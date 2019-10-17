@@ -1,4 +1,5 @@
 import React from "react";
+import ViewExpense from "./views/Expense/Expense/ViewExpense/ViewExpense";
 
 const Login = React.lazy(() => import("./views/Login"));
 const Dashboard = React.lazy(() => import("./views/Dashboard"));
@@ -28,19 +29,9 @@ const CreateOrEditProject = React.lazy(() => import("./views/Master/Project/Crea
 const CreateOrEditUsers = React.lazy(() => import("./views/Master/Users/CreateOrEditUsers/CreateOrEditUsers"));
 const CreateOrEditPurchase = React.lazy(() => import("./views/Expense/Purchase/CreateOrEditPurchase/CreateOrEditPurchase"));
 const CreateOrEditBankAccount = React.lazy(() => import("./views/BankAccount/CreateOrEditBankAccount/CreateOrEditBankAccount"));
-const CreateOrEditVatCategory = React.lazy(() =>
-  import(
-    "./views/Settings/Vat-Category/CreateOrEditVatCategory/CreateOrEditVatCategory"
-  )
-);
-const CreateOrEditTranactionCategory = React.lazy(() =>
-  import(
-    "./views/Settings/Transaction-Category/CreateOrEditTransactionCategory/CreateOrEditTransactionCategory"
-  )
-);
-const TransactionCategory = React.lazy(() =>
-  import("./views/Settings/Transaction-Category")
-);
+const CreateOrEditVatCategory = React.lazy(() => import("./views/Settings/Vat-Category/CreateOrEditVatCategory/CreateOrEditVatCategory"));
+const CreateOrEditTranactionCategory = React.lazy(() => import("./views/Settings/Transaction-Category/CreateOrEditTransactionCategory/CreateOrEditTransactionCategory"));
+const TransactionCategory = React.lazy(() => import("./views/Settings/Transaction-Category"));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -51,7 +42,8 @@ const routes = [
   { path: "/bankAccount", name: "BankAccount", component: BankAccount },
   { path: "/Taxes", name: "Taxes", component: Taxes },
   { path: "/create-Invoice", name: "Invoice", component: CreateOrEditInvoice },
-  { path: "/create-Expense", name: "Expense", component: CreateOrEditExpense },
+  { path: "/Expense/create-Expense", name: "Expense", component: CreateOrEditExpense },
+  { path: "/Expense/View-Expense", name: "ViewExpense", component: ViewExpense },
   { path: "/create-Product", name: "Product", component: CreateOrEditProduct },
   { path: "/create-Users", name: "Users", component: CreateOrEditUsers },
   { path: "/create-Project", name: "Project", component: CreateOrEditProject },
@@ -60,76 +52,20 @@ const routes = [
   { path: "/create-bank-account", name: "BankAccount", component: CreateOrEditBankAccount },
   { path: "/Imports", name: "Imports", component: Imports },
   { path: "/Employee", name: "Employee", component: Employee },
-  {
-    path: "/Report/ExpenseReport",
-    name: "ExpenseReport", 
-    component: ExpenseReport
-  },
-  {
-    path: "/Report/InvoiceReport",
-    name: "InvoiceReport", 
-    component: InvoiceReport
-  },
-  {
-    path: "/Report/TransactionReport",
-    name: "TransactionReport", 
-    component: TransactionReport
-  },
-  {
-    path: "/Expense/Expense",
-    name: "Expense", 
-    component: Expense
-  },
-  {
-    path: "/Expense/Purchase",
-    name: "Purchase",
-    component: Purchase
-  },
-  {
-    path: "/settings/general",
-    name: "General Settings",
-    component: GeneralSettings
-  },
-  {
-    path: "/settings/vat-category",
-    name: "Vat Category",
-    component: VatCategory
-  },
-  {
-    path: "/Master/Contact",
-    name: "Contact",
-    component: Contact
-  },
-  {
-    path: "/Master/Project",
-    name: "Project",
-    component: Project
-  },
-  {
-    path: "/Master/Product",
-    name: "Product",
-    component: Product
-  },
-  {
-    path: "/Master/Users",
-    name: "Users",
-    component: Users
-  },
-  {
-    path: "/create-vat-category",
-    name: "Create Vat Category",
-    component: CreateOrEditVatCategory
-  },
-  {
-    path: "/create-transaction-category",
-    name: "Create Transaction Category",
-    component: CreateOrEditTranactionCategory
-  },
-  {
-    path: "/settings/transaction-category",
-    name: "Transaction Category",
-    component: TransactionCategory
-  }
+  { path: "/Report/ExpenseReport", name: "ExpenseReport", component: ExpenseReport },
+  { path: "/Report/InvoiceReport", name: "InvoiceReport", component: InvoiceReport },
+  { path: "/Report/TransactionReport", name: "TransactionReport", component: TransactionReport },
+  { path: "/Expense/Expense", name: "Expense", component: Expense },
+  { path: "/Expense/Purchase", name: "Purchase", component: Purchase },
+  { path: "/settings/general", name: "General Settings", component: GeneralSettings },
+  { path: "/settings/vat-category", name: "Vat Category", component: VatCategory },
+  { path: "/Master/Contact", name: "Contact", component: Contact },
+  { path: "/Master/Project", name: "Project", component: Project },
+  { path: "/Master/Product", name: "Product", component: Product },
+  { path: "/Master/Users", name: "Users", component: Users },
+  { path: "/create-vat-category", name: "Create Vat Category", component: CreateOrEditVatCategory },
+  { path: "/create-transaction-category", name: "Create Transaction Category", component: CreateOrEditTranactionCategory },
+  { path: "/settings/transaction-category", name: "Transaction Category", component: TransactionCategory }
 ];
 
 export default routes;

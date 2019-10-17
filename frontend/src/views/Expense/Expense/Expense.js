@@ -41,10 +41,10 @@ class Expense extends Component {
     }
 
     componentDidMount() {
-        this.getVatListData();
+        this.getExpenseListData();
     }
 
-    getVatListData = () => {
+    getExpenseListData = () => {
         const res = sendRequest(`rest/expense/retrieveExpenseList`, "get", "");
         res.then((res) => {
             if (res.status === 200) {
@@ -73,8 +73,8 @@ class Expense extends Component {
     expenseActions = (cell, row) => {
         return (
             <div className="d-flex">
-                <Button block color="primary" className="btn-pill vat-actions" title="Edit Expense" onClick={() => this.props.history.push(`/create-vat-category?id=${row.id}`)}><i className="far fa-edit"></i></Button>
-                <Button block color="primary" className="btn-pill vat-actions" title="View Expense" onClick={() => this.props.history.push(`/create-vat-category?id=${row.id}`)}><i className="far fa-edit"></i></Button>
+                <Button block color="primary" className="btn-pill vat-actions" title="Edit Expense" onClick={() => this.props.history.push(`/Expense/create-Expense?id=${row.expenseId}`)}><i className="far fa-edit"></i></Button>
+                <Button block color="primary" className="btn-pill vat-actions" title="View Expense" onClick={() => this.props.history.push(`/Expense/View-Expense?id=${row.expenseId}`)}><i className="far fa-eye"></i></Button>
                 <Button block color="primary" className="btn-pill vat-actions" title="Delete Expense" onClick={() => this.setState({ selectedData: row }, () => this.setState({ openDeleteModal: true }))}><i className="fas fa-trash-alt"></i></Button>
             </div>
         );
@@ -84,18 +84,18 @@ class Expense extends Component {
         return (
             <div>
                 <div>
-                    <div>{`${row.expenseAmountCompanyCurrency}.00`}</div>
+                    <div>{this.formatNumber(row.expenseAmountCompanyCurrency)}</div>
                 </div>
                 <div>
                     <label>{row.expenseContact ? row.expenseContact.currency.currencySymbol : ""}</label>
-                    <label>{`${row.expenseAmount}.00`}</label>
+                    <label>{this.formatNumber(row.expenseAmount)}</label>
                 </div>
             </div>
         )
     }
 
     success = () => {
-        return toast.success('Vat Category Deleted Successfully... ', {
+        return toast.success('Expense Deleted Successfully... ', {
             position: toast.POSITION.TOP_RIGHT
         });
     }
@@ -103,15 +103,20 @@ class Expense extends Component {
     deleteVat = (data) => {
         this.setState({ loading: true })
         this.setState({ openDeleteModal: false });
-        const res = sendRequest(`rest/vat/deletevat?id=${this.state.selectedData.id}`, "delete", "");
+        const res = sendRequest(`rest/expense/delete?expenseId=${this.state.selectedData.expenseId}`, "get", "");
         res.then(res => {
             if (res.status === 200) {
                 this.setState({ loading: false });
                 this.success();
-                this.getVatListData();
+                this.getExpenseListData();
             }
         })
     }
+
+    formatNumber(num) {
+        let n = num ? num : 0;
+        return Number.parseFloat(n).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+      }
 
     render() {
         const { expenseList, loading } = this.state;
@@ -127,7 +132,7 @@ class Expense extends Component {
                         <i className="icon-menu"></i>Expenses
                     </CardHeader>
                     <CardBody>
-                        <Button className="mb-3" onClick={() => this.props.history.push(`/create-Expense`)}>New</Button>
+                        <Button className="mb-3" onClick={() => this.props.history.push(`/Expense/create-Expense`)}>New</Button>
                         <BootstrapTable data={expenseList} version="4" striped hover pagination={paginationFactory(this.options)} totalSize={expenseList ? expenseList.length : 0} >
                             <TableHeaderColumn isKey dataField="receiptNumber">Reciept Number</TableHeaderColumn>
                             <TableHeaderColumn dataFormat={this.formatAmount}>Amount</TableHeaderColumn>

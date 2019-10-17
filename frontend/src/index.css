@@ -95,6 +95,14 @@
   padding: 0.3rem;
 }
 
+.expense-labels{
+  padding: 0 0.5rem;
+}
+
+.expense-headers{
+  font-weight: bold;
+}
+
 .expense-items-table thead,
 .expense-items-table tbody,
  .expense-items-table thead td ,

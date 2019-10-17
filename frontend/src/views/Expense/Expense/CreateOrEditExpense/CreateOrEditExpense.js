@@ -40,20 +40,46 @@ class CreateOrEditExpense extends Component {
       collapseitemDetails: true,
       loading: false,
       large: false,
-      expenseData: { description: "" },
+      expenseData: { expenseDescription: "" },
       cliementList: [],
       vatList: [],
-      expenseItem: [{ expenseItemId: 0, productName: "", quatity: "0", unitPrice: "0.00", vatId: "", subTotal: "" }],
-      totalNet: 0.00,
-      totalVat: 0.00,
-      total: 0.00
+      expenseItem: [{ expenseItemId: 0, productName: "", quatity: "0", unitPrice: "0", vatId: "", subTotal: "" }],
+      totalNet: 0,
+      totalVat: 0,
+      total: 0,
     };
     this.toggleLarge = this.toggleLarge.bind(this);
   }
 
   componentDidMount() {
+    let params = new URLSearchParams(this.props.location.search);
+    let id = params.get("id");
+    if (id) {
+      this.getExpenseData(id);
+    }
     this.getcliementList();
     this.getVatList();
+  }
+
+  getExpenseData = (id) => {
+    const res = sendRequest(`rest/expense/vieworedit?expenseId=${id}`, "get", "");
+    res.then((res) => {
+      if (res.status === 200) {
+        this.setState({ loading: false });
+        return res.json();
+      }
+    }).then(data => {
+      const { totalAmount, expenseSubtotal, expenseVATAmount, expenseContact } = data;
+      this.setState({
+        expenseData: data,
+        expenseItem: data.expenseItem,
+        total: totalAmount ? totalAmount : 0,
+        totalNet: expenseSubtotal ? expenseSubtotal : 0,
+        totalVat: expenseVATAmount ? expenseVATAmount : 0,
+        currencyValue: expenseContact.currency ? expenseContact.currency.description : "",
+        currencySymbol: expenseContact.currency ? expenseContact.currency.currencySymbol : ""
+      });
+    })
   }
 
   getVatList = () => {
@@ -175,7 +201,22 @@ class CreateOrEditExpense extends Component {
 
   getCategorySuggestionValue = suggestion => suggestion.transactionCategoryName;
 
-  renderCategorySuggestion = suggestion => <div>{suggestion.transactionCategoryName}</div>;
+  renderCategorySuggestion = suggestion => {
+    // let currParent = suggestion.parentTransactionCategory ? suggestion.parentTransactionCategory.transactionCategoryName : "";
+    // console.log("====>", currParent, "---", this.state.prevParentCategory)
+    // this.setState({ prevParentCategory: currParent })
+    return <div>
+      {/* {
+        this.state.prevParentCategory === currParent ?
+          "" : <div>{currParent}</div>
+      } */}
+      <div>{suggestion.transactionCategoryName}</div>
+    </div>
+  };
+
+  renderCategorySectionTitle = (section) => {
+    console.log("parent --> ", section);
+  }
 
   getCurrencySuggestionValue = suggestion => suggestion.description;
 
@@ -243,12 +284,12 @@ class CreateOrEditExpense extends Component {
   addExpense = () => {
     const d = [...this.state.expenseItem];
     if (!d[this.state.expenseItem.length - 2] || d[this.state.expenseItem.length - 2].quatity > 0 && d[this.state.expenseItem.length - 2].unitPrice > 0) {
-      this.state.expenseItem.push({ expenseItemId: this.state.expenseItem.length, productName: "", quatity: "0", unitPrice: "0.00", vatId: "", subTotal: "" });
-    } else if (!parseInt(d[this.state.expenseItem.length - 2].quatity) > 0 && !parseInt(d[this.state.expenseItem.length - 2].unitPrice) > 0) {
+      this.state.expenseItem.push({ expenseItemId: this.state.expenseItem.length, productName: "", quatity: "0", unitPrice: "0", vatId: "", subTotal: "" });
+    } else if (!parseFloat(d[this.state.expenseItem.length - 2].quatity) > 0 && !parseFloat(d[this.state.expenseItem.length - 2].unitPrice) > 0) {
       this.setState({ alertMsg: "Unit price should be greater than 0 and Quantity should be greater than 0 in expense items." })
-    } else if (!parseInt(d[this.state.expenseItem.length - 2].quatity) > 0) {
+    } else if (!parseFloat(d[this.state.expenseItem.length - 2].quatity) > 0) {
       this.setState({ alertMsg: "Please enter Quantity should be greater than 0 in expense items." })
-    } else if (!parseInt(d[this.state.expenseItem.length - 2].unitPrice) > 0) {
+    } else if (!parseFloat(d[this.state.expenseItem.length - 2].unitPrice) > 0) {
       this.setState({ alertMsg: "Unit price should be greater than 0 in expense items." })
     }
 
@@ -256,7 +297,6 @@ class CreateOrEditExpense extends Component {
   }
 
   deleteExpense = (e, id, item) => {
-    // console.log("detele --> ", id, item)
     this.state.expenseItem.splice(id, 1);
     this.setState({ expenseItem: this.state.expenseItem }, () => { this.getTotalNet(); this.getTotal(); this.getTotalVat(); });
   }
@@ -285,10 +325,10 @@ class CreateOrEditExpense extends Component {
     let subTotal;
     let expenseData = [...this.state.expenseItem];
     if (item) {
-      subTotal = `${item.quatity * item.unitPrice}.00`;
+      subTotal = `${item.quatity * item.unitPrice}`;
       expenseData[ind].subTotal = subTotal;
       this.setState({ expenseItem: expenseData })
-      return subTotal > 0 ? subTotal : 0.00;
+      return subTotal > 0 ? subTotal : 0;
     }
   }
 
@@ -302,18 +342,19 @@ class CreateOrEditExpense extends Component {
   getTotalNet = () => {
     let totalNet;
     this.state.expenseItem.reduce((accumulator, currVal) => {
-      totalNet = currVal.subTotal ? `${parseFloat(accumulator) + parseFloat(currVal.subTotal)}.00` : accumulator
-      this.setState({ totalNet: totalNet ? totalNet : 0.00 }, () => this.getTotal())
+      totalNet = currVal.subTotal ? `${parseFloat(accumulator) + parseFloat(currVal.subTotal)}` : accumulator
+      this.setState({ totalNet: totalNet ? totalNet : 0 }, () => this.getTotal())
       return totalNet
-    }, 0.00);
+    }, 0);
   }
 
   getTotalVat = () => {
     let totalVat, prevVat;
+    // console.log(this.state.expenseItem);
     this.state.expenseItem.reduce((accumulator, currVal) => {
       prevVat = ((this.state.vatList[currVal.vatId].vat * parseFloat(currVal.subTotal)) / 100);
       totalVat = currVal.subTotal ? `${parseFloat(accumulator) + prevVat}` : accumulator
-      this.setState({ totalVat: totalVat ? totalVat : 0.00 }, () => this.getTotal())
+      this.setState({ totalVat: totalVat ? totalVat : 0 }, () => this.getTotal())
       return totalVat
     }, this.state.totalVat);
   }
@@ -370,11 +411,18 @@ class CreateOrEditExpense extends Component {
     }
   };
 
+  formatNumber(num) {
+    let n = num ? num : 0;
+    return Number.parseFloat(n).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  }
+
   render() {
-    // console.log("state --> ", this.state)
+    let params = new URLSearchParams(this.props.location.search);
+    let id = params.get("id");
     const { categorySuggestion, categoryValue, currencySuggestions, currencyValue, projectSuggestions, projectValue, expenseData, cliementList, loading, expenseItem,
       vatList, totalNet, totalVat, alertMsg, total, currencySymbol } = this.state;
-    const { expenseDate, description, attachmentDescription, recieptNumber } = expenseData;
+    const { expenseDate, expenseDescription, receiptAttachmentDescription, receiptNumber, userId } = expenseData;
+    let date = expenseDate ? new Date(expenseDate) : "";
     const categoryInputProps = {
       placeholder: "Type Category Name",
       value: categoryValue,
@@ -393,7 +441,7 @@ class CreateOrEditExpense extends Component {
     return (
       <div className="animated fadeIn">
         <Card>
-          <CardHeader>New Expense</CardHeader>
+          <CardHeader>{id ? "Edit Expense" : "New Expense"}</CardHeader>
           <div className="create-bank-wrapper">
             <Row>
               <Col xs="12">
@@ -413,6 +461,7 @@ class CreateOrEditExpense extends Component {
                               type="select"
                               name="cliement"
                               id="cliement"
+                              value={userId}
                               required
                             >
                               {
@@ -432,9 +481,11 @@ class CreateOrEditExpense extends Component {
                               onSuggestionsClearRequested={
                                 e => this.onSuggestionsClearRequested(e, "categorySuggestion")
                               }
+                              renderSectionTitle={this.renderCategorySectionTitle}
                               getSuggestionValue={this.getCategorySuggestionValue}
                               onSuggestionSelected={this.onCategorySuggestionSelected}
                               renderSuggestion={this.renderCategorySuggestion}
+
                               inputProps={categoryInputProps}
                             />
                           </FormGroup>
@@ -446,7 +497,7 @@ class CreateOrEditExpense extends Component {
                               type="date"
                               name="expenseDate"
                               id="expenseDate"
-                              value={expenseDate}
+                              value={date ? `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` : ""}
                               onChange={e => this.handleChange(e, "expenseDate")}
                             />
                           </FormGroup>
@@ -495,14 +546,14 @@ class CreateOrEditExpense extends Component {
                             <Label htmlFor="Description">Description</Label>
                             <Input
                               type="textarea"
-                              id="description"
-                              name="description"
+                              id="expenseDescription"
+                              name="expenseDescription"
                               maxLength="255"
-                              value={description}
-                              onChange={e => this.handleChange(e, "description")}
+                              value={expenseDescription}
+                              onChange={e => this.handleChange(e, "expenseDescription")}
                               required
                             />
-                            <span>{`${255 - description.split('').length} characters remaining.`}</span>
+                            <span>{`${255 - expenseDescription.split('').length} characters remaining.`}</span>
                           </FormGroup>
                         </Col>
                       </Row>
@@ -531,9 +582,9 @@ class CreateOrEditExpense extends Component {
                               <Label htmlFor="text-input">Reciept Number</Label>
                               <Input
                                 type="number"
-                                name="recieptNumber"
-                                id="recieptNumber"
-                                value={recieptNumber}
+                                name="receiptNumber"
+                                id="receiptNumber"
+                                value={receiptNumber}
                               />
 
                             </FormGroup>
@@ -543,9 +594,9 @@ class CreateOrEditExpense extends Component {
                               <Label htmlFor="text-input">Attachment Description</Label>
                               <Input
                                 type="text"
-                                name="attachmentDescription"
-                                id="attachmentDescription"
-                                value={attachmentDescription}
+                                name="receiptAttachmentDescription"
+                                id="receiptAttachmentDescription"
+                                value={receiptAttachmentDescription}
                               />
 
                             </FormGroup>
@@ -632,6 +683,7 @@ class CreateOrEditExpense extends Component {
                                     type="text"
                                     name="unitPrice"
                                     id="unitPrice"
+                                    // value={this.formatNumber(item.unitPrice)}
                                     value={item.unitPrice}
                                     onChange={e => this.handleEnpeseTableChange(e, "unitPrice", item, ind)}
                                   />
@@ -653,7 +705,7 @@ class CreateOrEditExpense extends Component {
                                   </Input>
                                 </td>
                                 <td width="20%">
-                                  <label>{item.subTotal ? `${item.subTotal}${currencySymbol}` : ""}</label>
+                                  <label>{item.subTotal ? `${this.formatNumber(item.subTotal)}${currencySymbol}` : ""}</label>
                                 </td>
                               </tr>)
                             }
@@ -661,22 +713,22 @@ class CreateOrEditExpense extends Component {
                           <tfoot>
                             <tr>
                               <td rowSpan="3" colSpan="4" className="expense-table-footer"></td>
-                              <td className="expense-table-border">Total</td>
-                              <td className="expense-table-border">{`${total}${currencySymbol}`}</td>
+                              <td className="expense-table-border"><b>Total</b></td>
+                              <td className="expense-table-border">{`${this.formatNumber(total)}${currencySymbol}`}</td>
                             </tr>
                           </tfoot>
                           <tfoot>
                             <tr>
                               <td rowSpan="3" colSpan="4" className="expense-table-footer"></td>
                               <td className="expense-table-border">Total Net</td>
-                              <td className="expense-table-border">{`${totalNet}${currencySymbol}`}</td>
+                              <td className="expense-table-border">{`${this.formatNumber(totalNet)}${currencySymbol}`}</td>
                             </tr>
                           </tfoot>
                           <tfoot>
                             <tr>
                               <td rowSpan="3" colSpan="4" className="expense-table-footer"></td>
                               <td className="expense-table-border">Total VAT</td>
-                              <td className="expense-table-border">{`${totalVat}${currencySymbol}`}</td>
+                              <td className="expense-table-border">{`${this.formatNumber(totalVat)}${currencySymbol}`}</td>
                             </tr>
                           </tfoot>
                         </table>

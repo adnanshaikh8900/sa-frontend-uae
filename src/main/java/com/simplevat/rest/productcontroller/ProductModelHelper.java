@@ -2,14 +2,19 @@ package com.simplevat.rest.productcontroller;
 
 import com.simplevat.entity.Product;
 import com.simplevat.productservice.model.ProductModel;
+import com.simplevat.service.ProductService;
+import com.simplevat.service.ProductWarehouseService;
+import com.simplevat.service.VatCategoryService;
 
 public class ProductModelHelper {
 
-    public Product convertToProduct(ProductModel productModel) {
+    public Product convertToProduct(ProductModel productModel, VatCategoryService vatCategoryService, ProductWarehouseService productWarehouseService, ProductService productService) {
         Product product = new Product();
         product.setProductID(productModel.getProductID());
         product.setProductName(productModel.getProductName());
-        product.setVatCategory(productModel.getVatCategory());
+        if (vatCategoryService != null) {
+            product.setVatCategory(vatCategoryService.findByPK(productModel.getVatCategory()));
+        }
         product.setCreatedBy(productModel.getCreatedBy());
         product.setCreatedDate(productModel.getCreatedDate());
         product.setDeleteFlag(productModel.getDeleteFlag());
@@ -18,8 +23,12 @@ public class ProductModelHelper {
         product.setProductCode(productModel.getProductCode());
         product.setVersionNumber(productModel.getVersionNumber());
         product.setProductDescription(productModel.getProductDescription());
-        product.setParentProduct(productModel.getParentProduct());
-        product.setProductWarehouse(productModel.getProductWarehouse());
+        if (productService != null) {
+            product.setParentProduct(productService.findByPK(productModel.getParentProduct()));
+        }
+        if (productWarehouseService != null) {
+            product.setProductWarehouse(productWarehouseService.findByPK(productModel.getProductWarehouse()));
+        }
         product.setVatIncluded(productModel.getVatIncluded());
         product.setUnitPrice(productModel.getUnitPrice());
 
@@ -30,7 +39,9 @@ public class ProductModelHelper {
         ProductModel productModel = new ProductModel();
         productModel.setProductID(product.getProductID());
         productModel.setProductName(product.getProductName());
-        productModel.setVatCategory(product.getVatCategory());
+        if (product.getVatCategory() != null) {
+            productModel.setVatCategory(product.getVatCategory().getId());
+        }
         productModel.setCreatedBy(product.getCreatedBy());
         productModel.setCreatedDate(product.getCreatedDate());
         productModel.setDeleteFlag(product.getDeleteFlag());
@@ -39,8 +50,12 @@ public class ProductModelHelper {
         productModel.setProductCode(product.getProductCode());
         productModel.setVersionNumber(product.getVersionNumber());
         productModel.setProductDescription(product.getProductDescription());
-        productModel.setParentProduct(product.getParentProduct());
-        productModel.setProductWarehouse(product.getProductWarehouse());
+        if (product.getParentProduct() != null) {
+            productModel.setParentProduct(product.getParentProduct().getProductID());
+        }
+        if (product.getProductWarehouse() != null) {
+            productModel.setProductWarehouse(product.getProductWarehouse().getWarehouseId());
+        }
         productModel.setVatIncluded(product.getVatIncluded());
         productModel.setUnitPrice(product.getUnitPrice());
         return productModel;

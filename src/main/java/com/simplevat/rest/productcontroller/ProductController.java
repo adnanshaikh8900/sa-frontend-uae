@@ -113,7 +113,7 @@ public class ProductController implements Serializable {
 
     @PostMapping(value = "/saveproduct")
     private ResponseEntity save(@RequestBody ProductModel productModel, @RequestParam(value = "id") Integer id) {
-        Product product = productModelHelper.convertToProduct(productModel);
+        Product product = productModelHelper.convertToProduct(productModel,vatCategoryService,productWarehouseService,productService);
         if (product.getUnitPrice() == null) {
             product.setUnitPrice(BigDecimal.ZERO);
         }
@@ -126,7 +126,7 @@ public class ProductController implements Serializable {
             product.setLastUpdatedBy(id);
         }
         if (productModel.getVatCategory() != null) {
-            VatCategory vatCategory = vatCategoryService.findByPK(productModel.getVatCategory().getId());
+            VatCategory vatCategory = vatCategoryService.findByPK(productModel.getVatCategory());
             product.setVatCategory(vatCategory);
         }
         if (productModel.getProductID() == null) {

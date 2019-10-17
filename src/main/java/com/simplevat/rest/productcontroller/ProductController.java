@@ -112,7 +112,7 @@ public class ProductController implements Serializable {
     }
 
     @PostMapping(value = "/saveproduct")
-    private ResponseEntity save(@RequestParam ProductModel productModel, @RequestParam(value = "id") Integer id) {
+    private ResponseEntity save(@RequestBody ProductModel productModel, @RequestParam(value = "id") Integer id) {
         Product product = productModelHelper.convertToProduct(productModel);
         if (product.getUnitPrice() == null) {
             product.setUnitPrice(BigDecimal.ZERO);

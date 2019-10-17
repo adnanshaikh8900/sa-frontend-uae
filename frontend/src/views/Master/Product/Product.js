@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
 import { Card, CardHeader, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import sendRequest from '../../../xhrRequest';
 import paginationFactory from 'react-bootstrap-table2-paginator';
@@ -13,7 +14,7 @@ class Product extends Component {
         super(props);
 
         this.state = {
-            vatCategoryList: [],
+            productList: [],
             openDeleteModal: false,
             loading: true
         }
@@ -29,9 +30,9 @@ class Product extends Component {
             showTotal: true,
             paginationTotalRenderer: this.customTotal,
             sizePerPageList: [{
-                text: '5', value: 5
-            }, {
                 text: '10', value: 10
+            }, {
+                text: '25', value: 25
             }, {
                 text: 'All', value: this.state.vatCategoryList ? this.state.vatCategoryList.length : 0
             }]
@@ -40,62 +41,59 @@ class Product extends Component {
     }
 
     componentDidMount() {
-        this.getVatListData();
+        this.getProductListData();
     }
 
-    getVatListData = () => {
-        const res = sendRequest(`rest/vat/getvat`, "get", "");
+    getProductListData = () => {
+        const res = sendRequest(`rest/product/getproduct`, "get", "");
         res.then((res) => {
             if (res.status === 200) {
                 this.setState({ loading: false });
                 return res.json();
             }
         }).then(data => {
-            this.setState({ vatCategoryList: data });
+            this.setState({ productList: data });
         })
     }
 
     customTotal = (from, to, size) => (
         <span className="react-bootstrap-table-pagination-total">
-            {
-                console.log("----------------")
-            }
             Showing {from} to {to} of {size} Results
         </span >
     );
 
-    vatPercentageFormat = (cell, row) => `${row.vat} %`;
+    productPercentageFormat = (cell, row) => row.vatCategory ? row.vatCategory.name : ""
 
-    vatActions = (cell, row) => {
+    tableActions = (cell, row) => {
         return (
             <div className="d-flex">
-                <Button block color="primary" className="btn-pill vat-actions" title="Edit Vat Category" onClick={() => this.props.history.push(`/create-vat-category?id=${row.id}`)}><i className="far fa-edit"></i></Button>
-                <Button block color="primary" className="btn-pill vat-actions" title="Delete Vat Ctegory" onClick={() => this.setState({ selectedData: row }, () => this.setState({ openDeleteModal: true }))}><i className="fas fa-trash-alt"></i></Button>
+                <Button block color="primary" className="btn-pill vat-actions" title="Edit Product/Service" onClick={() => this.props.history.push(`/Master/Product/create-Product?id=${row.productID}`)}><i className="far fa-edit"></i></Button>
+                <Button block color="primary" className="btn-pill vat-actions" title="Delete Product/Service" onClick={() => this.setState({ selectedData: row }, () => this.setState({ openDeleteModal: true }))}><i className="fas fa-trash-alt"></i></Button>
             </div>
         );
     };
 
     success = () => {
-        return toast.success('Vat Category Deleted Successfully... ', {
+        return toast.success('Product/Service Deleted Successfully... ', {
             position: toast.POSITION.TOP_RIGHT
         });
     }
 
-    deleteVat = (data) => {
+    deleteProduct = (data) => {
         this.setState({ loading: true })
         this.setState({ openDeleteModal: false });
-        const res = sendRequest(`rest/vat/deletevat?id=${this.state.selectedData.id}`, "delete", "");
+        const res = sendRequest(`rest/product/deleteproduct?id=${this.state.selectedData.productID}`, "delete", "");
         res.then(res => {
             if (res.status === 200) {
                 this.setState({ loading: false });
                 this.success();
-                this.getVatListData();
+                this.getProductListData();
             }
         })
     }
 
     render() {
-        const { vatCategoryList, loading } = this.state;
+        const { productList, loading } = this.state;
         const containerStyle = {
             zIndex: 1999
         };
@@ -108,14 +106,42 @@ class Product extends Component {
                         <i className="icon-menu"></i>Product And Service
                     </CardHeader>
                     <CardBody>
-                        <Button className="mb-3" onClick={() => this.props.history.push(`/create-Product`)}>New</Button>
-                        <BootstrapTable data={vatCategoryList} version="4" striped hover pagination={paginationFactory(this.options)} totalSize={vatCategoryList ? vatCategoryList.length : 0} >
-                            <TableHeaderColumn isKey dataField="name">Name</TableHeaderColumn>
-                            <TableHeaderColumn>Product Code</TableHeaderColumn>
-                            <TableHeaderColumn >Description</TableHeaderColumn>
-                            <TableHeaderColumn dataField="vat" dataFormat={this.vatPercentageFormat}>Vat Percentage</TableHeaderColumn>
-                            <TableHeaderColumn dataFormat={this.vatActions}>Action</TableHeaderColumn>
-                        </BootstrapTable>
+                        <Button className="mb-3" onClick={() => this.props.history.push(`/Master/Product/create-Product`)}>New</Button>
+                        <BootstrapTable
+                            keyField="productID"
+                            data={productList}
+                            filter={filterFactory()}
+                            pagination={paginationFactory(this.options)}
+                            columns={[
+                                {
+                                    dataField: 'productName',
+                                    text: 'Name',
+                                    filter: textFilter(),
+                                    sort: true
+                                },
+                                {
+                                    dataField: 'productCode',
+                                    text: 'Product Code',
+                                    sort: true,
+                                },
+                                {
+                                    dataField: 'productDescription',
+                                    text: 'Description',
+                                    sort: true,
+                                },
+                                {
+                                    dataField: '',
+                                    text: 'Vat Percentage',
+                                    sort: true,
+                                    formatter: this.productPercentageFormat
+                                },
+                                {
+                                    dataField: '',
+                                    text: 'Action',
+                                    formatter: this.tableActions
+                                },
+                            ]}
+                        />
                     </CardBody>
                 </Card>
                 <Modal isOpen={this.state.openDeleteModal}
@@ -125,7 +151,7 @@ class Product extends Component {
                         Are you sure want to delete this record?
                   </ModalBody>
                     <ModalFooter>
-                        <Button color="danger" onClick={this.deleteVat}>Yes</Button>{' '}
+                        <Button color="danger" onClick={this.deleteProduct}>Yes</Button>{' '}
                         <Button color="secondary" onClick={() => this.setState({ openDeleteModal: false })}>No</Button>
                     </ModalFooter>
                 </Modal>

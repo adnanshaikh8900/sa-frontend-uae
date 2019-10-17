@@ -94,7 +94,7 @@ class CreateOrEditCategory extends Component {
               <FormGroup>
                 <Col xs="4">
                   <FormGroup>
-                    <Label htmlFor="name">Vat Category Name</Label>
+                    <Label htmlFor="name" className="required">Vat Category Name</Label>
                     <Input
                       type="text"
                       id="name"
@@ -110,7 +110,7 @@ class CreateOrEditCategory extends Component {
               <FormGroup>
                 <Col xs="4">
                   <FormGroup>
-                    <Label htmlFor="name">Percentage</Label>
+                    <Label htmlFor="name" className="required">Percentage</Label>
                     <Input
                       type="number"
                       id="name"

@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
 import { Card, CardHeader, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import sendRequest from '../../../xhrRequest';
 import paginationFactory from 'react-bootstrap-table2-paginator';
@@ -30,9 +31,9 @@ class Expense extends Component {
             showTotal: true,
             paginationTotalRenderer: this.customTotal,
             sizePerPageList: [{
-                text: '5', value: 5
-            }, {
                 text: '10', value: 10
+            }, {
+                text: '25', value: 25
             }, {
                 text: 'All', value: this.state.expenseList ? this.state.expenseList.length : 0
             }]
@@ -58,9 +59,6 @@ class Expense extends Component {
 
     customTotal = (from, to, size) => (
         <span className="react-bootstrap-table-pagination-total">
-            {
-                console.log("----------------")
-            }
             Showing {from} to {to} of {size} Results
         </span >
     );
@@ -116,7 +114,7 @@ class Expense extends Component {
     formatNumber(num) {
         let n = num ? num : 0;
         return Number.parseFloat(n).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-      }
+    }
 
     render() {
         const { expenseList, loading } = this.state;
@@ -133,13 +131,45 @@ class Expense extends Component {
                     </CardHeader>
                     <CardBody>
                         <Button className="mb-3" onClick={() => this.props.history.push(`/Expense/create-Expense`)}>New</Button>
-                        <BootstrapTable data={expenseList} version="4" striped hover pagination={paginationFactory(this.options)} totalSize={expenseList ? expenseList.length : 0} >
-                            <TableHeaderColumn isKey dataField="receiptNumber">Reciept Number</TableHeaderColumn>
-                            <TableHeaderColumn dataFormat={this.formatAmount}>Amount</TableHeaderColumn>
-                            <TableHeaderColumn dataField="expenseDescription">Description</TableHeaderColumn>
-                            <TableHeaderColumn dataFormat={this.formatExpenseDate}>Expense Date</TableHeaderColumn>
-                            <TableHeaderColumn dataFormat={this.expenseActions}>Action</TableHeaderColumn>
-                        </BootstrapTable>
+                        <BootstrapTable
+                            keyField="expenseId"
+                            data={expenseList}
+                            filter={filterFactory()}
+                            columns={[
+                                {
+                                    dataField: 'receiptNumber',
+                                    text: 'Reciept Number',
+                                    filter: textFilter(),
+                                    sort: true
+                                },
+                                {
+                                    dataField: '',
+                                    text: 'Amount',
+                                    filter: textFilter(),
+                                    sort: true,
+                                    formatter: this.formatAmount
+                                },
+                                {
+                                    dataField: 'expenseDescription',
+                                    text: 'Description',
+                                    filter: textFilter(),
+                                    sort: true,
+                                },
+                                {
+                                    dataField: '',
+                                    text: 'Expense Date',
+                                    filter: textFilter(),
+                                    sort: true,
+                                    formatter: this.formatExpenseDate
+                                },
+                                {
+                                    dataField: '',
+                                    text: 'Action',
+                                    formatter: this.expenseActions
+                                },
+                            ]}
+                            pagination={paginationFactory(this.options)}
+                        />
                     </CardBody>
                 </Card>
                 <Modal isOpen={this.state.openDeleteModal}

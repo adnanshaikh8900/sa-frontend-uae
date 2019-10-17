@@ -9,7 +9,9 @@ import {
   ModalBody,
   ModalFooter
 } from "reactstrap";
-import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+// import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 import sendRequest from "../../../xhrRequest";
 import paginationFactory from "react-bootstrap-table2-paginator";
@@ -39,12 +41,12 @@ class TransactionCategory extends Component {
       paginationTotalRenderer: this.customTotal,
       sizePerPageList: [
         {
-          text: "5",
-          value: 5
-        },
-        {
           text: "10",
           value: 10
+        },
+        {
+          text: "25",
+          value: 25
         },
         {
           text: "All",
@@ -77,7 +79,6 @@ class TransactionCategory extends Component {
 
   customTotal = (from, to, size) => (
     <span className="react-bootstrap-table-pagination-total">
-      {console.log("----------------")}
       Showing {from} to {to} of {size} Results
     </span>
   );
@@ -129,7 +130,6 @@ class TransactionCategory extends Component {
       `rest/transaction/deletetransactioncategory?id=${this.state.selectedData.transactionCategoryId}`,
       "delete",
       "",
-      ""
     );
     res.then(res => {
       if (res.status === 200) {
@@ -145,7 +145,6 @@ class TransactionCategory extends Component {
     const containerStyle = {
       zIndex: 1999
     };
-    console.log(this.state)
     return (
       <div className="animated">
         <ToastContainer
@@ -167,34 +166,45 @@ class TransactionCategory extends Component {
               New
             </Button>
             <BootstrapTable
+              keyField="expenseId"
               data={transactionCategoryList}
-              version="4"
-              striped
-              hover
+              columns={[
+                {
+                  dataField: 'transactionCategoryCode',
+                  text: 'Category Code',
+                  sort: true
+                },
+                {
+                  dataField: 'transactionCategoryName',
+                  text: 'Category Name',
+                  sort: true
+                },
+                {
+                  dataField: 'transactionCategoryDescription',
+                  text: 'Category Description',
+                  sort: true
+                },
+                {
+                  dataField: '',
+                  text: 'Parent Transaction Category Name',
+                  formatter: this.getparentTransactionCategory,
+                  sort: true
+                },
+                {
+                  dataField: '',
+                  text: 'Transaction Type',
+                  formatter: this.getTransactionType,
+                  sort: true
+                },
+                {
+                  dataField: '',
+                  text: 'Action',
+                  formatter: this.transactionActions
+                },
+              ]}
+              filter={filterFactory()}
               pagination={paginationFactory(this.options)}
-              totalSize={
-                transactionCategoryList ? transactionCategoryList.length : 0
-              }
-            >
-              <TableHeaderColumn isKey dataField="transactionCategoryCode">
-                Category Code
-              </TableHeaderColumn>
-              <TableHeaderColumn dataField="transactionCategoryName">
-                Category Name
-              </TableHeaderColumn>
-              <TableHeaderColumn dataField="transactionCategoryDescription">
-                Category Description
-              </TableHeaderColumn>
-              <TableHeaderColumn dataFormat={this.getparentTransactionCategory}>
-                Parent Transaction Category Name
-              </TableHeaderColumn>
-              <TableHeaderColumn dataFormat={this.getTransactionType}>
-                Transaction Type
-              </TableHeaderColumn>
-              <TableHeaderColumn dataFormat={this.transactionActions}>
-                Action
-              </TableHeaderColumn>
-            </BootstrapTable>
+            />
           </CardBody>
         </Card>
         <Modal

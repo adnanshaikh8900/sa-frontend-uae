@@ -306,7 +306,7 @@ class CreateOrEditTransactionCategory extends Component {
               <FormGroup>
                 <Col xs="4">
                   <FormGroup>
-                    <Label htmlFor="categoryName">Category Name</Label>
+                    <Label htmlFor="categoryName" className="required">Category Name</Label>
                     <Input
                       type="text"
                       id="categoryName"
@@ -322,7 +322,7 @@ class CreateOrEditTransactionCategory extends Component {
               <FormGroup>
                 <Col xs="4">
                   <FormGroup>
-                    <Label htmlFor="categoryCode">Category Code</Label>
+                    <Label htmlFor="categoryCode" className="required">Category Code</Label>
                     <Input
                       type="text"
                       id="categoryCode"

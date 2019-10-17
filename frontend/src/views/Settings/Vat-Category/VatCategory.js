@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
 import { Card, CardHeader, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory from 'react-bootstrap-table2-filter';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import sendRequest from '../../../xhrRequest';
 import paginationFactory from 'react-bootstrap-table2-paginator';
@@ -29,9 +30,9 @@ class VatCategory extends Component {
             showTotal: true,
             paginationTotalRenderer: this.customTotal,
             sizePerPageList: [{
-                text: '5', value: 5
-            }, {
                 text: '10', value: 10
+            }, {
+                text: '25', value: 25
             }, {
                 text: 'All', value: this.state.vatCategoryList ? this.state.vatCategoryList.length : 0
             }]
@@ -57,9 +58,6 @@ class VatCategory extends Component {
 
     customTotal = (from, to, size) => (
         <span className="react-bootstrap-table-pagination-total">
-            {
-                console.log("----------------")
-            }
             Showing {from} to {to} of {size} Results
         </span >
     );
@@ -109,11 +107,28 @@ class VatCategory extends Component {
                     </CardHeader>
                     <CardBody>
                         <Button className="mb-3" onClick={() => this.props.history.push(`/create-vat-category`)}>New</Button>
-                        <BootstrapTable data={vatCategoryList} version="4" striped hover pagination={paginationFactory(this.options)} totalSize={vatCategoryList ? vatCategoryList.length : 0} >
-                            <TableHeaderColumn isKey dataField="name">Vat Name</TableHeaderColumn>
-                            <TableHeaderColumn dataField="vat" dataFormat={this.vatPercentageFormat}>Vat Percentage</TableHeaderColumn>
-                            <TableHeaderColumn dataFormat={this.vatActions}>Action</TableHeaderColumn>
-                        </BootstrapTable>
+                        <BootstrapTable
+                            keyField="id"
+                            data={vatCategoryList}
+                            columns={[
+                                {
+                                    dataField: 'name',
+                                    text: 'Vat Name'
+                                },
+                                {
+                                    dataField: '',
+                                    text: 'Vat Percentage',
+                                    formatter: this.vatPercentageFormat
+                                },
+                                {
+                                    dataField: '',
+                                    text: 'Action',
+                                    formatter: this.vatActions
+                                },
+                            ]}
+                            filter={filterFactory()}
+                            pagination={paginationFactory(this.options)}
+                        />
                     </CardBody>
                 </Card>
                 <Modal isOpen={this.state.openDeleteModal}

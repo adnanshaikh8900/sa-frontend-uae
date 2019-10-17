@@ -1,3 +1,17 @@
+
+.required::after{
+  content: " *";
+  color: red;
+}
+
+.filter-label{
+  display: block !important;
+}
+
+.table thead th{
+  vertical-align: top !important;
+}
+
 .vat-actions {
   width: 2.3rem !important;
   margin: 0 0.5rem !important;
@@ -112,3 +126,15 @@
   border: 1px solid rgba(0,0,0,0.1);
 }
 
+.form-check-input{
+  margin-top: 31px !important;
+  margin-left: 0 !important;
+}
+
+.product-cotact-input select{
+  width: 89% !important;
+}
+
+.product-cotact-input button{
+  margin: 0 !important;
+}

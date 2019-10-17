@@ -44,7 +44,7 @@ const routes = [
   { path: "/create-Invoice", name: "Invoice", component: CreateOrEditInvoice },
   { path: "/Expense/create-Expense", name: "Expense", component: CreateOrEditExpense },
   { path: "/Expense/View-Expense", name: "ViewExpense", component: ViewExpense },
-  { path: "/create-Product", name: "Product", component: CreateOrEditProduct },
+  { path: "/Master/Product/create-Product", name: "Create Product", component: CreateOrEditProduct },
   { path: "/create-Users", name: "Users", component: CreateOrEditUsers },
   { path: "/create-Project", name: "Project", component: CreateOrEditProject },
   { path: "/create-Contact", name: "Contact", component: CreateOrEditContact },

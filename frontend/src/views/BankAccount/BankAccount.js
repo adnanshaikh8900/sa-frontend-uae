@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Card, CardHeader, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import sendRequest from '../../xhrRequest';
 import paginationFactory from 'react-bootstrap-table2-paginator';
@@ -28,9 +29,9 @@ class BankAccount extends Component {
       showTotal: true,
       paginationTotalRenderer: this.customTotal,
       sizePerPageList: [{
-        text: '5', value: 5
-      }, {
         text: '10', value: 10
+      }, {
+        text: '25', value: 25
       }, {
         text: 'All', value: this.state.bankAccountList ? this.state.bankAccountList.length : 0
       }]
@@ -85,6 +86,13 @@ class BankAccount extends Component {
 
   setStatus = (cell, row) => row.bankAccountStatus.bankAccountStatusName;
 
+  setCurrentBal = (cell, row) => `${row.bankAccountCurrency.currencySymbol} ${this.formatNumber(row.openingBalance)}`
+
+  formatNumber(num) {
+    let n = num ? num : 0;
+    return Number.parseFloat(n).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  }
+
   render() {
     const { bankAccountList, loading } = this.state;
     const containerStyle = {
@@ -99,14 +107,52 @@ class BankAccount extends Component {
                     </CardHeader>
           <CardBody>
             <Button className="mb-3" onClick={() => this.props.history.push(`/create-bank-account`)}>New</Button>
-            <BootstrapTable data={bankAccountList} version="4" striped hover pagination={paginationFactory(this.options)} totalSize={bankAccountList ? bankAccountList.length : 0} >
-              <TableHeaderColumn isKey dataField="bankAccountName">Account Name</TableHeaderColumn>
-              <TableHeaderColumn dataField="accountNumber" >Account Number</TableHeaderColumn>
-              <TableHeaderColumn dataField="swiftCode" >Swift Code</TableHeaderColumn>
-              <TableHeaderColumn dataFormat={this.setStatus} >Status</TableHeaderColumn>
-              <TableHeaderColumn dataField="openingBalance" >Current Balance</TableHeaderColumn>
-              <TableHeaderColumn dataFormat={this.bankAccounttActions}>Action</TableHeaderColumn>
-            </BootstrapTable>
+            <BootstrapTable
+              keyField="bankAccountId"
+              data={bankAccountList}
+              filter={filterFactory()}
+              columns={[
+                {
+                  dataField: 'bankAccountName',
+                  text: 'Account Name',
+                  filter: textFilter(),
+                  sort: true
+                },
+                {
+                  dataField: 'accountNumber',
+                  text: 'Account Number',
+                  filter: textFilter(),
+                  sort: true
+                },
+                {
+                  dataField: 'swiftCode',
+                  text: 'Swift Code',
+                  filter: textFilter(),
+                  sort: true
+                },
+                {
+                  dataField: '',
+                  text: 'Status',
+                  formatter: this.setStatus,
+                  filter: textFilter(),
+                  sort: true
+                },
+                {
+                  dataField: 'openingBalance',
+                  text: 'Current Balance',
+                  formatter: this.setCurrentBal,
+                  filter: textFilter(),
+                  sort: true
+                },
+                {
+                  dataField: '',
+                  text: 'Action',
+                  formatter: this.bankAccounttActions
+                },
+              ]}
+              filter={filterFactory()}
+              pagination={paginationFactory(this.options)}
+            />
           </CardBody>
         </Card>
         <Modal isOpen={this.state.openDeleteModal}

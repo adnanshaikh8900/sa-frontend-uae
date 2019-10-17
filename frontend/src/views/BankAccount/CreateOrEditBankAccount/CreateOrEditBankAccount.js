@@ -331,7 +331,7 @@ class CreateOrEditBankAccount extends Component {
                       <Row className="row-wrapper">
                         <Col md="4">
                           <FormGroup >
-                            <Label htmlFor="bankAccountName">
+                            <Label htmlFor="bankAccountName" className="required">
                               Account Name
                           </Label>
                             <Input
@@ -347,7 +347,7 @@ class CreateOrEditBankAccount extends Component {
                         </Col>
                         <Col md="4">
                           <FormGroup >
-                            <Label htmlFor="select">Currency</Label>
+                            <Label htmlFor="select" className="required">Currency</Label>
                             <Autosuggest
                               className="autoSuggest"
                               suggestions={currencylist}
@@ -361,6 +361,7 @@ class CreateOrEditBankAccount extends Component {
                               onSuggestionSelected={this.onCurrencySuggestionSelected}
                               renderSuggestion={this.renderCurrencySuggestion}
                               inputProps={currencyInputProps}
+                              required
                             />
                           </FormGroup>
                         </Col>
@@ -368,7 +369,7 @@ class CreateOrEditBankAccount extends Component {
                           id ?
                             <Col md="4">
                               <FormGroup >
-                                <Label htmlFor="select">Status</Label>
+                                <Label htmlFor="select" className="required">Status</Label>
                                 <Input
                                   type="select"
                                   name="bankAccountStatus"
@@ -391,7 +392,7 @@ class CreateOrEditBankAccount extends Component {
                         }
                         <Col md="4">
                           <FormGroup >
-                            <Label htmlFor="select">Opening Balance</Label>
+                            <Label htmlFor="select" className="required">Opening Balance</Label>
                             <Input
                               type="text"
                               id="openingBalance"
@@ -406,7 +407,7 @@ class CreateOrEditBankAccount extends Component {
                         {/* </Row>
                       <Row> */}
                         <Col md="4">
-                          <Label htmlFor="select" className="d-block">Is this your primary account?</Label>
+                          <Label htmlFor="select" className="d-block required">Is this your primary account?</Label>
                           <FormGroup check inline>
                             <Input className="form-check-input" type="radio" id="inline-radio1" name="isprimaryAccountFlag" value="true" onChange={this.handleChange} checked={isprimaryAccountFlag} />
                             <Label className="form-check-label" check htmlFor="inline-radio1">Yes</Label>
@@ -417,7 +418,7 @@ class CreateOrEditBankAccount extends Component {
                           </FormGroup>
                         </Col>
                         <Col md="4">
-                          <Label htmlFor="select" className="d-block">Is this your personal account?</Label>
+                          <Label htmlFor="select" className="d-block required">Is this your personal account?</Label>
                           <FormGroup check inline>
                             <Input className="form-check-input" type="radio" id="inline-radio1" name="personalCorporateAccountInd" value="P" onChange={this.handleChange} checked={personalCorporateAccountInd === "P"} />
                             <Label className="form-check-label" check htmlFor="inline-radio1">Yes</Label>
@@ -429,7 +430,7 @@ class CreateOrEditBankAccount extends Component {
                         </Col>
                         <Col md="4">
                           <FormGroup >
-                            <Label htmlFor="select">Account Type</Label>
+                            <Label htmlFor="select" className="required">Account Type</Label>
                             <Input
                               type="select"
                               name="bankAccountType"
@@ -464,7 +465,7 @@ class CreateOrEditBankAccount extends Component {
                         <Row className="row-wrapper">
                           <Col md="4">
                             <FormGroup >
-                              <Label htmlFor="bankName">
+                              <Label htmlFor="bankName" className="required">
                                 Bank Name
                               </Label>
                               <Input
@@ -480,7 +481,7 @@ class CreateOrEditBankAccount extends Component {
                           </Col>
                           <Col md="4">
                             <FormGroup >
-                              <Label htmlFor="accountNumber">
+                              <Label htmlFor="accountNumber" className="required">
                                 Account Number
                               </Label>
                               <Input
@@ -506,7 +507,6 @@ class CreateOrEditBankAccount extends Component {
                                 placeholder="Enter Swift Code"
                                 value={swiftCode}
                                 onChange={this.handleChange}
-                                required
                               />
                             </FormGroup>
                           </Col>
@@ -524,7 +524,6 @@ class CreateOrEditBankAccount extends Component {
                                 placeholder="Enter IBAN Number"
                                 value={ibanNumber}
                                 onChange={this.handleChange}
-                                required
                               />
                             </FormGroup>
                           </Col>
@@ -547,14 +546,6 @@ class CreateOrEditBankAccount extends Component {
                                 renderSuggestion={this.renderCountrySuggestion}
                                 inputProps={countryInputProps}
                               />
-                              {/* <Input
-                                type="text"
-                                id="text-input"
-                                name="text-input"
-                                placeholder="Enter Country"
-                                onChange={this.handleChange}
-                                required
-                              /> */}
                             </FormGroup>
                           </Col>
                         </Row>

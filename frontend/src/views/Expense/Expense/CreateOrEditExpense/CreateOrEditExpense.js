@@ -456,7 +456,7 @@ class CreateOrEditExpense extends Component {
                       <Row className="row-wrapper">
                         <Col md="4">
                           <FormGroup>
-                            <Label htmlFor="text-input">Cliement</Label>
+                            <Label htmlFor="text-input" className="required">Cliement</Label>
                             <Input
                               type="select"
                               name="cliement"
@@ -472,7 +472,7 @@ class CreateOrEditExpense extends Component {
                         </Col>
                         <Col md="4">
                           <FormGroup>
-                            <Label htmlFor="select">Category</Label>
+                            <Label htmlFor="select" className="required">Category</Label>
                             <Autosuggest
                               suggestions={categorySuggestion}
                               onSuggestionsFetchRequested={
@@ -506,7 +506,7 @@ class CreateOrEditExpense extends Component {
                       <Row>
                         <Col md="4">
                           <FormGroup>
-                            <Label htmlFor="select">Currency</Label>
+                            <Label htmlFor="select" className="required">Currency</Label>
                             <Autosuggest
                               suggestions={currencySuggestions}
                               onSuggestionsFetchRequested={
@@ -519,6 +519,7 @@ class CreateOrEditExpense extends Component {
                               onSuggestionSelected={this.onCurrencySuggestionSelected}
                               renderSuggestion={this.renderCurrencySuggestion}
                               inputProps={currencyInputProps}
+                              required
                             />
                           </FormGroup>
                         </Col>
@@ -551,7 +552,6 @@ class CreateOrEditExpense extends Component {
                               maxLength="255"
                               value={expenseDescription}
                               onChange={e => this.handleChange(e, "expenseDescription")}
-                              required
                             />
                             <span>{`${255 - expenseDescription.split('').length} characters remaining.`}</span>
                           </FormGroup>

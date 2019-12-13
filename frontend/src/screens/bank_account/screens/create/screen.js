@@ -50,14 +50,14 @@ class CreateBankAccount extends React.Component {
       createMore: false,
 
       initialVals: {
-        account_name: 'test',
+        account_name: '',
         currency: null,
-        opening_balance: 2323,
+        opening_balance: '',
         account_type: null,
-        bank_name: 'DKL',
-        account_number: '29340234',
-        iban_number: '23424323',
-        swift_code: '2342342',
+        bank_name: '',
+        account_number: '',
+        iban_number: '',
+        swift_code: '',
         country: null,
         account_is_for: null
       },
@@ -129,7 +129,6 @@ class CreateBankAccount extends React.Component {
   }
 
   render() {
-
     const {
       account_type_list,
       currency_list,

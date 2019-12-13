@@ -28,7 +28,9 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
 
 
-import * as ExpenseActions from './actions'
+import * as ExpenseActions from './actions';
+import moment from 'moment'
+
 
 import './style.scss'
 
@@ -54,7 +56,8 @@ class Expense extends React.Component {
     this.initializeData = this.initializeData.bind(this)
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
+    this.goToDetail = this.goToDetail.bind(this);
+    this.renderDate = this.renderDate.bind(this);
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -80,7 +83,7 @@ class Expense extends React.Component {
   }
 
   goToDetail (row) {
-    this.props.history.push('/admin/expense/expense/detail')
+    this.props.history.push('/admin/expense/expense/detail',{expenseId : row['expenseId']})
   }
 
   onRowSelect (row, isSelected, e) {
@@ -90,6 +93,10 @@ class Expense extends React.Component {
     console.log('current page all row checked ++++++++', rows)
   }
 
+  renderDate (cell,rows) {
+    return moment(cell[0].expenseDate).format('DD-MM-YYYY')
+  }
+
   render() {
 
     const { loading } = this.state
@@ -97,7 +104,6 @@ class Expense extends React.Component {
     const containerStyle = {
       zIndex: 1999
     }
-
     return (
       <div className="expense-screen">
         <div className="animated fadeIn">
@@ -187,32 +193,33 @@ class Expense extends React.Component {
                             Supplier Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryCode"
+                            dataField="expenseDescription"
                             dataSort
                           >
                             Description
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="parentTransactionCategory"
+                            dataField="receiptNumber"
                             dataSort
                           >
                             Receipt Number
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="vat"
                             dataSort
                           >
                             VAT
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="totalAmount"
                             dataSort
                           >
                             Amount
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="expenseDate"
                             dataSort
+                            dataFormat = {this.renderDate}
                           >
                             Date
                           </TableHeaderColumn>

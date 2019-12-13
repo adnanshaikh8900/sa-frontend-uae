@@ -44,7 +44,10 @@ export const CONTACT = {
 }
 
 export const EXPENSE = {
-  EXPENSE_LIST: 'EXPENSE_LIST'
+  EXPENSE_LIST: 'EXPENSE_LIST',
+  EXPENSE_DETAIL: 'EXPENSE_DETAIL',
+  CURRENCY_LIST: 'CURRENCY_LIST',
+
 }
 
 export const SETTINGS = {

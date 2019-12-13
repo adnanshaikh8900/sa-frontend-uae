@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import {
@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class Payment extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
@@ -78,27 +78,26 @@ class Payment extends React.Component {
 
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.initializeData()
   }
 
-  initializeData () {
+  initializeData() {
     this.props.paymentActions.getPaymentList()
   }
 
-  goToDetail (row) {
+  goToDetail(row) {
     this.props.history.push('/admin/expense/payment/detail')
   }
 
-  onRowSelect (row, isSelected, e) {
+  onRowSelect(row, isSelected, e) {
     console.log('one row checked ++++++++', row)
   }
-  onSelectAll (isSelected, rows) {
+  onSelectAll(isSelected, rows) {
     console.log('current page all row checked ++++++++', rows)
   }
 
   render() {
-
     const { loading } = this.state
     const { payment_list } = this.props
     const containerStyle = {
@@ -128,7 +127,7 @@ class Payment extends React.Component {
                       <Loader />
                     </Col>
                   </Row>
-                :
+                  :
                   <Row>
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
@@ -181,9 +180,9 @@ class Payment extends React.Component {
                       </div>
                       <div>
                         <BootstrapTable
-                          selectRow={ this.selectRowProp }
+                          selectRow={this.selectRowProp}
                           search={false}
-                          options={ this.options }
+                          options={this.options}
                           data={payment_list}
                           version="4"
                           hover

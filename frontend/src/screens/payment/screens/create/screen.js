@@ -56,10 +56,10 @@ class CreatePayment extends React.Component {
       initialVals: {
         supplier: null,
         invoice: null,
-        paymentDate: null,
+        payment_date: null,
         currency: null,
         project: null,
-        paymentDueDate: null,
+        payment_due_date: null,
         description: null,
         receiptNo: null,
         attachmentDescription: null
@@ -106,6 +106,8 @@ class CreatePayment extends React.Component {
 
 
   handleChange(e, name) {
+    console.log(e)
+    console.log(name)
     this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -119,17 +121,17 @@ class CreatePayment extends React.Component {
     const {
       supplier,
       invoice,
-      paymentDate,
+      payment_date,
       currency,
       project,
-      paymentDueDate,
+      payment_due_date,
       description,
       receiptNo,
       attachmentDescription
     } = data
     let formData = new FormData();   
-    formData.append("paymentDate", paymentDate !== null ? paymentDate : "");
-    formData.append("paymentDueDate", paymentDueDate !== null ? paymentDueDate : "");
+    formData.append("paymentDate", payment_date !== null ? payment_date : "");
+    formData.append("paymentDueDate", payment_due_date !== null ? payment_due_date : "");
     formData.append("description", description);
     formData.append("receiptNo", receiptNo);
     formData.append("attachmentDescription", attachmentDescription);
@@ -328,11 +330,11 @@ class CreatePayment extends React.Component {
                                     <div>
                                       <DatePicker
                                         className="form-control"
-                                        id="paymentDate"
-                                        name="paymentDate"
+                                        id="payment_date"
+                                        name="payment_date"
                                         placeholderText=""
-                                        onChange={option => props.handleChange('paymentDate')(option)}
-                                        value={props.values.paymentDate}
+                                        onChange={option => props.handleChange('payment_date')(option)}
+                                        selected={props.values.payment_date}
                                       />
                                     </div>
                                   </FormGroup>
@@ -377,15 +379,15 @@ class CreatePayment extends React.Component {
                                 </Col>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="payment_due">Payment Due</Label>
+                                    <Label htmlFor="payment_due_date">Payment Due</Label>
                                     <div>
                                       <DatePicker
                                         className="form-control"
-                                        id="paymentDueDate"
-                                        name="paymentDueDate"
+                                        id="payment_due_date"
+                                        name="payment_due_date"
                                         placeholderText=""
-                                        onChange={option => props.handleChange('paymentDueDate')(option)}
-                                        value={props.values.paymentDueDate}
+                                        onChange={option => props.handleChange('payment_due_date')(option)}
+                                        selected={props.values.payment_due_date}
                                       />
                                     </div>
                                   </FormGroup>

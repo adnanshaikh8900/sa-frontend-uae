@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -20,27 +20,29 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
+import * as ExpenseDetailsAction from './actions';
+
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
+    expense_detail: state.expense.expense_detail,
+    currency_list: state.expense.currency_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
+    expenseDetailActions: bindActionCreators(ExpenseDetailsAction, dispatch)
   })
 }
 
 class DetailExpense extends React.Component {
-  
+
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       loading: false,
-      data: [
-        {},
-        {}
-      ]
+      data: []
     }
 
 
@@ -56,7 +58,7 @@ class DetailExpense extends React.Component {
 
   }
 
-  renderActions (cell, row) {
+  renderActions(cell, row) {
     return (
       <Button
         size="sm"
@@ -67,7 +69,7 @@ class DetailExpense extends React.Component {
     )
   }
 
-  renderProductName (cell, row) {
+  renderProductName(cell, row) {
     return (
       <div className="d-flex align-items-center">
         <Input type="select" className="mr-1">
@@ -89,7 +91,7 @@ class DetailExpense extends React.Component {
     )
   }
 
-  renderAmount (cell, row) {
+  renderAmount(cell, row) {
     return (
       <Input
         type="text"
@@ -98,7 +100,7 @@ class DetailExpense extends React.Component {
     )
   }
 
-  renderVat (cell, row) {
+  renderVat(cell, row) {
     return (
       <Input type="select">
         <option value="1">1</option>
@@ -111,14 +113,24 @@ class DetailExpense extends React.Component {
     )
   }
 
-  renderSubTotal (cell, row) {
+  renderSubTotal(cell, row) {
     return (
       <label className="mb-0">0.00</label>
     )
   }
 
+  componentDidMount() {
+    this.initializeData()
+  }
+
+  initializeData() {
+    this.props.expenseDetailActions.getExpenseDetail(this.props.location.state.expenseId);
+    this.props.expenseDetailActions.getCurrencyList();
+  }
+
   render() {
 
+    const { expense_detail , currency_list} = this.props
     const { data } = this.state
 
     return (
@@ -239,11 +251,12 @@ class DetailExpense extends React.Component {
                                 id="description"
                                 rows="5"
                                 placeholder="1024 characters..."
+
                               />
                             </FormGroup>
                           </Col>
                         </Row>
-                        <hr/>
+                        <hr />
                         <Row>
                           <Col lg={8}>
                             <Row>
@@ -279,8 +292,8 @@ class DetailExpense extends React.Component {
                             <Row>
                               <Col lg={12}>
                                 <FormGroup className="mb-3">
-                                  <Label>Reciept Attachment</Label><br/>
-                                  <Button color="primary" className="btn-square mr-3">
+                                  <Label>Reciept Attachment</Label><br />
+                                  <Button type="file" color="primary" className="btn-square mr-3">
                                     <i className="fa fa-upload"></i> Upload
                                   </Button>
                                 </FormGroup>
@@ -288,7 +301,7 @@ class DetailExpense extends React.Component {
                             </Row>
                           </Col>
                         </Row>
-                        <hr/>
+                        <hr />
                         <Row>
                           <Col lg={12} className="mb-3">
                             <Button color="primary" className="btn-square mr-3">
@@ -299,7 +312,7 @@ class DetailExpense extends React.Component {
                         <Row>
                           <Col lg={12}>
                             <BootstrapTable
-                              options={ this.options }
+                              options={this.options}
                               data={data}
                               version="4"
                               hover
@@ -380,7 +393,7 @@ class DetailExpense extends React.Component {
                       </div>
                     </Col>
                   </Row>
-                  <hr/>
+                  <hr />
                   <Row>
                     <Col lg={6}>
                       <div className="p-5">
@@ -406,8 +419,8 @@ class DetailExpense extends React.Component {
                         <Button type="submit" color="primary" className="btn-square mr-3">
                           <i className="fa fa-dot-circle-o"></i> Update
                         </Button>
-                        <Button color="secondary" className="btn-square" 
-                          onClick={() => {this.props.history.push('/admin/expense/expense')}}>
+                        <Button color="secondary" className="btn-square"
+                          onClick={() => { this.props.history.push('/admin/expense/expense') }}>
                           <i className="fa fa-ban"></i> Cancel
                         </Button>
                       </FormGroup>

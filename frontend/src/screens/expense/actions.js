@@ -6,60 +6,19 @@ import {
 
 export const getExpenseList = () => {
   return (dispatch) => {
-    dispatch({
-      type: EXPENSE.EXPENSE_LIST,
-      payload: {
-        data: [{
-          transactionCategoryId: 2,
-          transactionCategoryCode: 2,
-          transactionCategoryName: 'temp',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        }, {
-          transactionCategoryId: 1,
-          transactionCategoryCode: 4,
-          transactionCategoryName: 'temp',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        }, {
-          transactionCategoryId: 1,
-          transactionCategoryCode: 4,
-          transactionCategoryName: 'temp',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        }, {
-          transactionCategoryId: 1,
-          transactionCategoryCode: 4,
-          transactionCategoryName: 'temp',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        }, {
-          transactionCategoryId: 1,
-          transactionCategoryCode: 4,
-          transactionCategoryName: 'temp',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        },{
-          transactionCategoryId: 1,
-          transactionCategoryCode: 4,
-          transactionCategoryName: 'temp',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        },{
-          transactionCategoryId: 1,
-          transactionCategoryCode: 4,
-          transactionCategoryName: 'temp',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        }]
-      }
+    let data = {
+      method: 'GET',
+      url: '/rest/expense/retrieveExpenseList'
+    }
+
+    return authApi(data).then(res => {
+      dispatch({
+        type: EXPENSE.EXPENSE_LIST,
+        payload: res.data
+      })
+      return res
+    }).catch(err => {
+      throw err
     })
   }
 }

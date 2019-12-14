@@ -1,5 +1,6 @@
 package com.simplevat.dao.invoice;
 
+import com.simplevat.contact.model.InvoiceReportRestModel;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public interface InvoiceDao extends Dao<Integer, Invoice> {
 
     public Invoice getClosestDueInvoiceByContactId(Integer contactId);
 
-    public List<Invoice> getInvoicesForReports(Date startDate, Date endDate);
+    public List<InvoiceReportRestModel> getInvoicesForReports(String refNumber, Date invoiceStartDate, Date invoiceEndDate, Date invoiceDueStartDate, Date invoiceDueEndDate, Integer contactId, Integer pageNo, Integer pageSize);
 
     public List<Invoice> getInvoiceList();
 

@@ -1,5 +1,6 @@
 package com.simplevat.service.impl.invoice;
 
+import com.simplevat.contact.model.InvoiceReportRestModel;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import com.simplevat.entity.Event;
 import com.simplevat.entity.invoice.Invoice;
 import com.simplevat.entity.invoice.InvoiceLineItem;
 import com.simplevat.service.invoice.InvoiceService;
-import com.simplevat.service.report.model.BankAccountTransactionReportModel;
 import com.simplevat.util.ChartUtil;
 
 /**
@@ -134,16 +134,6 @@ public class InvoiceServiceImpl extends InvoiceService {
     }
 
     @Override
-    public List<BankAccountTransactionReportModel> getInvoicesForRepots(Date startDate, Date endDate) {
-        List<Object[]> rows = getDao().getInvoices(startDate, endDate);
-        List<BankAccountTransactionReportModel> list = util.convertToTransactionReportModel(rows);
-        for (BankAccountTransactionReportModel model : list) {
-            model.setCredit(true);
-        }
-        return list;
-    }
-
-    @Override
     public List<Invoice> getInvoiceListByDueDate() {
         return getDao().getInvoiceListByDueDate();
     }
@@ -159,8 +149,8 @@ public class InvoiceServiceImpl extends InvoiceService {
     }
 
     @Override
-    public List<Invoice> getInvoicesForReports(Date startDate, Date endDate) {
-        return getDao().getInvoicesForReports(startDate, endDate);
+    public List<InvoiceReportRestModel> getInvoicesForReports(String refNumber, Date invoiceStartDate, Date invoiceEndDate, Date invoiceDueStartDate, Date invoiceDueEndDate, Integer contactId, Integer pageNo, Integer pageSize){
+        return getDao().getInvoicesForReports(refNumber, invoiceStartDate, invoiceEndDate, invoiceDueStartDate, invoiceDueEndDate, contactId, pageNo, pageSize);
     }
 
     @Override

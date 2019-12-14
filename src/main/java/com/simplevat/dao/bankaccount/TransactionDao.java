@@ -1,13 +1,12 @@
 package com.simplevat.dao.bankaccount;
 
+import com.simplevat.contact.model.TransactionReportRestModel;
 import java.util.Date;
 import java.util.List;
 
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.entity.bankaccount.TransactionView;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
 
     public List<Transaction> getAfterTransaction(Transaction transaction);
 
-    public List<Transaction> getTransactionsByDateRangeAndTranscationTypeAndTranscationCategory(TransactionType transactionType, TransactionCategory category, Date startDate, Date lastDate);
+    public List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId, Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo, Integer pageSize);
 
     public List<Transaction> getChildTransactionListByParentId(int parentId);
 

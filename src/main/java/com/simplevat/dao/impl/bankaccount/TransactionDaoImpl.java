@@ -1,6 +1,7 @@
 package com.simplevat.dao.impl.bankaccount;
 
 import com.simplevat.constant.TransactionStatusConstant;
+import com.simplevat.contact.model.TransactionReportRestModel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,9 +15,10 @@ import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.bankaccount.TransactionDao;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.entity.bankaccount.TransactionView;
+import com.simplevat.utils.CommonUtil;
+import com.simplevat.utils.DateUtils;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Map;
@@ -95,35 +97,62 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
     }
 
     @Override
-    public List<Transaction> getTransactionsByDateRangeAndTranscationTypeAndTranscationCategory(TransactionType transactionType, TransactionCategory category, Date startDate, Date lastDate) {
+    public List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId, Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo, Integer pageSize) {
 
         StringBuilder builder = new StringBuilder();
-        if (transactionType != null) {
+        if (transactionTypeId != null) {
             builder.append("and t.transactionType.transactionTypeCode =:transactionTypeCode ");
         }
-        if (category != null) {
+        if (transactionCategoryId != null) {
             builder.append("and t.explainedTransactionCategory.transactionCategoryId =:transactionCategoryId ");
         }
-        if (startDate != null && lastDate != null) {
+        if (startDate != null && endDate != null) {
             builder.append("and t.transactionDate BETWEEN :startDate AND :lastDate ");
         }
         TypedQuery<Transaction> query = getEntityManager().createQuery("SELECT t FROM Transaction t WHERE t.deleteFlag = false " + builder.toString() + "ORDER BY t.transactionDate ASC", Transaction.class);
-        if (transactionType != null) {
-            query.setParameter("transactionTypeCode", transactionType.getTransactionTypeCode());
+        if (transactionTypeId != null) {
+            query.setParameter("transactionTypeCode", transactionTypeId);
         }
-        if (category != null) {
-            query.setParameter("transactionCategoryId", category.getTransactionCategoryId());
+        if (transactionCategoryId != null) {
+            query.setParameter("transactionCategoryId", transactionCategoryId);
         }
-        if (startDate != null && lastDate != null) {
-            query.setParameter("startDate", Instant.ofEpochMilli(startDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
-            query.setParameter("lastDate", Instant.ofEpochMilli(lastDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+        if (startDate != null && endDate != null) {
+            query.setParameter("startDate", Instant.ofEpochMilli(DateUtils.getStartDate(startDate).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+            query.setParameter("lastDate", Instant.ofEpochMilli(DateUtils.getEndDate(endDate).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
         }
-
+        int maxRows = CommonUtil.DEFAULT_ROW_COUNT;
+        if (pageSize != null) {
+            maxRows = pageSize;
+        }
+        int start = 0;
+        if (pageNo != null) {
+            pageNo = pageNo * maxRows;
+            start = pageNo;
+        }
+        query.setFirstResult(start);
+        query.setMaxResults(maxRows);
+        List<TransactionReportRestModel> transactionReportRestModelList = new ArrayList();
         List<Transaction> transactionList = query.getResultList();
         if (transactionList != null && !transactionList.isEmpty()) {
-            return transactionList;
+            for (Transaction transaction : transactionList) {
+                TransactionReportRestModel transactionReportRestModel = new TransactionReportRestModel();
+                if (transaction.getBankAccount() != null) {
+                    transactionReportRestModel.setBankAccount(transaction.getBankAccount().getBankName());
+                }
+                transactionReportRestModel.setTransactionAmount(transaction.getTransactionAmount());
+                if (transaction.getExplainedTransactionCategory() != null) {
+                    transactionReportRestModel.setTransactionCategory(transaction.getExplainedTransactionCategory().getTransactionCategoryName());
+                }
+                transactionReportRestModel.setTransactionDate(transaction.getTransactionDate());
+                transactionReportRestModel.setTransactionDescription(transaction.getTransactionDescription());
+                transactionReportRestModel.setTransactionId(transaction.getTransactionId());
+                if (transaction.getTransactionType() != null) {
+                    transactionReportRestModel.setTransactionType(transaction.getTransactionType().getTransactionTypeName());
+                }
+                transactionReportRestModelList.add(transactionReportRestModel);
+            }
         }
-        return null;
+        return transactionReportRestModelList;
     }
 
     @Override

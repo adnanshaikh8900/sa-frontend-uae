@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -44,6 +45,7 @@ public class PurchaseLineItem implements Serializable {
     @Basic(optional = false)
     @Version
     private Integer versionNumber;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "PURCHASE_ID")
     private Purchase purchase;

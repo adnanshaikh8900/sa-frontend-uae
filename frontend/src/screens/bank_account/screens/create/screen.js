@@ -52,7 +52,7 @@ class CreateBankAccount extends React.Component {
       initialVals: {
         account_name: '',
         currency: null,
-        opening_balance: 0,
+        opening_balance: '',
         account_type: null,
         bank_name: '',
         account_number: '',
@@ -129,7 +129,6 @@ class CreateBankAccount extends React.Component {
   }
 
   render() {
-
     const {
       account_type_list,
       currency_list,

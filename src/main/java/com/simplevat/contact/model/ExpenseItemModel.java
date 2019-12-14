@@ -20,11 +20,12 @@ public class ExpenseItemModel {
     private int id;
     private int quatity;
     private BigDecimal unitPrice;
-    private VatCategory vatId;
+    private Integer vatCategoryId;
     private String description;
     private BigDecimal subTotal;
     private Integer versionNumber;
-    private Product expenseLineItemProductService;
+    private Integer productId;
     private Boolean isProductSelected = Boolean.TRUE;
     private String productName;
+    
 }

@@ -6,11 +6,10 @@
 package com.simplevat.rest.expenses;
 
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.entity.Country;
+import com.simplevat.constant.TransactionTypeConstant;
 import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import static com.simplevat.helper.ExpenseRestHelper.TRANSACTION_TYPE_EXPENSE;
 import com.simplevat.service.CompanyService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
@@ -19,6 +18,7 @@ import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryServiceNew;
 import com.simplevat.service.UserServiceNew;
 import com.simplevat.service.bankaccount.TransactionTypeService;
+import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +64,7 @@ public class ExpenseRestController {
 
     ExpenseRestHelper controllerHelper = new ExpenseRestHelper();
 
+    @ApiOperation(value = "Get Expanse List")
     @RequestMapping(method = RequestMethod.GET, value = "/retrieveExpenseList")
     public ResponseEntity expenseList() {
         try {
@@ -83,6 +84,7 @@ public class ExpenseRestController {
         }
     }
 
+    @ApiOperation(value = "Add New Expense")
     @RequestMapping(method = RequestMethod.POST, value = "/save")
     public ResponseEntity saveExpense(@RequestBody ExpenseRestModel expenseRestModel) {
         try {
@@ -94,11 +96,12 @@ public class ExpenseRestController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/vieworedit")
+    @ApiOperation(value = "Get Expense Detail by Expanse Id")
+    @RequestMapping(method = RequestMethod.GET, value = "/getExpenseById")
     public ResponseEntity viewExpense(@RequestParam("expenseId") Integer expenseId) {
         try {
             System.out.println("expenseId=" + expenseId);
-            return new ResponseEntity(controllerHelper.viewOrEditExpense(expenseId, expenseService), HttpStatus.OK);
+            return new ResponseEntity(controllerHelper.getExpenseById(expenseId, expenseService), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -143,38 +146,11 @@ public class ExpenseRestController {
     public ResponseEntity getCategorys(@RequestParam("categoryName") String queryString) {
         try {
             System.out.println("queryString=" + queryString);
-            List<TransactionCategory> transactionCategoryList = transactionCategoryService.findAllTransactionCategoryByTransactionType(TRANSACTION_TYPE_EXPENSE, queryString);
+            List<TransactionCategory> transactionCategoryList = transactionCategoryService.findAllTransactionCategoryByTransactionType(TransactionTypeConstant.TRANSACTION_TYPE_EXPENSE, queryString);
             return new ResponseEntity(controllerHelper.completeCategory(transactionCategoryList), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    @Deprecated
-    @RequestMapping(method = RequestMethod.GET, value = "/currencys")
-    public ResponseEntity getCurrencys() {
-        try {
-            List<Country> countries = countryService.getCountries();
-            if (countries != null && !countries.isEmpty()) {
-                return new ResponseEntity<>(countries, HttpStatus.OK);
-            } else {
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/projects")
-    public ResponseEntity getProjects(@RequestParam("projectName") String queryString) {
-        try {
-            return new ResponseEntity(controllerHelper.projects(queryString, projectService), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
 }

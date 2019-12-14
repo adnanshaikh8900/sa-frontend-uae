@@ -13,8 +13,10 @@ import com.simplevat.entity.Currency;
 import com.simplevat.entity.CurrencyConversion;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.ExpenseLineItem;
+import com.simplevat.entity.Product;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.User;
+import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.expenses.ExpenseRestModel;
 import com.simplevat.service.CompanyService;
@@ -23,6 +25,7 @@ import com.simplevat.service.ExpenseService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryServiceNew;
 import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -41,6 +44,7 @@ import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -50,7 +54,8 @@ public class ExpenseRestHelper implements Serializable {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ExpenseRestHelper.class);
 
-    public static final int TRANSACTION_TYPE_EXPENSE = 8;
+    @Autowired
+    private VatCategoryService vatCategoryService;
 
     public List<User> users(UserServiceNew userServiceNew) throws Exception {
         return userServiceNew.executeNamedQuery("findAllUsers");
@@ -143,7 +148,7 @@ public class ExpenseRestHelper implements Serializable {
         }
     }
 
-    public ExpenseRestModel viewOrEditExpense(Integer expenseId, ExpenseService expenseService) throws Exception {
+    public ExpenseRestModel getExpenseById(Integer expenseId, ExpenseService expenseService) throws Exception {
         Expense expense = expenseService.findByPK(expenseId);
         ExpenseRestModel expenseModel = getExpenseModel(expense);
         return expenseModel;
@@ -217,9 +222,13 @@ public class ExpenseRestHelper implements Serializable {
         item.setExpenseLineItemDescription(expenseItemModel.getDescription());
         item.setExpenseLineItemQuantity(expenseItemModel.getQuatity());
         item.setExpenseLineItemUnitPrice(expenseItemModel.getUnitPrice());
-        item.setExpenseLineItemVat(expenseItemModel.getVatId());
+        VatCategory vatCategory = new VatCategory();
+        vatCategory.setId(expenseItemModel.getVatCategoryId());
+        item.setExpenseLineItemVat(vatCategory);
         item.setVersionNumber(expenseItemModel.getVersionNumber());
-        item.setExpenseLineItemProductService(expenseItemModel.getExpenseLineItemProductService());
+        Product product = new Product();
+        product.setProductID(expenseItemModel.getProductId());
+        item.setExpenseLineItemProductService(product);
         item.setProductName(expenseItemModel.getProductName());
         item.setExpense(expense);
         return item;
@@ -275,10 +284,10 @@ public class ExpenseRestHelper implements Serializable {
         model.setDescription(expenseLineItem.getExpenseLineItemDescription());
         model.setQuatity(expenseLineItem.getExpenseLineItemQuantity());
         model.setUnitPrice(expenseLineItem.getExpenseLineItemUnitPrice());
-        model.setVatId(expenseLineItem.getExpenseLineItemVat());
+        model.setVatCategoryId(expenseLineItem.getExpenseLineItemVat().getId());
         model.setVersionNumber(expenseLineItem.getVersionNumber());
         model.setProductName(expenseLineItem.getProductName());
-        model.setExpenseLineItemProductService(expenseLineItem.getExpenseLineItemProductService());
+        model.setProductId(expenseLineItem.getExpenseLineItemProductService().getProductID());
         updateSubTotal(model);
         return model;
     }
@@ -287,8 +296,8 @@ public class ExpenseRestHelper implements Serializable {
         final int quantity = expenseItemModel.getQuatity();
         final BigDecimal unitPrice = expenseItemModel.getUnitPrice();
         BigDecimal vatPer = new BigDecimal(BigInteger.ZERO);
-        if (expenseItemModel.getVatId() != null) {
-            vatPer = expenseItemModel.getVatId().getVat();
+        if (expenseItemModel.getVatCategoryId() != null) {
+            vatPer = vatCategoryService.findByPK(expenseItemModel.getVatCategoryId()).getVat();
         }
         if (null != unitPrice) {
             final BigDecimal amountWithoutTax = unitPrice.multiply(new BigDecimal(quantity));

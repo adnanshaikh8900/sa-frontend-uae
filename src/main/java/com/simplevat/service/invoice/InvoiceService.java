@@ -1,5 +1,6 @@
 package com.simplevat.service.invoice;
 
+import com.simplevat.contact.model.InvoiceReportRestModel;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,6 @@ public abstract class InvoiceService extends SimpleVatService<Integer, Invoice> 
 
     public abstract Map<Object, Number> getInvoicePerMonth(Date startDate, Date endDate);
 
-    public abstract List<BankAccountTransactionReportModel> getInvoicesForRepots(Date startDate, Date endDate);
-
     public abstract int getMaxValue(Map<Object, Number> data);
 
     public abstract Map<Object, Number> getVatInPerMonth();
@@ -41,7 +40,7 @@ public abstract class InvoiceService extends SimpleVatService<Integer, Invoice> 
 
     public abstract Invoice getClosestDueInvoiceByContactId(Integer contactId);
 
-    public abstract List<Invoice> getInvoicesForReports(Date startDate, Date endDate);
+    public abstract List<InvoiceReportRestModel> getInvoicesForReports(String refNumber, Date invoiceStartDate, Date invoiceEndDate, Date invoiceDueStartDate, Date invoiceDueEndDate, Integer contactId, Integer pageNo, Integer pageSize);
 
     public abstract List<Invoice> getInvoiceList();
 

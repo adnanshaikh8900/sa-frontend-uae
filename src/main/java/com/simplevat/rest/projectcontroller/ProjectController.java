@@ -58,7 +58,7 @@ public class ProjectController {
     @Autowired
     private CountryService countryService;
 
-    @GetMapping(value = "/getprojectbycriteria")
+    @GetMapping(value = "/getprojects")
     public ResponseEntity getProjects() throws Exception {
         ProjectCriteria projectCriteria = new ProjectCriteria();
         projectCriteria.setActive(Boolean.TRUE);

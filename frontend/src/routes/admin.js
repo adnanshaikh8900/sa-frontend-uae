@@ -58,6 +58,8 @@ import {
   CreateContact,
   DetailContact,
   Employee,
+  CreateEmployee,
+  DetailEmployee,
   Product,
   CreateProduct,
   DetailProduct,
@@ -68,6 +70,8 @@ import {
   CreateVatCode,
   DetailVatCode,
   Currency,
+  CreateCurrency,
+  DetailCurrency,
 
 
 
@@ -357,6 +361,16 @@ const adminRoutes = [
     component: Contact.screen
   },
   {
+    path: '/admin/master/employee/create',
+    name: 'Create',
+    component: CreateEmployee.screen
+  },
+  {
+    path: '/admin/master/employee/detail',
+    name: 'Detail',
+    component: DetailEmployee.screen
+  },
+  {
     path: '/admin/master/employee',
     name: 'Employee',
     component: Employee.screen
@@ -405,6 +419,16 @@ const adminRoutes = [
     path: '/admin/master/vat-code',
     name: 'Vat Code',
     component: VatCode.screen
+  },
+  {
+    path: '/admin/master/currency/create',
+    name: 'Create',
+    component: CreateCurrency.screen
+  },
+  {
+    path: '/admin/master/currency/detail',
+    name: 'Detail',
+    component: DetailCurrency.screen
   },
   {
     path: '/admin/master/currency',

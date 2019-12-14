@@ -74,6 +74,8 @@ import Contact from './contact'
 import CreateContact from './contact/screens/create'
 import DetailContact from './contact/screens/detail'
 import Employee from './employee'
+import CreateEmployee from './employee/screens/create'
+import DetailEmployee from './employee/screens/detail'
 import Product from './product'
 import CreateProduct from './product/screens/create'
 import DetailProduct from './product/screens/detail'
@@ -84,6 +86,8 @@ import VatCode from './vat_code'
 import CreateVatCode from './vat_code/screens/create'
 import DetailVatCode from './vat_code/screens/detail'
 import Currency from './currency'
+import CreateCurrency from './currency/screens/create'
+import DetailCurrency from './currency/screens/detail'
 
 
 
@@ -175,6 +179,8 @@ export {
   CreateContact,
   DetailContact,
   Employee,
+  CreateEmployee,
+  DetailEmployee,
   Product,
   CreateProduct,
   DetailProduct,
@@ -185,6 +191,8 @@ export {
   CreateVatCode,
   DetailVatCode,
   Currency,
+  CreateCurrency,
+  DetailCurrency,
 
 
 

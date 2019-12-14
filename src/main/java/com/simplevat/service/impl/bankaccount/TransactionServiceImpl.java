@@ -1,5 +1,6 @@
 package com.simplevat.service.impl.bankaccount;
 
+import com.simplevat.contact.model.TransactionReportRestModel;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,6 @@ import com.simplevat.dao.invoice.InvoiceDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.entity.bankaccount.TransactionView;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.util.ChartUtil;
@@ -204,8 +203,8 @@ public class TransactionServiceImpl extends TransactionService {
     }
 
     @Override
-    public List<Transaction> getTransactionsByDateRangeAndTranscationTypeAndTranscationCategory(TransactionType transactionType, TransactionCategory category, Date startDate, Date lastDate) {
-        return transactionDao.getTransactionsByDateRangeAndTranscationTypeAndTranscationCategory(transactionType, category, startDate, lastDate);
+    public List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId, Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo, Integer pageSize){
+        return transactionDao.getTransactionsReport(transactionTypeId, transactionCategoryId, startDate, endDate, bankAccountId, pageNo, pageSize);
     }
 
     @Override

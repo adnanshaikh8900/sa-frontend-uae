@@ -1,7 +1,11 @@
 package com.simplevat.dao.invoice;
 
+import com.simplevat.constant.InvoiceStatusConstant;
+import com.simplevat.contact.model.InvoiceReportRestModel;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.entity.invoice.Invoice;
+import com.simplevat.utils.CommonUtil;
+import com.simplevat.utils.DateUtils;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -147,15 +151,66 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
     }
 
     @Override
-    public List<Invoice> getInvoicesForReports(Date startDate, Date endDate) {
-        TypedQuery<Invoice> query = getEntityManager().createQuery("SELECT i FROM Invoice i WHERE i.deleteFlag = false AND i.invoiceDate BETWEEN :startDate AND :endDate ORDER BY i.invoiceReferenceNumber ASC", Invoice.class);
-        query.setParameter("startDate", Instant.ofEpochMilli(startDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
-        query.setParameter("endDate", Instant.ofEpochMilli(endDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
-        List<Invoice> invoiceList = query.getResultList();
-        if (invoiceList != null && !invoiceList.isEmpty()) {
-            return invoiceList;
+    public List<InvoiceReportRestModel> getInvoicesForReports(String refNumber, Date invoiceStartDate, Date invoiceEndDate, Date invoiceDueStartDate, Date invoiceDueEndDate, Integer contactId, Integer pageNo, Integer pageSize) {
+        StringBuilder queryBuilder = new StringBuilder();
+        if (refNumber != null) {
+            queryBuilder.append(" AND i.invoiceReferenceNumber = :invoiceReferenceNumber");
         }
-        return null;
+        if (invoiceStartDate != null) {
+            queryBuilder.append(" AND i.invoiceDate BETWEEN :invoiceStartDate and :invoiceEndDate");
+        }
+        if (invoiceDueStartDate != null) {
+            queryBuilder.append(" AND i.invoiceDueDate BETWEEN :invoiceDueStartDate AND :invoiceDueEndDate");
+        }
+        if (contactId != null) {
+            queryBuilder.append(" AND i.invoiceContact.id = :contactId");
+        }
+        TypedQuery<Invoice> query = getEntityManager().createQuery("SELECT i FROM Invoice i WHERE i.deleteFlag = false " + queryBuilder.toString() + " ORDER BY i.invoiceReferenceNumber ASC", Invoice.class);
+
+        if (refNumber != null) {
+            query.setParameter("invoiceReferenceNumber", refNumber);
+        }
+        if (invoiceStartDate != null) {
+            query.setParameter("invoiceStartDate", Instant.ofEpochMilli(DateUtils.getStartDate(invoiceStartDate).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+            query.setParameter("invoiceEndDate", Instant.ofEpochMilli(DateUtils.getEndDate(invoiceEndDate).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+        }
+        if (invoiceDueStartDate != null) {
+            query.setParameter("invoiceDueStartDate", Instant.ofEpochMilli(DateUtils.getStartDate(invoiceStartDate).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+            query.setParameter("invoiceDueEndDate", Instant.ofEpochMilli(DateUtils.getEndDate(invoiceDueEndDate).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+        }
+        if (contactId != null) {
+            query.setParameter("contactId", contactId);
+        }
+
+        int maxRows = CommonUtil.DEFAULT_ROW_COUNT;
+        if (pageSize != null) {
+            maxRows = pageSize;
+        }
+        int start = 0;
+        if (pageNo != null) {
+            pageNo = pageNo * maxRows;
+            start = pageNo;
+        }
+        query.setFirstResult(start);
+        query.setMaxResults(maxRows);
+
+        List<Invoice> invoiceList = query.getResultList();
+        List<InvoiceReportRestModel> invoiceReportRestModelList = new ArrayList();
+        if (invoiceList != null && !invoiceList.isEmpty()) {
+            for (Invoice invoice : invoiceList) {
+                InvoiceReportRestModel invoiceReportRestModel = new InvoiceReportRestModel();
+                invoiceReportRestModel.setInvoiceId(invoice.getInvoiceId());
+                invoiceReportRestModel.setInvoiceDate(invoice.getInvoiceDate());
+                invoiceReportRestModel.setInvoiceDueDate(invoice.getInvoiceDueDate());
+                invoiceReportRestModel.setRefNumber(invoice.getInvoiceReferenceNumber());
+                invoiceReportRestModel.setContactName(invoice.getInvoiceContact().getFirstName() + " " + invoice.getInvoiceContact().getLastName());
+                invoiceReportRestModel.setStatus(InvoiceStatusConstant.getStatusName(invoice.getStatus()));
+                invoiceReportRestModel.setNoOfItem(invoice.getInvoiceLineItems().size());
+                invoiceReportRestModel.setTotalCost(invoice.getInvoiceAmount());
+                invoiceReportRestModelList.add(invoiceReportRestModel);
+            }
+        }
+        return invoiceReportRestModelList;
     }
 
     @Override

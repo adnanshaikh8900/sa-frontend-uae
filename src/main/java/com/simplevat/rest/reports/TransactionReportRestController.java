@@ -5,23 +5,24 @@
  */
 package com.simplevat.rest.reports;
 
-import com.simplevat.helper.TransactionRestControllerHelper;
 import com.simplevat.contact.model.TransactionRestModel;
 import com.simplevat.contact.model.FinancialPeriodRestModel;
-import com.simplevat.entity.bankaccount.Transaction;
+import com.simplevat.contact.model.InvoiceReportRestModel;
+import com.simplevat.contact.model.TransactionReportRestModel;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.service.TransactionCategoryServiceNew;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
-import java.text.SimpleDateFormat;
+import com.simplevat.service.invoice.InvoiceService;
+import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,9 +46,10 @@ public class TransactionReportRestController {
     private TransactionService transactionService;
 
     @Autowired
-    TransactionRestControllerHelper transactionRestControllerHelper;
+    InvoiceService invoiceService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getfinancialperiods")
+    @ApiOperation(value = "Get All Financial Periods")
+    @RequestMapping(method = RequestMethod.GET, value = "/getFinancialPeriods")
     public ResponseEntity<List<FinancialPeriodRestModel>> completeFinancialPeriods() {
         try {
             return new ResponseEntity(FinancialPeriodHolderRest.getFinancialPeriodList(), HttpStatus.OK);
@@ -57,7 +59,8 @@ public class TransactionReportRestController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/gettransactiontypes")
+    @ApiOperation(value = "Get All Transaction Type")
+    @RequestMapping(method = RequestMethod.GET, value = "/getTransactionTypes")
     public ResponseEntity<List<TransactionType>> transactionTypes() throws Exception {
         try {
             List<TransactionType> transactionTypeList = transactionTypeService.findAllChild();
@@ -68,11 +71,11 @@ public class TransactionReportRestController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/gettransactioncategories")
+    @ApiOperation(value = "Get All Transaction Category")
+    @RequestMapping(method = RequestMethod.GET, value = "/getTransactionCategories")
     public ResponseEntity<List<TransactionCategory>> transactionCategories(@RequestParam("transactionTypeCode") Integer transactionTypeCode) throws Exception {
         try {
             TransactionType transactionType = transactionTypeService.findByPK(transactionTypeCode);
-            System.out.println("transactionType==" + transactionType);
             String name = "";
             List<TransactionCategory> transactionCategoryParentList = new ArrayList<>();
             List<TransactionCategory> transactionCategoryList = new ArrayList<>();
@@ -94,22 +97,43 @@ public class TransactionReportRestController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/view")
-    public ResponseEntity<List<TransactionRestModel>> view(@RequestBody Integer transactionTypeCode, @RequestBody Integer transactionCategoryId, @RequestBody String startDate, @RequestBody String endDate) {
+    @ApiOperation(value = "Get Account Balance Report")
+    @RequestMapping(method = RequestMethod.POST, value = "/accountBalanceReport")
+    public ResponseEntity<List<TransactionRestModel>> view(@RequestParam(value = "transactionTypeCode", required = false) Integer transactionTypeCode,
+            @RequestParam(value = "transactionCategoryId", required = false) Integer transactionCategoryId,
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM.dd.yyyy") Date startDate,
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "MM.dd.yyyy") Date endDate,
+            @RequestParam(value = "accountId", required = false) Integer accountId,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-            TransactionType transactionType = transactionTypeService.findByPK(transactionTypeCode);
-            TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryId);
-            double totalTransactionAmount = 0.00;
-            List<TransactionRestModel> transactionList = new ArrayList<>();
-            List<Transaction> transactions = transactionService.getTransactionsByDateRangeAndTranscationTypeAndTranscationCategory(transactionType, transactionCategory, dateFormat.parse(startDate), dateFormat.parse(endDate));
-            if (transactions != null && !transactions.isEmpty()) {
-                for (Transaction transaction : transactions) {
-                    totalTransactionAmount = totalTransactionAmount + transaction.getTransactionAmount().doubleValue();
-                    transactionList.add(transactionRestControllerHelper.getTransactionModel(transaction));
-                }
+            List<TransactionReportRestModel> transactionRestModels = transactionService.getTransactionsReport(transactionTypeCode, transactionCategoryId, startDate, endDate, accountId, pageNo, pageSize);
+            return new ResponseEntity(transactionRestModels, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @ApiOperation(value = "Get Customet Invoice Report")
+    @RequestMapping(method = RequestMethod.POST, value = "/customerInvoiceReport")
+    public ResponseEntity<List<InvoiceReportRestModel>> view(@RequestParam(value = "refNumber", required = false) String refNumber,
+            @RequestParam(value = "contactId", required = false) Integer contactId,
+            @RequestParam(value = "invoiceStartDate", required = false) @DateTimeFormat(pattern = "MM.dd.yyyy") Date invoiceStartDate,
+            @RequestParam(value = "invoiceEndDate", required = false) @DateTimeFormat(pattern = "MM.dd.yyyy") Date invoiceEndDate,
+            @RequestParam(value = "invoiceDueStartDate", required = false) @DateTimeFormat(pattern = "MM.dd.yyyy") Date invoiceDueStartDate,
+            @RequestParam(value = "invoiceDueEndDate", required = false) @DateTimeFormat(pattern = "MM.dd.yyyy") Date invoiceDueEndDate,
+            @RequestParam(value = "pageNo", required = false) Integer pageNo,
+            @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        try {
+            if (invoiceStartDate != null && invoiceEndDate == null) {
+                invoiceEndDate = invoiceStartDate;
             }
-            return new ResponseEntity(transactionList, HttpStatus.OK);
+            if (invoiceDueStartDate != null && invoiceDueEndDate == null) {
+                invoiceDueEndDate = invoiceDueStartDate;
+            }
+            List<InvoiceReportRestModel> invoiceReportRestModels = invoiceService.getInvoicesForReports(refNumber, invoiceStartDate, invoiceEndDate, invoiceDueStartDate, invoiceDueEndDate, contactId, pageNo, pageSize);
+            return new ResponseEntity(invoiceReportRestModels, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

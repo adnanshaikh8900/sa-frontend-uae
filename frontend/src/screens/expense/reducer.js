@@ -1,7 +1,9 @@
 import { EXPENSE } from 'constants/types'
 
 const initState = {
-  expense_list: []
+  expense_list: [],
+  expense_detail: {},
+  currency_list: []
 }
 
 const ExpenseReducer = (state = initState, action) => {
@@ -12,8 +14,20 @@ const ExpenseReducer = (state = initState, action) => {
     case EXPENSE.EXPENSE_LIST:
       return {
         ...state,
-        expense_list: Object.assign([], payload.data)
+        expense_list: Object.assign([], payload)
       }
+
+      case EXPENSE.EXPENSE_DETAIL:
+        return {
+          ...state,
+          expense_detail: Object.assign({}, payload)
+        }
+
+        case EXPENSE.CURRENCY_LIST:
+          return {
+            ...state,
+            currency_list : Object.assign([], payload.data)
+          }
 
     default:
       return state

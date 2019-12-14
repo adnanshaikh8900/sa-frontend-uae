@@ -1,13 +1,12 @@
 package com.simplevat.service.bankaccount;
 
+import com.simplevat.contact.model.TransactionReportRestModel;
 import java.util.List;
 import java.util.Map;
 
 import com.simplevat.criteria.bankaccount.TransactionCriteria;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.entity.bankaccount.TransactionView;
 import com.simplevat.service.SimpleVatService;
 import java.util.Date;
@@ -33,7 +32,7 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
 
     public abstract Transaction deleteChildTransaction(Transaction transaction);
 
-    public abstract List<Transaction> getTransactionsByDateRangeAndTranscationTypeAndTranscationCategory(TransactionType transactionType, TransactionCategory category, Date startDate, Date lastDate);
+    public abstract List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId, Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo, Integer pageSize);
 
     public abstract List<Transaction> getChildTransactionListByParentId(int parentId);
 

@@ -5,12 +5,10 @@
  */
 package com.simplevat.rest.transactioncontroller;
 
-import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -18,13 +16,19 @@ import lombok.Data;
  * @author sonu
  */
 @Data
-public class TransactionModel implements Serializable {
+public class TransactionPresistModel implements Serializable {
 
     private LocalDateTime transactionDate;
     private String transactionDescription;
     private BigDecimal transactionAmount;
-    private TransactionType transactionType;
-    private TransactionCategory explainedTransactionCategory;
-    private BankAccount bankAccount;
+    @NotNull
+    private Integer transactionTypeCode;
+    private Integer transactionCategoryId;
+    @NotNull
+    private Integer bankAccountId;
+    private Integer projectId;
+    private String receiptNumber;
+    private String attachementDescription;
+    private byte[] attachment;
 
 }

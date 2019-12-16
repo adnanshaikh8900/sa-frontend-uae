@@ -20,19 +20,29 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
+import { Formik } from 'formik'
+import * as Yup from 'yup'
+
 import * as ExpenseDetailsAction from './actions';
+import * as ExpenseActions from '../../actions';
 
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
     expense_detail: state.expense.expense_detail,
-    currency_list: state.expense.currency_list
+    currency_list: state.expense.currency_list,
+    project_list: state.expense.project_list,
+    bank_account_list: state.expense.bank_account_list,
+    customer_list: state.expense.customer_list,
+    payment_list: state.expense.payment_list,
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    expenseDetailActions: bindActionCreators(ExpenseDetailsAction, dispatch)
+    expenseDetailActions: bindActionCreators(ExpenseDetailsAction, dispatch),
+    expenseActions: bindActionCreators(ExpenseActions, dispatch)
+
   })
 }
 
@@ -42,7 +52,9 @@ class DetailExpense extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      data: []
+      data: [],
+
+      initialVals: null,
     }
 
 
@@ -124,13 +136,18 @@ class DetailExpense extends React.Component {
   }
 
   initializeData() {
-    this.props.expenseDetailActions.getExpenseDetail(this.props.location.state.expenseId);
-    this.props.expenseDetailActions.getCurrencyList();
+    const { expenseId } = this.props.location.state;
+    this.props.expenseDetailActions.getExpenseDetail(expenseId);
+    this.props.expenseActions.getCurrencyList();
+    this.props.expenseActions.getProjectList();
+    this.props.expenseActions.getBankAccountList();
+    this.props.expenseActions.getCustomerList();
+    this.props.expenseActions.getPaymentList();
   }
 
   render() {
 
-    const { expense_detail , currency_list} = this.props
+    const { expense_detail, currency_list,project_list,payment_list,bank_account_list,customer_list } = this.props
     const { data } = this.state
 
     return (
@@ -151,210 +168,275 @@ class DetailExpense extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <Row>
-                    <Col lg={12}>
-                      <Form>
-                        <Row>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="payee">Payee</Label>
-                              <Input
-                                type="text"
-                                id="payee"
-                                name="payee"
-                                placeholder="Enter Payee"
-                                required
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="expense_date">Expense Date</Label>
-                              <div>
-                                <DatePicker
-                                  className="form-control"
-                                  id="date"
-                                  name="date"
-                                  placeholderText=""
-                                />
-                              </div>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="currency">Currency</Label>
-                              <Select
-                                className="select-default-width"
-                                options={[]}
-                                id="currency"
-                                name="currency"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="project">Project</Label>
-                              <Select
-                                className="select-default-width"
-                                options={[]}
-                                id="project"
-                                name="project"
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="bank">Bank</Label>
-                              <Select
-                                className="select-default-width"
-                                options={[]}
-                                id="bank"
-                                name="bank"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="payment_date">Payment Date</Label>
-                              <div>
-                                <DatePicker
-                                  className="form-control"
-                                  id="payment_date"
-                                  name="payment_date"
-                                  placeholderText=""
-                                />
-                              </div>
-                            </FormGroup>
-                          </Col>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="payment_reference_number">Payment Reference Number</Label>
-                              <Select
-                                className="select-default-width"
-                                options={[]}
-                                id="payment_reference_number"
-                                name="payment_reference_number"
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={8}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="description">Description</Label>
-                              <Input
-                                type="textarea"
-                                name="description"
-                                id="description"
-                                rows="5"
-                                placeholder="1024 characters..."
+                  <Col lg={12}>
+                      <Formik
+                        initialValues={this.state.ExpenseValue}
+                        onSubmit={(values, { resetForm }) => {
 
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                          <Col lg={8}>
+                          this.expenseHandleSubmit(values)
+                          resetForm(this.state.initProductValue)
+
+                          this.setState({
+                            selectedCurrency: null,
+                            selectedProject: null,
+                            selectedBankAccount: null,
+                            selectedCustomer: null
+
+                          })
+                        }}
+                      >
+                        {props => (
+                          <Form onSubmit={props.handleSubmit}>
                             <Row>
-                              <Col lg={6}>
+                              <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                  <Label htmlFor="expenseContactId">Customer</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    options={customer_list}
+                                    id="expenseContactId"
+                                    name="expenseContactId"
+                                    value={this.state.selectedCustomer}
+                                    onChange={(option) => {
+                                      this.setState({
+                                        selectedCustomer: option.value
+                                      })
+                                      props.handleChange("expenseContactId")(option.value);
+                                    }}
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="reciept_number">Reciept Number</Label>
-                                  <Input
-                                    type="text"
-                                    id="reciept_number"
-                                    name="reciept_number"
-                                    placeholder="Enter Reciept Number"
-                                    required
+                                  <Label htmlFor="expense_date">Expense Date</Label>
+                                  <div>
+                                    <DatePicker
+                                      className="form-control"
+                                      id="date"
+                                      name="expenseDate"
+                                      placeholderText=""
+                                      // selected={expenseDate}
+                                      onChange={(val)=> {
+                                        this.setState({
+                                          initExpenseValue: {
+                                            expenseDate: val
+                                          }
+                                        })
+                                        props.handleChange("expenseDate")(val)}
+                                      }
+                                    />
+                                  </div>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col lg={4}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="currency">Currency</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    options={currency_list}
+                                    id="currencyCode"
+                                    name="currencyCode"
+                                    value={this.state.selectedCurrency}
+                                    onChange={(option) => {
+                                      this.setState({
+                                        selectedCurrency: option.value
+                                      })
+                                      props.handleChange("currencyCode")(option.value);
+                                    }}
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col lg={4}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="project">Project</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    options={project_list}
+                                    id="project"
+                                    name="project"
+                                    value={this.state.selectedProject}
+                                    onChange={(option) => {
+                                      this.setState({
+                                        selectedProject: option.value
+                                      })
+                                      props.handleChange("project")(option.value);
+                                    }}
                                   />
                                 </FormGroup>
                               </Col>
                             </Row>
                             <Row>
-                              <Col lg={12}>
+                              <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="attachment_description">Attachment Description</Label>
+                                  <Label htmlFor="bank">Bank</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    options={bank_account_list}
+                                    id="bankAccountId"
+                                    name="bankAccountId"
+                                    value={this.state.selectedBankAccount}
+                                    onChange={(option) => {
+                                      this.setState({
+                                        selectedBankAccount: option.value
+                                      })
+                                      props.handleChange("bankAccountId")(option.value);
+                                    }}
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col lg={4}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="payment_date">Payment Date</Label>
+                                  <div>
+                                    <DatePicker
+                                      className="form-control"
+                                      id="payment_date"
+                                      name="payment_date"
+                                      placeholderText=""
+                                    />
+                                  </div>
+                                </FormGroup>
+                              </Col>
+                              <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                  <Label htmlFor="paymentId">Payment</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    options={payment_list}
+                                    id="paymentId"
+                                    name="paymentId"
+                                    value={this.state.selectedPayment}
+                                    onChange={(option) => {
+                                      this.setState({
+                                        selectedPayment: option.value
+                                      })
+                                      props.handleChange("paymentId")(option.value);
+                                    }}
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col lg={8}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="expenseDescription">Description</Label>
                                   <Input
                                     type="textarea"
-                                    name="attachment_description"
-                                    id="attachment_description"
+                                    name="expenseDescription"
+                                    id="expenseDescription"
                                     rows="5"
                                     placeholder="1024 characters..."
                                   />
                                 </FormGroup>
                               </Col>
                             </Row>
-                          </Col>
-                          <Col lg={4}>
+                            <hr />
                             <Row>
-                              <Col lg={12}>
-                                <FormGroup className="mb-3">
-                                  <Label>Reciept Attachment</Label><br />
-                                  <Button type="file" color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-upload"></i> Upload
+                              <Col lg={8}>
+                                <Row>
+                                  <Col lg={6}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="receiptNumber">Reciept Number</Label>
+                                      <Input
+                                        type="text"
+                                        id="receiptNumber"
+                                        name="receiptNumber"
+                                        placeholder="Enter Reciept Number"
+                                        required
+                                      />
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Col lg={12}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="attachment_description">Attachment Description</Label>
+                                      <Input
+                                        type="textarea"
+                                        name="attachment_description"
+                                        id="attachment_description"
+                                        rows="5"
+                                        placeholder="1024 characters..."
+                                      />
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
+                              </Col>
+                              <Col lg={4}>
+                                <Row>
+                                  <Col lg={12}>
+                                    <FormGroup className="mb-3">
+                                      <Label>Reciept Attachment</Label><br />
+                                      <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                        <i className="fa fa-upload"></i> Upload
                                   </Button>
-                                </FormGroup>
+                                      <input id="fileInput" ref={ref => {
+                                        this.uploadFile = ref;
+                                      }}
+                                        type="file" type="file" style={{ display: 'none' }} />
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
                               </Col>
                             </Row>
-                          </Col>
-                        </Row>
-                        <hr />
-                        <Row>
-                          <Col lg={12} className="mb-3">
-                            <Button color="primary" className="btn-square mr-3">
-                              <i className="fa fa-plus"></i> Add More
+                            <hr />
+                            <Row>
+                              <Col lg={12} className="mb-3">
+                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}>
+                                  <i className="fa fa-plus"></i> Add More
                             </Button>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={12}>
-                            <BootstrapTable
-                              options={this.options}
-                              data={data}
-                              version="4"
-                              hover
-                              className="expense-detail-table"
-                            >
-                              <TableHeaderColumn
-                                width="55"
-                                dataAlign="center"
-                                dataFormat={this.renderActions}
-                              >
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col lg={12}>
+                                <BootstrapTable
+                                  options={this.options}
+                                  data={data}
+                                  version="4"
+                                  hover
+                                  className="expense-create-table"
+                                >
+                                  <TableHeaderColumn
+                                    width="55"
+                                    dataAlign="center"
+                                    dataFormat={this.renderActions}
+                                  >
+                                  </TableHeaderColumn>
+                                  <TableHeaderColumn
+                                    isKey
+                                    dataField="product_name"
+                                    dataFormat={this.renderProductName}
+                                  >
+                                    Account Code
                               </TableHeaderColumn>
-                              <TableHeaderColumn
-                                isKey
-                                dataField="product_name"
-                                dataFormat={this.renderProductName}
-                              >
-                                Account Code
+                                  <TableHeaderColumn
+                                    dataField="quantity"
+                                    dataFormat={this.renderAmount}
+                                  >
+                                    Amount
                               </TableHeaderColumn>
-                              <TableHeaderColumn
-                                dataField="quantity"
-                                dataFormat={this.renderAmount}
-                              >
-                                Amount
+                                  <TableHeaderColumn
+                                    dataField="vat"
+                                    dataFormat={this.renderVat}
+                                  >
+                                    Vat (%)
                               </TableHeaderColumn>
-                              <TableHeaderColumn
-                                dataField="vat"
-                                dataFormat={this.renderVat}
-                              >
-                                Vat (%)
+                                  <TableHeaderColumn
+                                    dataField="sub_total"
+                                    dataFormat={this.renderSubTotal}
+                                    className="text-right"
+                                    columnClassName="text-right"
+                                  >
+                                    Sub Total (All)
                               </TableHeaderColumn>
-                              <TableHeaderColumn
-                                dataField="sub_total"
-                                dataFormat={this.renderSubTotal}
-                                className="text-right"
-                                columnClassName="text-right"
-                              >
-                                Sub Total (All)
-                              </TableHeaderColumn>
-                            </BootstrapTable>
-                          </Col>
-                        </Row>
-                      </Form>
+                                </BootstrapTable>
+                              </Col>
+                            </Row>
+                          </Form>
+                        )}
+                      </Formik>
                     </Col>
                   </Row>
                   <Row>

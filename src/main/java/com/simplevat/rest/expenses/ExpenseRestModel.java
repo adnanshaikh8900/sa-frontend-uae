@@ -57,6 +57,10 @@ public class ExpenseRestModel {
     private Integer companyId;
     private Integer currencyCode;
     private BigDecimal totalAmount;
+    private Integer bankAccountId;
+    private Integer expenseContactId;
+    private Integer paymentId;
+    private BigDecimal vat;
 
     public void addExpenseItem(@NonNull final ExpenseItemModel expenseItemModel) {
         if (null == this.expenseItem) {

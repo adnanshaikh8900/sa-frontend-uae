@@ -3,6 +3,7 @@ import { PAYMENT } from 'constants/types'
 const initState = {
   payment_list: [],
   currency_list: [],
+  bank_list: [],
   supplier_list: [],
   invoice_list: [],
   project_list: [],
@@ -16,12 +17,17 @@ const PaymentReducer = (state = initState, action) => {
     case PAYMENT.PAYMENT_LIST:
       return {
         ...state,
-        payment_list: Object.assign([], payload.data)
+        payment_list: Object.assign([], payload)
       }
     case PAYMENT.CURRENCY_LIST:
       return {
         ...state,
         currency_list: Object.assign([], payload.data)
+      }
+    case PAYMENT.BANK_LIST:
+      return {
+        ...state,
+        bank_list: Object.assign([], payload.data)
       }
     case PAYMENT.SUPPLIER_LIST:
       return {

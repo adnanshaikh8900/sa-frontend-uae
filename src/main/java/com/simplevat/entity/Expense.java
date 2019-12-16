@@ -1,6 +1,7 @@
 package com.simplevat.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.entity.converter.DateConverter;
@@ -166,6 +167,16 @@ public class Expense implements Serializable {
     @ColumnDefault(value = "0.00")
     @Column(name = "EXPENSE_AMOUNT_COMPANY_CURRENCY")
     private BigDecimal expencyAmountCompanyCurrency;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "BANK_ID")
+    @JsonManagedReference
+    private BankAccount bankAccount;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PAYMENT_ID")
+    @JsonManagedReference
+    private Payment payment;
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "expense", orphanRemoval = true)

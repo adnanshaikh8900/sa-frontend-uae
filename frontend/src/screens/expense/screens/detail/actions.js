@@ -8,7 +8,7 @@ export const getExpenseDetail = (_id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/expense/vieworedit?expenseId=${_id}`
+      url: `/rest/expense/getExpenseById?expenseId=${_id}`
     }
 
     return authApi(data).then(res => {

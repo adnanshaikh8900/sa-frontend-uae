@@ -175,7 +175,7 @@ public class ExpenseRestHelper implements Serializable {
         }
     }
 
-    public Expense getExpense(ExpenseRestModel model, UserServiceNew userServiceNew, CurrencyService currencyService, ProjectService projectService, ExpenseService expenseService, TransactionCategoryServiceNew transactionCategoryServiceNew, TransactionTypeService transactionTypeService, ContactService contactService, PaymentService paymentService) throws Exception {
+    public Expense getExpense(ExpenseRestModel model, UserServiceNew userServiceNew, CurrencyService currencyService, ProjectService projectService, ExpenseService expenseService, TransactionCategoryServiceNew transactionCategoryServiceNew, TransactionTypeService transactionTypeService, ContactService contactService) throws Exception {
         Expense expense = new Expense();
         expense.setExpenseId(model.getExpenseId());
         if (model.getUser() != null) {
@@ -194,6 +194,7 @@ public class ExpenseRestHelper implements Serializable {
         }
         expense.setDeleteFlag(model.isDeleteFlag());
         expense.setExpenseAmount(model.getExpenseAmount());
+        expense.setPayee(model.getPayee());
         if (model.getExpenseDate() != null) {
             LocalDateTime expenseDate = Instant.ofEpochMilli(model.getExpenseDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
             expense.setExpenseDate(expenseDate);
@@ -214,12 +215,6 @@ public class ExpenseRestHelper implements Serializable {
             Contact expenseContact = contactService.findByPK(model.getExpenseContactId());
             if (expenseContact != null) {
                 expense.setExpenseContact(expenseContact);
-            }
-        }
-        if (model.getPaymentId() != null) {
-            Payment payment = paymentService.findByPK(model.getPaymentId());
-            if (payment != null) {
-                expense.setPayment(payment);
             }
         }
         if (model.getTransactionCategory() != null) {
@@ -291,6 +286,7 @@ public class ExpenseRestHelper implements Serializable {
             }
             expenseModel.setDeleteFlag(entity.getDeleteFlag());
             expenseModel.setExpenseAmount(entity.getExpenseAmount());
+            expenseModel.setPayee(entity.getPayee());
             if (entity.getExpenseDate() != null) {
                 Date expenseDate = Date.from(entity.getExpenseDate().atZone(ZoneId.systemDefault()).toInstant());
                 expenseModel.setExpenseDate(expenseDate);
@@ -303,9 +299,6 @@ public class ExpenseRestHelper implements Serializable {
             }
             if (entity.getBankAccount() != null) {
                 expenseModel.setBankAccountId(entity.getBankAccount().getBankAccountId());
-            }
-            if (entity.getPayment() != null) {
-                expenseModel.setPaymentId(entity.getPayment().getPaymentId());
             }
             expenseModel.setReceiptAttachmentDescription(entity.getReceiptAttachmentDescription());
             expenseModel.setReceiptAttachmentPath(entity.getReceiptAttachmentPath());
@@ -380,12 +373,12 @@ public class ExpenseRestHelper implements Serializable {
         }
     }
 
-    public String saveExpense(ExpenseRestModel expenseRestModel, CurrencyService currencyService, UserServiceNew userServiceNew, CompanyService companyService, ProjectService projectService, ExpenseService expenseService, TransactionCategoryServiceNew transactionCategoryServiceNew, TransactionTypeService transactionTypeService, ContactService contactService, PaymentService paymentService) throws Exception {
+    public String saveExpense(ExpenseRestModel expenseRestModel, CurrencyService currencyService, UserServiceNew userServiceNew, CompanyService companyService, ProjectService projectService, ExpenseService expenseService, TransactionCategoryServiceNew transactionCategoryServiceNew, TransactionTypeService transactionTypeService, ContactService contactService) throws Exception {
         removeEmptyRow(expenseRestModel);
         if (!validateInvoiceLineItems(expenseRestModel) || !validateAtLeastOneItem(expenseRestModel)) {
             return "";
         }
-        save(expenseRestModel, currencyService, userServiceNew, companyService, projectService, expenseService, transactionCategoryServiceNew, transactionTypeService, contactService, paymentService);
+        save(expenseRestModel, currencyService, userServiceNew, companyService, projectService, expenseService, transactionCategoryServiceNew, transactionTypeService, contactService);
 //        FacesContext context = FacesContext.getCurrentInstance();
 //        context.getExternalContext().getFlash().setKeepMessages(true);
 //        context.addMessage(null, new FacesMessage("", "Expense saved successfully"));
@@ -441,12 +434,12 @@ public class ExpenseRestHelper implements Serializable {
         return expenseModel.getExpenseItem().size() >= 1;
     }
 
-    private void save(ExpenseRestModel expenseRestModel, CurrencyService currencyService, UserServiceNew userServiceNew, CompanyService companyService, ProjectService projectService, ExpenseService expenseService, TransactionCategoryServiceNew transactionCategoryServiceNew, TransactionTypeService transactionTypeService, ContactService contactService, PaymentService paymentService) throws Exception {
+    private void save(ExpenseRestModel expenseRestModel, CurrencyService currencyService, UserServiceNew userServiceNew, CompanyService companyService, ProjectService projectService, ExpenseService expenseService, TransactionCategoryServiceNew transactionCategoryServiceNew, TransactionTypeService transactionTypeService, ContactService contactService) throws Exception {
         User loggedInUser = userServiceNew.findByPK(expenseRestModel.getUserId());
         Company company = companyService.findByPK(expenseRestModel.getCompanyId());
         TransactionCategory transactionCategory = transactionCategoryServiceNew.findByPK(expenseRestModel.getTransactionCategory());
         expenseRestModel.setTransactionType(transactionCategory.getTransactionType().getTransactionTypeCode());
-        Expense expense = getExpense(expenseRestModel, userServiceNew, currencyService, projectService, expenseService, transactionCategoryServiceNew, transactionTypeService, contactService, paymentService);
+        Expense expense = getExpense(expenseRestModel, userServiceNew, currencyService, projectService, expenseService, transactionCategoryServiceNew, transactionTypeService, contactService);
         expense.setExpenseAmount(expenseRestModel.getTotalAmount());
         CurrencyConversion currencyConversion = currencyService.getCurrencyRateFromCurrencyConversion(expenseRestModel.getCurrencyCode());
         if (currencyConversion != null) {

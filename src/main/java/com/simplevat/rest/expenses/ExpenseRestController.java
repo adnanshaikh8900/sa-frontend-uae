@@ -100,7 +100,7 @@ public class ExpenseRestController {
     @RequestMapping(method = RequestMethod.POST, value = "/save")
     public ResponseEntity saveExpense(@RequestBody ExpenseRestModel expenseRestModel) {
         try {
-            controllerHelper.saveExpense(expenseRestModel, currencyService, userServiceNew, companyService, projectService, expenseService, transactionCategoryService, transactionTypeService, contactService, paymentService);
+            controllerHelper.saveExpense(expenseRestModel, currencyService, userServiceNew, companyService, projectService, expenseService, transactionCategoryService, transactionTypeService, contactService);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             e.printStackTrace();

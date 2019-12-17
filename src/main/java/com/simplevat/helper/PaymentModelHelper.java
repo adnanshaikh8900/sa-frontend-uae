@@ -5,6 +5,7 @@ import com.simplevat.entity.Payment;
 import com.simplevat.rest.payment.model.PaymentPersistModel;
 import com.simplevat.rest.payment.model.PaymentViewModel;
 import com.simplevat.service.PaymentService;
+import java.math.BigDecimal;
 import java.text.ParseException;
 
 public class PaymentModelHelper {
@@ -21,7 +22,10 @@ public class PaymentModelHelper {
             payment.setPaymentDueDate(paymentModel.getPaymentDueDate());
         }
         payment.setDescription(paymentModel.getDescription());
-        payment.setReferenceNo(paymentModel.getReferenceNo());
+        payment.setInvoiceReferenceNo(paymentModel.getInvoiceReferenceNo());
+        if (paymentModel.getAmount() != null) {
+            payment.setInvoiceAmount(new BigDecimal(paymentModel.getAmount()));
+        }
         payment.setReceiptNo(paymentModel.getReceiptNo());
         payment.setReceiptAttachmentDescription(paymentModel.getReceiptAttachmentDescription());
         return payment;
@@ -30,17 +34,14 @@ public class PaymentModelHelper {
     public PaymentViewModel convertToPaymentViewModel(Payment payment) {
         PaymentViewModel paymentModel = new PaymentViewModel();
         paymentModel.setPaymentId(payment.getPaymentId());
-//        paymentModel.setPaymentNo(payment.get);
-        paymentModel.setReferenceNo(payment.getReferenceNo());
-        if (payment.getInvoice() != null) {
-            paymentModel.setInvoiceNo(payment.getInvoice().getInvoiceReferenceNumber());
-            if (payment.getInvoice().getInvoiceAmount() != null) {
-                paymentModel.setAmount(payment.getInvoice().getInvoiceAmount().intValue());
-            }
-        }
+        paymentModel.setAmount(payment.getInvoiceAmount());
+        paymentModel.setInvoiceReferenceNo(payment.getInvoiceReferenceNo());
         paymentModel.setPaymentDate(payment.getPaymentDate());
         if (payment.getBankAccount() != null) {
             paymentModel.setBankName(payment.getBankAccount().getBankAccountName());
+        }
+        if (payment.getSupplier() != null) {
+            paymentModel.setSupplierName(payment.getSupplier().getFirstName());
         }
         paymentModel.setPaymentDueDate(payment.getPaymentDueDate());
         paymentModel.setDescription(payment.getDescription());
@@ -50,7 +51,7 @@ public class PaymentModelHelper {
         paymentModel.setDeleteFlag(payment.getDeleteFlag());
         return paymentModel;
     }
-    
+
     public void deletePayments(DeleteModel paymentIds, PaymentService paymentService) throws Exception {
         try {
             paymentService.deleteByIds(paymentIds.getIds());

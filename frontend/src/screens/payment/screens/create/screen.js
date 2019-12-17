@@ -21,6 +21,7 @@ import {
 import { Formik } from 'formik'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
+import * as Yup from 'yup'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -33,10 +34,9 @@ import {
 
 const mapStateToProps = (state) => {
   return ({
-    bank_list: state.payment.bank_list,
+    // bank_list: state.payment.bank_list,
     currency_list: state.payment.currency_list,
     supplier_list: state.payment.supplier_list,
-    invoice_list: state.payment.invoice_list,
     project_list: state.payment.project_list,
   })
 }
@@ -54,16 +54,17 @@ class CreatePayment extends React.Component {
     this.state = {
       loading: false,
       initialVals: {
-        bank: null,
+        // bank: null,
         supplier: null,
-        invoice: null,
+        invoiceReferenceNo: null,
+        amount: null,
         payment_date: null,
         currency: null,
         project: null,
         payment_due_date: null,
         description: null,
         receiptNo: null,
-        referenceNo: null,
+        // referenceNo: null,
         attachmentDescription: null
       },
       data: [
@@ -95,9 +96,8 @@ class CreatePayment extends React.Component {
 
   initializeData() {
     this.props.createPaymentActions.getCurrencyList()
-    this.props.createPaymentActions.getBankList()
+    // this.props.createPaymentActions.getBankList()
     this.props.createPaymentActions.getSupplierList()
-    this.props.createPaymentActions.getInvoiceList()
     this.props.createPaymentActions.getProjectList()
   }
 
@@ -120,15 +120,16 @@ class CreatePayment extends React.Component {
 
   handleSubmit(data) {
     const {
-      bank,
+      // bank,
       supplier,
-      invoice,
+      invoiceReferenceNo,
+      amount,
       payment_date,
       currency,
       project,
       payment_due_date,
       description,
-      referenceNo,
+      // referenceNo,
       receiptNo,
       attachmentDescription
     } = data
@@ -136,17 +137,15 @@ class CreatePayment extends React.Component {
     formData.append("paymentDate", payment_date !== null ? payment_date : "");
     formData.append("paymentDueDate", payment_due_date !== null ? payment_due_date : "");
     formData.append("description", description);
-    formData.append("referenceNo", referenceNo);
+    formData.append("invoiceReferenceNo", invoiceReferenceNo);
+    formData.append("amount", amount);
     formData.append("receiptNo", receiptNo);
     formData.append("attachmentDescription", attachmentDescription);
-    if (bank && bank.value) {
-      formData.append("bankAccountId", bank.value);
-    }
+    // if (bank && bank.value) {
+    //   formData.append("bankAccountId", bank.value);
+    // }
     if (supplier && supplier.value) {
       formData.append("supplierId", supplier.value);
-    }
-    if (invoice && invoice.value) {
-      formData.append("invoiceId", invoice.value);
     }
     if (currency && currency.value) {
       formData.append("currencyCode", currency.value);
@@ -225,7 +224,7 @@ class CreatePayment extends React.Component {
   render() {
     const {
       currency_list,
-      bank_list,
+      // bank_list,
       supplier_list,
       invoice_list,
       project_list
@@ -259,35 +258,31 @@ class CreatePayment extends React.Component {
                         this.handleSubmit(values)
                         resetForm(initialVals)
                       }}
-                  //   validationSchema={Yup.object().shape({
-                  //     account_name: Yup.string()
-                  //       .required('Account Name is Required'),
-                  //     currency: Yup.object().shape({
-                  //       label: Yup.string().required(),
-                  //       value: Yup.string().required(),
-                  //     }),
-                  //     account_type: Yup.object().shape({
-                  //       label: Yup.string().required(),
-                  //       value: Yup.string().required(),
-                  //     }),
-                  //     bank_name: Yup.string()
-                  //       .required('Bank Name is Required'),
-                  //     account_number: Yup.string()
-                  //       .required('Account Number is Required'),
-                  //     iban_number: Yup.string()
-                  //       .required('IBAN Number is Required'),
-                  //     swift_code: Yup.string()
-                  //       .required('Swift Code is Required'),
-                  //     country: Yup.object().shape({
-                  //       label: Yup.string().required(),
-                  //       value: Yup.string().required(),
-                  //     }),
-                  //     account_is_for: Yup.object().shape({
-                  //       label: Yup.string().required(),
-                  //       value: Yup.string().required()
-                  //     })
-                  //   })
-                  // }
+                    // validationSchema={Yup.object().shape({
+                    //   currency: Yup.object().shape({
+                    //     label: Yup.string().required(),
+                    //     value: Yup.string().required(),
+                    //   }),
+                    //   invoiceReferenceNo: Yup.string()
+                    //   .required('Reference is Required'),
+                    //   amount: Yup.string()
+                    //   .required('Amount is Required'),
+                    //   payment_date: Yup.string()
+                    //     .required('Payment Date is Required'),
+                    //   payment_due_date: Yup.string()
+                    //     .required('Payment Due Date is Required'),
+                    //   receiptNo: Yup.string()
+                    //     .required('Receipt Number is Required'),
+                    //   supplier: Yup.object().shape({
+                    //     label: Yup.string().required(),
+                    //     value: Yup.string().required(),
+                    //   }),
+                    //   project: Yup.object().shape({
+                    //     label: Yup.string().required(),
+                    //     value: Yup.string().required()
+                    //   })
+                    // })
+                    // }
                   >
                     {
                       props => (
@@ -316,35 +311,30 @@ class CreatePayment extends React.Component {
                                 </Col>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="invoice">Invoice</Label>
-                                    <Select
-                                      className="select-default-width"
-                                      id="invoice"
-                                      name="invoice"
-                                      options={selectOptionsFactory.renderOptions('invoiceReferenceNumber', 'invoiceId', invoice_list)}
-                                      value={props.values.invoice}
-                                      onChange={option => props.handleChange('invoice')(option)}
-                                      className={
-                                        props.errors.invoice && props.touched.invoice
-                                          ? 'is-invalid'
-                                          : ''
-                                      }
+                                    <Label htmlFor="invoiceReferenceNo">Invoice Reference Number</Label>
+                                    <Input
+                                      type="text"
+                                      id="invoiceReferenceNo"
+                                      name="invoiceReferenceNo"
+                                      placeholder="Enter Reference Number"
+                                      required
+                                      onChange={option => props.handleChange('invoiceReferenceNo')(option)}
                                     />
                                   </FormGroup>
                                 </Col>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="payment_date">Payment Date</Label>
-                                    <div>
-                                      <DatePicker
-                                        className="form-control"
-                                        id="payment_date"
-                                        name="payment_date"
-                                        placeholderText=""
-                                        onChange={option => props.handleChange('payment_date')(option)}
-                                        selected={props.values.payment_date}
-                                      />
-                                    </div>
+                                    <Label htmlFor="amount">Invoice Amount</Label>
+                                    <Input
+                                      // className="form-control"
+                                      type="text"
+                                      id="amount"
+                                      name="amount"
+                                      placeholder="Enter Amount"
+                                      required
+                                      onChange={option => props.handleChange('amount')(option)}
+                                    />
+
                                   </FormGroup>
                                 </Col>
                               </Row>
@@ -387,6 +377,25 @@ class CreatePayment extends React.Component {
                                 </Col>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
+                                    <Label htmlFor="payment_date">Payment Date</Label>
+                                    <div>
+                                      <DatePicker
+                                        className="form-control"
+                                        id="payment_date"
+                                        name="payment_date"
+                                        placeholderText=""
+                                        onChange={option => props.handleChange('payment_date')(option)}
+                                        value={props.values.payment_date}
+                                        selected={props.values.payment_date}
+                                      />
+                                    </div>
+
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
                                     <Label htmlFor="payment_due_date">Payment Due</Label>
                                     <div>
                                       <DatePicker
@@ -396,13 +405,12 @@ class CreatePayment extends React.Component {
                                         placeholderText=""
                                         onChange={option => props.handleChange('payment_due_date')(option)}
                                         selected={props.values.payment_due_date}
+                                        value={props.values.payment_due_date}
                                       />
                                     </div>
                                   </FormGroup>
                                 </Col>
-                              </Row>
-                              <Row>
-                                <Col lg={4}>
+                                {/* <Col lg={4}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="bank">Bank</Label>
                                     <Select
@@ -438,7 +446,7 @@ class CreatePayment extends React.Component {
                                       }
                                     />
                                   </FormGroup>
-                                </Col>
+                                </Col> */}
                               </Row>
                               <Row>
                                 <Col lg={8}>

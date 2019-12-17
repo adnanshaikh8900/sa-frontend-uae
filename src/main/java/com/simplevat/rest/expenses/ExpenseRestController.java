@@ -11,9 +11,11 @@ import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.CompanyService;
+import com.simplevat.service.ContactService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ExpenseService;
+import com.simplevat.service.PaymentService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryServiceNew;
 import com.simplevat.service.UserServiceNew;
@@ -62,10 +64,18 @@ public class ExpenseRestController {
     @Autowired
     private CountryService countryService;
 
-    ExpenseRestHelper controllerHelper = new ExpenseRestHelper();
+    @Autowired
+    private ContactService contactService;
 
-    @ApiOperation(value = "Get Expanse List")
+    @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
+    private ExpenseRestHelper controllerHelper;
+
+    @ApiOperation(value = "Get Expense List")
     @RequestMapping(method = RequestMethod.GET, value = "/retrieveExpenseList")
+
     public ResponseEntity expenseList() {
         try {
             List<ExpenseRestModel> expenses = new ArrayList<>();
@@ -74,7 +84,9 @@ public class ExpenseRestController {
             List<Expense> expenseList = expenseService.getExpenses();
             for (Expense expense : expenseList) {
                 ExpenseRestModel model = controllerHelper.getExpenseModel(expense);
-                model.setExpenseAmountCompanyCurrency(expense.getExpencyAmountCompanyCurrency());
+                if (expense.getExpencyAmountCompanyCurrency() != null) {
+                    model.setExpenseAmountCompanyCurrency(expense.getExpencyAmountCompanyCurrency());
+                }
                 expenses.add(model);
             }
             return new ResponseEntity(expenses, HttpStatus.OK);
@@ -88,7 +100,7 @@ public class ExpenseRestController {
     @RequestMapping(method = RequestMethod.POST, value = "/save")
     public ResponseEntity saveExpense(@RequestBody ExpenseRestModel expenseRestModel) {
         try {
-            controllerHelper.saveExpense(expenseRestModel, currencyService, userServiceNew, companyService, projectService, expenseService, transactionCategoryService, transactionTypeService);
+            controllerHelper.saveExpense(expenseRestModel, currencyService, userServiceNew, companyService, projectService, expenseService, transactionCategoryService, transactionTypeService, contactService, paymentService);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             e.printStackTrace();

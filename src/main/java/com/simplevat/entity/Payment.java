@@ -1,6 +1,7 @@
 package com.simplevat.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.invoice.Invoice;
 import java.io.Serializable;
 import java.util.Date;
@@ -50,6 +51,11 @@ public class Payment implements Serializable {
     @JsonManagedReference
     private Project project;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "BANK_ID")
+    @JsonManagedReference
+    private BankAccount bankAccount;
+
     @Basic
     @Column(name = "PAYMENT_DUE_DATE")
     private Date paymentDueDate;
@@ -57,6 +63,10 @@ public class Payment implements Serializable {
     @Basic
     @Column(name = "DESCRIPTION")
     private String description;
+
+    @Basic
+    @Column(name = "REFERENCE_NUMBER")
+    private String referenceNo;
 
     @Basic
     @Column(name = "RECEIPT_NUMBER")
@@ -69,7 +79,7 @@ public class Payment implements Serializable {
     @Basic
     @Column(name = "RECEIPT_ATTACHMENT_DESCRIPTION")
     private String receiptAttachmentDescription;
-    
+
     @Column(name = "DELETE_FLAG")
     @ColumnDefault(value = "0")
     @Basic(optional = false)

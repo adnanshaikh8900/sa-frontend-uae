@@ -34,5 +34,10 @@ public class PaymentServiceImpl extends PaymentService {
     public List<Payment> getPayments() {
         return this.paymentDao.getPayments();
     }
+    
+    @Override
+    public void deleteByIds(List<Integer> ids) {
+        paymentDao.deleteByIds(ids);
+    }
 
 }

@@ -32,8 +32,8 @@ import {
 } from 'services/global'
 
 const mapStateToProps = (state) => {
-  console.log(state.payment);
   return ({
+    bank_list: state.payment.bank_list,
     currency_list: state.payment.currency_list,
     supplier_list: state.payment.supplier_list,
     invoice_list: state.payment.invoice_list,
@@ -54,6 +54,7 @@ class CreatePayment extends React.Component {
     this.state = {
       loading: false,
       initialVals: {
+        bank: null,
         supplier: null,
         invoice: null,
         payment_date: null,
@@ -62,6 +63,7 @@ class CreatePayment extends React.Component {
         payment_due_date: null,
         description: null,
         receiptNo: null,
+        referenceNo: null,
         attachmentDescription: null
       },
       data: [
@@ -93,6 +95,7 @@ class CreatePayment extends React.Component {
 
   initializeData() {
     this.props.createPaymentActions.getCurrencyList()
+    this.props.createPaymentActions.getBankList()
     this.props.createPaymentActions.getSupplierList()
     this.props.createPaymentActions.getInvoiceList()
     this.props.createPaymentActions.getProjectList()
@@ -106,8 +109,6 @@ class CreatePayment extends React.Component {
 
 
   handleChange(e, name) {
-    console.log(e)
-    console.log(name)
     this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -119,6 +120,7 @@ class CreatePayment extends React.Component {
 
   handleSubmit(data) {
     const {
+      bank,
       supplier,
       invoice,
       payment_date,
@@ -126,27 +128,32 @@ class CreatePayment extends React.Component {
       project,
       payment_due_date,
       description,
+      referenceNo,
       receiptNo,
       attachmentDescription
     } = data
-    let formData = new FormData();   
+    let formData = new FormData();
     formData.append("paymentDate", payment_date !== null ? payment_date : "");
     formData.append("paymentDueDate", payment_due_date !== null ? payment_due_date : "");
     formData.append("description", description);
+    formData.append("referenceNo", referenceNo);
     formData.append("receiptNo", receiptNo);
     formData.append("attachmentDescription", attachmentDescription);
-    if (supplier.value) {
+    if (bank && bank.value) {
+      formData.append("bankAccountId", bank.value);
+    }
+    if (supplier && supplier.value) {
       formData.append("supplierId", supplier.value);
     }
-    if (invoice.value) {
+    if (invoice && invoice.value) {
       formData.append("invoiceId", invoice.value);
     }
-    if (currency.value) {
+    if (currency && currency.value) {
       formData.append("currencyCode", currency.value);
     }
-    if (project.value) {
+    if (project && project.value) {
       formData.append("projectId", project.value);
-    } 
+    }
     if (this.uploadFile.files[0]) {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
@@ -218,6 +225,7 @@ class CreatePayment extends React.Component {
   render() {
     const {
       currency_list,
+      bank_list,
       supplier_list,
       invoice_list,
       project_list
@@ -390,6 +398,45 @@ class CreatePayment extends React.Component {
                                         selected={props.values.payment_due_date}
                                       />
                                     </div>
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="bank">Bank</Label>
+                                    <Select
+                                      className="select-default-width"
+                                      id="bank"
+                                      name="bank"
+                                      options={selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_list)}
+                                      value={props.values.bank}
+                                      onChange={option => props.handleChange('bank')(option)}
+                                      className={
+                                        props.errors.bank && props.touched.bank
+                                          ? 'is-invalid'
+                                          : ''
+                                      }
+                                    />
+                                  </FormGroup>
+                                </Col>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="referenceNo">Reference Number</Label>
+                                    <Input
+                                      type="text"
+                                      id="referenceNo"
+                                      name="referenceNo"
+                                      placeholder="Enter Reference Number"
+                                      required
+                                      onChange={option => props.handleChange('referenceNo')(option)}
+                                      value={props.values.referenceNo}
+                                      className={
+                                        props.errors.referenceNo && props.touched.referenceNo
+                                          ? 'is-invalid'
+                                          : ''
+                                      }
+                                    />
                                   </FormGroup>
                                 </Col>
                               </Row>

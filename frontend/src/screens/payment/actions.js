@@ -22,3 +22,18 @@ export const getPaymentList = () => {
     })
   }
 }
+export const removeBulkPayments= (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'delete',
+      url: 'rest/payment/deletes',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+

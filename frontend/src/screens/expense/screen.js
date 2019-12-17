@@ -252,6 +252,7 @@ class Expense extends React.Component {
                             <Button
                               color="success"
                               className="btn-square"
+                              onClick={()=>this.table.handleExportCSV()}
                             >
                               <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                               Export to CSV
@@ -323,12 +324,14 @@ class Expense extends React.Component {
                             totalSize={expense_list ? expense_list.length : 0}
                             className="expense-table"
                             trClassName="cursor-pointer"
+                            ref={node => this.table = node}
+                            csvFileName="ExpenseList.csv"
                           >
                             <TableHeaderColumn
-                              dataField="transactionCategoryName"
+                              dataField="payee"
                               dataSort
                             >
-                              Supplier Name
+                              Payee
                           </TableHeaderColumn>
                             <TableHeaderColumn
                               dataField="expenseDescription"

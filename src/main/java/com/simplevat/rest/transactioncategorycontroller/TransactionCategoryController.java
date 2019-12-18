@@ -16,11 +16,13 @@ import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 import com.simplevat.constant.DefualtTypeConstant;
 import com.simplevat.entity.User;
+import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.UserServiceNew;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,19 +41,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/rest/transactioncategory")
 public class TransactionCategoryController implements Serializable {
-
+    
     @Autowired
     private TransactionCategoryServiceNew transactionCategoryService;
-
+    
     @Autowired
     private VatCategoryService vatCategoryService;
-
+    
     @Autowired
-    TransactionTypeService transactionTypeService;
-
+    private TransactionTypeService transactionTypeService;
+    
     @Autowired
     private UserServiceNew userServiceNew;
-
+    
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    
     @GetMapping(value = "/gettransactioncategory")
     public ResponseEntity getAllTransactionCategory() {
         List<TransactionCategory> transactionCategories = transactionCategoryService.findAllTransactionCategory();
@@ -59,9 +64,9 @@ public class TransactionCategoryController implements Serializable {
             return new ResponseEntity(transactionCategories, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-
+        
     }
-
+    
     @GetMapping(value = "/edittransactioncategory")
     public ResponseEntity editTransactionCategory(@RequestParam("id") Integer id) {
         TransactionCategory transactionCategories = transactionCategoryService.findByPK(id);
@@ -69,9 +74,9 @@ public class TransactionCategoryController implements Serializable {
             return new ResponseEntity(transactionCategories, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-
+        
     }
-
+    
     @DeleteMapping(value = "/deletetransactioncategory")
     public ResponseEntity deleteTransactionCategory(@RequestParam("id") Integer id) {
         TransactionCategory transactionCategories = transactionCategoryService.findByPK(id);
@@ -82,7 +87,7 @@ public class TransactionCategoryController implements Serializable {
         transactionCategoryService.update(transactionCategories, id);
         return new ResponseEntity(HttpStatus.OK);
     }
-
+    
     @DeleteMapping(value = "/deletetransactioncategorys")
     public ResponseEntity deleteTransactionCategorys(@RequestBody DeleteModel ids) {
         try {
@@ -93,7 +98,7 @@ public class TransactionCategoryController implements Serializable {
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
+    
     @GetMapping(value = "/getvatcategories")
     public ResponseEntity getVatCategories() {
         List<VatCategory> vatCategorys = vatCategoryService.getVatCategoryList();
@@ -101,10 +106,10 @@ public class TransactionCategoryController implements Serializable {
             return new ResponseEntity(vatCategorys, HttpStatus.OK);
         } else {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-
+            
         }
     }
-
+    
     @GetMapping(value = "/gettransactiontype")
     public ResponseEntity getAllTransactionType(String str) {
         List<TransactionType> transactionTypes;
@@ -118,14 +123,15 @@ public class TransactionCategoryController implements Serializable {
         }
         return new ResponseEntity(filterList, HttpStatus.OK);
     }
-
+    
     @PostMapping(value = "/savetransactioncategory")
-    public ResponseEntity save(@RequestBody TransactionCategoryBean transactionCategoryBean, @RequestParam("id") Integer id) {
+    public ResponseEntity save(@RequestBody TransactionCategoryBean transactionCategoryBean, HttpServletRequest request) {
         try {
-            User user = userServiceNew.findByPK(id);
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            User user = userServiceNew.findByPK(userId);
             TransactionCategory selectedTransactionCategory = TranscationCategoryHelper.getTrascationByTrascationModel(transactionCategoryBean, transactionTypeService, transactionCategoryService, vatCategoryService);
-
-            if (selectedTransactionCategory.getDefaltFlag() == DefualtTypeConstant.YES) {
+            
+            if (selectedTransactionCategory.getDefaltFlag() != null && selectedTransactionCategory.getDefaltFlag() == DefualtTypeConstant.YES) {
                 System.out.println("insideif=========1=========" + selectedTransactionCategory.getDefaltFlag());
                 TransactionCategory transactionCategory = transactionCategoryService.getDefaultTransactionCategoryByTransactionCategoryId(selectedTransactionCategory.getTransactionCategoryId());
                 if (transactionCategory != null) {
@@ -133,34 +139,36 @@ public class TransactionCategoryController implements Serializable {
                     transactionCategory.setDefaltFlag(DefualtTypeConstant.NO);
                     transactionCategoryService.update(transactionCategory);
                 }
+            } else {
+                selectedTransactionCategory.setDefaltFlag(DefualtTypeConstant.YES);
             }
             if (selectedTransactionCategory.getTransactionCategoryId() != null && selectedTransactionCategory.getTransactionCategoryId() > 0) {
                 selectedTransactionCategory.setLastUpdateBy(user.getUserId());
                 selectedTransactionCategory.setLastUpdateDate(LocalDateTime.now());
                 transactionCategoryService.update(selectedTransactionCategory);
-
+                
             } else {
                 selectedTransactionCategory.setOrderSequence(1);
                 selectedTransactionCategory.setCreatedBy(user.getUserId());
                 selectedTransactionCategory.setCreatedDate(LocalDateTime.now());
                 transactionCategoryService.persist(selectedTransactionCategory);
             }
-
+            
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
+    
     @GetMapping(value = "/getparenttransaction")
     public ResponseEntity getParentTransaction(@RequestParam("TransactionTypeCode") Integer transactionTypeCode, @RequestParam("transcationTxt") String transcationTxt) {
-
+        
         if (transactionTypeCode != null) {
             List<TransactionCategory> transactionCategorys = transactionCategoryService.findAllTransactionCategoryByTransactionType(transactionTypeCode, transcationTxt);
             return new ResponseEntity<>(transactionCategorys, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
+    
 }

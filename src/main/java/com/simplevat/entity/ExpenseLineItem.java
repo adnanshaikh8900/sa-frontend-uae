@@ -1,5 +1,7 @@
 package com.simplevat.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -27,16 +29,12 @@ public class ExpenseLineItem implements Serializable {
     private Integer expenseLineItemQuantity;
 
     @Basic
-    @Column(name = "EXPENSE_LINE_ITEM_DESCRIPTION")
-    private String expenseLineItemDescription;
-
-    @Basic
     @Column(name = "EXPENSE_LINE_ITEM_UNIT_PRICE")
     private BigDecimal expenseLineItemUnitPrice;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EXPENSE_LINE_ITEM_PRODUCT_SERVICE_ID")
-    private Product expenseLineItemProductService;
+    
+    @Basic
+    @Column(name = "EXPENSE_LINE_ITEM_TOTAL_PRICE")
+    private BigDecimal expenseLineItemTotalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EXPENSE_LINE_ITEM_VAT_ID")
@@ -57,7 +55,9 @@ public class ExpenseLineItem implements Serializable {
     @JoinColumn(name = "EXPENSE_ID")
     private Expense expense;
     
-    @Column(name = "EXPENSE_PRODUCT_NAME")
-    private String productName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TRANSACTION_CATEGORY_CODE")
+    @JsonManagedReference
+    private TransactionCategory transactionCategory;
 
 }

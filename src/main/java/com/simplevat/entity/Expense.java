@@ -15,6 +15,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 /**
@@ -25,10 +28,12 @@ import org.hibernate.annotations.ColumnDefault;
             query = "SELECT e "
             + "FROM Expense e where e.deleteFlag = FALSE")
 })
-
 @Entity
 @Table(name = "EXPENSE")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 public class Expense implements Serializable {
 
@@ -43,6 +48,11 @@ public class Expense implements Serializable {
     @Column(name = "EXPENSE_AMOUNT")
     @ColumnDefault(value = "0.00")
     private BigDecimal expenseAmount;
+    
+    @Basic
+    @Column(name = "EXPENSE_VAT_AMOUNT")
+    @ColumnDefault(value = "0.00")
+    private BigDecimal expenseVATAmount;
 
     @Basic
     @Column(name = "EXPENSE_DATE")

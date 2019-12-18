@@ -37,6 +37,8 @@ const mapStateToProps = (state) => {
     bank_account_list: state.expense.bank_account_list,
     customer_list: state.expense.customer_list,
     payment_list: state.expense.payment_list,
+    vat_list: state.expense.vat_list,
+    chart_of_account_list: state.expense.chart_of_account_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -52,21 +54,26 @@ class CreateExpense extends React.Component {
     super(props)
     this.state = {
       loading: false,
-      data: [
-        {},
-        {}
+      data: [{
+        id: 0,
+        account_code: null,
+        amount: null,
+        vat: null,
+        sub_total: 0
+      }
       ],
-
+      idCount: 0,
       selectedCurrency: null,
       selectedProject: null,
       selectedBankAccount: null,
       selectedCustomer: null,
-      selectedPayment:null,
+      selectedPayment: null,
 
       initExpenseValue: {
         expenseId: null,
         expenseAmount: null,
         expenseDate: null,
+        paymentDate: null,
         expenseContactId: null,
         bankAccountId: null,
         expenseDescription: null,
@@ -85,21 +92,28 @@ class CreateExpense extends React.Component {
         deleteFlag: false,
         attachmentFile: null,
         receiptAttachmentName: null,
-        receiptAttachmentContentType: null
+        receiptAttachmentContentType: null,
+        total_net: 0,
+        total_vat:0,
+        total: 0
       }
 
     }
 
-    
+
     this.initializeData = this.initializeData.bind(this)
-    
+
     this.renderActions = this.renderActions.bind(this)
     this.renderProductName = this.renderProductName.bind(this)
     this.renderAmount = this.renderAmount.bind(this)
     this.renderVat = this.renderVat.bind(this)
     this.renderSubTotal = this.renderSubTotal.bind(this);
     this.addRow = this.addRow.bind(this);
-    
+    this.deleteRow = this.deleteRow.bind(this);
+    this.selectItem = this.selectItem.bind(this);
+    this.updateAmount = this.updateAmount.bind(this);
+
+
     this.options = {
       paginationPosition: 'top'
     }
@@ -110,13 +124,32 @@ class CreateExpense extends React.Component {
     this.initializeData()
   }
 
+  // addData() {
+  //   this.setState({
+  //     data: [{
+  //       id: this.state.idCount + 1
+  //     },
+  //     ], idCount: this.state.idCount + 1
+  //   })
+  // }
+
   initializeData() {
+    this.props.expenseActions.getVatList();
     this.props.expenseActions.getCurrencyList();
     this.props.expenseActions.getProjectList();
     this.props.expenseActions.getBankAccountList();
     this.props.expenseActions.getCustomerList();
     this.props.expenseActions.getPaymentList();
+    this.props.expenseActions.getChartOfAccountList();
+  }
 
+  deleteRow(e, row) {
+    const id = row['id'];
+    let newData = []
+    e.preventDefault();
+    const data = this.state.data
+    newData = data.filter(obj => obj.id !== id);
+    this.setState({ data: newData })
   }
 
   renderActions(cell, row) {
@@ -124,27 +157,66 @@ class CreateExpense extends React.Component {
       <Button
         size="sm"
         className="btn-twitter btn-brand icon"
+        onClick={(e) => { this.deleteRow(e, row) }}
       >
         <i className="fas fa-trash"></i>
       </Button>
     )
   }
 
+  selectItem(e, row, name) {
+    e.preventDefault();
+    const data = this.state.data
+    data.map((obj, index) => {
+      if (obj.id === row.id) {
+        obj[name] = e.target.value
+      }
+    });
+    if (name === 'amount' || name === 'vat') {
+      this.updateAmount(data);
+    } else {
+      this.setState({ data: data });
+    }
+
+  }
+
+  updateAmount(data) {
+    let total_net = 0;
+    let total = 0;
+    let total_vat=0;
+    data.map(obj => {
+      obj.sub_total = (obj.amount * obj.vat)/100;
+      total_net = total_net + (+obj.amount);
+      total = total + obj.sub_total + total_net;
+      total_vat = total_vat + obj.sub_total
+    })
+    this.setState({ 
+      data: data,
+      initExpenseValue: {
+        total_net: total,
+        total_vat: total_vat,
+        total: total
+      }
+    })
+  }
+
   renderProductName(cell, row) {
+    const { chart_of_account_list } = this.props;
     return (
       <div className="d-flex align-items-center">
-        <Input type="select" className="mr-1">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
+        <Input type="select"
+          onChange={(e) => { this.selectItem(e, row, 'account_code') }}
+          value={row.account_code}
+        >
+          {chart_of_account_list ? chart_of_account_list.map(obj => {
+            return <option value={obj.value}>{obj.label}</option>
+          }) : ''}
         </Input>
         <Button
           size="sm"
           color="primary"
           className="btn-brand icon"
+          onClick={() => { }}
         >
           <i className="fas fa-plus"></i>
         </Button>
@@ -157,42 +229,51 @@ class CreateExpense extends React.Component {
       <Input
         type="text"
         defaultValue="0"
+        onChange={(e) => { this.selectItem(e, row, 'amount') }}
       />
     )
   }
 
   renderVat(cell, row) {
+    const { vat_list } = this.props;
     return (
-      <Input type="select">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
+      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vat') }} value={row.vat}>
+        {vat_list ? vat_list.map(obj => {
+          return <option value={obj.value}>{obj.label}</option>
+        }) : ''}
       </Input>
     )
   }
 
   renderSubTotal(cell, row) {
     return (
-      <label className="mb-0">0.00</label>
+      <label className="mb-0">{row.sub_total}</label>
     )
   }
 
   addRow() {
     const data = [...this.state.data]
-    this.setState({data: data.concat({})})
+    this.setState({
+      data: data.concat({
+        id: this.state.idCount + 1,
+        account_code: null,
+        add: null,
+        sub_total: 0,
+        amount: null,
+        sub_total: 0
+      }), idCount: this.state.idCount + 1
+    })
   }
 
   render() {
 
-    const { data ,
+    const { data,
       initExpenseValue: {
-        expenseDate
-    }
+        expenseDate,
+        paymentDate
+      }
     } = this.state
-    const { currency_list, project_list,bank_account_list,customer_list,payment_list} = this.props
+    const { currency_list, project_list, bank_account_list, customer_list, payment_list } = this.props
 
 
     return (
@@ -229,26 +310,20 @@ class CreateExpense extends React.Component {
 
                           })
                         }}
-                     
+
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={4}>
-                              <FormGroup className="mb-3">
-                                  <Label htmlFor="expenseContactId">Customer</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    options={customer_list}
-                                    id="expenseContactId"
-                                    name="expenseContactId"
-                                    value={this.state.selectedCustomer}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedCustomer: option.value
-                                      })
-                                      props.handleChange("expenseContactId")(option.value);
-                                    }}
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="payee">Payee</Label>
+                                  <Input
+                                    type="text"
+                                    name="payee"
+                                    id="payee"
+                                    rows="5"
+                                    placeholder="Payee"
                                   />
                                 </FormGroup>
                               </Col>
@@ -262,13 +337,14 @@ class CreateExpense extends React.Component {
                                       name="expenseDate"
                                       placeholderText=""
                                       selected={expenseDate}
-                                      onChange={(val)=> {
+                                      onChange={(val) => {
                                         this.setState({
                                           initExpenseValue: {
                                             expenseDate: val
                                           }
                                         })
-                                        props.handleChange("expenseDate")(val)}
+                                        props.handleChange("expenseDate")(val)
+                                      }
                                       }
                                     />
                                   </div>
@@ -341,25 +417,28 @@ class CreateExpense extends React.Component {
                                       id="payment_date"
                                       name="payment_date"
                                       placeholderText=""
+                                      selected={paymentDate}
+                                      onChange={(val) => {
+                                        this.setState({
+                                          initExpenseValue: {
+                                            paymentDate: val
+                                          }
+                                        })
+                                        props.handleChange("expenseDate")(val)
+                                      }}
                                     />
                                   </div>
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
-                              <FormGroup className="mb-3">
-                                  <Label htmlFor="paymentId">Payment</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    options={payment_list}
-                                    id="paymentId"
-                                    name="paymentId"
-                                    value={this.state.selectedPayment}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedPayment: option.value
-                                      })
-                                      props.handleChange("paymentId")(option.value);
-                                    }}
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="expenseAmount">Expense Amount</Label>
+                                  <Input
+                                    type="expenseAmount"
+                                    name="expenseAmount"
+                                    id="expenseAmount"
+                                    rows="5"
+                                    placeholder="Amount"
                                   />
                                 </FormGroup>
                               </Col>
@@ -494,7 +573,7 @@ class CreateExpense extends React.Component {
                               <h5 className="mb-0 text-right">Total Net</h5>
                             </Col>
                             <Col lg={6} className="text-right">
-                              <label className="mb-0">0.00</label>
+                                    <label className="mb-0">{this.state.initExpenseValue.total_net}</label>
                             </Col>
                           </Row>
                         </div>
@@ -504,7 +583,7 @@ class CreateExpense extends React.Component {
                               <h5 className="mb-0 text-right">Total Vat</h5>
                             </Col>
                             <Col lg={6} className="text-right">
-                              <label className="mb-0">0.00</label>
+                              <label className="mb-0">{this.state.initExpenseValue.total_vat}</label>
                             </Col>
                           </Row>
                         </div>
@@ -514,7 +593,7 @@ class CreateExpense extends React.Component {
                               <h5 className="mb-0 text-right">Total</h5>
                             </Col>
                             <Col lg={6} className="text-right">
-                              <label className="mb-0">0.00</label>
+                              <label className="mb-0">{this.state.initExpenseValue.total}</label>
                             </Col>
                           </Row>
                         </div>

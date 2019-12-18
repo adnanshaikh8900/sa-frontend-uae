@@ -33,9 +33,7 @@ export const getSupplierList = () => {
       if (res.status == 200) {
         dispatch({
           type: EXPENSE.SUPPLIER_LIST,
-          payload: {
-            data: res.data
-          }
+          payload: res.data
         })
       }
     }).catch(err => {
@@ -54,9 +52,7 @@ export const getCurrencyList = () => {
       if (res.status == 200) {
         dispatch({
           type: EXPENSE.CURRENCY_LIST,
-          payload: {
-            data: res.data
-          }
+          payload: res.data
         })
       }
     }).catch(err => {
@@ -75,9 +71,7 @@ export const getProjectList = () => {
       if (res.status == 200) {
         dispatch({
           type: EXPENSE.PROJECT_LIST,
-          payload: {
-            data: res.data
-          }
+          payload: res.data
         })
       }
     }).catch(err => {
@@ -114,9 +108,7 @@ export const getBankAccountList = () => {
       if (res.status == 200) {
         dispatch({
           type: EXPENSE.BANK_ACCOUNT_LIST,
-          payload: {
-            data: Object.assign([], res.data)
-          } 
+          payload: res.data 
         })
       }
     }).catch(err => {
@@ -135,9 +127,7 @@ export const getCustomerList = () => {
       if (res.status == 200) {
         dispatch({
           type: EXPENSE.CUSTOMER_LIST,
-          payload: {
-            data: Object.assign([], res.data)
-          } 
+          payload: res.data 
         })
       }
     }).catch(err => {
@@ -156,9 +146,46 @@ export const getPaymentList = () => {
       if (res.status == 200) {
         dispatch({
           type: EXPENSE.PAYMENT_LIST,
-          payload: {
-            data: Object.assign([], res.data)
-          } 
+          payload: res.data 
+        })
+      }
+      return res;
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getChartOfAccountList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/transactioncategory/gettransactioncategory'
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+        dispatch({
+          type: EXPENSE.CHART_OF_ACCOUNT_LIST,
+          payload: res.data 
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getVatList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: 'rest/vat/getvat'
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+        dispatch({
+          type: EXPENSE.VAT_LIST,
+          payload: res.data 
         })
       }
     }).catch(err => {

@@ -25,7 +25,7 @@ const ExpenseReducer = (state = initState, action) => {
 
     case EXPENSE.CURRENCY_LIST:
 
-      const currency_list = payload.data.map(currency => {
+      const currency_list = payload.map(currency => {
         return { label: currency.currencyName, value: currency.currencyCode }
       })
 
@@ -35,7 +35,7 @@ const ExpenseReducer = (state = initState, action) => {
       }
 
     case EXPENSE.PROJECT_LIST:
-      const project_list = payload.data.map(project => {
+      const project_list = payload.map(project => {
         return { label: project.projectName, value: project.projectId }
       })
 
@@ -45,7 +45,7 @@ const ExpenseReducer = (state = initState, action) => {
       }
 
     case EXPENSE.SUPPLIER_LIST:
-      const supplier_list = payload.data.map(supplier => {
+      const supplier_list = payload.map(supplier => {
         return { label: supplier.firstName, value: supplier.contactId }
       })
 
@@ -55,7 +55,7 @@ const ExpenseReducer = (state = initState, action) => {
       }
 
     case EXPENSE.BANK_ACCOUNT_LIST:
-      const bank_account_list = payload.data.map(bank_account => {
+      const bank_account_list = payload.map(bank_account => {
         return { label: bank_account.bankAccountId, value: bank_account.bankAccountName }
       })
 
@@ -64,19 +64,10 @@ const ExpenseReducer = (state = initState, action) => {
         bank_account_list: Object.assign([], bank_account_list)
       }
 
-    case EXPENSE.CUSTOMER_LIST:
-      const customer_list = payload.data.map(customer => {
-        return { label: customer.firstName, value: customer.contactId }
-      })
-
-      return {
-        ...state,
-        customer_list: Object.assign([], customer_list)
-      }
-
     case EXPENSE.PAYMENT_LIST:
-      const payment_list = payload.data.map(payment => {
-        return { label: payment.value, value: payment.paymentID }
+
+      const payment_list = payload.map(payment => {
+        return { label: payment.amount, value: payment.paymentID }
       })
 
       return {
@@ -84,6 +75,27 @@ const ExpenseReducer = (state = initState, action) => {
         payment_list: Object.assign([], payment_list)
       }
 
+      case EXPENSE.VAT_LIST:
+
+        const vat_list = payload.map(vat => {
+          return { label: vat.name, value: vat.id }
+        })
+  
+        return {
+          ...state,
+          vat_list: Object.assign([], vat_list)
+        }
+  
+      case EXPENSE.CHART_OF_ACCOUNT_LIST:
+        const chart_of_account_list = payload.map(item => {
+          return { label: item.transactionCategoryDescription, value: item.transactionCategoryId }
+        })
+  
+        return {
+          ...state,
+          chart_of_account_list: Object.assign([], chart_of_account_list)
+        }
+  
 
     default:
       return state

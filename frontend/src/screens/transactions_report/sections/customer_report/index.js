@@ -15,9 +15,11 @@ import {
   Button,
   ButtonGroup
 } from "reactstrap"
-
+ 
 import _ from "lodash"
 import Select from 'react-select'
+import * as customerReportData from '../../actions';
+
 import { DateRangePicker2 } from 'components'
 import moment from 'moment'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
@@ -28,13 +30,22 @@ import "react-toastify/dist/ReactToastify.css"
 import 'react-select/dist/react-select.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
 import './style.scss'
+import {
+  selectOptionsFactory,
+  filterFactory
+} from 'utils' 
+
 
 const mapStateToProps = (state) => {
+      console.log(state)
   return ({
+    customer_invoice_report : state.transaction_data.customer_invoice_report,
+    contact_list : state.transaction_data.contact_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
+    customerReportData: bindActionCreators(customerReportData, dispatch)
   })
 }
 
@@ -110,21 +121,89 @@ class CustomerReport extends React.Component {
     super(props)
     this.state = {
       selectedOption: '',
+      filter_refNumber : '',
+      filter_contactName : ''
     }
 
     this.handleChange = this.handleChange.bind(this)
   }
 
 
+
+  componentDidMount(){
+    this.getCustomerInvoice()
+    
+  }
+
+  getCustomerInvoice = () => {
+    this.props.customerReportData.getCustomerInvoiceReport();
+    this.props.customerReportData.getContactNameList();
+  }
+  
   handleChange(selectedOption) {
     this.setState({ selectedOption })
   }
 
   getInvoiceStatus(cell, row) {
-    return(<Badge color={cell === 'paid'?'success':'danger'}>{cell}</Badge>)
+    return(<Badge color={cell === 'Paid'?'success':'danger'}>{cell}</Badge>)
+  }
+
+
+  getSelectedData = () => {
+    console.log(this.state);
+
+    
+    // if(this.state.filter_transactionType !== '' || this.state.filter_transactionCategory !== '' || this.state.filter_accountType !== '' ) {
+    //   const postObj = {
+    //     "transactionTypeCode" : this.state.filter_transactionType !== '' ? this.state.filter_transactionType.value : "" ,
+    //     "transactionCategoryId" : this.state.filter_transactionCategory !== '' ? this.state.filter_transactionCategory.value : "",
+    //     "accountId" : this.state.filter_accountType !== '' ? this.state.filter_accountType.value : ""
+        
+    //   }
+    //   this.props.accountBalanceActions.getAccountBalancesList(postObj);
+    //  console.log(this.state);
+
+    // }
+    
+  }
+
+  inputHandler = (key, value) => {
+    console.log(key,value)
+    this.setState({
+      [key]: value
+    })
+  }
+
+
+  handleEvent = (event, picker) => {
+    // alert(picker.minDate, picker.maxDate)
+    console.log(picker.startDate);
   }
 
   render() {
+  
+    const customerInvoice = this.props.customer_invoice_report ? this.props.customer_invoice_report.map(customer => 
+     
+      ({
+        status : customer.status,
+        referenceNumber : customer.refNumber,
+        date: moment(customer.invoiceDate).format('L'),
+        dueDate: moment(customer.invoiceDueDate).format('L'),
+        contactName: customer.contactName,
+        numberOfItems: customer.noOfItem,
+        totalCost: customer.totalCost,
+      // transactionCategoryName: 'temp',
+     
+      // parentTransactionCategory: 'Loream Ipsume',
+     
+      })
+    ) : ""
+
+    const {
+      contact_list
+    } = this.props
+
+
     return (
       <div className="invoice-report-section">
         <div className="animated fadeIn">
@@ -162,11 +241,27 @@ class CustomerReport extends React.Component {
                 <h5>Filter : </h5>
                 <Row>
                   <Col lg={2} className="mb-1">
-                    <Input type="text" placeholder="Ref. Number" />
+                  <Input
+                              type="text"
+                              placeholder="Ref. Number" 
+                              value={this.state.filter_refNumber}
+                              onChange={e => this.inputHandler('filter_refNumber', e.target.value)}
+                            />
                   </Col>
                   <Col lg={2} className="mb-1">
-                    <DateRangePicker>
-                      <Input type="text" placeholder="Date" />
+
+                  {/* <DatePicker
+                                        className="form-control"
+                                        id="payment_date"
+                                        name="payment_date"
+                                        placeholderText=""
+                                        onChange={option => props.handleChange('payment_date')(option)}
+                                        selected={props.values.payment_date}
+                                      /> */}
+
+                                      
+                    <DateRangePicker  selected = "asdfg" onEvent={this.handleEvent}>
+                      <Input type="text" placeholder="Date"/>
                     </DateRangePicker>
                   </Col>
                   <Col lg={2} className="mb-1">
@@ -175,13 +270,36 @@ class CustomerReport extends React.Component {
                     </DateRangePicker>
                   </Col>
                   <Col lg={2} className="mb-1">
-                    <Input type="text" placeholder="Contact Name" />
+                    {/* <Input type="text" placeholder="Contact Name" /> */}
+                    <Select
+                      className=""
+                      // options={accountOptions}
+                      options={selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list)}
+                      value={this.state.filter_accountType}
+                      onChange={option => this.setState({
+                        filter_accountType: option
+                      })}
+                      placeholder="Account"
+                      // onChange={this.changeType}
+                    />
                   </Col>
+                  <Col lg={2} className="mb-1">
+                  <Button
+                          color="secondary"
+                          className="btn-square"
+                          type="submit"
+                          name="submit"
+                          onClick = {this.getSelectedData}
+                        >
+                          <i className="fa glyphicon glyphicon-export fa-search mr-1" />
+                          Search
+                        </Button>
+                        </Col>
                 </Row>
               </div>
               <div className="table-wrapper">
                 <BootstrapTable 
-                  data={tempdata} 
+                  data={customerInvoice} 
                   hover
                   pagination
                   filter = {true}
@@ -197,37 +315,37 @@ class CustomerReport extends React.Component {
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     isKey
-                    dataField="transactionCategoryCode"
+                    dataField="referenceNumber"
                     dataSort
                   >
                     Ref. Number
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionCategoryName"
+                    dataField="date"
                     dataSort
                   >
                     Date
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionCategoryDescription"
+                    dataField="dueDate"
                     dataSort
                   >
                     Due Date
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="parentTransactionCategory"
+                    dataField="contactName"
                     dataSort
                   >
                     Contact Name
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionType"
+                    dataField="numberOfItems"
                     dataSort
                   >
                     No. of Items
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionType"
+                    dataField="totalCost"
                     dataSort
                   >
                     Total Cost

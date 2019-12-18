@@ -23,6 +23,12 @@ import moment from 'moment'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DateRangePicker from 'react-bootstrap-daterangepicker'
 
+import * as accountBalanceData from '../../actions';
+import {
+  selectOptionsFactory,
+  filterFactory
+} from 'utils' 
+
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
 import 'react-select/dist/react-select.css'
@@ -31,10 +37,15 @@ import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
+    account_balance_report : state.transaction_data.account_balance_report,
+    transaction_type_list :  state.transaction_data.transaction_type_list,
+    transaction_category_list :  state.transaction_data.transaction_category_list
+
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
+    accountBalanceData: bindActionCreators(accountBalanceData, dispatch)
   })
 }
 
@@ -122,11 +133,25 @@ class AccountBalances extends React.Component {
     super(props)
     this.state = {
       selectedType: '',
-      selectedCategory: ''
+      selectedCategory: '',
+      filter_type:'',
+      filter_category :'',
+      filter_account : ''
     }
 
     this.changeType = this.changeType.bind(this)
     this.changeCategory = this.changeCategory.bind(this)
+  }
+
+  componentDidMount(){
+    this.getAccountBalanceData()
+    
+  }
+
+  getAccountBalanceData = () => {
+    this.props.accountBalanceData.getAccountBalanceReport();
+    this.props.accountBalanceData.getTransactionTypeList();
+    this.props.accountBalanceData.getTransactionCategoryList();
   }
 
 
@@ -138,7 +163,41 @@ class AccountBalances extends React.Component {
     this.setState({ selectedCategory })
   }
 
+
+  getSelectedData = () => {
+    const postObj = {
+      filter_type : this.state.filter_type !== '' ?  this.state.filter_type : "",
+      filter_category : this.state.filter_category !== '' ?  this.state.filter_category : "",
+    }
+
+    this.props.accountBalanceData.getAccountBalanceReport(postObj);
+  }
+
   render() {
+
+
+  
+
+
+    const account_balance_table = this.props.account_balance_report ?
+    this.props.account_balance_report.map(account => ({
+      account : account.bankAccount,
+      transactionType:account.transactionType,
+      transactionDescription : account.transactionDescription,
+      transactionCategory : account.transactionCategory,
+      transactionAmount : account.transactionAmount,
+      transactionDate : account.transactionDate
+
+    })) : ""
+
+
+
+    const {
+      transaction_type_list,
+    transaction_category_list 
+    } = this.props
+
+    
     return (
       <div className="transaction-report-section">
         <div className="animated fadeIn">
@@ -192,26 +251,45 @@ class AccountBalances extends React.Component {
                   <Col lg={2} className="mb-1">
                     <Select
                       className=""
-                      options={colourOptions}
-                      value={this.state.selectedType}
+                      // options={colourOptions}
+                      options={selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list)}
+                      value={this.state.filter_type}
                       placeholder="Transaction Type"
-                      onChange={this.changeType}
+                      onChange={option => this.setState({
+                        filter_type: option
+                      })}
                     />
                   </Col>
                   <Col lg={2} className="mb-1">
                     <Select
                       className=""
-                      options={colourOptions}
-                      value={this.state.selectedType}
+                      options={selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list)}
+                      // options={colourOptions}
+                      value={this.state.filter_category}
                       placeholder="Transaction Category"
-                      onChange={this.changeType}
+                      onChange={option => this.setState({
+                        filter_category: option
+                      })}
+                      // onChange={this.changeType}
                     />
                   </Col>
+                  <Col lg={2} className="mb-1">
+                  <Button
+                          color="secondary"
+                          className="btn-square"
+                          type="submit"
+                          name="submit"
+                          onClick = {this.getSelectedData}
+                        >
+                          <i className="fa glyphicon glyphicon-export fa-search mr-1" />
+                          Search
+                        </Button>
+                        </Col>
                 </Row>
               </div>
               <div className="table-wrapper">
                 <BootstrapTable 
-                  data={tempdata} 
+                  data={account_balance_table} 
                   hover
                   pagination
                   version="4"
@@ -224,7 +302,7 @@ class AccountBalances extends React.Component {
                     Transaction Date
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionDate"
+                    dataField="account"
                     dataSort
                   >
                     Account
@@ -236,19 +314,19 @@ class AccountBalances extends React.Component {
                     Transaction Type
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="parentTransactionCategory"
+                    dataField="transactionCategory"
                     dataSort
                   >
                     Transaction Category
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionCategoryDescription"
+                    dataField="transactionDescription"
                     dataSort
                   >
                     Transaction Description
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionType"
+                    dataField="transactionAmount"
                     dataSort
                   >
                     Transaction Amount

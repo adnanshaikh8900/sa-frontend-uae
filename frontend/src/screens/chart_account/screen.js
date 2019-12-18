@@ -26,18 +26,18 @@ import { Loader } from 'components'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
-import * as ProductActions from './actions'
+import * as ChartAccountActions from './actions'
 
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    product_list: state.product.product_list
+    transaction_list: state.transaction.transaction_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    productActions: bindActionCreators(ProductActions, dispatch)
+    chartOfAccountActions: bindActionCreators(ChartAccountActions, dispatch)
   })
 }
 
@@ -54,6 +54,7 @@ class ChartAccount extends React.Component {
     this.onSelectAll = this.onSelectAll.bind(this)
     this.goToDetailPage = this.goToDetailPage.bind(this)
     this.goToCreatePage = this.goToCreatePage.bind(this)
+    this.typeFormatter = this.typeFormatter.bind(this);
 
     this.options = {
       onRowClick: this.goToDetailPage,
@@ -75,11 +76,11 @@ class ChartAccount extends React.Component {
   }
 
   initializeData () {
-    // this.props.productActions.getProductList()
+    this.props.chartOfAccountActions.getTransactionList()
   }
 
   goToDetailPage (row) {
-    this.props.history.push('/admin/master/chart-account/detail')
+    this.props.history.push(`/admin/master/chart-account/detail`,{id:row.transactionCategoryId})
   }
 
   goToCreatePage() {
@@ -93,10 +94,15 @@ class ChartAccount extends React.Component {
     console.log('current page all row checked ++++++++', rows)
   }
 
+  typeFormatter(cell,row) {
+    return  row['transactionType']['transactionTypeName'];
+    
+  }
+
   render() {
 
     const { loading } = this.state
-    const { product_list } = this.props
+    const { transaction_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -176,30 +182,31 @@ class ChartAccount extends React.Component {
                           selectRow={ this.selectRowProp }
                           search={false}
                           options={ this.options }
-                          data={product_list}
+                          data={transaction_list}
                           version="4"
                           hover
                           pagination
-                          totalSize={product_list ? product_list.length : 0}
+                          totalSize={transaction_list ? transaction_list.length : 0}
                           className="product-table"
                           trClassName="cursor-pointer"
                         >
                           <TableHeaderColumn
                             isKey
-                            dataField="transactionCategoryName"
+                            dataField="transactionCategoryCode"
                             dataSort
                           >
                             Code
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryCode"
+                            dataField="transactionCategoryName"
                             dataSort
                           >
-                            Account
+                            Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryCode"
+                            dataField="transactionType"
                             dataSort
+                            dataFormat={this.typeFormatter}
                           >
                             Type
                           </TableHeaderColumn>

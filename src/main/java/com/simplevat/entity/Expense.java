@@ -172,11 +172,10 @@ public class Expense implements Serializable {
     @JoinColumn(name = "BANK_ID")
     @JsonManagedReference
     private BankAccount bankAccount;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAYMENT_ID")
-    @JsonManagedReference
-    private Payment payment;
+
+    @Basic
+    @Column(name = "PAYEE")
+    private String payee;
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "expense", orphanRemoval = true)

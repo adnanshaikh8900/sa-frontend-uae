@@ -98,22 +98,19 @@ public class PaymentController implements Serializable {
     public ResponseEntity save(@ModelAttribute PaymentPersistModel paymentModel) {
         try {
             Payment payment = paymentModelHelper.convertToPayment(paymentModel);
-            if (paymentModel.getBankAccountId()!= null) {
+            if (paymentModel.getBankAccountId() != null) {
                 BankAccount bankAccount = bankAccountService.findByPK(paymentModel.getBankAccountId());
                 if (bankAccount != null) {
                     payment.setBankAccount(bankAccount);
                 }
             }
+            if (paymentModel.getAttachmentFile() != null) {
+                System.out.println("=======" + paymentModel.getAttachmentFile().getOriginalFilename());
+            }
             if (paymentModel.getSupplierId() != null) {
                 Contact supplier = contactService.findByPK(paymentModel.getSupplierId());
                 if (supplier != null) {
                     payment.setSupplier(supplier);
-                }
-            }
-            if (paymentModel.getInvoiceId() != null) {
-                Invoice invoice = invoiceService.findByPK(paymentModel.getInvoiceId());
-                if (invoice != null) {
-                    payment.setInvoice(invoice);
                 }
             }
             if (paymentModel.getCurrencyCode() != null) {
@@ -146,8 +143,8 @@ public class PaymentController implements Serializable {
         return new ResponseEntity(HttpStatus.OK);
 
     }
-    
-     @RequestMapping(method = RequestMethod.DELETE, value = "/deletes")
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/deletes")
     public ResponseEntity deleteExpenses(@RequestBody DeleteModel expenseIds) {
         try {
             System.out.println("paymentIds=" + expenseIds);

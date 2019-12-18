@@ -285,28 +285,16 @@ class Payment extends React.Component {
                           trClassName="cursor-pointer"
                         >
                           <TableHeaderColumn
-                            dataField="paymentNo"
+                            dataField="supplierName"
                             dataSort
                           >
-                            Payment Number
+                            Supplier Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="referenceNo"
+                            dataField="invoiceReferenceNo"
                             dataSort
                           >
                             Reference #
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="invoiceNo"
-                            dataSort
-                          >
-                            Invoice
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="bankName"
-                            dataSort
-                          >
-                            Bank Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="amount"

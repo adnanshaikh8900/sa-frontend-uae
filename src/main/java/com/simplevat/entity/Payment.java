@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.invoice.Invoice;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
 import lombok.Data;
@@ -33,10 +34,6 @@ public class Payment implements Serializable {
     @JoinColumn(name = "SUPPLIER_ID")
     private Contact supplier;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INVOICE_ID")
-    private Invoice invoice;
-
     @Basic
     @Column(name = "PAYMENT_DATE")
     private Date paymentDate;
@@ -65,8 +62,12 @@ public class Payment implements Serializable {
     private String description;
 
     @Basic
-    @Column(name = "REFERENCE_NUMBER")
-    private String referenceNo;
+    @Column(name = "INVOICE_REFERENCE_NUMBER")
+    private String invoiceReferenceNo;
+
+    @Basic
+    @Column(name = "INVOICE_AMOUNT")
+    private BigDecimal invoiceAmount;
 
     @Basic
     @Column(name = "RECEIPT_NUMBER")

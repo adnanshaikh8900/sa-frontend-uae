@@ -1,11 +1,21 @@
 import { EXPENSE } from 'constants/types'
 import {
   api,
-  authApi
+  authFileUploadApi
 } from 'utils'
 
-export const initialData = (obj) => {
+export const createExpense = (obj) => {
   return (dispatch) => {
-    
+    let data = {
+      method: 'post',
+      url: 'rest/expense/save',
+      data: obj
+    }
+    return authFileUploadApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
   }
 }
+

@@ -11,11 +11,20 @@ export const initialData = (obj) => {
 }
 
 
-export const getCustomerInvoiceReport = () => {
+export const getCustomerInvoiceReport = (inputObj) => {
+  
+  let startDate = inputObj && inputObj.startDate  !== '' ? `startDate=${inputObj.startDate}` : ""
+  let endDate = inputObj && inputObj.endDate  !== '' ? `endDate=${inputObj.endDate}` : ""
+  let contactId = inputObj && inputObj.contactName  !== '' ? `contactId=${inputObj.contactName.value}` : ""  
+  let refNumber =  inputObj && inputObj.refNumber  !== '' ? `refNumber=${inputObj.refNumber}` : ""
+
   return (dispatch) => {
     let data ={
       method: 'post',
-      url: 'rest/transactionreport/customerInvoiceReport'
+      
+      url: `rest/transactionreport/customerInvoiceReport?${refNumber}&${contactId}`,
+      // url: 'rest/transactionreport/customerInvoiceReport'  ,
+      data: inputObj    
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
@@ -34,16 +43,19 @@ export const getCustomerInvoiceReport = () => {
 
 
 export const getAccountBalanceReport = (postObj) => {
-  console.log(postObj)
-  // let transactionTypeCode = postObj.filter_type  !== '' ? postObj.filter_type.value : ""
-  //  let transactionCategoryId = postObj.filter_category  !== '' ? postObj.filter_category.value : ""
+let transactionTypeCode,transactionCategoryId,accountId
+
+    transactionTypeCode  = postObj && postObj.filter_type  !== '' ?  `transactionTypeCode=${postObj.filter_type.value}`  : "" 
+    transactionCategoryId = postObj && postObj.filter_category  !== '' ?  `transactionCategoryId=${postObj.filter_category.value}` : "" 
+    accountId = postObj && postObj.filter_account  !== '' ?  `accountId=${postObj.filter_account.value}` : "" 
+    
   return (dispatch) => {
 
- 
-
+   
     let data ={
       method: 'post',
-      url: `rest/transactionreport/accountBalanceReport`,
+      url: `rest/transactionreport/accountBalanceReport?${transactionTypeCode}&${transactionCategoryId}&${accountId}`,
+      // url: `rest/transactionreport/accountBalanceReport`,      
       // url: `rest/transactionreport/accountBalanceReport?transactionTypeCode=${transactionTypeCode}&transactionCategoryId=${transactionCategoryId}`,
       
       data: postObj
@@ -92,7 +104,7 @@ export const getAccountTypeList = () => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: 'rest/contact/contacttype'
+      url: 'rest/bank/getaccounttype'
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
@@ -113,7 +125,7 @@ export const getTransactionTypeList = () => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: 'rest/transactioncategory/gettransactiontype'
+      url: 'rest/transactionreport/getTransactionTypes'
     }
     return authApi(data).then(res => {
       if (res.status == 200) {

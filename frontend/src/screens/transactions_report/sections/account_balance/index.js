@@ -39,7 +39,8 @@ const mapStateToProps = (state) => {
   return ({
     account_balance_report : state.transaction_data.account_balance_report,
     transaction_type_list :  state.transaction_data.transaction_type_list,
-    transaction_category_list :  state.transaction_data.transaction_category_list
+    transaction_category_list :  state.transaction_data.transaction_category_list,
+   account_type_list :state.transaction_data.account_type_list,    
 
   })
 }
@@ -136,7 +137,10 @@ class AccountBalances extends React.Component {
       selectedCategory: '',
       filter_type:'',
       filter_category :'',
-      filter_account : ''
+      filter_account : '',
+      startDate : '',
+      endDate : ''
+
     }
 
     this.changeType = this.changeType.bind(this)
@@ -152,6 +156,7 @@ class AccountBalances extends React.Component {
     this.props.accountBalanceData.getAccountBalanceReport();
     this.props.accountBalanceData.getTransactionTypeList();
     this.props.accountBalanceData.getTransactionCategoryList();
+    this.props.accountBalanceData.getAccountTypeList();
   }
 
 
@@ -168,9 +173,17 @@ class AccountBalances extends React.Component {
     const postObj = {
       filter_type : this.state.filter_type !== '' ?  this.state.filter_type : "",
       filter_category : this.state.filter_category !== '' ?  this.state.filter_category : "",
+      filter_account :  this.state.filter_account !== '' ?  this.state.filter_account : "",
+      startDate :  this.state.startDate !== '' ?  this.state.startDate : "",
+      endDate :  this.state.endDate !== '' ?  this.state.endDate : "",
     }
-
     this.props.accountBalanceData.getAccountBalanceReport(postObj);
+  }
+
+  handleChange = (e,picker) => {
+    let startingDate = picker ? moment(picker.startDate._d).format('L') : ''
+    let endingDate = picker ? moment(picker.endDate._d).format('L') : ''
+    this.setState({ startDate : startingDate ,endDate : endingDate })
   }
 
   render() {
@@ -186,7 +199,7 @@ class AccountBalances extends React.Component {
       transactionDescription : account.transactionDescription,
       transactionCategory : account.transactionCategory,
       transactionAmount : account.transactionAmount,
-      transactionDate : account.transactionDate
+      transactionDate : moment(account.transactionDate).format('L')
 
     })) : ""
 
@@ -194,7 +207,8 @@ class AccountBalances extends React.Component {
 
     const {
       transaction_type_list,
-    transaction_category_list 
+    transaction_category_list ,
+    account_type_list
     } = this.props
 
     
@@ -235,17 +249,31 @@ class AccountBalances extends React.Component {
                 <h5>Filter : </h5>
                 <Row>
                   <Col lg={2} className="mb-1">
-                    <DateRangePicker>
+                    {/* <DateRangePicker>
                       <Input type="text" placeholder="Transaction Date" />
+                    </DateRangePicker> */}
+                     <DateRangePicker   id="transaction_date"
+                                        name="transaction_date" 
+                                        // onChange={option => this.handleChange('payment_date')(option)}
+                                       
+                                        onApply={ this.handleChange}
+                                        >
+                      <Input type="text"  value={this.state.startDate }
+                                        selected={this.state.startDate} placeholder="Transaction Date"/>
+                                       
                     </DateRangePicker>
                   </Col>
+                 
                   <Col lg={2} className="mb-1">
                     <Select
                       className=""
-                      options={colourOptions}
-                      value={this.state.selectedType}
+                      options={selectOptionsFactory.renderOptions('name', 'id', account_type_list)}
+                      // options={colourOptions}
+                      value={this.state.filter_account}
                       placeholder="Account"
-                      onChange={this.changeType}
+                      onChange={option => this.setState({
+                        filter_account: option
+                      })}
                     />
                   </Col>
                   <Col lg={2} className="mb-1">

@@ -19,6 +19,7 @@ import {
 import _ from "lodash"
 import Select from 'react-select'
 import * as customerReportData from '../../actions';
+import DatePicker from 'react-datepicker'
 
 import { DateRangePicker2 } from 'components'
 import moment from 'moment'
@@ -29,6 +30,7 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
 import 'react-select/dist/react-select.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
+import 'bootstrap/dist/css/bootstrap.css';
 import './style.scss'
 import {
   selectOptionsFactory,
@@ -37,7 +39,6 @@ import {
 
 
 const mapStateToProps = (state) => {
-      console.log(state)
   return ({
     customer_invoice_report : state.transaction_data.customer_invoice_report,
     contact_list : state.transaction_data.contact_list
@@ -122,7 +123,12 @@ class CustomerReport extends React.Component {
     this.state = {
       selectedOption: '',
       filter_refNumber : '',
-      filter_contactName : ''
+      filter_contactName : '',
+      payment_date :'',
+      startDate : '',
+      endDate : '',
+      currentData : {},
+      currentDate : {}
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -140,9 +146,9 @@ class CustomerReport extends React.Component {
     this.props.customerReportData.getContactNameList();
   }
   
-  handleChange(selectedOption) {
-    this.setState({ selectedOption })
-  }
+  // handleChange(selectedOption) {
+  //   this.setState({ selectedOption })
+  // }
 
   getInvoiceStatus(cell, row) {
     return(<Badge color={cell === 'Paid'?'success':'danger'}>{cell}</Badge>)
@@ -150,25 +156,17 @@ class CustomerReport extends React.Component {
 
 
   getSelectedData = () => {
-    console.log(this.state);
 
-    
-    // if(this.state.filter_transactionType !== '' || this.state.filter_transactionCategory !== '' || this.state.filter_accountType !== '' ) {
-    //   const postObj = {
-    //     "transactionTypeCode" : this.state.filter_transactionType !== '' ? this.state.filter_transactionType.value : "" ,
-    //     "transactionCategoryId" : this.state.filter_transactionCategory !== '' ? this.state.filter_transactionCategory.value : "",
-    //     "accountId" : this.state.filter_accountType !== '' ? this.state.filter_accountType.value : ""
-        
-    //   }
-    //   this.props.accountBalanceActions.getAccountBalancesList(postObj);
-    //  console.log(this.state);
-
-    // }
-    
+    const postObj = {
+      startDate : this.state.startDate !== '' ?  this.state.startDate : "",
+      endDate : this.state.endDate !== '' ?  this.state.endDate : "",
+      contactName : this.state.filter_contactName !=='' ? this.state.filter_contactName : "",
+      refNumber : this.state.filter_refNumber !== '' ? this.state.filter_refNumber : ""
+    }
+    this.props.customerReportData.getCustomerInvoiceReport(postObj);
   }
 
   inputHandler = (key, value) => {
-    console.log(key,value)
     this.setState({
       [key]: value
     })
@@ -177,7 +175,17 @@ class CustomerReport extends React.Component {
 
   handleEvent = (event, picker) => {
     // alert(picker.minDate, picker.maxDate)
-    console.log(picker.startDate);
+  }
+
+
+
+
+
+
+  handleChange(e,picker) {
+    let startingDate = picker ? moment(picker.startDate._d).format('L') : ''
+    let endingDate = picker ? moment(picker.endDate._d).format('L') : ''
+    this.setState({ startDate : startingDate ,endDate : endingDate })
   }
 
   render() {
@@ -192,10 +200,6 @@ class CustomerReport extends React.Component {
         contactName: customer.contactName,
         numberOfItems: customer.noOfItem,
         totalCost: customer.totalCost,
-      // transactionCategoryName: 'temp',
-     
-      // parentTransactionCategory: 'Loream Ipsume',
-     
       })
     ) : ""
 
@@ -250,36 +254,34 @@ class CustomerReport extends React.Component {
                   </Col>
                   <Col lg={2} className="mb-1">
 
-                  {/* <DatePicker
-                                        className="form-control"
-                                        id="payment_date"
-                                        name="payment_date"
-                                        placeholderText=""
-                                        onChange={option => props.handleChange('payment_date')(option)}
-                                        selected={props.values.payment_date}
-                                      /> */}
-
-                                      
-                    <DateRangePicker  selected = "asdfg" onEvent={this.handleEvent}>
-                      <Input type="text" placeholder="Date"/>
+                    <DateRangePicker   id="payment_date"
+                                        name="payment_date" 
+                                        // onChange={option => this.handleChange('payment_date')(option)}
+                                       
+                                        onApply={ this.handleChange}
+                                        >
+                      <Input type="text"  value={this.state.startDate }
+                                        selected={this.state.startDate} placeholder="Start Date"/>
+                                       
                     </DateRangePicker>
                   </Col>
                   <Col lg={2} className="mb-1">
-                    <DateRangePicker>
-                      <Input type="text" placeholder="Due Date" />
-                    </DateRangePicker>
+                    {/* <DateRangePicker> */}
+                        <Input type="text"  value={this.state.endDate}
+                                        selected={this.state.endDate} placeholder="End Date"/>
+                    {/* </DateRangePicker> */}
                   </Col>
                   <Col lg={2} className="mb-1">
                     {/* <Input type="text" placeholder="Contact Name" /> */}
                     <Select
                       className=""
                       // options={accountOptions}
-                      options={selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list)}
-                      value={this.state.filter_accountType}
+                      options={selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list, 'none')}
+                      value={this.state.filter_contactName}
                       onChange={option => this.setState({
-                        filter_accountType: option
+                        filter_contactName: option
                       })}
-                      placeholder="Account"
+                      placeholder="contact Name"
                       // onChange={this.changeType}
                     />
                   </Col>

@@ -32,6 +32,7 @@
     "react-bootstrap-table2-paginator": "^2.1.0",
     "react-chartjs-2": "^2.7.6",
     "react-codemirror2": "^6.0.0",
+    "react-date-range": "^0.9.4",
     "react-datepicker": "^2.9.6",
     "react-dates": "^20.2.3",
     "react-dom": "^16.8.6",

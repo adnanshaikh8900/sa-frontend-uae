@@ -21,8 +21,8 @@ public class ProductServiceImpl extends ProductService {
     }
 
     @Override
-    public List<Product> getProductList() {
-        return productDao.getProductList();
+    public List<Product> getProductList(Integer userId) {
+        return productDao.getProductList(userId);
     }
 
     @Override

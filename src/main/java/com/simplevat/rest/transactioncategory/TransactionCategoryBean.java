@@ -3,31 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.simplevat.contact.model;
+package com.simplevat.rest.transactioncategory;
 
-import com.simplevat.entity.VatCategory;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  *
- * @author daynil
+ * @author Sonu
  */
-@Getter
-@Setter
-public class TransactionCategoryModel {
+@Data
+public class TransactionCategoryBean implements Serializable{
 
     private Integer transactionCategoryId;
     private String transactionCategoryName;
     private String transactionCategoryDescription;
     private String transactionCategoryCode;
-    private TransactionType transactionType;
-    private TransactionCategory parentTransactionCategory;
-    private VatCategory vatCategory;
-    private Character defaltFlag;
+    private Integer transactionType;
+    private Integer parentTransactionCategory;
+    private Integer vatCategory;
+    private String defaltFlag;
     private Integer orderSequence;
     private Integer createdBy;
     private LocalDateTime createdDate;

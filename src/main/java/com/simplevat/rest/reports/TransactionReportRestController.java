@@ -11,7 +11,7 @@ import com.simplevat.contact.model.InvoiceReportRestModel;
 import com.simplevat.contact.model.TransactionReportRestModel;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.bankaccount.TransactionType;
-import com.simplevat.service.TransactionCategoryServiceNew;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 import com.simplevat.service.invoice.InvoiceService;
@@ -40,7 +40,7 @@ public class TransactionReportRestController {
     private TransactionTypeService transactionTypeService;
 
     @Autowired
-    private TransactionCategoryServiceNew transactionCategoryService;
+    private TransactionCategoryService transactionCategoryService;
 
     @Autowired
     private TransactionService transactionService;

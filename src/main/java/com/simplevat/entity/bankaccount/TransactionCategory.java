@@ -19,6 +19,10 @@ import org.hibernate.annotations.ColumnDefault;
     ,
     @NamedQuery(name = "findAllTransactionCategoryByTransactionType",
             query = "SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.transactionType.transactionTypeCode =:transactionTypeCode ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
+    ,
+     @NamedQuery(name = "findAllTransactionCategoryByUserId",
+            query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false where created_by =:createdBy or created_by =1 ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
+
 })
 @Entity
 @Table(name = "TRANSACTION_CATEGORY")
@@ -51,7 +55,7 @@ public class TransactionCategory implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_TRANSACTION_CATEGORY_CODE")
     private TransactionCategory parentTransactionCategory;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "VAT_CATEGORY_CODE")
     private VatCategory vatCategory;

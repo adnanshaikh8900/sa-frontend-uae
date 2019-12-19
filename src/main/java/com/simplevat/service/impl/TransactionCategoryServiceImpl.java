@@ -13,12 +13,14 @@ import com.simplevat.criteria.bankaccount.TransactionCategoryCriteria;
 import com.simplevat.dao.bankaccount.TransactionCategoryDaoNew;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.service.TransactionCategoryServiceNew;
+import com.simplevat.service.TransactionCategoryService;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service("transactionCategoryService")
 @Transactional
-public class TransactionCategoryServiceNewImpl extends TransactionCategoryServiceNew {
+public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 
     private static final String TRANSACTION_CATEGORY = "TRANSACTION_CATEGORY";
 
@@ -34,6 +36,13 @@ public class TransactionCategoryServiceNewImpl extends TransactionCategoryServic
     @Override
     public List<TransactionCategory> findAllTransactionCategory() {
         return getDao().executeNamedQuery("findAllTransactionCategory");
+    }
+    
+     @Override
+    public List<TransactionCategory> findAllTransactionCategoryByUserId(Integer userId) {
+        Map<String, Object> parameterDataMap = new HashMap();
+        parameterDataMap.put("createdBy", userId);
+        return getDao().executeNamedQuery("findAllTransactionCategoryByUserId");
     }
 
     @Override

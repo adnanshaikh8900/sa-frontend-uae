@@ -29,7 +29,7 @@ import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ProductService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.PurchaseService;
-import com.simplevat.service.TransactionCategoryServiceNew;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserServiceNew;
 import com.simplevat.service.VatCategoryService;
 import java.math.BigDecimal;
@@ -74,7 +74,7 @@ public class PurchaseRestController {
     private VatCategoryService vatCategoryService;
 
     @Autowired
-    private TransactionCategoryServiceNew transactionCategoryService;
+    private TransactionCategoryService transactionCategoryService;
 
     @Autowired
     private CurrencyService currencyService;

@@ -5,6 +5,7 @@
  */
 package com.simplevat.contact.model;
 
+import com.simplevat.entity.Expense;
 import java.math.BigDecimal;
 import lombok.Data;
 
@@ -22,5 +23,4 @@ public class ExpenseItemModel {
     private Integer transactionCategoryId;
     private BigDecimal subTotal;
     private Integer versionNumber;
-    
 }

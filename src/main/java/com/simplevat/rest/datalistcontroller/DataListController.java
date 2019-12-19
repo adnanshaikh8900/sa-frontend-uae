@@ -13,6 +13,7 @@ import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
+import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,8 @@ public class DataListController implements Serializable {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping(value = "/gettransactiontypes")
+    @ApiOperation(value = "All Transaction Types")
+    @GetMapping(value = "/getTransactionTypes")
     public ResponseEntity getTransactionTypes() {
         try {
             List<TransactionType> transactionTypes = transactionTypeService.findAll();

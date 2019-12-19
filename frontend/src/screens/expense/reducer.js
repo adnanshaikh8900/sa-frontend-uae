@@ -55,6 +55,7 @@ const ExpenseReducer = (state = initState, action) => {
       }
 
     case EXPENSE.BANK_ACCOUNT_LIST:
+      console.log(payload)
     //   const bank_account_list = payload.map(bank_account => {
     //     return { label: bank_account.bankAccountId, value: bank_account.bankAccountName }
     //   })

@@ -15,9 +15,12 @@ import {
   Button,
   ButtonGroup
 } from "reactstrap"
-
+ 
 import _ from "lodash"
 import Select from 'react-select'
+import * as customerReportData from '../../actions';
+import DatePicker from 'react-datepicker'
+
 import { DateRangePicker2 } from 'components'
 import moment from 'moment'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
@@ -27,14 +30,23 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
 import 'react-select/dist/react-select.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
+import 'bootstrap/dist/css/bootstrap.css';
 import './style.scss'
+import {
+  selectOptionsFactory,
+  filterFactory
+} from 'utils' 
+
 
 const mapStateToProps = (state) => {
   return ({
+    customer_invoice_report : state.transaction_data.customer_invoice_report,
+    contact_list : state.transaction_data.contact_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
+    customerReportData: bindActionCreators(customerReportData, dispatch)
   })
 }
 
@@ -110,21 +122,92 @@ class CustomerReport extends React.Component {
     super(props)
     this.state = {
       selectedOption: '',
+      filter_refNumber : '',
+      filter_contactName : '',
+      payment_date :'',
+      startDate : '',
+      endDate : '',
+      currentData : {},
+      currentDate : {}
     }
 
     this.handleChange = this.handleChange.bind(this)
   }
 
 
-  handleChange(selectedOption) {
-    this.setState({ selectedOption })
+
+  componentDidMount(){
+    this.getCustomerInvoice()
+    
   }
 
+  getCustomerInvoice = () => {
+    this.props.customerReportData.getCustomerInvoiceReport();
+    this.props.customerReportData.getContactNameList();
+  }
+  
+  // handleChange(selectedOption) {
+  //   this.setState({ selectedOption })
+  // }
+
   getInvoiceStatus(cell, row) {
-    return(<Badge color={cell === 'paid'?'success':'danger'}>{cell}</Badge>)
+    return(<Badge color={cell === 'Paid'?'success':'danger'}>{cell}</Badge>)
+  }
+
+
+  getSelectedData = () => {
+
+    const postObj = {
+      startDate : this.state.startDate !== '' ?  this.state.startDate : "",
+      endDate : this.state.endDate !== '' ?  this.state.endDate : "",
+      contactName : this.state.filter_contactName !=='' ? this.state.filter_contactName : "",
+      refNumber : this.state.filter_refNumber !== '' ? this.state.filter_refNumber : ""
+    }
+    this.props.customerReportData.getCustomerInvoiceReport(postObj);
+  }
+
+  inputHandler = (key, value) => {
+    this.setState({
+      [key]: value
+    })
+  }
+
+
+  handleEvent = (event, picker) => {
+    // alert(picker.minDate, picker.maxDate)
+  }
+
+
+
+
+
+
+  handleChange(e,picker) {
+    let startingDate = picker ? moment(picker.startDate._d).format('L') : ''
+    let endingDate = picker ? moment(picker.endDate._d).format('L') : ''
+    this.setState({ startDate : startingDate ,endDate : endingDate })
   }
 
   render() {
+  
+    const customerInvoice = this.props.customer_invoice_report ? this.props.customer_invoice_report.map(customer => 
+     
+      ({
+        status : customer.status,
+        referenceNumber : customer.refNumber,
+        date: moment(customer.invoiceDate).format('L'),
+        dueDate: moment(customer.invoiceDueDate).format('L'),
+        contactName: customer.contactName,
+        numberOfItems: customer.noOfItem,
+        totalCost: customer.totalCost,
+      })
+    ) : ""
+
+    const {
+      contact_list
+    } = this.props
+
+
     return (
       <div className="invoice-report-section">
         <div className="animated fadeIn">
@@ -162,26 +245,63 @@ class CustomerReport extends React.Component {
                 <h5>Filter : </h5>
                 <Row>
                   <Col lg={2} className="mb-1">
-                    <Input type="text" placeholder="Ref. Number" />
+                  <Input
+                              type="text"
+                              placeholder="Ref. Number" 
+                              value={this.state.filter_refNumber}
+                              onChange={e => this.inputHandler('filter_refNumber', e.target.value)}
+                            />
                   </Col>
                   <Col lg={2} className="mb-1">
-                    <DateRangePicker>
-                      <Input type="text" placeholder="Date" />
+
+                    <DateRangePicker   id="payment_date"
+                                        name="payment_date" 
+                                        // onChange={option => this.handleChange('payment_date')(option)}
+                                       
+                                        onApply={ this.handleChange}
+                                        >
+                      <Input type="text"  value={this.state.startDate }
+                                        selected={this.state.startDate} placeholder="Start Date"/>
+                                       
                     </DateRangePicker>
                   </Col>
                   <Col lg={2} className="mb-1">
-                    <DateRangePicker>
-                      <Input type="text" placeholder="Due Date" />
-                    </DateRangePicker>
+                    {/* <DateRangePicker> */}
+                        <Input type="text"  value={this.state.endDate}
+                                        selected={this.state.endDate} placeholder="End Date"/>
+                    {/* </DateRangePicker> */}
                   </Col>
                   <Col lg={2} className="mb-1">
-                    <Input type="text" placeholder="Contact Name" />
+                    {/* <Input type="text" placeholder="Contact Name" /> */}
+                    <Select
+                      className=""
+                      // options={accountOptions}
+                      options={selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list, 'none')}
+                      value={this.state.filter_contactName}
+                      onChange={option => this.setState({
+                        filter_contactName: option
+                      })}
+                      placeholder="contact Name"
+                      // onChange={this.changeType}
+                    />
                   </Col>
+                  <Col lg={2} className="mb-1">
+                  <Button
+                          color="secondary"
+                          className="btn-square"
+                          type="submit"
+                          name="submit"
+                          onClick = {this.getSelectedData}
+                        >
+                          <i className="fa glyphicon glyphicon-export fa-search mr-1" />
+                          Search
+                        </Button>
+                        </Col>
                 </Row>
               </div>
               <div className="table-wrapper">
                 <BootstrapTable 
-                  data={tempdata} 
+                  data={customerInvoice} 
                   hover
                   pagination
                   filter = {true}
@@ -197,37 +317,37 @@ class CustomerReport extends React.Component {
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     isKey
-                    dataField="transactionCategoryCode"
+                    dataField="referenceNumber"
                     dataSort
                   >
                     Ref. Number
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionCategoryName"
+                    dataField="date"
                     dataSort
                   >
                     Date
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionCategoryDescription"
+                    dataField="dueDate"
                     dataSort
                   >
                     Due Date
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="parentTransactionCategory"
+                    dataField="contactName"
                     dataSort
                   >
                     Contact Name
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionType"
+                    dataField="numberOfItems"
                     dataSort
                   >
                     No. of Items
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField="transactionType"
+                    dataField="totalCost"
                     dataSort
                   >
                     Total Cost

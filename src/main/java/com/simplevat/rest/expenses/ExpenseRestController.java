@@ -10,22 +10,18 @@ import com.simplevat.constant.TransactionTypeConstant;
 import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.service.CompanyService;
-import com.simplevat.service.ContactService;
-import com.simplevat.service.CountryService;
-import com.simplevat.service.CurrencyService;
+import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
-import com.simplevat.service.PaymentService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.TransactionCategoryServiceNew;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserServiceNew;
-import com.simplevat.service.bankaccount.TransactionTypeService;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,34 +40,16 @@ public class ExpenseRestController {
     private ExpenseService expenseService;
 
     @Autowired
-    private TransactionCategoryServiceNew transactionCategoryService;
+    private TransactionCategoryService transactionCategoryService;
 
     @Autowired
     private UserServiceNew userServiceNew;
 
     @Autowired
-    private CompanyService companyService;
-
-    @Autowired
-    private CurrencyService currencyService;
-
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private TransactionTypeService transactionTypeService;
-
-    @Autowired
-    private CountryService countryService;
-
-    @Autowired
-    private ContactService contactService;
-
-    @Autowired
-    private PaymentService paymentService;
-
-    @Autowired
     private ExpenseRestHelper controllerHelper;
+    
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @ApiOperation(value = "Get Expense List")
     @RequestMapping(method = RequestMethod.GET, value = "/retrieveExpenseList")
@@ -98,9 +76,14 @@ public class ExpenseRestController {
 
     @ApiOperation(value = "Add New Expense")
     @RequestMapping(method = RequestMethod.POST, value = "/save")
-    public ResponseEntity saveExpense(@RequestBody ExpenseRestModel expenseRestModel) {
+    public ResponseEntity saveExpense(@ModelAttribute ExpenseRestModel expenseRestModel, HttpServletRequest request) {
         try {
-            controllerHelper.saveExpense(expenseRestModel, currencyService, userServiceNew, companyService, projectService, expenseService, transactionCategoryService, transactionTypeService, contactService);
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            expenseRestModel.setUserId(userId);
+            controllerHelper.saveExpense(expenseRestModel);
+            if (expenseRestModel.getAttachmentFile() != null) {
+                System.out.println("===Expense===" + expenseRestModel.getAttachmentFile().getOriginalFilename());
+            }
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,7 +96,7 @@ public class ExpenseRestController {
     public ResponseEntity viewExpense(@RequestParam("expenseId") Integer expenseId) {
         try {
             System.out.println("expenseId=" + expenseId);
-            return new ResponseEntity(controllerHelper.getExpenseById(expenseId, expenseService), HttpStatus.OK);
+            return new ResponseEntity(controllerHelper.getExpenseById(expenseId), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -124,7 +107,7 @@ public class ExpenseRestController {
     public ResponseEntity deleteExpense(@RequestParam("expenseId") Integer expenseId) {
         try {
             System.out.println("expenseId=" + expenseId);
-            controllerHelper.deleteExpense(expenseId, expenseService);
+            controllerHelper.deleteExpense(expenseId);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,7 +119,7 @@ public class ExpenseRestController {
     public ResponseEntity deleteExpenses(@RequestBody DeleteModel expenseIds) {
         try {
             System.out.println("expenseId=" + expenseIds);
-            controllerHelper.deleteExpenses(expenseIds, expenseService);
+            controllerHelper.deleteExpenses(expenseIds);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             e.printStackTrace();

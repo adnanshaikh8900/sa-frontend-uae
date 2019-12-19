@@ -19,11 +19,14 @@ import DatePicker from 'react-datepicker'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
+import _ from 'lodash'
 
 import {
   CommonActions
 } from 'services/global'
+import { selectOptionsFactory } from 'utils'
 import * as ExpenseActions from '../../actions';
+import * as ExpenseCreateActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -44,7 +47,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return ({
     commonActions: bindActionCreators(CommonActions, dispatch),
-    expenseActions: bindActionCreators(ExpenseActions, dispatch)
+    expenseActions: bindActionCreators(ExpenseActions, dispatch),
+    expenseCreateActions: bindActionCreators(ExpenseCreateActions, dispatch)
   })
 }
 
@@ -56,10 +60,10 @@ class CreateExpense extends React.Component {
       loading: false,
       data: [{
         id: 0,
-        account_code: null,
-        amount: null,
-        vat: null,
-        sub_total: 0
+        transactionCategoryId: '',
+        unitPrice: '',
+        vatCategoryId: '',
+        subTotal: 0
       }
       ],
       idCount: 0,
@@ -69,34 +73,24 @@ class CreateExpense extends React.Component {
       selectedCustomer: null,
       selectedPayment: null,
 
-      initExpenseValue: {
+      initValue: {
         expenseId: null,
-        expenseAmount: null,
+        payee: '',
         expenseDate: null,
+        currency: null,
+        project: null,
         paymentDate: null,
-        expenseContactId: null,
-        bankAccountId: null,
+        expenseAmount: null,
         expenseDescription: null,
         receiptNumber: null,
-        transactionType: null,
-        transactionCategory: null,
-        currencyCode: null,
-        project: null,
-        paymentId: null,
-        receiptAttachmentPath: null,
-        receiptAttachmentDescription: null,
-        createdBy: null,
-        createdDate: null,
-        lastUpdatedBy: null,
-        lastUpdateDate: null,
-        deleteFlag: false,
         attachmentFile: null,
-        receiptAttachmentName: null,
-        receiptAttachmentContentType: null,
+        receiptAttachmentDescription: null,
+        bank: null,
         total_net: 0,
-        total_vat:0,
-        total: 0
-      }
+        expenseVATAmount: 0,
+        totalAmount: 0,
+      },
+      currentData: {}
 
     }
 
@@ -112,7 +106,8 @@ class CreateExpense extends React.Component {
     this.deleteRow = this.deleteRow.bind(this);
     this.selectItem = this.selectItem.bind(this);
     this.updateAmount = this.updateAmount.bind(this);
-
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this)
 
     this.options = {
       paginationPosition: 'top'
@@ -134,10 +129,10 @@ class CreateExpense extends React.Component {
   // }
 
   initializeData() {
+    this.props.expenseActions.getBankAccountList();
     this.props.expenseActions.getVatList();
     this.props.expenseActions.getCurrencyList();
     this.props.expenseActions.getProjectList();
-    this.props.expenseActions.getBankAccountList();
     this.props.expenseActions.getCustomerList();
     this.props.expenseActions.getPaymentList();
     this.props.expenseActions.getChartOfAccountList();
@@ -149,7 +144,7 @@ class CreateExpense extends React.Component {
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
-    this.setState({ data: newData })
+    this.updateAmount(newData)
   }
 
   renderActions(cell, row) {
@@ -172,7 +167,7 @@ class CreateExpense extends React.Component {
         obj[name] = e.target.value
       }
     });
-    if (name === 'amount' || name === 'vat') {
+    if (name === 'unitPrice' || name === 'vatCategoryId') {
       this.updateAmount(data);
     } else {
       this.setState({ data: data });
@@ -183,21 +178,22 @@ class CreateExpense extends React.Component {
   updateAmount(data) {
     let total_net = 0;
     let total = 0;
-    let total_vat=0;
+    let total_vat = 0;
     data.map(obj => {
-      obj.sub_total = (obj.amount * obj.vat)/100;
-      total_net = total_net + (+obj.amount);
-      total = total + obj.sub_total + total_net;
-      total_vat = total_vat + obj.sub_total
+      let val = (((+obj.unitPrice)* (+obj.vatCategoryId)) / 100)
+      obj.subTotal = (+obj.unitPrice) + val;
+      total_net = Math.round(total_net + (+obj.unitPrice));
+      total = Math.round(total + obj.subTotal + total_net);
+      total_vat = Math.round(total_vat + val)
     })
-    this.setState({ 
+    this.setState({
       data: data,
-      initExpenseValue: {
-        total_net: total,
-        total_vat: total_vat,
-        total: total
+      initValue: {
+        total_net: total_net,
+        expenseVATAmount: total_vat,
+        totalAmount: total
       }
-    })
+    }, () => { })
   }
 
   renderProductName(cell, row) {
@@ -205,11 +201,11 @@ class CreateExpense extends React.Component {
     return (
       <div className="d-flex align-items-center">
         <Input type="select"
-          onChange={(e) => { this.selectItem(e, row, 'account_code') }}
-          value={row.account_code}
+          onChange={(e) => { this.selectItem(e, row, 'transactionCategoryId') }}
+          value={row.transactionCategoryId}
         >
           {chart_of_account_list ? chart_of_account_list.map(obj => {
-            return <option value={obj.value}>{obj.label}</option>
+            return <option value={obj.transactionCategoryId}>{obj.transactionCategoryDescription}</option>
           }) : ''}
         </Input>
         <Button
@@ -229,7 +225,7 @@ class CreateExpense extends React.Component {
       <Input
         type="text"
         defaultValue="0"
-        onChange={(e) => { this.selectItem(e, row, 'amount') }}
+        onChange={(e) => { this.selectItem(e, row, 'unitPrice') }}
       />
     )
   }
@@ -237,9 +233,10 @@ class CreateExpense extends React.Component {
   renderVat(cell, row) {
     const { vat_list } = this.props;
     return (
-      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vat') }} value={row.vat}>
+      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
         {vat_list ? vat_list.map(obj => {
-          return <option value={obj.value}>{obj.label}</option>
+          obj.name = obj.name === 'default' ? '0' : obj.name
+          return <option value={obj.id}>{obj.name}</option>
         }) : ''}
       </Input>
     )
@@ -247,7 +244,7 @@ class CreateExpense extends React.Component {
 
   renderSubTotal(cell, row) {
     return (
-      <label className="mb-0">{row.sub_total}</label>
+      <label className="mb-0">{row.subTotal}</label>
     )
   }
 
@@ -256,25 +253,85 @@ class CreateExpense extends React.Component {
     this.setState({
       data: data.concat({
         id: this.state.idCount + 1,
-        account_code: null,
-        add: null,
-        sub_total: 0,
-        amount: null,
-        sub_total: 0
+        transactionCategoryId: null,
+        unitPrice: null,
+        vatCategoryId: null,
+        subTotal: 0
       }), idCount: this.state.idCount + 1
+    })
+  }
+
+  handleSubmit(data) {
+    const {
+      expenseId,
+      payee,
+      expenseDate,
+      currency,
+      project,
+      paymentDate,
+      expenseAmount,
+      expenseDescription,
+      receiptNumber,
+      attachmentFile,
+      receiptAttachmentDescription,
+      bank,
+      expenseVATAmount,
+      totalAmount,
+    } = data
+    let formData = new FormData();
+    // const userId = window.localStorage.getItem('userId');
+    // formData.append("user",userId)
+    formData.append("payee", payee);
+    formData.append("expenseDate", expenseDate !== null ? expenseDate : "");
+    formData.append("paymentDate", paymentDate !== null ? paymentDate : "");
+    formData.append("expenseAmount", expenseAmount);
+    formData.append("expenseDescription", expenseDescription);
+    formData.append("receiptNumber", receiptNumber);
+    formData.append("receiptAttachmentDescription", receiptAttachmentDescription);
+    formData.append('expenseItems',JSON.stringify(this.state.data));
+    formData.append('expenseVATAmount',this.state.initValue.expenseVATAmount);
+    formData.append('totalAmount',this.state.initValue.totalAmount);
+    if (bank && bank.value) {
+      formData.append("bankAccountId", bank.value);
+    }
+    if (currency && currency.value) {
+      formData.append("currencyCode", currency.value);
+    }
+    if (project && project.value) {
+      formData.append("projectId", project.value);
+    }
+    if (this.uploadFile.files[0]) {
+      formData.append("attachmentFile", this.uploadFile.files[0]);
+    }
+    this.props.expenseCreateActions.createExpense(formData).then(res => {
+      this.props.commonActions.tostifyAlert('success', 'Creted Successfully.')
+      if (this.state.createMore) {
+        this.setState({
+          createMore: false
+        })
+      } else {
+        this.props.history.push('/admin/expense/expense')
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  handleChange(e, name) {
+    this.setState({
+      currentData: _.set(
+        { ...this.state.currentData },
+        e.target.name && e.target.name !== '' ? e.target.name : name,
+        e.target.type === 'checkbox' ? e.target.checked : e.target.value
+      )
     })
   }
 
   render() {
 
-    const { data,
-      initExpenseValue: {
-        expenseDate,
-        paymentDate
-      }
-    } = this.state
+    const { data } = this.state
+    const { initValue } = this.state
     const { currency_list, project_list, bank_account_list, customer_list, payment_list } = this.props
-
 
     return (
       <div className="create-expense-screen">
@@ -296,19 +353,19 @@ class CreateExpense extends React.Component {
                   <Row>
                     <Col lg={12}>
                       <Formik
-                        initialValues={this.state.ExpenseValue}
+                        initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
 
-                          this.expenseHandleSubmit(values)
-                          resetForm(this.state.initProductValue)
+                          this.handleSubmit(values)
+                          resetForm(initValue)
 
-                          this.setState({
-                            selectedCurrency: null,
-                            selectedProject: null,
-                            selectedBankAccount: null,
-                            selectedCustomer: null
+                          // this.setState({
+                          //   selectedCurrency: null,
+                          //   selectedProject: null,
+                          //   selectedBankAccount: null,
+                          //   selectedCustomer: null
 
-                          })
+                          // })
                         }}
 
                       >
@@ -324,6 +381,7 @@ class CreateExpense extends React.Component {
                                     id="payee"
                                     rows="5"
                                     placeholder="Payee"
+                                    onChange={(value) => { props.handleChange("payee")(value) }}
                                   />
                                 </FormGroup>
                               </Col>
@@ -336,16 +394,10 @@ class CreateExpense extends React.Component {
                                       id="date"
                                       name="expenseDate"
                                       placeholderText=""
-                                      selected={expenseDate}
-                                      onChange={(val) => {
-                                        this.setState({
-                                          initExpenseValue: {
-                                            expenseDate: val
-                                          }
-                                        })
-                                        props.handleChange("expenseDate")(val)
-                                      }
-                                      }
+                                      selected={props.values.expenseDate}
+                                      onChange={(value) => {
+                                        props.handleChange("expenseDate")(value)
+                                      }}
                                     />
                                   </div>
                                 </FormGroup>
@@ -357,16 +409,12 @@ class CreateExpense extends React.Component {
                                   <Label htmlFor="currency">Currency</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={currency_list}
                                     id="currencyCode"
                                     name="currencyCode"
-                                    value={this.state.selectedCurrency}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedCurrency: option.value
-                                      })
-                                      props.handleChange("currencyCode")(option.value);
-                                    }}
+                                    options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
+                                    value={props.values.currency}
+                                    onChange={option => props.handleChange('currency')(option)}
+
                                   />
                                 </FormGroup>
                               </Col>
@@ -375,16 +423,11 @@ class CreateExpense extends React.Component {
                                   <Label htmlFor="project">Project</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={project_list}
                                     id="project"
                                     name="project"
-                                    value={this.state.selectedProject}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedProject: option.value
-                                      })
-                                      props.handleChange("project")(option.value);
-                                    }}
+                                    options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
+                                    value={props.values.project}
+                                    onChange={option => props.handleChange('project')(option)}
                                   />
                                 </FormGroup>
                               </Col>
@@ -395,37 +438,25 @@ class CreateExpense extends React.Component {
                                   <Label htmlFor="bank">Bank</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={bank_account_list}
-                                    id="bankAccountId"
-                                    name="bankAccountId"
-                                    value={this.state.selectedBankAccount}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedBankAccount: option.value
-                                      })
-                                      props.handleChange("bankAccountId")(option.value);
-                                    }}
+                                    id="bank"
+                                    name="bank"
+                                    options={bank_account_list ? selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_account_list) : ''}
+                                    value={props.values.bank}
+                                    onChange={option => props.handleChange('bank')(option)}
                                   />
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="payment_date">Payment Date</Label>
+                                  <Label htmlFor="paymentDate">Payment Date</Label>
                                   <div>
                                     <DatePicker
                                       className="form-control"
-                                      id="payment_date"
-                                      name="payment_date"
+                                      id="paymentDate"
+                                      name="paymentDate"
                                       placeholderText=""
-                                      selected={paymentDate}
-                                      onChange={(val) => {
-                                        this.setState({
-                                          initExpenseValue: {
-                                            paymentDate: val
-                                          }
-                                        })
-                                        props.handleChange("expenseDate")(val)
-                                      }}
+                                      selected={props.values.paymentDate}
+                                      onChange={option => props.handleChange('paymentDate')(option)}
                                     />
                                   </div>
                                 </FormGroup>
@@ -439,6 +470,8 @@ class CreateExpense extends React.Component {
                                     id="expenseAmount"
                                     rows="5"
                                     placeholder="Amount"
+                                    onChange={option => props.handleChange('expenseAmount')(option)}
+                                    // value={props.values.expenseAmount}
                                   />
                                 </FormGroup>
                               </Col>
@@ -453,6 +486,9 @@ class CreateExpense extends React.Component {
                                     id="expenseDescription"
                                     rows="5"
                                     placeholder="1024 characters..."
+                                    onChange={option => props.handleChange('expenseDescription')(option)}
+                                    value={props.values.expenseDescription}
+
                                   />
                                 </FormGroup>
                               </Col>
@@ -470,6 +506,9 @@ class CreateExpense extends React.Component {
                                         name="receiptNumber"
                                         placeholder="Enter Reciept Number"
                                         required
+                                        onChange={option => props.handleChange('receiptNumber')(option)}
+                                        value={props.values.receiptNumber}
+
                                       />
                                     </FormGroup>
                                   </Col>
@@ -477,13 +516,16 @@ class CreateExpense extends React.Component {
                                 <Row>
                                   <Col lg={12}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="attachment_description">Attachment Description</Label>
+                                      <Label htmlFor="receiptAttachmentDescription">Attachment Description</Label>
                                       <Input
                                         type="textarea"
-                                        name="attachment_description"
-                                        id="attachment_description"
+                                        name="receiptAttachmentDescription"
+                                        id="receiptAttachmentDescription"
                                         rows="5"
                                         placeholder="1024 characters..."
+                                        onChange={option => props.handleChange('receiptAttachmentDescription')(option)}
+                                        value={props.values.receiptAttachmentDescription}
+
                                       />
                                     </FormGroup>
                                   </Col>
@@ -559,61 +601,63 @@ class CreateExpense extends React.Component {
                                 </BootstrapTable>
                               </Col>
                             </Row>
+
+
+                            <Row>
+                              <Col lg={4} className="ml-auto">
+                                <div className="">
+                                  <div className="total-item p-2">
+                                    <Row>
+                                      <Col lg={6}>
+                                        <h5 className="mb-0 text-right">Total Net</h5>
+                                      </Col>
+                                      <Col lg={6} className="text-right">
+                                        <label className="mb-0">{this.state.initValue.total_net}</label>
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                  <div className="total-item p-2">
+                                    <Row>
+                                      <Col lg={6}>
+                                        <h5 className="mb-0 text-right">Total Vat</h5>
+                                      </Col>
+                                      <Col lg={6} className="text-right">
+                                        <label className="mb-0">{this.state.initValue.expenseVATAmount}</label>
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                  <div className="total-item p-2">
+                                    <Row>
+                                      <Col lg={6}>
+                                        <h5 className="mb-0 text-right">Total</h5>
+                                      </Col>
+                                      <Col lg={6} className="text-right">
+                                        <label className="mb-0">{this.state.initValue.totalAmount}</label>
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                </div>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col lg={12} className="mt-5">
+                                <FormGroup className="text-right">
+                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                    <i className="fa fa-dot-circle-o"></i> Create
+                        </Button>
+                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                    <i className="fa fa-repeat"></i> Create and More
+                        </Button>
+                                  <Button color="secondary" className="btn-square"
+                                    onClick={() => { this.props.history.push('/admin/expense/expense') }}>
+                                    <i className="fa fa-ban"></i> Cancel
+                        </Button>
+                                </FormGroup>
+                              </Col>
+                            </Row>
                           </Form>
                         )}
                       </Formik>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={4} className="ml-auto">
-                      <div className="">
-                        <div className="total-item p-2">
-                          <Row>
-                            <Col lg={6}>
-                              <h5 className="mb-0 text-right">Total Net</h5>
-                            </Col>
-                            <Col lg={6} className="text-right">
-                                    <label className="mb-0">{this.state.initExpenseValue.total_net}</label>
-                            </Col>
-                          </Row>
-                        </div>
-                        <div className="total-item p-2">
-                          <Row>
-                            <Col lg={6}>
-                              <h5 className="mb-0 text-right">Total Vat</h5>
-                            </Col>
-                            <Col lg={6} className="text-right">
-                              <label className="mb-0">{this.state.initExpenseValue.total_vat}</label>
-                            </Col>
-                          </Row>
-                        </div>
-                        <div className="total-item p-2">
-                          <Row>
-                            <Col lg={6}>
-                              <h5 className="mb-0 text-right">Total</h5>
-                            </Col>
-                            <Col lg={6} className="text-right">
-                              <label className="mb-0">{this.state.initExpenseValue.total}</label>
-                            </Col>
-                          </Row>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={12} className="mt-5">
-                      <FormGroup className="text-right">
-                        <Button type="submit" color="primary" className="btn-square mr-3">
-                          <i className="fa fa-dot-circle-o"></i> Create
-                        </Button>
-                        <Button type="submit" color="primary" className="btn-square mr-3">
-                          <i className="fa fa-repeat"></i> Create and More
-                        </Button>
-                        <Button color="secondary" className="btn-square"
-                          onClick={() => { this.props.history.push('/admin/expense/expense') }}>
-                          <i className="fa fa-ban"></i> Cancel
-                        </Button>
-                      </FormGroup>
                     </Col>
                   </Row>
                 </CardBody>

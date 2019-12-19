@@ -28,7 +28,6 @@ public class ExpenseRestModel {
     private Date expenseDate;
     private String expenseDescription;
     private String receiptNumber;
-    private Integer user;
     private Integer transactionType;
     private Integer transactionCategory;
     private Integer currency;
@@ -47,9 +46,8 @@ public class ExpenseRestModel {
     private Integer versionNumber;
     private Integer paymentMode;
     private byte[] receiptAttachmentBinary;
-    private List<ExpenseItemModel> expenseItem;
+    private List<ExpenseItemModel> expenseItems;
     private Contact expenseContact;
-    private BigDecimal expenseSubtotal;
     private BigDecimal expenseVATAmount;
     private BigDecimal expenseAmountCompanyCurrency;
     private Integer flagView;
@@ -62,11 +60,12 @@ public class ExpenseRestModel {
     private Integer paymentId;
     private BigDecimal vat;
     private String payee;
+    private String expenseItemsString;
 
     public void addExpenseItem(@NonNull final ExpenseItemModel expenseItemModel) {
-        if (null == this.expenseItem) {
-            expenseItem = new ArrayList<>();
+        if (null == this.expenseItems) {
+            expenseItems = new ArrayList<>();
         }
-        expenseItem.add(expenseItemModel);
+        expenseItems.add(expenseItemModel);
     }
 }

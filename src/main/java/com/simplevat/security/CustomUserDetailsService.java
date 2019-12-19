@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService
     private UserServiceNew userService;
 
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String emailAddress)
+    public CustomUserDetails loadUserByUsername(String emailAddress)
             throws UsernameNotFoundException {
         Optional<User> user = userService.getUserByEmail(emailAddress);
 

@@ -11,12 +11,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductModel {
+public class ProductRequestModel {
 
     private Integer productID;
     private String productName;
     private String productDescription;
-    private VatCategory vatCategory;
+    private Integer vatCategoryId;
     private String productCode;
     private Integer createdBy;
     private LocalDateTime createdDate;
@@ -25,8 +25,8 @@ public class ProductModel {
     private Boolean deleteFlag = Boolean.FALSE;
     private Boolean active;
     private Integer versionNumber;
-    private Product parentProduct;
-    private ProductWarehouse productWarehouse;
+    private Integer parentProductId;
+    private Integer productWarehouseId;
     private Boolean vatIncluded = Boolean.FALSE;
     private BigDecimal unitPrice;
 

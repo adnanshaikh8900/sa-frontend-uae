@@ -41,7 +41,9 @@ export const logIn = (obj) => {
       dispatch({
         type: AUTH.SIGNED_IN
       })
-      window.localStorage.setItem('accessToken', res.data.token)
+      window.localStorage.setItem('accessToken', res.data.token);
+      // window.localStorage.setItem('userId', res.data.userId);
+
       return res
     }).catch(err => {
       throw err

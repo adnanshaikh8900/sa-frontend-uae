@@ -13,7 +13,7 @@ import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.ProjectService;
-import com.simplevat.service.TransactionCategoryServiceNew;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class TransactionHelper {
     private TransactionTypeService transactionTypeService;
 
     @Autowired
-    private TransactionCategoryServiceNew transactionCategoryService;
+    private TransactionCategoryService transactionCategoryService;
 
     @Autowired
     private ProjectService projectService;

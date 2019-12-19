@@ -6,14 +6,18 @@ import org.springframework.stereotype.Repository;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ProductDao;
 import com.simplevat.entity.Product;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ProductDaoImpl extends AbstractDao<Integer, Product> implements ProductDao {
 
     @Override
-    public List<Product> getProductList() {
-        List<Product> products = this.executeNamedQuery("allProduct");
+    public List<Product> getProductList(Integer userId) {
+        Map<String, Object> parameterDataMap = new HashMap();
+        parameterDataMap.put("createdBy", userId);
+        List<Product> products = this.executeNamedQuery("allProduct", parameterDataMap);
         return products;
     }
 

@@ -28,7 +28,7 @@ import {
   Organization,
   UsersRoles,
   DataBackup,
-  ChartAccount
+  TransactionsReport
 } from 'screens'
 
 
@@ -58,7 +58,7 @@ const reducer = combineReducers({
   organization: Organization.reducer,
   users_roles: UsersRoles.reducer,
   data_backup: DataBackup.reducer,
-  chart_account: ChartAccount.reducer
+  transaction_data: TransactionsReport.reducer
 })
 
 export default reducer

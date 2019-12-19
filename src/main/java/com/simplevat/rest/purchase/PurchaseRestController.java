@@ -29,7 +29,7 @@ import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ProductService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.PurchaseService;
-import com.simplevat.service.TransactionCategoryServiceNew;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserServiceNew;
 import com.simplevat.service.VatCategoryService;
 import java.math.BigDecimal;
@@ -74,7 +74,7 @@ public class PurchaseRestController {
     private VatCategoryService vatCategoryService;
 
     @Autowired
-    private TransactionCategoryServiceNew transactionCategoryService;
+    private TransactionCategoryService transactionCategoryService;
 
     @Autowired
     private CurrencyService currencyService;
@@ -280,25 +280,6 @@ public class PurchaseRestController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/products")
-    public ResponseEntity products(@RequestParam("productName") String searchQuery) throws Exception {
-        try {
-            List<Product> productList = productService.getProductList();
-            if (productList != null) {
-                List<Product> parentProductList = new ArrayList<>();
-                for (Product product : productList) {
-                    if (product.getParentProduct() != null) {
-                        parentProductList.add(product.getParentProduct());
-                    }
-                }
-                productList.removeAll(parentProductList);
-            }
-            return new ResponseEntity(productList, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/vatcategories")
     public ResponseEntity vatCategorys(@RequestParam("vatSearchString") String searchQuery) throws Exception {

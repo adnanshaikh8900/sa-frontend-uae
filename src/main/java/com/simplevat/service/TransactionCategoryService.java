@@ -5,9 +5,11 @@ import java.util.List;
 import com.simplevat.criteria.bankaccount.TransactionCategoryCriteria;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 
-public abstract class TransactionCategoryServiceNew extends SimpleVatService<Integer, TransactionCategory> {
+public abstract class TransactionCategoryService extends SimpleVatService<Integer, TransactionCategory> {
 
     public abstract List<TransactionCategory> findAllTransactionCategory();
+
+    public abstract List<TransactionCategory> findAllTransactionCategoryByUserId(Integer userId);
 
     public abstract List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode, String name);
 

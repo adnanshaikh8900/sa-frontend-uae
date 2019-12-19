@@ -60,9 +60,9 @@ class CreateExpense extends React.Component {
       loading: false,
       data: [{
         id: 0,
-        transactionCategoryId: '',
-        unitPrice: '',
-        vatCategoryId: '',
+        transactionCategoryId: null,
+        unitPrice: 0,
+        vatCategoryId: null,
         subTotal: 0
       }
       ],
@@ -144,6 +144,7 @@ class CreateExpense extends React.Component {
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
+    console.log(newData)
     this.updateAmount(newData)
   }
 
@@ -176,15 +177,22 @@ class CreateExpense extends React.Component {
   }
 
   updateAmount(data) {
+    const {vat_list} = this.props;
     let total_net = 0;
     let total = 0;
     let total_vat = 0;
+    console.log(data);
+    console.log(vat_list)
     data.map(obj => {
-      let val = (((+obj.unitPrice)* (+obj.vatCategoryId)) / 100)
-      obj.subTotal = (+obj.unitPrice) + val;
-      total_net = Math.round(total_net + (+obj.unitPrice));
-      total = Math.round(total + obj.subTotal + total_net);
-      total_vat = Math.round(total_vat + val)
+      const index = obj.vatCategoryId !== null ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
+      const vat = index !== '' ? vat_list[index].vat : 0
+      console.log(index)
+      let val = (((+obj.unitPrice) * vat) / 100)
+      obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (+obj.unitPrice) + val : 0;
+      total_net = +(total_net + (+obj.unitPrice));
+      total_vat = +(total_vat + val).toFixed(2);
+      total =  (total_vat + total_net).toFixed(2);
+      console.log(total_vat + ' '+ total_net)
     })
     this.setState({
       data: data,
@@ -193,7 +201,7 @@ class CreateExpense extends React.Component {
         expenseVATAmount: total_vat,
         totalAmount: total
       }
-    }, () => { })
+    }, () => { console.log(this.state.data)})
   }
 
   renderProductName(cell, row) {
@@ -221,10 +229,12 @@ class CreateExpense extends React.Component {
   }
 
   renderAmount(cell, row) {
+    console.log(row)
     return (
       <Input
-        type="text"
-        defaultValue="0"
+        type="number"
+        value={row['unitPrice'] !== 0? row['unitPrice'] : 0}
+        defaultValue={row['unitPrice']}
         onChange={(e) => { this.selectItem(e, row, 'unitPrice') }}
       />
     )
@@ -254,7 +264,7 @@ class CreateExpense extends React.Component {
       data: data.concat({
         id: this.state.idCount + 1,
         transactionCategoryId: null,
-        unitPrice: null,
+        unitPrice: 0,
         vatCategoryId: null,
         subTotal: 0
       }), idCount: this.state.idCount + 1
@@ -288,7 +298,7 @@ class CreateExpense extends React.Component {
     formData.append("expenseDescription", expenseDescription);
     formData.append("receiptNumber", receiptNumber);
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription);
-    formData.append('expenseItems',JSON.stringify(this.state.data));
+    formData.append('expenseItemsString',JSON.stringify(this.state.data));
     formData.append('expenseVATAmount',this.state.initValue.expenseVATAmount);
     formData.append('totalAmount',this.state.initValue.totalAmount);
     if (bank && bank.value) {
@@ -331,7 +341,7 @@ class CreateExpense extends React.Component {
 
     const { data } = this.state
     const { initValue } = this.state
-    const { currency_list, project_list, bank_account_list, customer_list, payment_list } = this.props
+    const { currency_list, project_list, bank_account_list} = this.props
 
     return (
       <div className="create-expense-screen">
@@ -612,7 +622,7 @@ class CreateExpense extends React.Component {
                                         <h5 className="mb-0 text-right">Total Net</h5>
                                       </Col>
                                       <Col lg={6} className="text-right">
-                                        <label className="mb-0">{this.state.initValue.total_net}</label>
+                                        <label className="mb-0">{initValue.total_net}</label>
                                       </Col>
                                     </Row>
                                   </div>
@@ -622,7 +632,7 @@ class CreateExpense extends React.Component {
                                         <h5 className="mb-0 text-right">Total Vat</h5>
                                       </Col>
                                       <Col lg={6} className="text-right">
-                                        <label className="mb-0">{this.state.initValue.expenseVATAmount}</label>
+                                        <label className="mb-0">{initValue.expenseVATAmount}</label>
                                       </Col>
                                     </Row>
                                   </div>
@@ -632,7 +642,7 @@ class CreateExpense extends React.Component {
                                         <h5 className="mb-0 text-right">Total</h5>
                                       </Col>
                                       <Col lg={6} className="text-right">
-                                        <label className="mb-0">{this.state.initValue.totalAmount}</label>
+                                        <label className="mb-0">{initValue.totalAmount}</label>
                                       </Col>
                                     </Row>
                                   </div>

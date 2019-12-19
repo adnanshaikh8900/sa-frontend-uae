@@ -21,7 +21,7 @@ import org.hibernate.annotations.ColumnDefault;
             query = "SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.transactionType.transactionTypeCode =:transactionTypeCode ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
     ,
      @NamedQuery(name = "findAllTransactionCategoryByUserId",
-            query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false where created_by =:createdBy or created_by =1 ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
+            query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (created_by =:createdBy or created_by =1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
 
 })
 @Entity

@@ -8,16 +8,15 @@ package com.simplevat.rest.productcontroller;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.helper.ProductModelHelper;
 import com.simplevat.entity.Product;
-import com.simplevat.entity.ProductWarehouse;
-import com.simplevat.entity.VatCategory;
 import com.simplevat.service.ProductService;
-import com.simplevat.service.ProductWarehouseService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.productservice.model.ProductModel;
+import com.simplevat.productservice.model.ProductRequestModel;
+import com.simplevat.security.JwtTokenUtil;
+import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,28 +41,49 @@ public class ProductController implements Serializable {
     private ProductService productService;
 
     @Autowired
-    private ProductWarehouseService productWarehouseService;
+    private ProductModelHelper productModelHelper;
 
     @Autowired
-    private VatCategoryService vatCategoryService;
+    private JwtTokenUtil jwtTokenUtil;
 
-    private ProductModelHelper productModelHelper = new ProductModelHelper();
-
-    @GetMapping(value = "/getproduct")
-    public ResponseEntity getProduct() {
-        List<Product> products = productService.getProductList();
+    @ApiOperation(value = "Get Product List")
+    @GetMapping(value = "/getProductList")
+    public ResponseEntity getProduct(HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+        List<Product> products = productService.getProductList(userId);
         try {
             if (products == null) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity(products, HttpStatus.OK);
     }
+    
+    
+//    @RequestMapping(method = RequestMethod.GET, value = "/products")
+//    public ResponseEntity products(@RequestParam("productName") String searchQuery) throws Exception {
+//        try {
+//            List<Product> productList = productService.getProductList();
+//            if (productList != null) {
+//                List<Product> parentProductList = new ArrayList<>();
+//                for (Product product : productList) {
+//                    if (product.getParentProduct() != null) {
+//                        parentProductList.add(product.getParentProduct());
+//                    }
+//                }
+//                productList.removeAll(parentProductList);
+//            }
+//            return new ResponseEntity(productList, HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
 
-    @DeleteMapping(value = "/deleteproduct")
+    @ApiOperation(value = "Delete Product By ID")
+    @DeleteMapping(value = "/deleteProduct")
     public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
         Product product = productService.findByPK(id);
         if (product != null) {
@@ -73,7 +94,8 @@ public class ProductController implements Serializable {
 
     }
 
-    @DeleteMapping(value = "/deleteproducts")
+    @ApiOperation(value = "Delete Product in Bulk")
+    @DeleteMapping(value = "/deleteProducts")
     public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
         try {
             productService.deleteByIds(ids.getIds());
@@ -85,8 +107,9 @@ public class ProductController implements Serializable {
 
     }
 
-    @GetMapping(value = "/editproduct")
-    public ResponseEntity editProduct(@RequestParam(value = "id") Integer id) {
+    @ApiOperation(value = "Get Product By ID")
+    @GetMapping(value = "/getProductById")
+    public ResponseEntity getProductById(@RequestParam(value = "id") Integer id) {
         Product product = productService.findByPK(id);
         if (product == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -96,57 +119,26 @@ public class ProductController implements Serializable {
 
     }
 
-    @GetMapping(value = "/getvatpercentage")
-    public ResponseEntity vatCategorys() {
-        List<VatCategory> vatCategorys = vatCategoryService.getVatCategoryList();
-        if (vatCategorys == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(vatCategorys, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/getwarehouse")
-    public ResponseEntity getProductWarehouse() {
-        List<ProductWarehouse> productWarehouseList = productWarehouseService.getProductWarehouseList();
-        if (productWarehouseList == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(productWarehouseList, HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/savewarehouse")
-    public ResponseEntity createNewWarehouse(@RequestBody ProductWarehouse productWarehouse) {
-
-        if (productWarehouse != null) {
-            productWarehouseService.persist(productWarehouse);
-        }
+    @ApiOperation(value = "Add New Product")
+    @PostMapping(value = "/save")
+    public ResponseEntity save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+        Product product = productModelHelper.convertToProduct(productRequestModel);
+        product.setCreatedBy(userId);
+        product.setCreatedDate(LocalDateTime.now());
+        product.setDeleteFlag(Boolean.FALSE);
+        productService.persist(product);
         return new ResponseEntity(HttpStatus.OK);
-
     }
 
-    @PostMapping(value = "/saveproduct")
-    public ResponseEntity save(@RequestParam ProductModel productModel, @RequestParam(value = "id") Integer id) {
-        Product product = productModelHelper.convertToProduct(productModel);
-        if (product.getUnitPrice() == null) {
-            product.setUnitPrice(BigDecimal.ZERO);
-        }
-        if (productModel.getProductID() == null) {
-            product.setCreatedBy(id);
-            product.setCreatedDate(LocalDateTime.now());
-            product.setDeleteFlag(Boolean.FALSE);
-        } else {
-            product.setLastUpdateDate(LocalDateTime.now());
-            product.setLastUpdatedBy(id);
-        }
-        if (productModel.getVatCategory() != null) {
-            VatCategory vatCategory = vatCategoryService.findByPK(productModel.getVatCategory().getId());
-            product.setVatCategory(vatCategory);
-        }
-        if (productModel.getProductID() == null) {
-            productService.persist(product);
-        } else {
-            productService.update(product);
-        }
+    @ApiOperation(value = "Update Product")
+    @PostMapping(value = "/update")
+    public ResponseEntity update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+        Product product = productModelHelper.convertToProduct(productRequestModel);
+        product.setLastUpdateDate(LocalDateTime.now());
+        product.setLastUpdatedBy(userId);
+        productService.update(product);
 
         return new ResponseEntity(HttpStatus.OK);
     }

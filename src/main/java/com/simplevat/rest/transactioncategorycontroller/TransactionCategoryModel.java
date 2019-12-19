@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.simplevat.rest.transactioncategory;
+package com.simplevat.rest.transactioncategorycontroller;
 
 import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.bankaccount.TransactionCategory;

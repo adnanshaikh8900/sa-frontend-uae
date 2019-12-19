@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.simplevat.rest.transactioncategory;
+package com.simplevat.rest.transactioncategorycontroller;
 
 import com.simplevat.constant.DefualtTypeConstant;
 import com.simplevat.entity.bankaccount.TransactionCategory;
@@ -11,11 +11,13 @@ import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author daynil
  */
+@Service
 public class TranscationCategoryHelper {
 
     @Autowired

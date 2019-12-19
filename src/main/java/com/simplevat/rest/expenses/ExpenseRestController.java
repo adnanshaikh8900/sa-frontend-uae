@@ -12,7 +12,7 @@ import com.simplevat.entity.Expense;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
-import com.simplevat.service.TransactionCategoryServiceNew;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserServiceNew;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class ExpenseRestController {
     private ExpenseService expenseService;
 
     @Autowired
-    private TransactionCategoryServiceNew transactionCategoryService;
+    private TransactionCategoryService transactionCategoryService;
 
     @Autowired
     private UserServiceNew userServiceNew;

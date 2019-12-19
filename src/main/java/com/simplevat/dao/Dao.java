@@ -7,29 +7,31 @@ import javax.persistence.EntityManager;
 
 public interface Dao<PK, ENTITY> {
 
-	public ENTITY findByPK(PK pk);
+    public ENTITY findByPK(PK pk);
 
-	public List<ENTITY> executeNamedQuery(String namedQuery);
+    public List<ENTITY> executeNamedQuery(String namedQuery);
 
-	public ENTITY persist(ENTITY entity);
+    public List<ENTITY> executeNamedQuery(String namedQuery, Map<String, Object> parameterDataMap);
 
-	public ENTITY update(ENTITY entity);
+    public ENTITY persist(ENTITY entity);
 
-	public void delete(ENTITY entity);
+    public ENTITY update(ENTITY entity);
 
-	public List<ENTITY> findByAttributes(Map<String, String> attributes);
+    public void delete(ENTITY entity);
 
-	public List<ENTITY> filter(AbstractFilter<ENTITY> filter);
+    public List<ENTITY> findByAttributes(Map<String, String> attributes);
 
-	public EntityManager getEntityManager();
+    public List<ENTITY> filter(AbstractFilter<ENTITY> filter);
 
-	public void importData(List<ENTITY> entities);
+    public EntityManager getEntityManager();
 
-	/**
-	 * This method should just get ALL the data, which is different than findALL
-	 * and hence given so unique name
-	 * 
-	 * @return
-	 */
-	public List<ENTITY> dumpData();
+    public void importData(List<ENTITY> entities);
+
+    /**
+     * This method should just get ALL the data, which is different than findALL
+     * and hence given so unique name
+     *
+     * @return
+     */
+    public List<ENTITY> dumpData();
 }

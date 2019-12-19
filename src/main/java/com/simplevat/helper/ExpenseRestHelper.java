@@ -24,7 +24,7 @@ import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.ProjectService;
-import com.simplevat.service.TransactionCategoryServiceNew;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserServiceNew;
 import com.simplevat.service.VatCategoryService;
 import java.io.Serializable;
@@ -71,12 +71,12 @@ public class ExpenseRestHelper implements Serializable {
 
     private final UserServiceNew userServiceNew;
 
-    private final TransactionCategoryServiceNew transactionCategoryServiceNew;
+    private final TransactionCategoryService transactionCategoryServiceNew;
 
     @Autowired
     public ExpenseRestHelper(VatCategoryService vatCategoryService, CurrencyService currencyService, ExpenseService expenseService,
             ProjectService projectService, CompanyService companyService, ContactService contactService,
-            UserServiceNew userServiceNew, TransactionCategoryServiceNew transactionCategoryServiceNew) {
+            UserServiceNew userServiceNew, TransactionCategoryService transactionCategoryServiceNew) {
         this.vatCategoryService = vatCategoryService;
         this.currencyService = currencyService;
         this.expenseService = expenseService;

@@ -26,6 +26,27 @@ export const getCurrencyList = () => {
   }
 }
 
+export const getBankList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: 'rest/bank/getbanklist'
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+        dispatch({
+          type: PAYMENT.BANK_LIST,
+          payload: {
+            data: res.data
+          }
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
 export const getSupplierList = () => {
   return (dispatch) => {
     let data = {
@@ -72,7 +93,7 @@ export const getProjectList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/project/getprojectbycriteria'
+      url: 'rest/project/getprojects'
     }
     return authApi(data).then(res => {
       if (res.status == 200) {

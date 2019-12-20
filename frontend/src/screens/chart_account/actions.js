@@ -4,8 +4,60 @@ import {
   authApi
 } from 'utils'
 
-export const initialData = (obj) => {
+export const getTransactionTypes = () => {
   return (dispatch) => {
-    
+    let data = {
+      method: 'GET',
+      url: `rest/datalist/getTransactionTypes`
+    }
+
+    return authApi(data).then(res => {
+      dispatch({
+        type: CHART_ACCOUNT.TRANSACTION_TYPES,
+        payload: res.data
+      })
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getTransactionCategoryList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `rest/transactioncategory/gettransactioncategory`
+    }
+
+    return authApi(data).then(res => {
+      dispatch({
+        type: CHART_ACCOUNT.TRANSACTION_CATEGORY_LIST,
+        payload: res.data
+      })
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+
+
+
+export const removeBulk = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'delete',
+      url: 'rest/transactioncategory/deleteTransactionCategories',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+        return res
+      }
+    }).catch(err => {
+      throw err
+    })
   }
 }

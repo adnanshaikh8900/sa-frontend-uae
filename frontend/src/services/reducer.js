@@ -27,7 +27,8 @@ import {
   Notification,
   Organization,
   UsersRoles,
-  DataBackup
+  DataBackup,
+  TransactionsReport
 } from 'screens'
 
 
@@ -56,7 +57,8 @@ const reducer = combineReducers({
   notification: Notification.reducer,
   organization: Organization.reducer,
   users_roles: UsersRoles.reducer,
-  data_backup: DataBackup.reducer
+  data_backup: DataBackup.reducer,
+  transaction_data: TransactionsReport.reducer
 })
 
 export default reducer

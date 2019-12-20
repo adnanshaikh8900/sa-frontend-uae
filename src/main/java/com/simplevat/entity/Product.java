@@ -14,7 +14,7 @@ import org.hibernate.annotations.ColumnDefault;
  */
 @NamedQueries({
     @NamedQuery(name = "allProduct",
-            query = "SELECT p FROM Product p  where p.deleteFlag = FALSE ")
+            query = "SELECT p FROM Product p where createdBy = :createdBy and p.deleteFlag = FALSE ")
 })
 @Entity
 @Table(name = "PRODUCT")

@@ -21,23 +21,27 @@ import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import Select from 'react-select'
 
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal} from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
-import * as ProductActions from './actions'
+import * as ChartAccountActions from './actions'
+import {
+  CommonActions
+} from 'services/global'
 
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    product_list: state.product.product_list
+    transaction_category_list: state.chart_account.transaction_category_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    productActions: bindActionCreators(ProductActions, dispatch)
+    commonActions: bindActionCreators(CommonActions, dispatch),
+    chartOfAccountActions: bindActionCreators(ChartAccountActions, dispatch)
   })
 }
 
@@ -46,7 +50,10 @@ class ChartAccount extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
+      selected_id_list: [],
+      dialog: null,
+
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -54,6 +61,10 @@ class ChartAccount extends React.Component {
     this.onSelectAll = this.onSelectAll.bind(this)
     this.goToDetailPage = this.goToDetailPage.bind(this)
     this.goToCreatePage = this.goToCreatePage.bind(this)
+    this.typeFormatter = this.typeFormatter.bind(this);
+    this.bulkDelete = this.bulkDelete.bind(this);
+    this.removeBulk = this.removeBulk.bind(this);
+    this.removeDialog = this.removeDialog.bind(this);
 
     this.options = {
       onRowClick: this.goToDetailPage,
@@ -74,36 +85,128 @@ class ChartAccount extends React.Component {
     this.initializeData()
   }
 
+  componentWillUnmount() {
+    this.setState({
+      selected_id_list: []
+    })
+  }
+
   initializeData () {
-    // this.props.productActions.getProductList()
+    this.props.chartOfAccountActions.getTransactionCategoryList().then(res=> {
+      if(res.status === 200) {
+        this.setState({loading: false});
+        console.log(this.props)
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
+      this.setState({loading: false})
+    })
   }
 
   goToDetailPage (row) {
-    this.props.history.push('/admin/master/chart-account/detail')
+    this.props.history.push(`/admin/master/chart-account/detail`,{id:row.transactionCategoryId})
   }
 
   goToCreatePage() {
     this.props.history.push('/admin/master/chart-account/create')
   }
 
-  onRowSelect (row, isSelected, e) {
-    console.log('one row checked ++++++++', row)
+  onRowSelect(row, isSelected, e) {
+    let temp_list = []
+    if (isSelected) {
+      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list.push(row.transactionCategoryId);
+    } else {
+      this.state.selected_id_list.map(item => {
+        if (item !== row.transactionCategoryId) {
+          temp_list.push(item)
+        }
+      });
+    }
+    this.setState({
+      selected_id_list: temp_list
+    })
   }
-  onSelectAll (isSelected, rows) {
-    console.log('current page all row checked ++++++++', rows)
+  onSelectAll(isSelected, rows) {
+    let temp_list = []
+    if (isSelected) {
+      rows.map(item => {
+        temp_list.push(item.transactionCategoryId)
+      })
+    }
+    this.setState({
+      selected_id_list: temp_list
+    })
+  }
+
+  bulkDelete() {
+    const {
+      selected_id_list
+    } = this.state
+    if (selected_id_list.length > 0) {
+      this.setState({
+        dialog: <ConfirmDeleteModal
+          isOpen={true}
+          okHandler={this.removeBulk}
+          cancelHandler={this.removeDialog}
+        />
+      })
+    } else {
+      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
+    }
+  }
+
+  removeBulk() {
+    this.removeDialog()
+    let { selected_id_list } = this.state;
+    const { transaction_category_list } = this.props
+    let obj = {
+      ids: selected_id_list
+    }
+    this.props.chartOfAccountActions.removeBulk(obj).then(() => {
+      this.props.chartOfAccountActions.getTransactionCategoryList()
+      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+      if(transaction_category_list && transaction_category_list.length > 0) {
+                this.setState({
+        selected_id_list: []
+      })
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
+
+
+
+  typeFormatter(cell,row) {
+    return  row['transactionType']['transactionTypeName'];
+    
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
   }
 
   render() {
 
-    const { loading } = this.state
-    const { product_list } = this.props
+    const { loading , dialog } = this.state
+    const { transaction_category_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
+    console.log(transaction_category_list)
 
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
+        {dialog}
           <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
           <Card>
             <CardHeader>
@@ -132,6 +235,7 @@ class ChartAccount extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
+                            onClick={()=>this.table.handleExportCSV()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -147,6 +251,7 @@ class ChartAccount extends React.Component {
                           <Button
                             color="warning"
                             className="btn-square"
+                            onClick={this.bulkDelete}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -176,30 +281,34 @@ class ChartAccount extends React.Component {
                           selectRow={ this.selectRowProp }
                           search={false}
                           options={ this.options }
-                          data={product_list}
+                          data={transaction_category_list ? transaction_category_list : ''}
                           version="4"
                           hover
                           pagination
-                          totalSize={product_list ? product_list.length : 0}
+                          totalSize={transaction_category_list ? transaction_category_list.length : 0}
                           className="product-table"
                           trClassName="cursor-pointer"
+                          csvFileName="Chart_Of_Account.csv"
+                          ref={node => this.table = node}
+
                         >
                           <TableHeaderColumn
                             isKey
-                            dataField="transactionCategoryName"
+                            dataField="transactionCategoryCode"
                             dataSort
                           >
                             Code
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryCode"
+                            dataField="transactionCategoryName"
                             dataSort
                           >
-                            Account
+                            Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryCode"
+                            dataField="transactionType"
                             dataSort
+                            dataFormat={this.typeFormatter}
                           >
                             Type
                           </TableHeaderColumn>

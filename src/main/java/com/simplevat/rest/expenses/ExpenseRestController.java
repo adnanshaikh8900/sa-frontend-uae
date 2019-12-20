@@ -5,25 +5,25 @@
  */
 package com.simplevat.rest.expenses;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.TransactionTypeConstant;
+import com.simplevat.contact.model.ExpenseItemModel;
 import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.entity.Expense;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.service.CompanyService;
-import com.simplevat.service.CountryService;
-import com.simplevat.service.CurrencyService;
+import com.simplevat.entity.User;
+import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.TransactionCategoryServiceNew;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserServiceNew;
-import com.simplevat.service.bankaccount.TransactionTypeService;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,39 +42,25 @@ public class ExpenseRestController {
     private ExpenseService expenseService;
 
     @Autowired
-    private TransactionCategoryServiceNew transactionCategoryService;
-
-    @Autowired
     private UserServiceNew userServiceNew;
 
     @Autowired
-    private CompanyService companyService;
+    private ExpenseRestHelper expenseRestHelper;
 
     @Autowired
-    private CurrencyService currencyService;
+    private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private TransactionTypeService transactionTypeService;
-
-    @Autowired
-    private CountryService countryService;
-
-    ExpenseRestHelper controllerHelper = new ExpenseRestHelper();
-
-    @ApiOperation(value = "Get Expanse List")
-    @RequestMapping(method = RequestMethod.GET, value = "/retrieveExpenseList")
-    public ResponseEntity expenseList() {
+    @ApiOperation(value = "Get Expense List")
+    @RequestMapping(method = RequestMethod.GET, value = "/getList")
+    public ResponseEntity getExpenseList() {
         try {
             List<ExpenseRestModel> expenses = new ArrayList<>();
-            System.out.println("expenseService=" + expenseService);
-            System.out.println("transactionCategoryService=" + transactionCategoryService);
             List<Expense> expenseList = expenseService.getExpenses();
             for (Expense expense : expenseList) {
-                ExpenseRestModel model = controllerHelper.getExpenseModel(expense);
-                model.setExpenseAmountCompanyCurrency(expense.getExpencyAmountCompanyCurrency());
+                ExpenseRestModel model = expenseRestHelper.getExpenseModel(expense);
+                if (expense.getExpencyAmountCompanyCurrency() != null) {
+                    model.setExpenseAmountCompanyCurrency(expense.getExpencyAmountCompanyCurrency());
+                }
                 expenses.add(model);
             }
             return new ResponseEntity(expenses, HttpStatus.OK);
@@ -86,9 +72,25 @@ public class ExpenseRestController {
 
     @ApiOperation(value = "Add New Expense")
     @RequestMapping(method = RequestMethod.POST, value = "/save")
-    public ResponseEntity saveExpense(@RequestBody ExpenseRestModel expenseRestModel) {
+    public ResponseEntity save(@ModelAttribute ExpenseRestModel expenseRestModel, HttpServletRequest request) {
         try {
-            controllerHelper.saveExpense(expenseRestModel, currencyService, userServiceNew, companyService, projectService, expenseService, transactionCategoryService, transactionTypeService);
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            User loggedInUser = userServiceNew.findByPK(userId);
+
+            List<ExpenseItemModel> items = new ArrayList();
+            if (expenseRestModel.getExpenseItemsString() != null && !expenseRestModel.getExpenseItemsString().isEmpty()) {
+                ObjectMapper mapper = new ObjectMapper();
+                items = mapper.readValue(expenseRestModel.getExpenseItemsString(), new TypeReference<ArrayList<ExpenseItemModel>>() {
+                });
+                expenseRestModel.setExpenseItems(items);
+            }
+
+            Expense expense = expenseRestHelper.getExpenseEntity(expenseRestModel, loggedInUser);
+            if (expense.getExpenseId() == null || expense.getExpenseId() == 0) {
+                expenseService.persist(expense);
+            } else {
+                expenseService.update(expense);
+            }
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,10 +100,11 @@ public class ExpenseRestController {
 
     @ApiOperation(value = "Get Expense Detail by Expanse Id")
     @RequestMapping(method = RequestMethod.GET, value = "/getExpenseById")
-    public ResponseEntity viewExpense(@RequestParam("expenseId") Integer expenseId) {
+    public ResponseEntity getExpenseById(@RequestParam("expenseId") Integer expenseId) {
         try {
-            System.out.println("expenseId=" + expenseId);
-            return new ResponseEntity(controllerHelper.getExpenseById(expenseId, expenseService), HttpStatus.OK);
+            Expense expense = expenseService.findByPK(expenseId);
+            ExpenseRestModel expenseModel = expenseRestHelper.getExpenseModel(expense);
+            return new ResponseEntity(expenseModel, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -109,10 +112,11 @@ public class ExpenseRestController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
-    public ResponseEntity deleteExpense(@RequestParam("expenseId") Integer expenseId) {
+    public ResponseEntity delete(@RequestParam("expenseId") Integer expenseId) {
         try {
-            System.out.println("expenseId=" + expenseId);
-            controllerHelper.deleteExpense(expenseId, expenseService);
+            Expense expense = expenseService.findByPK(expenseId);
+            expense.setDeleteFlag(true);
+            expenseService.update(expense);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,36 +125,25 @@ public class ExpenseRestController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/deletes")
-    public ResponseEntity deleteExpenses(@RequestBody DeleteModel expenseIds) {
+    public ResponseEntity bulkDelete(@RequestBody DeleteModel expenseIds) {
         try {
-            System.out.println("expenseId=" + expenseIds);
-            controllerHelper.deleteExpenses(expenseIds, expenseService);
+            expenseService.deleteByIds(expenseIds.getIds());
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/claimants")
-    public ResponseEntity getClaimants() {
-        try {
-            return new ResponseEntity(controllerHelper.users(userServiceNew), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/categories")
-    public ResponseEntity getCategorys(@RequestParam("categoryName") String queryString) {
-        try {
-            System.out.println("queryString=" + queryString);
-            List<TransactionCategory> transactionCategoryList = transactionCategoryService.findAllTransactionCategoryByTransactionType(TransactionTypeConstant.TRANSACTION_TYPE_EXPENSE, queryString);
-            return new ResponseEntity(controllerHelper.completeCategory(transactionCategoryList), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+//
+//    @RequestMapping(method = RequestMethod.GET, value = "/categories")
+//    public ResponseEntity getCategorys(@RequestParam("categoryName") String queryString) {
+//        try {
+//            System.out.println("queryString=" + queryString);
+//            List<TransactionCategory> transactionCategoryList = transactionCategoryService.findAllTransactionCategoryByTransactionType(TransactionTypeConstant.TRANSACTION_TYPE_EXPENSE, queryString);
+//            return new ResponseEntity(expenseRestHelper.completeCategory(transactionCategoryList), HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
 }

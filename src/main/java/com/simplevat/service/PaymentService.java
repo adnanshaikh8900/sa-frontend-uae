@@ -15,5 +15,7 @@ import java.util.List;
 public abstract class PaymentService extends SimpleVatService<Integer, Payment> {
     
     public abstract List<Payment> getPayments();
+    
+    public abstract void deleteByIds(List<Integer> ids);
 
 }

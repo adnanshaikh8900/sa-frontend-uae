@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class CustomUserDetails implements UserDetails {
 
+    private Integer userId;
     private String username;
     private String password;
     private Role role;
@@ -28,11 +29,20 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public CustomUserDetails(User user) {
+        this.userId = user.getUserId();
         this.username = user.getUserEmail();
         this.password = user.getPassword();
         this.role = user.getRole();
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+    
     @Override
     public String getUsername() {
         return username;

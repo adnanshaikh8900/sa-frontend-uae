@@ -23,12 +23,13 @@ import './style.scss'
 import * as ProductActions from '../../actions'
 
 import {WareHouseModal} from '../../sections'
+import {selectOptionsFactory} from 'utils'
 
 const mapStateToProps = (state) => {
   return ({
-    vat_list: state.product.product_vat_list,
-    product_ware_house: state.product.product_ware_house,
-    product_parent: state.product.product_parent
+    vat_list: state.product.vat_list,
+    product_warehouse_list: state.product.product_warehouse_list,
+    product_parent_list: state.product.product_parent_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -42,7 +43,7 @@ class CreateProduct extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       openWarehouseModal:false,
 
       selectedParentProduct: null,
@@ -53,11 +54,11 @@ class CreateProduct extends React.Component {
         productName: '', 
         productDescription: '',
         productCode:'',
-        vatIncluded : false,
-        unitPrice : 8,
-        parentProduct : 1,
-        vatCategory: '', 
-        productWarehouse: ''
+        vatCategoryId : '',
+        unitPrice : '',
+        parentProductId: '',
+        productWarehouseId: '',
+        vatIncluded: false,
       },
     }
 
@@ -79,12 +80,24 @@ class CreateProduct extends React.Component {
   }
   // Cloase Confirm Modal
   closeWarehouseModal() {
-    this.setState({ openWarehouseModal: false })
+    this.setState({ openWarehouseModal: false });
+    this.props.productActions.getProductWareHouseList()
   }
 
 
   // Create or Edit Product
   productHandleSubmit(data) {
+    const {
+      productName, 
+      productDescription,
+      productCode,
+      vatCategoryId,
+      unitPrice ,
+      parentProductId,
+      productWarehouseId,
+      vatIncluded,
+    } = this.data
+
     this.props.productActions.createAndSaveProduct(data).then(res => {
       if (res.status === 200) {
         // this.success()
@@ -96,11 +109,12 @@ class CreateProduct extends React.Component {
         } else this.props.history.push('/admin/master/product')
       }
     })
+
   }
 
   render() {
 
-    const  {vat_list, product_parent, product_ware_house } = this.props
+    const  {vat_list, product_parent_list, product_warehouse_list } = this.props
 
     console.log()
 
@@ -185,18 +199,18 @@ class CreateProduct extends React.Component {
 
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="parent_product">Parent Product</Label>
+                                    <Label htmlFor="parentProductId">Parent Product</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={product_parent}
-                                      id="parentProduct"
-                                      name="parentProduct"
+                                      options={selectOptionsFactory.renderOptions('productName', 'productID', product_parent_list)}
+                                      id="parentProductId"
+                                      name="parentProductId"
                                       value={this.state.selectedParentProduct}
                                       onChange={(option) => {
                                         this.setState({
                                           selectedParentProduct: option.value
                                         })
-                                        props.handleChange("parentProduct")(option.value);
+                                        props.handleChange("parentProductId")(option.value);
                                       }}
                                     />
                                   </FormGroup>
@@ -219,27 +233,27 @@ class CreateProduct extends React.Component {
                                 </Col>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="vatCategory"><span className="text-danger">*</span>Vat Percentage</Label>
+                                    <Label htmlFor="vatCategoryId"><span className="text-danger">*</span>Vat Percentage</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={vat_list}
-                                      id="vatCategory"
-                                      name="vatCategory"
+                                      options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list): []}
+                                      id="vatCategoryId"
+                                      name="vatCategoryId"
                                       value={this.state.selectedVatCategory}
                                       onChange={(option) => {
                                         this.setState({
                                           selectedVatCategory: option.value
                                         })
-                                        props.handleChange("vatCategory")(option.value);
+                                        props.handleChange("vatCategoryId")(option.value);
                                       }}
                                       className={
-                                        props.errors.vatCategory && props.touched.vatCategory
+                                        props.errors.vatCategoryId && props.touched.vatCategoryId
                                           ? "is-invalid"
                                           : ""
                                       }
                                     />
-                                    {props.errors.vatCategory && props.touched.vatCategory && (
-                                      <div className="invalid-feedback">{props.errors.vatCategory}</div>
+                                    {props.errors.vatCategoryId && props.touched.vatCategoryId && (
+                                      <div className="invalid-feedback">{props.errors.vatCategoryId}</div>
                                     )}
                                   </FormGroup>
                                 </Col>
@@ -266,7 +280,7 @@ class CreateProduct extends React.Component {
                                     <Label htmlFor="warehourse">Warehourse</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={product_ware_house}
+                                      options={selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list)}
                                       id="productWarehouse"
                                       name="productWarehouse"
                                       value={this.state.selectedWareHouse}

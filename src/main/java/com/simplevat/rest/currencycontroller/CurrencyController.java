@@ -69,7 +69,7 @@ public class CurrencyController implements Serializable {
     @Autowired
     UserServiceNew userServiceNew;
     
-    @ApiOperation(value = "Update Bank Account", response = List.class)
+    @ApiOperation(value = "Get Currency List", response = List.class)
     @GetMapping
     public ResponseEntity getCurrencies() {
         try {
@@ -87,7 +87,7 @@ public class CurrencyController implements Serializable {
     
     @ApiOperation(value = "Get Currency by Currency Code", response = Currency.class)
     @GetMapping("/{currencyCode}")
-    public ResponseEntity getCurrency(@PathVariable(value = "currencyCode") Integer currencyCode) {
+    public ResponseEntity getCurrency(@RequestParam("currencyCode") Integer currencyCode) {
         try {
             Currency currency = currencyService.findByPK(currencyCode);
             if (currency != null) {
@@ -103,7 +103,7 @@ public class CurrencyController implements Serializable {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
-    @ApiOperation(value = "Insert Currency Code", response = Currency.class)
+    @ApiOperation(value = "Save Currency Code", response = Currency.class)
     @PostMapping
     public ResponseEntity createCurrency(@RequestBody Currency currency, HttpServletRequest request) {
         try {
@@ -120,7 +120,7 @@ public class CurrencyController implements Serializable {
     
     @ApiOperation(value = "Update Currency by Currency Code", response = Currency.class)
     @PutMapping(value = "/{currencyCode}")
-    public ResponseEntity editCurrency(@RequestBody Currency currency, @PathVariable(value = "currencyCode") int currencyCode, HttpServletRequest request) {
+    public ResponseEntity editCurrency(@RequestBody Currency currency, @RequestParam("currencyCode") Integer currencyCode, HttpServletRequest request) {
     	try {
     		
             Currency existingCurrency = currencyService.findByPK(currencyCode);
@@ -145,7 +145,7 @@ public class CurrencyController implements Serializable {
     
     @ApiOperation(value = "Delete Currency by Currency Code", response = Currency.class)
     @DeleteMapping(value = "/{currencyCode}")
-    public ResponseEntity deleteCurrency(@PathVariable(value = "currencyCode") int currencyCode,HttpServletRequest request) {
+    public ResponseEntity deleteCurrency(@RequestParam("currencyCode") Integer currencyCode,HttpServletRequest request) {
         try {
             Currency currency = currencyService.findByPK(currencyCode);
             if (currency != null) {

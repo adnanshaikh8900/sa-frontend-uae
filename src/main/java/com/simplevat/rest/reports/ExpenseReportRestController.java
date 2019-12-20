@@ -31,7 +31,8 @@ public class ExpenseReportRestController {
     @Autowired
     private ExpenseService expenseService;
 
-    ExpenseRestHelper controllerHelper = new ExpenseRestHelper();
+    @Autowired
+    private ExpenseRestHelper controllerHelper;
 
     @RequestMapping(method = RequestMethod.POST, value = "/viewexpensereport")
     public ResponseEntity<List<ExpenseRestModel>> view(@RequestBody FinancialPeriodRestModel financialPeriod) {

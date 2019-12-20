@@ -5,8 +5,7 @@
  */
 package com.simplevat.contact.model;
 
-import com.simplevat.entity.Product;
-import com.simplevat.entity.VatCategory;
+import com.simplevat.entity.Expense;
 import java.math.BigDecimal;
 import lombok.Data;
 
@@ -18,14 +17,10 @@ import lombok.Data;
 public class ExpenseItemModel {
 
     private int id;
-    private int quatity;
+    private int quantity;
     private BigDecimal unitPrice;
     private Integer vatCategoryId;
-    private String description;
+    private Integer transactionCategoryId;
     private BigDecimal subTotal;
     private Integer versionNumber;
-    private Integer productId;
-    private Boolean isProductSelected = Boolean.TRUE;
-    private String productName;
-    
 }

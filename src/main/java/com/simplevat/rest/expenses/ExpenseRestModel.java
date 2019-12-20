@@ -31,7 +31,7 @@ public class ExpenseRestModel {
     private Integer transactionType;
     private Integer transactionCategory;
     private Integer currency;
-    private Integer project;
+    private Integer projectId;
     private String receiptAttachmentPath;
     private String receiptAttachmentDescription;
     private Integer createdBy;
@@ -54,7 +54,6 @@ public class ExpenseRestModel {
     private Integer userId;
     private Integer companyId;
     private Integer currencyCode;
-    private BigDecimal totalAmount;
     private Integer bankAccountId;
     private Integer expenseContactId;
     private Integer paymentId;

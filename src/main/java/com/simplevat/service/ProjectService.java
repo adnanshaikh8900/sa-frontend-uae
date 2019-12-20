@@ -10,7 +10,7 @@ public abstract class ProjectService extends SimpleVatService<Integer, Project> 
 
     public abstract List<Project> getProjectsByCriteria(ProjectCriteria projectCriteria) throws Exception;
 
-    public abstract void updateProjectExpenseBudget(BigDecimal expenseAmount, Project project);
+//    public abstract void updateProjectExpenseBudget(BigDecimal expenseAmount, Project project);
 
     public abstract void updateProjectRevenueBudget(BigDecimal revenueAmount, Project project);
 

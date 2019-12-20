@@ -137,7 +137,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
             for (Transaction transaction : transactionList) {
                 TransactionReportRestModel transactionReportRestModel = new TransactionReportRestModel();
                 if (transaction.getBankAccount() != null) {
-                    transactionReportRestModel.setBankAccount(transaction.getBankAccount().getBankName());
+                    transactionReportRestModel.setBankAccount(transaction.getBankAccount().getBankAccountName());
                 }
                 transactionReportRestModel.setTransactionAmount(transaction.getTransactionAmount());
                 if (transaction.getExplainedTransactionCategory() != null) {

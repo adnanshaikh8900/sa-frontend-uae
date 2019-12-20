@@ -8,7 +8,7 @@ export const getProductList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/product/getproduct`
+      url: `rest/product/getProductList`
     }
 
     return authApi(data).then(res => {
@@ -26,20 +26,7 @@ export const getProductList = () => {
 
 
 // Get Product By ID
-export const getProductByID = (id) => {
-  return (dispatch) => {
-    let data = {
-      method: 'GET',
-      url: `rest/product/editproduct?id=${id}`
-    }
 
-    return authApi(data).then(res => {
-      return res
-    }).catch(err => {
-      throw err
-    })
-  }
-}
 
 
 // Create & Save Product
@@ -47,7 +34,7 @@ export const createAndSaveProduct = (product) => {
   return (dispatch) => {
     let data = {
       method: 'POST',
-      url: `/rest/product/saveproduct?id=1`,
+      url: `rest/product/save`,
       data: product
     }
 
@@ -65,7 +52,7 @@ export const createAndSaveProduct = (product) => {
 export const createWarehouse = (warehouse) => {
   let data = {
     method: 'POST',
-    url: `/rest/product/savewarehouse`,
+    url: `rest/productwarehouse/savewarehouse`,
     data: warehouse
   }
 
@@ -82,13 +69,13 @@ export const getProductWareHouseList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/product/getwarehouse'
+      url: 'rest/productwarehouse/getwarehouse'
     }
 
     return authApi(data).then(res => {
       dispatch({
         type: PRODUCT.PRODUCT_WHARE_HOUSE,
-        payload: res
+        payload: res.data
       })
       return res
     }).catch(err => {
@@ -103,13 +90,13 @@ export const getProductVatCategoryList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/product/getvatpercentage'
+      url: 'rest/vat/getvat'
     }
 
     return authApi(data).then(res => {
       dispatch({
         type: PRODUCT.PRODUCT_VAT_CATEGORY,
-        payload: res
+        payload: res.data
       })
       return res
     }).catch(err => {
@@ -124,15 +111,32 @@ export const getParentProductList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/product/getproduct'
+      url: 'rest/product/getProductList'
     }
 
     return authApi(data).then(res => {
       dispatch({
         type: PRODUCT.PRODUCT_PARENT,
-        payload: res
+        payload: res.data
       })
       return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const removeBulk = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'delete',
+      url: 'rest/product/deleteproducts',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+        return res
+      }
     }).catch(err => {
       throw err
     })

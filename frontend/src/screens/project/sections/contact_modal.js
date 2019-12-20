@@ -19,7 +19,7 @@ import { Formik } from 'formik';
 import * as Yup from "yup";
 
 import * as ProjectActions from '../actions'
-
+import {selectOptionsFactory} from 'utils'
 
 const INVOICE_LANGUAGE_OPTIONS = [
   { value: 1, label: 'English'},
@@ -34,7 +34,7 @@ class ContactModal extends React.Component {
       loading: false,
 
       initContactValue: {
-        title: '',
+        title: 1,
         billingEmail: '',
         city: '',
         country : '',
@@ -54,7 +54,9 @@ class ContactModal extends React.Component {
 
   // Create or Contact
   contactHandleSubmit(data) {
-    ProjectActions.createProjectContact(data).then(res => {
+
+    const request = this.props.createContact(data);
+    request.then(res => {
       if (res.status === 200) {
       // this.success()
       this.closeContactModel()
@@ -63,11 +65,10 @@ class ContactModal extends React.Component {
   }
 
   render() {
-    const { openContactModel, closeContactModel, currencyList, countryList } = this.props
-
+    const { openContactModal, closeContactModel, currencyList, countryList , titleList} = this.props
     return (
       <div className="contact-modal-screen">
-        <Modal isOpen={openContactModel}
+        <Modal isOpen={openContactModal}
           className="modal-success contact-modal"
           >
           <Formik
@@ -112,13 +113,13 @@ class ContactModal extends React.Component {
                           <Label htmlFor="categoryCode"><span className="text-danger">*</span>Title</Label>
                           <Select
                             className="select-default-width"
-                            options={INVOICE_LANGUAGE_OPTIONS}
+                            options={titleList? selectOptionsFactory.renderOptions('titleName', 'titleCode', titleList): []}
                             id="title"
                             onChange={(option) => {
                               this.setState({
                               selectedContactTitle: option.value
                               })
-                              props.handleChange("title")(option.value);
+                              props.handleChange("title")(option.label);
                             }}
                             placeholder="Select title"
                             value={this.state.selectedContactTitle}
@@ -315,7 +316,7 @@ class ContactModal extends React.Component {
                         <Label htmlFor="categoryName"><span className="text-danger">*</span>Country</Label>
                         <Select
                         className="select-default-width"
-                        options={countryList}
+                        options={countryList ? selectOptionsFactory.renderOptions('countryName', 'countryCode', countryList): []}
                         id="country"
                         onChange={(option) => {
                           this.setState({
@@ -345,7 +346,8 @@ class ContactModal extends React.Component {
                         <Label htmlFor="categoryName"><span className="text-danger">*</span>Currency Code</Label>
                         <Select
                         className="select-default-width"
-                        options={currencyList}
+                        options={currencyList ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currencyList): []}
+
                         id="currency"
                         onChange={(option) => {
                           this.setState({

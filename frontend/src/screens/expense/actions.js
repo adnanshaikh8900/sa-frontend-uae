@@ -8,7 +8,7 @@ export const getExpenseList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/expense/retrieveExpenseList'
+      url: '/rest/expense/getList'
     }
 
     return authApi(data).then(res => {

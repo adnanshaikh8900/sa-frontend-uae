@@ -14,7 +14,7 @@ export const getExpenseDetail = (_id) => {
     return authApi(data).then(res => {
       dispatch({
         type: EXPENSE.EXPENSE_DETAIL,
-        payload: res.data
+        payload: res
       })
       return res
     }).catch(err => {

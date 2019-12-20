@@ -281,7 +281,7 @@ class ChartAccount extends React.Component {
                           selectRow={ this.selectRowProp }
                           search={false}
                           options={ this.options }
-                          data={transaction_category_list ? transaction_category_list : ''}
+                          data={transaction_category_list ? transaction_category_list : []}
                           version="4"
                           hover
                           pagination

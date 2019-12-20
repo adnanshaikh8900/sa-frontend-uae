@@ -74,7 +74,6 @@ class DetailProduct extends React.Component {
       // this.setState({
       // }, () => {
       this.props.detailProductActions.getProductById(id).then(res => {
-        console.log(res.data)
         if (res.status === 200) {
           this.setState({
             loading: false,
@@ -97,7 +96,7 @@ class DetailProduct extends React.Component {
               } : null,
               vatIncluded: res.data.vatIncluded
             }
-          },()=>{console.log(this.state.initValue)})
+          })
         } else { this.props.history.push('/admin/master/product') }
       })
       // })
@@ -132,7 +131,7 @@ class DetailProduct extends React.Component {
       productId: id,
       productName : productName,
       productDescription: productDescription, 
-      productCode: productCode ,
+      productCode: productCode,
       vatCategoryId: vatCategoryId,
       unitPrice: unitPrice,
       parentProductId: parentProductId,
@@ -142,15 +141,10 @@ class DetailProduct extends React.Component {
     this.props.detailProductActions.updateProduct(postData).then(res => {
       if (res.status === 200) {
         this.success()
-
-        if (this.state.readMore) {
-          this.setState({
-            readMore: false
-          })
-        } else this.props.history.push('/admin/master/product')
       }
+    }).catch(err => {
+        this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
     })
-    console.log(postData)
   }
 
   render() {
@@ -212,7 +206,7 @@ class DetailProduct extends React.Component {
                                     id="productName"
                                     name="productName"
                                     onChange={props.handleChange}
-                                    value={props.values.productName}
+                                    defaultValue={props.values.productName}
                                     placeholder="Enter Product Name"
                                     className={
                                       props.errors.productName && props.touched.productName
@@ -234,7 +228,7 @@ class DetailProduct extends React.Component {
                                     id="productCode"
                                     name="productCode"
                                     onChange={props.handleChange}
-                                    value={props.values.productCode}
+                                    defaultValue={props.values.productCode}
                                     placeholder="Enter Product Code"
                                   />
                                 </FormGroup>
@@ -270,7 +264,7 @@ class DetailProduct extends React.Component {
                                     name="unitPrice"
                                     placeholder="Enter Product Price"
                                     onChange={props.handleChange}
-                                    value={props.values.unitPrice}
+                                    defaultValue={props.values.unitPrice}
                                   />
                                 </FormGroup>
                               </Col>
@@ -282,7 +276,7 @@ class DetailProduct extends React.Component {
                                     options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list) : []}
                                     id="vatCategoryId"
                                     name="vatCategoryId"
-                                    value={props.values.vatCategoryId}
+                                    value={props.values.vatCategoryId.value}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedVatCategory: option.value
@@ -310,7 +304,7 @@ class DetailProduct extends React.Component {
                                     id="vatIncluded"
                                     name="vatIncluded"
                                     onChange={props.handleChange}
-                                    value={props.values.vatIncluded}
+                                    defaultChecked={props.values.vatIncluded}
                                   />
                                   <Label className="form-check-label" check htmlFor="vatIncluded">Vat Include</Label>
                                 </FormGroup>
@@ -326,7 +320,7 @@ class DetailProduct extends React.Component {
                                     options={selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list)}
                                     id="productWarehouseId"
                                     name="productWarehouseId"
-                                    value={props.values.productWarehouseId}
+                                    value={props.values.productWarehouseId.value}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedWareHouse: option.value
@@ -358,7 +352,7 @@ class DetailProduct extends React.Component {
                                     rows="6"
                                     placeholder="Description..."
                                     onChange={props.handleChange}
-                                    value={props.values.productDescription}
+                                    defaultValue={props.values.productDescription}
                                   />
                                 </FormGroup>
                               </Col>

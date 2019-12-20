@@ -5,7 +5,8 @@ const initState = {
   country_list: [],
   currency_list: [],
   state_list: [],
-  city_list: []
+  city_list: [],
+  contact_type_list: []
 }
 
 const ContactReducer = (state = initState, action) => {
@@ -43,6 +44,11 @@ const ContactReducer = (state = initState, action) => {
                 currency_list: Object.assign([], payload)
               }
 
+              case CONTACT.CONTACT_TYPE_LIST:
+                return {
+                  ...state,
+                  contact_type_list: Object.assign([], payload)
+                }
     default:
       return state
   }

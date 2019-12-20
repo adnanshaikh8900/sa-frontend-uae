@@ -1,6 +1,8 @@
 import { CHART_ACCOUNT } from 'constants/types'
 
 const initState = {
+  transaction_type_list: [],
+  transaction_category_list: []
 }
 
 const ChartAccountReducer = (state = initState, action) => {

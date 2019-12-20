@@ -20,12 +20,17 @@ import {
 import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal} from 'components'
+
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
 import * as ProductActions from './actions'
+import {
+  CommonActions
+} from 'services/global'
+
 
 import './style.scss'
 
@@ -36,7 +41,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    productActions: bindActionCreators(ProductActions, dispatch)
+    productActions: bindActionCreators(ProductActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
 
@@ -46,13 +52,19 @@ class Product extends React.Component {
     super(props)
     this.state = {
       loading: true,
+      selected_id_list: [],
+      dialog: null,
     }
 
     this.initializeData = this.initializeData.bind(this)
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
     this.goToDetail = this.goToDetail.bind(this)
-
+    this.vatCategoryFormatter = this.vatCategoryFormatter.bind(this);
+    this.bulkDelete = this.bulkDelete.bind(this);
+    this.removeBulk = this.removeBulk.bind(this);
+    this.removeDialog = this.removeDialog.bind(this);
+    
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top'
@@ -72,28 +84,103 @@ class Product extends React.Component {
     this.initializeData()
   }
 
+  componentWillUnmount() {
+    this.setState({
+      selected_id_list: []
+    })
+  }
+
   initializeData () {
     this.props.productActions.getProductList().then(res => {
       if (res.status === 200) {
+        console.log(res.status)
         this.setState({ loading: false })
       }
     })
   }
 
   goToDetail (row) {
-    this.props.history.push('/admin/master/product/detail')
+    this.props.history.push('/admin/master/product/detail',{id:row.productID})
   }
 
-  onRowSelect (row, isSelected, e) {
-    console.log('one row checked ++++++++', row)
+  onRowSelect(row, isSelected, e) {
+    let temp_list = []
+    if (isSelected) {
+      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list.push(row.productID);
+    } else {
+      this.state.selected_id_list.map(item => {
+        if (item !== row.productID) {
+          temp_list.push(item)
+        }
+      });
+    }
+    this.setState({
+      selected_id_list: temp_list
+    })
   }
-  onSelectAll (isSelected, rows) {
-    console.log('current page all row checked ++++++++', rows)
+  onSelectAll(isSelected, rows) {
+    let temp_list = []
+    if (isSelected) {
+      rows.map(item => {
+        temp_list.push(item.productID)
+      })
+    }
+    this.setState({
+      selected_id_list: temp_list
+    })
+  }
+
+  bulkDelete() {
+    const {
+      selected_id_list
+    } = this.state
+    if (selected_id_list.length > 0) {
+      this.setState({
+        dialog: <ConfirmDeleteModal
+          isOpen={true}
+          okHandler={this.removeBulk}
+          cancelHandler={this.removeDialog}
+        />
+      })
+    } else {
+      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
+    }
+  }
+
+  removeBulk() {
+    this.removeDialog()
+    let { selected_id_list } = this.state;
+    const { product_list } = this.props
+    let obj = {
+      ids: selected_id_list
+    }
+    this.props.productActions.removeBulk(obj).then(() => {
+      this.props.productActions.getProductList()
+      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+      if(product_list && product_list.length > 0) {
+                this.setState({
+        selected_id_list: []
+      })
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
+  vatCategoryFormatter(cell,row) {
+    return row['vatCategory'] !== null ? row['vatCategory']['name'] : ''
   }
 
   render() {
 
-    const { loading } = this.state
+    const { loading , dialog} = this.state
     const { product_list } = this.props
     const containerStyle = {
       zIndex: 1999
@@ -102,6 +189,7 @@ class Product extends React.Component {
     return (
       <div className="product-screen">
         <div className="animated fadeIn">
+        {dialog}
           <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
           <Card>
             <CardHeader>
@@ -130,6 +218,8 @@ class Product extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
+                            onClick={()=>this.table.handleExportCSV()}
+
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -145,6 +235,8 @@ class Product extends React.Component {
                           <Button
                             color="warning"
                             className="btn-square"
+                            onClick={this.bulkDelete}
+
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -177,6 +269,8 @@ class Product extends React.Component {
                           totalSize={product_list ? product_list.length : 0}
                           className="product-table"
                           trClassName="cursor-pointer"
+                          csvFileName="product_list.csv"
+                          ref={node => this.table = node}
                         >
                           <TableHeaderColumn
                             isKey
@@ -200,6 +294,7 @@ class Product extends React.Component {
                           <TableHeaderColumn
                             dataField="vatCategory"
                             dataSort
+                            dataFormat={this.vatCategoryFormatter}
                           >
                             Vat Percentage
                           </TableHeaderColumn>

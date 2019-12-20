@@ -31,16 +31,16 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import './style.scss'
 
-import * as TransactionActions from './actions'
+import * as currenciesActions from './actions'
 
 const mapStateToProps = (state) => {
   return ({
-    transaction_list: state.transaction.transaction_list
+    currency_list: state.currency.currency_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    transactionActions: bindActionCreators(TransactionActions, dispatch)
+    currenciesActions: bindActionCreators(currenciesActions, dispatch)
   })
 }
 
@@ -75,6 +75,11 @@ class Currency extends React.Component {
   }
 
   componentDidMount() {
+    this.getCurrencyDetails();
+  }
+
+  getCurrencyDetails = () => {
+    this.props.currenciesActions.getCurrencyList();
   }
 
   // Show Invite User Modal
@@ -95,6 +100,14 @@ class Currency extends React.Component {
     const containerStyle = {
       zIndex: 1999
     };
+
+    
+    const currencyList = this.props.currency_list && this.props.currency_list !== [] ?
+    this.props.currency_list.map(currencyData => ({
+      name : currencyData.currencyName,
+      symbol:currencyData.currencySymbol
+
+    })) : ""
 
     return (
       <div className="transaction-category-screen">
@@ -146,7 +159,7 @@ class Currency extends React.Component {
                     </div>
           
                     <BootstrapTable 
-                      data={currencies} 
+                      data={currencyList} 
                       hover
                       pagination
                       version="4"

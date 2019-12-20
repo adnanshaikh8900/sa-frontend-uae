@@ -209,18 +209,13 @@ public class ExpenseRestHelper implements Serializable {
     private void updateSubTotal(@NonNull final ExpenseItemModel expenseItemModel) {
         final int quantity = expenseItemModel.getQuantity();
         final BigDecimal unitPrice = expenseItemModel.getUnitPrice();
-        BigDecimal vatPer = new BigDecimal(BigInteger.ZERO);
-        if (expenseItemModel.getVatCategoryId() != null) {
-            VatCategory vatCategory = vatCategoryService.findByPK(expenseItemModel.getVatCategoryId());
-            if (vatCategory != null) {
-                vatPer = vatCategory.getVat();
-            }
-        }
+       
         if (null != unitPrice) {
             final BigDecimal amountWithoutTax = unitPrice.multiply(new BigDecimal(quantity));
             expenseItemModel.setSubTotal(amountWithoutTax);
         }
     }
+    
 
 //    public List<TransactionCategory> completeCategory(List<TransactionCategory> transactionCategoryList) {
 //        try {

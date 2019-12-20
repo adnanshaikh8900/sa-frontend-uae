@@ -14,6 +14,7 @@ import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.expenses.ExpenseRestModel;
 import com.simplevat.service.CurrencyService;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -44,10 +45,12 @@ public class ExpenseRestHelper implements Serializable {
 
     @Autowired
     private VatCategoryService vatCategoryService;
+    
+    @Autowired
+    private TransactionCategoryService transactionCategoryService;
 
     @Autowired
     private CurrencyService currencyService;
-
 
     public Expense getExpenseEntity(ExpenseRestModel model, User user) throws Exception {
 
@@ -195,12 +198,8 @@ public class ExpenseRestHelper implements Serializable {
         item.setExpenseLineItemQuantity(expenseItemModel.getQuantity());
         item.setExpenseLineItemUnitPrice(expenseItemModel.getUnitPrice());
         item.setExpenseLineItemTotalPrice(expenseItemModel.getSubTotal());
-        VatCategory vatCategory = new VatCategory();
-        vatCategory.setId(expenseItemModel.getVatCategoryId());
-        item.setExpenseLineItemVat(vatCategory);
-        TransactionCategory transactionCategory = new TransactionCategory();
-        transactionCategory.setTransactionCategoryId(expenseItemModel.getTransactionCategoryId());
-        item.setTransactionCategory(transactionCategory);
+        item.setExpenseLineItemVat(vatCategoryService.findByPK(expenseItemModel.getVatCategoryId()));
+        item.setTransactionCategory(transactionCategoryService.findByPK(expenseItemModel.getTransactionCategoryId()));
         item.setVersionNumber(expenseItemModel.getVersionNumber());
         item.setExpense(expense);
         return item;
@@ -209,13 +208,12 @@ public class ExpenseRestHelper implements Serializable {
     private void updateSubTotal(@NonNull final ExpenseItemModel expenseItemModel) {
         final int quantity = expenseItemModel.getQuantity();
         final BigDecimal unitPrice = expenseItemModel.getUnitPrice();
-       
+
         if (null != unitPrice) {
             final BigDecimal amountWithoutTax = unitPrice.multiply(new BigDecimal(quantity));
             expenseItemModel.setSubTotal(amountWithoutTax);
         }
     }
-    
 
 //    public List<TransactionCategory> completeCategory(List<TransactionCategory> transactionCategoryList) {
 //        try {

@@ -37,12 +37,12 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
     public List<TransactionCategory> findAllTransactionCategory() {
         return getDao().executeNamedQuery("findAllTransactionCategory");
     }
-    
-     @Override
+
+    @Override
     public List<TransactionCategory> findAllTransactionCategoryByUserId(Integer userId) {
         Map<String, Object> parameterDataMap = new HashMap();
         parameterDataMap.put("createdBy", userId);
-        return getDao().executeNamedQuery("findAllTransactionCategoryByUserId");
+        return getDao().executeNamedQuery("findAllTransactionCategoryByUserId", parameterDataMap);
     }
 
     @Override

@@ -9,8 +9,10 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.entity.User;
+import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.bankaccount.TransactionTypeService;
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -39,6 +41,9 @@ public class TransactionCategoryRestController implements Serializable {
     private TransactionCategoryService transactionCategoryService;
 
     @Autowired
+    private TransactionTypeService transactionTypeService;
+
+    @Autowired
     private UserServiceNew userServiceNew;
 
     @Autowired
@@ -47,7 +52,6 @@ public class TransactionCategoryRestController implements Serializable {
     @Autowired
     private TranscationCategoryHelper transcationCategoryHelper;
 
-    
     @ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data")
     @GetMapping(value = "/gettransactioncategory")
     public ResponseEntity getAllTransactionCategory(HttpServletRequest request) {
@@ -119,11 +123,16 @@ public class TransactionCategoryRestController implements Serializable {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User user = userServiceNew.findByPK(userId);
-            TransactionCategory selectedTransactionCategory = transcationCategoryHelper.getEntity(transactionCategoryBean);
+            TransactionCategory selectedTransactionCategory = transactionCategoryService
+                    .findByPK(transactionCategoryBean.getTransactionCategoryId());
+            selectedTransactionCategory.setTransactionCategoryCode(transactionCategoryBean.getTransactionCategoryCode());
+            selectedTransactionCategory.setTransactionCategoryName(transactionCategoryBean.getTransactionCategoryName());
+            if (transactionCategoryBean.getTransactionType() != null) {
+                selectedTransactionCategory.setTransactionType(transactionTypeService.findByPK(transactionCategoryBean.getTransactionType()));
+            }
             selectedTransactionCategory.setLastUpdateBy(user.getUserId());
             selectedTransactionCategory.setLastUpdateDate(LocalDateTime.now());
             transactionCategoryService.update(selectedTransactionCategory);
-
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

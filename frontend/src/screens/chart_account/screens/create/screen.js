@@ -24,6 +24,8 @@ import './style.scss'
 import {selectOptionsFactory} from 'utils'
 
 import * as ChartOfAccontActions from '../../actions'
+import * as CreateChartOfAccontActions from './actions'
+
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
@@ -36,7 +38,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    ChartOfAccontActions: bindActionCreators(ChartOfAccontActions, dispatch)
+    ChartOfAccontActions: bindActionCreators(ChartOfAccontActions, dispatch),
+    createChartOfAccontActions: bindActionCreators(CreateChartOfAccontActions, dispatch),
   })
 }
 
@@ -72,7 +75,7 @@ class CreateChartAccount extends React.Component {
   }
   // Show Success Toast
   success() {
-    toast.success('Transaction Category Created successfully... ', {
+    toast.success('Chart Of Account Created Successfully... ', {
       position: toast.POSITION.TOP_RIGHT
     })
   }
@@ -85,7 +88,7 @@ class CreateChartAccount extends React.Component {
       transactionCategoryName: transactionCategoryName,
       transactionType: (transactionType && transactionType.value !== null ? transactionType.value: '')
     }
-    this.props.ChartOfAccontActions.createTransactionCategory(postData).then(res => {
+    this.props.createChartOfAccontActions.createTransactionCategory(postData).then(res => {
       if (res.status === 200) {
         this.success()
 
@@ -144,7 +147,7 @@ class CreateChartAccount extends React.Component {
                                   name="transactionCategoryCode"
                                   placeholder="Enter Code"
                                   onChange={(val)=>{props.handleChange('transactionCategoryCode')(val)}}
-                                  value={transactionCategoryCode}
+                                  // value={transactionCategoryCode}
                                   // className={
                                   //   props.errors.transactionCategoryCode && props.touched.transactionCategoryCode
                                   //     ? "is-invalid"
@@ -163,7 +166,7 @@ class CreateChartAccount extends React.Component {
                                   name="transactionCategoryName"
                                   placeholder="Enter Name"
                                   onChange={(value)=>{props.handleChange('transactionCategoryName')(value)}}
-                                  value={transactionCategoryName}
+                                  // value={transactionCategoryName}
                                   className={
                                     props.errors.transactionCategoryName && props.touched.transactionCategoryName
                                       ? "is-invalid"

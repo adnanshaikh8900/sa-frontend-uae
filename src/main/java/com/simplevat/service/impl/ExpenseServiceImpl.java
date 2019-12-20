@@ -1,5 +1,6 @@
 package com.simplevat.service.impl;
 
+import com.simplevat.dao.CompanyDao;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -12,10 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.ExpenseDao;
+import com.simplevat.dao.ProjectDao;
+import com.simplevat.entity.Company;
 import com.simplevat.entity.Expense;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.report.model.BankAccountTransactionReportModel;
 import com.simplevat.util.ChartUtil;
+import java.math.BigDecimal;
 
 @Service("expenseService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -25,11 +29,52 @@ public class ExpenseServiceImpl extends ExpenseService {
     public ExpenseDao expenseDao;
 
     @Autowired
+    public ProjectDao projectDao;
+
+    @Autowired
+    public CompanyDao companyDao;
+
+    @Autowired
     ChartUtil util;
 
     @Override
     public List<Expense> getExpenses() {
         return expenseDao.getAllExpenses();
+    }
+
+    @Override
+    public void persist(Expense expense) {
+        if (expense.getProject() != null) {
+            if (expense.getProject().getProjectExpenseBudget() != null) {
+                expense.getProject().setProjectExpenseBudget(expense.getProject().getProjectExpenseBudget().add(expense.getExpenseAmount()));
+            } else {
+                expense.getProject().setProjectExpenseBudget(expense.getExpenseAmount());
+            }
+            projectDao.update(expense.getProject());
+        }
+        Company company = expense.getUser().getCompany();
+        company.setCompanyExpenseBudget(company.getCompanyExpenseBudget().add(expense.getExpenseAmount()));
+        companyDao.update(company);
+        super.persist(expense);
+    }
+
+    @Override
+    public Expense update(Expense expense) {
+        Expense prevExpense = expenseDao.findByPK(expense.getExpenseId());
+        BigDecimal defferenceAmount = expense.getExpenseAmount().subtract(prevExpense.getExpenseAmount());
+        if (expense.getProject() != null) {
+            if (expense.getProject().getProjectExpenseBudget() != null) {
+                expense.getProject().setProjectExpenseBudget(expense.getProject().getProjectExpenseBudget().add(defferenceAmount));
+            } else {
+                expense.getProject().setProjectExpenseBudget(defferenceAmount);
+            }
+            projectDao.update(expense.getProject());
+        }
+        Company company = expense.getUser().getCompany();
+        company.setCompanyExpenseBudget(company.getCompanyExpenseBudget().add(defferenceAmount));
+        companyDao.update(company);
+        super.update(expense);
+        return expense;
     }
 
     @Override

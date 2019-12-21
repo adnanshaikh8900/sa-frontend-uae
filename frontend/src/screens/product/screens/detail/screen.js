@@ -116,6 +116,7 @@ class DetailProduct extends React.Component {
   }
 
   handleSubmit(data) {
+    console.log(data)
     const id = this.props.location.state.id
     const { 
       productName , 
@@ -187,12 +188,13 @@ class DetailProduct extends React.Component {
                             selectedVatCategory: null,
                           })
                         }}
-                        validationSchema={Yup.object().shape({
-                          productName: Yup.string()
-                            .required("Product Name is Required"),
-                          vatCategory: Yup.string()
-                            .required("Vat Category is Required"),
-                        })}>
+                        // validationSchema={Yup.object().shape({
+                        //   productName: Yup.string()
+                        //     .required("Product Name is Required"),
+                        //   vatCategory: Yup.string()
+                        //     .required("Vat Category is Required"),
+                        // })}
+                        >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
@@ -276,7 +278,7 @@ class DetailProduct extends React.Component {
                                     options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list) : []}
                                     id="vatCategoryId"
                                     name="vatCategoryId"
-                                    value={props.values.vatCategoryId.value}
+                                    value={props.values.vatCategoryId}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedVatCategory: option.value
@@ -320,7 +322,7 @@ class DetailProduct extends React.Component {
                                     options={selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list)}
                                     id="productWarehouseId"
                                     name="productWarehouseId"
-                                    value={props.values.productWarehouseId.value}
+                                    value={props.values.productWarehouseId}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedWareHouse: option.value

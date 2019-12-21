@@ -55,11 +55,15 @@ class DetailContact extends React.Component {
     this.state = {
       loading: true,
       initValue: {},
-      currentData: {}
+      currentData: {},
+      dialog: null
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
     this.success = this.success.bind(this)
+    this.removeContact = this.removeContact.bind(this);
+    this.removeDialog = this.removeDialog.bind(this);
+    this.deleteContact = this.deleteContact.bind(this)
   }
 
   componentDidMount() {
@@ -189,17 +193,18 @@ class DetailContact extends React.Component {
     })
   }
 
-  deleteAccount() {
+  deleteContact() {
+    console.log('data')
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
-        okHandler={this.removeChartAccount}
+        okHandler={this.removeContact}
         cancelHandler={this.removeDialog}
       />
     })
   }
 
-  removeAccount() {
+  removeContact() {
     const id= this.props.location.state.id;
     this.props.detailContactActions.deleteContact(id).then(res=>{
       if(res.status === 200) {
@@ -218,11 +223,12 @@ class DetailContact extends React.Component {
   }
 
   render() {
-    const { currency_list, country_list, contact_type_list } = this.props;
-    const { initValue, loading } = this.state;
+    const { currency_list, country_list, contact_type_list} = this.props;
+    const { initValue, loading ,dialog} = this.state;
     return (
       <div className="create-contact-screen">
         <div className="animated fadeIn">
+          {dialog}
           {loading ? (
             <Loader></Loader>
           )
@@ -406,7 +412,7 @@ class DetailContact extends React.Component {
                                         type="number"
                                         id="telephone"
                                         name="telephone"
-                                        required
+                                        // required/
                                         onChange={(value) => { props.handleChange("telephone")(value) }}
                                         defaultValue={props.values.telephone}
 

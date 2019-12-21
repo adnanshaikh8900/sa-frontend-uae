@@ -11,9 +11,10 @@ import com.simplevat.entity.Expense;
 import com.simplevat.entity.ExpenseLineItem;
 import com.simplevat.entity.User;
 import com.simplevat.entity.VatCategory;
-import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.expenses.ExpenseRestModel;
+import com.simplevat.service.BankAccountService;
 import com.simplevat.service.CurrencyService;
+import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import java.io.Serializable;
@@ -51,6 +52,12 @@ public class ExpenseRestHelper implements Serializable {
     @Autowired
     private CurrencyService currencyService;
 
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private BankAccountService bankAccountService;
+
     public Expense getExpenseEntity(ExpenseRestModel model, User user) throws Exception {
 
         Expense.ExpenseBuilder expenseBuilder = Expense.builder()
@@ -74,14 +81,21 @@ public class ExpenseRestHelper implements Serializable {
                 .versionNumber(model.getVersionNumber())
                 .receiptAttachmentName(model.getReceiptAttachmentName())
                 .receiptAttachmentContentType(model.getReceiptAttachmentContentType())
-                .expenseAmount(model.getTotalAmount())
                 .expenseVATAmount(model.getExpenseVATAmount());
-
+        if (model.getCurrencyCode() != null) {
+            expenseBuilder.currency(currencyService.findByPK(model.getCurrencyCode()));
+        }
+        if (model.getProjectId() != null) {
+            expenseBuilder.project(projectService.findByPK(model.getProjectId()));
+        }
+        if (model.getBankAccountId() != null) {
+            expenseBuilder.bankAccount(bankAccountService.findByPK(model.getBankAccountId()));
+        }
         CurrencyConversion currencyConversion = currencyService.getCurrencyRateFromCurrencyConversion(model.getCurrencyCode());
         if (currencyConversion != null) {
-            expenseBuilder.expencyAmountCompanyCurrency(model.getTotalAmount().divide(currencyConversion.getExchangeRate(), 9, RoundingMode.HALF_UP));
+            expenseBuilder.expencyAmountCompanyCurrency(model.getExpenseAmount().divide(currencyConversion.getExchangeRate(), 9, RoundingMode.HALF_UP));
         } else {
-            expenseBuilder.expencyAmountCompanyCurrency(model.getTotalAmount());
+            expenseBuilder.expencyAmountCompanyCurrency(model.getExpenseAmount());
         }
         if (model.getReceiptAttachmentBinary() != null) {
             expenseBuilder.receiptAttachmentBinary(model.getReceiptAttachmentBinary());
@@ -117,7 +131,7 @@ public class ExpenseRestHelper implements Serializable {
             expenseModel.setCreatedBy(entity.getCreatedBy());
             expenseModel.setCreatedDate(entity.getCreatedDate());
             if (entity.getCurrency() != null) {
-                expenseModel.setCurrency(entity.getCurrency().getCurrencyCode());
+                expenseModel.setCurrencyCode(entity.getCurrency().getCurrencyCode());
             }
             expenseModel.setDeleteFlag(entity.getDeleteFlag());
             expenseModel.setExpenseAmount(entity.getExpenseAmount());
@@ -129,8 +143,10 @@ public class ExpenseRestHelper implements Serializable {
             expenseModel.setExpenseDescription(entity.getExpenseDescription());
             expenseModel.setLastUpdateDate(entity.getLastUpdateDate());
             expenseModel.setLastUpdatedBy(entity.getLastUpdateBy());
+            expenseModel.setExpenseVATAmount(entity.getExpenseVATAmount());
+            expenseModel.setLastUpdatedBy(entity.getLastUpdateBy());
             if (entity.getProject() != null) {
-                expenseModel.setProject(entity.getProject().getProjectId());
+                expenseModel.setProjectId(entity.getProject().getProjectId());
             }
             if (entity.getBankAccount() != null) {
                 expenseModel.setBankAccountId(entity.getBankAccount().getBankAccountId());
@@ -183,6 +199,9 @@ public class ExpenseRestHelper implements Serializable {
         if (expenseLineItem.getExpenseLineItemVat() != null) {
             model.setVatCategoryId(expenseLineItem.getExpenseLineItemVat().getId());
         }
+        if (expenseLineItem.getTransactionCategory() != null) {
+            model.setTransactionCategoryId(expenseLineItem.getTransactionCategory().getTransactionCategoryId());
+        }
         model.setVersionNumber(expenseLineItem.getVersionNumber());
         updateSubTotal(model);
         return model;
@@ -208,7 +227,7 @@ public class ExpenseRestHelper implements Serializable {
         final BigDecimal unitPrice = expenseItemModel.getUnitPrice();
         VatCategory vatCategory = vatCategoryService.findByPK(expenseItemModel.getVatCategoryId());
         if (null != unitPrice) {
-            final BigDecimal amountWithoutTax = unitPrice.multiply(vatCategory.getVat()).divide(new BigDecimal(100));
+            final BigDecimal amountWithoutTax = unitPrice.add(unitPrice.multiply(vatCategory.getVat()).divide(new BigDecimal(100)));
             expenseItemModel.setSubTotal(amountWithoutTax);
         }
     }

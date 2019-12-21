@@ -16,18 +16,32 @@ import {
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
+import { Formik } from 'formik';
 
+import * as  createSupplier from "../../actions";
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
+import {
+  selectOptionsFactory,
+  filterFactory
+} from 'utils' 
+
 import './style.scss'
 
+
 const mapStateToProps = (state) => {
+  console.log(state)
   return ({
+    project_list : state.supplier_invoice.project_list,
+    customer_list :  state.supplier_invoice.customer_list,
+    vendor_list :  state.supplier_invoice.vendor_list,
+    currency_list : state.supplier_invoice.currency_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
+    createSupplier: bindActionCreators(createSupplier, dispatch),
   })
 }
 
@@ -142,21 +156,45 @@ class CreateSupplierInvoice extends React.Component {
     )
   }
 
+  componentDidMount(){
+    this.getInitialData();
+  }
+
+  getInitialData = () => {
+    this.props.createSupplier.getProjectList();
+    this.props.createSupplier.getCustomerList();
+    this.props.createSupplier.getVendorList();
+    this.props.createSupplier.getCurrencyList();
+  }
+
+
+  handleChange(e, name) {
+    console.log(e,name)
+    // this.setState({
+    //   currentData: _.set(
+    //     { ...this.state.currentData },
+    //     e.target.name && e.target.name !== '' ? e.target.name : name,
+    //     e.target.type === 'checkbox' ? e.target.checked : e.target.value
+    //   )
+    // })
+  }
+
 
   render() {
-
+      
     const {
       data,
       discountOptions,
-      discount_option
+      discount_option,
     } = this.state
 
+    const { project_list , customer_list , vendor_list, currency_list } = this.props
     return (
       <div className="create-supplier-invoice-screen">
         <div className="animated fadeIn">
           <Row>
             <Col lg={12} className="mx-auto">
-              <Card>
+              <Card> 
                 <CardHeader>
                   <Row>
                     <Col lg={12}>
@@ -170,6 +208,24 @@ class CreateSupplierInvoice extends React.Component {
                 <CardBody>
                   <Row>
                     <Col lg={12}>
+                    <Formik
+                        // initialValues={initValue}
+                        onSubmit={(values, { resetForm }) => {
+
+                          // this.handleSubmit(values)
+                          // resetForm(initValue)
+
+                          // this.setState({
+                          //   selectedCurrency: null,
+                          //   selectedProject: null,
+                          //   selectedBankAccount: null,
+                          //   selectedCustomer: null
+
+                          // })
+                        }}
+
+                      >
+                        {props => (
                       <Form>
                         <Row>
                           <Col lg={4}>
@@ -189,7 +245,7 @@ class CreateSupplierInvoice extends React.Component {
                               <Label htmlFor="project">Project</Label>
                               <Select
                                 className="select-default-width"
-                                options={[]}
+                                options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
                                 id="project"
                                 name="project"
                               />
@@ -202,7 +258,7 @@ class CreateSupplierInvoice extends React.Component {
                               <Label htmlFor="contact">Customer</Label>
                               <Select
                                 className="select-default-width"
-                                options={[]}
+                                options={selectOptionsFactory.renderOptions('firstName', 'contactId', customer_list)}
                                 id="contact"
                                 name="contact"
                               />
@@ -240,7 +296,7 @@ class CreateSupplierInvoice extends React.Component {
                               <Label htmlFor="contact">Shipping Contact</Label>
                               <Select
                                 className="select-default-width"
-                                options={[]}
+                                options={selectOptionsFactory.renderOptions('firstName', 'contactId', vendor_list)}
                                 id="contact"
                                 name="contact"
                               />
@@ -253,12 +309,22 @@ class CreateSupplierInvoice extends React.Component {
                             <FormGroup className="mb-3">
                               <Label htmlFor="date">Invoice Date</Label>
                               <div>
-                                <DatePicker
+                              <DatePicker
+                                      className="form-control"
+                                      id="date"
+                                      name="invoiceDate"
+                                      placeholderText=""
+                                      selected={props.values.invoiceDate}
+                                      onChange={(value) => {
+                                        props.handleChange("invoiceDate")(value)
+                                      }}
+                                    />
+                                {/* <DatePicker
                                   className="form-control"
                                   id="date"
                                   name="date"
                                   placeholderText=""
-                                />
+                                /> */}
                               </div>
                             </FormGroup>
                           </Col>
@@ -282,7 +348,7 @@ class CreateSupplierInvoice extends React.Component {
                               <Label htmlFor="currency">Currency</Label>
                               <Select
                                 className="select-default-width"
-                                options={[]}
+                                options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
                                 id="currency"
                                 name="currency"
                               />
@@ -475,6 +541,8 @@ class CreateSupplierInvoice extends React.Component {
                           </Col>
                         </Row>
                       </Form>
+                        )}
+                        </Formik>
                     </Col>
                   </Row>
                 </CardBody>

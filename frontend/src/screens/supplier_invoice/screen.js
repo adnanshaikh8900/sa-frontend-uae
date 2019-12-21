@@ -33,6 +33,7 @@ import { Loader } from 'components'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
+import moment from 'moment'
 
 import * as SupplierInvoiceActions from './actions'
 
@@ -104,11 +105,11 @@ class SupplierInvoice extends React.Component {
 
   renderInvoiceStatus (cell, row) {
     let classname = ''
-    if (row.status == 'paid') {
+    if (row.statusName == 'paid') {
       classname = 'badge-success'
-    } else if (row.status == 'unpaid') {
+    } else if (row.status == 'UNPAID') {
       classname = 'badge-danger'
-    } else if (row.status == 'Patially Paid') {
+    } else if (row.status == 'PARTIALLY PAID') {
       classname = "badget-info"
     } else {
       classname = 'badge-primary'
@@ -179,15 +180,27 @@ class SupplierInvoice extends React.Component {
   onSelectAll (isSelected, rows) {
     console.log('current page all row checked ++++++++', rows)
   }
-
-
+ 
   render() {
-
-    const { loading } = this.state
+      const { loading } = this.state
     const { supplier_invoice_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
+
+    const supplier_invoice_data = this.props.supplier_invoice_list ? this.props.supplier_invoice_list.map(supplier => 
+     
+      ({
+        status : supplier.statusName,
+        customerName : supplier.invoiceContact.firstName,
+        invoiceNumber: supplier.invoiceReferenceNumber,        
+        invoiceDate: moment(supplier.invoiceDate).format('L'),
+        invoiceDueDate: moment(supplier.invoiceDueDate).format('L'),
+        invoiceAmount: supplier.invoiceAmount,
+        // vatAmount: supplier.totalCost,
+      })
+    ) : ""
+
 
     return (
       <div className="supplier-invoice-screen">
@@ -296,13 +309,14 @@ class SupplierInvoice extends React.Component {
                           selectRow={ this.selectRowProp }
                           search={false}
                           options={ this.options }
-                          data={supplier_invoice_list}
+                          data={supplier_invoice_data}
                           version="4"
                           hover
                           pagination
                           totalSize={supplier_invoice_list ? supplier_invoice_list.length : 0}
                           className="supplier-invoice-table"
                         >
+                        
                           <TableHeaderColumn
                             width="130"
                             dataFormat={this.renderInvoiceStatus}
@@ -311,38 +325,38 @@ class SupplierInvoice extends React.Component {
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             isKey
-                            dataField="transactionCategoryCode"
+                            dataField="customerName"
                             dataSort
                           >
                             Customer Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryName"
-                            dataFormat={this.renderInvoiceNumber}
+                            dataField="invoiceNumber"
+                            // dataFormat={this.renderInvoiceNumber}
                             dataSort
                           >
                             Invoice Number
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryDescription" 
+                            dataField="invoiceDate" 
                             dataSort
                           >
                             Invoice Date
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="parentTransactionCategory"
+                            dataField="invoiceDueDate"
                             dataSort
                           >
                             Due Date
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="invoiceAmount"
                             dataSort
                           >
                             Invoice Amount
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="vatAmount"
                             dataSort
                           >
                             VAT Amount

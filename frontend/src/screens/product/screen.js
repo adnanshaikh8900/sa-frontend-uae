@@ -93,9 +93,12 @@ class Product extends React.Component {
   initializeData () {
     this.props.productActions.getProductList().then(res => {
       if (res.status === 200) {
-        console.log(res.status)
         this.setState({ loading: false })
       }
+    }).catch(() => {
+      this.setState({
+        loading: false
+      })
     })
   }
 
@@ -262,7 +265,7 @@ class Product extends React.Component {
                           selectRow={ this.selectRowProp }
                           search={false}
                           options={ this.options }
-                          data={product_list}
+                          data={product_list ? product_list : []}
                           version="4"
                           hover
                           pagination

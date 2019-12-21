@@ -17,6 +17,7 @@ import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
+import _ from 'lodash'
 
 import * as  createSupplier from "../../actions";
 import 'react-datepicker/dist/react-datepicker.css'
@@ -60,7 +61,28 @@ class CreateSupplierInvoice extends React.Component {
       data: [
         {},
         {}
-      ]
+      ],
+
+      initValue: {
+        // expenseId: null,
+        reference_number: '',
+        invoiceDate: null,
+        invoiceDueDate: null,        
+        currency: null,
+        project: null,
+        customerContact: null,
+        paymentDate: null,
+        expenseAmount: null,
+        expenseDescription: null,
+        receiptNumber: null,
+        attachmentFile: null,
+        receiptAttachmentDescription: null,
+        bank: null,
+        total_net: 0,
+        expenseVATAmount: 0,
+        totalAmount: 0,
+      },
+      currentData: {}
     }
 
     this.options = {
@@ -77,17 +99,17 @@ class CreateSupplierInvoice extends React.Component {
 
   }
 
-  renderActions (cell, row) {
-    return (
-      <Button
-        size="sm"
-        color="primary"
-        className="btn-brand icon"
-      >
-        <i className="fas fa-trash"></i>
-      </Button>
-    )
-  }
+  // renderActions (cell, row) {
+  //   return (
+  //     <Button
+  //       size="sm"
+  //       color="primary"
+  //       className="btn-brand icon"
+  //     >
+  //       <i className="fas fa-trash"></i>
+  //     </Button>
+  //   )
+  // }
 
   renderProductName (cell, row) {
     return (
@@ -166,19 +188,54 @@ class CreateSupplierInvoice extends React.Component {
     this.props.createSupplier.getVendorList();
     this.props.createSupplier.getCurrencyList();
   }
+ 
 
-
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     console.log(e,name)
-    // this.setState({
-    //   currentData: _.set(
-    //     { ...this.state.currentData },
-    //     e.target.name && e.target.name !== '' ? e.target.name : name,
-    //     e.target.type === 'checkbox' ? e.target.checked : e.target.value
-    //   )
-    // })
+    this.setState({
+      currentData: _.set(
+        { ...this.state.currentData },
+        e.target.name && e.target.name !== '' ? e.target.name : name,
+        e.target.type === 'checkbox' ? e.target.checked : e.target.value
+      )
+    })
   }
 
+  addRow = () => {
+    const data = [...this.state.data]
+    this.setState({
+      data: data.concat({
+        id: this.state.idCount + 1,
+        transactionCategoryId: null,
+        unitPrice: 0,
+        vatCategoryId: null,
+        subTotal: 0
+      }), idCount: this.state.idCount + 1
+    })
+  }
+
+
+  deleteRow(e, row) {
+    const id = row['id'];
+    let newData = []
+    e.preventDefault();
+    const data = this.state.data
+    newData = data.filter(obj => obj.id !== id);
+    console.log(newData)
+    // this.updateAmount(newData)
+  }
+
+  renderActions(cell, row) {
+    return (
+      <Button
+        size="sm"
+        className="btn-twitter btn-brand icon"
+        onClick={(e) => { this.deleteRow(e, row) }}
+      >
+        <i className="fas fa-trash"></i>
+      </Button>
+    )
+  }
 
   render() {
       
@@ -186,6 +243,7 @@ class CreateSupplierInvoice extends React.Component {
       data,
       discountOptions,
       discount_option,
+      initValue
     } = this.state
 
     const { project_list , customer_list , vendor_list, currency_list } = this.props
@@ -209,19 +267,19 @@ class CreateSupplierInvoice extends React.Component {
                   <Row>
                     <Col lg={12}>
                     <Formik
-                        // initialValues={initValue}
+                        initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
 
-                          // this.handleSubmit(values)
-                          // resetForm(initValue)
+                          this.handleSubmit(values)
+                          resetForm(initValue)
 
-                          // this.setState({
-                          //   selectedCurrency: null,
-                          //   selectedProject: null,
-                          //   selectedBankAccount: null,
-                          //   selectedCustomer: null
+                          this.setState({
+                            selectedCurrency: null,
+                            selectedProject: null,
+                            selectedBankAccount: null,
+                            selectedCustomer: null
 
-                          // })
+                          })
                         }}
 
                       >
@@ -236,6 +294,7 @@ class CreateSupplierInvoice extends React.Component {
                                 id="reference_number"
                                 name="reference_number"
                                 placeholder=""
+                                onChange={(value) => { props.handleChange("reference_number")(value) }}
                                 required
                               />
                             </FormGroup>
@@ -248,6 +307,8 @@ class CreateSupplierInvoice extends React.Component {
                                 options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
                                 id="project"
                                 name="project"
+                                value={props.values.project}                                
+                                onChange={option => props.handleChange('project')(option)}
                               />
                             </FormGroup>
                           </Col>
@@ -259,8 +320,11 @@ class CreateSupplierInvoice extends React.Component {
                               <Select
                                 className="select-default-width"
                                 options={selectOptionsFactory.renderOptions('firstName', 'contactId', customer_list)}
-                                id="contact"
-                                name="contact"
+                                id="customerContact"
+                                name="customerContact"
+                                value={props.values.customerContact}
+                                onChange={option => props.handleChange('customerContact')(option)}
+                                
                               />
                             </FormGroup>
                           </Col>
@@ -297,8 +361,10 @@ class CreateSupplierInvoice extends React.Component {
                               <Select
                                 className="select-default-width"
                                 options={selectOptionsFactory.renderOptions('firstName', 'contactId', vendor_list)}
-                                id="contact"
-                                name="contact"
+                                id="shippingContact"
+                                name="shippingContact"
+                                value={props.values.shippingContact}
+                                onChange={option => props.handleChange('shippingContact')(option)}                                
                               />
                             </FormGroup>
                           </Col>
@@ -334,9 +400,13 @@ class CreateSupplierInvoice extends React.Component {
                               <div>
                                 <DatePicker
                                   className="form-control"
-                                  id="date"
+                                  id="invoiceDueDate"
                                   name="date"
                                   placeholderText=""
+                                  selected={props.values.invoiceDueDate}
+                                  onChange={(value) => {
+                                    props.handleChange("invoiceDueDate")(value)
+                                  }}
                                 />
                               </div>
                             </FormGroup>
@@ -351,6 +421,8 @@ class CreateSupplierInvoice extends React.Component {
                                 options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
                                 id="currency"
                                 name="currency"
+                                value={props.values.currency}
+                                onChange={option => props.handleChange('currency')(option)}
                               />
                             </FormGroup>
                           </Col>
@@ -362,6 +434,7 @@ class CreateSupplierInvoice extends React.Component {
                                 id="contact_po_number"
                                 name="contact_po_number"
                                 placeholder=""
+                                onChange={(value) => { props.handleChange("contact_po_number")(value) }}
                                 required
                               />
                             </FormGroup>
@@ -370,7 +443,7 @@ class CreateSupplierInvoice extends React.Component {
                         <hr/>
                         <Row>
                           <Col lg={12} className="mb-3">
-                            <Button color="primary" className="btn-square mr-3">
+                            <Button color="primary" className="btn-square mr-3" onClick={this.addRow}>
                               <i className="fa fa-plus"></i> Add More
                             </Button>
                           </Col>

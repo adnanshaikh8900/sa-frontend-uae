@@ -1,18 +1,19 @@
-package com.simplevat.helper;
+package com.simplevat.rest.productcontroller;
 
 import com.simplevat.entity.Product;
 import com.simplevat.entity.ProductWarehouse;
 import com.simplevat.entity.VatCategory;
-import com.simplevat.productservice.model.ProductRequestModel;
 import com.simplevat.service.ProductService;
 import com.simplevat.service.ProductWarehouseService;
 import com.simplevat.service.VatCategoryService;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductModelHelper {
+public class ProductRestHelper {
 
     @Autowired
     VatCategoryService vatCategoryService;
@@ -23,7 +24,7 @@ public class ProductModelHelper {
     @Autowired
     ProductWarehouseService productWarehouseService;
 
-    public Product convertToProduct(ProductRequestModel productModel) {
+    public Product getEntity(ProductRequestModel productModel) {
         Product product = new Product();
         if (product.getUnitPrice() == null) {
             product.setUnitPrice(BigDecimal.ZERO);
@@ -57,7 +58,7 @@ public class ProductModelHelper {
         return product;
     }
 
-    public ProductRequestModel convertToProductRequestModel(Product product) {
+    public ProductRequestModel getRequestModel(Product product) {
         ProductRequestModel productModel = new ProductRequestModel();
         productModel.setProductID(product.getProductID());
         productModel.setProductName(product.getProductName());
@@ -81,5 +82,20 @@ public class ProductModelHelper {
         productModel.setVatIncluded(product.getVatIncluded());
         productModel.setUnitPrice(product.getUnitPrice());
         return productModel;
+    }
+
+    public List<ProductListModel> getListModel(List<Product> productList) {
+        List<ProductListModel> productListModels = new ArrayList();
+        for (Product product : productList) {
+            ProductListModel productModel = new ProductListModel();
+            productModel.setId(product.getProductID());
+            productModel.setName(product.getProductName());
+            productModel.setVatPercentage(product.getVatCategory().getVatLabel());
+            productModel.setDescription(product.getProductDescription());
+            productModel.setProductCode(product.getProductCode());
+            productModel.setUnitPrice(product.getUnitPrice());
+            productListModels.add(productModel);
+        }
+        return productListModels;
     }
 }

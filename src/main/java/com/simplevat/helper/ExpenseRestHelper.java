@@ -18,7 +18,6 @@ import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -45,7 +44,7 @@ public class ExpenseRestHelper implements Serializable {
 
     @Autowired
     private VatCategoryService vatCategoryService;
-    
+
     @Autowired
     private TransactionCategoryService transactionCategoryService;
 
@@ -206,34 +205,12 @@ public class ExpenseRestHelper implements Serializable {
     }
 
     private void updateSubTotal(@NonNull final ExpenseItemModel expenseItemModel) {
-        final int quantity = expenseItemModel.getQuantity();
         final BigDecimal unitPrice = expenseItemModel.getUnitPrice();
-
+        VatCategory vatCategory = vatCategoryService.findByPK(expenseItemModel.getVatCategoryId());
         if (null != unitPrice) {
-            final BigDecimal amountWithoutTax = unitPrice.multiply(new BigDecimal(quantity));
+            final BigDecimal amountWithoutTax = unitPrice.multiply(vatCategory.getVat()).divide(new BigDecimal(100));
             expenseItemModel.setSubTotal(amountWithoutTax);
         }
     }
 
-//    public List<TransactionCategory> completeCategory(List<TransactionCategory> transactionCategoryList) {
-//        try {
-//            List<TransactionCategory> transactionCategoryParentList = new ArrayList<>();
-//            System.out.println("transactionCategoryList=" + transactionCategoryList);
-//            if (transactionCategoryList != null && !transactionCategoryList.isEmpty()) {
-//                for (TransactionCategory transactionCategory : transactionCategoryList) {
-//                    if (transactionCategory.getParentTransactionCategory() != null) {
-//                        transactionCategoryParentList.add(transactionCategory.getParentTransactionCategory());
-//                    }
-////                    transactionCategoryModels.add(convertTransactionCategoryModel(transactionCategory));
-//                }
-////            selectedExpenseModel.setTransactionType(transactionCategoryList.get(0).getTransactionType());
-//                transactionCategoryList.removeAll(transactionCategoryParentList);
-//            }
-//            return transactionCategoryList;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
 }

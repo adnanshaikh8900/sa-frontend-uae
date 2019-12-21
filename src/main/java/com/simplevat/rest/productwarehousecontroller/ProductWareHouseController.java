@@ -5,7 +5,7 @@
  */
 package com.simplevat.rest.productwarehousecontroller;
 
-import com.simplevat.helper.ProductModelHelper;
+import com.simplevat.rest.productcontroller.ProductRestHelper;
 import com.simplevat.entity.ProductWarehouse;
 import com.simplevat.service.ProductWarehouseService;
 import com.simplevat.service.VatCategoryService;

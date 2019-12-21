@@ -131,11 +131,9 @@ class CreateExpense extends React.Component {
   initializeData() {
     this.props.expenseActions.getBankAccountList();
     this.props.expenseActions.getVatList();
+    this.props.expenseActions.getChartOfAccountList();
     this.props.expenseActions.getCurrencyList();
     this.props.expenseActions.getProjectList();
-    this.props.expenseActions.getCustomerList();
-    this.props.expenseActions.getPaymentList();
-    this.props.expenseActions.getChartOfAccountList();
   }
 
   deleteRow(e, row) {
@@ -144,7 +142,6 @@ class CreateExpense extends React.Component {
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
-    console.log(newData)
     this.updateAmount(newData)
   }
 
@@ -181,18 +178,15 @@ class CreateExpense extends React.Component {
     let total_net = 0;
     let total = 0;
     let total_vat = 0;
-    console.log(data);
-    console.log(vat_list)
     data.map(obj => {
       const index = obj.vatCategoryId !== null ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
       const vat = index !== '' ? vat_list[index].vat : 0
-      console.log(index)
       let val = (((+obj.unitPrice) * vat) / 100)
       obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (+obj.unitPrice) + val : 0;
       total_net = +(total_net + (+obj.unitPrice));
       total_vat = +(total_vat + val).toFixed(2);
       total =  (total_vat + total_net).toFixed(2);
-      console.log(total_vat + ' '+ total_net)
+
     })
     this.setState({
       data: data,
@@ -201,7 +195,7 @@ class CreateExpense extends React.Component {
         expenseVATAmount: total_vat,
         totalAmount: total
       }
-    }, () => { console.log(this.state.data)})
+    })
   }
 
   renderProductName(cell, row) {
@@ -229,7 +223,6 @@ class CreateExpense extends React.Component {
   }
 
   renderAmount(cell, row) {
-    console.log(row)
     return (
       <Input
         type="number"
@@ -294,13 +287,12 @@ class CreateExpense extends React.Component {
     formData.append("payee", payee);
     formData.append("expenseDate", expenseDate !== null ? expenseDate : "");
     formData.append("paymentDate", paymentDate !== null ? paymentDate : "");
-    formData.append("expenseAmount", expenseAmount);
     formData.append("expenseDescription", expenseDescription);
     formData.append("receiptNumber", receiptNumber);
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription);
     formData.append('expenseItemsString',JSON.stringify(this.state.data));
     formData.append('expenseVATAmount',this.state.initValue.expenseVATAmount);
-    formData.append('totalAmount',this.state.initValue.totalAmount);
+    formData.append('expenseAmount',this.state.initValue.totalAmount);
     if (bank && bank.value) {
       formData.append("bankAccountId", bank.value);
     }
@@ -471,20 +463,7 @@ class CreateExpense extends React.Component {
                                   </div>
                                 </FormGroup>
                               </Col>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="expenseAmount">Expense Amount</Label>
-                                  <Input
-                                    type="expenseAmount"
-                                    name="expenseAmount"
-                                    id="expenseAmount"
-                                    rows="5"
-                                    placeholder="Amount"
-                                    onChange={option => props.handleChange('expenseAmount')(option)}
-                                    // value={props.values.expenseAmount}
-                                  />
-                                </FormGroup>
-                              </Col>
+
                             </Row>
                             <Row>
                               <Col lg={8}>

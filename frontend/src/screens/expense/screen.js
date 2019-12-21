@@ -352,10 +352,10 @@ class Expense extends React.Component {
                               VAT
                           </TableHeaderColumn>
                             <TableHeaderColumn
-                              dataField="totalAmount"
+                              dataField="expenseAmount"
                               dataSort
                             >
-                              Amount
+                              Expense Amount
                           </TableHeaderColumn>
                             <TableHeaderColumn
                               dataField="expenseDate"

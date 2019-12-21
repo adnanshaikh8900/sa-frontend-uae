@@ -5,8 +5,10 @@
  */
 package com.simplevat.dao;
 
+import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.Product;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -14,7 +16,7 @@ import java.util.List;
  */
 public interface ProductDao extends Dao<Integer, Product> {
 
-    public List<Product> getProductList(Integer userId);
+    public List<Product> getProductList(Map<ProductFilterEnum, Object> filterMap);
 
     public void deleteByIds(List<Integer> ids);
 

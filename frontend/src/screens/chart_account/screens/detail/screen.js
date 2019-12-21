@@ -16,7 +16,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify'
 import Select from 'react-select'
 import _ from 'lodash'
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal} from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
@@ -29,6 +29,10 @@ import * as DetailChartOfAccontActions from './actions'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
+import {
+  CommonActions
+} from 'services/global'
+
 
 const mapStateToProps = (state) => {
   return ({
@@ -38,7 +42,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return ({
     chartOfAccontActions: bindActionCreators(ChartOfAccontActions, dispatch),
-    detailChartOfAccontActions: bindActionCreators(DetailChartOfAccontActions, dispatch)
+    detailChartOfAccontActions: bindActionCreators(DetailChartOfAccontActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch)
+
   })
 }
 
@@ -54,6 +60,7 @@ class DetailChartAccount extends React.Component {
       initValue: null,
       loading: true,
       readMore: false,
+      dialog: false,
       currentData: {}
 
     }
@@ -62,6 +69,9 @@ class DetailChartAccount extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.initializeData = this.initializeData.bind(this)
     this.success = this.success.bind(this)
+    this.deleteChartAccount = this.deleteChartAccount.bind(this)
+    this.removeChartAccount = this.removeChartAccount.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
   }
 
   componentDidMount() {
@@ -75,8 +85,7 @@ class DetailChartAccount extends React.Component {
       // this.setState({
       // }, () => {
       this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then(res => {
-        console.log(res.data)
-        if(res.status === 200) {
+        if (res.status === 200) {
           this.setState({
             loading: false,
             initValue: {
@@ -88,11 +97,14 @@ class DetailChartAccount extends React.Component {
               } : null,
             }
           })
-        } else {this.props.history.push('/admin/master/chartAccount')}
-      })
-      // })
-    } else {
-      this.props.history.push('/admin/master/chartAccount')
+        } else {
+          this.setState({loading: false})
+        }
+      }).catch(err => {
+        this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
+        this.props.history.push('/admin/master/chart-account')
+        // this.setState({loading: false})
+    })
     }
   }
 
@@ -106,9 +118,37 @@ class DetailChartAccount extends React.Component {
     })
   }
   // Show Success Toast
-  success() {
-    toast.success('Transaction Category Updated successfully... ', {
+  success(msg) {
+    toast.success(msg, {
       position: toast.POSITION.TOP_RIGHT
+    })
+  }
+
+  deleteChartAccount() {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removeChartAccount}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeChartAccount() {
+    const id= this.props.location.state.id;
+    this.props.detailChartOfAccontActions.deleteChartAccount(id).then(res=>{
+      if(res.status === 200) {
+        this.success('Chart Account Deleted Successfully');
+        this.props.history.push('/admin/master/chart-account')
+      }
+    }).catch(err=> {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
     })
   }
 
@@ -124,7 +164,7 @@ class DetailChartAccount extends React.Component {
     }
     this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then(res => {
       if (res.status === 200) {
-        this.success()
+        this.success('Chart Account Updated Successfully')
 
         if (this.state.readMore) {
           this.setState({
@@ -133,16 +173,15 @@ class DetailChartAccount extends React.Component {
         } else this.props.history.push('/admin/master/chart-account')
       }
     })
-    console.log(postData)
   }
 
   render() {
-    const { loading } = this.state
+    const { loading,dialog } = this.state
     const { transaction_type_list } = this.props
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
-
+          {dialog}
           {loading ? (
             <Loader></Loader>
           ) : (
@@ -235,22 +274,26 @@ class DetailChartAccount extends React.Component {
                                   )}
                                 </FormGroup>
 
-                                <FormGroup className="text-right mt-5">
-                                  <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-dot-circle-o"></i> Update
-                                </Button>
-                                  {/* <Button name="button" color="primary" className="btn-square mr-3"
-                                    onClick={() => {
-                                      this.setState({ readMore: true })
-                                      props.handleSubmit()
-                                    }}>
-                                    <i className="fa fa-refresh"></i> Create and More
-                                </Button> */}
-                                  <Button type="submit" color="secondary" className="btn-square"
-                                    onClick={() => { this.props.history.push('/admin/master/chart-account') }}>
-                                    <i className="fa fa-ban"></i> Cancel
-                                </Button>
-                                </FormGroup>
+                                <Row>
+                                  <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                    <FormGroup>
+                                      <Button type="button" name="button" color="danger" className="btn-square"
+                                        onClick={this.deleteChartAccount}
+                                      >
+                                        <i className="fa fa-trash"></i> Delete
+                                    </Button>
+                                    </FormGroup>
+                                    <FormGroup className="text-right">
+                                      <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                                        <i className="fa fa-dot-circle-o"></i> Update
+                                    </Button>
+                                      <Button type="button" name="button" color="secondary" className="btn-square"
+                                        onClick={() => { this.props.history.push("/admin/master/chart-account") }}>
+                                        <i className="fa fa-ban"></i> Cancel
+                                    </Button>
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
                               </Form>
                             )}
                           </Formik>

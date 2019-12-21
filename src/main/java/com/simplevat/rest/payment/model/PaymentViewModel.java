@@ -11,14 +11,10 @@ public class PaymentViewModel {
 
     private Integer paymentId;
     private String supplierName;
+    private BigDecimal invoiceAmount;
     private String invoiceReferenceNo;
-    private BigDecimal amount;
     private String bankName;
     private Date paymentDate;
-    private Date paymentDueDate;
     private String description;
-    private String receiptNo;
-    private String receiptAttachmentDescription;
-    private String receiptAttachmentPath;
     private Boolean deleteFlag;
 }

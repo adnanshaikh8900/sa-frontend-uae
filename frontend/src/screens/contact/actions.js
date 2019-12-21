@@ -77,3 +77,22 @@ export const getCountryList = () => {
     })
   }
 }
+
+export const getContactTypeList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: 'rest/contact/contacttype'
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+        dispatch({
+          type: CONTACT.CONTACT_TYPE_LIST,
+          payload: res.data
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}

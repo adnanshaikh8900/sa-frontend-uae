@@ -1,5 +1,6 @@
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -14,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductDaoImpl extends AbstractDao<Integer, Product> implements ProductDao {
 
     @Override
-    public List<Product> getProductList(Integer userId) {
+    public List<Product> getProductList(Map<ProductFilterEnum, Object> filterMap) {
         Map<String, Object> parameterDataMap = new HashMap();
-        parameterDataMap.put("createdBy", userId);
+        filterMap.forEach((productFilter, value) -> parameterDataMap.put(productFilter.getDbColumnName(), value));
         List<Product> products = this.executeNamedQuery("allProduct", parameterDataMap);
         return products;
     }

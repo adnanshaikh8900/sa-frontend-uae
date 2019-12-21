@@ -1,5 +1,6 @@
 package com.simplevat.service.impl;
 
+import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import com.simplevat.dao.Dao;
 import com.simplevat.dao.ProductDao;
 import com.simplevat.entity.Product;
 import com.simplevat.service.ProductService;
+import java.util.Map;
 
 @Service("ProductService")
 public class ProductServiceImpl extends ProductService {
@@ -21,8 +23,8 @@ public class ProductServiceImpl extends ProductService {
     }
 
     @Override
-    public List<Product> getProductList(Integer userId) {
-        return productDao.getProductList(userId);
+    public List<Product> getProductList(Map<ProductFilterEnum, Object> filterMap) {
+        return productDao.getProductList(filterMap);
     }
 
     @Override

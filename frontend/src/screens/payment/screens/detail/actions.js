@@ -8,7 +8,7 @@ export const getPaymentById = (id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/payment/getPaymentById?paymentId=${id}`
+      url: `rest/payment/getpaymentbyid?paymentId=${id}`
     }
 
     return authApi(data).then(res => {
@@ -26,6 +26,21 @@ export const updatePayment = (obj) => {
       url: 'rest/payment/update',
       data: obj
     }
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const deletePayment = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/payment/delete?id=${id}`
+    }
+
     return authApi(data).then(res => {
       return res
     }).catch(err => {

@@ -40,6 +40,7 @@ const mapStateToProps = (state) => {
     currency_list: state.project.currency_list,
     country_list: state.project.country_list,
     contact_list: state.project.contact_list,
+    title_list: state.project.title_list
   })
 }
 
@@ -63,7 +64,7 @@ class DetailProject extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      openContactModel: false,
+      openContactModal: false,
       loading: true,
       dialog: null,
       selectedContact: null,
@@ -89,11 +90,11 @@ class DetailProject extends React.Component {
 
   // Show Invite User Modal
   showContactModel() {
-    this.setState({ openContactModel: true })
+    this.setState({ openContactModal: true })
   }
   // Cloase Confirm Modal
   closeContactModel() {
-    this.setState({ openContactModel: false })
+    this.setState({ openContactModal: false })
   }
 
   componentDidMount() {
@@ -147,7 +148,29 @@ class DetailProject extends React.Component {
 
   // Create or Edit Vat
   projectHandleSubmit(data) {
-    this.props.projectActions.createAndSaveProject(data).then(res => {
+    const {
+      projectName,
+      invoiceLanguageCode,
+      contact,
+      contractPoNumber,
+      vatRegistrationNumber,
+      projectExpenseBudget,
+      projectRevenueBudget,
+      currency,
+    } = data
+
+    const postData = {
+      projectName: projectName ? projectName: '',
+      invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
+      contact: contact && contact !== null ? contact : '',
+      contractPoNumber: contractPoNumber ? contractPoNumber : '',
+      vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
+      projectExpenseBudget: projectExpenseBudget ? projectExpenseBudget : '',
+      projectRevenueBudget: projectRevenueBudget ? projectRevenueBudget : '',
+      currencyCode: currency && currency!== null ? currency : ''
+      // contractPoNumber: contractPoNumber ? contractPoNumber : ''
+    }
+    this.props.detailProjectActions.updateProject(postData).then(res => {
       if (res.status === 200) {
         // this.success()
 
@@ -157,6 +180,8 @@ class DetailProject extends React.Component {
           })
         } else this.props.history.push('/admin/master/project')
       }
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
 
@@ -229,8 +254,8 @@ class DetailProject extends React.Component {
                             .required("Contact is Required"),
                           currency: Yup.string()
                             .required("Currency is Required"),
-                          invoiceLanguageCode: Yup.string()
-                            .required("Invoice Language is Required")
+                          // invoiceLanguageCode: Yup.string()
+                          //   .required("Invoice Language is Required")
                         })}>
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -300,7 +325,7 @@ class DetailProject extends React.Component {
                                     onChange={(option)=>{props.handleChange('contractPoNumber',option)}}
 
                                     placeholder="Enter Contract PO Number"
-                                    value={props.values.contractPoNumber}
+                                    defaultValue={props.values.contractPoNumber}
                                     className={
                                       props.errors.contractPoNumber && props.touched.contractPoNumber
                                         ? "is-invalid"
@@ -321,7 +346,7 @@ class DetailProject extends React.Component {
                                     name="vatRegistrationNumber"
                                     onChange={(option)=>{props.handleChange('vatRegistrationNumber',option)}}
                                     placeholder="Enter VAT Registration Number"
-                                    value={props.values.vatRegistrationNumber}
+                                    defaultValue={props.values.vatRegistrationNumber}
                                     className={
                                       props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber
                                         ? "is-invalid"
@@ -374,7 +399,7 @@ class DetailProject extends React.Component {
                                     onChange={(option)=>{props.handleChange('projectExpenseBudget',option)}}
 
                                     placeholder="Enter Expense Budgets"
-                                    value={props.values.projectExpenseBudget}
+                                    defaultValue={props.values.projectExpenseBudget}
                                     className={
                                       props.errors.projectExpenseBudget && props.touched.projectExpenseBudget
                                         ? "is-invalid"
@@ -395,7 +420,7 @@ class DetailProject extends React.Component {
                                     name="projectRevenueBudget"
                                     onChange={(option)=>{props.handleChange('projectRevenueBudget',option)}}
                                     placeholder="Enter VAT Revenue Budget"
-                                    value={props.values.projectRevenueBudget}
+                                    defaultValue={props.values.projectRevenueBudget}
                                     className={
                                       props.errors.projectRevenueBudget && props.touched.projectRevenueBudget
                                         ? "is-invalid"
@@ -466,7 +491,6 @@ class DetailProject extends React.Component {
           </Row>
          )}
         </div>
-
         <ContactModal
           openContactModal={this.state.openContactModal}
           closeContactModel={this.closeContactModel}

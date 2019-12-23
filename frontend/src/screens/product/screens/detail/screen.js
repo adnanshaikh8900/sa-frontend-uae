@@ -26,10 +26,12 @@ import * as ProductActions from '../../actions'
 
 import { WareHouseModal } from '../../sections'
 
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal} from 'components'
 import { selectOptionsFactory } from 'utils'
 import * as DetailProductActions from './actions'
-
+import {
+  CommonActions
+} from 'services/global'
 
 const mapStateToProps = (state) => {
   return ({
@@ -41,7 +43,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return ({
     productActions: bindActionCreators(ProductActions, dispatch),
-    detailProductActions: bindActionCreators(DetailProductActions, dispatch)
+    detailProductActions: bindActionCreators(DetailProductActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch)
+    
   })
 }
 
@@ -52,12 +56,19 @@ class DetailProduct extends React.Component {
     this.state = {
       loading: true,
       initValue: {},
-      currentData: {}
+      currentData: {},
+      openWarehouseModal:false,
+      dialog: null
     }
 
     this.initializeData = this.initializeData.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.showWarehouseModal = this.showWarehouseModal.bind(this)
+    this.closeWarehouseModal = this.closeWarehouseModal.bind(this)
+    this.deleteProduct = this.deleteProduct.bind(this)
+    this.removeProduct = this.removeProduct.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
   }
 
   componentDidMount() {
@@ -78,22 +89,22 @@ class DetailProduct extends React.Component {
           this.setState({
             loading: false,
             initValue: {
-              productName: res.data.productName,
+              productName: res.data.productName ? res.data.productName : '',
               productDescription: res.data.productDescription,
               productCode: res.data.productCode,
-              vatCategoryId: res.data.vatCategoryId ? {
-                label: res.data.vatCategoryId.name,
-                value: res.data.vatCategoryId.id
-              } : null,
+              vatCategoryId: res.data.vatCategory ? {
+                label: res.data.vatCategory.name,
+                value: res.data.vatCategory.id
+              } : '',
               unitPrice: res.data.unitPrice,
-              parentProductId: res.data.parentProductId ? {
-                label: res.data.parentProductId.productID,
-                value: res.data.parentProductId.productName
-              } : null,
-              productWarehouseId: res.data.productWarehouseId ? {
-                label: res.data.productWarehouseId.warehouseName,
-                value: res.data.productWarehouseId.warehouseId
-              } : null,
+              parentProductId: res.data.parentProduct ? {
+                label: res.data.parentProduct.productID,
+                value: res.data.parentProduct.productName
+              } : '',
+              productWarehouseId: res.data.productWarehouse ? {
+                label: res.data.productWarehouse.warehouseName,
+                value: res.data.productWarehouse.warehouseId
+              } : '',
               vatIncluded: res.data.vatIncluded
             }
           })
@@ -116,7 +127,6 @@ class DetailProduct extends React.Component {
   }
 
   handleSubmit(data) {
-    console.log(data)
     const id = this.props.location.state.id
     const { 
       productName , 
@@ -129,7 +139,7 @@ class DetailProduct extends React.Component {
       vatIncluded,
     } = data
     const postData = {
-      productId: id,
+      productID : id,
       productName : productName,
       productDescription: productDescription, 
       productCode: productCode,
@@ -148,14 +158,52 @@ class DetailProduct extends React.Component {
     })
   }
 
+  showWarehouseModal() {
+    this.setState({ openWarehouseModal: true })
+  }
+  // Cloase Confirm Modal
+  closeWarehouseModal() {
+    this.setState({ openWarehouseModal: false });
+    this.props.productActions.getProductWareHouseList()
+  }
+
+  deleteProduct() {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removeProduct}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeProduct() {
+    const id= this.props.location.state.id;
+    this.props.detailProductActions.deleteProduct(id).then(res=>{
+      if(res.status === 200) {
+        // this.success('Product Deleted Successfully');
+        this.props.history.push('/admin/master/product')
+      }
+    }).catch(err=> {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
   render() {
 
     const { vat_list, product_parent_list, product_warehouse_list } = this.props
-    const { loading } = this.state
+    const { loading , dialog} = this.state
 
     return (
       <div className="detail-product-screen">
         <div className="animated fadeIn">
+          {dialog}
         {loading ? (
             <Loader></Loader>
           ) : (
@@ -182,18 +230,19 @@ class DetailProduct extends React.Component {
                           this.handleSubmit(values)
                           resetForm(this.state.initValue)
 
-                          this.setState({
-                            selectedWareHouse: null,
-                            selectedParentProduct: null,
-                            selectedVatCategory: null,
-                          })
+                          // this.setState({
+                          //   selectedWareHouse: null,
+                          //   selectedParentProduct: null,
+                          //   selectedVatCategory: null,
+                          // })
                         }}
-                        // validationSchema={Yup.object().shape({
-                        //   productName: Yup.string()
-                        //     .required("Product Name is Required"),
-                        //   vatCategory: Yup.string()
-                        //     .required("Vat Category is Required"),
-                        // })}
+                        validationSchema={Yup.object().shape({
+                          productName: Yup.string()
+                            .required("Product Name is Required"),
+                          vatCategoryId: Yup.string()
+                            .required("Vat Category is Required")
+                            .nullable()
+                        })}
                         >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -360,21 +409,25 @@ class DetailProduct extends React.Component {
                               </Col>
                             </Row>
                             <Row>
-                              <Col lg={12} className="mt-5">
-                                <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-dot-circle-o"></i> Update
+                                <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                  <FormGroup>
+                                    <Button type="button" name="button" color="danger" className="btn-square"
+                                      onClick={this.deleteProduct}
+                                    >
+                                      <i className="fa fa-trash"></i> Delete
                                     </Button>
-                                  {/* <Button type="submit" color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-repeat"></i> Create and More
-                                    </Button> */}
-                                  <Button color="secondary" className="btn-square"
+                                  </FormGroup>
+                                  <FormGroup className="text-right">
+                                    <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                                      <i className="fa fa-dot-circle-o"></i> Update
+                                    </Button>
+                                    <Button color="secondary" className="btn-square"
                                     onClick={() => { this.props.history.push('/admin/master/product') }}>
                                     <i className="fa fa-ban"></i> Cancel
                                     </Button>
-                                </FormGroup>
-                              </Col>
-                            </Row>
+                                  </FormGroup>
+                                </Col>
+                              </Row>
                           </Form>
                         )}
                       </Formik>
@@ -386,6 +439,8 @@ class DetailProduct extends React.Component {
           </Row>
           )}
         </div>
+        <WareHouseModal openModal={this.state.openWarehouseModal} closeWarehouseModal={this.closeWarehouseModal}/>
+
       </div>
     )
   }

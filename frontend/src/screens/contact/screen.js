@@ -95,10 +95,8 @@ class Contact extends React.Component {
 
   initializeData() {
     this.props.contactActions.getContactList().then(res => {
-      console.log(res)
       if (res.status === 200) {
         this.setState({ loading: false });
-        console.log(this.props)
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);

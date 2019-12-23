@@ -108,7 +108,6 @@ class DetailVatCode extends React.Component {
                       <Formik
                           initialValues={this.state.vatData}
                           onSubmit={values => {
-                            console.log(values)
                             this.handleSubmit(values)
                           }}
                           validationSchema={Yup.object().shape({

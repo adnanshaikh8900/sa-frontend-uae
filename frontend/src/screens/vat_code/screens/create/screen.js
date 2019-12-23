@@ -92,7 +92,6 @@ class CreateVatCode extends React.Component {
         } else this.props.history.push('/admin/master/vat-code')
       }
     }).catch(err => {
-      console.log(err)
       this.props.commonActions.tostifyAlert('error', err.data.message)
     })
   }

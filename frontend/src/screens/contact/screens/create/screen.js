@@ -147,10 +147,9 @@ class CreateContact extends React.Component {
         this.success();
         if (this.state.readMore) {
           this.setState({ readMore: false });
-          this.props.history.push('/admin/master/contact/create');
+        } else {
+          this.props.history.push('/admin/master/contact');
         }
-      } else {
-        this.props.history.push('/admin/master/contact');
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
@@ -190,47 +189,55 @@ class CreateContact extends React.Component {
 
                           this.handleSubmit(values)
                           resetForm(initValue)
-
-                          // this.setState({
-                          //   selectedCurrency: null,
-                          //   selectedProject: null,
-                          //   selectedBankAccount: null,
-                          //   selectedCustomer: null
-
-                          // })
                         }}
-
+                        validationSchema={
+                          Yup.object().shape({
+                            firstName: Yup.string()
+                              .required("FirstName is Required"),
+                            lastName: Yup.string()
+                              .required("LastName is Required"),
+                            middleName: Yup.string()
+                              .required("MiddleName is Required"),
+                              contactType: Yup.string()
+                              .required("Please Select Contact Type"),
+                              organization: Yup.string()
+                              .required("Organization Name is Required"),
+                            poBoxNumber: Yup.number()
+                              .required("PO Box Number is Required"),
+                            email: Yup.string()
+                              .required("Email is Required")
+                              .email('Invalid Email'),
+                            telephone: Yup.number()
+                              .required("Telephone Number is Required"),
+                            mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, {message: "Please enter valid number.", excludeEmptyString: false})
+                              .required("Mobile Number is required"),
+                            invoicingAddressLine1: Yup.string()
+                              .required("Address is required"),
+                            country: Yup.string()
+                              .required("Please Select Country")
+                              .nullable(),
+                            stateRegion: Yup.string()
+                              .required("State is Required"),
+                            city: Yup.string()
+                              .required("City is Required"),
+                            postZipCode: Yup.number()
+                              .required("Postal Code is Required"),
+                            billingEmail: Yup.string()
+                              .required("Billing Email is Required")
+                              .email('Invalid Email'),
+                            contractPoNumber: Yup.number()
+                              .required("Contract PoNumber is Required"),
+                              vatRegistrationNumber: Yup.number()
+                              .required("Vat Registration Number is Required"),
+                              currency: Yup.string()
+                              .required("Please Select Currency")
+                              .nullable(),
+                          })
+                        }
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
                             <h4 className="mb-4">Contact Name</h4>
-                            <Row>
-                              <Col md="4">
-                                <FormGroup>
-                                  <Label htmlFor="select">Refrence Code  (TBD)</Label>
-                                  <Input
-                                    type="text"
-                                    id=""
-                                    name=""
-                                    required
-                                    onChange={(value) => { props.handleChange("reference_code")(value) }}
-                                    className="tbd"
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col md="4">
-                                <FormGroup>
-                                  <Label htmlFor="select">Type</Label>
-                                  <Input
-                                    type="text"
-                                    id=""
-                                    name=""
-                                    required
-                                    onChange={(value) => { props.handleChange("type")(value) }}
-                                  />
-                                </FormGroup>
-                              </Col>
-                            </Row>
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
@@ -239,10 +246,18 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="firstName"
                                     name="firstName"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("firstName")(value) }}
-
+                                    value={props.values.firstName}
+                                    className={
+                                      props.errors.firstName && props.touched.firstName
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.firstName && props.touched.firstName && (
+                                    <div className="invalid-feedback">{props.errors.firstName}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -252,10 +267,18 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="middleName "
                                     name="middleName "
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("middleName")(value) }}
-
+                                    value={props.values.middleName}
+                                    className={
+                                      props.errors.middleName && props.touched.middleName
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.middleName && props.touched.middleName && (
+                                    <div className="invalid-feedback">{props.errors.middleName}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -265,10 +288,18 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="lastName"
                                     name="lastName"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("lastName")(value) }}
-
+                                    value={props.values.lastName}
+                                    className={
+                                      props.errors.lastName && props.touched.lastName
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.lastName && props.touched.lastName && (
+                                    <div className="invalid-feedback">{props.errors.lastName}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -281,12 +312,21 @@ class CreateContact extends React.Component {
                                   <Select
                                     className="select-default-width"
                                     options={contact_type_list ? selectOptionsFactory.renderOptions('name', 'id', contact_type_list) : []}
-                                    value={props.values.contact_type_list}
-                                    onChange={option => props.handleChange('contact_type_list')(option)}
-                                    placeholder="Select Type"
+                                    value={props.values.contactType}
+                                    onChange={option => props.handleChange('contactType')(option)}
+                                    placeholder="Select Contact Type"
                                     id="contact_type_list"
                                     name="contact_type_list"
+                                    className={
+                                      props.errors.contactType && props.touched.contactType
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.contactType && props.touched.contactType && (
+                                    <div className="invalid-feedback">{props.errors.contactType}</div>
+                                  )}
+                
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -296,10 +336,19 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="organization"
                                     name="organization"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("organization")(value) }}
-
+                                    value={props.values.organization}
+                                    className={
+                                      props.errors.organization && props.touched.organization
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.organization && props.touched.organization && (
+                                    <div className="invalid-feedback">{props.errors.organization}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -309,10 +358,19 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="poBoxNumber"
                                     name="poBoxNumber"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("poBoxNumber")(value) }}
-
+                                    value={props.values.poBoxNumber}
+                                    className={
+                                      props.errors.poBoxNumber && props.touched.poBoxNumber
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.poBoxNumber && props.touched.poBoxNumber && (
+                                    <div className="invalid-feedback">{props.errors.poBoxNumber}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -324,10 +382,19 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="email"
                                     name="email"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("email")(value) }}
-
+                                    value={props.values.email}
+                                    className={
+                                      props.errors.email && props.touched.email
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.email && props.touched.email && (
+                                    <div className="invalid-feedback">{props.errors.email}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -337,10 +404,19 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="telephone"
                                     name="telephone"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("telephone")(value) }}
-
+                                    value={props.values.telephone}
+                                    className={
+                                      props.errors.telephone && props.touched.telephone
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.telephone && props.touched.telephone && (
+                                    <div className="invalid-feedback">{props.errors.telephone}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -350,10 +426,19 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="mobileNumber"
                                     name="mobileNumber"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("mobileNumber")(value) }}
-
+                                    value={props.values.mobileNumber}
+                                    className={
+                                      props.errors.mobileNumber && props.touched.mobileNumber
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.mobileNumber && props.touched.mobileNumber && (
+                                    <div className="invalid-feedback">{props.errors.mobileNumber}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -365,10 +450,19 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="invoicingAddressLine1"
                                     name="invoicingAddressLine1"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("invoicingAddressLine1")(value) }}
-
+                                    value={props.values.invoicingAddressLine1}
+                                    className={
+                                      props.errors.invoicingAddressLine1 && props.touched.invoicingAddressLine1
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.invoicingAddressLine1 && props.touched.invoicingAddressLine1 && (
+                                    <div className="invalid-feedback">{props.errors.invoicingAddressLine1}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -378,7 +472,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="invoicingAddressLine2"
                                     name="invoicingAddressLine2"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("invoicingAddressLine2")(value) }}
 
                                   />
@@ -391,7 +485,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="invoicingAddressLine3"
                                     name="invoicingAddressLine3"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("invoicingAddressLine3")(value) }}
 
                                   />
@@ -407,39 +501,66 @@ class CreateContact extends React.Component {
                                     options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
                                     value={props.values.country}
                                     onChange={option => props.handleChange('country')(option)}
-                                    placeholder="Select Type"
+                                    placeholder="Select Country"
                                     id="country"
                                     name="country"
+                                    className={
+                                      props.errors.country && props.touched.country
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.country && props.touched.country && (
+                                    <div className="invalid-feedback">{props.errors.country}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                               <Col md="4">
-                                {/* <FormGroup>
-                                    <Label htmlFor="stateRegion">State Region</Label>
-                                    <Select
-                                      className="select-default-width"
-                                      options={stateRegion ? selectOptionsFactory.renderOptions('stateName', 'stateCode', stateRegion) : ''}
-                                      value={props.values.stateRegion}
-                                      onChange={option => props.handleChange('stateRegion')(option)}
-                                      placeholder="Select Type"
-                                      id="stateRegion"
-                                      name="stateRegion"
-                                    />
-                                  </FormGroup> */}
+                                <FormGroup>
+                                  <Label htmlFor="stateRegion">State Region</Label>
+                                  <Input
+                                    className="select-default-width"
+                                    // options={stateRegion ? selectOptionsFactory.renderOptions('stateName', 'stateCode', stateRegion) : ''}
+                                    value={props.values.stateRegion}
+                                    onChange={option => props.handleChange('stateRegion')(option)}
+                                    placeholder=""
+                                    id="stateRegion"
+                                    name="stateRegion"
+                                    className={
+                                      props.errors.stateRegion && props.touched.stateRegion
+                                        ? "is-invalid"
+                                        : ""
+                                    }
+                                  />
+                                  {props.errors.stateRegion && props.touched.stateRegion && (
+                                    <div className="invalid-feedback">{props.errors.stateRegion}</div>
+                                  )}
+                                  
+                                </FormGroup>
                               </Col>
                               <Col md="4">
-                                {/* <FormGroup>
-                                    <Label htmlFor="city">City</Label>
-                                    <Select
-                                      className="select-default-width"
-                                      options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
-                                      value={props.values.city}
-                                      onChange={option => props.handleChange('city')(option)}
-                                      placeholder="Select Type"
-                                      id="city"
-                                      name="city"
-                                    />
-                                  </FormGroup> */}
+                                <FormGroup>
+                                  <Label htmlFor="city">City</Label>
+                                  <Input
+                                    className="select-default-width"
+                                    // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
+                                    value={props.values.city}
+                                    onChange={option => props.handleChange('city')(option)}
+                                    placeholder=""
+                                    id="city"
+                                    name="city"
+                                    className={
+                                      props.errors.city && props.touched.city
+                                        ? "is-invalid"
+                                        : ""
+                                    }
+                                  />
+                                  {props.errors.city && props.touched.city && (
+                                    <div className="invalid-feedback">{props.errors.city}</div>
+                                  )}
+                                  
+                                </FormGroup>
                               </Col>
                             </Row>
                             <Row className="row-wrapper">
@@ -450,10 +571,19 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="postZipCode"
                                     name="postZipCode"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("postZipCode")(value) }}
-
+                                    value={props.values.postZipCode}
+                                    className={
+                                      props.errors.postZipCode && props.touched.postZipCode
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.postZipCode && props.touched.postZipCode && (
+                                    <div className="invalid-feedback">{props.errors.postZipCode}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -468,10 +598,18 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="billingEmail"
                                     name="billingEmail"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("billingEmail")(value) }}
-
-                                  />
+                                    value={props.values.billingEmail}
+                                    className={
+                                      props.errors.billingEmail && props.touched.billingEmail
+                                        ? "is-invalid"
+                                        : ""
+                                    }                           
+                                    />
+                                  {props.billingEmail && props.touched.billingEmail && (
+                                    <div className="invalid-feedback">{props.errors.billingEmail}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -481,10 +619,19 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="contractPoNumber"
                                     name="contractPoNumber"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("contractPoNumber")(value) }}
-
+                                    value={props.values.contractPoNumber}
+                                    className={
+                                      props.errors.contractPoNumber && props.touched.contractPoNumber
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.contractPoNumber && props.touched.contractPoNumber && (
+                                    <div className="invalid-feedback">{props.errors.contractPoNumber}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -496,10 +643,19 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
-                                    required
+                                    
                                     onChange={(value) => { props.handleChange("vatRegistrationNumber")(value) }}
-
+                                    value={props.values.vatRegistrationNumber}
+                                    className={
+                                      props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber && (
+                                    <div className="invalid-feedback">{props.errors.vatRegistrationNumber}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -510,10 +666,19 @@ class CreateContact extends React.Component {
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                                     value={props.values.currency}
                                     onChange={option => props.handleChange('currency')(option)}
-                                    placeholder="Select Type"
+                                    placeholder="Select Currency"
                                     id="currency"
                                     name="currency"
+                                    className={
+                                      props.errors.currency && props.touched.currency
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.currency && props.touched.currency && (
+                                    <div className="invalid-feedback">{props.errors.currency}</div>
+                                  )}
+                                  
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -523,7 +688,7 @@ class CreateContact extends React.Component {
                                   <Button type="submit" color="primary" className="btn-square mr-3">
                                     <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
-                                  <Button type="submit" color="primary" className="btn-square mr-3"
+                                  <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={() => {
                                       this.setState({ readMore: true });
                                       props.handleSubmit();

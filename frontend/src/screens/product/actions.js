@@ -4,11 +4,12 @@ import {
   authApi
 } from 'utils'
 
-export const getProductList = () => {
+export const getProductList = (obj) => {
   return (dispatch) => {
     let data = {
-      method: 'GET',
-      url: `rest/product/getProductList`
+      method: 'POST',
+      url: `/rest/product/getList`,
+      data: obj
     }
 
     return authApi(data).then(res => {
@@ -130,7 +131,7 @@ export const removeBulk = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: 'rest/product/deleteproducts',
+      url: 'rest/product/deletes',
       data: obj
     }
     return authApi(data).then(res => {

@@ -1,7 +1,8 @@
 import { EXPENSE } from 'constants/types'
 import {
   api,
-  authApi
+  authApi,
+  authFileUploadApi
 } from 'utils'
 
 export const getExpenseDetail = (_id) => {
@@ -38,6 +39,36 @@ export const getCurrencyList = () => {
           }
         })
       }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const updateExpense = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: 'rest/expense/save',
+      data: obj
+    }
+    return authFileUploadApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const deleteExpense = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/expense/delete?expenseId=${id}`
+    }
+
+    return authApi(data).then(res => {
+      return res
     }).catch(err => {
       throw err
     })

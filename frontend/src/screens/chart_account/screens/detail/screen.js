@@ -16,7 +16,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify'
 import Select from 'react-select'
 import _ from 'lodash'
-import { Loader , ConfirmDeleteModal} from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
@@ -98,13 +98,13 @@ class DetailChartAccount extends React.Component {
             }
           })
         } else {
-          this.setState({loading: false})
+          this.setState({ loading: false })
         }
       }).catch(err => {
         this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
         this.props.history.push('/admin/master/chart-account')
         // this.setState({loading: false})
-    })
+      })
     }
   }
 
@@ -135,13 +135,14 @@ class DetailChartAccount extends React.Component {
   }
 
   removeChartAccount() {
-    const id= this.props.location.state.id;
-    this.props.detailChartOfAccontActions.deleteChartAccount(id).then(res=>{
-      if(res.status === 200) {
-        this.success('Chart Account Deleted Successfully');
+    const id = this.props.location.state.id;
+    this.props.detailChartOfAccontActions.deleteChartAccount(id).then(res => {
+      if (res.status === 200) {
+        // this.success('Chart Account Deleted Successfully');
+        this.props.commonActions.tostifyAlert('success', 'Account Deleted Successfully')
         this.props.history.push('/admin/master/chart-account')
       }
-    }).catch(err=> {
+    }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
@@ -164,20 +165,20 @@ class DetailChartAccount extends React.Component {
     }
     this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then(res => {
       if (res.status === 200) {
-        this.success('Chart Account Updated Successfully')
-
-        if (this.state.readMore) {
-          this.setState({
-            readMore: false
-          })
-        } else this.props.history.push('/admin/master/chart-account')
-      }
+        // this.success('')
+        this.props.commonActions.tostifyAlert('success', 'Chart Account Updated Successfully')
+      } else this.props.history.push('/admin/master/chart-account')
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
 
   render() {
-    const { loading,dialog } = this.state
+    const { loading, dialog } = this.state
     const { transaction_type_list } = this.props
+    const containerStyle = {
+      zIndex: 1999
+    }
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
@@ -204,14 +205,16 @@ class DetailChartAccount extends React.Component {
                               this.handleSubmit(values)
                               resetForm(this.state.initValue)
                             }}
-                          // validationSchema={Yup.object().shape({
-                          //   code: Yup.string()
-                          //     .required("Code Name is Required"),
-                          //   account: Yup.string()
-                          //     .required("Account is Required"),
-                          //   type: Yup.string()
-                          //     .required("Type is Required")
-                          // })}
+                            validationSchema={
+                              Yup.object().shape({
+                                transactionCategoryCode: Yup.string()
+                                  .required("Code Name is Required"),
+                                transactionCategoryName: Yup.string()
+                                  .required("Account is Required"),
+                                transactionType: Yup.string()
+                                  .required("Type is Required")
+                                  .nullable()
+                              })}
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">

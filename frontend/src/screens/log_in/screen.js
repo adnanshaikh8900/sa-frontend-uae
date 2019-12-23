@@ -72,14 +72,15 @@ class LogIn extends React.Component {
       })
       this.props.history.push('/admin')
     }).catch(err => {
-      console.log(err)
       this.setState({
         alert: <Message
           type="danger"
-          title={err.data.error}
+          title={err ? err.data.error : ''}
           content="Log in failed. Please try again later"
         />
       })
+      // this.props.history.push('/admin')
+
     })
   }
 

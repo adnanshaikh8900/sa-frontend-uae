@@ -1,6 +1,6 @@
 package com.simplevat.entity;
 
-import com.simplevat.constant.ContactType;
+import com.simplevat.enums.ContactType;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -28,14 +28,14 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "CONTACT")
 @Data
-@TableGenerator(name="INCREMENT_INITIAL_VALUE", initialValue = 1000)
+@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 public class Contact implements Serializable {
 
     private static final long serialVersionUID = 6914121175305098995L;
 
     @Id
     @Column(name = "CONTACT_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY,generator ="INCREMENT_INITIAL_VALUE")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "INCREMENT_INITIAL_VALUE")
     private Integer contactId;
     @Basic
     @Column(name = "FIRST_NAME")
@@ -135,7 +135,8 @@ public class Contact implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TITLE_CODE")
     private Title title;
-    
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "CONTACT_TYPE")
     private ContactType contactType;
 

@@ -5,6 +5,7 @@ import {
 } from 'utils'
 
 export const updateProduct = (obj) => {
+  console.log(obj)
   return (dispatch) => {
     let data = {
       method: 'POST',

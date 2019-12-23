@@ -11,7 +11,7 @@ public interface Dao<PK, ENTITY> {
 
     public List<ENTITY> executeNamedQuery(String namedQuery);
 
-    public List<ENTITY> executeNamedQuery(String namedQuery, Map<String, Object> parameterDataMap);
+    public List<ENTITY> executeQuery(Map<String, Object> parameterDataMap);
 
     public ENTITY persist(ENTITY entity);
 

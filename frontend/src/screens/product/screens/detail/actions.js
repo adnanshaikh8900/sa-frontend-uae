@@ -5,7 +5,6 @@ import {
 } from 'utils'
 
 export const updateProduct = (obj) => {
-  console.log(obj)
   return (dispatch) => {
     let data = {
       method: 'POST',
@@ -26,6 +25,21 @@ export const getProductById = (id) => {
     let data = {
       method: 'GET',
       url: `rest/product/getProductById?id=${id}`
+    }
+
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const deleteProduct = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/product/delete?id=${id}`
     }
 
     return authApi(data).then(res => {

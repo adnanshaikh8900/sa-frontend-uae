@@ -23,6 +23,8 @@ import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-
 import DatePicker from 'react-datepicker'
 import * as Yup from 'yup'
 import { Loader } from 'components'
+import { SupplierModal } from '../../sections'
+
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -72,7 +74,8 @@ class CreatePayment extends React.Component {
         {},
         {}
       ],
-      currentData: {}
+      currentData: {},
+      openSupplierModal: false
     }
 
     this.options = {
@@ -87,7 +90,8 @@ class CreatePayment extends React.Component {
     this.renderUnitPrice = this.renderUnitPrice.bind(this)
     this.renderVat = this.renderVat.bind(this)
     this.renderSubTotal = this.renderSubTotal.bind(this)
-
+    this.closeSupplierModal = this.closeSupplierModal.bind(this)
+    this.openSupplierModal = this.openSupplierModal.bind(this)
   }
 
   componentDidMount() {
@@ -208,6 +212,15 @@ class CreatePayment extends React.Component {
 
   }
 
+  openSupplierModal(e) {
+    e.preventDefault()
+    this.setState({openSupplierModal: true})
+  }
+
+  closeSupplierModal() {
+    this.setState({openSupplierModal: false})
+  }
+
   render() {
     const {
       currency_list,
@@ -299,7 +312,9 @@ class CreatePayment extends React.Component {
                                       }
                                     />
                                   </FormGroup>
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="submit" color="primary" className="btn-square mr-3 mb-3" 
+                                  onClick={this.openSupplierModal}
+                                  >
                                     <i className="fa fa-dot-circle-o"></i> Supplier
                                   </Button>
                                 </Col>
@@ -336,8 +351,8 @@ class CreatePayment extends React.Component {
                                       name="amount"
                                       placeholder="Enter Amount"
                                       required
-                                      defaultValue={props.values.amount}
-                                      value={props.values.amount}
+                                      // defaultValue={props.values.amount}
+                                      value={props.values.amount || ''}
                                       onChange={option => props.handleChange('amount')(option)}
                                     />
 
@@ -483,6 +498,10 @@ class CreatePayment extends React.Component {
           </Row>
           )}
         </div>
+        <SupplierModal
+          openSupplierModal={this.state.openSupplierModal}
+          closeSupplierModal={(e)=>{this.closeSupplierModal(e)}}
+        />
       </div>
     )
   }

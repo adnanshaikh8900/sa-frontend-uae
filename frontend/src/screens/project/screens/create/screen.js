@@ -23,6 +23,9 @@ import { ContactModal } from '../../sections'
 
 import * as ProjectActions from '../../actions'
 import * as CreateProjectActions from './actions'
+import {
+  CommonActions
+} from 'services/global'
 
 import { selectOptionsFactory } from 'utils'
 
@@ -42,6 +45,7 @@ const mapDispatchToProps = (dispatch) => {
   return ({
     projectActions: bindActionCreators(ProjectActions, dispatch),
     createProjectActions: bindActionCreators(CreateProjectActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch),
 
   })
 }
@@ -114,23 +118,45 @@ class CreateProject extends React.Component {
 
   // Create or Edit Project
   projectHandleSubmit(data) {
+    const {
+      projectName,
+      invoiceLanguageCode,
+      contact,
+      contractPoNumber,
+      vatRegistrationNumber,
+      projectExpenseBudget,
+      projectRevenueBudget,
+      currency,
+    } = data
 
-  //   this.props.createProjectActions.createAndSaveProject(data).then(res => {
-  //     if (res.status === 200) {
-  //       // this.success()
+    const postData = {
+      projectName: projectName ? projectName: '',
+      invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
+      contact: contact && contact !== null ? contact : '',
+      contractPoNumber: contractPoNumber ? contractPoNumber : '',
+      vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
+      projectExpenseBudget: projectExpenseBudget ? projectExpenseBudget : '',
+      projectRevenueBudget: projectRevenueBudget ? projectRevenueBudget : '',
+      currencyCode: currency && currency!== null ? currency : ''
+      // contractPoNumber: contractPoNumber ? contractPoNumber : ''
+    }
+    this.props.createProjectActions.createAndSaveProject(postData).then(res => {
+      if (res.status === 200) {
+        // this.success()
 
-  //       if (this.state.readMore) {
-  //         this.setState({
-  //           readMore: false
-  //         })
-  //       } else this.props.history.push('/admin/master/project')
-  //     }
-  //   })
-  // }
+        if (this.state.readMore) {
+          this.setState({
+            readMore: false
+          })
+        } else this.props.history.push('/admin/master/project')
+      }
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
   }
 
   render() {
-    const { currency_list, country_list, contact_list , title_list} = this.props
+    const { currency_list, country_list, contact_list, title_list } = this.props
 
     return (
       <div className="create-product-screen">
@@ -169,9 +195,10 @@ class CreateProject extends React.Component {
                           contact: Yup.string()
                             .required("Contact is Required"),
                           currency: Yup.string()
-                            .required("Currency is Required"),
-                          invoiceLanguageCode: Yup.string()
-                            .required("Invoice Language is Required")
+                            .required("Currency is Required")
+                            .nullable(),
+                          // invoiceLanguageCode: Yup.string()
+                          //   .required("Invoice Language is Required")
                         })}>
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -364,15 +391,15 @@ class CreateProject extends React.Component {
                                     placeholder="Select invoiceLanguageCode"
                                     value={this.state.selectedInvoiceLanguage}
                                     name="invoiceLanguageCode"
-                                    className={
-                                      props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode
-                                        ? "is-invalid"
-                                        : ""
-                                    }
+                                  // className={
+                                  //   props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode
+                                  //     ? "is-invalid"
+                                  //     : ""
+                                  // }
                                   />
-                                  {props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode && (
+                                  {/* {props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode && (
                                     <div className="invalid-feedback">{props.errors.invoiceLanguageCode}</div>
-                                  )}
+                                  )} */}
                                 </FormGroup>
                               </Col>
                             </Row>

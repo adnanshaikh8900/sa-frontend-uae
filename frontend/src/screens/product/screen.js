@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -15,16 +15,19 @@ import {
   ButtonGroup,
   Form,
   FormGroup,
-  Input
+  Input,
 } from 'reactstrap'
+import Select from 'react-select'
+
 import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 
-import { Loader , ConfirmDeleteModal} from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
+import { selectOptionsFactory } from 'utils'
 
 import * as ProductActions from './actions'
 import {
@@ -36,7 +39,8 @@ import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    product_list: state.product.product_list
+    product_list: state.product.product_list,
+    vat_list: state.product.vat_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -47,13 +51,19 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class Product extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
-      loading: true,
+      loading: false,
       selected_id_list: [],
       dialog: null,
+      filterData: {
+        name: '',
+        productCode: '',
+        vatPercentage: ''
+      },
+      selectedVat: ''
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -64,7 +74,9 @@ class Product extends React.Component {
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
-    
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top'
@@ -80,7 +92,7 @@ class Product extends React.Component {
 
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.initializeData()
   }
 
@@ -90,8 +102,10 @@ class Product extends React.Component {
     })
   }
 
-  initializeData () {
-    this.props.productActions.getProductList().then(res => {
+  initializeData() {
+    this.props.productActions.getProductVatCategoryList();
+    const { filterData } = this.state;
+    this.props.productActions.getProductList(filterData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -102,8 +116,9 @@ class Product extends React.Component {
     })
   }
 
-  goToDetail (row) {
-    this.props.history.push('/admin/master/product/detail',{id:row.productID})
+  goToDetail(row) {
+    console.log(row)
+    this.props.history.push('/admin/master/product/detail', { id: row.id })
   }
 
   onRowSelect(row, isSelected, e) {
@@ -161,10 +176,10 @@ class Product extends React.Component {
     this.props.productActions.removeBulk(obj).then(() => {
       this.props.productActions.getProductList()
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if(product_list && product_list.length > 0) {
-                this.setState({
-        selected_id_list: []
-      })
+      if (product_list && product_list.length > 0) {
+        this.setState({
+          selected_id_list: []
+        })
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
@@ -177,14 +192,27 @@ class Product extends React.Component {
     })
   }
 
-  vatCategoryFormatter(cell,row) {
+  vatCategoryFormatter(cell, row) {
     return row['vatCategory'] !== null ? row['vatCategory']['name'] : ''
+  }
+
+  handleChange(val, name) {
+    this.setState({
+     filterData: Object.assign(this.state.filterData,{
+      [name]: val
+     })
+    })
+  }
+
+  handleSearch() {
+    this.initializeData();
+    // this.setState({})
   }
 
   render() {
 
-    const { loading , dialog} = this.state
-    const { product_list } = this.props
+    const { loading, dialog } = this.state
+    const { product_list, vat_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -192,7 +220,7 @@ class Product extends React.Component {
     return (
       <div className="product-screen">
         <div className="animated fadeIn">
-        {dialog}
+          {dialog}
           <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
           <Card>
             <CardHeader>
@@ -213,7 +241,7 @@ class Product extends React.Component {
                       <Loader />
                     </Col>
                   </Row>
-                :
+                  :
                   <Row>
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
@@ -221,7 +249,7 @@ class Product extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={()=>this.table.handleExportCSV()}
+                            onClick={() => this.table.handleExportCSV()}
 
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -248,23 +276,43 @@ class Product extends React.Component {
                       </div>
                       <div className="py-3">
                         <h5>Filter : </h5>
-                        <Row>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Name" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Product Code" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Vat Percentage" />
-                          </Col>
-                        </Row>
+                        <form>
+                          <Row>
+                            <Col lg={3} className="mb-1">
+                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                            </Col>
+                            <Col lg={3} className="mb-2">
+                              <Input type="text" placeholder="Product Code" onChange={(e) => { this.handleChange(e.target.value, 'productCode') }} />
+                            </Col>
+                            <Col lg={3} className="mb-1">
+                              <FormGroup className="mb-3">
+
+                                <Select
+                                  options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list) : []}
+                                  onChange={(val) => { 
+                                    this.handleChange(val['value'], 'vatPercentage') 
+                                    this.setState({'selectedVat': val['value']})
+                                  }}
+                                  className="select-default-width"
+                                  placeholder="Vat Percentage"
+                                  value={this.state.selectedVat}
+                                />
+                              </FormGroup>
+
+                            </Col>
+                            <Col lg={2} className="mb-1">
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                                <i className="fa fa-search"></i> Search
+                            </Button>
+                            </Col>
+                          </Row>
+                        </form>
                       </div>
                       <div>
                         <BootstrapTable
-                          selectRow={ this.selectRowProp }
+                          selectRow={this.selectRowProp}
                           search={false}
-                          options={ this.options }
+                          options={this.options}
                           data={product_list ? product_list : []}
                           version="4"
                           hover
@@ -277,7 +325,7 @@ class Product extends React.Component {
                         >
                           <TableHeaderColumn
                             isKey
-                            dataField="productName"
+                            dataField="name"
                             dataSort
                           >
                             Name
@@ -289,17 +337,24 @@ class Product extends React.Component {
                             Product Code
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="productDescription"
+                            dataField="description"
                             dataSort
                           >
                             Description
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="vatCategory"
+                            dataField="vatPercentage"
                             dataSort
-                            dataFormat={this.vatCategoryFormatter}
+                            // dataFormat={this.vatCategoryFormatter}
                           >
                             Vat Percentage
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
+                            dataField="unitPrice"
+                            dataSort
+                            // dataFormat={this.vatCategoryFormatter}
+                          >
+                            Unit Price
                           </TableHeaderColumn>
                         </BootstrapTable>
                       </div>

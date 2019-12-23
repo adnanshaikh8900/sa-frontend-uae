@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -21,7 +21,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import Select from 'react-select'
 
-import { Loader , ConfirmDeleteModal} from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class ChartAccount extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
@@ -81,7 +81,7 @@ class ChartAccount extends React.Component {
 
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.initializeData()
   }
 
@@ -91,20 +91,19 @@ class ChartAccount extends React.Component {
     })
   }
 
-  initializeData () {
-    this.props.chartOfAccountActions.getTransactionCategoryList().then(res=> {
-      if(res.status === 200) {
-        this.setState({loading: false});
-        console.log(this.props)
+  initializeData() {
+    this.props.chartOfAccountActions.getTransactionCategoryList().then(res => {
+      if (res.status === 200) {
+        this.setState({ loading: false });
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
-      this.setState({loading: false})
+      this.setState({ loading: false })
     })
   }
 
-  goToDetailPage (row) {
-    this.props.history.push(`/admin/master/chart-account/detail`,{id:row.transactionCategoryId})
+  goToDetailPage(row) {
+    this.props.history.push(`/admin/master/chart-account/detail`, { id: row.transactionCategoryId })
   }
 
   goToCreatePage() {
@@ -166,10 +165,10 @@ class ChartAccount extends React.Component {
     this.props.chartOfAccountActions.removeBulk(obj).then(() => {
       this.props.chartOfAccountActions.getTransactionCategoryList()
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if(transaction_category_list && transaction_category_list.length > 0) {
-                this.setState({
-        selected_id_list: []
-      })
+      if (transaction_category_list && transaction_category_list.length > 0) {
+        this.setState({
+          selected_id_list: []
+        })
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
@@ -182,32 +181,23 @@ class ChartAccount extends React.Component {
     })
   }
 
+  typeFormatter(cell, row) {
+    return row['transactionType']['transactionTypeName'];
 
-
-
-  typeFormatter(cell,row) {
-    return  row['transactionType']['transactionTypeName'];
-    
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
   }
 
   render() {
 
-    const { loading , dialog } = this.state
+    const { loading, dialog } = this.state
     const { transaction_category_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
-    console.log(transaction_category_list)
 
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
-        {dialog}
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {dialog}
           <Card>
             <CardHeader>
               <Row>
@@ -227,7 +217,7 @@ class ChartAccount extends React.Component {
                       <Loader />
                     </Col>
                   </Row>
-                :
+                  :
                   <Row>
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
@@ -235,7 +225,7 @@ class ChartAccount extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={()=>this.table.handleExportCSV()}
+                            onClick={() => this.table.handleExportCSV()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -278,9 +268,9 @@ class ChartAccount extends React.Component {
                       </div>
                       <div>
                         <BootstrapTable
-                          selectRow={ this.selectRowProp }
+                          selectRow={this.selectRowProp}
                           search={false}
-                          options={ this.options }
+                          options={this.options}
                           data={transaction_category_list ? transaction_category_list : []}
                           version="4"
                           hover

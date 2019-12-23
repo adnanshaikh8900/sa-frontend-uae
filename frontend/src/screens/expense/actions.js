@@ -193,3 +193,22 @@ export const getVatList = () => {
     })
   }
 }
+
+export const getEmployeeList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: '/rest/employee/getuser'
+    }
+
+    return authApi(data).then(res => {
+      dispatch({
+        type: EXPENSE.EMPLOYEE_LIST,
+        payload: res.data
+      })
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}

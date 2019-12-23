@@ -22,7 +22,7 @@ import { Formik } from 'formik'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import * as Yup from 'yup'
-import {Loader} from 'components'
+import {Loader, ConfirmDeleteModal} from 'components'
 import moment from 'moment'
 
 
@@ -59,6 +59,7 @@ class DetailPayment extends React.Component {
     super(props)
     this.state = {
       loading: true,
+      dialog: null,
       data: [
         {},
         {}
@@ -78,7 +79,9 @@ class DetailPayment extends React.Component {
     this.renderUnitPrice = this.renderUnitPrice.bind(this)
     this.renderVat = this.renderVat.bind(this)
     this.renderSubTotal = this.renderSubTotal.bind(this)
-
+    this.deletePayment = this.deletePayment.bind(this)
+    this.removePayment = this.removePayment.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
   }
 
   componentDidMount() {
@@ -204,9 +207,38 @@ class DetailPayment extends React.Component {
 
   }
 
+  deletePayment() {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removePayment}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removePayment() {
+    const id = this.props.location.state.id;
+    this.props.detailPaymentActions.deletePayment(id).then(res => {
+      if (res.status === 200) {
+        // this.success('Chart Account Deleted Successfully');
+        this.props.commonActions.tostifyAlert('success', 'Payment Deleted Successfully')
+        this.props.history.push('/admin/expense/payment')
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
   render() {
 
-    const { data , loading , initialVals} = this.state
+    const { data , loading , initialVals , dialog} = this.state
     const {
       currency_list,
       bank_list,
@@ -217,6 +249,7 @@ class DetailPayment extends React.Component {
     return (
       <div className="detail-payment-screen">
         <div className="animated fadeIn">
+          {dialog}
           {loading? 
           <Loader />
           :
@@ -292,7 +325,7 @@ class DetailPayment extends React.Component {
                                       }
                                     />
                                   </FormGroup>
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="submit" color="primary" className="btn-square mr-3 mb-3">
                                     <i className="fa fa-dot-circle-o"></i> Supplier
                                   </Button>
                                 </Col>
@@ -452,21 +485,25 @@ class DetailPayment extends React.Component {
                             </Col>
                           </Row>
                           <Row>
-                            <Col lg={12} className="mt-5">
-                              <FormGroup className="text-right">
-                                <Button type="submit" color="primary" className="btn-square mr-3">
-                                  <i className="fa fa-dot-circle-o"></i> Create
-                        </Button>
-                                <Button type="submit" color="primary" className="btn-square mr-3">
-                                  <i className="fa fa-repeat"></i> Create and More
-                        </Button>
-                                <Button color="secondary" className="btn-square"
-                                  onClick={() => { this.props.history.push('/admin/expense/payment') }}>
-                                  <i className="fa fa-ban"></i> Cancel
-                        </Button>
-                              </FormGroup>
-                            </Col>
-                          </Row>
+                                  <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                    <FormGroup>
+                                      <Button type="button" name="button" color="danger" className="btn-square"
+                                        onClick={this.deletePayment}
+                                      >
+                                        <i className="fa fa-trash"></i> Delete
+                                    </Button>
+                                    </FormGroup>
+                                    <FormGroup className="text-right">
+                                      <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                                        <i className="fa fa-dot-circle-o"></i> Update
+                                    </Button>
+                                      <Button type="button" name="button" color="secondary" className="btn-square"
+                                        onClick={() => { this.props.history.push("/admin/expense/payment") }}>
+                                        <i className="fa fa-ban"></i> Cancel
+                                    </Button>
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
                         </Form>
                       )
                     }

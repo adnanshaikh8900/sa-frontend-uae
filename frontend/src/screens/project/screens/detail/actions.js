@@ -34,3 +34,18 @@ export const deleteProject = (id) => {
     })
   }
 }
+
+export const updateProject = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'put',
+      url: `/rest/project/update`
+    }
+
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}

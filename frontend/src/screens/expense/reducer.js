@@ -6,6 +6,7 @@ const initState = {
   currency_list: [],
   supplier_list: [],
   project_list: [],
+  employee_list: []
 }
 
 const ExpenseReducer = (state = initState, action) => {
@@ -54,15 +55,14 @@ const ExpenseReducer = (state = initState, action) => {
         supplier_list: Object.assign([], payload)
       }
 
-    case EXPENSE.BANK_ACCOUNT_LIST:
-      console.log(payload)
+    case EXPENSE.EMPLOYEE_LIST:
     //   const bank_account_list = payload.map(bank_account => {
     //     return { label: bank_account.bankAccountId, value: bank_account.bankAccountName }
     //   })
 
       return {
         ...state,
-        bank_account_list: Object.assign([], payload)
+        employee_list: Object.assign([], payload)
       }
 
     case EXPENSE.PAYMENT_LIST:

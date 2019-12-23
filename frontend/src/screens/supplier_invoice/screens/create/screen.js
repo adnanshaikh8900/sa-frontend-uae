@@ -32,7 +32,6 @@ import './style.scss'
 
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return ({
     project_list : state.supplier_invoice.project_list,
     customer_list :  state.supplier_invoice.customer_list,
@@ -191,7 +190,6 @@ class CreateSupplierInvoice extends React.Component {
  
 
   handleChange = (e, name) => {
-    console.log(e,name)
     this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -221,7 +219,6 @@ class CreateSupplierInvoice extends React.Component {
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
-    console.log(newData)
     // this.updateAmount(newData)
   }
 

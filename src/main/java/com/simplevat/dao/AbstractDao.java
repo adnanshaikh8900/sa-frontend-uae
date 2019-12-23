@@ -49,12 +49,17 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
     }
 
     @Override
-    public List<ENTITY> executeNamedQuery(String namedQuery, Map<String, Object> parameterDataMap) {
-        TypedQuery<ENTITY> typedQuery = entityManager.createNamedQuery(namedQuery, entityClass);
+    public List<ENTITY> executeQuery(Map<String, Object> parameterDataMap) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM ").append(entityClass.getName().toUpperCase()).append(" o where ");
+        for (Map.Entry<String, Object> entry : parameterDataMap.entrySet()) {
+            queryBuilder.append("o.").append(entry.getKey());
+        }
+        TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
 
         for (Map.Entry<String, Object> entry : parameterDataMap.entrySet()) {
             typedQuery.setParameter(entry.getKey(), entry.getValue());
         }
+        
         List<ENTITY> result = typedQuery.getResultList();
         return result;
     }

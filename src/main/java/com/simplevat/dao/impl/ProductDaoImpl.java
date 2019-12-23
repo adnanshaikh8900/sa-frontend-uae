@@ -18,7 +18,7 @@ public class ProductDaoImpl extends AbstractDao<Integer, Product> implements Pro
     public List<Product> getProductList(Map<ProductFilterEnum, Object> filterMap) {
         Map<String, Object> parameterDataMap = new HashMap();
         filterMap.forEach((productFilter, value) -> parameterDataMap.put(productFilter.getDbColumnName(), value));
-        List<Product> products = this.executeNamedQuery("allProduct", parameterDataMap);
+        List<Product> products = this.executeQuery(parameterDataMap);
         return products;
     }
 

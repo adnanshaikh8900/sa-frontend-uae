@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author ashish
  */
-public enum ContactType {
+public enum ContactTypeEnum {
 
     SUPPLIER("Supplier"),
     CUSTOMER("Customer"),
@@ -20,7 +20,7 @@ public enum ContactType {
 
     private String desc;
 
-    ContactType(String desc) {
+    ContactTypeEnum(String desc) {
         this.desc = desc;
     }
 
@@ -32,9 +32,9 @@ public enum ContactType {
         return desc;
     }
 
-    public static List<ContactType> contactTypeList() {
-        List<ContactType> contactTypes = new ArrayList<ContactType>();
-        for (ContactType contactType : values()) {
+    public static List<ContactTypeEnum> contactTypeList() {
+        List<ContactTypeEnum> contactTypes = new ArrayList<ContactTypeEnum>();
+        for (ContactTypeEnum contactType : values()) {
             contactTypes.add(contactType);
         }
         return contactTypes;

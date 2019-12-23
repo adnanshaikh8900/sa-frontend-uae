@@ -9,12 +9,14 @@ import lombok.Getter;
 
 /**
  *
- * @author uday
+ * @author ashish
  */
-public enum ProductFilterEnum {
-    PRODUCT_NAME("productName"),
-    PRODUCT_CODE("productCode"),
-    PRODUCT_VAT_PERCENTAGE("vatCategory"),
+public enum SupplierInvoiceFilterEnum {
+    CUSTOMER_NAME("contact.firstName"),
+    INVOICE_NUMBER("referenceNumber"),
+    INVOICE_DATE("invoiceDate"),
+    INVOICE_DUE_DATE("invoiceDueDate"),
+    STATUS("status"),
     PAGE_NUMBER("pageNo"),
     PAGE_SIZE("pageSize"),
     USER_ID("createdBy");
@@ -22,7 +24,7 @@ public enum ProductFilterEnum {
     @Getter
     String dbColumnName;
 
-    private ProductFilterEnum(String dbColumnName) {
+    private SupplierInvoiceFilterEnum(String dbColumnName) {
         this.dbColumnName = dbColumnName;
     }
 }

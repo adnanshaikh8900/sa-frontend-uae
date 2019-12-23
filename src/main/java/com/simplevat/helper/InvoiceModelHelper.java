@@ -43,76 +43,76 @@ public class InvoiceModelHelper {
     private InvoiceService invoiceService;
 
     public Invoice getInvoiceEntity(InvoiceRestModel invoiceModel) {
-        final LocalDateTime invoiceDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDate().toInstant(), ZoneId.systemDefault());
-        final LocalDateTime invoiceDueDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDueDate().toInstant(), ZoneId.systemDefault());
-        Invoice invoice;
-        if (invoiceModel.getInvoiceId() != null && invoiceModel.getInvoiceId() > 0) {
-            invoice = invoiceService.findByPK(invoiceModel.getInvoiceId());
-        } else {
-            invoice = new Invoice();
-        }
-        invoice.setContractPoNumber(invoiceModel.getContractPoNumber());
-        invoice.setCurrency(invoiceModel.getCurrencyCode());
-        invoice.setInvoiceProject(invoiceModel.getProject());
-        if (invoiceModel.getInvoiceContact() != null
-                && invoiceModel.getInvoiceContact().getContactId() != null
-                && invoiceModel.getInvoiceContact().getContactId() > 0) {
-            invoice.setInvoiceContact(invoiceModel.getInvoiceContact());
-        } else {
-            invoice.setInvoiceContact(null);
-        }
-        if (invoiceModel.getShippingContact() != null
-                && invoiceModel.getShippingContact().getContactId() != null
-                && invoiceModel.getShippingContact().getContactId() > 0) {
-            invoice.setShippingContact(invoiceModel.getShippingContact());
-        } else {
-            invoice.setShippingContact(null);
-        }
-        invoice.setInvoiceDate(invoiceDate);
-        invoice.setInvoiceDiscount(invoiceModel.getDiscount());
-        invoice.setDiscountType(invoiceModel.getDiscountType());
-        invoice.setInvoiceDueOn(invoiceModel.getInvoiceDueOn());
-        invoice.setInvoiceDueDate(invoiceDueDate);
-        invoice.setInvoiceReferenceNumber(invoiceModel.getInvoiceReferenceNumber());
-        invoice.setInvoiceNotes(invoiceModel.getInvoiceNotes());
-        final Collection<InvoiceLineItem> items = invoiceModel
-                .getInvoiceLineItems()
-                .stream()
-                .map((item) -> convertToLineItem(item, invoice))
-                .collect(Collectors.toList());
-
-        invoice.setInvoiceLineItems(items);
-        invoice.setCreatedBy(invoiceModel.getCreatedBy());
-        invoice.setLastUpdateBy(invoiceModel.getLastUpdatedBy());
-        invoice.setInvoiceAmount(invoiceModel.getInvoiceAmount());
-        invoice.setDueAmount(invoiceModel.getDueAmount());
-        invoice.setStatus(invoiceModel.getStatus());
-        invoice.setFreeze(invoiceModel.getFreeze());
-        invoice.setPaymentMode(invoiceModel.getPaymentMode());
-//        invoice.setRecurringFlag(invoiceModel.getRecurringFlag());
-        return invoice;
+//        final LocalDateTime invoiceDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDate().toInstant(), ZoneId.systemDefault());
+//        final LocalDateTime invoiceDueDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDueDate().toInstant(), ZoneId.systemDefault());
+//        Invoice invoice;
+//        if (invoiceModel.getInvoiceId() != null && invoiceModel.getInvoiceId() > 0) {
+//            invoice = invoiceService.findByPK(invoiceModel.getInvoiceId());
+//        } else {
+//            invoice = new Invoice();
+//        }
+//        invoice.setContractPoNumber(invoiceModel.getContractPoNumber());
+//        invoice.setCurrency(invoiceModel.getCurrencyCode());
+//        invoice.setInvoiceProject(invoiceModel.getProject());
+//        if (invoiceModel.getInvoiceContact() != null
+//                && invoiceModel.getInvoiceContact().getContactId() != null
+//                && invoiceModel.getInvoiceContact().getContactId() > 0) {
+//            invoice.setInvoiceContact(invoiceModel.getInvoiceContact());
+//        } else {
+//            invoice.setInvoiceContact(null);
+//        }
+//        if (invoiceModel.getShippingContact() != null
+//                && invoiceModel.getShippingContact().getContactId() != null
+//                && invoiceModel.getShippingContact().getContactId() > 0) {
+//            invoice.setShippingContact(invoiceModel.getShippingContact());
+//        } else {
+//            invoice.setShippingContact(null);
+//        }
+//        invoice.setInvoiceDate(invoiceDate);
+//        invoice.setInvoiceDiscount(invoiceModel.getDiscount());
+//        invoice.setDiscountType(invoiceModel.getDiscountType());
+//        invoice.setInvoiceDueOn(invoiceModel.getInvoiceDueOn());
+//        invoice.setInvoiceDueDate(invoiceDueDate);
+//        invoice.setInvoiceReferenceNumber(invoiceModel.getInvoiceReferenceNumber());
+//        invoice.setInvoiceNotes(invoiceModel.getInvoiceNotes());
+//        final Collection<InvoiceLineItem> items = invoiceModel
+//                .getInvoiceLineItems()
+//                .stream()
+//                .map((item) -> convertToLineItem(item, invoice))
+//                .collect(Collectors.toList());
+//
+//        invoice.setInvoiceLineItems(items);
+//        invoice.setCreatedBy(invoiceModel.getCreatedBy());
+//        invoice.setLastUpdateBy(invoiceModel.getLastUpdatedBy());
+//        invoice.setInvoiceAmount(invoiceModel.getInvoiceAmount());
+//        invoice.setDueAmount(invoiceModel.getDueAmount());
+//        invoice.setStatus(invoiceModel.getStatus());
+//        invoice.setFreeze(invoiceModel.getFreeze());
+//        invoice.setPaymentMode(invoiceModel.getPaymentMode());
+//        return invoice;
+        return null;
     }
 
     @Nonnull
     InvoiceLineItem convertToLineItem(@Nonnull final InvoiceItemModel model,
             @Nonnull final Invoice invoice) {
         final InvoiceLineItem item = new InvoiceLineItem();
-        if (model.getId() > 0) {
-            item.setInvoiceLineItemId(model.getId());
-        }
-        item.setCreatedDate(Calendar.getInstance().getTime());
-
-        item.setInvoiceLineItemDescription(model.getDescription());
-        item.setInvoiceLineItemQuantity(model.getQuatity());
-        item.setInvoiceLineItemUnitPrice(model.getUnitPrice());
-        item.setInvoiceLineItemVat(model.getVatId());
-        item.setCreatedBy(1);
-        item.setLastUpdateDate(Calendar.getInstance().getTime());
-        item.setVersionNumber(model.getVersionNumber());
-        if (model.getProductService() != null) {
-            item.setInvoiceLineItemProductService(model.getProductService());
-        }
-        item.setInvoice(invoice);
+//        if (model.getId() > 0) {
+//            item.setInvoiceLineItemId(model.getId());
+//        }
+//        item.setCreatedDate(Calendar.getInstance().getTime());
+//
+//        item.setInvoiceLineItemDescription(model.getDescription());
+//        item.setInvoiceLineItemQuantity(model.getQuatity());
+//        item.setInvoiceLineItemUnitPrice(model.getUnitPrice());
+//        item.setInvoiceLineItemVat(model.getVatId());
+//        item.setCreatedBy(1);
+//        item.setLastUpdateDate(Calendar.getInstance().getTime());
+//        item.setVersionNumber(model.getVersionNumber());
+//        if (model.getProductService() != null) {
+//            item.setInvoiceLineItemProductService(model.getProductService());
+//        }
+//        item.setInvoice(invoice);
 
         return item;
     }
@@ -147,54 +147,54 @@ public class InvoiceModelHelper {
     }
 
     public Invoice getInvoiceEntity(InvoiceRestModel invoiceModel, InvoiceLineItemService invoiceLineItemService) {
-        final LocalDateTime invoiceDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDate().toInstant(), ZoneId.systemDefault());
-        final LocalDateTime invoiceDueDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDueDate().toInstant(), ZoneId.systemDefault());
-        Invoice invoice;
-        if (invoiceModel.getInvoiceId() != null && invoiceModel.getInvoiceId() > 0) {
-            invoice = invoiceService.findByPK(invoiceModel.getInvoiceId());
-        } else {
-            invoice = new Invoice();
-        }
-        invoice.setContractPoNumber(invoiceModel.getContractPoNumber());
-        invoice.setCurrency(invoiceModel.getCurrencyCode());
-        invoice.setInvoiceProject(invoiceModel.getProject());
-        if (invoiceModel.getInvoiceContact() != null
-                && invoiceModel.getInvoiceContact().getContactId() != null
-                && invoiceModel.getInvoiceContact().getContactId() > 0) {
-            invoice.setInvoiceContact(invoiceModel.getInvoiceContact());
-        } else {
-            invoice.setInvoiceContact(null);
-        }
-        if (invoiceModel.getShippingContact() != null
-                && invoiceModel.getShippingContact().getContactId() != null
-                && invoiceModel.getShippingContact().getContactId() > 0) {
-            invoice.setShippingContact(invoiceModel.getShippingContact());
-        } else {
-            invoice.setShippingContact(null);
-        }
-        invoice.setInvoiceDate(invoiceDate);
-        invoice.setInvoiceDiscount(invoiceModel.getDiscount());
-        invoice.setDiscountType(invoiceModel.getDiscountType());
-        invoice.setInvoiceDueOn(invoiceModel.getInvoiceDueOn());
-        invoice.setInvoiceDueDate(invoiceDueDate);
-        invoice.setInvoiceReferenceNumber(invoiceModel.getInvoiceReferenceNumber());
-        invoice.setInvoiceNotes(invoiceModel.getInvoiceNotes());
-        final Collection<InvoiceLineItem> items = invoiceModel
-                .getInvoiceLineItems()
-                .stream()
-                .map((item) -> convertToLineItem(item, invoice, invoiceLineItemService))
-                .collect(Collectors.toList());
-
-        invoice.setInvoiceLineItems(items);
-        invoice.setCreatedBy(invoiceModel.getCreatedBy());
-        invoice.setLastUpdateBy(invoiceModel.getLastUpdatedBy());
-        invoice.setInvoiceAmount(invoiceModel.getInvoiceAmount());
-        invoice.setDueAmount(invoiceModel.getDueAmount());
-        invoice.setStatus(invoiceModel.getStatus());
-        invoice.setFreeze(invoiceModel.getFreeze());
-        invoice.setPaymentMode(invoiceModel.getPaymentMode());
-//        invoice.setRecurringFlag(invoiceModel.getRecurringFlag());
-        return invoice;
+//        final LocalDateTime invoiceDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDate().toInstant(), ZoneId.systemDefault());
+//        final LocalDateTime invoiceDueDate = LocalDateTime.ofInstant(invoiceModel.getInvoiceDueDate().toInstant(), ZoneId.systemDefault());
+//        Invoice invoice;
+//        if (invoiceModel.getInvoiceId() != null && invoiceModel.getInvoiceId() > 0) {
+//            invoice = invoiceService.findByPK(invoiceModel.getInvoiceId());
+//        } else {
+//            invoice = new Invoice();
+//        }
+//        invoice.setContractPoNumber(invoiceModel.getContractPoNumber());
+//        invoice.setCurrency(invoiceModel.getCurrencyCode());
+//        invoice.setInvoiceProject(invoiceModel.getProject());
+//        if (invoiceModel.getInvoiceContact() != null
+//                && invoiceModel.getInvoiceContact().getContactId() != null
+//                && invoiceModel.getInvoiceContact().getContactId() > 0) {
+//            invoice.setInvoiceContact(invoiceModel.getInvoiceContact());
+//        } else {
+//            invoice.setInvoiceContact(null);
+//        }
+//        if (invoiceModel.getShippingContact() != null
+//                && invoiceModel.getShippingContact().getContactId() != null
+//                && invoiceModel.getShippingContact().getContactId() > 0) {
+//            invoice.setShippingContact(invoiceModel.getShippingContact());
+//        } else {
+//            invoice.setShippingContact(null);
+//        }
+//        invoice.setInvoiceDate(invoiceDate);
+//        invoice.setInvoiceDiscount(invoiceModel.getDiscount());
+//        invoice.setDiscountType(invoiceModel.getDiscountType());
+//        invoice.setInvoiceDueOn(invoiceModel.getInvoiceDueOn());
+//        invoice.setInvoiceDueDate(invoiceDueDate);
+//        invoice.setInvoiceReferenceNumber(invoiceModel.getInvoiceReferenceNumber());
+//        invoice.setInvoiceNotes(invoiceModel.getInvoiceNotes());
+//        final Collection<InvoiceLineItem> items = invoiceModel
+//                .getInvoiceLineItems()
+//                .stream()
+//                .map((item) -> convertToLineItem(item, invoice, invoiceLineItemService))
+//                .collect(Collectors.toList());
+//
+//        invoice.setInvoiceLineItems(items);
+//        invoice.setCreatedBy(invoiceModel.getCreatedBy());
+//        invoice.setLastUpdateBy(invoiceModel.getLastUpdatedBy());
+//        invoice.setInvoiceAmount(invoiceModel.getInvoiceAmount());
+//        invoice.setDueAmount(invoiceModel.getDueAmount());
+//        invoice.setStatus(invoiceModel.getStatus());
+//        invoice.setFreeze(invoiceModel.getFreeze());
+//        invoice.setPaymentMode(invoiceModel.getPaymentMode());
+//        return invoice;
+        return null;
     }
 
     public InvoiceRestModel getInvoiceModel(Invoice invoice, boolean process) {
@@ -366,38 +366,38 @@ public class InvoiceModelHelper {
     }
 
     public String getNextInvoiceRefNumber(String invoicingReferencePattern, InvoiceRestModel invoice) {
-        if (invoicingReferencePattern != null) {
-            if (invoicingReferencePattern.contains(InvoiceNumberReferenceEnum.DDMMYY.getValue())) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
-                LocalDateTime dateTime = LocalDateTime.now();
-                String currentDateString = dateTime.format(formatter);
-                System.out.println("=currentDateString=" + currentDateString);
-                invoicingReferencePattern = invoicingReferencePattern.replace(InvoiceNumberReferenceEnum.DDMMYY.getValue(), currentDateString);
-            }
-            if (invoicingReferencePattern.contains(InvoiceNumberReferenceEnum.CONTACT_CODE.getValue())) {
-                if (invoice.getInvoiceContact() != null) {
-                    invoicingReferencePattern = invoicingReferencePattern.replace(InvoiceNumberReferenceEnum.CONTACT_CODE.getValue(), invoice.getInvoiceContact().getContactId() + "");
-                }
-            }
-
-            Pattern p = Pattern.compile("[a-z]+|\\d+");
-            Matcher m = p.matcher(invoicingReferencePattern);
-            int invoceNumber;
-            String invoiceReplacementString = "";
-            String invoiceRefNumber = "";
-            while (m.find()) {
-                if (StringUtils.isNumeric(m.group())) {
-                    invoiceReplacementString = m.group();
-                    invoceNumber = Integer.parseInt(m.group());
-                    invoiceRefNumber = ++invoceNumber + "";
-                    while (invoiceRefNumber.length() < invoiceReplacementString.length()) {
-                        invoiceRefNumber = "0" + invoiceRefNumber;
-                    }
-                }
-            }
-            String nextInvoiceNumber = replaceLast(invoicingReferencePattern, invoiceReplacementString, invoiceRefNumber);
-            return nextInvoiceNumber;
-        }
+//        if (invoicingReferencePattern != null) {
+//            if (invoicingReferencePattern.contains(InvoiceNumberReferenceEnum.DDMMYY.getValue())) {
+//                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+//                LocalDateTime dateTime = LocalDateTime.now();
+//                String currentDateString = dateTime.format(formatter);
+//                System.out.println("=currentDateString=" + currentDateString);
+//                invoicingReferencePattern = invoicingReferencePattern.replace(InvoiceNumberReferenceEnum.DDMMYY.getValue(), currentDateString);
+//            }
+//            if (invoicingReferencePattern.contains(InvoiceNumberReferenceEnum.CONTACT_CODE.getValue())) {
+//                if (invoice.getInvoiceContact() != null) {
+//                    invoicingReferencePattern = invoicingReferencePattern.replace(InvoiceNumberReferenceEnum.CONTACT_CODE.getValue(), invoice.getInvoiceContact().getContactId() + "");
+//                }
+//            }
+//
+//            Pattern p = Pattern.compile("[a-z]+|\\d+");
+//            Matcher m = p.matcher(invoicingReferencePattern);
+//            int invoceNumber;
+//            String invoiceReplacementString = "";
+//            String invoiceRefNumber = "";
+//            while (m.find()) {
+//                if (StringUtils.isNumeric(m.group())) {
+//                    invoiceReplacementString = m.group();
+//                    invoceNumber = Integer.parseInt(m.group());
+//                    invoiceRefNumber = ++invoceNumber + "";
+//                    while (invoiceRefNumber.length() < invoiceReplacementString.length()) {
+//                        invoiceRefNumber = "0" + invoiceRefNumber;
+//                    }
+//                }
+//            }
+//            String nextInvoiceNumber = replaceLast(invoicingReferencePattern, invoiceReplacementString, invoiceRefNumber);
+//            return nextInvoiceNumber;
+//        }
         return null;
     }
 

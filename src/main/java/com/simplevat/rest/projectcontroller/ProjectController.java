@@ -12,7 +12,7 @@ import com.simplevat.entity.Country;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.Title;
-import com.simplevat.helper.ContactHelper;
+import com.simplevat.rest.contactController.ContactHelper;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
@@ -109,16 +109,6 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getcontactbyName")
-    public ResponseEntity getContacts(@RequestParam(value = "searchQuery") String searchQuery) {
-        List<Contact> contact = contactService.getContacts(searchQuery, ContactTypeConstant.CUSTOMER);
-        if (contact == null && contact.isEmpty()) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-
-        }
-        return new ResponseEntity<>(contact, HttpStatus.OK);
-    }
-
     @Deprecated
     @GetMapping(value = "/getcurrenncy")
     public ResponseEntity getCurrency() {
@@ -184,8 +174,7 @@ public class ProjectController {
         contact.setCreatedBy(id);
         contact.setCreatedDate(LocalDateTime.now());
         contact.setDeleteFlag(Boolean.FALSE);
-        contact.setContactType(ContactTypeConstant.CUSTOMER);
-        if (contact.getContactId() != null && contact.getContactId() > 0) {
+        if (contact.getId() != null && contact.getId() > 0) {
             this.contactService.update(contact);
         } else {
 

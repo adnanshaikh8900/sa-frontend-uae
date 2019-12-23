@@ -77,13 +77,13 @@ public class ExpenseRestController {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User loggedInUser = userServiceNew.findByPK(userId);
 
-            List<ExpenseItemModel> items = new ArrayList();
-            if (expenseRestModel.getExpenseItemsString() != null && !expenseRestModel.getExpenseItemsString().isEmpty()) {
-                ObjectMapper mapper = new ObjectMapper();
-                items = mapper.readValue(expenseRestModel.getExpenseItemsString(), new TypeReference<ArrayList<ExpenseItemModel>>() {
-                });
-                expenseRestModel.setExpenseItems(items);
-            }
+//            List<ExpenseItemModel> items = new ArrayList();
+//            if (expenseRestModel.getExpenseItemsString() != null && !expenseRestModel.getExpenseItemsString().isEmpty()) {
+//                ObjectMapper mapper = new ObjectMapper();
+//                items = mapper.readValue(expenseRestModel.getExpenseItemsString(), new TypeReference<ArrayList<ExpenseItemModel>>() {
+//                });
+//                expenseRestModel.setExpenseItems(items);
+//            }
 
             Expense expense = expenseRestHelper.getExpenseEntity(expenseRestModel, loggedInUser);
             if (expense.getExpenseId() == null || expense.getExpenseId() == 0) {

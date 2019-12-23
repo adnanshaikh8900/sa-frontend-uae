@@ -50,15 +50,15 @@ public class ContactHelper {
         contactModel.setLastUpdatedBy(contact.getLastUpdatedBy());
         contactModel.setDeleteFlag(contact.getDeleteFlag());
         contactModel.setContactCode(contact.getContactId());
-        if (contact.getContactType() != 3) {
-            for (ContactType contactType : ContactUtil.contactTypeList()) {
-                if (contactType.getId().equals(contact.getContactType())) {
-                    contactModel.setContactType(contactType);
-                }
-            }
-        } else {
-            contactModel.setContactType(new ContactType(ContactTypeConstant.EMPLOYEE, "Employee"));
-        }
+//        if (contact.getContactType() != 3) {
+//            for (ContactType contactType : ContactUtil.contactTypeList()) {
+//                if (contactType.getId().equals(contact.getContactType())) {
+//                    contactModel.setContactType(contactType);
+//                }
+//            }
+//        } else {
+//            contactModel.setContactType(new ContactType(ContactTypeConstant.EMPLOYEE, "Employee"));
+//        }
         return contactModel;
     }
 
@@ -92,9 +92,9 @@ public class ContactHelper {
         contact.setLastUpdateDate(contactModel.getLastUpdateDate());
         contact.setLastUpdatedBy(contactModel.getLastUpdatedBy());
         contact.setDeleteFlag(contactModel.getDeleteFlag());
-        if (contactModel.getContactType() != null) {
-            contact.setContactType(contactModel.getContactType().getId());
-        }
+//        if (contactModel.getContactType() != null) {
+//            contact.setContactType(contactModel.getContactType().getId());
+//        }
 
         return contact;
     }

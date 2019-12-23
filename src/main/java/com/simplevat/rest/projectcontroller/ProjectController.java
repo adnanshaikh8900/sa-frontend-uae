@@ -184,7 +184,7 @@ public class ProjectController {
         contact.setCreatedBy(id);
         contact.setCreatedDate(LocalDateTime.now());
         contact.setDeleteFlag(Boolean.FALSE);
-        contact.setContactType(ContactTypeConstant.CUSTOMER);
+//        contact.setContactType(ContactTypeConstant.CUSTOMER);
         if (contact.getContactId() != null && contact.getContactId() > 0) {
             this.contactService.update(contact);
         } else {

@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import com.simplevat.constant.ContactType;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -135,9 +136,8 @@ public class Contact implements Serializable {
     @JoinColumn(name = "TITLE_CODE")
     private Title title;
     
-    @Basic
     @Column(name = "CONTACT_TYPE")
-    private Integer contactType;
+    private ContactType contactType;
 
     @PrePersist
     public void updateDates() {

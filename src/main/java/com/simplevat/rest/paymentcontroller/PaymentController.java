@@ -105,7 +105,7 @@ public class PaymentController implements Serializable {
     }
 
     @ApiOperation(value = "Get Payment By Id")
-    @GetMapping(value = "/getPaymentById")
+    @GetMapping(value = "/getpaymentbyid")
     public ResponseEntity getPaymentById(@RequestParam("paymentId") Integer paymentId) {
         try {
             PaymentPersistModel paymentModel = new PaymentPersistModel();

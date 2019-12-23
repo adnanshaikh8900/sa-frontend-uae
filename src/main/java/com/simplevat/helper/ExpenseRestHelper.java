@@ -111,13 +111,13 @@ public class ExpenseRestHelper implements Serializable {
         }
 
         Expense expense = expenseBuilder.build();
-        final Collection<ExpenseLineItem> items = model
-                .getExpenseItems()
-                .stream()
-                .map((item) -> convertToLineItem(item, expense))
-                .collect(Collectors.toList());
-
-        expense.setExpenseLineItems(items);
+//        final Collection<ExpenseLineItem> items = model
+//                .getExpenseItems()
+//                .stream()
+//                .map((item) -> convertToLineItem(item, expense))
+//                .collect(Collectors.toList());
+//
+//        expense.setExpenseLineItems(items);
         return expense;
     }
 

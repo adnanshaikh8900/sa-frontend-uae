@@ -134,7 +134,7 @@ public class EmployeeController implements Serializable {
             if (contactModel.getNonEmployeeUser() != null) {
                 selectedContact.setEmail(contactModel.getNonEmployeeUser().getUserEmail());
             }
-            selectedContact.setContactType(ContactTypeConstant.EMPLOYEE);
+//            selectedContact.setContactType(ContactTypeConstant.EMPLOYEE);
             if (selectedContact.getContactId() != null && selectedContact.getContactId() > 0) {
                 contactService.update(selectedContact);
             } else {

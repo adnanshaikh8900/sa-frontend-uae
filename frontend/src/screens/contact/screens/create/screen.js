@@ -214,6 +214,7 @@ class CreateContact extends React.Component {
                                     name=""
                                     required
                                     onChange={(value) => { props.handleChange("reference_code")(value) }}
+                                    className="tbd"
                                   />
                                 </FormGroup>
                               </Col>

@@ -14,7 +14,6 @@ import com.simplevat.entity.Expense;
 import com.simplevat.entity.User;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
-import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserServiceNew;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
@@ -58,9 +57,6 @@ public class ExpenseRestController {
             List<Expense> expenseList = expenseService.getExpenses();
             for (Expense expense : expenseList) {
                 ExpenseRestModel model = expenseRestHelper.getExpenseModel(expense);
-                if (expense.getExpencyAmountCompanyCurrency() != null) {
-                    model.setExpenseAmountCompanyCurrency(expense.getExpencyAmountCompanyCurrency());
-                }
                 expenses.add(model);
             }
             return new ResponseEntity(expenses, HttpStatus.OK);
@@ -76,15 +72,6 @@ public class ExpenseRestController {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User loggedInUser = userServiceNew.findByPK(userId);
-
-//            List<ExpenseItemModel> items = new ArrayList();
-//            if (expenseRestModel.getExpenseItemsString() != null && !expenseRestModel.getExpenseItemsString().isEmpty()) {
-//                ObjectMapper mapper = new ObjectMapper();
-//                items = mapper.readValue(expenseRestModel.getExpenseItemsString(), new TypeReference<ArrayList<ExpenseItemModel>>() {
-//                });
-//                expenseRestModel.setExpenseItems(items);
-//            }
-
             Expense expense = expenseRestHelper.getExpenseEntity(expenseRestModel, loggedInUser);
             if (expense.getExpenseId() == null || expense.getExpenseId() == 0) {
                 expenseService.persist(expense);

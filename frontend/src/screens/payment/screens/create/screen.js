@@ -22,28 +22,33 @@ import { Formik } from 'formik'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import * as Yup from 'yup'
+import { Loader } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
 import './style.scss'
-import * as createPaymentActions from './actions'
+import * as PaymentActions from '../../actions'
+import * as CreatePaymentActions from './actions'
+
 import {
   CommonActions
 } from 'services/global'
 
 const mapStateToProps = (state) => {
   return ({
-    // bank_list: state.payment.bank_list,
+    bank_list: state.payment.bank_list,
     currency_list: state.payment.currency_list,
     supplier_list: state.payment.supplier_list,
     project_list: state.payment.project_list,
+    invoice_list: state.payment.invoice_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
     commonActions: bindActionCreators(CommonActions, dispatch),
-    createPaymentActions: bindActionCreators(createPaymentActions, dispatch)
+    createPaymentActions: bindActionCreators(CreatePaymentActions, dispatch),
+    paymentActions: bindActionCreators(PaymentActions, dispatch)
   })
 }
 
@@ -54,18 +59,14 @@ class CreatePayment extends React.Component {
     this.state = {
       loading: false,
       initialVals: {
-        // bank: null,
+        bank: null,
         supplier: null,
-        invoiceReferenceNo: null,
+        invoiceId: null,
         amount: null,
-        payment_date: null,
         currency: null,
         project: null,
         payment_due_date: null,
         description: null,
-        receiptNo: null,
-        // referenceNo: null,
-        attachmentDescription: null
       },
       data: [
         {},
@@ -74,12 +75,12 @@ class CreatePayment extends React.Component {
       currentData: {}
     }
 
+    this.options = {
+    }
+    
     this.initializeData = this.initializeData.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.options = {
-    }
-
     this.renderActions = this.renderActions.bind(this)
     this.renderProductName = this.renderProductName.bind(this)
     this.renderQuantity = this.renderQuantity.bind(this)
@@ -95,10 +96,12 @@ class CreatePayment extends React.Component {
 
 
   initializeData() {
-    this.props.createPaymentActions.getCurrencyList()
-    // this.props.createPaymentActions.getBankList()
-    this.props.createPaymentActions.getSupplierList()
-    this.props.createPaymentActions.getProjectList()
+    this.props.paymentActions.getCurrencyList()
+    this.props.paymentActions.getBankList()
+    this.props.paymentActions.getSupplierList()
+    this.props.paymentActions.getProjectList()
+    this.props.paymentActions.getSupplierInvoiceList()
+
   }
 
   renderActions(cell, row) {
@@ -120,44 +123,28 @@ class CreatePayment extends React.Component {
 
   handleSubmit(data) {
     const {
-      // bank,
+      bank,
       supplier,
-      invoiceReferenceNo,
+      invoiceId,
       amount,
       payment_date,
       currency,
       project,
-      payment_due_date,
       description,
-      // referenceNo,
-      receiptNo,
-      attachmentDescription
     } = data
-    let formData = new FormData();
-    formData.append("paymentDate", payment_date !== null ? payment_date : "");
-    formData.append("paymentDueDate", payment_due_date !== null ? payment_due_date : "");
-    formData.append("description", description);
-    formData.append("invoiceReferenceNo", invoiceReferenceNo);
-    formData.append("amount", amount);
-    formData.append("receiptNo", receiptNo);
-    formData.append("attachmentDescription", attachmentDescription);
-    // if (bank && bank.value) {
-    //   formData.append("bankAccountId", bank.value);
-    // }
-    if (supplier && supplier.value) {
-      formData.append("supplierId", supplier.value);
+
+    const postData = {
+      paymentDate: payment_date !== null ? payment_date : "",
+      description: description,
+      invoiceId: invoiceId && invoiceId.value ? invoiceId.value : '',
+      invoiceAmount: amount,
+      bankAccountId: bank && bank.value ? bank.value: '' ,
+      supplierId: supplier && supplier.value ? supplier.value : '',
+      currencyCode: currency && currency.value ? currency.value : '',
+      projectId: project && project.value ? project.value : '',
     }
-    if (currency && currency.value) {
-      formData.append("currencyCode", currency.value);
-    }
-    if (project && project.value) {
-      formData.append("projectId", project.value);
-    }
-    if (this.uploadFile.files[0]) {
-      formData.append("attachmentFile", this.uploadFile.files[0]);
-    }
-    this.props.createPaymentActions.createPayment(formData).then(res => {
-      this.props.commonActions.tostifyAlert('success', 'Creted Successfully.')
+    this.props.createPaymentActions.createPayment(postData).then(res => {
+      this.props.commonActions.tostifyAlert('success', 'Created Successfully.')
       if (this.state.createMore) {
         this.setState({
           createMore: false
@@ -224,7 +211,7 @@ class CreatePayment extends React.Component {
   render() {
     const {
       currency_list,
-      // bank_list,
+      bank_list,
       supplier_list,
       invoice_list,
       project_list
@@ -232,11 +219,15 @@ class CreatePayment extends React.Component {
     const {
       initialVals
     } = this.state
-    const { data } = this.state
+    const { data ,loading} = this.state
 
     return (
       <div className="create-payment-screen">
         <div className="animated fadeIn">
+          {loading ? 
+          <Loader />
+          :
+          (
           <Row>
             <Col lg={12} className="mx-auto">
               <Card>
@@ -258,31 +249,31 @@ class CreatePayment extends React.Component {
                         this.handleSubmit(values)
                         resetForm(initialVals)
                       }}
-                    // validationSchema={Yup.object().shape({
-                    //   currency: Yup.object().shape({
-                    //     label: Yup.string().required(),
-                    //     value: Yup.string().required(),
-                    //   }),
-                    //   invoiceReferenceNo: Yup.string()
-                    //   .required('Reference is Required'),
-                    //   amount: Yup.string()
-                    //   .required('Amount is Required'),
-                    //   payment_date: Yup.string()
-                    //     .required('Payment Date is Required'),
-                    //   payment_due_date: Yup.string()
-                    //     .required('Payment Due Date is Required'),
-                    //   receiptNo: Yup.string()
-                    //     .required('Receipt Number is Required'),
-                    //   supplier: Yup.object().shape({
-                    //     label: Yup.string().required(),
-                    //     value: Yup.string().required(),
-                    //   }),
-                    //   project: Yup.object().shape({
-                    //     label: Yup.string().required(),
-                    //     value: Yup.string().required()
-                    //   })
-                    // })
-                    // }
+                  // validationSchema={Yup.object().shape({
+                  //   currency: Yup.object().shape({
+                  //     label: Yup.string().required(),
+                  //     value: Yup.string().required(),
+                  //   }),
+                  //   invoiceReferenceNo: Yup.string()
+                  //   .required('Reference is Required'),
+                  //   amount: Yup.string()
+                  //   .required('Amount is Required'),
+                  //   payment_date: Yup.string()
+                  //     .required('Payment Date is Required'),
+                  //   payment_due_date: Yup.string()
+                  //     .required('Payment Due Date is Required'),
+                  //   receiptNo: Yup.string()
+                  //     .required('Receipt Number is Required'),
+                  //   supplier: Yup.object().shape({
+                  //     label: Yup.string().required(),
+                  //     value: Yup.string().required(),
+                  //   }),
+                  //   project: Yup.object().shape({
+                  //     label: Yup.string().required(),
+                  //     value: Yup.string().required()
+                  //   })
+                  // })
+                  // }
                   >
                     {
                       props => (
@@ -308,17 +299,30 @@ class CreatePayment extends React.Component {
                                       }
                                     />
                                   </FormGroup>
+                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                    <i className="fa fa-dot-circle-o"></i> Supplier
+                                  </Button>
                                 </Col>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="invoiceReferenceNo">Invoice Reference Number</Label>
-                                    <Input
-                                      type="text"
-                                      id="invoiceReferenceNo"
-                                      name="invoiceReferenceNo"
-                                      placeholder="Enter Reference Number"
-                                      required
-                                      onChange={option => props.handleChange('invoiceReferenceNo')(option)}
+                                    <Label htmlFor="invoiceId">Invoice</Label>
+                                    <Select
+                                      className="select-default-width"
+                                      id="invoiceId"
+                                      name="invoiceId"
+                                      options={selectOptionsFactory.renderOptions('invoiceReferenceNumber', 'invoiceId', invoice_list)}
+                                      value={props.values.invoiceId}
+                                      onChange={option => {
+                                        let data;
+                                        data = invoice_list.filter(item => item.invoiceId === option.value);
+                                        props.handleChange('amount')(data[0]['invoiceAmount'])
+                                        props.handleChange('invoiceId')(option)
+                                      }}
+                                      className={
+                                        props.errors.invoiceId && props.touched.invoiceId
+                                          ? 'is-invalid'
+                                          : ''
+                                      }
                                     />
                                   </FormGroup>
                                 </Col>
@@ -332,6 +336,8 @@ class CreatePayment extends React.Component {
                                       name="amount"
                                       placeholder="Enter Amount"
                                       required
+                                      defaultValue={props.values.amount}
+                                      value={props.values.amount}
                                       onChange={option => props.handleChange('amount')(option)}
                                     />
 
@@ -396,22 +402,6 @@ class CreatePayment extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="payment_due_date">Payment Due</Label>
-                                    <div>
-                                      <DatePicker
-                                        className="form-control"
-                                        id="payment_due_date"
-                                        name="payment_due_date"
-                                        placeholderText=""
-                                        onChange={option => props.handleChange('payment_due_date')(option)}
-                                        selected={props.values.payment_due_date}
-                                        value={props.values.payment_due_date}
-                                      />
-                                    </div>
-                                  </FormGroup>
-                                </Col>
-                                {/* <Col lg={4}>
-                                  <FormGroup className="mb-3">
                                     <Label htmlFor="bank">Bank</Label>
                                     <Select
                                       className="select-default-width"
@@ -428,7 +418,7 @@ class CreatePayment extends React.Component {
                                     />
                                   </FormGroup>
                                 </Col>
-                                <Col lg={4}>
+                                {/* <Col lg={4}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="referenceNo">Reference Number</Label>
                                     <Input
@@ -463,57 +453,7 @@ class CreatePayment extends React.Component {
                                   </FormGroup>
                                 </Col>
                               </Row>
-                              <hr />
-                              <Row>
-                                <Col lg={8}>
-                                  <Row>
-                                    <Col lg={6}>
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="recieptNo">Reciept Number</Label>
-                                        <Input
-                                          type="text"
-                                          id="recieptNo"
-                                          name="recieptNo"
-                                          placeholder="Enter Reciept Number"
-                                          required
-                                          onChange={option => props.handleChange('recieptNo')(option)}
-                                        />
-                                      </FormGroup>
-                                    </Col>
-                                  </Row>
-                                  <Row>
-                                    <Col lg={12}>
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="attachmentDescription">Attachment Description</Label>
-                                        <Input
-                                          type="textarea"
-                                          name="attachmentDescription"
-                                          id="attachmentDescription"
-                                          rows="5"
-                                          placeholder="Description..."
-                                          onChange={option => props.handleChange('attachmentDescription')(option)}
-                                        />
-                                      </FormGroup>
-                                    </Col>
-                                  </Row>
-                                </Col>
-                                <Col lg={4}>
-                                  <Row>
-                                    <Col lg={12}>
-                                      <FormGroup className="mb-3">
-                                        <Label>Reciept Attachment</Label><br />
-                                        <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                          <i className="fa fa-upload"></i> Upload
-                                  </Button>
-                                        <input id="fileInput" ref={ref => {
-                                          this.uploadFile = ref;
-                                        }}
-                                          type="file" type="file" style={{ display: 'none' }} />
-                                      </FormGroup>
-                                    </Col>
-                                  </Row>
-                                </Col>
-                              </Row>
+
 
                             </Col>
                           </Row>
@@ -541,6 +481,7 @@ class CreatePayment extends React.Component {
               </Card>
             </Col>
           </Row>
+          )}
         </div>
       </div>
     )

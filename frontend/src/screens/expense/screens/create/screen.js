@@ -374,6 +374,20 @@ class CreateExpense extends React.Component {
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
+                            {/* <Col lg={4}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="currency">Expanse Name</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    id="currencyCode"
+                                    name="currencyCode"
+                                    options={selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', chart_of_account_list)}
+                                    value={props.values.currency}
+                                    onChange={option => props.handleChange('currency')(option)}
+
+                                  />
+                                </FormGroup>
+                              </Col> */}
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="payee">Payee</Label>
@@ -433,37 +447,6 @@ class CreateExpense extends React.Component {
                                   />
                                 </FormGroup>
                               </Col>
-                            </Row>
-                            <Row>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="bank">Bank</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    id="bank"
-                                    name="bank"
-                                    options={bank_account_list ? selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_account_list) : ''}
-                                    value={props.values.bank}
-                                    onChange={option => props.handleChange('bank')(option)}
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="paymentDate">Payment Date</Label>
-                                  <div>
-                                    <DatePicker
-                                      className="form-control"
-                                      id="paymentDate"
-                                      name="paymentDate"
-                                      placeholderText=""
-                                      selected={props.values.paymentDate}
-                                      onChange={option => props.handleChange('paymentDate')(option)}
-                                    />
-                                  </div>
-                                </FormGroup>
-                              </Col>
-
                             </Row>
                             <Row>
                               <Col lg={8}>
@@ -537,15 +520,15 @@ class CreateExpense extends React.Component {
                                 </Row>
                               </Col>
                             </Row>
-                            <hr />
-                            <Row>
+                            {/* <hr /> */}
+                            {/* <Row>
                               <Col lg={12} className="mb-3">
                                 <Button color="primary" className="btn-square mr-3" onClick={this.addRow}>
                                   <i className="fa fa-plus"></i> Add More
                             </Button>
                               </Col>
-                            </Row>
-                            <Row>
+                            </Row> */}
+                            {/* <Row>
                               <Col lg={12}>
                                 <BootstrapTable
                                   options={this.options}
@@ -627,7 +610,7 @@ class CreateExpense extends React.Component {
                                   </div>
                                 </div>
                               </Col>
-                            </Row>
+                            </Row> */}
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">

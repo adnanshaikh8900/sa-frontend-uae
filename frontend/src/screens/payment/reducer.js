@@ -15,9 +15,10 @@ const PaymentReducer = (state = initState, action) => {
   switch (type) {
 
     case PAYMENT.PAYMENT_LIST:
+      console.log(payload)
       return {
         ...state,
-        payment_list: Object.assign([], payload)
+        payment_list: Object.assign([], payload.data)
       }
     case PAYMENT.CURRENCY_LIST:
       return {

@@ -8,7 +8,6 @@ package com.simplevat.helper;
 import com.simplevat.contact.model.ExpenseItemModel;
 import com.simplevat.entity.CurrencyConversion;
 import com.simplevat.entity.Expense;
-import com.simplevat.entity.ExpenseLineItem;
 import com.simplevat.entity.User;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.rest.expenses.ExpenseRestModel;
@@ -47,22 +46,15 @@ public class ExpenseRestHelper implements Serializable {
     private VatCategoryService vatCategoryService;
 
     @Autowired
-    private TransactionCategoryService transactionCategoryService;
-
-    @Autowired
     private CurrencyService currencyService;
 
     @Autowired
     private ProjectService projectService;
 
-    @Autowired
-    private BankAccountService bankAccountService;
-
     public Expense getExpenseEntity(ExpenseRestModel model, User user) throws Exception {
 
         Expense.ExpenseBuilder expenseBuilder = Expense.builder()
                 .expenseId(model.getExpenseId() != null ? model.getExpenseId() : null)
-                .user(user)
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .deleteFlag(model.isDeleteFlag())
@@ -78,27 +70,12 @@ public class ExpenseRestHelper implements Serializable {
                 .receiptAttachmentDescription(model.getReceiptAttachmentDescription())
                 .receiptAttachmentPath(model.getReceiptAttachmentPath())
                 .receiptNumber(model.getReceiptNumber())
-                .versionNumber(model.getVersionNumber())
-                .receiptAttachmentName(model.getReceiptAttachmentName())
-                .receiptAttachmentContentType(model.getReceiptAttachmentContentType())
-                .expenseVATAmount(model.getExpenseVATAmount());
+                .versionNumber(model.getVersionNumber());
         if (model.getCurrencyCode() != null) {
             expenseBuilder.currency(currencyService.findByPK(model.getCurrencyCode()));
         }
         if (model.getProjectId() != null) {
             expenseBuilder.project(projectService.findByPK(model.getProjectId()));
-        }
-        if (model.getBankAccountId() != null) {
-            expenseBuilder.bankAccount(bankAccountService.findByPK(model.getBankAccountId()));
-        }
-        CurrencyConversion currencyConversion = currencyService.getCurrencyRateFromCurrencyConversion(model.getCurrencyCode());
-        if (currencyConversion != null) {
-            expenseBuilder.expencyAmountCompanyCurrency(model.getExpenseAmount().divide(currencyConversion.getExchangeRate(), 9, RoundingMode.HALF_UP));
-        } else {
-            expenseBuilder.expencyAmountCompanyCurrency(model.getExpenseAmount());
-        }
-        if (model.getReceiptAttachmentBinary() != null) {
-            expenseBuilder.receiptAttachmentBinary(model.getReceiptAttachmentBinary());
         }
 
         if (model.getExpenseId() == null || model.getExpenseId() == 0) {
@@ -111,13 +88,6 @@ public class ExpenseRestHelper implements Serializable {
         }
 
         Expense expense = expenseBuilder.build();
-//        final Collection<ExpenseLineItem> items = model
-//                .getExpenseItems()
-//                .stream()
-//                .map((item) -> convertToLineItem(item, expense))
-//                .collect(Collectors.toList());
-//
-//        expense.setExpenseLineItems(items);
         return expense;
     }
 
@@ -125,9 +95,6 @@ public class ExpenseRestHelper implements Serializable {
         try {
             ExpenseRestModel expenseModel = new ExpenseRestModel();
             expenseModel.setExpenseId(entity.getExpenseId());
-            if (entity.getUser() != null) {
-                expenseModel.setUserId(entity.getUser().getUserId());
-            }
             expenseModel.setCreatedBy(entity.getCreatedBy());
             expenseModel.setCreatedDate(entity.getCreatedDate());
             if (entity.getCurrency() != null) {
@@ -143,13 +110,9 @@ public class ExpenseRestHelper implements Serializable {
             expenseModel.setExpenseDescription(entity.getExpenseDescription());
             expenseModel.setLastUpdateDate(entity.getLastUpdateDate());
             expenseModel.setLastUpdatedBy(entity.getLastUpdateBy());
-            expenseModel.setExpenseVATAmount(entity.getExpenseVATAmount());
             expenseModel.setLastUpdatedBy(entity.getLastUpdateBy());
             if (entity.getProject() != null) {
                 expenseModel.setProjectId(entity.getProject().getProjectId());
-            }
-            if (entity.getBankAccount() != null) {
-                expenseModel.setBankAccountId(entity.getBankAccount().getBankAccountId());
             }
             expenseModel.setReceiptAttachmentDescription(entity.getReceiptAttachmentDescription());
             expenseModel.setReceiptAttachmentPath(entity.getReceiptAttachmentPath());
@@ -157,70 +120,14 @@ public class ExpenseRestHelper implements Serializable {
             if (entity.getTransactionCategory() != null) {
                 expenseModel.setTransactionCategory(entity.getTransactionCategory().getTransactionCategoryId());
             }
-            if (entity.getExpenseContact() != null) {
-                expenseModel.setExpenseContact(entity.getExpenseContact());
-                expenseModel.setExpenseContactId(entity.getExpenseContact().getContactId());
-            }
-            if (entity.getTransactionType() != null) {
-                expenseModel.setTransactionType(entity.getTransactionType().getTransactionTypeCode());
-            }
+
             expenseModel.setVersionNumber(entity.getVersionNumber());
-            expenseModel.setReceiptAttachmentBinary(entity.getReceiptAttachmentBinary());
-            expenseModel.setReceiptAttachmentName(entity.getReceiptAttachmentName());
-            expenseModel.setReceiptAttachmentContentType(entity.getReceiptAttachmentContentType());
-            expenseModel.setExpenseAmountCompanyCurrency(entity.getExpencyAmountCompanyCurrency());
-            if (entity.getExpenseLineItems() != null && entity.getExpenseLineItems().size() > 0) {
-                List<ExpenseLineItem> expenseLineItems = new ArrayList<>(entity.getExpenseLineItems());
-                if (expenseLineItems.get(0) != null) {
-                    VatCategory vatCategory = expenseLineItems.get(0).getExpenseLineItemVat();
-                    if (vatCategory != null) {
-                        expenseModel.setVat(vatCategory.getVat());
-                    }
-                }
-                final List<ExpenseItemModel> items = expenseLineItems.stream()
-                        .map((lineItem) -> convertToItemModel(lineItem)).collect(Collectors.toList());
-                expenseModel.setExpenseItems(items);
-            }
+
             return expenseModel;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @NonNull
-    private ExpenseItemModel convertToItemModel(@NonNull final ExpenseLineItem expenseLineItem) {
-
-        final ExpenseItemModel model = new ExpenseItemModel();
-        model.setId(expenseLineItem.getExpenseLineItemId());
-        model.setQuantity(expenseLineItem.getExpenseLineItemQuantity());
-        model.setUnitPrice(expenseLineItem.getExpenseLineItemUnitPrice());
-        model.setSubTotal(expenseLineItem.getExpenseLineItemTotalPrice());
-        if (expenseLineItem.getExpenseLineItemVat() != null) {
-            model.setVatCategoryId(expenseLineItem.getExpenseLineItemVat().getId());
-        }
-        if (expenseLineItem.getTransactionCategory() != null) {
-            model.setTransactionCategoryId(expenseLineItem.getTransactionCategory().getTransactionCategoryId());
-        }
-        model.setVersionNumber(expenseLineItem.getVersionNumber());
-        updateSubTotal(model);
-        return model;
-    }
-
-    @NonNull
-    private ExpenseLineItem convertToLineItem(@NonNull final ExpenseItemModel expenseItemModel, @NonNull final Expense expense) {
-        final ExpenseLineItem item = new ExpenseLineItem();
-        if (expenseItemModel.getId() > 0) {
-            item.setExpenseLineItemId(expenseItemModel.getId());
-        }
-        item.setExpenseLineItemQuantity(expenseItemModel.getQuantity());
-        item.setExpenseLineItemUnitPrice(expenseItemModel.getUnitPrice());
-        item.setExpenseLineItemTotalPrice(expenseItemModel.getSubTotal());
-        item.setExpenseLineItemVat(vatCategoryService.findByPK(expenseItemModel.getVatCategoryId()));
-        item.setTransactionCategory(transactionCategoryService.findByPK(expenseItemModel.getTransactionCategoryId()));
-        item.setVersionNumber(expenseItemModel.getVersionNumber());
-        item.setExpense(expense);
-        return item;
     }
 
     private void updateSubTotal(@NonNull final ExpenseItemModel expenseItemModel) {

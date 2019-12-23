@@ -57,7 +57,7 @@ class Payment extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       stateOptions: [
         { value: 'Paid', label: 'Paid' },
         { value: 'Unpaid', label: 'Unpaid' },
@@ -94,7 +94,13 @@ class Payment extends React.Component {
   }
 
   initializeData() {
-    this.props.paymentActions.getPaymentList()
+    this.props.paymentActions.getPaymentList().then(res=>{
+        if(res.status === 200) {
+          this.setState({loading: false})
+        }
+    }).catch(err => {
+      this.setState({loading: false})
+    })
   }
 
   inputHandler(key, value) {
@@ -104,7 +110,7 @@ class Payment extends React.Component {
   }
 
   goToDetail(row) {
-    this.props.history.push('/admin/expense/payment/detail')
+    this.props.history.push('/admin/expense/payment/detail',{id: row.paymentId})
   }
 
   bulkDeletePayments() {
@@ -183,7 +189,7 @@ class Payment extends React.Component {
   }
 
   renderDate(cell, rows) {
-    return moment(cell[0].paymentDate).format('DD-MM-YYYY')
+    return rows['paymentDate'] !== null ? moment(rows['paymentDate']).format('DD-MM-YYYY') : ''
   }
 
 
@@ -297,7 +303,7 @@ class Payment extends React.Component {
                             Reference #
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="amount"
+                            dataField="invoiceAmount"
                             dataSort
                           >
                             Amount

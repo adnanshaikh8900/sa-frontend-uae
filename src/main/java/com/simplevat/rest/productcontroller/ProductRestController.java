@@ -49,7 +49,7 @@ public class ProductRestController implements Serializable {
     private JwtTokenUtil jwtTokenUtil;
 
     @ApiOperation(value = "Get Product List")
-    @GetMapping(value = "/getList")
+    @PostMapping(value = "/getList")
     public ResponseEntity getProductList(@RequestBody ProductRequestFilterModel filterModel, HttpServletRequest request) {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         Map<ProductFilterEnum, Object> filterDataMap = new HashMap();

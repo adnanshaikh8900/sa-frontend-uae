@@ -90,7 +90,9 @@ public class ProductRestHelper {
             ProductListModel productModel = new ProductListModel();
             productModel.setId(product.getProductID());
             productModel.setName(product.getProductName());
-            productModel.setVatPercentage(product.getVatCategory().getVatLabel());
+            if (product.getVatCategory() != null) {
+                productModel.setVatPercentage(product.getVatCategory().getVatLabel());
+            }
             productModel.setDescription(product.getProductDescription());
             productModel.setProductCode(product.getProductCode());
             productModel.setUnitPrice(product.getUnitPrice());

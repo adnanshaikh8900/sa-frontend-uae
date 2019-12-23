@@ -1,6 +1,6 @@
 package com.simplevat.entity;
 
-import com.simplevat.enums.ContactType;
+import com.simplevat.enums.ContactTypeEnum;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -34,9 +34,9 @@ public class Contact implements Serializable {
     private static final long serialVersionUID = 6914121175305098995L;
 
     @Id
-    @Column(name = "CONTACT_ID")
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "INCREMENT_INITIAL_VALUE")
-    private Integer contactId;
+    private Integer id;
     @Basic
     @Column(name = "FIRST_NAME")
     private String firstName;
@@ -46,50 +46,67 @@ public class Contact implements Serializable {
     @Basic
     @Column(name = "LAST_NAME")
     private String lastName;
+        
+    @Enumerated(EnumType.STRING)
+    @Column(name = "CONTACT_TYPE")
+    private ContactTypeEnum contactType;
+    
     @Basic
     @Column(name = "ORGANIZATION")
     private String organization;
-    @Basic
-    @Column(name = "EMAIL")
-    private String email;
-    @Basic
-    @Column(name = "BILLING_EMAIL")
-    private String billingEmail;
-    @Basic
-    @Column(name = "TELEPHONE")
-    private String telephone;
-    @Basic
-    @Column(name = "MOBILE_NUMBER")
-    private String mobileNumber;
-    @Basic
-    @Column(name = "INVOICING_ADDRESS_LINE1")
-    private String invoicingAddressLine1;
-    @Basic
-    @Column(name = "INVOICING_ADDRESS_LINE2")
-    private String invoicingAddressLine2;
-    @Basic
-    @Column(name = "INVOICING_ADDRESS_LINE3")
-    private String invoicingAddressLine3;
-    @Basic
-    @Column(name = "CITY")
-    private String city;
-    @Basic
-    @Column(name = "STATE_REGION")
-    private String stateRegion;
-    @Basic
-    @Column(name = "POST_ZIP_CODE")
-    private String postZipCode;
+    
     @Basic
     @Column(name = "PO_BOX_NUMBER")
     private String poBoxNumber;
-
+    
+    @Basic
+    @Column(name = "EMAIL")
+    private String email;
+    
+    @Basic
+    @Column(name = "TELEPHONE")
+    private String telephone;
+    
+    @Basic
+    @Column(name = "MOBILE_NUMBER")
+    private String mobileNumber;
+    
+    @Basic
+    @Column(name = "ADDRESS_LINE1")
+    private String addressLine1;
+    
+    @Basic
+    @Column(name = "ADDRESS_LINE2")
+    private String addressLine2;
+    
+    @Basic
+    @Column(name = "ADDRESS_LINE3")
+    private String addressLine3;    
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "COUNTRY_CODE")
+    private Country country;
+    
+    @Basic
+    @Column(name = "POST_ZIP_CODE")
+    private String postZipCode;
+    
+    @Basic
+    @Column(name = "BILLING_EMAIL")
+    private String billingEmail;
+    
     @Basic
     @Column(name = "CONTRACT_PO_NUMBER")
     private String contractPoNumber;
+    
     @Basic
     @Column(name = "VAT_REGISTRATION_NUMBER")
     private String vatRegistrationNumber;
-
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CURRENCY_CODE")
+    private Currency currency;
+    
     @Basic(optional = false)
     @Column(name = "CREATED_BY")
     private Integer createdBy;
@@ -119,26 +136,6 @@ public class Contact implements Serializable {
     @Basic(optional = false)
     @Version
     private Integer versionNumber;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COUNTRY_CODE")
-    private Country country;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INVOICE_LANGUAGE_CODE")
-    private Language language;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE")
-    private Currency currency;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TITLE_CODE")
-    private Title title;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "CONTACT_TYPE")
-    private ContactType contactType;
 
     @PrePersist
     public void updateDates() {

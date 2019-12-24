@@ -1,5 +1,6 @@
 package com.simplevat.dao;
 
+import com.simplevat.constant.dbfilter.DbFilter;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,21 +50,28 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
     }
 
     @Override
-    public List<ENTITY> executeQuery(Map<String, Object> parameterDataMap) {
+    public List<ENTITY> executeQuery(List<DbFilter> dbFilters) {
         StringBuilder queryBuilder = new StringBuilder("SELECT o FROM ").append(entityClass.getName()).append(" o ");
         int i = 0;
-        for (Map.Entry<String, Object> entry : parameterDataMap.entrySet()) {
-            if (entry.getValue() != null && !entry.getValue().equals("")) {
+        for (DbFilter dbFilter : dbFilters) {
+            if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
                 if (i > 0) {
                     queryBuilder.append(" and ");
                 } else {
                     queryBuilder.append(" where ");
                 }
-                queryBuilder.append("o.").append(entry.getKey()).append(" = ").append(entry.getValue()).append("  ");
+                queryBuilder.append("o.").append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
                 i++;
             }
         }
+
         TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
+        for (DbFilter dbFilter : dbFilters) {
+            if (dbFilter.getValue() != null) {
+                typedQuery.setParameter(dbFilter.getDbCoulmnName(), dbFilter.getValue());
+            }
+        }
+
         List<ENTITY> result = typedQuery.getResultList();
         return result;
     }

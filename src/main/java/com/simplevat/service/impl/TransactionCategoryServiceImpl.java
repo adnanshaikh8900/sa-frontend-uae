@@ -1,5 +1,6 @@
 package com.simplevat.service.impl;
 
+import com.simplevat.constant.dbfilter.DbFilter;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -15,6 +16,7 @@ import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.TransactionCategoryService;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +44,11 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
     public List<TransactionCategory> findAllTransactionCategoryByUserId(Integer userId) {
         Map<String, Object> parameterDataMap = new HashMap();
         parameterDataMap.put("createdBy", userId);
-        return getDao().executeQuery(parameterDataMap);
+        DbFilter dbFilter = DbFilter.builder()
+                .dbCoulmnName("createdBy")
+                .condition(" = :createdBy")
+                .value(userId).build();
+        return getDao().executeQuery(Arrays.asList(dbFilter));
     }
 
     @Override

@@ -18,7 +18,6 @@ import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TitleService;
-import com.simplevat.constant.ContactTypeConstant;
 import com.simplevat.contact.model.ContactModel;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -174,7 +173,7 @@ public class ProjectController {
         contact.setCreatedBy(id);
         contact.setCreatedDate(LocalDateTime.now());
         contact.setDeleteFlag(Boolean.FALSE);
-        if (contact.getId() != null && contact.getId() > 0) {
+        if (contact.getContactId() != null && contact.getContactId() > 0) {
             this.contactService.update(contact);
         } else {
 

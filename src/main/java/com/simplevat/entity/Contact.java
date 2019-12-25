@@ -1,6 +1,5 @@
 package com.simplevat.entity;
 
-import com.simplevat.enums.ContactTypeEnum;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -34,9 +33,9 @@ public class Contact implements Serializable {
     private static final long serialVersionUID = 6914121175305098995L;
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "CONTACT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "INCREMENT_INITIAL_VALUE")
-    private Integer id;
+    private Integer contactId;
     @Basic
     @Column(name = "FIRST_NAME")
     private String firstName;
@@ -47,9 +46,8 @@ public class Contact implements Serializable {
     @Column(name = "LAST_NAME")
     private String lastName;
         
-    @Enumerated(EnumType.STRING)
     @Column(name = "CONTACT_TYPE")
-    private ContactTypeEnum contactType;
+    private Integer contactType;
     
     @Basic
     @Column(name = "ORGANIZATION")

@@ -50,13 +50,11 @@ public class ProductRestController implements Serializable {
 
     @ApiOperation(value = "Get Product List")
     @PostMapping(value = "/getList")
-    public ResponseEntity getProductList(@RequestBody ProductRequestFilterModel filterModel, HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+    public ResponseEntity getProductList(ProductRequestFilterModel filterModel, HttpServletRequest request) {
         Map<ProductFilterEnum, Object> filterDataMap = new HashMap();
         filterDataMap.put(ProductFilterEnum.PRODUCT_NAME, filterModel.getName());
         filterDataMap.put(ProductFilterEnum.PRODUCT_CODE, filterModel.getProductCode());
         filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE, filterModel.getVatPercentage());
-        filterDataMap.put(ProductFilterEnum.USER_ID, userId);
         List<Product> products = productService.getProductList(filterDataMap);
         if (products == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);

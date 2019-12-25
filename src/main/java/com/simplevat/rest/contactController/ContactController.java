@@ -6,6 +6,7 @@
 package com.simplevat.rest.contactController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ContactTypeConstant;
 import com.simplevat.entity.Contact;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CountryService;
@@ -13,14 +14,13 @@ import com.simplevat.service.CurrencyService;
 import com.simplevat.service.LanguageService;
 import com.simplevat.service.TitleService;
 import com.simplevat.service.UserServiceNew;
-import com.simplevat.constant.ContactTypeConstant;
-import com.simplevat.contact.model.ContactModel;
-import com.simplevat.contact.model.ContactViewModel;
-import com.simplevat.enums.ContactTypeEnum;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.security.JwtTokenUtil;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,22 +44,10 @@ public class ContactController implements Serializable {
     private ContactService contactService;
 
     @Autowired
-    private CountryService countryService;
-
-    @Autowired
-    private LanguageService languageService;
-
-    @Autowired
-    private CurrencyService currencyService;
-
-    @Autowired
-    private TitleService titleService;
-
-    @Autowired
-    private UserServiceNew userServiceNew;
-
-    @Autowired
     private ContactHelper contactHelper;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
 //    private int totalEmployees;
 //
@@ -86,30 +74,35 @@ public class ContactController implements Serializable {
 //        }
 //        totalContacts++;
 //    }
-
     @GetMapping(value = "/getSupplierList")
-    public ResponseEntity getSupplierList(@RequestBody PaginationModel paginationModel) {
+    public ResponseEntity getSupplierList(PaginationModel paginationModel) throws IOException {
+        if (paginationModel == null) {
+            paginationModel = new PaginationModel();
+        }
         List<ContactListModel> contactListModels = new ArrayList<>();
-        List<Contact> contactList = contactService.getContacts(ContactTypeEnum.SUPPLIER, paginationModel.getPageNo(), paginationModel.getPageSize());
-        contactList.forEach(cobtact -> contactListModels.add(contactHelper.getListModel(cobtact)));
-        return new ResponseEntity<>(contactList, HttpStatus.OK);
+        List<Contact> contactList = contactService.getContacts(ContactTypeConstant.SUPPLIER, paginationModel.getPageNo(), paginationModel.getPageSize());
+        contactList.forEach(contact -> contactListModels.add(contactHelper.getListModel(contact)));
+        return new ResponseEntity<>(contactListModels, HttpStatus.OK);
     }
 
-     @GetMapping(value = "/getCustomerList")
-    public ResponseEntity getCustomerList(@RequestBody PaginationModel paginationModel) {
+    @GetMapping(value = "/getCustomerList")
+    public ResponseEntity getCustomerList(PaginationModel paginationModel) {
         List<ContactListModel> contactListModels = new ArrayList<>();
-        List<Contact> contactList = contactService.getContacts(ContactTypeEnum.CUSTOMER, paginationModel.getPageNo(), paginationModel.getPageSize());
+        List<Contact> contactList = contactService.getContacts(ContactTypeConstant.CUSTOMER, paginationModel.getPageNo(), paginationModel.getPageSize());
         contactList.forEach(cobtact -> contactListModels.add(contactHelper.getListModel(cobtact)));
         return new ResponseEntity<>(contactList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/save")
-    public ResponseEntity save(@RequestBody Contact contact, @RequestParam(value = "id") Integer id) {
+    public ResponseEntity save(@RequestBody Contact contact, HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+
         try {
-            if (contact.getId() != null && contact.getId() > 0) {
+            if (contact.getContactId() != null && contact.getContactId() > 0) {
                 contactService.update(contact);
+                contact.setLastUpdatedBy(userId);
             } else {
-                contact.setCreatedBy(1);
+                contact.setCreatedBy(userId);
                 contactService.persist(contact);
             }
             return new ResponseEntity<>(HttpStatus.OK);
@@ -121,25 +114,32 @@ public class ContactController implements Serializable {
     }
 
     @DeleteMapping(value = "/delete")
-    public ResponseEntity delete(@RequestParam(value = "id") Integer id) {
+    public ResponseEntity delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+
         Contact contact1 = contactService.findByPK(id);
         if (contact1 == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         contact1.setDeleteFlag(Boolean.TRUE);
+        contact1.setLastUpdatedBy(userId);
         contactService.update(contact1);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
     @DeleteMapping(value = "/deletes")
-    public ResponseEntity deletes(@RequestBody DeleteModel ids) {
+    public ResponseEntity deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
+
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+
         try {
             contactService.deleleByIds(ids.getIds());
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

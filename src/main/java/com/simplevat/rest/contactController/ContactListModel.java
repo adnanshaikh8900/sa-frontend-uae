@@ -5,7 +5,6 @@
  */
 package com.simplevat.rest.contactController;
 
-import com.simplevat.enums.ContactTypeEnum;
 import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Builder;
@@ -39,7 +38,7 @@ public class ContactListModel {
 
     private String title;
 
-    private ContactTypeEnum contactType;
+    private Integer contactType;
 
     private Date nextDueDate;
 

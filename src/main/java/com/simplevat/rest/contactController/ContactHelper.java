@@ -18,7 +18,7 @@ public class ContactHelper {
 
      public ContactListModel getListModel(Contact contact) {
         return ContactListModel.builder()
-                .id(contact.getId())
+                .id(contact.getContactId())
                 .contactType(contact.getContactType())
                 .currencySymbol(contact.getCurrency().getCurrencySymbol())
                 .email(contact.getEmail())

@@ -3,7 +3,6 @@ package com.simplevat.service.impl;
 import com.simplevat.dao.ContactDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.Contact;
-import com.simplevat.enums.ContactTypeEnum;
 import com.simplevat.service.ContactService;
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +21,13 @@ public class ContactServiceImpl extends ContactService {
     private ContactDao contactDao;
     
     @Override
-    public List<Contact> getContacts(ContactTypeEnum contactTypeEnum, Integer pageIndex, Integer noOfRecorgs) {
-        return this.contactDao.getContacts(contactTypeEnum, pageIndex, noOfRecorgs);
+    public List<Contact> getContacts(Integer contactType, Integer pageIndex, Integer noOfRecorgs) {
+        return this.contactDao.getContacts(contactType, pageIndex, noOfRecorgs);
     }
     
     @Override
-    public List<Contact> getContacts(ContactTypeEnum contactTypeEnum, final String searchQuery, int contactType) {
-        return contactDao.getContacts(contactTypeEnum, searchQuery, contactType);
+    public List<Contact> getContacts(Integer contactType, final String searchQuery) {
+        return contactDao.getContacts(contactType, searchQuery);
     }
     
     @Override

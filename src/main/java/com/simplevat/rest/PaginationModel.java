@@ -17,7 +17,7 @@ public class PaginationModel {
     private Integer pageSize;
     
     
-    public Integer getStart() {
+    public Integer getPageNo() {
         if (pageNo == null) {
             pageNo = 0;
         }else{

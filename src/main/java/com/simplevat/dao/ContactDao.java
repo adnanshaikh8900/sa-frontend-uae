@@ -1,7 +1,6 @@
 package com.simplevat.dao;
 
 import com.simplevat.entity.Contact;
-import com.simplevat.enums.ContactTypeEnum;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +10,9 @@ import java.util.Optional;
  */
 public interface ContactDao extends Dao<Integer, Contact> {
 
-    public List<Contact> getContacts(ContactTypeEnum contactTypeEnum, Integer pageNo, Integer pageSize);
+    public List<Contact> getContacts(Integer contactType, Integer pageNo, Integer pageSize);
     
-    public List<Contact> getContacts(ContactTypeEnum contactTypeEnum, final String searchQuery, int contactType);
+    public List<Contact> getContacts(Integer contactType, final String searchQuery);
 
     public Optional<Contact> getContactByEmail(String Email);
 

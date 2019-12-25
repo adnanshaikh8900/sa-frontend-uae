@@ -49,7 +49,7 @@ public class PaymentModelHelper {
             paymentModel.setBankAccountId(payment.getBankAccount().getBankAccountId());
         }
         if (payment.getSupplier() != null) {
-            paymentModel.setSupplierId(payment.getSupplier().getId());
+            paymentModel.setSupplierId(payment.getSupplier().getContactId());
         }
         if (payment.getInvoice() != null) {
             paymentModel.setInvoiceId(payment.getInvoice().getInvoiceId());

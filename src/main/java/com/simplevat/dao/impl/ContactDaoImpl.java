@@ -20,7 +20,7 @@ import org.apache.commons.collections4.CollectionUtils;
 public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements ContactDao {
 
     @Override
-    public List<Contact> getContacts(ContactTypeEnum contactTypeEnum, Integer pageNo, Integer pageSize) {
+    public List<Contact> getContacts(Integer contactType, Integer pageNo, Integer pageSize) {
         List<Contact> contacts = getEntityManager().createNamedQuery("allContacts", Contact.class)
                 .setMaxResults(pageSize)
                 .setFirstResult(pageNo * pageSize).getResultList();
@@ -28,7 +28,7 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
     }
 
     @Override
-    public List<Contact> getContacts(ContactTypeEnum contactTypeEnum, final String searchQuery, int contactType) {
+    public List<Contact> getContacts(Integer contactType, final String searchQuery) {
         List<Contact> contacts = getEntityManager()
                 .createNamedQuery("Contact.contactsByName", Contact.class)
                 .setParameter("name", "%" + searchQuery + "%")

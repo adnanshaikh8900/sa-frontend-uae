@@ -56,6 +56,9 @@ public class ContactHelper {
         contact.setFirstName(contactPersistModel.getFirstName());
         contact.setMiddleName(contactPersistModel.getMiddleName());
         contact.setLastName(contactPersistModel.getLastName());
+        contact.setAddressLine1(contactPersistModel.getAddressLine1());
+        contact.setAddressLine2(contactPersistModel.getAddressLine2());
+        contact.setAddressLine3(contactPersistModel.getAddressLine3());
         contact.setMobileNumber(contactPersistModel.getMobileNumber());
         contact.setOrganization(contactPersistModel.getOrganization());
         contact.setPoBoxNumber(contactPersistModel.getPoBoxNumber());
@@ -85,6 +88,9 @@ public class ContactHelper {
                 .organization(contact.getOrganization())
                 .poBoxNumber(contact.getPoBoxNumber())
                 .postZipCode(contact.getPostZipCode())
+                .addressLine1(contact.getAddressLine1())
+                .addressLine2(contact.getAddressLine2())
+                .addressLine3(contact.getAddressLine3())
                 .telephone(contact.getTelephone())
                 .vatRegistrationNumber(contact.getVatRegistrationNumber());
         if (contact.getCountry() != null) {

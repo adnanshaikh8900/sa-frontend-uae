@@ -5,20 +5,17 @@
  */
 package com.simplevat.rest.expenses;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.contact.model.ExpenseItemModel;
+import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.User;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.UserServiceNew;
+import com.simplevat.utils.FileHelper;
 import io.swagger.annotations.ApiOperation;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +49,9 @@ public class ExpenseRestController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private FileHelper fileHelper;
+
     @ApiOperation(value = "Get Expense List")
     @RequestMapping(method = RequestMethod.GET, value = "/getList")
     public ResponseEntity getExpenseList() {
@@ -77,8 +77,11 @@ public class ExpenseRestController {
             User loggedInUser = userServiceNew.findByPK(userId);
             Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
             expense.setCreatedBy(userId);
-            expense.setDeleteFlag(false);
             expense.setCreatedDate(LocalDateTime.now());
+            if (!expenseModel.getAttachmentFile().isEmpty()) {
+                String fileName = fileHelper.saveFile(expenseModel.getAttachmentFile(), FileTypeEnum.EXPENSE);
+                expense.setReceiptAttachmentPath(fileName);
+            }
             expenseService.persist(expense);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {

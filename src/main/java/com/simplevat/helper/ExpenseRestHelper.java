@@ -12,6 +12,7 @@ import com.simplevat.entity.VatCategory;
 import com.simplevat.rest.expenses.ExpenseModel;
 import com.simplevat.rest.expenses.ExpenseRestModel;
 import com.simplevat.service.CurrencyService;
+import com.simplevat.service.ExpenseService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
@@ -46,15 +47,18 @@ public class ExpenseRestHelper implements Serializable {
     private ProjectService projectService;
 
     @Autowired
+    private ExpenseService expenseService;
+
+    @Autowired
     private TransactionCategoryService transactionCategoryService;
 
-//    @Autowired
-//    private EmployeeService emploayeeService;
     public Expense getExpenseEntity(ExpenseModel model, User user) throws Exception {
-
-        Expense.ExpenseBuilder expenseBuilder = Expense.builder()
-                .expenseId(model.getExpenseId() != null ? model.getExpenseId() : null)
-                .expenseAmount(model.getExpenseAmount())
+        Expense expense = new Expense();
+        if (model.getExpenseId() != null) {
+            expense = expenseService.findByPK(model.getExpenseId());
+        }
+        Expense.ExpenseBuilder expenseBuilder = expense.toBuilder();
+        expenseBuilder.expenseAmount(model.getExpenseAmount())
                 .payee(model.getPayee());
         if (model.getExpenseDate() != null) {
             LocalDateTime expenseDate = Instant.ofEpochMilli(model.getExpenseDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -72,12 +76,8 @@ public class ExpenseRestHelper implements Serializable {
         if (model.getExpenseCategory() != null) {
             expenseBuilder.transactionCategory(transactionCategoryService.findByPK(model.getExpenseCategory()));
         }
-//        if (model.getEmployeeId()!= null) {
-//            expenseBuilder.employee(emploayeeService.findByPK(model.getEmployeeId()));
-//        }     
-//     
-        Expense expense = expenseBuilder.build();
-        return expense;
+
+        return expenseBuilder.build();
     }
 
     public ExpenseModel getExpenseModel(Expense entity) {

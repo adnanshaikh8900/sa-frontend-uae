@@ -29,7 +29,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 public class Expense implements Serializable {
 

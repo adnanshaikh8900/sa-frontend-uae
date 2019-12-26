@@ -49,7 +49,7 @@ export const updateExpense = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: 'rest/expense/save',
+      url: 'rest/expense/update',
       data: obj
     }
     return authFileUploadApi(data).then(res => {

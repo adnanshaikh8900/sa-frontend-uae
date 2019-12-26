@@ -85,6 +85,9 @@ import DetailProject from './project/screens/detail'
 import VatCode from './vat_code'
 import CreateVatCode from './vat_code/screens/create'
 import DetailVatCode from './vat_code/screens/detail'
+import ProductCategory from './product_category'
+import CreateProductCategory from './product_category/screens/create'
+import DetailProductCategory from './product_category/screens/detail'
 import Currency from './currency'
 import CreateCurrency from './currency/screens/create'
 import DetailCurrency from './currency/screens/detail'
@@ -190,6 +193,10 @@ export {
   VatCode,
   CreateVatCode,
   DetailVatCode,
+  
+  ProductCategory,
+  CreateProductCategory,
+  DetailProductCategory,
   Currency,
   CreateCurrency,
   DetailCurrency,

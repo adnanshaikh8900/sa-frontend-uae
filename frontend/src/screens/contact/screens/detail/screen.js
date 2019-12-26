@@ -77,55 +77,55 @@ class DetailContact extends React.Component {
       this.props.contactActions.getCountryList();
       this.props.contactActions.getCurrencyList();
       this.props.detailContactActions.getContactById(id).then(res => {
-        this.setState({
-          loading: false,
-          initValue: {
-            billingEmail: res.data.billingEmail && res.data.billingEmail !== null ? res.data.billingEmail : '',
-            // city: res.data.city ? {
-            //   label: res.data.city.name,
-            //   value: res.data.city.value
-            // } : '',
-            city: res.data.city && res.data.city,
-            contactType: res.data.contactType ? {
-              label: res.data.contactType.name,
-              value: res.data.contactType.id
-            } : '',
-            contractPoNumber: res.data.contractPoNumber && res.data.contractPoNumber ? res.data.contractPoNumber : '',
-            country: res.data.country && res.data.country !== null? {
-              label: res.data.country.countryName,
-              value: res.data.country.countryCode
-            } : '',
-            currency: res.data.currency && res.data.currency !== null ? {
-              label: res.data.currency.currencyName,
-              value: res.data.currency.currencyCode 
-            } : '',
-            email: res.data.email && res.data.email !== null ? res.data.email : '',
-            firstName: res.data.firstName && res.data.firstName !== null ? res.data.firstName : '',
-            invoicingAddressLine1: res.data.invoicingAddressLine1 && res.data.invoicingAddressLine1 ? res.data.invoicingAddressLine1 : '',
-            invoicingAddressLine2: res.data.invoicingAddressLine2,
-            invoicingAddressLine3: res.data.invoicingAddressLine3,
-            // language(Language, optional),
-            lastName: res.data.lastName && res.data.lastName !== null ? res.data.lastName: '',
-            middleName: res.data.middleName && res.data.middleName !== null ? res.data.middleName: '',
-            mobileNumber: res.data.mobileNumber && res.data.mobileNumber !== null ? res.data.mobileNumber: '',
-            organization: res.data.organization && res.data.organization !== null ? res.data.organization: '',
-            poBoxNumber: res.data.poBoxNumber && res.data.poBoxNumber !== null ? res.data.poBoxNumber: '',
-            postZipCode: res.data.postZipCode && res.data.postZipCode !== null ? res.data.postZipCode: '',
-            // stateRegion: res.data.stateRegion ? {
-            //   label: res.data.country.countryName,
-            //   value: res.data.country.countryCode
-            // } : '',
-            stateRegion: res.data.stateRegion && res.data.stateRegion !== null ? res.data.stateRegion: '',
-            telephone: res.data.telephone && res.data.telephone !== null ? res.data.telephone: '',
-            vatRegistrationNumber: res.data.vatRegistrationNumber && res.data.vatRegistrationNumber !== null ? res.data.vatRegistrationNumber: ''
-          }
-        })
+        // this.setState({
+        //   loading: false,
+        //   initValue: {
+        //     billingEmail: res.data.billingEmail && res.data.billingEmail !== null ? res.data.billingEmail : '',
+        //     // city: res.data.city ? {
+        //     //   label: res.data.city.name,
+        //     //   value: res.data.city.value
+        //     // } : '',
+        //     city: res.data.city && res.data.city,
+        //     contactType: res.data.contactType ? {
+        //       label: res.data.contactType.name,
+        //       value: res.data.contactType.id
+        //     } : '',
+        //     contractPoNumber: res.data.contractPoNumber && res.data.contractPoNumber ? res.data.contractPoNumber : '',
+        //     country: res.data.country && res.data.country !== null? {
+        //       label: res.data.country.countryName,
+        //       value: res.data.country.countryCode
+        //     } : '',
+        //     currency: res.data.currency && res.data.currency !== null ? {
+        //       label: res.data.currency.currencyName,
+        //       value: res.data.currency.currencyCode 
+        //     } : '',
+        //     email: res.data.email && res.data.email !== null ? res.data.email : '',
+        //     firstName: res.data.firstName && res.data.firstName !== null ? res.data.firstName : '',
+        //     invoicingAddressLine1: res.data.invoicingAddressLine1 && res.data.invoicingAddressLine1 ? res.data.invoicingAddressLine1 : '',
+        //     invoicingAddressLine2: res.data.invoicingAddressLine2,
+        //     invoicingAddressLine3: res.data.invoicingAddressLine3,
+        //     // language(Language, optional),
+        //     lastName: res.data.lastName && res.data.lastName !== null ? res.data.lastName: '',
+        //     middleName: res.data.middleName && res.data.middleName !== null ? res.data.middleName: '',
+        //     mobileNumber: res.data.mobileNumber && res.data.mobileNumber !== null ? res.data.mobileNumber: '',
+        //     organization: res.data.organization && res.data.organization !== null ? res.data.organization: '',
+        //     poBoxNumber: res.data.poBoxNumber && res.data.poBoxNumber !== null ? res.data.poBoxNumber: '',
+        //     postZipCode: res.data.postZipCode && res.data.postZipCode !== null ? res.data.postZipCode: '',
+        //     // stateRegion: res.data.stateRegion ? {
+        //     //   label: res.data.country.countryName,
+        //     //   value: res.data.country.countryCode
+        //     // } : '',
+        //     stateRegion: res.data.stateRegion && res.data.stateRegion !== null ? res.data.stateRegion: '',
+        //     telephone: res.data.telephone && res.data.telephone !== null ? res.data.telephone: '',
+        //     vatRegistrationNumber: res.data.vatRegistrationNumber && res.data.vatRegistrationNumber !== null ? res.data.vatRegistrationNumber: ''
+        //   }
+        // })
       }).catch(err => {
         this.setState({ loading: false })
         this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
       })
     } else {
-      this.props.location.push('/admin/master/contact')
+      this.props.history.push('/admin/master/contact')
     }
   }
 
@@ -384,7 +384,7 @@ class DetailContact extends React.Component {
                                       <Select
                                         className="select-default-width"
                                         options={contact_type_list ? selectOptionsFactory.renderOptions('name', 'id', contact_type_list) : []}
-                                        value={props.values.contactType.value}
+                                        value={props.values.contactType}
                                         onChange={option => props.handleChange('contactType')(option.value)}
                                         placeholder="Select Contact Type"
                                         id="contact_type_list"
@@ -571,8 +571,8 @@ class DetailContact extends React.Component {
                                       <Select
                                         className="select-default-width"
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
-                                        value={props.values.country.value}
-                                        onChange={option => props.handleChange('country')(option)}
+                                        value={props.values.country}
+                                        onChange={option => props.handleChange('country')(option.value)}
                                         placeholder="Select Country"
                                         id="country"
                                         name="country"
@@ -736,8 +736,8 @@ class DetailContact extends React.Component {
                                       <Select
                                         className="select-default-width"
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
-                                        value={props.values.currency.value}
-                                        onChange={option => props.handleChange('currency')(option)}
+                                        value={props.values.currency}
+                                        onChange={option => props.handleChange('currency')(option.value)}
                                         placeholder="Select Currency"
                                         id="currency"
                                         name="currency"

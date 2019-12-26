@@ -16,18 +16,33 @@ import {
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
+import { Formik } from 'formik';
+import _ from 'lodash'
+import { CustomerModal } from '../../sections'
+
+import * as  CustomerActions from "../../actions";
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
+import {
+  selectOptionsFactory,
+  filterFactory
+} from 'utils' 
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
+    project_list : state.customer_invoice.project_list,
+    customer_list :  state.customer_invoice.customer_list,
+    vendor_list :  state.customer_invoice.vendor_list,
+    currency_list : state.customer_invoice.currency_list,
+    vat_list : state.customer_invoice.vat_list  
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
+    customerActions: bindActionCreators(CustomerActions, dispatch),
   })
 }
 
@@ -42,11 +57,33 @@ class CreateCustomerInvoice extends React.Component {
         {value: 'Percentage', label: 'Percentage'}
       ],
       discount_option: '',
-      
-      data: [
-        {},
-        {}
-      ]
+      openCustomerModal: false,
+
+      data: [{
+         id: 0,
+          description: '',
+          quantity : 0,
+          unitPrices: 0,
+          vatCategoryId: null,
+          subTotal: 0
+        }],
+      idCount: 0,
+      initValue: {
+        // expenseId: null,
+        reference_number: '',
+        invoiceDate: null,
+        invoiceDueDate: null,        
+        currency: null,
+        project: null,
+        customerContact: null,
+        paymentDate: null,
+        expenseAmount: null,
+        expenseDescription: null,
+        bank: null,
+        total_net: 0,
+        expenseVATAmount: 0,
+        totalAmount: 0,
+      },
     }
 
     this.options = {
@@ -60,21 +97,23 @@ class CreateCustomerInvoice extends React.Component {
     this.renderUnitPrice = this.renderUnitPrice.bind(this)
     this.renderVat = this.renderVat.bind(this)
     this.renderSubTotal = this.renderSubTotal.bind(this)
+    this.openCustomerModal = this.openCustomerModal.bind(this)
+    this.closeCustomerModal = this.closeCustomerModal.bind(this)
 
   }
 
-  renderActions (cell, row) {
-    return (
-      <Button
-        size="sm"
-        color="primary"
-        className="btn-brand icon"
-      >
-        <i className="fas fa-trash"></i>
-      </Button>
-    )
-  }
-
+  // renderActions (cell, row) {
+  //   return (
+  //     <Button
+  //       size="sm"
+  //       color="primary"
+  //       className="btn-brand icon"
+  //     >
+  //       <i className="fas fa-trash"></i>
+  //     </Button>
+  //   )
+  // }
+ 
   renderProductName (cell, row) {
     return (
       <div className="d-flex align-items-center">
@@ -106,10 +145,14 @@ class CreateCustomerInvoice extends React.Component {
   }
 
   renderQuantity (cell, row) {
+    console.log(cell, row,"<--");
+    
     return (
       <Input
-        type="text"
-        placeholder="0"
+        type="number"
+        value={row['quantity'] !== 0? row['quantity'] : 0}
+        defaultValue={row['quantity']}
+        onChange={(e) => { this.selectItem(e, row, 'quantity') }}
       />
     )
   }
@@ -117,24 +160,15 @@ class CreateCustomerInvoice extends React.Component {
   renderUnitPrice (cell, row) {
     return (
       <Input
-        type="text"
-        placeholder="0.00"
+        type="number"
+        value={row['unitPrice'] !== 0? row['unitPrice'] : 0}
+        defaultValue={row['unitPrice']}
+        onChange={(e) => { this.selectItem(e, row, 'unitPrice') }}
       />
     )
   }
 
-  renderVat (cell, row) {
-    return (
-      <Input type="select">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-      </Input>
-    )
-  }
+
 
   renderSubTotal (cell, row) {
     return (
@@ -142,14 +176,142 @@ class CreateCustomerInvoice extends React.Component {
     )
   }
 
+  componentDidMount(){
+    this.getInitialData();
+  }
+
+  getInitialData = () => {
+    this.props.customerActions.getProjectList();
+    this.props.customerActions.getCustomerList();
+    // this.props.customerActions.getVendorList();
+    this.props.customerActions.getCurrencyList();
+    this.props.customerActions.getVatList();    
+  }
+ 
+
+  handleChange = (e, name) => {
+    this.setState({
+      currentData: _.set(
+        { ...this.state.currentData },
+        e.target.name && e.target.name !== '' ? e.target.name : name,
+        e.target.type === 'checkbox' ? e.target.checked : e.target.value
+      )
+    })
+  }
+  
+
+  addRow = () => {
+    const data = [...this.state.data]
+    this.setState({
+      data: data.concat({
+        id: this.state.idCount + 1,
+        description: null,
+        quantity:0,
+        unitPrices: 0,
+        vatCategoryId: null,
+        subTotal: 0
+      }), idCount: this.state.idCount + 1
+    })
+  }
+
+  selectItem(e, row, name) {
+    e.preventDefault();
+    const data = this.state.data
+    
+    data.map((obj, index) => {
+      if (obj.id === row.id) {
+        obj[name] = e.target.value
+      }
+    });
+    if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
+      this.updateAmount(data);
+    } else {
+      this.setState({ data: data });
+    }
+
+  }
+
+  renderVat(cell, row) {
+    const { vat_list } = this.props;
+    return (
+      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
+        {vat_list ? vat_list.map(obj => {
+          obj.name = obj.name === 'default' ? '0' : obj.name
+          return <option value={obj.id}>{obj.name}</option>
+        }) : ''}
+      </Input>
+    )
+  }
+
+
+  deleteRow(e, row) {
+    
+    const id = row['id'];
+    let newData = []
+    e.preventDefault();
+    const data = this.state.data
+    newData = data.filter(obj => obj.id !== id);
+    this.updateAmount(newData)
+  }
+
+  renderActions(cell, row) {
+    return (
+      <Button
+        size="sm"
+        className="btn-twitter btn-brand icon"
+        onClick={(e) => { this.deleteRow(e, row) }}
+      >
+        <i className="fas fa-trash"></i>
+      </Button>
+    )
+  }
+
+
+  updateAmount(data) {
+    console.log(data,"data")
+    const {vat_list} = this.props;
+    let total_net = 0;
+    let total = 0;
+    let total_vat = 0;
+    data.map(obj => {
+      const index = obj.vatCategoryId !== null ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
+      const vat = index !== '' ? vat_list[index].vat : 0
+      let val = (((+obj.quantity)*(+obj.unitPrice) * vat) / 100)
+      obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (+obj.unitPrice) + val : 0;
+      total_net = +(total_net + (+obj.unitPrice));
+      total_vat = +(total_vat + val).toFixed(2);
+      total =  (total_vat + total_net).toFixed(2);
+
+    })
+    this.setState({
+      data: data,
+      initValue: {
+        total_net: total_net,
+        expenseVATAmount: total_vat,
+        totalAmount: total
+      }
+    })
+  }
+
+  openCustomerModal(){
+    this.setState({openCustomerModal: true})
+  }
+
+  closeCustomerModal() {
+    this.setState({openCustomerModal: false})
+  }
 
   render() {
 
     const {
       data,
       discountOptions,
-      discount_option
+      discount_option,
+      initValue,
+      openCustomerModal
     } = this.state
+    const { project_list , customer_list , vendor_list, currency_list } = this.props
+
 
     return (
       <div className="create-customer-invoice-screen">
@@ -168,8 +330,26 @@ class CreateCustomerInvoice extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
-                  <Row>
+                <Row>
                     <Col lg={12}>
+                    <Formik
+                        initialValues={initValue}
+                        onSubmit={(values, { resetForm }) => {
+
+                          this.handleSubmit(values)
+                          resetForm(initValue)
+
+                          this.setState({
+                            selectedCurrency: null,
+                            selectedProject: null,
+                            selectedBankAccount: null,
+                            selectedCustomer: null
+
+                          })
+                        }}
+
+                      >
+                        {props => (
                       <Form>
                         <Row>
                           <Col lg={4}>
@@ -180,6 +360,7 @@ class CreateCustomerInvoice extends React.Component {
                                 id="reference_number"
                                 name="reference_number"
                                 placeholder=""
+                                onChange={(value) => { props.handleChange("reference_number")(value) }}
                                 required
                               />
                             </FormGroup>
@@ -189,9 +370,11 @@ class CreateCustomerInvoice extends React.Component {
                               <Label htmlFor="project">Project</Label>
                               <Select
                                 className="select-default-width"
-                                options={[]}
+                                options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
                                 id="project"
                                 name="project"
+                                value={props.values.project}                                
+                                onChange={option => props.handleChange('project')(option)}
                               />
                             </FormGroup>
                           </Col>
@@ -202,18 +385,21 @@ class CreateCustomerInvoice extends React.Component {
                               <Label htmlFor="contact">Customer</Label>
                               <Select
                                 className="select-default-width"
-                                options={[]}
-                                id="contact"
-                                name="contact"
+                                options={customer_list ? selectOptionsFactory.renderOptions('firstName', 'contactId', customer_list) : []}
+                                id="shippingContact"
+                                name="shippingContact"
+                                value={props.values.shippingContact}
+                                onChange={option => props.handleChange('shippingContact')(option)}                                
                               />
+                              
                             </FormGroup>
                           </Col>
                         </Row>
                         <Row>
                           <Col lg={4}>
                             <FormGroup className="mb-3">
-                              <Button color="primary" className="btn-square">
-                                <i className="fa fa-plus"></i> Add a Contact
+                              <Button color="primary" className="btn-square" onClick={this.openCustomerModal}>
+                                <i className="fa fa-plus"></i> Add a Customer
                               </Button>
                             </FormGroup>
                           </Col>
@@ -240,9 +426,11 @@ class CreateCustomerInvoice extends React.Component {
                               <Label htmlFor="contact">Shipping Contact</Label>
                               <Select
                                 className="select-default-width"
-                                options={[]}
-                                id="contact"
-                                name="contact"
+                                options={selectOptionsFactory.renderOptions('firstName', 'contactId', vendor_list)}
+                                id="shippingContact"
+                                name="shippingContact"
+                                value={props.values.shippingContact}
+                                onChange={option => props.handleChange('shippingContact')(option)}                                
                               />
                             </FormGroup>
                           </Col>
@@ -253,12 +441,22 @@ class CreateCustomerInvoice extends React.Component {
                             <FormGroup className="mb-3">
                               <Label htmlFor="date">Invoice Date</Label>
                               <div>
-                                <DatePicker
+                              <DatePicker
+                                      className="form-control"
+                                      id="date"
+                                      name="invoiceDate"
+                                      placeholderText=""
+                                      selected={props.values.invoiceDate}
+                                      onChange={(value) => {
+                                        props.handleChange("invoiceDate")(value)
+                                      }}
+                                    />
+                                {/* <DatePicker
                                   className="form-control"
                                   id="date"
                                   name="date"
                                   placeholderText=""
-                                />
+                                /> */}
                               </div>
                             </FormGroup>
                           </Col>
@@ -268,9 +466,13 @@ class CreateCustomerInvoice extends React.Component {
                               <div>
                                 <DatePicker
                                   className="form-control"
-                                  id="date"
+                                  id="invoiceDueDate"
                                   name="date"
                                   placeholderText=""
+                                  selected={props.values.invoiceDueDate}
+                                  onChange={(value) => {
+                                    props.handleChange("invoiceDueDate")(value)
+                                  }}
                                 />
                               </div>
                             </FormGroup>
@@ -294,9 +496,11 @@ class CreateCustomerInvoice extends React.Component {
                               <Label htmlFor="currency">Currency</Label>
                               <Select
                                 className="select-default-width"
-                                options={[]}
+                                options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                                 id="currency"
                                 name="currency"
+                                value={props.values.currency}
+                                onChange={option => props.handleChange('currency')(option)}
                               />
                             </FormGroup>
                           </Col>
@@ -308,15 +512,17 @@ class CreateCustomerInvoice extends React.Component {
                                 id="contact_po_number"
                                 name="contact_po_number"
                                 placeholder=""
+                                onChange={(value) => { props.handleChange("contact_po_number")(value) }}
                                 required
                               />
                             </FormGroup>
                           </Col>
                         </Row>
+
                         <hr/>
                         <Row>
                           <Col lg={12} className="mb-3">
-                            <Button color="primary" className="btn-square mr-3">
+                            <Button color="primary" className="btn-square mr-3" onClick={this.addRow}>
                               <i className="fa fa-plus"></i> Add More
                             </Button>
                           </Col>
@@ -480,13 +686,15 @@ class CreateCustomerInvoice extends React.Component {
                                 <i className="fa fa-repeat"></i> Create and More
                               </Button>
                               <Button color="secondary" className="btn-square" 
-                                onClick={() => {this.props.history.push('/admin/revenue/customer-invoice')}}>
+                                onClick={() => {this.props.history.push('/admin/expense/customer-invoice')}}>
                                 <i className="fa fa-ban"></i> Cancel
                               </Button>
                             </FormGroup>
                           </Col>
                         </Row>
                       </Form>
+                        )}
+                        </Formik>
                     </Col>
                   </Row>
                 </CardBody>
@@ -494,6 +702,9 @@ class CreateCustomerInvoice extends React.Component {
             </Col>
           </Row>
         </div>
+
+        <CustomerModal openCustomerModal={openCustomerModal} closeCustomerModal={this.closeCustomerModal} />
+
       </div>
     )
   }

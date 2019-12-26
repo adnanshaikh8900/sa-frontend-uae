@@ -57,6 +57,13 @@ class Contact extends React.Component {
       clickedRow: {},
       selected_id_list: [],
       dialog: null,
+      filterData: {
+        name: '',
+        email: '',
+        contactType: '',
+        pageNo: 0,
+        pageSize: 10,
+      },
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -67,10 +74,13 @@ class Contact extends React.Component {
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
+    this.onPageChange = this.onPageChange.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange
     }
 
     this.selectRowProp = {
@@ -80,7 +90,11 @@ class Contact extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.contactType = [
+      {label: 'supplier',value: 1},
+      {label: 'customer',value: 2},
+      {label: 'both',value: 3},
+    ]
   }
 
   componentDidMount() {
@@ -99,13 +113,23 @@ class Contact extends React.Component {
         this.setState({ loading: false });
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
+      this.props.commonActions.tostifyAlert('error', err.data ? err.message : null);
       this.setState({ loading: false })
     })
   }
 
+
+  onPageChange = (page, sizePerPage) => {
+   console.log(page);
+   console.log(sizePerPage)
+  }
+
+  onSizePerPageList = (sizePerPage) => {
+   console.log(sizePerPage)
+  }
+
   typeFormatter(cell, row) {
-    return row['contactType'].name;
+    return row['contactType'] ? row['contactType'].name : '';
   }
 
   onRowSelect(row, isSelected, e) {
@@ -138,7 +162,7 @@ class Contact extends React.Component {
   }
 
   goToDetail(row) {
-    this.props.history.push('/admin/master/contact/detail',{id: row.contactId})
+    this.props.history.push('/admin/master/contact/detail',{id: row.id})
   }
 
   bulkDelete() {
@@ -174,7 +198,8 @@ class Contact extends React.Component {
         })
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error',  err && err!== null? err.data.message : null)
+      this.setState({isLoading: false})
     })
   }
 
@@ -261,8 +286,8 @@ class Contact extends React.Component {
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
-                              options={[]}
-                              placeholder="User Type"
+                              options={this.contactType}
+                              placeholder="Contact Type"
                             />
                           </Col>
                         </Row>

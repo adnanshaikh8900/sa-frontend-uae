@@ -156,16 +156,16 @@ export const getPaymentList = () => {
   }
 }
 
-export const getChartOfAccountList = () => {
+export const getExpenseCategoriesList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: '/rest/transactioncategory/gettransactioncategory'
+      url: '/rest/transactioncategory/getForExpenses'
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
         dispatch({
-          type: EXPENSE.CHART_OF_ACCOUNT_LIST,
+          type: EXPENSE.EXPENSE_CATEGORIES_LIST,
           payload: res.data 
         })
       }

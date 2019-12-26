@@ -46,7 +46,7 @@ export const getSupplierList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/contact/contactvendorlist'
+      url: '/rest/contact/getContactList'
     }
     return authApi(data).then(res => {
       if (res.status == 200) {

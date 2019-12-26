@@ -53,7 +53,6 @@ class ChartAccount extends React.Component {
       loading: true,
       selected_id_list: [],
       dialog: null,
-
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -65,10 +64,11 @@ class ChartAccount extends React.Component {
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
-
+    this.onPageChange = this.onPageChange.bind(this)
     this.options = {
       onRowClick: this.goToDetailPage,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      onPageChange: this.onPageChange
     }
 
     this.selectRowProp = {
@@ -97,7 +97,7 @@ class ChartAccount extends React.Component {
         this.setState({ loading: false });
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
+      this.props.commonActions.tostifyAlert('error', err && err!== null ? err.data.message : null);
       this.setState({ loading: false })
     })
   }
@@ -185,6 +185,9 @@ class ChartAccount extends React.Component {
     return row['transactionType']['transactionTypeName'];
 
   }
+
+  onPageChange = (page, sizePerPage) => {
+   }
 
   render() {
 

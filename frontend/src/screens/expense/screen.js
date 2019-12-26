@@ -111,7 +111,7 @@ class Expense extends React.Component {
 
   initializeData() {
     this.props.expenseActions.getExpenseList();
-    this.props.expenseActions.getSupplierList();
+    // this.props.expenseActions.getSupplierList();
 
   }
 
@@ -344,12 +344,6 @@ class Expense extends React.Component {
                               dataSort
                             >
                               Receipt Number
-                          </TableHeaderColumn>
-                            <TableHeaderColumn
-                              dataField="vat"
-                              dataSort
-                            >
-                              VAT
                           </TableHeaderColumn>
                             <TableHeaderColumn
                               dataField="expenseAmount"

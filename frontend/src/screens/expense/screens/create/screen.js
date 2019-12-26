@@ -41,7 +41,7 @@ const mapStateToProps = (state) => {
     customer_list: state.expense.customer_list,
     payment_list: state.expense.payment_list,
     vat_list: state.expense.vat_list,
-    chart_of_account_list: state.expense.chart_of_account_list
+    expense_categories_list: state.expense.expense_categories_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -70,7 +70,7 @@ class CreateExpense extends React.Component {
         expenseDate: '',
         currency: '',
         project: '',
-        expanseCategory: '',
+        expenseCategory: '',
         expenseAmount: '',
         expenseDescription: '',
         receiptNumber: '',
@@ -98,22 +98,23 @@ class CreateExpense extends React.Component {
 
 
   initializeData() {
+    console.log(this.props.history)
     this.props.expenseActions.getVatList();
-    this.props.expenseActions.getChartOfAccountList();
+    this.props.expenseActions.getExpenseCategoriesList();
     this.props.expenseActions.getCurrencyList();
     this.props.expenseActions.getProjectList();
     this.props.expenseActions.getEmployeeList();
 
   }
 
-  
+
   handleSubmit(data) {
     const {
       payee,
       expenseDate,
       currency,
       project,
-      expanseCategory,
+      expenseCategory,
       expenseAmount,
       employee,
       expenseDescription,
@@ -121,17 +122,17 @@ class CreateExpense extends React.Component {
       attachmentFile,
       receiptAttachmentDescription,
     } = data
+
+    console.log(data)
     let formData = new FormData();
-    // const userId = window.localStorage.getItem('userId');
-    // formData.append("user",userId)
     formData.append("payee", payee);
     formData.append("expenseDate", expenseDate !== null ? expenseDate : "");
     formData.append("expenseDescription", expenseDescription);
     formData.append("receiptNumber", receiptNumber);
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription);
-    formData.append('expenseAmount',this.state.initValue.expenseAmount);
-    if (expanseCategory && expanseCategory.value) {
-      formData.append("expanseCategoryId", expanseCategory.value);
+    formData.append('expenseAmount', expenseAmount);
+    if (expenseCategory && expenseCategory.value) {
+      formData.append("expenseCategory", expenseCategory.value);
     }
     if (employee && employee.value) {
       formData.append("employeeId", employee.value);
@@ -146,16 +147,17 @@ class CreateExpense extends React.Component {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
     this.props.expenseCreateActions.createExpense(formData).then(res => {
-      this.props.commonActions.tostifyAlert('success', 'Creted Successfully.')
-        if(res.status === 200) {
-          if (this.state.readMore) {
-            this.setState({
-              readMore: false
-            })
-          } else {
-            this.props.history.push('/admin/expense/expense')
-          }
+      if (res.status === 200) {
+        console.log('22')
+        if (this.state.readMore) {
+          this.setState({
+            readMore: false
+          })
+        } else {
+          this.props.commonActions.tostifyAlert('success', 'Created Successfully.')
+          this.props.history.push('/admin/expense/expense')
         }
+      }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
@@ -175,7 +177,7 @@ class CreateExpense extends React.Component {
 
     const { data } = this.state
     const { initValue } = this.state
-    const { currency_list, project_list, chart_of_account_list , employee_list} = this.props
+    const { currency_list, project_list, expense_categories_list, employee_list } = this.props
 
     return (
       <div className="create-expense-screen">
@@ -211,22 +213,22 @@ class CreateExpense extends React.Component {
 
                           // })
                         }}
-                        
+
 
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
-                            <Col lg={4}>
+                              <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="expanseCategoryId">Accounts</Label>
+                                  <Label htmlFor="expenseCategoryId">Expense Category</Label>
                                   <Select
                                     className="select-default-width"
-                                    id="expanseCategory"
-                                    name="expanseCategory"
-                                    options={chart_of_account_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', chart_of_account_list) : []}
-                                    value={props.values.expanseCategory}
-                                    onChange={option => props.handleChange('expanseCategory')(option)}
+                                    id="expenseCategory"
+                                    name="expenseCategory"
+                                    options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
+                                    value={props.values.expenseCategory}
+                                    onChange={option => props.handleChange('expenseCategory')(option)}
                                   />
                                 </FormGroup>
                               </Col>
@@ -305,7 +307,7 @@ class CreateExpense extends React.Component {
                               </Col>
                             </Row>
                             <Row>
-                            <Col lg={4}>
+                              <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="expenseAmount">Amount</Label>
                                   <Input
@@ -347,7 +349,6 @@ class CreateExpense extends React.Component {
                                         id="receiptNumber"
                                         name="receiptNumber"
                                         placeholder="Enter Reciept Number"
-                                        required
                                         onChange={option => props.handleChange('receiptNumber')(option)}
                                         value={props.values.receiptNumber}
 
@@ -397,8 +398,9 @@ class CreateExpense extends React.Component {
                                     <i className="fa fa-dot-circle-o"></i> Create
                         </Button>
                                   <Button type="submit" color="primary" className="btn-square mr-3"
-                                    onClick={()=>{
-                                      this.setState({readMore: true})
+                                    onClick={() => {
+                                      this.setState({ readMore: true })
+                                      props.handleSubmit()
                                     }}
                                   >
                                     <i className="fa fa-repeat"></i> Create and More

@@ -69,6 +69,11 @@ import {
   VatCode,
   CreateVatCode,
   DetailVatCode,
+  
+  ProductCategory,
+  CreateProductCategory,
+  DetailProductCategory,
+  
   Currency,
   CreateCurrency,
   DetailCurrency,
@@ -419,6 +424,21 @@ const adminRoutes = [
     path: '/admin/master/vat-code',
     name: 'Vat Code',
     component: VatCode.screen
+  },
+  {
+    path: '/admin/master/product-category/create',
+    name: 'Create',
+    component: CreateProductCategory.screen
+  },
+  {
+    path: '/admin/master/product-category/detail',
+    name: 'Detail',
+    component: DetailProductCategory.screen
+  },
+  {
+    path: '/admin/master/product-category',
+    name: 'Product Category',
+    component: ProductCategory.screen
   },
   {
     path: '/admin/master/currency/create',

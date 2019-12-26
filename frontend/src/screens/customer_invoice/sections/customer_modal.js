@@ -22,7 +22,7 @@ import * as ProjectActions from '../actions'
 import {selectOptionsFactory} from 'utils'
 
 
-class SupplierModal extends React.Component {
+class CustomerModal extends React.Component {
   
   constructor(props) {
     super(props)
@@ -33,7 +33,7 @@ class SupplierModal extends React.Component {
         firstName: '',
         lastName: '',
         middleName: '',
-        contactType: 'supplier'
+        contactType: 'customer'
       },
     }
 
@@ -43,7 +43,7 @@ class SupplierModal extends React.Component {
   // Create or Contact
   handleSubmit(data) {
 
-    const request = this.props.createSupplier(data);
+    const request = this.props.createContact(data);
     request.then(res => {
       if (res.status === 200) {
       // this.success()
@@ -53,10 +53,10 @@ class SupplierModal extends React.Component {
   }
 
   render() {
-    const { openSupplierModal, closeSupplierModal} = this.props
+    const { openCustomerModal, closeCustomerModal} = this.props
     return (
       <div className="contact-modal-screen">
-        <Modal isOpen={openSupplierModal}
+        <Modal isOpen={openCustomerModal}
           className="modal-success contact-modal"
           >
           <Formik
@@ -68,7 +68,7 @@ class SupplierModal extends React.Component {
             >
             {props => (
               <Form name="simpleForm" onSubmit={props.handleSubmit}>
-                <ModalHeader toggle={this.toggleDanger}>New Supplier</ModalHeader>
+                <ModalHeader toggle={this.toggleDanger}>New Customer</ModalHeader>
                   <ModalBody>
                   <Row>
                       <Col>
@@ -143,7 +143,7 @@ class SupplierModal extends React.Component {
                   </ModalBody>
                   <ModalFooter>
                     <Button color="success" type="submit" className="btn-square">Save</Button>&nbsp;
-                    <Button color="secondary" className="btn-square" onClick={closeSupplierModal}>Cancel</Button>
+                    <Button color="secondary" className="btn-square" onClick={closeCustomerModal}>Cancel</Button>
                   </ModalFooter>
               </Form>
               )}
@@ -154,4 +154,4 @@ class SupplierModal extends React.Component {
   }
 }
 
-export default SupplierModal
+export default CustomerModal

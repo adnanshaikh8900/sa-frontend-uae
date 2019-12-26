@@ -219,6 +219,7 @@ class CreatePayment extends React.Component {
 
   closeSupplierModal() {
     this.setState({openSupplierModal: false})
+
   }
 
   render() {
@@ -312,7 +313,7 @@ class CreatePayment extends React.Component {
                                       }
                                     />
                                   </FormGroup>
-                                  <Button type="submit" color="primary" className="btn-square mr-3 mb-3" 
+                                  <Button type="button" color="primary" className="btn-square mr-3 mb-3" 
                                   onClick={this.openSupplierModal}
                                   >
                                     <i className="fa fa-dot-circle-o"></i> Supplier
@@ -501,6 +502,7 @@ class CreatePayment extends React.Component {
         <SupplierModal
           openSupplierModal={this.state.openSupplierModal}
           closeSupplierModal={(e)=>{this.closeSupplierModal(e)}}
+
         />
       </div>
     )

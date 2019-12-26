@@ -50,32 +50,36 @@ public class ContactController implements Serializable {
     private JwtTokenUtil jwtTokenUtil;
 
     @GetMapping(value = "/getContactList")
-    public ResponseEntity getContactList(PaginationModel paginationModel, @RequestParam(value = "contactType", required = false) Integer contactType) throws IOException {
+    public ResponseEntity getContactList(PaginationModel paginationModel, ContactRequestFilterModel contactRequestFilterModel) throws IOException {
         if (paginationModel == null) {
             paginationModel = new PaginationModel();
         }
         List<ContactListModel> contactListModels = new ArrayList<>();
         List<Contact> contactList;
-        if (contactType == null) {
+        if (contactRequestFilterModel == null || contactRequestFilterModel.getContactType() == null) {
             contactList = contactService.getAllContacts(paginationModel.getPageNo(), paginationModel.getPageSize());
         } else {
-            contactList = contactService.getContacts(contactType, paginationModel.getPageNo(), paginationModel.getPageSize());
+            contactList = contactService.getContacts(contactRequestFilterModel.getContactType(), paginationModel.getPageNo(), paginationModel.getPageSize());
         }
         contactList.forEach(contact -> contactListModels.add(contactHelper.getListModel(contact)));
         return new ResponseEntity<>(contactListModels, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/getContactById")
+    public ResponseEntity getContactById(@RequestParam("contactId") Integer contactId) throws IOException {
+        ContactPersistModel contactPersistModel = contactHelper.getContactPersistModel(contactService.findByPK(contactId));
+        return new ResponseEntity<>(contactPersistModel, HttpStatus.OK);
+    }
+
     @PostMapping(value = "/save")
-    public ResponseEntity save(@RequestBody Contact contact, HttpServletRequest request) {
+    public ResponseEntity save(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
         try {
-            if (contact.getContactId() != null && contact.getContactId() > 0) {
-                contactService.update(contact);
-                contact.setLastUpdatedBy(userId);
+            if (contactPersistModel.getId() != null && contactPersistModel.getId() > 0) {
+                contactService.update(contactHelper.getEntity(contactPersistModel, userId));
             } else {
-                contact.setCreatedBy(userId);
-                contactService.persist(contact);
+                contactService.persist(contactHelper.getEntity(contactPersistModel, userId));
             }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -89,13 +93,13 @@ public class ContactController implements Serializable {
     public ResponseEntity delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-        Contact contact1 = contactService.findByPK(id);
-        if (contact1 == null) {
+        Contact contact = contactService.findByPK(id);
+        if (contact == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        contact1.setDeleteFlag(Boolean.TRUE);
-        contact1.setLastUpdatedBy(userId);
-        contactService.update(contact1);
+        contact.setDeleteFlag(Boolean.TRUE);
+        contact.setLastUpdatedBy(userId);
+        contactService.update(contact);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
@@ -104,7 +108,6 @@ public class ContactController implements Serializable {
     public ResponseEntity deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
 
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-
         try {
             contactService.deleleByIds(ids.getIds());
             return new ResponseEntity(HttpStatus.OK);

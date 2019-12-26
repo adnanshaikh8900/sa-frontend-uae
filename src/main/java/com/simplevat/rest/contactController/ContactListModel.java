@@ -36,21 +36,14 @@ public class ContactListModel {
 
     private String currencySymbol;
 
-    private String title;
-
     private Integer contactType;
 
     private Date nextDueDate;
 
     private BigDecimal dueAmount;
-    
-    private Boolean selected = Boolean.FALSE;
 
     public String getFullName() {
         StringBuilder sb = new StringBuilder();
-        if (title != null) {
-            sb.append(title).append(" ");
-        }
         if (firstName != null && !firstName.isEmpty()) {
             sb.append(firstName).append(" ");
         }

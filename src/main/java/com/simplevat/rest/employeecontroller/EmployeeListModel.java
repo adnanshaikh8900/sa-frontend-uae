@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.simplevat.rest.contactController;
+package com.simplevat.rest.employeecontroller;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,7 +16,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class ContactListModel {
+public class EmployeeListModel {
 
     private Integer id;
 
@@ -26,21 +26,9 @@ public class ContactListModel {
 
     private String lastName;
 
-    private String organization;
-
     private String email;
 
     private String mobileNumber;
-
-    private String telephone;
-
-    private String currencySymbol;
-
-    private Integer contactType;
-
-    private Date nextDueDate;
-
-    private BigDecimal dueAmount;
 
     public String getFullName() {
         StringBuilder sb = new StringBuilder();

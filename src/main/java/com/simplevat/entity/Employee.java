@@ -1,6 +1,5 @@
 package com.simplevat.entity;
 
-import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -8,43 +7,34 @@ import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
-/**
- * Created by mohsinh on 2/26/2017.
- */
-
 @NamedQueries({
-    @NamedQuery(name = "contactForDropdown",
-            query = "SELECT new "+ CommonConstant.DROPDOWN_MODEL_PACKAGE +"(c.contactId , CONCAT(c.firstName, ' ', c.middleName, ' ', c.lastName))"
-            + " FROM Contact c where c.deleteFlag = FALSE and c.contactType = :contactType order by c.firstName, c.lastName")
-    ,
-    @NamedQuery(name = "allContacts",
+    @NamedQuery(name = "employeesForDropdown",
+            query = "SELECT c.id as value, CONCAT(c.firstName, c.middleName, c.lastName) as label"
+                    + " FROM Employee c where c.deleteFlag = FALSE order by c.firstName, c.lastName")
+    ,    
+    @NamedQuery(name = "allEmployees",
             query = "SELECT c "
-            + "FROM Contact c where c.deleteFlag = FALSE order by c.firstName, c.lastName")
+            + "FROM Employee c where c.deleteFlag = FALSE order by c.firstName, c.lastName")
     ,
-    @NamedQuery(name = "contactsByType",
+    @NamedQuery(name = "employeeByEmail",
             query = "SELECT c "
-            + "FROM Contact c where c.deleteFlag = FALSE and c.contactType = :contactType order by c.firstName, c.lastName")
+            + "FROM Employee c where c.email =:email")
     ,
-    @NamedQuery(name = "Contact.contactByEmail",
-            query = "SELECT c "
-            + "FROM Contact c where c.email =:email")
-    ,
-    @NamedQuery(name = "Contact.contactsByName",
-            query = "SELECT c FROM Contact c WHERE  ((c.firstName LIKE :name or c.lastName LIKE :name) and c.deleteFlag = FALSE and c.contactType=:contactType) order by c.firstName, c.lastName")
+    @NamedQuery(name = "employeesByName",
+            query = "SELECT c FROM Employee c WHERE (c.firstName LIKE :name or c.lastName LIKE :name) and c.deleteFlag = FALSE order by c.firstName, c.lastName")
 })
-
 @Entity
-@Table(name = "CONTACT")
+@Table(name = "EMPLOYEE")
 @Data
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
-public class Contact implements Serializable {
+public class Employee implements Serializable {
 
     private static final long serialVersionUID = 6914121175305098995L;
 
     @Id
-    @Column(name = "CONTACT_ID")
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "INCREMENT_INITIAL_VALUE")
-    private Integer contactId;
+    private Integer id;
     @Basic
     @Column(name = "FIRST_NAME")
     private String firstName;
@@ -55,13 +45,6 @@ public class Contact implements Serializable {
     @Column(name = "LAST_NAME")
     private String lastName;
 
-    @Column(name = "CONTACT_TYPE")
-    private Integer contactType;
-
-    @Basic
-    @Column(name = "ORGANIZATION")
-    private String organization;
-
     @Basic
     @Column(name = "PO_BOX_NUMBER")
     private String poBoxNumber;
@@ -69,10 +52,10 @@ public class Contact implements Serializable {
     @Basic
     @Column(name = "EMAIL")
     private String email;
-
+        
     @Basic
-    @Column(name = "TELEPHONE")
-    private String telephone;
+    @Column(name = "PASSWORD")
+    private String password;
 
     @Basic
     @Column(name = "MOBILE_NUMBER")
@@ -97,22 +80,6 @@ public class Contact implements Serializable {
     @Basic
     @Column(name = "POST_ZIP_CODE")
     private String postZipCode;
-
-    @Basic
-    @Column(name = "BILLING_EMAIL")
-    private String billingEmail;
-
-    @Basic
-    @Column(name = "CONTRACT_PO_NUMBER")
-    private String contractPoNumber;
-
-    @Basic
-    @Column(name = "VAT_REGISTRATION_NUMBER")
-    private String vatRegistrationNumber;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRENCY_CODE")
-    private Currency currency;
 
     @Basic(optional = false)
     @Column(name = "CREATED_BY")

@@ -52,7 +52,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Sonu
  * 
- * @author saurabh 26/12/19
+ * Modified by saurabh 26/12/19
  */
 @RestController
 @RequestMapping(value = "/rest/project")
@@ -223,5 +223,4 @@ public class ProjectController implements Serializable {
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
-
 }

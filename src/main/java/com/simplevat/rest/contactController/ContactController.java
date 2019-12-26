@@ -8,6 +8,7 @@ package com.simplevat.rest.contactController;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ContactTypeConstant;
 import com.simplevat.entity.Contact;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
@@ -49,61 +50,43 @@ public class ContactController implements Serializable {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-//    private int totalEmployees;
-//
-//    private int totalVendors;
-//
-//    private int totalCustomers;
-//
-//    private int totalContacts;
-//
-//
-//    private void contactCountByType(ContactViewModel contactViewModel) {
-//        totalEmployees = 0;
-//        totalCustomers = 0;
-//        totalVendors = 0;
-//        totalContacts = 0;
-//        if (contactViewModel.getContactType() != null) {
-//            if (contactViewModel.getContactType().getId() == ContactTypeConstant.EMPLOYEE) {
-//                totalEmployees++;
-//            } else if (contactViewModel.getContactType().getId() == ContactTypeConstant.CUSTOMER) {
-//                totalCustomers++;
-//            } else {
-//                totalVendors++;
-//            }
-//        }
-//        totalContacts++;
-//    }
-    @GetMapping(value = "/getSupplierList")
-    public ResponseEntity getSupplierList(PaginationModel paginationModel) throws IOException {
+    @GetMapping(value = "/getContactList")
+    public ResponseEntity getContactList(PaginationModel paginationModel, ContactRequestFilterModel contactRequestFilterModel) throws IOException {
         if (paginationModel == null) {
             paginationModel = new PaginationModel();
         }
         List<ContactListModel> contactListModels = new ArrayList<>();
-        List<Contact> contactList = contactService.getContacts(ContactTypeConstant.SUPPLIER, paginationModel.getPageNo(), paginationModel.getPageSize());
+        List<Contact> contactList;
+        if (contactRequestFilterModel == null || contactRequestFilterModel.getContactType() == null) {
+            contactList = contactService.getAllContacts(paginationModel.getPageNo(), paginationModel.getPageSize());
+        } else {
+            contactList = contactService.getContacts(contactRequestFilterModel.getContactType(), paginationModel.getPageNo(), paginationModel.getPageSize());
+        }
         contactList.forEach(contact -> contactListModels.add(contactHelper.getListModel(contact)));
         return new ResponseEntity<>(contactListModels, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getCustomerList")
-    public ResponseEntity getCustomerList(PaginationModel paginationModel) {
-        List<ContactListModel> contactListModels = new ArrayList<>();
-        List<Contact> contactList = contactService.getContacts(ContactTypeConstant.CUSTOMER, paginationModel.getPageNo(), paginationModel.getPageSize());
-        contactList.forEach(cobtact -> contactListModels.add(contactHelper.getListModel(cobtact)));
-        return new ResponseEntity<>(contactList, HttpStatus.OK);
+    @GetMapping(value = "/getContactsForDropdown")
+    public ResponseEntity getContactsForDropdown(@RequestParam("contactType") Integer contactType) throws IOException {
+        List<DropdownModel> dropdownModels = contactService.getContactForDropdown(contactType);
+        return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getContactById")
+    public ResponseEntity getContactById(@RequestParam("contactId") Integer contactId) throws IOException {
+        ContactPersistModel contactPersistModel = contactHelper.getContactPersistModel(contactService.findByPK(contactId));
+        return new ResponseEntity<>(contactPersistModel, HttpStatus.OK);
     }
 
     @PostMapping(value = "/save")
-    public ResponseEntity save(@RequestBody Contact contact, HttpServletRequest request) {
+    public ResponseEntity save(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
         try {
-            if (contact.getContactId() != null && contact.getContactId() > 0) {
-                contactService.update(contact);
-                contact.setLastUpdatedBy(userId);
+            if (contactPersistModel.getId() != null && contactPersistModel.getId() > 0) {
+                contactService.update(contactHelper.getEntity(contactPersistModel, userId));
             } else {
-                contact.setCreatedBy(userId);
-                contactService.persist(contact);
+                contactService.persist(contactHelper.getEntity(contactPersistModel, userId));
             }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -117,13 +100,13 @@ public class ContactController implements Serializable {
     public ResponseEntity delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-        Contact contact1 = contactService.findByPK(id);
-        if (contact1 == null) {
+        Contact contact = contactService.findByPK(id);
+        if (contact == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        contact1.setDeleteFlag(Boolean.TRUE);
-        contact1.setLastUpdatedBy(userId);
-        contactService.update(contact1);
+        contact.setDeleteFlag(Boolean.TRUE);
+        contact.setLastUpdatedBy(userId);
+        contactService.update(contact);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
@@ -132,7 +115,6 @@ public class ContactController implements Serializable {
     public ResponseEntity deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
 
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-
         try {
             contactService.deleleByIds(ids.getIds());
             return new ResponseEntity(HttpStatus.OK);

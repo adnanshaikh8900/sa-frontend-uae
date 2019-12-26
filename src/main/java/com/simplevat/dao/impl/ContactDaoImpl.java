@@ -3,7 +3,6 @@ package com.simplevat.dao.impl;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ContactDao;
 import com.simplevat.entity.Contact;
-import com.simplevat.enums.ContactTypeEnum;
 
 import org.springframework.stereotype.Repository;
 
@@ -21,19 +20,29 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
 
     @Override
     public List<Contact> getContacts(Integer contactType, Integer pageNo, Integer pageSize) {
-        List<Contact> contacts = getEntityManager().createNamedQuery("allContacts", Contact.class)
+        List<Contact> contacts = getEntityManager().createNamedQuery("contactsByType", Contact.class)
+                .setParameter("contactType", contactType)
                 .setMaxResults(pageSize)
                 .setFirstResult(pageNo * pageSize).getResultList();
         return contacts;
     }
 
     @Override
-    public List<Contact> getContacts(Integer contactType, final String searchQuery) {
+    public List<Contact> getAllContacts(Integer pageNo, Integer pageSize) {
+        List<Contact> contacts = getEntityManager().createNamedQuery("allContacts", Contact.class)
+                .setMaxResults(pageSize)
+                .setFirstResult(pageNo * pageSize).getResultList();
+        return contacts;
+    }
+    
+    @Override
+    public List<Contact> getContacts(Integer contactType, final String searchQuery, Integer pageNo, Integer pageSize) {
         List<Contact> contacts = getEntityManager()
                 .createNamedQuery("Contact.contactsByName", Contact.class)
                 .setParameter("name", "%" + searchQuery + "%")
                 .setParameter("contactType", contactType)
-                .getResultList();
+                .setMaxResults(pageSize)
+                .setFirstResult(pageNo * pageSize).getResultList();
         return contacts;
     }
 

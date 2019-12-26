@@ -6,6 +6,7 @@
 package com.simplevat.rest.transactioncategorycontroller;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.TransactionTypeConstant;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.entity.User;
@@ -138,6 +139,19 @@ public class TransactionCategoryRestController implements Serializable {
             e.printStackTrace();
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+     @ApiOperation(value = "Get All Transaction Categories for Expense")
+    @GetMapping(value = "/getForExpenses")
+    public ResponseEntity getTransactionCatgeoriesForExpenses(HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+        User user = userServiceNew.findByPK(userId);
+        List<TransactionCategory> transactionCategories = transactionCategoryService.findAllTransactionCategoryByTransactionType(TransactionTypeConstant.TRANSACTION_TYPE_EXPENSE);
+        if (transactionCategories != null) {
+            return new ResponseEntity(transactionCategories, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
 }

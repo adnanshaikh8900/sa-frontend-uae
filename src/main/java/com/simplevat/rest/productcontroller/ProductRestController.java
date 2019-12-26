@@ -9,6 +9,7 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.contact.model.TransactionRestModel;
 import com.simplevat.entity.Product;
+import com.simplevat.entity.VatCategory;
 import com.simplevat.service.ProductService;
 import com.simplevat.security.JwtTokenUtil;
 import io.swagger.annotations.ApiOperation;
@@ -49,12 +50,14 @@ public class ProductRestController implements Serializable {
     private JwtTokenUtil jwtTokenUtil;
 
     @ApiOperation(value = "Get Product List")
-    @PostMapping(value = "/getList")
+    @GetMapping(value = "/getList")
     public ResponseEntity getProductList(ProductRequestFilterModel filterModel, HttpServletRequest request) {
         Map<ProductFilterEnum, Object> filterDataMap = new HashMap();
         filterDataMap.put(ProductFilterEnum.PRODUCT_NAME, filterModel.getName());
         filterDataMap.put(ProductFilterEnum.PRODUCT_CODE, filterModel.getProductCode());
-        filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE, filterModel.getVatPercentage());
+        if (filterModel.getVatPercentage() != null) {
+            filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE, new VatCategory(filterModel.getVatPercentage()));
+        }
         List<Product> products = productService.getProductList(filterDataMap);
         if (products == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);

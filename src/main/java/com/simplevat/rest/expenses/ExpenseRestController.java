@@ -16,6 +16,9 @@ import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.UserServiceNew;
 import io.swagger.annotations.ApiOperation;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -53,10 +56,10 @@ public class ExpenseRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/getList")
     public ResponseEntity getExpenseList() {
         try {
-            List<ExpenseRestModel> expenses = new ArrayList<>();
+            List<ExpenseModel> expenses = new ArrayList<>();
             List<Expense> expenseList = expenseService.getExpenses();
             for (Expense expense : expenseList) {
-                ExpenseRestModel model = expenseRestHelper.getExpenseModel(expense);
+                ExpenseModel model = expenseRestHelper.getExpenseModel(expense);
                 expenses.add(model);
             }
             return new ResponseEntity(expenses, HttpStatus.OK);
@@ -68,17 +71,36 @@ public class ExpenseRestController {
 
     @ApiOperation(value = "Add New Expense")
     @RequestMapping(method = RequestMethod.POST, value = "/save")
-    public ResponseEntity save(@ModelAttribute ExpenseRestModel expenseRestModel, HttpServletRequest request) {
+    public ResponseEntity save(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User loggedInUser = userServiceNew.findByPK(userId);
-            Expense expense = expenseRestHelper.getExpenseEntity(expenseRestModel, loggedInUser);
-            if (expense.getExpenseId() == null || expense.getExpenseId() == 0) {
+            Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
+            expense.setCreatedBy(userId);
+            expense.setDeleteFlag(false);
+            expense.setCreatedDate(LocalDateTime.now());
+            expenseService.persist(expense);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @ApiOperation(value = "Update Expense")
+    @RequestMapping(method = RequestMethod.POST, value = "/update")
+    public ResponseEntity update(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
+        try {
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            User loggedInUser = userServiceNew.findByPK(userId);
+            if (expenseModel.getExpenseId() != null) {
+                Expense expense = expenseService.findByPK(expenseModel.getExpenseId());
+                expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
+                expense.setLastUpdateBy(userId);
+                expense.setLastUpdateDate(LocalDateTime.now());
                 expenseService.persist(expense);
-            } else {
-                expenseService.update(expense);
             }
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -90,7 +112,7 @@ public class ExpenseRestController {
     public ResponseEntity getExpenseById(@RequestParam("expenseId") Integer expenseId) {
         try {
             Expense expense = expenseService.findByPK(expenseId);
-            ExpenseRestModel expenseModel = expenseRestHelper.getExpenseModel(expense);
+            ExpenseModel expenseModel = expenseRestHelper.getExpenseModel(expense);
             return new ResponseEntity(expenseModel, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

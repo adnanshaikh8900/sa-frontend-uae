@@ -287,7 +287,7 @@ class CreateSupplierInvoice extends React.Component {
       let val = (((+obj.unitPrice) * vat) / 100)
       obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? ((+obj.unitPrice) + val)* obj.quantity : 0;
       total_net = +(total_net + (+obj.unitPrice)* obj.quantity);
-      total_vat = +(total_vat + val).toFixed(2);
+      total_vat = +((total_vat + val)* obj.quantity).toFixed(2);
       total =  (total_vat + total_net).toFixed(2);
 
     })

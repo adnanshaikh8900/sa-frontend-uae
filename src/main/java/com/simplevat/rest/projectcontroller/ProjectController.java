@@ -164,24 +164,6 @@ public class ProjectController {
 
     }
 
-    @PostMapping(value = "/saveprojectcontact")
-    public ResponseEntity saveContact(@RequestBody ContactModel contactModel, @RequestParam(value = "id") Integer id) {
-
-        Contact contact = new Contact();
-        ContactHelper contactHelper = new ContactHelper();
-        contact = contactHelper.getContact(contactModel);
-        contact.setCreatedBy(id);
-        contact.setCreatedDate(LocalDateTime.now());
-        contact.setDeleteFlag(Boolean.FALSE);
-        if (contact.getContactId() != null && contact.getContactId() > 0) {
-            this.contactService.update(contact);
-        } else {
-
-            this.contactService.persist(contact);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @PostMapping(value = "/saveproject")
     public ResponseEntity saveProject(@RequestBody Project project, @RequestParam(value = "id") Integer id) throws Exception {
         project.setCreatedBy(id);

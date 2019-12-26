@@ -1,14 +1,12 @@
 package com.simplevat.entity;
 
-import com.simplevat.entity.invoice.*;
-import com.simplevat.entity.Product;
-import com.simplevat.entity.VatCategory;
+import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import org.hibernate.annotations.ColumnDefault;
 
 /**
@@ -41,24 +39,24 @@ public class SupplierInvoiceLineItem implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "VAT_ID")
-    private VatCategory vat;
+    private VatCategory vatCategory;
 
     @Column(name = "CREATED_BY")
     @Basic(optional = false)
     private Integer createdBy;
 
-    @Column(name = "CREATED_DATE")
+     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    @Convert(converter = DateConverter.class)
+    private LocalDateTime createdDate;
 
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdateBy;
 
     @Column(name = "LAST_UPDATE_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdateDate;
+    @Convert(converter = DateConverter.class)
+    private LocalDateTime lastUpdateDate;
 
     @Column(name = "DELETE_FLAG")
     @ColumnDefault(value = "0")
@@ -72,7 +70,7 @@ public class SupplierInvoiceLineItem implements Serializable {
     private Integer versionNumber;
 
     @ManyToOne
-    @JoinColumn(name = "INVOICE_ID")
-    private Invoice invoice;
+    @JoinColumn(name = "SUPPLIER_INVOICE_ID")
+    private SupplierInvoice supplierInvoice;
     
 }

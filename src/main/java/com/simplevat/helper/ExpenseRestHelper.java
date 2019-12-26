@@ -6,27 +6,21 @@
 package com.simplevat.helper;
 
 import com.simplevat.contact.model.ExpenseItemModel;
-import com.simplevat.entity.CurrencyConversion;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.User;
 import com.simplevat.entity.VatCategory;
+import com.simplevat.rest.expenses.ExpenseModel;
 import com.simplevat.rest.expenses.ExpenseRestModel;
-import com.simplevat.service.BankAccountService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,13 +45,15 @@ public class ExpenseRestHelper implements Serializable {
     @Autowired
     private ProjectService projectService;
 
-    public Expense getExpenseEntity(ExpenseRestModel model, User user) throws Exception {
+    @Autowired
+    private TransactionCategoryService transactionCategoryService;
+
+//    @Autowired
+//    private EmployeeService emploayeeService;
+    public Expense getExpenseEntity(ExpenseModel model, User user) throws Exception {
 
         Expense.ExpenseBuilder expenseBuilder = Expense.builder()
                 .expenseId(model.getExpenseId() != null ? model.getExpenseId() : null)
-                .createdBy(model.getCreatedBy())
-                .createdDate(model.getCreatedDate())
-                .deleteFlag(model.isDeleteFlag())
                 .expenseAmount(model.getExpenseAmount())
                 .payee(model.getPayee());
         if (model.getExpenseDate() != null) {
@@ -65,35 +61,28 @@ public class ExpenseRestHelper implements Serializable {
             expenseBuilder.expenseDate(expenseDate);
         }
         expenseBuilder.expenseDescription(model.getExpenseDescription())
-                .lastUpdateBy(model.getLastUpdatedBy())
-                .lastUpdateDate(model.getLastUpdateDate())
                 .receiptAttachmentDescription(model.getReceiptAttachmentDescription())
-                .receiptAttachmentPath(model.getReceiptAttachmentPath())
-                .receiptNumber(model.getReceiptNumber())
-                .versionNumber(model.getVersionNumber());
+                .receiptNumber(model.getReceiptNumber());
         if (model.getCurrencyCode() != null) {
             expenseBuilder.currency(currencyService.findByPK(model.getCurrencyCode()));
         }
         if (model.getProjectId() != null) {
             expenseBuilder.project(projectService.findByPK(model.getProjectId()));
         }
-
-        if (model.getExpenseId() == null || model.getExpenseId() == 0) {
-            expenseBuilder.deleteFlag(false);
-            expenseBuilder.createdBy(user.getUserId());
-            expenseBuilder.createdDate(LocalDateTime.now());
-        } else {
-            expenseBuilder.lastUpdateDate(LocalDateTime.now());
-            expenseBuilder.lastUpdateBy(user.getUserId());
+        if (model.getExpenseCategory() != null) {
+            expenseBuilder.transactionCategory(transactionCategoryService.findByPK(model.getExpenseCategory()));
         }
-
+//        if (model.getEmployeeId()!= null) {
+//            expenseBuilder.employee(emploayeeService.findByPK(model.getEmployeeId()));
+//        }     
+//     
         Expense expense = expenseBuilder.build();
         return expense;
     }
 
-    public ExpenseRestModel getExpenseModel(Expense entity) {
+    public ExpenseModel getExpenseModel(Expense entity) {
         try {
-            ExpenseRestModel expenseModel = new ExpenseRestModel();
+            ExpenseModel expenseModel = new ExpenseModel();
             expenseModel.setExpenseId(entity.getExpenseId());
             expenseModel.setCreatedBy(entity.getCreatedBy());
             expenseModel.setCreatedDate(entity.getCreatedDate());
@@ -110,17 +99,14 @@ public class ExpenseRestHelper implements Serializable {
             expenseModel.setExpenseDescription(entity.getExpenseDescription());
             expenseModel.setLastUpdateDate(entity.getLastUpdateDate());
             expenseModel.setLastUpdatedBy(entity.getLastUpdateBy());
-            expenseModel.setLastUpdatedBy(entity.getLastUpdateBy());
             if (entity.getProject() != null) {
                 expenseModel.setProjectId(entity.getProject().getProjectId());
             }
             expenseModel.setReceiptAttachmentDescription(entity.getReceiptAttachmentDescription());
-            expenseModel.setReceiptAttachmentPath(entity.getReceiptAttachmentPath());
             expenseModel.setReceiptNumber(entity.getReceiptNumber());
             if (entity.getTransactionCategory() != null) {
-                expenseModel.setTransactionCategory(entity.getTransactionCategory().getTransactionCategoryId());
+                expenseModel.setExpenseCategory(entity.getTransactionCategory().getTransactionCategoryId());
             }
-
             expenseModel.setVersionNumber(entity.getVersionNumber());
 
             return expenseModel;
@@ -130,13 +116,12 @@ public class ExpenseRestHelper implements Serializable {
         return null;
     }
 
-    private void updateSubTotal(@NonNull final ExpenseItemModel expenseItemModel) {
-        final BigDecimal unitPrice = expenseItemModel.getUnitPrice();
-        VatCategory vatCategory = vatCategoryService.findByPK(expenseItemModel.getVatCategoryId());
-        if (null != unitPrice) {
-            final BigDecimal amountWithoutTax = unitPrice.add(unitPrice.multiply(vatCategory.getVat()).divide(new BigDecimal(100)));
-            expenseItemModel.setSubTotal(amountWithoutTax);
-        }
-    }
-
+//    private void updateSubTotal(@NonNull final ExpenseItemModel expenseItemModel) {
+//        final BigDecimal unitPrice = expenseItemModel.getUnitPrice();
+//        VatCategory vatCategory = vatCategoryService.findByPK(expenseItemModel.getVatCategoryId());
+//        if (null != unitPrice) {
+//            final BigDecimal amountWithoutTax = unitPrice.add(unitPrice.multiply(vatCategory.getVat()).divide(new BigDecimal(100)));
+//            expenseItemModel.setSubTotal(amountWithoutTax);
+//        }
+//    }
 }

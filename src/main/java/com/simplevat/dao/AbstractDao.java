@@ -67,7 +67,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 
         TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
         for (DbFilter dbFilter : dbFilters) {
-            if (dbFilter.getValue() != null) {
+            if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
                 typedQuery.setParameter(dbFilter.getDbCoulmnName(), dbFilter.getValue());
             }
         }

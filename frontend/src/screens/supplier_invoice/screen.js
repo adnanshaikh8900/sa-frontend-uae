@@ -38,6 +38,7 @@ import moment from 'moment'
 import * as SupplierInvoiceActions from './actions'
 
 import './style.scss'
+import { setNestedObjectValues } from 'formik';
 
 const mapStateToProps = (state) => {
   return ({
@@ -61,7 +62,15 @@ class SupplierInvoice extends React.Component {
         { value: 'Unpaid', label: 'Unpaid' },
         { value: 'Partially Paid', label: 'Partially Paid' },
       ],
-      actionButtons: {}
+      actionButtons: {},
+      sendObj : {
+        customerName : '',
+        referenceNumber : '',
+        invoiceDate : '',
+       invoiceDueDate : '',
+        amount : '',
+        status : ''
+     }
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -89,7 +98,7 @@ class SupplierInvoice extends React.Component {
   }
 
   initializeData () {
-    this.props.supplierInvoiceActions.getSupplierInoviceList()
+    this.props.supplierInvoiceActions.getSupplierInoviceList(this.state.sendObj)
   }
 
   renderInvoiceNumber (cell, row) {
@@ -105,9 +114,9 @@ class SupplierInvoice extends React.Component {
 
   renderInvoiceStatus (cell, row) {
     let classname = ''
-    if (row.statusName == 'paid') {
+    if (row.status == 'Paid') {
       classname = 'badge-success'
-    } else if (row.status == 'UNPAID') {
+    } else if (row.status == 'Unpaid') {
       classname = 'badge-danger'
     } else if (row.status == 'PARTIALLY PAID') {
       classname = "badget-info"
@@ -191,13 +200,13 @@ class SupplierInvoice extends React.Component {
     const supplier_invoice_data = this.props.supplier_invoice_list ? this.props.supplier_invoice_list.map(supplier => 
      
       ({
-        status : supplier.statusName,
-        customerName : supplier.invoiceContact.firstName,
-        invoiceNumber: supplier.invoiceReferenceNumber,        
+        status : supplier.status,
+        customerName : supplier.customerName,
+        invoiceNumber: supplier.referenceNumber,        
         invoiceDate: moment(supplier.invoiceDate).format('L'),
         invoiceDueDate: moment(supplier.invoiceDueDate).format('L'),
-        invoiceAmount: supplier.invoiceAmount,
-        // vatAmount: supplier.totalCost,
+        invoiceAmount: supplier.totalAmount,
+        vatAmount: supplier.totalVatAmount,
       })
     ) : ""
 
@@ -319,7 +328,9 @@ class SupplierInvoice extends React.Component {
                         
                           <TableHeaderColumn
                             width="130"
+                            dataField="status"
                             dataFormat={this.renderInvoiceStatus}
+                            dataSort
                           >
                             Status
                           </TableHeaderColumn>
@@ -328,7 +339,7 @@ class SupplierInvoice extends React.Component {
                             dataField="customerName"
                             dataSort
                           >
-                            Customer Name
+                            Supplier Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="invoiceNumber"

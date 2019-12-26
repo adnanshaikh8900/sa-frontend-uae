@@ -7,6 +7,6 @@ import lombok.Data;
 public class ProductRequestFilterModel extends PaginationModel{
     private String name;
     private String productCode;
-    private String vatPercentage;
+    private Integer vatPercentage;
 
 }

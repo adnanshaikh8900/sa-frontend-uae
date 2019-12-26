@@ -17,7 +17,7 @@ import org.hibernate.annotations.ColumnDefault;
     ,
     @NamedQuery(name = "contactsByType",
             query = "SELECT c "
-            + "FROM Contact c where c.deleteFlag = FALSE Where c.contactType = :contactType order by c.firstName, c.lastName")
+            + "FROM Contact c where c.deleteFlag = FALSE and c.contactType = :contactType order by c.firstName, c.lastName")
     ,
     @NamedQuery(name = "Contact.contactByEmail",
             query = "SELECT c "

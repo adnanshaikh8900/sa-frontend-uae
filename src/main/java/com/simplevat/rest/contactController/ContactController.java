@@ -6,14 +6,8 @@
 package com.simplevat.rest.contactController;
 
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.ContactTypeConstant;
 import com.simplevat.entity.Contact;
 import com.simplevat.service.ContactService;
-import com.simplevat.service.CountryService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.LanguageService;
-import com.simplevat.service.TitleService;
-import com.simplevat.service.UserServiceNew;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.security.JwtTokenUtil;
 import java.io.IOException;

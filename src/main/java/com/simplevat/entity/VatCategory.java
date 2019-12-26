@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 /**
@@ -17,6 +18,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "VAT_CATEGORY")
 @Data
+@NoArgsConstructor
 public class VatCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,8 +62,12 @@ public class VatCategory implements Serializable {
     @Transient
     private String vatLabel;
 
+    public VatCategory(Integer id) {
+        this.id = id;
+    }
+    
     public String getVatLabel() {
-        return name + "(" + vat.toString() + ")";
+        return name + "(" + vat + ")";
     }
 
 }

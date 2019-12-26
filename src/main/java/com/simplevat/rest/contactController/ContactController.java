@@ -49,48 +49,20 @@ public class ContactController implements Serializable {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-//    private int totalEmployees;
-//
-//    private int totalVendors;
-//
-//    private int totalCustomers;
-//
-//    private int totalContacts;
-//
-//
-//    private void contactCountByType(ContactViewModel contactViewModel) {
-//        totalEmployees = 0;
-//        totalCustomers = 0;
-//        totalVendors = 0;
-//        totalContacts = 0;
-//        if (contactViewModel.getContactType() != null) {
-//            if (contactViewModel.getContactType().getId() == ContactTypeConstant.EMPLOYEE) {
-//                totalEmployees++;
-//            } else if (contactViewModel.getContactType().getId() == ContactTypeConstant.CUSTOMER) {
-//                totalCustomers++;
-//            } else {
-//                totalVendors++;
-//            }
-//        }
-//        totalContacts++;
-//    }
-    @GetMapping(value = "/getSupplierList")
-    public ResponseEntity getSupplierList(PaginationModel paginationModel) throws IOException {
+    @GetMapping(value = "/getContactList")
+    public ResponseEntity getContactList(PaginationModel paginationModel, @RequestParam(value = "contactType", required = false) Integer contactType) throws IOException {
         if (paginationModel == null) {
             paginationModel = new PaginationModel();
         }
         List<ContactListModel> contactListModels = new ArrayList<>();
-        List<Contact> contactList = contactService.getContacts(ContactTypeConstant.SUPPLIER, paginationModel.getPageNo(), paginationModel.getPageSize());
+        List<Contact> contactList;
+        if (contactType == null) {
+            contactList = contactService.getAllContacts(paginationModel.getPageNo(), paginationModel.getPageSize());
+        } else {
+            contactList = contactService.getContacts(contactType, paginationModel.getPageNo(), paginationModel.getPageSize());
+        }
         contactList.forEach(contact -> contactListModels.add(contactHelper.getListModel(contact)));
         return new ResponseEntity<>(contactListModels, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/getCustomerList")
-    public ResponseEntity getCustomerList(PaginationModel paginationModel) {
-        List<ContactListModel> contactListModels = new ArrayList<>();
-        List<Contact> contactList = contactService.getContacts(ContactTypeConstant.CUSTOMER, paginationModel.getPageNo(), paginationModel.getPageSize());
-        contactList.forEach(cobtact -> contactListModels.add(contactHelper.getListModel(cobtact)));
-        return new ResponseEntity<>(contactList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/save")

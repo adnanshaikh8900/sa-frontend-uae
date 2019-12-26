@@ -21,13 +21,18 @@ public class ContactServiceImpl extends ContactService {
     private ContactDao contactDao;
     
     @Override
-    public List<Contact> getContacts(Integer contactType, Integer pageIndex, Integer noOfRecorgs) {
-        return this.contactDao.getContacts(contactType, pageIndex, noOfRecorgs);
+    public List<Contact> getAllContacts(Integer pageNo, Integer pageSize){
+         return this.contactDao.getAllContacts(pageNo, pageSize);
     }
     
     @Override
-    public List<Contact> getContacts(Integer contactType, final String searchQuery) {
-        return contactDao.getContacts(contactType, searchQuery);
+    public List<Contact> getContacts(Integer contactType, Integer pageNo, Integer pageSize) {
+        return this.contactDao.getContacts(contactType, pageNo, pageSize);
+    }
+    
+    @Override
+    public List<Contact> getContacts(Integer contactType, final String searchQuery, Integer pageNo, Integer pageSize) {
+        return contactDao.getContacts(contactType, searchQuery, pageNo, pageSize);
     }
     
     @Override

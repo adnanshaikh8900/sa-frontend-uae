@@ -3,6 +3,7 @@ package com.simplevat.dao.impl;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ContactDao;
 import com.simplevat.entity.Contact;
+import com.simplevat.rest.DropdownModel;
 
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,17 @@ import org.apache.commons.collections4.CollectionUtils;
  */
 @Repository(value = "contactDao")
 public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements ContactDao {
+    
+    @Override
+    public List<DropdownModel> getContactForDropdown(Integer contactType) {
+        List<DropdownModel> empSelectItemModels = getEntityManager()
+                .createNamedQuery("contactForDropdown", DropdownModel.class)
+                .setParameter("contactType", contactType)
+                .getResultList();
+        return empSelectItemModels;
+    }
 
+    
     @Override
     public List<Contact> getContacts(Integer contactType, Integer pageNo, Integer pageSize) {
         List<Contact> contacts = getEntityManager().createNamedQuery("contactsByType", Contact.class)

@@ -8,6 +8,7 @@ package com.simplevat.rest.contactController;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ContactTypeConstant;
 import com.simplevat.entity.Contact;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
@@ -63,6 +64,12 @@ public class ContactController implements Serializable {
         }
         contactList.forEach(contact -> contactListModels.add(contactHelper.getListModel(contact)));
         return new ResponseEntity<>(contactListModels, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getContactsForDropdown")
+    public ResponseEntity getContactsForDropdown(@RequestParam("contactType") Integer contactType) throws IOException {
+        List<DropdownModel> dropdownModels = contactService.getContactForDropdown(contactType);
+        return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
     }
 
     @GetMapping(value = "/getContactById")

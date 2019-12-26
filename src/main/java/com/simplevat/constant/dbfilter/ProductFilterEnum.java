@@ -12,8 +12,8 @@ import lombok.Getter;
  * @author uday
  */
 public enum ProductFilterEnum {
-    PRODUCT_NAME("productName", " = :productName"),
-    PRODUCT_CODE("productCode", " like '%:productCode%'"),
+    PRODUCT_NAME("productName", " like CONCAT(:productName,'%')"),
+    PRODUCT_CODE("productCode", " like CONCAT(:productCode,'%')"),
     PRODUCT_VAT_PERCENTAGE("vatCategory", " = :vatCategory"),   
     USER_ID("createdBy", "= :createdBy");
 

@@ -17,12 +17,12 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 /**
- * Created by mohsinh on 2/26/2017.
+ * Created by ashish .
  */
 @Data
 @Entity
 @Table(name = "SUPPLIER_INVOICE")
-@TableGenerator(name="INCREMENT_INITIAL_VALUE", initialValue = 1000)
+@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 @NamedQueries({
     @NamedQuery(name = "allSupplierInvoices",
             query = "from SupplierInvoice i where i.deleteFlag = false order by i.lastUpdateDate desc")
@@ -32,9 +32,8 @@ public class SupplierInvoice implements Serializable {
     private static final long serialVersionUID = -8324261801367612269L;
 
     @Id
-    @Setter(AccessLevel.NONE)
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY,generator ="INCREMENT_INITIAL_VALUE")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "INCREMENT_INITIAL_VALUE")
     private Integer id;
 
     @Column(name = "REFERENCE_NUMBER")
@@ -87,12 +86,12 @@ public class SupplierInvoice implements Serializable {
     @ColumnDefault(value = "0")
     @Basic(optional = false)
     private Boolean deleteFlag = Boolean.FALSE;
-    
+
     @Column(name = "FREEZE")
     @ColumnDefault(value = "0")
     @Basic(optional = false)
     private Boolean freeze = Boolean.FALSE;
-    
+
     @Column(name = "VERSION_NUMBER")
     @ColumnDefault(value = "1")
     @Basic(optional = false)
@@ -111,7 +110,7 @@ public class SupplierInvoice implements Serializable {
     @JoinColumn(name = "DOCUMENT_TEMPLATE_ID")
     private DocumentTemplate documentTemplate;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "invoice", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "supplierInvoice", orphanRemoval = true)
     private Collection<SupplierInvoiceLineItem> supplierInvoiceLineItems;
 
     @Column(name = "TOTAL_AMOUNT")
@@ -121,21 +120,29 @@ public class SupplierInvoice implements Serializable {
     @Column(name = "TOTAL_VAT_AMOUNT")
     @ColumnDefault(value = "0.00")
     private BigDecimal totalVatAmount;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
     private InvoiceStatusType status;
 
-    public Collection<SupplierInvoiceLineItem> getSupplierInvoiceLineItems() {
-        return (supplierInvoiceLineItems == null) ? (supplierInvoiceLineItems = new ArrayList<>()) : supplierInvoiceLineItems;
-    }
+    @Basic
+    @Column(name = "RECEIPT_ATTACHMENT_PATH")
+    private String receiptAttachmentPath;
 
-    public void setInvoiceLineItems( final Collection<SupplierInvoiceLineItem> lineItems) {
+    @Basic
+    @Column(name = "RECEIPT_ATTACHMENT_DESCRIPTION")
+    private String receiptAttachmentDescription;
 
-        final Collection<SupplierInvoiceLineItem> supplierInvoiceLineItems = getSupplierInvoiceLineItems();
-        supplierInvoiceLineItems.clear();
-        supplierInvoiceLineItems.addAll(lineItems);
-    }
+//    public Collection<SupplierInvoiceLineItem> getSupplierInvoiceLineItems() {
+//        return (supplierInvoiceLineItems == null) ? (supplierInvoiceLineItems = new ArrayList<>()) : supplierInvoiceLineItems;
+//    }
+//
+//    public void setInvoiceLineItems(final Collection<SupplierInvoiceLineItem> lineItems) {
+//
+//        final Collection<SupplierInvoiceLineItem> supplierInvoiceLineItems = getSupplierInvoiceLineItems();
+//        supplierInvoiceLineItems.clear();
+//        supplierInvoiceLineItems.addAll(lineItems);
+//    }
 
     @PrePersist
     public void updateDates() {

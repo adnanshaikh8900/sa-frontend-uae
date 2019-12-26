@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -10,12 +11,20 @@ import org.hibernate.annotations.ColumnDefault;
 /**
  * Created by mohsinh on 2/26/2017.
  */
+
 @NamedQueries({
+    @NamedQuery(name = "contactForDropdown",
+            query = "SELECT new "+ CommonConstant.DROPDOWN_MODEL_PACKAGE +"(c.contactId , CONCAT(c.firstName, ' ', c.middleName, ' ', c.lastName))"
+            + " FROM Contact c where c.deleteFlag = FALSE and c.contactType = :contactType order by c.firstName, c.lastName")
+    ,
     @NamedQuery(name = "allContacts",
             query = "SELECT c "
             + "FROM Contact c where c.deleteFlag = FALSE order by c.firstName, c.lastName")
     ,
-    
+    @NamedQuery(name = "contactsByType",
+            query = "SELECT c "
+            + "FROM Contact c where c.deleteFlag = FALSE and c.contactType = :contactType order by c.firstName, c.lastName")
+    ,
     @NamedQuery(name = "Contact.contactByEmail",
             query = "SELECT c "
             + "FROM Contact c where c.email =:email")
@@ -45,66 +54,66 @@ public class Contact implements Serializable {
     @Basic
     @Column(name = "LAST_NAME")
     private String lastName;
-        
+
     @Column(name = "CONTACT_TYPE")
     private Integer contactType;
-    
+
     @Basic
     @Column(name = "ORGANIZATION")
     private String organization;
-    
+
     @Basic
     @Column(name = "PO_BOX_NUMBER")
     private String poBoxNumber;
-    
+
     @Basic
     @Column(name = "EMAIL")
     private String email;
-    
+
     @Basic
     @Column(name = "TELEPHONE")
     private String telephone;
-    
+
     @Basic
     @Column(name = "MOBILE_NUMBER")
     private String mobileNumber;
-    
+
     @Basic
     @Column(name = "ADDRESS_LINE1")
     private String addressLine1;
-    
+
     @Basic
     @Column(name = "ADDRESS_LINE2")
     private String addressLine2;
-    
+
     @Basic
     @Column(name = "ADDRESS_LINE3")
-    private String addressLine3;    
-    
+    private String addressLine3;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COUNTRY_CODE")
     private Country country;
-    
+
     @Basic
     @Column(name = "POST_ZIP_CODE")
     private String postZipCode;
-    
+
     @Basic
     @Column(name = "BILLING_EMAIL")
     private String billingEmail;
-    
+
     @Basic
     @Column(name = "CONTRACT_PO_NUMBER")
     private String contractPoNumber;
-    
+
     @Basic
     @Column(name = "VAT_REGISTRATION_NUMBER")
     private String vatRegistrationNumber;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CURRENCY_CODE")
     private Currency currency;
-    
+
     @Basic(optional = false)
     @Column(name = "CREATED_BY")
     private Integer createdBy;

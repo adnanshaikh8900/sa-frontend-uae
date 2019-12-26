@@ -81,7 +81,7 @@ public class TransactionReportRestController {
             List<TransactionCategory> transactionCategoryList = new ArrayList<>();
             transactionCategoryList.clear();
             if (transactionType != null) {
-                transactionCategoryList = transactionCategoryService.findAllTransactionCategoryByTransactionType(transactionType.getTransactionTypeCode(), name);
+                transactionCategoryList = transactionCategoryService.findAllTransactionCategoryByTransactionTypeAndName(transactionType.getTransactionTypeCode(), name);
                 for (TransactionCategory transactionCategory : transactionCategoryList) {
                     if (transactionCategory.getParentTransactionCategory() != null) {
                         transactionCategoryParentList.add(transactionCategory.getParentTransactionCategory());

@@ -1,6 +1,7 @@
 package com.simplevat.dao;
 
 import com.simplevat.entity.Contact;
+import com.simplevat.rest.DropdownModel;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,9 +11,13 @@ import java.util.Optional;
  */
 public interface ContactDao extends Dao<Integer, Contact> {
 
+    public List<DropdownModel> getContactForDropdown(Integer contactType);
+
+    public List<Contact> getAllContacts(Integer pageNo, Integer pageSize);
+
     public List<Contact> getContacts(Integer contactType, Integer pageNo, Integer pageSize);
-    
-    public List<Contact> getContacts(Integer contactType, final String searchQuery);
+
+    public List<Contact> getContacts(Integer contactType, final String searchQuery, Integer pageNo, Integer pageSize);
 
     public Optional<Contact> getContactByEmail(String Email);
 

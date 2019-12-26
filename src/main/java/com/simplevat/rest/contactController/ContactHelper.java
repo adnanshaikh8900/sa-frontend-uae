@@ -7,6 +7,11 @@ package com.simplevat.rest.contactController;
 
 import com.simplevat.entity.Contact;
 import com.simplevat.contact.model.ContactModel;
+import com.simplevat.service.CountryService;
+import com.simplevat.service.CurrencyService;
+import java.time.LocalDateTime;
+import lombok.Builder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,7 +21,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContactHelper {
 
-     public ContactListModel getListModel(Contact contact) {
+    @Autowired
+    CountryService countryService;
+
+    @Autowired
+    CurrencyService currencyService;
+
+    public ContactListModel getListModel(Contact contact) {
         return ContactListModel.builder()
                 .id(contact.getContactId())
                 .contactType(contact.getContactType())
@@ -26,124 +37,70 @@ public class ContactHelper {
                 .middleName(contact.getMiddleName())
                 .lastName(contact.getLastName())
                 .mobileNumber(contact.getMobileNumber()).build();
-                
-        
-     }
-    public ContactModel getContactModel(Contact contact) {
-        ContactModel contactModel = new ContactModel();
-//        contactModel.setContactId(contact.getContactId());
-//        contactModel.setBillingEmail(contact.getBillingEmail());
-//        contactModel.setCity(contact.getCity());
-//        contactModel.setContractPoNumber(contact.getContractPoNumber());
-//        contactModel.setCountry(contact.getCountry());
-//        contactModel.setCurrency(contact.getCurrency());
-//        contactModel.setEmail(contact.getEmail());
-//        contactModel.setFirstName(contact.getFirstName());
-//        contactModel.setInvoicingAddressLine1(contact.getInvoicingAddressLine1());
-//        contactModel.setInvoicingAddressLine2(contact.getInvoicingAddressLine2());
-//        contactModel.setInvoicingAddressLine3(contact.getInvoicingAddressLine3());
-//        contactModel.setLanguage(contact.getLanguage());
-//        contactModel.setLastName(contact.getLastName());
-//        contactModel.setMiddleName(contact.getMiddleName());
-//        contactModel.setMobileNumber(contact.getMobileNumber());
-//        contactModel.setOrganization(contact.getOrganization());
-//        contactModel.setPoBoxNumber(contact.getPoBoxNumber());
-//        contactModel.setPostZipCode(contact.getPostZipCode());
-//        contactModel.setStateRegion(contact.getStateRegion());
-//        contactModel.setTelephone(contact.getTelephone());
-//        contactModel.setTitle(contact.getTitle());
-//        contactModel.setVatRegistrationNumber(contact.getVatRegistrationNumber());
-//        contactModel.setVersionNumber(contact.getVersionNumber());
-//        contactModel.setCreatedBy(contact.getCreatedBy());
-//        contactModel.setCreatedDate(contact.getCreatedDate());
-//        contactModel.setLastUpdateDate(contact.getLastUpdateDate());
-//        contactModel.setLastUpdatedBy(contact.getLastUpdatedBy());
-//        contactModel.setDeleteFlag(contact.getDeleteFlag());
-//        contactModel.setContactCode(contact.getContactId());
-        return contactModel;
+
     }
 
-    public Contact getContact(ContactModel contactModel) {
+    public Contact getEntity(ContactPersistModel contactPersistModel, Integer userId) {
         Contact contact = new Contact();
-//        contact.setContactId(contactModel.getContactId());
-//        contact.setBillingEmail(contactModel.getBillingEmail());
-//        contact.setCity(contactModel.getCity());
-//        contact.setContractPoNumber(contactModel.getContractPoNumber());
-//        contact.setCountry(contactModel.getCountry());
-//        contact.setCurrency(contactModel.getCurrency());
-//        contact.setEmail(contactModel.getEmail());
-//        contact.setFirstName(contactModel.getFirstName());
-//        contact.setInvoicingAddressLine1(contactModel.getInvoicingAddressLine1());
-//        contact.setInvoicingAddressLine2(contactModel.getInvoicingAddressLine2());
-//        contact.setInvoicingAddressLine3(contactModel.getInvoicingAddressLine3());
-//        contact.setLanguage(contactModel.getLanguage());
-//        contact.setLastName(contactModel.getLastName());
-//        contact.setMiddleName(contactModel.getMiddleName());
-//        contact.setMobileNumber(contactModel.getMobileNumber());
-//        contact.setOrganization(contactModel.getOrganization());
-//        contact.setPoBoxNumber(contactModel.getPoBoxNumber());
-//        contact.setPostZipCode(contactModel.getPostZipCode());
-//        contact.setStateRegion(contactModel.getStateRegion());
-//        contact.setTelephone(contactModel.getTelephone());
-//        contact.setTitle(contactModel.getTitle());
-//        contact.setVatRegistrationNumber(contactModel.getVatRegistrationNumber());
-//        contact.setVersionNumber(contactModel.getVersionNumber());
-//        contact.setCreatedBy(contactModel.getCreatedBy());
-//        contact.setCreatedDate(contactModel.getCreatedDate());
-//        contact.setLastUpdateDate(contactModel.getLastUpdateDate());
-//        contact.setLastUpdatedBy(contactModel.getLastUpdatedBy());
-//        contact.setDeleteFlag(contactModel.getDeleteFlag());
+        contact.setContactId(contactPersistModel.getId());
+        contact.setContactType(contactPersistModel.getContactType());
+        contact.setContractPoNumber(contactPersistModel.getContractPoNumber());
+        if (contactPersistModel.getCountryId() != null) {
+            contact.setCountry(countryService.getCountry(contactPersistModel.getCountryId()));
+        }
+        if (contactPersistModel.getCurrencyCode() != null) {
+            contact.setCurrency(currencyService.getCurrency(contactPersistModel.getCurrencyCode()));
+        }
+
+        contact.setEmail(contactPersistModel.getEmail());
+        contact.setFirstName(contactPersistModel.getFirstName());
+        contact.setMiddleName(contactPersistModel.getMiddleName());
+        contact.setLastName(contactPersistModel.getLastName());
+        contact.setAddressLine1(contactPersistModel.getAddressLine1());
+        contact.setAddressLine2(contactPersistModel.getAddressLine2());
+        contact.setAddressLine3(contactPersistModel.getAddressLine3());
+        contact.setMobileNumber(contactPersistModel.getMobileNumber());
+        contact.setOrganization(contactPersistModel.getOrganization());
+        contact.setPoBoxNumber(contactPersistModel.getPoBoxNumber());
+        contact.setPostZipCode(contactPersistModel.getPostZipCode());
+        contact.setTelephone(contactPersistModel.getTelephone());
+        contact.setVatRegistrationNumber(contactPersistModel.getVatRegistrationNumber());
+        if (contactPersistModel.getId() != null) {
+            contact.setCreatedBy(userId);
+            contact.setCreatedDate(LocalDateTime.now());
+        } else {
+            contact.setLastUpdatedBy(userId);
+            contact.setLastUpdateDate(LocalDateTime.now());
+        }
         return contact;
     }
 
-//    public ContactViewModel getContactViewModel(ContactView contactView) {
-//        ContactViewModel contactViewModel = new ContactViewModel();
-//        if (contactView.getContactId() != 0) {
-//            contactViewModel.setContactId(contactView.getContactId());
-//        }
-//        if (contactView.getEmail() != null && !contactView.getEmail().isEmpty()) {
-//            contactViewModel.setEmail(contactView.getEmail());
-//        }
-//        if (contactView.getFirstName() != null && !contactView.getFirstName().isEmpty()) {
-//            contactViewModel.setFirstName(contactView.getFirstName());
-//        }
-//        if (contactView.getLastName() != null && !contactView.getLastName().isEmpty()) {
-//            contactViewModel.setLastName(contactView.getLastName());
-//        }
-//        if (contactView.getMiddleName() != null && !contactView.getMiddleName().isEmpty()) {
-//            contactViewModel.setMiddleName(contactView.getMiddleName());
-//        }
-//        if (contactView.getOrganization() != null && !contactView.getOrganization().isEmpty()) {
-//            contactViewModel.setOrganization(contactView.getOrganization());
-//        }
-//        if (contactView.getTelephone() != null && !contactView.getTelephone().isEmpty()) {
-//            contactViewModel.setTelephone(contactView.getTelephone());
-//        }
-//        if (contactView.getNextDueDate() != null) {
-//            contactViewModel.setNextDueDate(contactView.getNextDueDate());
-//        }
-//        if (contactView.getTitle() != null && !contactView.getTitle().isEmpty()) {
-//            contactViewModel.setTitle(contactView.getTitle());
-//        }
-//        if (contactView.getCurrencySymbol() != null && !contactView.getCurrencySymbol().isEmpty()) {
-//            contactViewModel.setCurrencySymbol(contactView.getCurrencySymbol());
-//        }
-//        if (contactView.getDueAmount() != null) {
-//            contactViewModel.setDueAmount(contactView.getDueAmount());
-//        }
-//
-//        if (contactView.getContactType() != 0) {
-//            if (contactView.getContactType() != 3) {
-//                for (ContactType contactType : ContactUtil.contactTypeList()) {
-//                    if (contactType.getId().equals(contactView.getContactType())) {
-//                        contactViewModel.setContactType(contactType);
-//                    }
-//                }
-//            } else {
-//                contactViewModel.setContactType(new ContactType(ContactTypeConstant.EMPLOYEE, "Employee"));
-//            }
-//
-//        }
-//        return contactViewModel;
-//    }
+    public ContactPersistModel getContactPersistModel(Contact contact) {
+        ContactPersistModel.ContactPersistModelBuilder builder = ContactPersistModel.builder()
+                .id(contact.getContactId())
+                .contactType(contact.getContactType())
+                .contractPoNumber(contact.getContractPoNumber())
+                .email(contact.getEmail())
+                .firstName(contact.getFirstName())
+                .middleName(contact.getMiddleName())
+                .lastName(contact.getLastName())
+                .mobileNumber(contact.getMobileNumber())
+                .organization(contact.getOrganization())
+                .poBoxNumber(contact.getPoBoxNumber())
+                .postZipCode(contact.getPostZipCode())
+                .addressLine1(contact.getAddressLine1())
+                .addressLine2(contact.getAddressLine2())
+                .addressLine3(contact.getAddressLine3())
+                .telephone(contact.getTelephone())
+                .vatRegistrationNumber(contact.getVatRegistrationNumber());
+        if (contact.getCountry() != null) {
+            builder.countryId(contact.getCountry().getCountryCode());
+        }
+        if (contact.getCurrency() != null) {
+            builder.currencyCode(contact.getCurrency().getCurrencyCode());
+        }
+
+        return builder.build();
+    }
+
 }

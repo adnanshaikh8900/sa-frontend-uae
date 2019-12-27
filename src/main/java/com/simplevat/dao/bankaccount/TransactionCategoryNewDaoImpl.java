@@ -1,10 +1,14 @@
 package com.simplevat.dao.bankaccount;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
+import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import javax.persistence.TypedQuery;
@@ -13,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository(value = "transactionCategoryDao")
 public class TransactionCategoryNewDaoImpl extends AbstractDao<Integer, TransactionCategory> implements TransactionCategoryDaoNew {
 
-    @Override
+	@Override
     public TransactionCategory getDefaultTransactionCategory() {
         List<TransactionCategory> transactionCategories = findAllTransactionCategory();
 
@@ -86,5 +90,15 @@ public class TransactionCategoryNewDaoImpl extends AbstractDao<Integer, Transact
             }
         }
     }
+    
+	@Override
+	public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap) {
+		List<DbFilter> dbFilters = new ArrayList();
+		filterMap.forEach((transactionCategoryFilter, value) -> dbFilters
+				.add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
+						.condition(transactionCategoryFilter.getCondition()).value(value).build()));
+		List<TransactionCategory> transactionCategories = this.executeQuery(dbFilters);
+		return transactionCategories;
+	}
 
 }

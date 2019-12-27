@@ -4,6 +4,7 @@ import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -29,6 +30,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "TRANSACTION_TYPE")
 @Data
+@NoArgsConstructor
 public class TransactionType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -87,4 +89,8 @@ public class TransactionType implements Serializable {
     @Basic(optional = false)
     @Version
     private Integer versionNumber;
+ 
+	public TransactionType(Integer transactionTypeCode) {
+		this.transactionTypeCode = transactionTypeCode;
+	}
 }

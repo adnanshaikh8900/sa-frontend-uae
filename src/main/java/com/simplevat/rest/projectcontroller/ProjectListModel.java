@@ -9,5 +9,7 @@ public class ProjectListModel {
 
 	private Integer projectId;
 	private String projectName;
+	private String vatRegistrationNumber; 
+	private String contactName;
 	
 }

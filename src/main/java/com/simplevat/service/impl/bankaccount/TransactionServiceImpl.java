@@ -307,5 +307,4 @@ public class TransactionServiceImpl extends TransactionService {
         activity.setLoggingRequired(true);
         return activity;
     }
-
 }

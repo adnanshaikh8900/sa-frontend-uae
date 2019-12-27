@@ -1,7 +1,9 @@
 package com.simplevat.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.criteria.bankaccount.TransactionCategoryCriteria;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 
@@ -24,4 +26,6 @@ public abstract class TransactionCategoryService extends SimpleVatService<Intege
     public abstract TransactionCategory getDefaultTransactionCategoryByTransactionCategoryId(Integer transactionCategoryId);
 
     public abstract void deleteByIds(List<Integer> ids);
+
+	public abstract List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap);
 }

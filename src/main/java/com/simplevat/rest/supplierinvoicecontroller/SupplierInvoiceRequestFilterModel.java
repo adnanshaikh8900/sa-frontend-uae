@@ -19,8 +19,8 @@ public class SupplierInvoiceRequestFilterModel extends PaginationModel {
 
     private String customerName;
     private String referenceNumber;
-    private Date invoiceDate;
-    private Date invoiceDueDate;
+    private String invoiceDate;
+    private String invoiceDueDate;
     private BigDecimal amount;
     private String status;
 }

@@ -20,7 +20,7 @@ public class SupplierInvoiceRequestModel {
     private Date invoiceDueDate;
     private Integer currencyCode;
     private String contactPoNumber;    
-    private MultipartFile attchmentFile;
+    private MultipartFile attachmentFile;
     private String receiptAttachmentDescription;
     private String receiptNumber;
     private String notes;

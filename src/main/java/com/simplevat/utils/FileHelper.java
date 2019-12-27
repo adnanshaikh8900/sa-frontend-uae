@@ -12,6 +12,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -86,14 +88,22 @@ public class FileHelper {
     }
 
     public String saveFile(MultipartFile multipartFile, FileTypeEnum fileTypeEnum) throws IOException {
-        String storagePath = fileLocation + File.separator;
-        String fileName = getFileName(multipartFile, fileTypeEnum);
-        File file = new File(storagePath + fileName);
-        multipartFile.transferTo(file);
-        return fileName;
+        String storagePath = fileLocation;
+        Map<String, String> map = getFileName(multipartFile, fileTypeEnum);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            File folder = new File(storagePath + entry.getKey());
+            if (!folder.isDirectory()) {
+                folder.mkdirs();
+            }
+            File file = new File(storagePath + entry.getValue());
+            multipartFile.transferTo(file);
+            return entry.getValue();
+        }
+        return "";
     }
 
-    public String getFileName(MultipartFile multipartFile, FileTypeEnum fileTypeEnum) {
+    public Map<String, String> getFileName(MultipartFile multipartFile, FileTypeEnum fileTypeEnum) {
+        Map<String, String> map = new HashMap<>();
         if (multipartFile.getOriginalFilename() != null) {
             String dateString = new SimpleDateFormat("yyyyMMdd").format(new Date());
             String fileExtension = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".") + 1);
@@ -101,14 +111,18 @@ public class FileHelper {
             String fileName = uuid.toString() + "." + fileExtension;
             switch (fileTypeEnum) {
                 case EXPENSE:
-                    return dateString + File.separator +"ex-" + fileName;
+                    map.put(dateString + File.separator, dateString + File.separator + "ex-" + fileName);
+                    break;
                 case CUSTOMER_INVOICE:
-                    return dateString + File.separator +"ci-" + fileName;
+                    map.put(dateString + File.separator, dateString + File.separator + "ci-" + fileName);
+                    break;
                 case SUPPLIER_INVOICE:
-                    return dateString + File.separator +"si-" + fileName;
+                    map.put(dateString + File.separator, dateString + File.separator + "si-" + fileName);
+                    break;
                 default:
-                    return uuid.toString();
+                    map.put(dateString + File.separator, dateString + File.separator + fileName);
             }
+            return map;
         }
         return null;
     }

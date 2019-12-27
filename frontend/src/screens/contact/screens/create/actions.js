@@ -8,7 +8,7 @@ export const createContact = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: `rest/contact/savecontact`,
+      url: '/rest/contact/save',
       data: obj
     }
 

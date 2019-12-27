@@ -23,10 +23,11 @@ export const getTransactionTypes = () => {
   }
 }
 
-export const getTransactionCategoryList = () => {
+export const getTransactionCategoryList = (data) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
+      // url: `rest/transactioncategory/gettransactioncategory?transactionCategoryCode=${data.transactionCategoryCode}&transactionCategoryName=${data.transactionCategoryName}&transactionType=${data.transactionType}`,
       url: `rest/transactioncategory/gettransactioncategory`
     }
 

@@ -37,7 +37,7 @@ const mapStateToProps = (state) => {
   return ({
     vat_list: state.product.vat_list,
     product_warehouse_list: state.product.product_warehouse_list,
-    product_parent_list: state.product.product_parent_list
+    product_category_list: state.product.product_category_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -79,7 +79,7 @@ class DetailProduct extends React.Component {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
       // this.props.productActions.getVatList();
-      this.props.productActions.getParentProductList();
+      this.props.productActions.getProductCategoryList();
       this.props.productActions.getProductVatCategoryList();
       this.props.productActions.getProductWareHouseList()
       // this.setState({
@@ -92,19 +92,19 @@ class DetailProduct extends React.Component {
               productName: res.data.productName ? res.data.productName : '',
               productDescription: res.data.productDescription,
               productCode: res.data.productCode,
-              vatCategoryId: res.data.vatCategory ? {
-                label: res.data.vatCategory.name,
-                value: res.data.vatCategory.id
-              } : '',
+              vatCategoryId: res.data.vatCategory ? res.data.vatCategory.id : '',
+              //   label: res.data.vatCategory.name,
+              //   value: res.data.vatCategory.id
+              // } : '',
               unitPrice: res.data.unitPrice,
-              parentProductId: res.data.parentProduct ? {
+              productCategoryId: res.data.parentProduct ? {
                 label: res.data.parentProduct.productID,
                 value: res.data.parentProduct.productName
               } : '',
-              productWarehouseId: res.data.productWarehouse ? {
-                label: res.data.productWarehouse.warehouseName,
-                value: res.data.productWarehouse.warehouseId
-              } : '',
+              productWarehouseId: res.data.productWarehouse ? res.data.productWarehouse.warehouseId : '',
+              //   label: res.data.productWarehouse.warehouseName,
+              //   value: res.data.productWarehouse.warehouseId
+              // } : '',
               vatIncluded: res.data.vatIncluded
             }
           })
@@ -134,7 +134,7 @@ class DetailProduct extends React.Component {
       productCode ,
       vatCategoryId,
       unitPrice,
-      parentProductId,
+      productCategoryId,
       productWarehouseId,
       vatIncluded,
     } = data
@@ -145,13 +145,14 @@ class DetailProduct extends React.Component {
       productCode: productCode,
       vatCategoryId: vatCategoryId,
       unitPrice: unitPrice,
-      parentProductId: parentProductId,
+      productCategoryId: productCategoryId,
       productWarehouseId: productWarehouseId,
       vatIncluded: vatIncluded,
     }
     this.props.detailProductActions.updateProduct(postData).then(res => {
       if (res.status === 200) {
-        this.success()
+        this.props.commonActions.tostifyAlert('sucess','Product Updated Successfully');
+        this.props.history.push('/admin/master/product')
       }
     }).catch(err => {
         this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
@@ -197,7 +198,7 @@ class DetailProduct extends React.Component {
 
   render() {
 
-    const { vat_list, product_parent_list, product_warehouse_list } = this.props
+    const { vat_list, product_category_list, product_warehouse_list } = this.props
     const { loading , dialog} = this.state
 
     return (
@@ -287,18 +288,18 @@ class DetailProduct extends React.Component {
 
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="parentProductId">Parent Product</Label>
+                                  <Label htmlFor="productCategoryId">Parent Product</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={selectOptionsFactory.renderOptions('productName', 'productID', product_parent_list)}
-                                    id="parentProductId"
-                                    name="parentProductId"
-                                    value={props.values.parentProductId}
+                                    options={selectOptionsFactory.renderOptions('productName', 'productID', product_category_list)}
+                                    id="productCategoryId"
+                                    name="productCategoryId"
+                                    value={props.values.productCategoryId}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedParentProduct: option.value
                                       })
-                                      props.handleChange("parentProductId")(option.value);
+                                      props.handleChange("productCategoryId")(option.value);
                                     }}
                                   />
                                 </FormGroup>
@@ -373,9 +374,9 @@ class DetailProduct extends React.Component {
                                     name="productWarehouseId"
                                     value={props.values.productWarehouseId}
                                     onChange={(option) => {
-                                      this.setState({
-                                        selectedWareHouse: option.value
-                                      })
+                                      // this.setState({
+                                      //   selectedWareHouse: option.value
+                                      // })
                                       props.handleChange("productWarehouseId")(option.value);
                                     }}
                                   />

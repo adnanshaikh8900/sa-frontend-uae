@@ -35,7 +35,7 @@ const mapStateToProps = (state) => {
   return ({
     country_list: state.contact.country_list,
     currency_list: state.contact.currency_list,
-    contact_type_list: state.contact.contact_type_list,
+    contact_type_list: state.contact.contact_type_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -61,9 +61,9 @@ class CreateContact extends React.Component {
         currency: '',
         email: '',
         firstName: '',
-        invoicingAddressLine1: '',
-        invoicingAddressLine2: '',
-        invoicingAddressLine3: '',
+        addressLine1: '',
+        addressLine2: '',
+        addressLine3: '',
         // language(Language, optional),
         lastName: '',
         middleName: '',
@@ -80,6 +80,11 @@ class CreateContact extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
     this.success = this.success.bind(this)
+    // this.contactType = [
+    //   {label: 'supplier',value: 1},
+    //   {label: 'customer',value: 2},
+    //   {label: 'both',value: 3},
+    // ]
   }
 
 
@@ -91,6 +96,7 @@ class CreateContact extends React.Component {
     this.props.contactActions.getContactTypeList();
     this.props.contactActions.getCountryList();
     this.props.contactActions.getCurrencyList();
+    
   }
 
   handleSubmit(data) {
@@ -103,9 +109,9 @@ class CreateContact extends React.Component {
       currency,
       email,
       firstName,
-      invoicingAddressLine1,
-      invoicingAddressLine2,
-      invoicingAddressLine3,
+      addressLine1,
+      addressLine2,
+      addressLine3,
       // language(Language, optional),
       lastName,
       middleName,
@@ -121,23 +127,23 @@ class CreateContact extends React.Component {
     const postData = {
       billingEmail: billingEmail !== null ? billingEmail : '',
       city: city.value !== null ? city.value : '',
-      contactType: contactType !== null ? contactType.value : '',
+      contactType: contactType !== null ? contactType : '',
       contractPoNumber: contractPoNumber,
-      country: country && country.value !== null ? country.value : '',
-      currency: currency && currency.value !== null ? currency.value : '',
+      countryId: country && country.value !== null ? country.value : '',
+      currencyCode: currency && currency.value !== null ? currency.value : '',
       email: email,
       firstName: firstName,
-      invoicingAddressLine1: invoicingAddressLine1,
-      invoicingAddressLine2: invoicingAddressLine2,
-      invoicingAddressLine3: invoicingAddressLine3,
+      addressLine1: addressLine1,
+      addressLine2: addressLine2,
+      addressLine3: addressLine3,
       // language(Language: optional):
       lastName: lastName,
       middleName: middleName,
       mobileNumber: mobileNumber,
       organization: organization,
       poBoxNumber: poBoxNumber,
-      postZipCode: postZipCode,
       stateRegion: stateRegion,
+      postZipCode: postZipCode,
       telephone: telephone,
       vatRegistrationNumber: vatRegistrationNumber
     }
@@ -156,12 +162,12 @@ class CreateContact extends React.Component {
     })
   }
   success() {
-    toast.success('Chart Of Account Created Successfully... ', {
+    toast.success('Contact Created Successfully... ', {
       position: toast.POSITION.TOP_RIGHT
     })
   }
   render() {
-    const { currency_list, country_list, loading, contact_type_list } = this.props;
+    const { currency_list, country_list, loading ,contact_type_list} = this.props;
     const { initValue } = this.state;
     return (
       <div className="create-contact-screen">
@@ -190,50 +196,50 @@ class CreateContact extends React.Component {
                           this.handleSubmit(values)
                           resetForm(initValue)
                         }}
-                        validationSchema={
-                          Yup.object().shape({
-                            firstName: Yup.string()
-                              .required("FirstName is Required"),
-                            lastName: Yup.string()
-                              .required("LastName is Required"),
-                            middleName: Yup.string()
-                              .required("MiddleName is Required"),
-                              contactType: Yup.string()
-                              .required("Please Select Contact Type"),
-                              organization: Yup.string()
-                              .required("Organization Name is Required"),
-                            poBoxNumber: Yup.number()
-                              .required("PO Box Number is Required"),
-                            email: Yup.string()
-                              .required("Email is Required")
-                              .email('Invalid Email'),
-                            telephone: Yup.number()
-                              .required("Telephone Number is Required"),
-                            mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, {message: "Please enter valid number.", excludeEmptyString: false})
-                              .required("Mobile Number is required"),
-                            invoicingAddressLine1: Yup.string()
-                              .required("Address is required"),
-                            country: Yup.string()
-                              .required("Please Select Country")
-                              .nullable(),
-                            stateRegion: Yup.string()
-                              .required("State is Required"),
-                            city: Yup.string()
-                              .required("City is Required"),
-                            postZipCode: Yup.number()
-                              .required("Postal Code is Required"),
-                            billingEmail: Yup.string()
-                              .required("Billing Email is Required")
-                              .email('Invalid Email'),
-                            contractPoNumber: Yup.number()
-                              .required("Contract PoNumber is Required"),
-                              vatRegistrationNumber: Yup.number()
-                              .required("Vat Registration Number is Required"),
-                              currency: Yup.string()
-                              .required("Please Select Currency")
-                              .nullable(),
-                          })
-                        }
+                        // validationSchema={
+                        //   Yup.object().shape({
+                        //     firstName: Yup.string()
+                        //       .required("FirstName is Required"),
+                        //     lastName: Yup.string()
+                        //       .required("LastName is Required"),
+                        //     middleName: Yup.string()
+                        //       .required("MiddleName is Required"),
+                        //       contactType: Yup.string()
+                        //       .required("Please Select Contact Type"),
+                        //       organization: Yup.string()
+                        //       .required("Organization Name is Required"),
+                        //     poBoxNumber: Yup.number()
+                        //       .required("PO Box Number is Required"),
+                        //     email: Yup.string()
+                        //       .required("Email is Required")
+                        //       .email('Invalid Email'),
+                        //     telephone: Yup.number()
+                        //       .required("Telephone Number is Required"),
+                        //     mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, {message: "Please enter valid number.", excludeEmptyString: false})
+                        //       .required("Mobile Number is required"),
+                        //     addressLine1: Yup.string()
+                        //       .required("Address is required"),
+                        //     country: Yup.string()
+                        //       .required("Please Select Country")
+                        //       .nullable(),
+                        //     stateRegion: Yup.string()
+                        //       .required("State is Required"),
+                        //     city: Yup.string()
+                        //       .required("City is Required"),
+                        //     postZipCode: Yup.number()
+                        //       .required("Postal Code is Required"),
+                        //     billingEmail: Yup.string()
+                        //       .required("Billing Email is Required")
+                        //       .email('Invalid Email'),
+                        //     contractPoNumber: Yup.number()
+                        //       .required("Contract PoNumber is Required"),
+                        //       vatRegistrationNumber: Yup.number()
+                        //       .required("Vat Registration Number is Required"),
+                        //       currency: Yup.string()
+                        //       .required("Please Select Currency")
+                        //       .nullable(),
+                        //   })
+                        // }
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -311,12 +317,12 @@ class CreateContact extends React.Component {
                                   <Label htmlFor="country">Contact Type</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={contact_type_list ? selectOptionsFactory.renderOptions('name', 'id', contact_type_list) : []}
+                                    options={contact_type_list ? contact_type_list : []}
                                     value={props.values.contactType}
-                                    onChange={option => props.handleChange('contactType')(option)}
+                                    onChange={option => props.handleChange('contactType')(option.value)}
                                     placeholder="Select Contact Type"
-                                    id="contact_type_list"
-                                    name="contact_type_list"
+                                    id="contactType"
+                                    name="contactType"
                                     className={
                                       props.errors.contactType && props.touched.contactType
                                         ? "is-invalid"
@@ -445,48 +451,48 @@ class CreateContact extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="invoicingAddressLine1">Address Line1</Label>
+                                  <Label htmlFor="addressLine1">Address Line1</Label>
                                   <Input
                                     type="text"
-                                    id="invoicingAddressLine1"
-                                    name="invoicingAddressLine1"
+                                    id="addressLine1"
+                                    name="addressLine1"
                                     
-                                    onChange={(value) => { props.handleChange("invoicingAddressLine1")(value) }}
-                                    value={props.values.invoicingAddressLine1}
+                                    onChange={(value) => { props.handleChange("addressLine1")(value) }}
+                                    value={props.values.addressLine1}
                                     className={
-                                      props.errors.invoicingAddressLine1 && props.touched.invoicingAddressLine1
+                                      props.errors.addressLine1 && props.touched.addressLine1
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.invoicingAddressLine1 && props.touched.invoicingAddressLine1 && (
-                                    <div className="invalid-feedback">{props.errors.invoicingAddressLine1}</div>
+                                  {props.errors.addressLine1 && props.touched.addressLine1 && (
+                                    <div className="invalid-feedback">{props.errors.addressLine1}</div>
                                   )}
                                   
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="invoicingAddressLine2">Address Line2</Label>
+                                  <Label htmlFor="addressLine2">Address Line2</Label>
                                   <Input
                                     type="text"
-                                    id="invoicingAddressLine2"
-                                    name="invoicingAddressLine2"
+                                    id="addressLine2"
+                                    name="addressLine2"
                                     
-                                    onChange={(value) => { props.handleChange("invoicingAddressLine2")(value) }}
+                                    onChange={(value) => { props.handleChange("addressLine2")(value) }}
 
                                   />
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="invoicingAddressLine3">Address Line3</Label>
+                                  <Label htmlFor="addressLine3">Address Line3</Label>
                                   <Input
                                     type="text"
-                                    id="invoicingAddressLine3"
-                                    name="invoicingAddressLine3"
+                                    id="addressLine3"
+                                    name="addressLine3"
                                     
-                                    onChange={(value) => { props.handleChange("invoicingAddressLine3")(value) }}
+                                    onChange={(value) => { props.handleChange("addressLine3")(value) }}
 
                                   />
                                 </FormGroup>

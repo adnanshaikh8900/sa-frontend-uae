@@ -46,7 +46,7 @@ export const getSupplierList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: '/rest/contact/getContactList'
+      url: `/rest/contact/getContactsForDropdown?contactType=1`
     }
     return authApi(data).then(res => {
       if (res.status == 200) {

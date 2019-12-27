@@ -29,7 +29,7 @@ const mapStateToProps = (state) => {
   return ({
     vat_list: state.product.vat_list,
     product_warehouse_list: state.product.product_warehouse_list,
-    product_parent_list: state.product.product_parent_list
+    product_category_list: state.product.product_category_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -56,7 +56,7 @@ class CreateProduct extends React.Component {
         productCode:'',
         vatCategoryId : '',
         unitPrice : '',
-        parentProductId: '',
+        productCategoryId: '',
         productWarehouseId: '',
         vatIncluded: false,
       },
@@ -71,7 +71,7 @@ class CreateProduct extends React.Component {
 
   componentDidMount(){
     this.props.productActions.getProductVatCategoryList()
-    this.props.productActions.getParentProductList()
+    this.props.productActions.getProductCategoryList()
     this.props.productActions.getProductWareHouseList()
   }
 
@@ -95,7 +95,7 @@ class CreateProduct extends React.Component {
       productCode,
       vatCategoryId,
       unitPrice ,
-      parentProductId,
+      productCategoryId,
       productWarehouseId,
       vatIncluded,
     } = data
@@ -107,7 +107,7 @@ class CreateProduct extends React.Component {
       productCode: productCode,
       vatCategoryId: vatCategoryId,
       unitPrice: unitPrice,
-      parentProductId: parentProductId,
+      productCategoryId: productCategoryId,
       productWarehouseId: productWarehouseId,
       vatIncluded: vatIncluded
     }
@@ -134,7 +134,7 @@ class CreateProduct extends React.Component {
 
   render() {
 
-    const  {vat_list, product_parent_list, product_warehouse_list } = this.props
+    const  {vat_list, product_category_list, product_warehouse_list } = this.props
     const { initValue } = this.state;
     return (
       <div className="create-product-screen">
@@ -221,18 +221,18 @@ class CreateProduct extends React.Component {
 
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="parentProductId">Parent Product</Label>
+                                    <Label htmlFor="productCategoryId">Product Category</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={product_parent_list ? selectOptionsFactory.renderOptions('name', 'id', product_parent_list) : []}
-                                      id="parentProductId"
-                                      name="parentProductId"
-                                      value={props.values.parentProductId}
+                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'productCategoryCode', product_category_list) : []}
+                                      id="productCategoryId"
+                                      name="productCategoryId"
+                                      value={props.values.productCategoryId}
                                       onChange={(option) => {
                                         // this.setState({
                                         //   selectedParentProduct: option.value
                                         // })
-                                        props.handleChange("parentProductId")(option.value);
+                                        props.handleChange("productCategoryId")(option.value);
                                       }}
                                     />
                                   </FormGroup>
@@ -301,18 +301,18 @@ class CreateProduct extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="warehourse">Warehourse</Label>
+                                    <Label htmlFor="productWarehouseId">Warehourse</Label>
                                     <Select
                                       className="select-default-width"
                                       options={product_warehouse_list ? selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list) : []}
-                                      id="productWarehouse"
-                                      name="productWarehouse"
-                                      value={props.values.selectedWareHouse}
+                                      id="productWarehouseId"
+                                      name="productWarehouseId"
+                                      value={props.values.productWarehouseId}
                                       onChange={(option) => {
                                         // this.setState({
                                         //   selectedWareHouse: option.value
                                         // })
-                                        props.handleChange("productWarehouse")(option.value);
+                                        props.handleChange("productWarehouseId")(option.value);
                                       }}
                                     />
                                   </FormGroup>

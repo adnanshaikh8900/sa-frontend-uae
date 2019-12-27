@@ -4,7 +4,7 @@ const initState = {
   product_list: [],
   vat_list: [],
   product_warehouse_list: [],
-  product_parent_list: []
+  product_category_list: []
 }
 
 const ProductReducer = (state = initState, action) => {
@@ -33,10 +33,10 @@ const ProductReducer = (state = initState, action) => {
       }
 
 
-    case PRODUCT.PRODUCT_PARENT:
+    case PRODUCT.PRODUCT_CATEGORY:
       return {
         ...state,
-        product_parent_list: Object.assign([], payload)
+        product_category_list: Object.assign([], payload)
       }
 
     default:

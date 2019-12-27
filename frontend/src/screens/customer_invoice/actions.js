@@ -45,17 +45,20 @@ export const getProjectList = () => {
 }
 
 
-export const getCustomerList = () => {
+export const getCustomerList = (nameCode) => {
+  let contactType = nameCode ? nameCode : ""
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: '/rest/contact/getCustomerList'
+      url: `rest/contact/getContactList?contactType=${contactType}`
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
         dispatch({
           type: CUSTOMER_INVOICE.CUSTOMER_LIST,
-          payload:  res
+          payload:  {
+            data: res.data
+          }
         })
       }
     }).catch(err => {
@@ -119,6 +122,29 @@ export const getVatList = () => {
       if (res.status == 200) {
         dispatch({
           type: CUSTOMER_INVOICE.VAT_LIST,
+          payload:  {
+            data: res.data
+          }
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+
+export const getContactList = (nameCode) => {
+  let contactType = nameCode ? nameCode : ""
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: `rest/contact/getContactList?contactType=${contactType}`
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+        dispatch({
+          type: CUSTOMER_INVOICE.CONTACT_LIST,
           payload:  {
             data: res.data
           }

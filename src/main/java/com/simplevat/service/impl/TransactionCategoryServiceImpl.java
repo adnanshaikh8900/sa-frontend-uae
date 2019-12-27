@@ -1,6 +1,8 @@
 package com.simplevat.service.impl;
 
 import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
+
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -13,6 +15,7 @@ import com.simplevat.criteria.TransactionCategoryFilterNew;
 import com.simplevat.criteria.bankaccount.TransactionCategoryCriteria;
 import com.simplevat.dao.bankaccount.TransactionCategoryDaoNew;
 import com.simplevat.entity.Activity;
+import com.simplevat.entity.Product;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.TransactionCategoryService;
 import java.time.LocalDateTime;
@@ -111,5 +114,10 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
     @Override
     public void deleteByIds(List<Integer> ids) {
         dao.deleteByIds(ids);
+    }
+    
+    @Override
+    public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap) {
+        return dao.getTransactionCategoryList(filterMap); 
     }
 }

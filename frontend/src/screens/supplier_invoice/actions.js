@@ -72,12 +72,20 @@ import {
 // }
 
 
-
-export const getSupplierInoviceList = () => {
+ 
+export const getSupplierInoviceList = (postObj) => {
+  let customerName = postObj ? postObj.customerName : ''
+  let referenceNumber =  postObj ? postObj.referenceNumber : ''
+  let invoiceDate =  postObj ? postObj.invoiceDate : ''
+  let invoiceDueDate =  postObj ? postObj.invoiceDueDate : ''
+  let amount =  postObj ? postObj.amount : ''
+  let status =  postObj ? postObj.status : ''
+  
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: 'rest/invoice/invoicelist'
+      url: `rest/supplierinvoice/getList?customerName=${customerName}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}`,
+      // data: postObj
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
@@ -117,16 +125,17 @@ export const getProjectList = () => {
 }
 
 
-export const getCustomerList = () => {
+export const getContactList = (nameCode) => {
+  let contactType = nameCode ? nameCode : ""
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/contact/contactcustomerlist'
+      url: `rest/contact/getContactList?contactType=${contactType}`
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
         dispatch({
-          type: SUPPLIER_INVOICE.CUSTOMER_LIST,
+          type: SUPPLIER_INVOICE.CONTACT_LIST,
           payload:  {
             data: res.data
           }
@@ -139,26 +148,26 @@ export const getCustomerList = () => {
 }
 
 
-export const getVendorList = () => {
-  return (dispatch) => {
-    let data = {
-      method: 'get',
-      url: 'rest/contact/contactvendorlist'
-    }
-    return authApi(data).then(res => {
-      if (res.status == 200) {
-        dispatch({
-          type: SUPPLIER_INVOICE.VENDOR_LIST,
-          payload:  {
-            data: res.data
-          }
-        })
-      }
-    }).catch(err => {
-      throw err
-    })
-  }
-}
+// export const getVendorList = () => {
+//   return (dispatch) => {
+//     let data = {
+//       method: 'get',
+//       url: 'rest/contact/getSupplierList'
+//     }
+//     return authApi(data).then(res => {
+//       if (res.status == 200) {
+//         dispatch({
+//           type: SUPPLIER_INVOICE.VENDOR_LIST,
+//           payload:  {
+//             data: res.data
+//           }
+//         })
+//       }
+//     }).catch(err => {
+//       throw err
+//     })
+//   }
+// }
 
 
 export const getCurrencyList = () => {

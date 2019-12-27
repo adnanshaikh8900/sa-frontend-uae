@@ -224,7 +224,7 @@ class CreateProduct extends React.Component {
                                     <Label htmlFor="parentProductId">Parent Product</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={selectOptionsFactory.renderOptions('productName', 'productID', product_parent_list)}
+                                      options={product_parent_list ? selectOptionsFactory.renderOptions('name', 'id', product_parent_list) : []}
                                       id="parentProductId"
                                       name="parentProductId"
                                       value={props.values.parentProductId}
@@ -304,7 +304,7 @@ class CreateProduct extends React.Component {
                                     <Label htmlFor="warehourse">Warehourse</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list)}
+                                      options={product_warehouse_list ? selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list) : []}
                                       id="productWarehouse"
                                       name="productWarehouse"
                                       value={props.values.selectedWareHouse}

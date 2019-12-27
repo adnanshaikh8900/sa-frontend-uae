@@ -43,7 +43,7 @@ class SupplierModal extends React.Component {
   // Create or Contact
   handleSubmit(data) {
 
-    const request = this.props.createContact(data);
+    const request = this.props.createSupplier(data);
     request.then(res => {
       if (res.status === 200) {
       // this.success()

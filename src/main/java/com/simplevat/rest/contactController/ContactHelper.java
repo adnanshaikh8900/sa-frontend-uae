@@ -6,11 +6,9 @@
 package com.simplevat.rest.contactController;
 
 import com.simplevat.entity.Contact;
-import com.simplevat.contact.model.ContactModel;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import java.time.LocalDateTime;
-import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -43,7 +43,7 @@ const mapStateToProps = (state) => {
     project_list: state.expense.project_list,
     employee_list: state.expense.employee_list,
     vat_list: state.expense.vat_list,
-    chart_of_account_list: state.expense.chart_of_account_list,
+    expense_categories_list: state.expense.expense_categories_list,
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -86,19 +86,20 @@ class DetailExpense extends React.Component {
     if (this.props.location.state && expenseId) {
       this.props.expenseActions.getVatList();
       this.props.expenseDetailActions.getExpenseDetail(expenseId).then(res => {
+        console.log(res)
         if (res.status === 200) {
           this.props.expenseActions.getCurrencyList();
           this.props.expenseActions.getProjectList();
-          this.props.expenseActions.getEmployeeList();
-          this.props.expenseActions.getChartOfAccountList();
+          // this.props.expenseActions.getEmployeeList();
+          this.props.expenseActions.getExpenseCategoriesList();
           this.setState({
             loading: false,
-            data: res.data.expenseItems ? res.data.expenseItems : [],
             initValue: {
               payee: res.data.payee,
               expenseDate: res.data.expenseDate ? moment(res.data.expenseDate).utc().format('YYYY-MM-DD') : '',
               // expenseDate: res.data.expenseDate,
               currency: res.data.currencyCode ? res.data.currencyCode : '',
+              expenseCategory: res.data.expenseCategory ? res.data.expenseCategory : '',
               projectId: res.data.projectId ? res.data.projectId : '',
               // paymentDate: res.data.paymentDate? moment(res.data.paymentDate).format('DD-MM-YYYY'): '',
               expenseAmount: res.data.expenseAmount,
@@ -106,7 +107,7 @@ class DetailExpense extends React.Component {
               receiptNumber: res.data.receiptNumber,
               attachmentFile: res.data.attachmentFile,
               receiptAttachmentDescription: res.data.receiptAttachmentDescription,
-              employee: res.data.employeeId ? res.data.employeeId : '',
+              // employee: res.data.employeeId ? res.data.employeeId : '',
             },
           })
         }
@@ -123,7 +124,7 @@ class DetailExpense extends React.Component {
       expenseDate,
       currency,
       project,
-      expanseCategory,
+      expenseCategory,
       expenseAmount,
       employee,
       expenseDescription,
@@ -141,8 +142,8 @@ class DetailExpense extends React.Component {
     formData.append("receiptNumber", receiptNumber);
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription);
     formData.append('expenseAmount',expenseAmount);
-    if (expanseCategory && expanseCategory.value) {
-      formData.append("expanseCategoryId", expanseCategory.value);
+    if (expenseCategory && expenseCategory.value) {
+      formData.append("expenseCategoryId", expenseCategory.value);
     }
     if (employee && employee.value) {
       formData.append("employeeId", employee.value);
@@ -206,7 +207,7 @@ class DetailExpense extends React.Component {
 
   render() {
 
-    const { expense_detail, currency_list, project_list, payment_list, employee_list, chart_of_account_list } = this.props
+    const { expense_detail, currency_list, project_list, payment_list, employee_list, expense_categories_list } = this.props
     const { data, initValue, loading , dialog} = this.state
 
     return (
@@ -255,15 +256,15 @@ class DetailExpense extends React.Component {
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                             <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="expanseCategoryId">Accounts</Label>
+                            <FormGroup className="mb-3">
+                                  <Label htmlFor="expenseCategoryId">Expense Category</Label>
                                   <Select
                                     className="select-default-width"
-                                    id="expanseCategory"
-                                    name="expanseCategory"
-                                    options={chart_of_account_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', chart_of_account_list) : []}
-                                    value={props.values.expanseCategory}
-                                    onChange={option => props.handleChange('expanseCategory')(option)}
+                                    id="expenseCategory"
+                                    name="expenseCategory"
+                                    options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
+                                    value={props.values.expenseCategory}
+                                    onChange={option => props.handleChange('expenseCategory')(option)}
                                   />
                                 </FormGroup>
                               </Col>
@@ -337,7 +338,7 @@ class DetailExpense extends React.Component {
                                     name="project"
                                     options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
                                     value={props.values.projectId}
-                                    onChange={option => props.handleChange('project')(option)}
+                                    onChange={option => props.handleChange('projectId')(option)}
                                   />
                                 </FormGroup>
                               </Col>

@@ -8,7 +8,7 @@ export const getContactList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/contact/contactlist`
+      url: `/rest/contact/getContactList`
     }
 
     return authApi(data).then(res => {

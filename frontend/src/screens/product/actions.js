@@ -7,9 +7,9 @@ import {
 export const getProductList = (obj) => {
   return (dispatch) => {
     let data = {
-      method: 'POST',
-      url: `/rest/product/getList`,
-      data: obj
+      method: 'GET',
+      url: `/rest/product/getList?name=${obj.name}&productCode=${obj.productCode}&vatPercentage=${obj.vatPercentage}`,
+      // data: obj
     }
 
     return authApi(data).then(res => {
@@ -112,7 +112,7 @@ export const getParentProductList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: 'rest/product/getProductList'
+      url: '/rest/product/getList'
     }
 
     return authApi(data).then(res => {

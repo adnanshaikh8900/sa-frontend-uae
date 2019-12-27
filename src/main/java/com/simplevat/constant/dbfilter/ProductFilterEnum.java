@@ -15,6 +15,7 @@ public enum ProductFilterEnum {
     PRODUCT_NAME("productName", " like CONCAT(:productName,'%')"),
     PRODUCT_CODE("productCode", " like CONCAT(:productCode,'%')"),
     PRODUCT_VAT_PERCENTAGE("vatCategory", " = :vatCategory"),   
+    DELETE_FLAG("deleteFlag", " = :deleteFlag"),   
     USER_ID("createdBy", "= :createdBy");
 
     @Getter

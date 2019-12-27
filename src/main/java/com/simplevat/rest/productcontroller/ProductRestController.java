@@ -12,6 +12,7 @@ import com.simplevat.entity.Product;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.service.ProductService;
 import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.VatCategoryService;
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -44,6 +45,9 @@ public class ProductRestController implements Serializable {
     private ProductService productService;
 
     @Autowired
+    private VatCategoryService vatCategoryService;
+
+    @Autowired
     private ProductRestHelper productRestHelper;
 
     @Autowired
@@ -52,29 +56,39 @@ public class ProductRestController implements Serializable {
     @ApiOperation(value = "Get Product List")
     @GetMapping(value = "/getList")
     public ResponseEntity getProductList(ProductRequestFilterModel filterModel, HttpServletRequest request) {
-        Map<ProductFilterEnum, Object> filterDataMap = new HashMap();
-        filterDataMap.put(ProductFilterEnum.PRODUCT_NAME, filterModel.getName());
-        filterDataMap.put(ProductFilterEnum.PRODUCT_CODE, filterModel.getProductCode());
-        if (filterModel.getVatPercentage() != null) {
-            filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE, new VatCategory(filterModel.getVatPercentage()));
+        try {
+            Map<ProductFilterEnum, Object> filterDataMap = new HashMap();
+            filterDataMap.put(ProductFilterEnum.PRODUCT_NAME, filterModel.getName());
+            filterDataMap.put(ProductFilterEnum.PRODUCT_CODE, filterModel.getProductCode());
+            filterDataMap.put(ProductFilterEnum.DELETE_FLAG, false);
+            if (filterModel.getVatPercentage() != null) {
+                filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE, vatCategoryService.findByPK(filterModel.getVatPercentage()));
+            }
+            List<Product> products = productService.getProductList(filterDataMap);
+            if (products == null) {
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity(productRestHelper.getListModel(products), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        List<Product> products = productService.getProductList(filterDataMap);
-        if (products == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity(productRestHelper.getListModel(products), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Delete Product By ID")
     @DeleteMapping(value = "/delete")
     public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
-        Product product = productService.findByPK(id);
-        if (product != null) {
-            product.setDeleteFlag(Boolean.TRUE);
-            productService.update(product, product.getProductID());
+        try {
+            Product product = productService.findByPK(id);
+            if (product != null) {
+                product.setDeleteFlag(Boolean.TRUE);
+                productService.update(product, product.getProductID());
+            }
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity(HttpStatus.OK);
-
     }
 
     @ApiOperation(value = "Delete Product in Bulk")
@@ -93,37 +107,50 @@ public class ProductRestController implements Serializable {
     @ApiOperation(value = "Get Product By ID")
     @GetMapping(value = "/getProductById")
     public ResponseEntity getProductById(@RequestParam(value = "id") Integer id) {
-        Product product = productService.findByPK(id);
-        if (product == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(product, HttpStatus.OK);
+        try {
+            Product product = productService.findByPK(id);
+            if (product == null) {
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(product, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @ApiOperation(value = "Add New Product")
     @PostMapping(value = "/save")
     public ResponseEntity save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        Product product = productRestHelper.getEntity(productRequestModel);
-        product.setCreatedBy(userId);
-        product.setCreatedDate(LocalDateTime.now());
-        product.setDeleteFlag(Boolean.FALSE);
-        productService.persist(product);
-        return new ResponseEntity(HttpStatus.OK);
+        try {
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Product product = productRestHelper.getEntity(productRequestModel);
+            product.setCreatedBy(userId);
+            product.setCreatedDate(LocalDateTime.now());
+            product.setDeleteFlag(Boolean.FALSE);
+            productService.persist(product);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @ApiOperation(value = "Update Product")
     @PostMapping(value = "/update")
     public ResponseEntity update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        Product product = productRestHelper.getEntity(productRequestModel);
-        product.setLastUpdateDate(LocalDateTime.now());
-        product.setLastUpdatedBy(userId);
-        productService.update(product);
-
-        return new ResponseEntity(HttpStatus.OK);
+        try {
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Product product = productRestHelper.getEntity(productRequestModel);
+            product.setLastUpdateDate(LocalDateTime.now());
+            product.setLastUpdatedBy(userId);
+            productService.update(product);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

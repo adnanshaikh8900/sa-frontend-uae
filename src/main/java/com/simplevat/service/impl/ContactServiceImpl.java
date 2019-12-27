@@ -4,6 +4,7 @@ import com.simplevat.dao.ContactDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.contactController.ContactRequestFilterModel;
 import com.simplevat.service.ContactService;
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +33,8 @@ public class ContactServiceImpl extends ContactService {
     }
 
     @Override
-    public List<Contact> getContacts(Integer contactType, Integer pageNo, Integer pageSize) {
-        return this.contactDao.getContacts(contactType, pageNo, pageSize);
+    public List<Contact> getContacts(ContactRequestFilterModel filterModel, Integer pageNo, Integer pageSize) {
+        return this.contactDao.getContacts(filterModel, pageNo, pageSize);
     }
 
     @Override

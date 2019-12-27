@@ -12,12 +12,14 @@ import lombok.Getter;
  * @author ashish
  */
 public enum SupplierInvoiceFilterEnum {
-//    CUSTOMER_NAME("contact.firstName"),
+//    CUSTOMER_NAME("customerName"," like CONCAT(:customerName,'%')"),
     INVOICE_NUMBER("referenceNumber", " like CONCAT(:referenceNumber,'%')"),
     INVOICE_DATE("invoiceDate", " = :invoiceDate "),
     INVOICE_DUE_DATE("invoiceDueDate", " = :invoiceDueDate "),
+    INVOICE_AMOUNT("totalAmount", " = :totalAmount "),
     STATUS("status", " = :status "),
-    USER_ID("createdBy", " = :createdBy ");
+    USER_ID("createdBy", " = :createdBy "),
+    DELETE_FLAG("deleteFlag", " = :deleteFlag ");
 
     @Getter
     String dbColumnName;

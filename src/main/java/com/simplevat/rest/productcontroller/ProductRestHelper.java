@@ -26,6 +26,9 @@ public class ProductRestHelper {
 
     public Product getEntity(ProductRequestModel productModel) {
         Product product = new Product();
+        if (productModel.getProductID() != null) {
+            product = productService.findByPK(productModel.getProductID());
+        }
         if (product.getUnitPrice() == null) {
             product.setUnitPrice(BigDecimal.ZERO);
         }
@@ -35,11 +38,6 @@ public class ProductRestHelper {
             VatCategory vatCategory = vatCategoryService.findByPK(productModel.getVatCategoryId());
             product.setVatCategory(vatCategory);
         }
-        product.setCreatedBy(productModel.getCreatedBy());
-        product.setCreatedDate(productModel.getCreatedDate());
-        product.setDeleteFlag(productModel.getDeleteFlag());
-        product.setLastUpdateDate(productModel.getLastUpdateDate());
-        product.setLastUpdatedBy(productModel.getLastUpdatedBy());
         product.setProductCode(productModel.getProductCode());
         product.setVersionNumber(productModel.getVersionNumber());
         product.setProductDescription(productModel.getProductDescription());

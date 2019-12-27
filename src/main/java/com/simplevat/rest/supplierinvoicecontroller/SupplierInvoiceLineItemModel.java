@@ -12,6 +12,6 @@ public class SupplierInvoiceLineItemModel {
     private Integer quantity;
     private String description;
     private BigDecimal unitPrice;
-    private Integer vatCatgeoryId;
-    
+    private String vatCategoryId;
+    private BigDecimal subTotal;
 }

@@ -2,18 +2,15 @@ package com.simplevat.entity;
 
 import com.simplevat.entity.converter.DateConverter;
 import com.simplevat.enums.DiscountType;
-import com.simplevat.enums.InvoiceStatusType;
+import com.simplevat.enums.InvoiceStatusEnum;
 import java.io.Serializable;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 
-import lombok.AccessLevel;
-import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 /**
@@ -123,7 +120,7 @@ public class SupplierInvoice implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
-    private InvoiceStatusType status;
+    private InvoiceStatusEnum status;
 
     @Basic
     @Column(name = "RECEIPT_ATTACHMENT_PATH")

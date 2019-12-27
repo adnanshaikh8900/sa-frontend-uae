@@ -97,11 +97,10 @@ public class ExpenseRestController {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User loggedInUser = userServiceNew.findByPK(userId);
             if (expenseModel.getExpenseId() != null) {
-                Expense expense = expenseService.findByPK(expenseModel.getExpenseId());
-                expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
+                Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
                 expense.setLastUpdateBy(userId);
                 expense.setLastUpdateDate(LocalDateTime.now());
-                expenseService.persist(expense);
+                expenseService.update(expense);
             }
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {

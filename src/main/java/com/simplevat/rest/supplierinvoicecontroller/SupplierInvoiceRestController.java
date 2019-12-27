@@ -6,13 +6,19 @@
 package com.simplevat.rest.supplierinvoicecontroller;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.SupplierInvoiceFilterEnum;
 import com.simplevat.entity.SupplierInvoice;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.SupplierInvoiceService;
+import com.simplevat.utils.FileHelper;
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,23 +52,43 @@ public class SupplierInvoiceRestController implements Serializable {
     @Autowired
     private SupplierInvoiceService supplierInvoiceService;
 
+    @Autowired
+    private FileHelper fileHelper;
+
     @ApiOperation(value = "Get Suppler Invoice List")
     @GetMapping(value = "/getList")
     public ResponseEntity getSupplierInvoiceList(SupplierInvoiceRequestFilterModel filterModel,
             HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        Map<SupplierInvoiceFilterEnum, Object> filterDataMap = new HashMap();
+        try {
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Map<SupplierInvoiceFilterEnum, Object> filterDataMap = new HashMap();
 //        filterDataMap.put(SupplierInvoiceFilterEnum.CUSTOMER_NAME, filterModel.getCustomerName());
-        filterDataMap.put(SupplierInvoiceFilterEnum.INVOICE_NUMBER, filterModel.getReferenceNumber());
-        filterDataMap.put(SupplierInvoiceFilterEnum.INVOICE_DATE, filterModel.getInvoiceDate());
-        filterDataMap.put(SupplierInvoiceFilterEnum.INVOICE_DUE_DATE, filterModel.getInvoiceDueDate());
-        filterDataMap.put(SupplierInvoiceFilterEnum.STATUS, filterModel.getStatus());
-        filterDataMap.put(SupplierInvoiceFilterEnum.USER_ID, userId);
-        List<SupplierInvoice> invoices = supplierInvoiceService.getSupplierInvoiceList(filterDataMap);
-        if (invoices == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            filterDataMap.put(SupplierInvoiceFilterEnum.INVOICE_NUMBER, filterModel.getReferenceNumber());
+            if (filterModel.getAmount() != null) {
+                filterDataMap.put(SupplierInvoiceFilterEnum.INVOICE_AMOUNT, filterModel.getAmount());
+            }
+            if (filterModel.getInvoiceDate() != null && !filterModel.getInvoiceDate().isEmpty()) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                filterDataMap.put(SupplierInvoiceFilterEnum.INVOICE_DATE, dateTime);
+            }
+            if (filterModel.getInvoiceDueDate() != null && !filterModel.getInvoiceDueDate().isEmpty()) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDueDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                filterDataMap.put(SupplierInvoiceFilterEnum.INVOICE_DUE_DATE, dateTime);
+            }
+            filterDataMap.put(SupplierInvoiceFilterEnum.STATUS, filterModel.getStatus());
+            filterDataMap.put(SupplierInvoiceFilterEnum.USER_ID, userId);
+            filterDataMap.put(SupplierInvoiceFilterEnum.DELETE_FLAG, false);
+            List<SupplierInvoice> invoices = supplierInvoiceService.getSupplierInvoiceList(filterDataMap);
+            if (invoices == null) {
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity(supplierInvoiceRestHelper.getListModel(invoices), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity(supplierInvoiceRestHelper.getListModel(invoices), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Delete Invoice By ID")
@@ -106,12 +132,21 @@ public class SupplierInvoiceRestController implements Serializable {
     public ResponseEntity save(
             @ModelAttribute SupplierInvoiceRequestModel requestModel,
             HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        SupplierInvoice invoice = supplierInvoiceRestHelper.getEntity(requestModel,userId);
-        invoice.setCreatedBy(userId);
-        invoice.setCreatedDate(LocalDateTime.now());
-        invoice.setDeleteFlag(Boolean.FALSE);
-        supplierInvoiceService.persist(invoice);
-        return new ResponseEntity(HttpStatus.OK);
+        try {
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            SupplierInvoice invoice = supplierInvoiceRestHelper.getEntity(requestModel, userId);
+            invoice.setCreatedBy(userId);
+            invoice.setCreatedDate(LocalDateTime.now());
+            invoice.setDeleteFlag(Boolean.FALSE);
+            if (!requestModel.getAttachmentFile().isEmpty()) {
+                String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(), FileTypeEnum.SUPPLIER_INVOICE);
+                invoice.setReceiptAttachmentPath(fileName);
+            }
+            supplierInvoiceService.persist(invoice);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

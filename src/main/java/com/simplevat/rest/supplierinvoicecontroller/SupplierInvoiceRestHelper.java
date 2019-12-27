@@ -10,13 +10,13 @@ import com.simplevat.entity.SupplierInvoiceLineItem;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ProjectService;
+import com.simplevat.service.SupplierInvoiceLineItemService;
 import com.simplevat.service.VatCategoryService;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -38,6 +38,9 @@ public class SupplierInvoiceRestHelper {
 
     @Autowired
     CurrencyService currencyService;
+
+    @Autowired
+    SupplierInvoiceLineItemService supplierInvoiceLineItemService;
 
     public SupplierInvoice getEntity(SupplierInvoiceRequestModel invoiceModel, Integer userId) {
         SupplierInvoice invoice = new SupplierInvoice();
@@ -71,14 +74,21 @@ public class SupplierInvoiceRestHelper {
             Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
             invoice.setCurrency(currency);
         }
+        System.out.println("====string=======" + invoiceModel.getLineItemsString());
         List<SupplierInvoiceLineItemModel> itemModels = new ArrayList<>();
         if (invoiceModel.getLineItemsString() != null && !invoiceModel.getLineItemsString().isEmpty()) {
+//            System.out.println("====string=======" + invoiceModel.getLineItemsString());
+            System.out.println("====In=======");
             ObjectMapper mapper = new ObjectMapper();
             try {
-                itemModels = mapper.readValue(invoiceModel.getLineItemsString(), new TypeReference<List<SupplierInvoiceLineItemModel>>(){});
+                itemModels = mapper.readValue(invoiceModel.getLineItemsString(), new TypeReference<List<SupplierInvoiceLineItemModel>>() {
+                });
+                System.out.println("====In=Try======" + itemModels.toString());
             } catch (IOException ex) {
+                System.out.println("====In=catch======" + ex.getMessage());
                 Logger.getLogger(SupplierInvoiceRestHelper.class.getName()).log(Level.SEVERE, null, ex);
             }
+            System.out.println("====In=if======" + itemModels.size());
             if (itemModels.size() > 0) {
                 invoice.setSupplierInvoiceLineItems(getLineItems(itemModels, invoice, userId));
             }
@@ -94,19 +104,31 @@ public class SupplierInvoiceRestHelper {
 
     public List<SupplierInvoiceLineItem> getLineItems(List<SupplierInvoiceLineItemModel> itemModels, SupplierInvoice invoice, Integer userId) {
         List<SupplierInvoiceLineItem> lineItems = new ArrayList<>();
+        int i = 0;
         for (SupplierInvoiceLineItemModel model : itemModels) {
-            SupplierInvoiceLineItem lineItem = new SupplierInvoiceLineItem();
-            lineItem.setCreatedBy(userId);
-            lineItem.setCreatedDate(LocalDateTime.now());
-            lineItem.setDeleteFlag(false);
-            lineItem.setQuantity(model.getQuantity());
-            lineItem.setDescription(model.getDescription());
-            lineItem.setUnitPrice(model.getUnitPrice());
-            if (model.getVatCatgeoryId() != null) {
-                lineItem.setVatCategory(vatCategoryService.findByPK(model.getVatCatgeoryId()));
+            try {
+                SupplierInvoiceLineItem lineItem = new SupplierInvoiceLineItem();
+                lineItem.setCreatedBy(userId);
+                lineItem.setCreatedDate(LocalDateTime.now());
+                lineItem.setDeleteFlag(false);
+                System.out.println("====lineitems==getDescription======" + model.getDescription());
+                lineItem.setQuantity(model.getQuantity());
+                lineItem.setDescription(model.getDescription());
+                lineItem.setUnitPrice(model.getUnitPrice());
+                lineItem.setSubTotal(model.getSubTotal());
+                if (model.getVatCategoryId() != null) {
+                    lineItem.setVatCategory(vatCategoryService.findByPK(Integer.parseInt(model.getVatCategoryId())));
+                }
+                lineItem.setSupplierInvoice(invoice);
+//                supplierInvoiceLineItemService.persist(lineItem);
+                lineItems.add(lineItem);
+                i++;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
-            lineItem.setSupplierInvoice(invoice);
         }
+        System.out.println("====lineitems==added======" + i);
         return lineItems;
     }
 //
@@ -157,7 +179,7 @@ public class SupplierInvoiceRestHelper {
             model.setTotalAmount(invoice.getTotalAmount());
             model.setTotalVatAmount(invoice.getTotalVatAmount());
             if (invoice.getStatus() != null) {
-                model.setStatus(invoice.getStatus().getDesc());
+                model.setStatus(invoice.getStatus().name());
             }
             invoiceListModels.add(model);
         }

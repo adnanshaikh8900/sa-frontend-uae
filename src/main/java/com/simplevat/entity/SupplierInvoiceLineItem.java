@@ -36,6 +36,11 @@ public class SupplierInvoiceLineItem implements Serializable {
     @Column(name = "UNIT_PRICE")
     @ColumnDefault(value = "0.00")
     private BigDecimal unitPrice;
+    
+    @Basic
+    @Column(name = "SUB_TOTAL")
+    @ColumnDefault(value = "0.00")
+    private BigDecimal subTotal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "VAT_ID")

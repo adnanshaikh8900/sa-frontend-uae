@@ -95,6 +95,14 @@ public class Contact implements Serializable {
     private Country country;
 
     @Basic
+    @Column(name = "STATE")
+    private String state;
+    
+    @Basic
+    @Column(name = "CITY")
+    private String city;
+    
+    @Basic
     @Column(name = "POST_ZIP_CODE")
     private String postZipCode;
 

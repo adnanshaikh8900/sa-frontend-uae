@@ -14,14 +14,16 @@ import java.util.List;
  */
 public enum ContactTypeEnum {
 
-    SUPPLIER("Supplier"),
-    CUSTOMER("Customer"),
-    BOTH("Both");
+    SUPPLIER("Supplier", 1),
+    CUSTOMER("Customer", 2),
+    BOTH("Both", 3);
 
     private String desc;
+    private Integer value;
 
-    ContactTypeEnum(String desc) {
+    ContactTypeEnum(String desc, Integer value) {
         this.desc = desc;
+        this.value = value;
     }
 
     public String toString() {
@@ -30,6 +32,10 @@ public enum ContactTypeEnum {
 
     public String getDesc() {
         return desc;
+    }
+
+    public Integer getValue() {
+        return value;
     }
 
     public static List<ContactTypeEnum> contactTypeList() {

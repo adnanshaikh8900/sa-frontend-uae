@@ -152,7 +152,6 @@ class CreateSupplierInvoice extends React.Component {
   }
 
   renderQuantity (cell, row) {
-    // console.log(cell, row,"<--"); 
     
     return (
       <Input
@@ -209,7 +208,6 @@ class CreateSupplierInvoice extends React.Component {
 
   addRow = () => {
     const data = [...this.state.data]
-    console.log("..", data)
     this.setState({
       data: data.concat({
         id: this.state.idCount + 1,
@@ -276,7 +274,6 @@ class CreateSupplierInvoice extends React.Component {
 
 
   updateAmount(data) {
-    console.log(data,"data")
     const {vat_list} = this.props;
     let total_net = 0;
     let total = 0;
@@ -284,10 +281,11 @@ class CreateSupplierInvoice extends React.Component {
     data.map(obj => {
       const index = obj.vatCategoryId !== null ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
       const vat = index !== '' ? vat_list[index].vat : 0
-      let val = (((+obj.unitPrice) * vat) / 100)
-      obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? ((+obj.unitPrice) + val)* obj.quantity : 0;
+      // let val = (((+obj.unitPrice) * vat) / 100)
+      let val = ((((+obj.unitPrice) * vat )*obj.quantity) / 100)
+      obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice)* obj.quantity) + val) : 0;
       total_net = +(total_net + (+obj.unitPrice)* obj.quantity);
-      total_vat = +((total_vat + val)* obj.quantity).toFixed(2);
+      total_vat = +((total_vat + val)).toFixed(2);
       total =  (total_vat + total_net).toFixed(2);
 
     })
@@ -300,9 +298,8 @@ class CreateSupplierInvoice extends React.Component {
       }
     })
   }
-
+ 
   handleSubmit(data) {
-    console.log(data)
     const {
       receiptAttachmentDescription,
       receiptNumber,

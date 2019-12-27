@@ -98,7 +98,6 @@ class CreateExpense extends React.Component {
 
 
   initializeData() {
-    console.log(this.props.history)
     this.props.expenseActions.getVatList();
     this.props.expenseActions.getExpenseCategoriesList();
     this.props.expenseActions.getCurrencyList();
@@ -123,7 +122,6 @@ class CreateExpense extends React.Component {
       receiptAttachmentDescription,
     } = data
 
-    console.log(data)
     let formData = new FormData();
     formData.append("payee", payee);
     formData.append("expenseDate", expenseDate !== null ? expenseDate : "");
@@ -148,7 +146,6 @@ class CreateExpense extends React.Component {
     }
     this.props.expenseCreateActions.createExpense(formData).then(res => {
       if (res.status === 200) {
-        console.log('22')
         if (this.state.readMore) {
           this.setState({
             readMore: false

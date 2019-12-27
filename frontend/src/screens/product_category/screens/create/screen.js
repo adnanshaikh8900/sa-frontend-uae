@@ -83,7 +83,6 @@ class CreateProductCategory extends React.Component {
 
   // Create or Edit Vat
   handleSubmit(data) {
-    console.log(data)
     this.props.createProductCategoryActions.createProductCategory(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Product Category is created successfully!')
@@ -176,8 +175,9 @@ class CreateProductCategory extends React.Component {
                                 </Button>
                                 <Button name="button" color="primary" className="btn-square mr-3" 
                                   onClick={() => {
-                                    this.setState({readMore: true})
-                                    props.handleSubmit()
+                                    this.setState({readMore: true}, () => {
+                                      props.handleSubmit()
+                                    })
                                   }}>
                                   <i className="fa fa-refresh"></i> Create and More
                                 </Button>

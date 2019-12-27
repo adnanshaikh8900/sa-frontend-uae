@@ -209,7 +209,6 @@ class CreateSupplierInvoice extends React.Component {
 
   addRow = () => {
     const data = [...this.state.data]
-    console.log("..", data)
     this.setState({
       data: data.concat({
         id: this.state.idCount + 1,
@@ -276,7 +275,6 @@ class CreateSupplierInvoice extends React.Component {
 
 
   updateAmount(data) {
-    console.log(data,"data")
     const {vat_list} = this.props;
     let total_net = 0;
     let total = 0;
@@ -302,7 +300,6 @@ class CreateSupplierInvoice extends React.Component {
   }
 
   handleSubmit(data) {
-    console.log(data)
     const {
       receiptAttachmentDescription,
       receiptNumber,

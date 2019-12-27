@@ -48,26 +48,25 @@ class DetailProductCategory extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      vatData: {},
+      initValue: {},
       loading: false
     }
-
-    this.saveAndContinue = false;
-
     this.handleSubmit = this.handleSubmit.bind(this)
 
     this.id = props.location.state.id;
   }
 
   componentDidMount() {
-    console.log(this.id)
     if (this.id) {
       this.setState({ loading: true });
       this.props.detailProductCategoryAction.getProductCategoryById(this.id).then(res => {
         if (res.status === 200)
           this.setState({ 
             loading: false,
-            vatData: res.data
+            initValue: {
+              productCategoryCode: res.data.productCategoryCode ? res.data.productCategoryCode : '',
+              productCategoryName: res.data.productCategoryName ? res.data.productCategoryName : ''
+            }
           })
       })
     }
@@ -75,9 +74,13 @@ class DetailProductCategory extends React.Component {
 
   // Create or Edit Vat
   handleSubmit(data){
-    const {id,productCategoryName,productCategoryDescription} = data;
-    this.props.detailProductCategoryAction.updateProductCategory(data).then(res => {
-      console.log(res)
+    const {id,productCategoryName,productCategoryCode} = data;
+    const postData = {
+      id: id,
+      productCategoryName: productCategoryName ? productCategoryName : '',
+      productCategoryCode: productCategoryCode ? productCategoryCode : ''
+    }
+    this.props.detailProductCategoryAction.updateProductCategory(postData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Product Category is updated successfully!')
         this.props.history.push('/admin/master/product-category')
@@ -88,7 +91,7 @@ class DetailProductCategory extends React.Component {
   }
 
   render() {
-    const { loading } = this.state
+    const { loading , initValue} = this.state
 
     return (
       <div className="detail-vat-code-screen">
@@ -109,7 +112,7 @@ class DetailProductCategory extends React.Component {
                     <Row>
                       <Col lg={6}>
                       <Formik
-                          initialValues={this.state.vatData}
+                          initialValues={initValue}
                           onSubmit={values => {
                             this.handleSubmit(values)
                           }}
@@ -123,11 +126,11 @@ class DetailProductCategory extends React.Component {
                             {props => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <FormGroup>
-                                  <Label htmlFor="productCategoryCode ">Product Category Code</Label>
+                                  <Label htmlFor="productCategoryCode">Product Category Code</Label>
                                   <Input
                                     type="text"
-                                    id="productCategoryCode "
-                                    name="productCategoryCode "
+                                    id="productCategoryCode"
+                                    name="productCategoryCode"
                                     placeholder="Enter Product Category Code"
                                     onChange={props.handleChange}
                                     defaultValue={props.values.productCategoryCode}
@@ -149,7 +152,7 @@ class DetailProductCategory extends React.Component {
                                     name="productCategoryName"
                                     placeholder="Enter Product Category Name"
                                     onChange={props.handleChange}
-                                    defaultValue={props.values.productCategoryName }
+                                    defaultValue={props.values.productCategoryName}
                                     className={
                                       props.errors.productCategoryName  && props.touched.productCategoryName 
                                         ? "is-invalid"

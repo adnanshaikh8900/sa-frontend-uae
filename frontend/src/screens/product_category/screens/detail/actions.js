@@ -5,7 +5,6 @@ import {
 } from 'utils'
 
 
-// Get Vat By ID
 export const getProductCategoryById = (id) => {
   return (dispatch) => {
     let data = {

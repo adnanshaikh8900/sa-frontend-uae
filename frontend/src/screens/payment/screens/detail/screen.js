@@ -142,18 +142,18 @@ class DetailPayment extends React.Component {
       currencyCode: currency && currency.value ? currency.value : '',
       projectId: project && project.value ? project.value : '',
     }
-    this.props.detailPaymentActions.updatePayment(postData).then(res => {
-      this.props.commonActions.tostifyAlert('success', 'Update Successfully.')
-      if (this.state.createMore) {
-        this.setState({
-          createMore: false
-        })
-      } else {
-        this.props.history.push('/admin/expense/payment')
-      }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
-    })
+    // this.props.detailPaymentActions.updatePayment(postData).then(res => {
+    //   this.props.commonActions.tostifyAlert('success', 'Update Successfully.')
+    //   if (this.state.createMore) {
+    //     this.setState({
+    //       createMore: false
+    //     })
+    //   } else {
+    //     this.props.history.push('/admin/expense/payment')
+    //   }
+    // }).catch(err => {
+    //   this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    // })
   }
 
   renderProductName (cell, row) {

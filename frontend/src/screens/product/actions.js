@@ -108,16 +108,16 @@ export const getProductVatCategoryList = () => {
 
 
 // Get Parent Product
-export const getParentProductList = () => {
+export const getProductCategoryList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/product/getList'
+      url: '/rest/productcategory/getList'
     }
 
     return authApi(data).then(res => {
       dispatch({
-        type: PRODUCT.PRODUCT_PARENT,
+        type: PRODUCT.PRODUCT_CATEGORY,
         payload: res.data
       })
       return res

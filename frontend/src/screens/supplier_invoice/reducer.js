@@ -4,7 +4,7 @@ const initState = {
   supplier_invoice_list: [],
   project_list : [],
   contact_list : [],
-  vendor_list : [],
+  status_list : [],
   currency_list : [],
   vat_list : []
 }
@@ -32,11 +32,11 @@ const SupplierInvoiceReducer = (state = initState, action) => {
         contact_list: Object.assign([], payload.data)
       }
 
-      // case SUPPLIER_INVOICE.VENDOR_LIST:
-      // return {
-      //   ...state,
-      //   vendor_list: Object.assign([], payload.data)
-      // }
+      case SUPPLIER_INVOICE.STATUS_LIST:
+      return {
+        ...state,
+        status_list: Object.assign([], payload.data)
+      }
       
       case SUPPLIER_INVOICE.CURRENCY_LIST:
       return {

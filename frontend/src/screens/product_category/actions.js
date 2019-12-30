@@ -26,52 +26,12 @@ export const getProductCategoryList = () => {
   }
 }
 
-
-// Get Vat By ID
-// export const getVatByID = (id) => {
-//   return (dispatch) => {
-//     let data = {
-//       method: 'GET',
-//       url: `rest/vat/getbyid?id=${id}`
-//     }
-
-//     return authApi(data).then(res => {
-//       dispatch({
-//         type: VAT.VAT_ROW,
-//         payload: res.data
-//       })
-//       return res
-//     }).catch(err => {
-//       throw err
-//     })
-//   }
-// }
-
-
-// Create & Save Bat
-// export const createBat = (bat) => {
-//   return (dispatch) => {
-//     let data = {
-//       method: 'POST',
-//       url: `rest/vat/savevat?id=1`,
-//       data: bat
-//     }
-
-//     return authApi(data).then(res => {
-//       return res
-//     }).catch(err => {
-//       throw err
-//     })
-//   }
-// }
-
-// Delete Vat Row
-export const deletePRODUCTCategory = (ids) => {
+export const deleteProductCategory = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'DELETE',
-      url: `rest/vat/deletevats?id=1`,
-      data: {ids: ids}
+      url: `/rest/productcategory/deletes`,
+      data: obj
     }
 
     return authApi(data).then(res => {

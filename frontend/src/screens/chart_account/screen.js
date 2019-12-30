@@ -27,6 +27,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
 import * as ChartAccountActions from './actions'
+import {selectOptionsFactory} from 'utils'
 import {
   CommonActions
 } from 'services/global'
@@ -35,7 +36,9 @@ import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    transaction_category_list: state.chart_account.transaction_category_list
+    transaction_category_list: state.chart_account.transaction_category_list,
+    transaction_type_list: state.chart_account.transaction_type_list
+
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -53,6 +56,12 @@ class ChartAccount extends React.Component {
       loading: true,
       selected_id_list: [],
       dialog: null,
+      filterData: {
+        transactionCategoryCode: '',
+        transactionCategoryName: '',
+        transactionType: ''
+      },
+      selectedTransactionType: ''
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -65,6 +74,8 @@ class ChartAccount extends React.Component {
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
     this.onPageChange = this.onPageChange.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
     this.options = {
       onRowClick: this.goToDetailPage,
       paginationPosition: 'top',
@@ -92,14 +103,17 @@ class ChartAccount extends React.Component {
   }
 
   initializeData() {
-    this.props.chartOfAccountActions.getTransactionCategoryList().then(res => {
+    const {filterData} = this.state
+    this.props.chartOfAccountActions.getTransactionCategoryList(filterData).then(res => {
       if (res.status === 200) {
+        this.props.chartOfAccountActions.getTransactionTypes();
         this.setState({ loading: false });
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err!== null ? err.data.message : null);
+      this.props.commonActions.tostifyAlert('error', err && err!== undefined ? err.data.message : '');
       this.setState({ loading: false })
     })
+
   }
 
   goToDetailPage(row) {
@@ -189,10 +203,24 @@ class ChartAccount extends React.Component {
   onPageChange = (page, sizePerPage) => {
    }
 
+   handleChange(val, name) {
+    this.setState({
+     filterData: Object.assign(this.state.filterData,{
+      [name]: val
+     })
+    })
+  }
+
+  handleSearch() {
+    this.initializeData();
+    // this.setState({})
+  }
+
+
   render() {
 
     const { loading, dialog } = this.state
-    const { transaction_category_list } = this.props
+    const { transaction_category_list , transaction_type_list} = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -253,21 +281,37 @@ class ChartAccount extends React.Component {
                       </div>
                       <div className="py-3">
                         <h5>Filter : </h5>
-                        <Row>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Code" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Account" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Select
-                              className=""
-                              options={[]}
-                              placeholder="Account Type"
-                            />
-                          </Col>
-                        </Row>
+                        <form>
+                          <Row>
+                            <Col lg={3} className="mb-1">
+                              <Input type="text" placeholder="Code" onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryCode') }} />
+                            </Col>
+                            <Col lg={3} className="mb-2">
+                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryName') }} />
+                            </Col>
+                            <Col lg={3} className="mb-1">
+                              <FormGroup className="mb-3">
+
+                                <Select
+                                  options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list) : []}
+                                  onChange={(val) => { 
+                                    this.handleChange(val['value'], 'transactionType') 
+                                    this.setState({'selectedTransactionType': val['value']})
+                                  }}
+                                  className="select-default-width"
+                                  placeholder="Transaction Type"
+                                  value={this.state.selectedTransactionType}
+                                />
+                              </FormGroup>
+
+                            </Col>
+                            <Col lg={2} className="mb-1">
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                                <i className="fa fa-search"></i> Search
+                            </Button>
+                            </Col>
+                          </Row>
+                        </form>
                       </div>
                       <div>
                         <BootstrapTable

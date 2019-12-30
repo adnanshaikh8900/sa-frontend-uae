@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -8,7 +8,7 @@ import {
   Button,
   Modal,
   ModalHeader,
-  ModalBody, 
+  ModalBody,
   ModalFooter,
   Row,
   Col,
@@ -54,9 +54,15 @@ class ProductCategory extends React.Component {
       openDeleteModal: false,
       loading: true,
       selectedRows: [],
-      filterData : {}
+      filterData: {
+        productCategoryCode: '',
+        productCategoryName: '',
+        // pageNo: 0,
+        // pageSize: 10
+      }
     }
 
+    this.initializeData = this.initializeData.bind(this)
     this.deleteProductCategory = this.deleteProductCategory.bind(this)
     this.success = this.success.bind(this)
 
@@ -68,10 +74,21 @@ class ProductCategory extends React.Component {
     this.onRowSelect = this.onRowSelect.bind(this)
 
     this.handleFilterChange = this.handleFilterChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+    this.onSizePerPageList = this.onSizePerPageList.bind(this)
+    this.onPageChange = this.onPageChange.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      // onPageChange: this.onPageChange,
+      onSizePerPageList: (page,pageSize) => {
+        this.setState({
+          filterData: {
+            pageNo: page
+          }
+        })
+      },
     }
 
     this.selectRowProp = {
@@ -84,50 +101,71 @@ class ProductCategory extends React.Component {
 
 
   onRowSelect(row, isSelected) {
-    if(isSelected) {
+    if (isSelected) {
       this.state.selectedRows.push(row.id)
 
       this.setState({
         selectedRows: this.state.selectedRows
       })
     }
-    else 
+    else
       this.setState({
-        selectedRows: this.state.selectedRows.filter(el => el!=row.id)
+        selectedRows: this.state.selectedRows.filter(el => el != row.id)
       })
   }
 
   onSelectAll(isSelected, rows) {
     this.setState({
-      selectedRows: isSelected?rows.map(row => row.id):[]
-    }) 
+      selectedRows: isSelected ? rows.map(row => row.id) : []
+    })
   }
 
   // -------------------------
   // Data Table Custom Fields
   //--------------------------
-  
 
-  goToDetail (row) {
-    this.props.history.push(`/admin/master/product-category/detail`,{id: row.id})
+
+  goToDetail(row) {
+    this.props.history.push(`/admin/master/product-category/detail`, { id: row.id })
   }
 
   // Show Success Toast
   success() {
     return toast.success('Product Category Deleted Successfully... ', {
-        position: toast.POSITION.TOP_RIGHT
+      position: toast.POSITION.TOP_RIGHT
     })
   }
 
-  
+
   componentDidMount() {
+    this.initializeData()
+  }
+
+  initializeData() {
     this.props.productCategoryActions.getProductCategoryList().then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
+    }).catch(err => {
+      this.setState({ loading: false })
     })
   }
 
+  onPageChange = (page, sizePerPage) => {
+    this.setState({
+      filterData: {
+        pageNo: page
+      }
+    })
+  }
+
+  onSizePerPageList = (sizePerPage) => {
+    this.setState({
+      filterData: {
+        pageSize: sizePerPage
+      }
+    })
+  }
 
   // -------------------------
   // Actions
@@ -137,11 +175,16 @@ class ProductCategory extends React.Component {
   deleteProductCategory() {
     this.setState({ loading: true })
     this.setState({ openDeleteModal: false })
-    this.props.productCategoryActions.deleteProductCategory(this.state.selectedRows).then(res => {
+    const data = {
+      ids: this.state.selectedRows
+    }
+    this.props.productCategoryActions.deleteProductCategory(data).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
-        // this.getVatListData()
+        this.initializeData()
       }
+    }).catch(err=>{
+    this.setState({ openDeleteModal: false })
     })
   }
 
@@ -157,8 +200,13 @@ class ProductCategory extends React.Component {
 
   handleFilterChange(e, name) {
     this.setState({
-      [name]: e.target.value
+      filterData: Object.assign(this.state.filterData, {
+        [name]: e.target.value
+      })
     })
+  }
+  handleSearch() {
+    this.initializeData()
   }
 
   // filterVatList(vat_list) {
@@ -176,9 +224,9 @@ class ProductCategory extends React.Component {
   // }
 
   render() {
-    const { loading, selectedRows, filters } = this.state
+    const { loading, selectedRows, filterData } = this.state
     const { product_category_list } = this.props
-   
+
     // let display_data = this.filterVatList(vatList)
 
     return (
@@ -192,106 +240,110 @@ class ProductCategory extends React.Component {
               </div>
             </CardHeader>
             <CardBody>
-            {
-              loading ?
-                <Loader></Loader>: 
-                <Row>
-                  <Col lg={12}>
-                    <div className="d-flex justify-content-end">
-                      <ButtonGroup className="toolbar" size="sm">
-                        <Button
-                          color="success"
-                          className="btn-square"
-                        >
-                          <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                          Export to CSV
+              {
+                loading ?
+                  <Loader></Loader> :
+                  <Row>
+                    <Col lg={12}>
+                      <div className="d-flex justify-content-end">
+                        <ButtonGroup className="toolbar" size="sm">
+                          <Button
+                            color="success"
+                            className="btn-square"
+                          >
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                            Export to CSV
                         </Button>
-                        <Button
-                          color="primary"
-                          className="btn-square"
-                          onClick={() => this.props.history.push(`/admin/master/product-category/create`)}
-                        >
-                          <i className="fas fa-plus mr-1" />
-                          New Product Category
+                          <Button
+                            color="primary"
+                            className="btn-square"
+                            onClick={() => this.props.history.push(`/admin/master/product-category/create`)}
+                          >
+                            <i className="fas fa-plus mr-1" />
+                            New Product Category
                         </Button>
-                        <Button
-                          color="warning"
-                          className="btn-square"
-                          onClick={this.showConfirmModal}
-                          disabled={selectedRows.length == 0}
-                        >
-                          <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-                          Bulk Delete
+                          <Button
+                            color="warning"
+                            className="btn-square"
+                            onClick={this.showConfirmModal}
+                            disabled={selectedRows.length == 0}
+                          >
+                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+                            Bulk Delete
                         </Button>
-                      </ButtonGroup>
-                    </div>
-                    <div className="py-3">
-                      <h5>Filter : </h5>
-                      <Row>
-                        <Col lg={4} className="mb-1">
-                          <Input type="text" 
-                            name="name"
-                            placeholder="Code" 
-                            onChange={this.handleFilterChange}/>
-                        </Col>
-                        <Col lg={4} className="mb-1">
-                          <Input type="number" 
-                            name="vat"
-                            placeholder="Product Category Name" 
-                            onChange={this.handleFilterChange}/>
-                        </Col>
-                        {/* <Col>
-                          <Select
-                            className=""
-                            options={[{'value':'121', label:'11111'}, {value:'222', label:'123131'}]}
-                            name="type"
-                            placeholder="Account Type"
-                            onChange={(val)=> {
-                              this.handleFilterChange({target: { name:'type', value: val.value }})
-                            }}
-                          />
-                        </Col> */}
-                      </Row>
-                    </div>
-                    <BootstrapTable 
-                      data={product_category_list ? product_category_list : []}
-                      hover
-                      version="4"
-                      pagination
-                      search={false}
-                      selectRow={ this.selectRowProp }
-                      options={ this.options }
-                      trClassName="cursor-pointer"
-                    >
-                      <TableHeaderColumn
-                        isKey
-                        dataField="productCategoryCode"
-                        dataSort
+                        </ButtonGroup>
+                      </div>
+                      <div className="py-3">
+                        <h5>Filter : </h5>
+                        <form onSubmit={this.handleSubmit}>
+                          <Row>
+                            <Col lg={4} className="mb-1">
+                              <Input type="text"
+                                name="name"
+                                placeholder="Product Category Name"
+                                // value={productCategoryCode ? productCategoryCode: ''}
+                                onChange={(e) => { this.handleFilterChange(e, 'productCategoryCode') }} />
+                            </Col>
+                            <Col lg={4} className="mb-1">
+                              <Input type="text"
+                                name="Code"
+                                placeholder="Code"
+                                // value={productCategoryName ?  productCategoryName : ''}
+                                onChange={(e) => { this.handleFilterChange(e, 'productCategoryName') }} />
+                            </Col>
+
+                            <Col lg={2} className="mb-1">
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                                <i className="fa fa-search"></i> Search
+                            </Button>
+                            </Col>
+                          </Row>
+                        </form>
+                      </div>
+                      <BootstrapTable
+                        selectRow={this.selectRowProp}
+                        search={false}
+                        options={this.options}
+                        data={product_category_list ? product_category_list : ''}
+                        version="4"
+                        hover
+                        pagination
+
+                        totalSize={product_category_list ? product_category_list.length : 0}
+                        className="product-table"
+                        trClassName="cursor-pointer"
+                        csvFileName="Product_Category.csv"
+                        ref={node => this.table = node}
                       >
-                        Code
+                        <TableHeaderColumn
+                          isKey
+                          dataField="productCategoryCode"
+                          dataSort
+                        >
+                          Code
                       </TableHeaderColumn>
-                      <TableHeaderColumn
-                        dataField="productCategoryName"
-                        dataSort
-                      >
-                        Product Category Name
+                        <TableHeaderColumn
+                          dataField="productCategoryName"
+                          dataSort
+                        >
+                          Product Category Name
                       </TableHeaderColumn>
-                    </BootstrapTable>
-                  </Col>
-                </Row>
-            }
+                      </BootstrapTable>
+                    </Col>
+                  </Row>
+              }
             </CardBody>
           </Card>
           <Modal isOpen={this.state.openDeleteModal}
-              className={'modal-danger ' + this.props.className}>
-              <ModalHeader toggle={this.toggleDanger}>Delete</ModalHeader>
-              <ModalBody>
-                  Are you sure want to delete this record?
+            className={'modal-danger ' + this.props.className}>
+            <ModalHeader toggle={this.toggleDanger}>Delete</ModalHeader>
+            <ModalBody>
+              Are you sure want to delete this record?
             </ModalBody>
-              <ModalFooter>
-                  <Button color="danger" onClick={this.deleteProductCategory}>Yes</Button>&nbsp;
+            <ModalFooter>
+              <Button color="danger" onClick={this.deleteProductCategory}>Yes</Button>&nbsp;
                   <Button color="secondary" onClick={this.closeConfirmModal}>No</Button>
-              </ModalFooter>
+            </ModalFooter>
           </Modal>
         </div>
       </div>

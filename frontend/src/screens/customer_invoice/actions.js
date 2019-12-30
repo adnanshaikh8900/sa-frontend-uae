@@ -4,17 +4,20 @@ import {
   authApi
 } from 'utils'
 
-export const getCustomerInoviceList = () => {
+export const getCustomerInoviceList = (contactType) => {
+  let type = contactType ? contactType : ""
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/customer/getList'
+      url: `rest/invoice/getList?type=${type}`
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
         dispatch({
           type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
-          payload:  res.data
+          payload:  {
+            data: res.data
+          }
         })
       }
     }).catch(err => {
@@ -22,12 +25,12 @@ export const getCustomerInoviceList = () => {
     })
   }
 }
-
+ 
 export const getProjectList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/project/getprojects'
+      url: 'rest/project/getProjectsForDropdown'
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
@@ -50,7 +53,7 @@ export const getCustomerList = (nameCode) => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: `rest/contact/getContactList?contactType=${contactType}`
+      url: `rest/contact/getContactsForDropdown?contactType=${contactType}`
     }
     return authApi(data).then(res => {
       if (res.status == 200) {

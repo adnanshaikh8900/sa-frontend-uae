@@ -88,7 +88,7 @@ class CreateSupplierInvoice extends React.Component {
         notes : null
       },
       currentData: {},
-      contactCode : "2"
+      contactType : "1"
     }
 
     this.options = {
@@ -120,30 +120,19 @@ class CreateSupplierInvoice extends React.Component {
   renderProductName (cell, row) {
     return (
       <div className="d-flex align-items-center">
-        <Input type="select" className="mr-1">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
+        <Input type="hidden" className="mr-1">
+          
         </Input>
-        <Button
-          size="sm"
-          color="primary"
-          className="btn-brand icon"
-        >
-          <i className="fas fa-plus"></i>
-        </Button>
+      
       </div>
     )
   }
-
+ 
   renderDescription (cell, row) {
     return (
       <Input
         type="text"
-        value={row['description'] !== 0? row['description'] : 0}
+        value={row['description'] !== '' ? row['description'] : '' }
         defaultValue={row['description']}
         onChange={(e) => { this.selectItem(e, row, 'description') }}
         
@@ -188,7 +177,7 @@ class CreateSupplierInvoice extends React.Component {
 
   getInitialData = () => {
     this.props.createSupplier.getProjectList();
-    this.props.createSupplier.getContactList(this.state.contactCode);
+    this.props.createSupplier.getContactList(this.state.contactType);
     // this.props.createSupplier.getVendorList();
     this.props.createSupplier.getCurrencyList();
     this.props.createSupplier.getVatList();    
@@ -322,6 +311,7 @@ class CreateSupplierInvoice extends React.Component {
     formData.append("contactPoNumber", contact_po_number!== null ? contact_po_number : "");    
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription !== null ? receiptAttachmentDescription : "");
     formData.append("notes", notes !== null ? notes : "");    
+    formData.append("type", 1); 
     formData.append('lineItemsString',JSON.stringify(this.state.data));
     formData.append('totalVatAmount',this.state.initValue.invoiceVATAmount);
     formData.append('totalAmount',this.state.initValue.totalAmount);
@@ -417,7 +407,7 @@ class CreateSupplierInvoice extends React.Component {
                               <Label htmlFor="project">Project</Label>
                               <Select
                                 className="select-default-width"
-                                options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
+                                options={selectOptionsFactory.renderOptions('label', 'value', project_list)}
                                 id="project"
                                 name="project"
                                 value={props.values.project}                                
@@ -432,7 +422,7 @@ class CreateSupplierInvoice extends React.Component {
                               <Label htmlFor="contact">Supplier</Label>
                               <Select
                                 className="select-default-width"
-                                options={selectOptionsFactory.renderOptions('firstName', 'id', contact_list)}
+                                options={selectOptionsFactory.renderOptions('label', 'value', contact_list)}
                                 id="shippingContact"
                                 name="shippingContact"
                                 value={props.values.shippingContact}
@@ -633,21 +623,23 @@ class CreateSupplierInvoice extends React.Component {
                                 dataFormat={this.renderActions}
                               >
                               </TableHeaderColumn>
-                              {/* <TableHeaderColumn
+                              <TableHeaderColumn
                                 isKey
+                                width="0"
                                 dataField="product_name"
                                 dataFormat={this.renderProductName}
                               >
                                 Product
-                              </TableHeaderColumn> */}
+                              </TableHeaderColumn>
                               <TableHeaderColumn
-                              isKey
+                              
                                 dataField="description"
                                 dataFormat={this.renderDescription}
                               >
                                 Description
                               </TableHeaderColumn>
                               <TableHeaderColumn
+                              
                                 dataField="quantity"
                                 dataFormat={this.renderQuantity}
                               >

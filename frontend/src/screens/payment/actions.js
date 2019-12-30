@@ -3,6 +3,7 @@ import {
   api,
   authApi
 } from 'utils'
+import moment from 'moment'
 
 export const getCurrencyList = () => {
   return (dispatch) => {
@@ -33,7 +34,7 @@ export const getBankList = () => {
       if (res.status == 200) {
         dispatch({
           type: PAYMENT.BANK_LIST,
-          payload:  res
+          payload: res
         })
       }
     }).catch(err => {
@@ -84,7 +85,7 @@ export const getProjectList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/project/getprojects'
+      url: 'rest/project/getList'
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
@@ -99,11 +100,18 @@ export const getProjectList = () => {
   }
 }
 
-export const getPaymentList = () => {
+export const getPaymentList = (paymentData) => {
+  const { supplierId, paymentDate, invoiceAmount, pageNo, pageSize } = paymentData;
   return (dispatch) => {
+    let param = `rest/payment/getlist?supplierId=${supplierId ? supplierId : ''}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}`
+    if (paymentDate) {
+      let date = moment(paymentDate).format('DD-MM-YYYY')
+      param = param + `&paymentDate=${date}`
+    }
     let data = {
-      method: 'GET',
-      url: `rest/payment/getlist`
+      method: 'get',
+      url: param
+      // data: postObj
     }
 
     return authApi(data).then(res => {
@@ -117,7 +125,7 @@ export const getPaymentList = () => {
     })
   }
 }
-export const removeBulkPayments= (obj) => {
+export const removeBulkPayments = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
@@ -132,3 +140,17 @@ export const removeBulkPayments= (obj) => {
   }
 }
 
+export const createSupplier = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: 'rest/contact/save',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}

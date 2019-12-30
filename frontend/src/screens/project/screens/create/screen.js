@@ -74,11 +74,11 @@ class CreateProject extends React.Component {
       initValue: {
         projectName: '',
         invoiceLanguageCode: '',
-        contact: '',
+        contactId: '',
         contractPoNumber: '',
         vatRegistrationNumber: '',
-        projectExpenseBudget: '',
-        projectRevenueBudget: '',
+        expenseBudget: '',
+        revenueBudget: '',
         currency: '',
         contractPoNumber: '',
       },
@@ -121,22 +121,22 @@ class CreateProject extends React.Component {
     const {
       projectName,
       invoiceLanguageCode,
-      contact,
+      contactId,
       contractPoNumber,
       vatRegistrationNumber,
-      projectExpenseBudget,
-      projectRevenueBudget,
+      expenseBudget,
+      revenueBudget,
       currency,
     } = data
 
     const postData = {
       projectName: projectName ? projectName: '',
       invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
-      contact: contact && contact !== null ? contact : '',
+      contactId : contactId && contactId !== null ? contactId : '',
       contractPoNumber: contractPoNumber ? contractPoNumber : '',
       vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
-      projectExpenseBudget: projectExpenseBudget ? projectExpenseBudget : '',
-      projectRevenueBudget: projectRevenueBudget ? projectRevenueBudget : '',
+      expenseBudget: expenseBudget ? expenseBudget : '',
+      revenueBudget: revenueBudget ? revenueBudget : '',
       currencyCode: currency && currency!== null ? currency : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
@@ -192,7 +192,7 @@ class CreateProject extends React.Component {
                         validationSchema={Yup.object().shape({
                           projectName: Yup.string()
                             .required("Project Name is Required"),
-                          contact: Yup.string()
+                          contactId: Yup.string()
                             .required("Contact is Required"),
                           currency: Yup.string()
                             .required("Currency is Required")
@@ -226,27 +226,28 @@ class CreateProject extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="contact"><span className="text-danger">*</span>Contact</Label>
+                                  <Label htmlFor="contactId"><span className="text-danger">*</span>Contact</Label>
                                   <Select
-                                    options={selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list)}
+                                    options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'id', contact_list) : []}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedContact: option.value
                                       })
-                                      props.handleChange("contact")(option.value);
+                                      console.log(option)
+                                      props.handleChange("contactId")(option.value);
                                     }}
-                                    id="contact"
-                                    name="contact"
+                                    id="contactId"
+                                    name="contactId"
                                     placeholder="Select Contact"
-                                    value={props.values.contact}
+                                    value={props.values.contactId}
                                     className={
-                                      props.errors.contact && props.touched.contact
+                                      props.errors.contactId && props.touched.contactId
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.contact && props.touched.contact && (
-                                    <div className="invalid-feedback">{props.errors.contact}</div>
+                                  {props.errors.contactId && props.touched.contactId && (
+                                    <div className="invalid-feedback">{props.errors.contactId}</div>
                                   )}
                                 </FormGroup>
                                 <FormGroup className="mb-5 text-right">
@@ -333,43 +334,43 @@ class CreateProject extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="">
-                                  <Label htmlFor="projectExpenseBudget">Expense Budget</Label>
+                                  <Label htmlFor="expenseBudget">Expense Budget</Label>
                                   <Input
                                     type="number"
-                                    id="projectExpenseBudget"
-                                    name="projectExpenseBudget"
+                                    id="expenseBudget"
+                                    name="expenseBudget"
                                     onChange={props.handleChange}
                                     placeholder="Enter Expense Budgets"
-                                    value={props.values.projectExpenseBudget}
+                                    value={props.values.expenseBudget}
                                     className={
-                                      props.errors.projectExpenseBudget && props.touched.projectExpenseBudget
+                                      props.errors.expenseBudget && props.touched.expenseBudget
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.projectExpenseBudget && props.touched.projectExpenseBudget && (
-                                    <div className="invalid-feedback">{props.errors.projectExpenseBudget}</div>
+                                  {props.errors.expenseBudget && props.touched.expenseBudget && (
+                                    <div className="invalid-feedback">{props.errors.expenseBudget}</div>
                                   )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="">
-                                  <Label htmlFor="projectRevenueBudget">Revenue Budget</Label>
+                                  <Label htmlFor="revenueBudget">Revenue Budget</Label>
                                   <Input
                                     type="number"
-                                    id="projectRevenueBudget"
-                                    name="projectRevenueBudget"
+                                    id="revenueBudget"
+                                    name="revenueBudget"
                                     onChange={props.handleChange}
                                     placeholder="Enter VAT Revenue Budget"
-                                    value={props.values.projectRevenueBudget}
+                                    value={props.values.revenueBudget}
                                     className={
-                                      props.errors.projectRevenueBudget && props.touched.projectRevenueBudget
+                                      props.errors.revenueBudget && props.touched.revenueBudget
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.projectRevenueBudget && props.touched.projectRevenueBudget && (
-                                    <div className="invalid-feedback">{props.errors.projectRevenueBudget}</div>
+                                  {props.errors.revenueBudget && props.touched.revenueBudget && (
+                                    <div className="invalid-feedback">{props.errors.revenueBudget}</div>
                                   )}
                                 </FormGroup>
                               </Col>

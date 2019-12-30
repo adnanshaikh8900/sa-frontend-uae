@@ -19,7 +19,7 @@ import _ from 'lodash'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
-import { ContactModal } from '../../sections'
+import { contactIdModal } from '../../sections'
 import { Loader ,ConfirmDeleteModal } from 'components'
 
 import * as ProjectActions from '../../actions'
@@ -39,7 +39,7 @@ const mapStateToProps = (state) => {
   return ({
     currency_list: state.project.currency_list,
     country_list: state.project.country_list,
-    contact_list: state.project.contact_list,
+    contact_list: state.project.contactId_list,
     title_list: state.project.title_list
   })
 }
@@ -67,19 +67,19 @@ class DetailProject extends React.Component {
       openContactModal: false,
       loading: true,
       dialog: null,
-      selectedContact: null,
+      selectedcontactId: null,
       selectedCurrency: null,
       selectedInvoiceLanguage: null,
 
-      selectedContactCountry: null,
-      selectedContactCurrency: null,
-      selectedContactTitle: null,
+      selectedcontactIdCountry: null,
+      selectedcontactIdCurrency: null,
+      selectedcontactIdTitle: null,
 
       initValue: {},
     }
 
-    this.showContactModel = this.showContactModel.bind(this)
-    this.closeContactModel = this.closeContactModel.bind(this)
+    this.showContactModal = this.showContactModal.bind(this)
+    this.closeContactModal = this.closeContactModal.bind(this)
 
     this.projectHandleSubmit = this.projectHandleSubmit.bind(this)
     this.success = this.success.bind(this)
@@ -89,11 +89,11 @@ class DetailProject extends React.Component {
   }
 
   // Show Invite User Modal
-  showContactModel() {
+  showContactModal() {
     this.setState({ openContactModal: true })
   }
   // Cloase Confirm Modal
-  closeContactModel() {
+  closeContactModal() {
     this.setState({ openContactModal: false })
   }
 
@@ -101,32 +101,28 @@ class DetailProject extends React.Component {
     const id = this.props.location.state.id;
     if (this.props.location.state && id) {
       this.props.detailProjectActions.getProjectById(id).then(res => {
-        this.props.projectActions.getCountryList()
         this.props.projectActions.getContactList()
+        this.props.projectActions.getCountryList()
         this.props.projectActions.getCurrencyList()
-        this.props.projectActions.getTitleList()
+        console.log(res.data.contactId)
+        // this.props.projectActions.getTitleList()
         if (res.status === 200) {
           this.setState({
-            loading: false,
             initValue: {
               projectName: res.data.projectName,
-              invoiceLanguageCode: res.data.invoiceLanguageCode !== null ? {
-                label: res.data.invoiceLanguageCode.id,
-                value: res.data.invoiceLanguageCode.value
-              } : '',
-              contact: res.data.contact ? {
-                label: res.data.contact.firstName,
-                value: res.data.contact.contactId
-              } : '',
+              // invoiceLanguageCode: res.data.invoiceLanguageCode !== null ? {
+              //   label: res.data.invoiceLanguageCode.id,
+              //   value: res.data.invoiceLanguageCode.value
+              // } : '',
+              contactId: res.data.contactId ? res.data.contactId: '',
               contractPoNumber: res.data.contractPoNumber,
               vatRegistrationNumber: res.data.vatRegistrationNumber,
-              projectExpenseBudget: res.data.projectExpenseBudget,
-              projectRevenueBudget: res.data.projectRevenueBudget,
-              currency: res.data.currency ? {
-                label: res.data.currency.currencyName,
-                value: res.data.currency.currencyCode
-              } : ''
-            }
+              expenseBudget: res.data.expenseBudget,
+              revenueBudget: res.data.revenueBudget,
+              currencyCode: res.data.currencyCode ? res.data.currencyCode : ''
+            },
+            loading: false,
+
           })
         }
       }).catch(err => {
@@ -148,26 +144,29 @@ class DetailProject extends React.Component {
 
   // Create or Edit Vat
   projectHandleSubmit(data) {
+    console.log(data)
+    const id = this.props.location.state.id;
     const {
       projectName,
       invoiceLanguageCode,
-      contact,
+      contactId,
       contractPoNumber,
       vatRegistrationNumber,
-      projectExpenseBudget,
-      projectRevenueBudget,
-      currency,
+      expenseBudget,
+      revenueBudget,
+      currencyCode,
     } = data
 
     const postData = {
+      projectId: id,
       projectName: projectName ? projectName: '',
       invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
-      contact: contact && contact !== null ? contact : '',
+      contactId: contactId && contactId !== null ? contactId : '',
       contractPoNumber: contractPoNumber ? contractPoNumber : '',
       vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
-      projectExpenseBudget: projectExpenseBudget ? projectExpenseBudget : '',
-      projectRevenueBudget: projectRevenueBudget ? projectRevenueBudget : '',
-      currencyCode: currency && currency!== null ? currency : ''
+      expenseBudget: expenseBudget ? expenseBudget : '',
+      revenueBudget: revenueBudget ? revenueBudget : '',
+      currencyCode: currencyCode && currencyCode!== null ? currencyCode : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
     this.props.detailProjectActions.updateProject(postData).then(res => {
@@ -250,10 +249,10 @@ class DetailProject extends React.Component {
                         validationSchema={Yup.object().shape({
                           projectName: Yup.string()
                             .required("Project Name is Required"),
-                          contact: Yup.string()
+                          contactId: Yup.string()
                             .required("Contact is Required"),
-                          currency: Yup.string()
-                            .required("Currency is Required"),
+                          currencyCode: Yup.string()
+                            .required("currencyCode is Required"),
                           // invoiceLanguageCode: Yup.string()
                           //   .required("Invoice Language is Required")
                         })}>
@@ -267,7 +266,7 @@ class DetailProject extends React.Component {
                                     type="text"
                                     id="name"
                                     name="projectName"
-                                    onChange={(option)=>{props.handleChange('projectName',option)}}
+                                    onChange={props.handleChange}
                                     placeholder="Enter Project Name"
                                     defaultValue={props.values.projectName}
                                     className={
@@ -283,27 +282,28 @@ class DetailProject extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="contact"><span className="text-danger">*</span>Contact</Label>
+                                  <Label htmlFor="contactId"><span className="text-danger">*</span>Contact</Label>
                                   <Select
-                                    options={selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list)}
+                                    options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'id', contact_list) : []}
                                     onChange={(option) => {
-                                      // this.setState({
-                                      //   selectedContact: option.value
-                                      // })
-                                      props.handleChange("contact")(option.value);
+                                      this.setState({
+                                        selectedContact: option.value
+                                      })
+                                      console.log(option)
+                                      props.handleChange("contactId")(option.value);
                                     }}
-                                    id="contact"
-                                    name="contact"
+                                    id="contactId"
+                                    name="contactId"
                                     placeholder="Select Contact"
-                                    value={props.values.contact}
+                                    value={props.values.contactId}
                                     className={
-                                      props.errors.contact && props.touched.contact
+                                      props.errors.contactId && props.touched.contactId
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.contact && props.touched.contact && (
-                                    <div className="invalid-feedback">{props.errors.contact}</div>
+                                  {props.errors.contactId && props.touched.contactId && (
+                                    <div className="invalid-feedback">{props.errors.contactId}</div>
                                   )}
                                 </FormGroup>
                                 <FormGroup className="mb-5 text-right">
@@ -322,7 +322,7 @@ class DetailProject extends React.Component {
                                     type="text"
                                     id="contractPoNumber"
                                     name="contractPoNumber"
-                                    onChange={(option)=>{props.handleChange('contractPoNumber',option)}}
+                                    onChange={props.handleChange}
 
                                     placeholder="Enter Contract PO Number"
                                     defaultValue={props.values.contractPoNumber}
@@ -344,7 +344,7 @@ class DetailProject extends React.Component {
                                     type="text"
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
-                                    onChange={(option)=>{props.handleChange('vatRegistrationNumber',option)}}
+                                    onChange={props.handleChange}
                                     placeholder="Enter VAT Registration Number"
                                     defaultValue={props.values.vatRegistrationNumber}
                                     className={
@@ -360,30 +360,30 @@ class DetailProject extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="currency">
-                                    <span className="text-danger">*</span>Currency
+                                  <Label htmlFor="currencyCode">
+                                    <span className="text-danger">*</span>currencyCode
                                       </Label>
                                   <Select
                                     className="select-default-width"
-                                    options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
+                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedCurrency: option.value
                                       })
-                                      props.handleChange("currency")(option.value);
+                                      props.handleChange("currencyCode")(option.value);
                                     }}
-                                    placeholder="Select currency"
-                                    value={props.values.currency}
-                                    id="currency"
-                                    name="currency"
+                                    placeholder="Select currencyCode"
+                                    value={props.values.currencyCode}
+                                    id="currencyCode"
+                                    name="currencyCode"
                                     className={
-                                      props.errors.currency && props.touched.currency
+                                      props.errors.currencyCode && props.touched.currencyCode
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.currency && props.touched.currency && (
-                                    <div className="invalid-feedback">{props.errors.currency}</div>
+                                  {props.errors.currencyCode && props.touched.currencyCode && (
+                                    <div className="invalid-feedback">{props.errors.currencyCode}</div>
                                   )}
                                 </FormGroup>
                               </Col>
@@ -391,44 +391,44 @@ class DetailProject extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="">
-                                  <Label htmlFor="projectExpenseBudget">Expense Budget</Label>
+                                  <Label htmlFor="expenseBudget">Expense Budget</Label>
                                   <Input
                                     type="number"
-                                    id="projectExpenseBudget"
-                                    name="projectExpenseBudget"
-                                    onChange={(option)=>{props.handleChange('projectExpenseBudget',option)}}
+                                    id="expenseBudget"
+                                    name="expenseBudget"
+                                    onChange={props.handleChange}
 
                                     placeholder="Enter Expense Budgets"
-                                    defaultValue={props.values.projectExpenseBudget}
+                                    defaultValue={props.values.expenseBudget}
                                     className={
-                                      props.errors.projectExpenseBudget && props.touched.projectExpenseBudget
+                                      props.errors.expenseBudget && props.touched.expenseBudget
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.projectExpenseBudget && props.touched.projectExpenseBudget && (
-                                    <div className="invalid-feedback">{props.errors.projectExpenseBudget}</div>
+                                  {props.errors.expenseBudget && props.touched.expenseBudget && (
+                                    <div className="invalid-feedback">{props.errors.expenseBudget}</div>
                                   )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="">
-                                  <Label htmlFor="projectRevenueBudget">Revenue Budget</Label>
+                                  <Label htmlFor="revenueBudget">Revenue Budget</Label>
                                   <Input
                                     type="number"
-                                    id="projectRevenueBudget"
-                                    name="projectRevenueBudget"
-                                    onChange={(option)=>{props.handleChange('projectRevenueBudget',option)}}
+                                    id="revenueBudget"
+                                    name="revenueBudget"
+                                    onChange={props.handleChange}
                                     placeholder="Enter VAT Revenue Budget"
-                                    defaultValue={props.values.projectRevenueBudget}
+                                    defaultValue={props.values.revenueBudget}
                                     className={
-                                      props.errors.projectRevenueBudget && props.touched.projectRevenueBudget
+                                      props.errors.revenueBudget && props.touched.revenueBudget
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.projectRevenueBudget && props.touched.projectRevenueBudget && (
-                                    <div className="invalid-feedback">{props.errors.projectRevenueBudget}</div>
+                                  {props.errors.revenueBudget && props.touched.revenueBudget && (
+                                    <div className="invalid-feedback">{props.errors.revenueBudget}</div>
                                   )}
                                 </FormGroup>
                               </Col>
@@ -491,9 +491,9 @@ class DetailProject extends React.Component {
           </Row>
          )}
         </div>
-        <ContactModal
+        <contactIdModal
           openContactModal={this.state.openContactModal}
-          closeContactModel={this.closeContactModel}
+          closeContactModal={this.closeContactModal}
           currencyList={currency_list}
           countryList={country_list}
           createContact={this.props.projectActions.createProjectContact}

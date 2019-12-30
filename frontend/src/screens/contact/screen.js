@@ -55,7 +55,7 @@ class Contact extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true,
+      loading: false,
       clickedRow: {},
       selected_id_list: [],
       dialog: null,
@@ -63,8 +63,6 @@ class Contact extends React.Component {
         name: '',
         email: '',
         contactType: '',
-        // pageNo: 0,
-        // pageSize: 10,
       },
       selectedContactType: ''
     }
@@ -73,7 +71,7 @@ class Contact extends React.Component {
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
     this.goToDetail = this.goToDetail.bind(this)
-    this.typeFormatter = this.typeFormatter.bind(this);
+
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
@@ -85,6 +83,8 @@ class Contact extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
     }
@@ -109,29 +109,34 @@ class Contact extends React.Component {
   }
 
   initializeData() {
-    const { filterData } = this.state
+    let { filterData } = this.state
+    const data = {
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
+    }
+    filterData = {...filterData,...data}
     this.props.contactActions.getContactList(filterData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false });
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.message : null);
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
       this.setState({ loading: false })
     })
   }
 
 
   onPageChange = (page, sizePerPage) => {
-
+      this.options.page = page
   }
 
   onSizePerPageList = (sizePerPage) => {
-
+    this.options.sizePerPage = sizePerPage
   }
 
-  typeFormatter(cell, row) {
-    return row['contactType'] ? row['contactType'].name : '';
-  }
+  // typeFormatter(cell, row) {
+  //   return row['contactType'] ? row['contactType'].name : '';
+  // }
 
   onRowSelect(row, isSelected, e) {
     let temp_list = []
@@ -163,7 +168,7 @@ class Contact extends React.Component {
   }
 
   goToDetail(row) {
-    this.props.history.push('/admin/master/contact/detail',{id: row.id})
+    this.props.history.push('/admin/master/contact/detail', { id: row.id })
   }
 
   bulkDelete() {
@@ -199,8 +204,8 @@ class Contact extends React.Component {
         })
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error',  err && err!== null? err.data.message : null)
-      this.setState({isLoading: false})
+      this.props.commonActions.tostifyAlert('error', err && err !== null ? err.data.message : null)
+      this.setState({ isLoading: false })
     })
   }
 
@@ -212,9 +217,9 @@ class Contact extends React.Component {
 
   handleChange(val, name) {
     this.setState({
-     filterData: Object.assign(this.state.filterData,{
-      [name]: val
-     })
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
     })
   }
 
@@ -226,8 +231,8 @@ class Contact extends React.Component {
 
   render() {
 
-    const { loading,dialog,filterData} = this.state
-    const { contact_list , contact_type_list} = this.props
+    const { loading, dialog, filterData } = this.state
+    const { contact_list, contact_type_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -264,7 +269,7 @@ class Contact extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={()=>this.table.handleExportCSV()}
+                            onClick={() => this.table.handleExportCSV()}
 
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -303,9 +308,9 @@ class Contact extends React.Component {
 
                                 <Select
                                   options={contact_type_list ? contact_type_list : []}
-                                  onChange={(val) => { 
-                                    this.handleChange(val['value'], 'contactType') 
-                                    this.setState({'selectedContactType': val['value']})
+                                  onChange={(val) => {
+                                    this.handleChange(val['value'], 'contactType')
+                                    this.setState({ 'selectedContactType': val['value'] })
                                   }}
                                   className="select-default-width"
                                   placeholder="Contact Type"
@@ -329,15 +334,19 @@ class Contact extends React.Component {
                               selectRow={this.selectRowProp}
                               search={false}
                               options={this.options}
-                              data={contact_list ? contact_list : ''}
+                              data={contact_list ? contact_list : []}
                               version="4"
                               hover
+                              remote
                               pagination
                               totalSize={contact_list ? contact_list.length : 0}
                               className="product-table"
                               trClassName="cursor-pointer"
                               csvFileName="Contact.csv"
-                              ref={node => this.table = node}
+                              ref={node => {
+                                console.log(this.options)
+                                this.table = node
+                              }}
                             >
                               <TableHeaderColumn
                                 isKey
@@ -353,9 +362,9 @@ class Contact extends React.Component {
                                 email
                               </TableHeaderColumn>
                               <TableHeaderColumn
-                                dataField="contactType"
+                                dataField="contactTypeString"
                                 dataSort
-                                dataFormat={this.typeFormatter}
+                                // dataFormat={this.typeFormatter}
                               >
                                 Type
                               </TableHeaderColumn>

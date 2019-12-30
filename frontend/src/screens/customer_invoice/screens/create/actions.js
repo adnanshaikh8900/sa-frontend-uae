@@ -12,17 +12,17 @@ export const initialData = (obj) => {
 }
 
 export const createInvoice = (obj) => {
-  // return (dispatch) => {
-  //   let data = {
-  //     method: 'post',
-  //     url: 'rest/supplierinvoice/save',
-  //     data: obj
-  //   }
-  //   return authFileUploadApi(data).then(res => {
-  //     return res
-  //   })
-  //   .catch(err => {
-  //     throw err
-  //   })
-  // }
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: 'rest/invoice/save',
+      data: obj
+    }
+    return authFileUploadApi(data).then(res => {
+      return res
+    })
+    .catch(err => {
+      throw err
+    })
+  }
 }

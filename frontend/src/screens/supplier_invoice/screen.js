@@ -69,7 +69,8 @@ class SupplierInvoice extends React.Component {
         invoiceDate : '',
        invoiceDueDate : '',
         amount : '',
-        status : ''
+        status : '',
+        contactType : "1"
      }
     }
 
@@ -201,7 +202,7 @@ class SupplierInvoice extends React.Component {
      
       ({
         status : supplier.status,
-        customerName : supplier.customerName,
+        customerName : supplier.name,
         invoiceNumber: supplier.referenceNumber,        
         invoiceDate: moment(supplier.invoiceDate).format('L'),
         invoiceDueDate: moment(supplier.invoiceDueDate).format('L'),

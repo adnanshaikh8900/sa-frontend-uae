@@ -8,7 +8,7 @@ export const createAndSaveProject = (project) => {
   return (dispatch) => {
     let data = {
       method: 'POST',
-      url: `/rest/project/saveproject`,
+      url: `/rest/project/save`,
       data: project
     }
 

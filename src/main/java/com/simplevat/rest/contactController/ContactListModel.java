@@ -15,7 +15,7 @@ import lombok.Data;
  * @author admin
  */
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class ContactListModel {
 
     private Integer id;
@@ -41,6 +41,8 @@ public class ContactListModel {
     private Date nextDueDate;
 
     private BigDecimal dueAmount;
+
+    private String contactTypeString;
 
     public String getFullName() {
         StringBuilder sb = new StringBuilder();

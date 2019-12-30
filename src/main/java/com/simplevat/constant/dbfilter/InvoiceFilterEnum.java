@@ -11,7 +11,7 @@ import lombok.Getter;
  *
  * @author ashish
  */
-public enum SupplierInvoiceFilterEnum {
+public enum InvoiceFilterEnum {
 //    CUSTOMER_NAME("customerName"," like CONCAT(:customerName,'%')"),
     INVOICE_NUMBER("referenceNumber", " like CONCAT(:referenceNumber,'%')"),
     INVOICE_DATE("invoiceDate", " = :invoiceDate "),
@@ -19,6 +19,7 @@ public enum SupplierInvoiceFilterEnum {
     INVOICE_AMOUNT("totalAmount", " = :totalAmount "),
     STATUS("status", " = :status "),
     USER_ID("createdBy", " = :createdBy "),
+    TYPE("type", " = :type "),
     DELETE_FLAG("deleteFlag", " = :deleteFlag ");
 
     @Getter
@@ -27,11 +28,11 @@ public enum SupplierInvoiceFilterEnum {
     @Getter
     String condition;
 
-    private SupplierInvoiceFilterEnum(String dbColumnName) {
+    private InvoiceFilterEnum(String dbColumnName) {
         this.dbColumnName = dbColumnName;
     }
 
-    private SupplierInvoiceFilterEnum(String dbColumnName, String condition) {
+    private InvoiceFilterEnum(String dbColumnName, String condition) {
         this.dbColumnName = dbColumnName;
         this.condition = condition;
     }

@@ -5,11 +5,13 @@
  */
 package com.simplevat.service.impl;
 
+import com.simplevat.constant.dbfilter.PaymentFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.PaymentDao;
 import com.simplevat.entity.Payment;
 import com.simplevat.service.PaymentService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +33,8 @@ public class PaymentServiceImpl extends PaymentService {
     }
 
     @Override
-    public List<Payment> getPayments() {
-        return this.paymentDao.getPayments();
+    public List<Payment> getPayments(Map<PaymentFilterEnum, Object> map) {
+        return this.paymentDao.getPayments(map);
     }
     
     @Override

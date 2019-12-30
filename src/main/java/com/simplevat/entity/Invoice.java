@@ -1,32 +1,27 @@
-package com.simplevat.entity.invoice;
+package com.simplevat.entity;
 
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.Currency;
-import com.simplevat.entity.DocumentTemplate;
-import com.simplevat.entity.Project;
 import com.simplevat.entity.converter.DateConverter;
+import com.simplevat.enums.DiscountType;
+import com.simplevat.enums.InvoiceStatusEnum;
 import java.io.Serializable;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 
-import lombok.AccessLevel;
-import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 /**
- * Created by mohsinh on 2/26/2017.
+ * Created by ashish .
  */
 @Data
 @Entity
 @Table(name = "INVOICE")
-@TableGenerator(name="INCREMENT_INITIAL_VALUE", initialValue = 1000)
+@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 @NamedQueries({
-    @NamedQuery(name = "Invoice.searchInvoices",
+    @NamedQuery(name = "allInvoices",
             query = "from Invoice i where i.deleteFlag = false order by i.lastUpdateDate desc")
 })
 public class Invoice implements Serializable {
@@ -34,40 +29,34 @@ public class Invoice implements Serializable {
     private static final long serialVersionUID = -8324261801367612269L;
 
     @Id
-    @Setter(AccessLevel.NONE)
-    @Column(name = "INVOICE_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY,generator ="INCREMENT_INITIAL_VALUE")
-    private Integer invoiceId;
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "INCREMENT_INITIAL_VALUE")
+    private Integer id;
 
-    @Column(name = "INVOICE_REFERENCE_NUMBER")
-    private String invoiceReferenceNumber;
+    @Column(name = "REFERENCE_NUMBER")
+    private String referenceNumber;
 
     @Column(name = "INVOICE_DATE")
     @Convert(converter = DateConverter.class)
     private LocalDateTime invoiceDate;
 
-    @Basic(optional = false)
-    @Column(name = "INVOICE_DUE_ON")
-    @ColumnDefault(value = "0")
-    private Integer invoiceDueOn;
-
     @Column(name = "INVOICE_DUE_DATE")
     @Convert(converter = DateConverter.class)
     private LocalDateTime invoiceDueDate;
 
-    @Column(name = "INVOICE_NOTES")
-    private String invoiceNotes;
+    @Column(name = "NOTES")
+    private String notes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DISCOUNT_TYPE_CODE")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "DISCOUNT_TYPE")
     private DiscountType discountType;
 
-    @Column(name = "INVOICE_DISCOUNT")
+    @Column(name = "DISCOUNT")
     @ColumnDefault(value = "0.00")
-    private BigDecimal invoiceDiscount;
+    private BigDecimal discount;
 
-    @Column(name = "CONTRACT_PO_NUMBER")
-    private String contractPoNumber;
+    @Column(name = "CONTACT_PO_NUMBER")
+    private String contactPoNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CURRENCY_CODE")
@@ -94,16 +83,12 @@ public class Invoice implements Serializable {
     @ColumnDefault(value = "0")
     @Basic(optional = false)
     private Boolean deleteFlag = Boolean.FALSE;
-    
+
     @Column(name = "FREEZE")
     @ColumnDefault(value = "0")
     @Basic(optional = false)
     private Boolean freeze = Boolean.FALSE;
 
-//    @Column(name = "RECURRING_FLAG")
-//    @ColumnDefault(value = "0")
-//    private Boolean recurringFlag = Boolean.FALSE;
-    
     @Column(name = "VERSION_NUMBER")
     @ColumnDefault(value = "1")
     @Basic(optional = false)
@@ -112,15 +97,11 @@ public class Invoice implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CONTACT_ID")
-    private Contact invoiceContact;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SHIPPING_CONTACT")
-    private Contact shippingContact;
+    private Contact contact;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROJECT_ID")
-    private Project invoiceProject;
+    private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DOCUMENT_TEMPLATE_ID")
@@ -129,49 +110,33 @@ public class Invoice implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "invoice", orphanRemoval = true)
     private Collection<InvoiceLineItem> invoiceLineItems;
 
-    @Column(name = "INVOICE_AMOUNT")
+    @Column(name = "TOTAL_AMOUNT")
     @ColumnDefault(value = "0.00")
-    private BigDecimal invoiceAmount;
+    private BigDecimal totalAmount;
 
-    @Column(name = "DUE_AMOUNT")
+    @Column(name = "TOTAL_VAT_AMOUNT")
     @ColumnDefault(value = "0.00")
-    private BigDecimal dueAmount;
+    private BigDecimal totalVatAmount;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
-    private Integer status;
+    private InvoiceStatusEnum status;
 
-    @Column(name = "PAYMENTMODE")
-    private Integer paymentMode;
-    
-//    @Column(name = "RECURRING_INTERVAL")
-//    private Integer recurringInterval;
-//
-//    @Column(name = "RECURRING_WEEK_DAYS")
-//    private Integer recurringWeekDays;
-//    
-//    @Column (name = "RECURRING_MONTH")
-//    private Integer recurringMonth;
-//
-//    @Column(name = "RECURRING_DAYS")
-//    private Integer recurringDays;
-//
-//    @Column(name = "RECURRING_FIRST_TO_LAST")
-//    private Integer recurringFistToLast;
-//
-//    @Column(name = "RECURRING_BY_AFTER")
-//    private Integer recurringByAfter;
+    @Basic
+    @Column(name = "RECEIPT_ATTACHMENT_PATH")
+    private String receiptAttachmentPath;
 
+    @Basic
+    @Column(name = "RECEIPT_ATTACHMENT_DESCRIPTION")
+    private String receiptAttachmentDescription;
 
-    public Collection<InvoiceLineItem> getInvoiceLineItems() {
-        return (invoiceLineItems == null) ? (invoiceLineItems = new ArrayList<>()) : invoiceLineItems;
-    }
+    @Basic
+    @Column(name = "TAX_IDENTIFICATION_NUMBER")
+    private String taxIdentificationNumber;
 
-    public void setInvoiceLineItems( final Collection<InvoiceLineItem> invoiceLineItems) {
-
-        final Collection<InvoiceLineItem> thisInvoiceLineItems = getInvoiceLineItems();
-        thisInvoiceLineItems.clear();
-        thisInvoiceLineItems.addAll(invoiceLineItems);
-    }
+    @Column(name = "TYPE")
+    @Basic(optional = false)
+    private Integer type;
 
     @PrePersist
     public void updateDates() {

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.ProjectFilterEnum;
 import com.simplevat.dao.AbstractDao;
+import com.simplevat.rest.DropdownModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,14 @@ public class ProjectDaoImpl extends AbstractDao<Integer, Project> implements Pro
                 .value(value).build()));
         List<Project> projects = this.executeQuery(dbFilters);
         return projects;
+    }
+    
+    @Override
+    public List<DropdownModel> getProjectsForDropdown() {
+        List<DropdownModel> empSelectItemModels = getEntityManager()
+                .createNamedQuery("projectsForDropdown", DropdownModel.class)
+                .getResultList();
+        return empSelectItemModels;
     }
 	
     @Override

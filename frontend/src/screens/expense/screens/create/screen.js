@@ -98,7 +98,6 @@ class CreateExpense extends React.Component {
 
 
   initializeData() {
-    console.log(this.props.history)
     this.props.expenseActions.getVatList();
     this.props.expenseActions.getExpenseCategoriesList();
     this.props.expenseActions.getCurrencyList();
@@ -122,8 +121,6 @@ class CreateExpense extends React.Component {
       attachmentFile,
       receiptAttachmentDescription,
     } = data
-
-    console.log(data)
     let formData = new FormData();
     formData.append("payee", payee);
     formData.append("expenseDate", expenseDate !== null ? expenseDate : "");
@@ -146,9 +143,10 @@ class CreateExpense extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
+    console.log(data)
+
     this.props.expenseCreateActions.createExpense(formData).then(res => {
       if (res.status === 200) {
-        console.log('22')
         if (this.state.readMore) {
           this.setState({
             readMore: false
@@ -178,6 +176,11 @@ class CreateExpense extends React.Component {
     const { data } = this.state
     const { initValue } = this.state
     const { currency_list, project_list, expense_categories_list, employee_list } = this.props
+    let currencyList = currency_list.length ? [{ currencyCode: null, currencyName: 'Select..' }, ...currency_list] : currency_list
+    let projectList = project_list.length ? [{ projectId: null, projectName: 'Select..' }, ...project_list] : project_list
+    let expenseCategoryList = expense_categories_list.length ? [{ transactionCategoryId: null, transactionCategoryDescription: 'Select..' }, ...expense_categories_list] : expense_categories_list
+    let employeeList = employee_list.length ? [{ projectId: null, projectName: 'Select..' }, ...employee_list] : employee_list
+
 
     return (
       <div className="create-expense-screen">
@@ -213,8 +216,12 @@ class CreateExpense extends React.Component {
 
                           // })
                         }}
-
-
+                        // validationSchema={
+                        //   Yup.object().shape({
+                        //     expenseDate: Yup.date()
+                        //     .required('Date is Required')
+                        //   })
+                        // }
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -226,7 +233,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="expenseCategory"
                                     name="expenseCategory"
-                                    options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
+                                    options={expenseCategoryList ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expenseCategoryList) : []}
                                     value={props.values.expenseCategory}
                                     onChange={option => props.handleChange('expenseCategory')(option)}
                                   />
@@ -258,7 +265,15 @@ class CreateExpense extends React.Component {
                                       onChange={(value) => {
                                         props.handleChange("expenseDate")(value)
                                       }}
+                                      // className={
+                                      //   props.errors.expenseDate && props.touched.expenseDate
+                                      //     ? "is-invalid"
+                                      //     : ""
+                                      // }
                                     />
+                                    {/* {props.errors.expenseDate && props.touched.expenseDate && (
+                                      <div className="invalid-feedback">{props.errors.expenseDate}</div>
+                                    )} */}
                                   </div>
                                 </FormGroup>
                               </Col>
@@ -272,7 +287,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="currencyCode"
                                     name="currencyCode"
-                                    options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
+                                    options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currencyList)}
                                     value={props.values.currency}
                                     onChange={option => props.handleChange('currency')(option)}
 
@@ -286,7 +301,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="employee"
                                     name="employee"
-                                    options={employee_list ? selectOptionsFactory.renderOptions('firstName', 'userId', employee_list) : []}
+                                    options={employeeList ? selectOptionsFactory.renderOptions('firstName', 'userId', employeeList) : []}
                                     value={props.values.employee}
                                     onChange={option => props.handleChange('employee')(option)}
                                   />
@@ -299,7 +314,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="project"
                                     name="project"
-                                    options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
+                                    options={selectOptionsFactory.renderOptions('projectName', 'projectId', projectList)}
                                     value={props.values.project}
                                     onChange={option => props.handleChange('project')(option)}
                                   />
@@ -397,7 +412,7 @@ class CreateExpense extends React.Component {
                                   <Button type="submit" color="primary" className="btn-square mr-3">
                                     <i className="fa fa-dot-circle-o"></i> Create
                         </Button>
-                                  <Button type="submit" color="primary" className="btn-square mr-3"
+                                  <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={() => {
                                       this.setState({ readMore: true })
                                       props.handleSubmit()

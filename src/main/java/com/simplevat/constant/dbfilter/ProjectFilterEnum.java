@@ -11,7 +11,10 @@ import lombok.Getter;
 public enum ProjectFilterEnum {
 
     PROJECT_ID("projectId", " = :projectId"),
-    PROJECT_NAME("projectNamee", " like '%:projectName%'"),
+    PROJECT_NAME("projectName", " like CONCAT(:projectName,'%')"),
+    VAT_REGISTRATION_NUMBER("vatRegistrationNumber", " like CONCAT(:vatRegistrationNumber,'%')"),
+    EXPENSE_BUDGET("expenseBudget", " like CONCAT(:expenseBudget,'%')"),
+    REVENUE_BUDGET("revenueBudget", " like CONCAT(:revenueBudget,'%')"),
     DELETE_FLAG("deleteFlag", " = :deleteFlag"),   
     USER_ID("createdBy", "= :createdBy");
 

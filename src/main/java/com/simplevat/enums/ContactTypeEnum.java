@@ -6,7 +6,10 @@
 package com.simplevat.enums;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -14,14 +17,16 @@ import java.util.List;
  */
 public enum ContactTypeEnum {
 
-    SUPPLIER("Supplier"),
-    CUSTOMER("Customer"),
-    BOTH("Both");
+    SUPPLIER("Supplier", 1),
+    CUSTOMER("Customer", 2),
+    BOTH("Both", 3);
 
     private String desc;
+    private Integer value;
 
-    ContactTypeEnum(String desc) {
+    ContactTypeEnum(String desc, Integer value) {
         this.desc = desc;
+        this.value = value;
     }
 
     public String toString() {
@@ -32,12 +37,20 @@ public enum ContactTypeEnum {
         return desc;
     }
 
-    public static List<ContactTypeEnum> contactTypeList() {
-        List<ContactTypeEnum> contactTypes = new ArrayList<ContactTypeEnum>();
+    public Integer getValue() {
+        return value;
+    }
+
+    public static Map<Integer,ContactTypeEnum> map() {
+        Map<Integer,ContactTypeEnum> contactTypes = new HashMap<>();
         for (ContactTypeEnum contactType : values()) {
-            contactTypes.add(contactType);
+            contactTypes.put(contactType.getValue(), contactType);
         }
         return contactTypes;
+    }
+    
+    public static String getContactTypeByValue(Integer value){
+        return map().get(value).getDesc();
     }
 
 }

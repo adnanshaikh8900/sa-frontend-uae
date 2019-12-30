@@ -37,7 +37,9 @@ import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    contact_list: state.contact.contact_list
+    contact_list: state.contact.contact_list,
+    contact_type_list: state.contact.contact_type_list
+
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -61,9 +63,10 @@ class Contact extends React.Component {
         name: '',
         email: '',
         contactType: '',
-        pageNo: 0,
-        pageSize: 10,
+        // pageNo: 0,
+        // pageSize: 10,
       },
+      selectedContactType: ''
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -74,13 +77,16 @@ class Contact extends React.Component {
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
-    this.onPageChange = this.onPageChange.bind(this)
+    this.onPageChange = this.onPageChange.bind(this);
+    this.onSizePerPageList = this.onSizePerPageList.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
       onSizePerPageList: this.onSizePerPageList,
-      onPageChange: this.onPageChange
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
@@ -90,11 +96,6 @@ class Contact extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-    this.contactType = [
-      {label: 'supplier',value: 1},
-      {label: 'customer',value: 2},
-      {label: 'both',value: 3},
-    ]
   }
 
   componentDidMount() {
@@ -108,7 +109,8 @@ class Contact extends React.Component {
   }
 
   initializeData() {
-    this.props.contactActions.getContactList().then(res => {
+    const { filterData } = this.state
+    this.props.contactActions.getContactList(filterData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false });
       }
@@ -120,12 +122,11 @@ class Contact extends React.Component {
 
 
   onPageChange = (page, sizePerPage) => {
-   console.log(page);
-   console.log(sizePerPage)
+
   }
 
   onSizePerPageList = (sizePerPage) => {
-   console.log(sizePerPage)
+
   }
 
   typeFormatter(cell, row) {
@@ -136,10 +137,10 @@ class Contact extends React.Component {
     let temp_list = []
     if (isSelected) {
       temp_list = Object.assign([], this.state.selected_id_list)
-      temp_list.push(row.contactId);
+      temp_list.push(row.id);
     } else {
       this.state.selected_id_list.map(item => {
-        if (item !== row.contactId) {
+        if (item !== row.id) {
           temp_list.push(item)
         }
       });
@@ -153,7 +154,7 @@ class Contact extends React.Component {
     let temp_list = []
     if (isSelected) {
       rows.map(item => {
-        temp_list.push(item.contactId)
+        temp_list.push(item.id)
       })
     }
     this.setState({
@@ -209,11 +210,24 @@ class Contact extends React.Component {
     })
   }
 
+  handleChange(val, name) {
+    this.setState({
+     filterData: Object.assign(this.state.filterData,{
+      [name]: val
+     })
+    })
+  }
+
+  handleSearch() {
+    this.initializeData();
+    // this.setState({})
+  }
+
 
   render() {
 
-    const { loading,dialog } = this.state
-    const { contact_list } = this.props
+    const { loading,dialog,filterData} = this.state
+    const { contact_list , contact_type_list} = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -276,21 +290,37 @@ class Contact extends React.Component {
                       </div>
                       <div className="py-3">
                         <h5>Filter : </h5>
-                        <Row>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="User Name" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Email" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Select
-                              className=""
-                              options={this.contactType}
-                              placeholder="Contact Type"
-                            />
-                          </Col>
-                        </Row>
+                        <form>
+                          <Row>
+                            <Col lg={3} className="mb-1">
+                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                            </Col>
+                            <Col lg={3} className="mb-2">
+                              <Input type="text" placeholder="Email" onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
+                            </Col>
+                            <Col lg={3} className="mb-1">
+                              <FormGroup className="mb-3">
+
+                                <Select
+                                  options={contact_type_list ? contact_type_list : []}
+                                  onChange={(val) => { 
+                                    this.handleChange(val['value'], 'contactType') 
+                                    this.setState({'selectedContactType': val['value']})
+                                  }}
+                                  className="select-default-width"
+                                  placeholder="Contact Type"
+                                  value={this.state.selectedContactType}
+                                />
+                              </FormGroup>
+
+                            </Col>
+                            <Col lg={2} className="mb-1">
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                                <i className="fa fa-search"></i> Search
+                            </Button>
+                            </Col>
+                          </Row>
+                        </form>
                       </div>
                       <div>
                         <Row>

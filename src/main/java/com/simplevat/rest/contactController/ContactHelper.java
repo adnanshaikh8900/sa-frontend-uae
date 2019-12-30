@@ -6,9 +6,10 @@
 package com.simplevat.rest.contactController;
 
 import com.simplevat.entity.Contact;
+import com.simplevat.enums.ContactTypeEnum;
+import com.simplevat.service.ContactService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
-import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,9 @@ import org.springframework.stereotype.Component;
 public class ContactHelper {
 
     @Autowired
+    ContactService contactService;
+
+    @Autowired
     CountryService countryService;
 
     @Autowired
@@ -29,18 +33,22 @@ public class ContactHelper {
         return ContactListModel.builder()
                 .id(contact.getContactId())
                 .contactType(contact.getContactType())
-                .currencySymbol(contact.getCurrency().getCurrencySymbol())
+                .currencySymbol(contact.getCurrency() != null ? contact.getCurrency().getCurrencySymbol() : null)
                 .email(contact.getEmail())
                 .firstName(contact.getFirstName())
                 .middleName(contact.getMiddleName())
                 .lastName(contact.getLastName())
+                .contactTypeString(contact.getContactType() != null ? ContactTypeEnum.getContactTypeByValue(contact.getContactType()) : null)
                 .mobileNumber(contact.getMobileNumber()).build();
 
     }
 
     public Contact getEntity(ContactPersistModel contactPersistModel, Integer userId) {
         Contact contact = new Contact();
-        contact.setContactId(contactPersistModel.getId());
+        if (contactPersistModel.getContactId() != null) {
+            contact = contactService.findByPK(contactPersistModel.getContactId());
+            contact.setContactId(contactPersistModel.getContactId());
+        }
         contact.setContactType(contactPersistModel.getContactType());
         contact.setContractPoNumber(contactPersistModel.getContractPoNumber());
         if (contactPersistModel.getCountryId() != null) {
@@ -49,7 +57,6 @@ public class ContactHelper {
         if (contactPersistModel.getCurrencyCode() != null) {
             contact.setCurrency(currencyService.getCurrency(contactPersistModel.getCurrencyCode()));
         }
-
         contact.setEmail(contactPersistModel.getEmail());
         contact.setFirstName(contactPersistModel.getFirstName());
         contact.setMiddleName(contactPersistModel.getMiddleName());
@@ -60,22 +67,18 @@ public class ContactHelper {
         contact.setMobileNumber(contactPersistModel.getMobileNumber());
         contact.setOrganization(contactPersistModel.getOrganization());
         contact.setPoBoxNumber(contactPersistModel.getPoBoxNumber());
+        contact.setBillingEmail(contactPersistModel.getBillingEmail());
+        contact.setState(contactPersistModel.getState());
+        contact.setCity(contactPersistModel.getCity());
         contact.setPostZipCode(contactPersistModel.getPostZipCode());
         contact.setTelephone(contactPersistModel.getTelephone());
         contact.setVatRegistrationNumber(contactPersistModel.getVatRegistrationNumber());
-        if (contactPersistModel.getId() != null) {
-            contact.setCreatedBy(userId);
-            contact.setCreatedDate(LocalDateTime.now());
-        } else {
-            contact.setLastUpdatedBy(userId);
-            contact.setLastUpdateDate(LocalDateTime.now());
-        }
         return contact;
     }
 
     public ContactPersistModel getContactPersistModel(Contact contact) {
         ContactPersistModel.ContactPersistModelBuilder builder = ContactPersistModel.builder()
-                .id(contact.getContactId())
+                .contactId(contact.getContactId())
                 .contactType(contact.getContactType())
                 .contractPoNumber(contact.getContractPoNumber())
                 .email(contact.getEmail())
@@ -86,6 +89,9 @@ public class ContactHelper {
                 .organization(contact.getOrganization())
                 .poBoxNumber(contact.getPoBoxNumber())
                 .postZipCode(contact.getPostZipCode())
+                .billingEmail(contact.getBillingEmail())
+                .state(contact.getState())
+                .city(contact.getCity())
                 .addressLine1(contact.getAddressLine1())
                 .addressLine2(contact.getAddressLine2())
                 .addressLine3(contact.getAddressLine3())

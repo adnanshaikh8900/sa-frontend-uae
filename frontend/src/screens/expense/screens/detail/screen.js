@@ -86,7 +86,6 @@ class DetailExpense extends React.Component {
     if (this.props.location.state && expenseId) {
       this.props.expenseActions.getVatList();
       this.props.expenseDetailActions.getExpenseDetail(expenseId).then(res => {
-        console.log(res)
         if (res.status === 200) {
           this.props.expenseActions.getCurrencyList();
           this.props.expenseActions.getProjectList();
@@ -137,7 +136,7 @@ class DetailExpense extends React.Component {
     // formData.append("user",userId)
     formData.append("expenseId", id);
     formData.append("payee", payee);
-    formData.append("expenseDate", expenseDate !== null ? moment(expenseDate, 'YYYY-MM-DD').toDate() : "");
+    formData.append("expenseDate", expenseDate !== null ? moment(expenseDate).utc().toDate() : "");
     formData.append("expenseDescription", expenseDescription);
     formData.append("receiptNumber", receiptNumber);
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription);
@@ -291,7 +290,7 @@ class DetailExpense extends React.Component {
                                       id="date"
                                       name="expenseDate"
                                       placeholderText=""
-                                      value={props.values.expenseDate}
+                                      value={moment(props.values.expenseDate).format('DD-MM-YYYY')}
                                       onChange={(value) => {
                                         props.handleChange("expenseDate")(value)
                                       }}

@@ -117,7 +117,6 @@ class Product extends React.Component {
   }
 
   goToDetail(row) {
-    console.log(row)
     this.props.history.push('/admin/master/product/detail', { id: row.id })
   }
 
@@ -125,10 +124,10 @@ class Product extends React.Component {
     let temp_list = []
     if (isSelected) {
       temp_list = Object.assign([], this.state.selected_id_list)
-      temp_list.push(row.productID);
+      temp_list.push(row.id);
     } else {
       this.state.selected_id_list.map(item => {
-        if (item !== row.productID) {
+        if (item !== row.id) {
           temp_list.push(item)
         }
       });
@@ -141,7 +140,7 @@ class Product extends React.Component {
     let temp_list = []
     if (isSelected) {
       rows.map(item => {
-        temp_list.push(item.productID)
+        temp_list.push(item.id)
       })
     }
     this.setState({
@@ -167,19 +166,22 @@ class Product extends React.Component {
   }
 
   removeBulk() {
+    const {filterData} = this.state
     this.removeDialog()
     let { selected_id_list } = this.state;
     const { product_list } = this.props
     let obj = {
       ids: selected_id_list
     }
-    this.props.productActions.removeBulk(obj).then(() => {
-      this.props.productActions.getProductList()
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if (product_list && product_list.length > 0) {
-        this.setState({
-          selected_id_list: []
-        })
+    this.props.productActions.removeBulk(obj).then(res => {
+      if(res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+        if (product_list && product_list.length > 0) {
+          this.setState({
+            selected_id_list: []
+          })
+        }
+        this.props.productActions.getProductList(filterData)
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)

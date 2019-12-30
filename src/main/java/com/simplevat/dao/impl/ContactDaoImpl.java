@@ -4,12 +4,14 @@ import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ContactDao;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.contactController.ContactRequestFilterModel;
 
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -18,7 +20,7 @@ import org.apache.commons.collections4.CollectionUtils;
  */
 @Repository(value = "contactDao")
 public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements ContactDao {
-    
+
     @Override
     public List<DropdownModel> getContactForDropdown(Integer contactType) {
         List<DropdownModel> empSelectItemModels = getEntityManager()
@@ -28,14 +30,21 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
         return empSelectItemModels;
     }
 
-    
     @Override
-    public List<Contact> getContacts(Integer contactType, Integer pageNo, Integer pageSize) {
-        List<Contact> contacts = getEntityManager().createNamedQuery("contactsByType", Contact.class)
-                .setParameter("contactType", contactType)
-                .setMaxResults(pageSize)
-                .setFirstResult(pageNo * pageSize).getResultList();
-        return contacts;
+    public List<Contact> getContacts(ContactRequestFilterModel filterModel, Integer pageNo, Integer pageSize) {
+        TypedQuery<Contact> typedQuery = getEntityManager().createNamedQuery("contactsByType", Contact.class);
+        if (filterModel.getContactType() != null) {
+            typedQuery.setParameter("contactType", filterModel.getContactType());
+        }
+        if (filterModel.getName() != null) {
+            typedQuery.setParameter("firstName", filterModel.getName());
+        }
+        if (filterModel.getEmail()!= null) {
+            typedQuery.setParameter("email", filterModel.getEmail());
+        }
+        typedQuery.setMaxResults(pageSize);
+        typedQuery.setFirstResult(pageNo * pageSize);
+        return typedQuery.getResultList();
     }
 
     @Override
@@ -45,7 +54,7 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
                 .setFirstResult(pageNo * pageSize).getResultList();
         return contacts;
     }
-    
+
     @Override
     public List<Contact> getContacts(Integer contactType, final String searchQuery, Integer pageNo, Integer pageSize) {
         List<Contact> contacts = getEntityManager()

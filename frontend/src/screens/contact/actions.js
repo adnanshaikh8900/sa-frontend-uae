@@ -4,11 +4,11 @@ import {
   authApi
 } from 'utils'
 
-export const getContactList = () => {
+export const getContactList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/contact/getContactList`
+      url: `/rest/contact/getContactList?name=${obj.name}&email=${obj.email}&contactType=${obj.contactType}`
     }
 
     return authApi(data).then(res => {
@@ -27,7 +27,7 @@ export const removeBulk = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: 'rest/contact/deletecontacts',
+      url: '/rest/contact/deletes',
       data: obj
     }
     return authApi(data).then(res => {
@@ -82,7 +82,7 @@ export const getContactTypeList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/contact/contacttype'
+      url: `/rest/datalist/getContactTypes`
     }
     return authApi(data).then(res => {
       if (res.status == 200) {

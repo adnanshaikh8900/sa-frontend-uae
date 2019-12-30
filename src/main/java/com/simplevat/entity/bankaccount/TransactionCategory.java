@@ -8,6 +8,9 @@ import lombok.Data;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.ColumnDefault;
 
 /**
@@ -22,7 +25,6 @@ import org.hibernate.annotations.ColumnDefault;
     ,
      @NamedQuery(name = "findAllTransactionCategoryByUserId",
             query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (t.createdBy = :createdBy or t.createdBy = 1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
-
 })
 @Entity
 @Table(name = "TRANSACTION_CATEGORY")

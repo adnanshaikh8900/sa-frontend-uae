@@ -3,11 +3,9 @@ package com.simplevat.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.converter.DateConverter;
-import com.simplevat.entity.invoice.Invoice;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
@@ -50,15 +48,16 @@ public class Payment implements Serializable {
     @JoinColumn(name = "BANK_ID")
     @JsonManagedReference
     private BankAccount bankAccount;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INVOICE_ID")
     @JsonManagedReference
     private Invoice invoice;
 
     @Basic
-    @Column(name = "PAYMENT_DUE_DATE")
-    private Date paymentDate;
+    @Column(name = "PAYMENT_DATE")
+    @Convert(converter = DateConverter.class)
+    private LocalDateTime paymentDate;
 
     @Basic
     @Column(name = "DESCRIPTION")

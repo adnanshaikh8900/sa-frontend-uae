@@ -5,6 +5,7 @@ import com.simplevat.contact.model.TransactionRestModel;
 import com.simplevat.contact.model.BankAccountRestModel;
 import com.simplevat.constant.TransactionRefrenceTypeConstant;
 import com.simplevat.constant.TransactionStatusConstant;
+import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Purchase;
 import com.simplevat.entity.bankaccount.BankAccount;
 import java.io.InputStream;
@@ -13,9 +14,8 @@ import java.time.ZoneId;
 import java.util.Date;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
-import com.simplevat.entity.invoice.Invoice;
+import com.simplevat.service.InvoiceService;
 import com.simplevat.service.PurchaseService;
-import com.simplevat.service.invoice.InvoiceService;
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -114,9 +114,9 @@ public class TransactionRestControllerHelper {
         if (entity.getReferenceType() != null) {
             if (entity.getReferenceType() == TransactionRefrenceTypeConstant.INVOICE) {
                 transactionModel.setReferenceTypeName("Invoice");
-                Invoice invoice = invoiceService.findByPK(entity.getReferenceId());
-                transactionModel.setRefObject(invoice);
-                transactionModel.setReferenceName("Invoice : " + invoice.getInvoiceReferenceNumber());
+//                Invoice invoice = invoiceService.findByPK(entity.getReferenceId());
+//                transactionModel.setRefObject(invoice);
+//                transactionModel.setReferenceName("Invoice : " + invoice.getInvoiceReferenceNumber());
             } else if (entity.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
                 transactionModel.setReferenceTypeName("Purchase");
                 Purchase purchase = purchaseService.findByPK(entity.getReferenceId());
@@ -239,7 +239,7 @@ public class TransactionRestControllerHelper {
                         transactionModel.setReferenceTypeName("Invoice");
                         Invoice invoice = invoiceService.findByPK(transaction.getReferenceId());
                         transactionModel.setRefObject(invoice);
-                        transactionModel.setReferenceName("Invoice : " + invoice.getInvoiceReferenceNumber());
+                        transactionModel.setReferenceName("Invoice : " + invoice.getReferenceNumber());
                     } else if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
                         transactionModel.setReferenceTypeName("Purchase");
                         Purchase purchase = purchaseService.findByPK(transaction.getReferenceId());

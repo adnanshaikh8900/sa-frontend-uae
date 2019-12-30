@@ -3,21 +3,30 @@ import {
   api,
   authApi
 } from 'utils'
+import moment from 'moment'
 
 
 export const getSupplierInoviceList = (postObj) => {
-  let customerName = postObj ? postObj.customerName : ''
+  let supplierName = postObj ? postObj.supplierName : ''
   let referenceNumber =  postObj ? postObj.referenceNumber : ''
-  let invoiceDate =  postObj ? postObj.invoiceDate : ''
-  let invoiceDueDate =  postObj ? postObj.invoiceDueDate : ''
+  let invoiceDate =  postObj.invoiceDate
+  let invoiceDueDate =  postObj.invoiceDueDate
   let amount =  postObj ? postObj.amount : ''
   let status =  postObj ? postObj.status : ''
   let contactType = postObj ? postObj.contactType : ''
   return (dispatch) => {
+    let param = `rest/invoice/getList?type=${contactType}`
+    if(invoiceDate) {
+      let date = moment(invoiceDate).format('DD-MM-YYYY')
+      param = param +`&invoiceDate=${date}`
+    }
+    if(invoiceDueDate) {
+      let date = moment(invoiceDueDate).format('DD-MM-YYYY')
+      param = param + `&invoiceDueDate=${date}`
+    }
     let data ={
       method: 'get',
-      // url: `rest/invoice/getList?type=${contactType}&customerName=${customerName}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}`,      
-      url: `rest/invoice/getList?type=${contactType}`,
+      url: param
       // data: postObj
     }
     return authApi(data).then(res => {
@@ -81,26 +90,24 @@ export const getContactList = (nameCode) => {
 }
 
 
-// export const getVendorList = () => {
-//   return (dispatch) => {
-//     let data = {
-//       method: 'get',
-//       url: 'rest/contact/getSupplierList'
-//     }
-//     return authApi(data).then(res => {
-//       if (res.status == 200) {
-//         dispatch({
-//           type: SUPPLIER_INVOICE.VENDOR_LIST,
-//           payload:  {
-//             data: res.data
-//           }
-//         })
-//       }
-//     }).catch(err => {
-//       throw err
-//     })
-//   }
-// }
+export const getStatusList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/datalist/getInvoiceStatusTypes'
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+        dispatch({
+          type: SUPPLIER_INVOICE.STATUS_LIST,
+          payload: res
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
 
 
 export const getCurrencyList = () => {
@@ -139,6 +146,23 @@ export const getVatList = () => {
             data: res.data
           }
         })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const removeBulk = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'delete',
+      url: '/rest/supplierinvoice/deletes',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+        return res
       }
     }).catch(err => {
       throw err

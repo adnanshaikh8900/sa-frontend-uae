@@ -13,6 +13,7 @@ import com.simplevat.rest.PaginationModel;
 import com.simplevat.security.JwtTokenUtil;
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +55,7 @@ public class ContactController implements Serializable {
         if (contactRequestFilterModel == null || contactRequestFilterModel.getContactType() == null) {
             contactList = contactService.getAllContacts(paginationModel.getPageNo(), paginationModel.getPageSize());
         } else {
-            contactList = contactService.getContacts(contactRequestFilterModel.getContactType(), paginationModel.getPageNo(), paginationModel.getPageSize());
+            contactList = contactService.getContacts(contactRequestFilterModel, paginationModel.getPageNo(), paginationModel.getPageSize());
         }
         contactList.forEach(contact -> contactListModels.add(contactHelper.getListModel(contact)));
         return new ResponseEntity<>(contactListModels, HttpStatus.OK);
@@ -77,15 +78,34 @@ public class ContactController implements Serializable {
         Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
         try {
-            if (contactPersistModel.getId() != null && contactPersistModel.getId() > 0) {
-                contactService.update(contactHelper.getEntity(contactPersistModel, userId));
-            } else {
-                contactService.persist(contactHelper.getEntity(contactPersistModel, userId));
+            Contact contact = contactHelper.getEntity(contactPersistModel, userId);
+            contact.setCreatedBy(userId);
+            contact.setCreatedDate(LocalDateTime.now());
+            contact.setDeleteFlag(false);
+            contactService.persist(contact);
+            return new ResponseEntity<>(contact,HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
+    @PostMapping(value = "/update")
+    public ResponseEntity update(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+
+        try {
+            if (contactPersistModel.getContactId() != null && contactPersistModel.getContactId() > 0) {
+                Contact contact = contactHelper.getEntity(contactPersistModel, userId);
+                contact.setLastUpdatedBy(userId);
+                contact.setLastUpdateDate(LocalDateTime.now());
+                contactService.update(contact);
             }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }
@@ -96,7 +116,7 @@ public class ContactController implements Serializable {
 
         Contact contact = contactService.findByPK(id);
         if (contact == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         contact.setDeleteFlag(Boolean.TRUE);
         contact.setLastUpdatedBy(userId);

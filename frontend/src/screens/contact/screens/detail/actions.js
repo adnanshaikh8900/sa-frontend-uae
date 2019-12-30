@@ -8,7 +8,7 @@ export const getContactById = (id) => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: `rest/contact/editcontact?id=${id}`,
+      url: `/rest/contact/getContactById?contactId=${id}`,
     }
 
     return authApi(data).then(res => {
@@ -23,7 +23,7 @@ export const updateContact = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: `rest/contact/savecontact`,
+      url: `/rest/contact/update`,
       data: obj
     }
 
@@ -39,7 +39,7 @@ export const deleteContact = (id) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: `rest/contact/deletecontact?id=${id}`,
+      url: `/rest/contact/delete?id=${id}`,
     }
 
     return authApi(data).then(res => {

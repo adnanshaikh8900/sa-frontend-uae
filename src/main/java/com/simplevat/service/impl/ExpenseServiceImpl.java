@@ -1,5 +1,6 @@
 package com.simplevat.service.impl;
 
+import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
 import com.simplevat.dao.CompanyDao;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,49 +24,53 @@ import com.simplevat.util.ChartUtil;
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class ExpenseServiceImpl extends ExpenseService {
 
-    @Autowired
-    public ExpenseDao expenseDao;
+	@Autowired
+	public ExpenseDao expenseDao;
 
-    @Autowired
-    public ProjectDao projectDao;
+	@Autowired
+	public ProjectDao projectDao;
 
-    @Autowired
-    public CompanyDao companyDao;
+	@Autowired
+	public CompanyDao companyDao;
 
-    @Autowired
-    ChartUtil util;
+	@Autowired
+	ChartUtil util;
 
-    @Override
-    public List<Expense> getExpenses() {
-        return expenseDao.getAllExpenses();
-    }
+	@Override
+	public List<Expense> getExpenses() {
+		return expenseDao.getAllExpenses();
+	}
 
-    @Override
-    public Expense updateOrCreateExpense(Expense expense) {
-        return this.update(expense, expense.getExpenseId());
-    }
+	@Override
+	public Expense updateOrCreateExpense(Expense expense) {
+		return this.update(expense, expense.getExpenseId());
+	}
 
-    @Override
-    public Dao<Integer, Expense> getDao() {
-        return expenseDao;
-    }
+	@Override
+	public Dao<Integer, Expense> getDao() {
+		return expenseDao;
+	}
 
+	@Override
+	public List<BankAccountTransactionReportModel> getExpensesForReport(Date startDate, Date endDate) {
 
-    @Override
-    public List<BankAccountTransactionReportModel> getExpensesForReport(Date startDate, Date endDate) {
+		List<Object[]> rows = expenseDao.getExpenses(startDate, endDate);
+		List<BankAccountTransactionReportModel> list = util.convertToTransactionReportModel(rows);
+		for (BankAccountTransactionReportModel model : list) {
+			model.setCredit(false);
+		}
+		return util.convertToTransactionReportModel(rows);
 
-        List<Object[]> rows = expenseDao.getExpenses(startDate, endDate);
-        List<BankAccountTransactionReportModel> list = util.convertToTransactionReportModel(rows);
-        for (BankAccountTransactionReportModel model : list) {
-            model.setCredit(false);
-        }
-        return util.convertToTransactionReportModel(rows);
+	}
 
-    }
+	@Override
+	public void deleteByIds(List<Integer> ids) {
+		expenseDao.deleteByIds(ids);
+	}
 
-    @Override
-    public void deleteByIds(List<Integer> ids) {
-        expenseDao.deleteByIds(ids);
-    }
+	@Override
+	public List<Expense> getExpensesList(Map<ExpenseFIlterEnum, Object> filterMap) {
+		return expenseDao.getExpenseList(filterMap);
+	}
 
 }

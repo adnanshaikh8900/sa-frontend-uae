@@ -1,4 +1,4 @@
-package com.simplevat.rest.supplierinvoicecontroller;
+package com.simplevat.rest.invoicecontroller;
 
 import com.simplevat.enums.DiscountType;
 import java.math.BigDecimal;
@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-public class SupplierInvoiceRequestModel {
+public class InvoiceRequestModel {
 
     private Integer id;
     private String referenceNumber;
@@ -27,6 +27,8 @@ public class SupplierInvoiceRequestModel {
     private BigDecimal totalAmount;
     private BigDecimal totalVatAmount;
     private String lineItemsString;
+    private String type;
+    private String taxIdentificationNumber;
     
     private DiscountType discountType;
     private BigDecimal discount;

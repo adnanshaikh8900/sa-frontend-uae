@@ -1,28 +1,28 @@
 package com.simplevat.dao.impl;
 
 import com.simplevat.constant.dbfilter.DbFilter;
-import com.simplevat.constant.dbfilter.SupplierInvoiceFilterEnum;
+import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 import com.simplevat.dao.AbstractDao;
-import com.simplevat.dao.SupplierInvoiceDao;
-import com.simplevat.entity.SupplierInvoice;
+import com.simplevat.entity.Invoice;
 import java.util.ArrayList;
 import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
+import com.simplevat.dao.InvoiceDao;
 
 @Repository
-public class SupplierInvoiceDaoImpl extends AbstractDao<Integer, SupplierInvoice> implements SupplierInvoiceDao {
+public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements InvoiceDao {
 
     @Override
-    public List<SupplierInvoice> getSupplierInvoiceList(Map<SupplierInvoiceFilterEnum, Object> filterMap) {
+    public List<Invoice> getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap) {
         List<DbFilter> dbFilters = new ArrayList();
         filterMap.forEach((productFilter, value) -> dbFilters.add(DbFilter.builder()
                 .dbCoulmnName(productFilter.getDbColumnName())
                 .condition(productFilter.getCondition())
                 .value(value).build()));
-        List<SupplierInvoice> invoices = this.executeQuery(dbFilters);
+        List<Invoice> invoices = this.executeQuery(dbFilters);
         return invoices;
     }
 
@@ -31,7 +31,7 @@ public class SupplierInvoiceDaoImpl extends AbstractDao<Integer, SupplierInvoice
     public void deleteByIds(List<Integer> ids) {
         if (ids != null && !ids.isEmpty()) {
             for (Integer id : ids) {
-                SupplierInvoice supplierInvoice = findByPK(id);
+                Invoice supplierInvoice = findByPK(id);
                 supplierInvoice.setDeleteFlag(Boolean.TRUE);
                 update(supplierInvoice);
             }

@@ -3,6 +3,7 @@ package com.simplevat.service;
 import com.simplevat.constant.dbfilter.ProjectFilterEnum;
 import com.simplevat.criteria.ProjectCriteria;
 import com.simplevat.entity.Project;
+import com.simplevat.rest.DropdownModel;
 import java.math.BigDecimal;
 
 import java.util.List;
@@ -20,5 +21,7 @@ public abstract class ProjectService extends SimpleVatService<Integer, Project> 
 	public abstract void updateProjectRevenueBudget(BigDecimal revenueAmount, Project project);
 
 	public abstract void deleteByIds(List<Integer> ids);
+        
+        public abstract List<DropdownModel> getProjectsForDropdown();
 
 }

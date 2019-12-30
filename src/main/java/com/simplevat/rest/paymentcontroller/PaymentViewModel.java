@@ -1,4 +1,4 @@
-package com.simplevat.rest.payment.model;
+package com.simplevat.rest.paymentcontroller;
 
 import java.math.BigDecimal;
 import java.util.Date;

@@ -1,16 +1,17 @@
-package com.simplevat.rest.supplierinvoicecontroller;
+package com.simplevat.rest.invoicecontroller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.entity.Contact;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.Project;
-import com.simplevat.entity.SupplierInvoice;
-import com.simplevat.entity.SupplierInvoiceLineItem;
+import com.simplevat.entity.Invoice;
+import com.simplevat.entity.InvoiceLineItem;
+import com.simplevat.enums.InvoiceStatusEnum;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ProjectService;
-import com.simplevat.service.SupplierInvoiceLineItemService;
+import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.service.VatCategoryService;
 import java.io.IOException;
 import java.time.Instant;
@@ -25,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SupplierInvoiceRestHelper {
+public class InvoiceRestHelper {
 
     @Autowired
     VatCategoryService vatCategoryService;
@@ -40,10 +41,10 @@ public class SupplierInvoiceRestHelper {
     CurrencyService currencyService;
 
     @Autowired
-    SupplierInvoiceLineItemService supplierInvoiceLineItemService;
+    InvoiceLineItemService invoiceLineItemService;
 
-    public SupplierInvoice getEntity(SupplierInvoiceRequestModel invoiceModel, Integer userId) {
-        SupplierInvoice invoice = new SupplierInvoice();
+    public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
+        Invoice invoice = new Invoice();
         if (invoiceModel.getTotalAmount() != null) {
             invoice.setTotalAmount(invoiceModel.getTotalAmount());
         }
@@ -54,6 +55,11 @@ public class SupplierInvoiceRestHelper {
             invoice.setId(invoiceModel.getId());
         }
         invoice.setReferenceNumber(invoiceModel.getReferenceNumber());
+        // Type supplier = 1
+        // Type customer = 2
+        if (invoiceModel.getType() != null && !invoiceModel.getType().isEmpty()) {
+            invoice.setType(Integer.parseInt(invoiceModel.getType()));
+        }
         if (invoiceModel.getProjectId() != null) {
             Project project = projectService.findByPK(invoiceModel.getProjectId());
             invoice.setProject(project);
@@ -74,24 +80,21 @@ public class SupplierInvoiceRestHelper {
             Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
             invoice.setCurrency(currency);
         }
-        System.out.println("====string=======" + invoiceModel.getLineItemsString());
-        List<SupplierInvoiceLineItemModel> itemModels = new ArrayList<>();
+        List<InvoiceLineItemModel> itemModels = new ArrayList<>();
         if (invoiceModel.getLineItemsString() != null && !invoiceModel.getLineItemsString().isEmpty()) {
-//            System.out.println("====string=======" + invoiceModel.getLineItemsString());
-            System.out.println("====In=======");
             ObjectMapper mapper = new ObjectMapper();
             try {
-                itemModels = mapper.readValue(invoiceModel.getLineItemsString(), new TypeReference<List<SupplierInvoiceLineItemModel>>() {
+                itemModels = mapper.readValue(invoiceModel.getLineItemsString(), new TypeReference<List<InvoiceLineItemModel>>() {
                 });
-                System.out.println("====In=Try======" + itemModels.toString());
             } catch (IOException ex) {
-                System.out.println("====In=catch======" + ex.getMessage());
-                Logger.getLogger(SupplierInvoiceRestHelper.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(InvoiceRestHelper.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("====In=if======" + itemModels.size());
             if (itemModels.size() > 0) {
-                invoice.setSupplierInvoiceLineItems(getLineItems(itemModels, invoice, userId));
+                invoice.setInvoiceLineItems(getLineItems(itemModels, invoice, userId));
             }
+        }
+        if(invoiceModel.getTaxIdentificationNumber() != null){
+           invoice.setTaxIdentificationNumber(invoiceModel.getTaxIdentificationNumber());
         }
         invoice.setContactPoNumber(invoiceModel.getContactPoNumber());
         invoice.setReferenceNumber(invoiceModel.getReceiptNumber());
@@ -99,19 +102,19 @@ public class SupplierInvoiceRestHelper {
         invoice.setNotes(invoiceModel.getNotes());
         invoice.setDiscountType(invoiceModel.getDiscountType());
         invoice.setDiscount(invoiceModel.getDiscount());
+        invoice.setStatus(InvoiceStatusEnum.PENDING);   // default set, will change in transaction
         return invoice;
     }
 
-    public List<SupplierInvoiceLineItem> getLineItems(List<SupplierInvoiceLineItemModel> itemModels, SupplierInvoice invoice, Integer userId) {
-        List<SupplierInvoiceLineItem> lineItems = new ArrayList<>();
+    public List<InvoiceLineItem> getLineItems(List<InvoiceLineItemModel> itemModels, Invoice invoice, Integer userId) {
+        List<InvoiceLineItem> lineItems = new ArrayList<>();
         int i = 0;
-        for (SupplierInvoiceLineItemModel model : itemModels) {
+        for (InvoiceLineItemModel model : itemModels) {
             try {
-                SupplierInvoiceLineItem lineItem = new SupplierInvoiceLineItem();
+                InvoiceLineItem lineItem = new InvoiceLineItem();
                 lineItem.setCreatedBy(userId);
                 lineItem.setCreatedDate(LocalDateTime.now());
                 lineItem.setDeleteFlag(false);
-                System.out.println("====lineitems==getDescription======" + model.getDescription());
                 lineItem.setQuantity(model.getQuantity());
                 lineItem.setDescription(model.getDescription());
                 lineItem.setUnitPrice(model.getUnitPrice());
@@ -119,8 +122,7 @@ public class SupplierInvoiceRestHelper {
                 if (model.getVatCategoryId() != null) {
                     lineItem.setVatCategory(vatCategoryService.findByPK(Integer.parseInt(model.getVatCategoryId())));
                 }
-                lineItem.setSupplierInvoice(invoice);
-//                supplierInvoiceLineItemService.persist(lineItem);
+                lineItem.setInvoice(invoice);
                 lineItems.add(lineItem);
                 i++;
             } catch (Exception e) {
@@ -128,7 +130,6 @@ public class SupplierInvoiceRestHelper {
                 return null;
             }
         }
-        System.out.println("====lineitems==added======" + i);
         return lineItems;
     }
 //
@@ -159,13 +160,15 @@ public class SupplierInvoiceRestHelper {
 //    }
 //
 
-    public List<SupplierInvoiceListModel> getListModel(List<SupplierInvoice> invoices) {
-        List<SupplierInvoiceListModel> invoiceListModels = new ArrayList();
-        for (SupplierInvoice invoice : invoices) {
-            SupplierInvoiceListModel model = new SupplierInvoiceListModel();
+    public List<InvoiceListModel> getListModel(List<Invoice> invoices) {
+        List<InvoiceListModel> invoiceListModels = new ArrayList();
+        for (Invoice invoice : invoices) {
+            InvoiceListModel model = new InvoiceListModel();
             model.setId(invoice.getId());
             if (invoice.getContact() != null) {
-                model.setCustomerName(invoice.getContact().getFirstName());
+                if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
+                    model.setName(invoice.getContact().getFirstName() + invoice.getContact().getLastName());
+                }
             }
             model.setReferenceNumber(invoice.getReferenceNumber());
             if (invoice.getInvoiceDate() != null) {

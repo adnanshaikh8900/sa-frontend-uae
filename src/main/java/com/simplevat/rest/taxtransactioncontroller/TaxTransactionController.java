@@ -9,15 +9,15 @@ import com.simplevat.entity.Purchase;
 import com.simplevat.entity.PurchaseLineItem;
 import com.simplevat.entity.TaxTransaction;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.entity.invoice.Invoice;
-import com.simplevat.entity.invoice.InvoiceLineItem;
 import com.simplevat.service.PurchaseService;
 import com.simplevat.service.TaxTransactionService;
 import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.service.invoice.InvoiceService;
 import com.simplevat.constant.TaxTransactionStatusConstant;
 import com.simplevat.constant.TransactionCreditDebitConstant;
 import com.simplevat.constant.TransactionRefrenceTypeConstant;
+import com.simplevat.entity.Invoice;
+import com.simplevat.entity.InvoiceLineItem;
+import com.simplevat.service.InvoiceService;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -232,13 +232,13 @@ public class TaxTransactionController implements Serializable {
         BigDecimal vatPercent = BigDecimal.ZERO;
         if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.INVOICE) {
             Invoice invoice = invoiceService.findByPK(refId);
-            for (InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()) {
-                BigDecimal totalAmount = invoiceLineItem.getInvoiceLineItemUnitPrice().multiply(new BigDecimal(invoiceLineItem.getInvoiceLineItemQuantity()));
-                if (invoiceLineItem.getInvoiceLineItemVat() != null) {
-                    vatPercent = invoiceLineItem.getInvoiceLineItemVat().getVat();
-                }
-                totalVat = (totalAmount.multiply(vatPercent)).divide(new BigDecimal(100), 5, RoundingMode.HALF_UP);
-            }
+//            for (InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()) {
+//                BigDecimal totalAmount = invoiceLineItem.getInvoiceLineItemUnitPrice().multiply(new BigDecimal(invoiceLineItem.getInvoiceLineItemQuantity()));
+//                if (invoiceLineItem.getInvoiceLineItemVat() != null) {
+//                    vatPercent = invoiceLineItem.getInvoiceLineItemVat().getVat();
+//                }
+//                totalVat = (totalAmount.multiply(vatPercent)).divide(new BigDecimal(100), 5, RoundingMode.HALF_UP);
+//            }
         }
         if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
             Purchase purchase = purchaseService.findByPK(refId);

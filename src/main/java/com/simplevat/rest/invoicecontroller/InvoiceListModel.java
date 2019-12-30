@@ -1,4 +1,4 @@
-package com.simplevat.rest.supplierinvoicecontroller;
+package com.simplevat.rest.invoicecontroller;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -7,11 +7,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SupplierInvoiceListModel {
+public class InvoiceListModel {
 
     private Integer id;
     private String status;
-    private String customerName;
+    private String name;
     private String referenceNumber;
     private Date invoiceDate;
     private Date invoiceDueDate;

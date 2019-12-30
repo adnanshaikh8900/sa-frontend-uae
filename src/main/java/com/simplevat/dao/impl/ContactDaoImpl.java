@@ -39,7 +39,7 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
         if (filterModel.getName() != null) {
             typedQuery.setParameter("firstName", filterModel.getName());
         }
-        if (filterModel.getContactType() != null) {
+        if (filterModel.getEmail()!= null) {
             typedQuery.setParameter("email", filterModel.getEmail());
         }
         typedQuery.setMaxResults(pageSize);

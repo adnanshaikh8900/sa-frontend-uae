@@ -20,6 +20,7 @@ import com.simplevat.service.bankaccount.TransactionTypeService;
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -94,7 +95,7 @@ public class DataListController implements Serializable {
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    
+
     @ApiOperation(value = "All Invoice Status Types")
     @GetMapping(value = "/getInvoiceStatusTypes")
     public ResponseEntity getInvoiceStatusTypes() {
@@ -102,8 +103,8 @@ public class DataListController implements Serializable {
             List<InvoiceStatusEnum> statusEnums = InvoiceStatusEnum.getInvoiceStatusList();
             List<EnumDropdownModel> dropdownModels = new ArrayList<>();
             if (statusEnums != null && !statusEnums.isEmpty()) {
-                for(InvoiceStatusEnum statusEnum : statusEnums){
-                    dropdownModels.add(new EnumDropdownModel(statusEnum.name(),statusEnum.getDesc()));
+                for (InvoiceStatusEnum statusEnum : statusEnums) {
+                    dropdownModels.add(new EnumDropdownModel(statusEnum.name(), statusEnum.getDesc()));
                 }
                 return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
             } else {
@@ -114,16 +115,16 @@ public class DataListController implements Serializable {
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    
+
     @ApiOperation(value = "All Contact Types")
     @GetMapping(value = "/getContactTypes")
     public ResponseEntity getContactTypes() {
         try {
-            List<ContactTypeEnum> typeEnums = ContactTypeEnum.contactTypeList();
+            List<ContactTypeEnum> typeEnums = Arrays.asList(ContactTypeEnum.values());
             List<DropdownModel> dropdownModels = new ArrayList<>();
             if (typeEnums != null && !typeEnums.isEmpty()) {
-                for(ContactTypeEnum typeEnum : typeEnums){
-                    dropdownModels.add(new DropdownModel(typeEnum.getValue(),typeEnum.getDesc()));
+                for (ContactTypeEnum typeEnum : typeEnums) {
+                    dropdownModels.add(new DropdownModel(typeEnum.getValue(), typeEnum.getDesc()));
                 }
                 return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
             } else {

@@ -76,21 +76,23 @@ class CreateCustomerInvoice extends React.Component {
       idCount: 0,
       initValue: {
         // expenseId: null,
-        reference_number: '',
-        invoiceDate: null,
-        invoiceDueDate: null,        
-        currency: null,
+        reference_number: null,
         project: null,
         customerContact: null,
-        paymentDate: null,
-        expenseAmount: null,
-        expenseDescription: null,
-        bank: null,
+        invoiceDate: null,
+        invoiceDueDate: null,   
+        tax_identification_number : null,
+        currency: null,
+        contact_po_number: null,
+        receiptNumber : null,
+        receiptAttachmentDescription : null,
         total_net: 0,
         customerVATAmount: 0,
         totalAmount: 0,
+        notes: null
       },
-      contactCode : "1"
+      currentData: {},
+      contactCode : "2"
     }
 
     this.options = {
@@ -124,21 +126,7 @@ class CreateCustomerInvoice extends React.Component {
   renderProductName (cell, row) {
     return (
       <div className="d-flex align-items-center">
-        <Input type="select" className="mr-1">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-        </Input>
-        <Button
-          size="sm"
-          color="primary"
-          className="btn-brand icon"
-        >
-          <i className="fas fa-plus"></i>
-        </Button>
+        <Input type="hidden" className="mr-1" />
       </div>
     )
   }
@@ -155,8 +143,6 @@ class CreateCustomerInvoice extends React.Component {
   }
 
   renderQuantity (cell, row) {
-    console.log(cell, row,"<--");
-    
     return (
       <Input
         type="number"
@@ -279,7 +265,6 @@ class CreateCustomerInvoice extends React.Component {
 
 
   updateAmount(data) {
-    console.log(data,"data")
     const {vat_list} = this.props;
     let total_net = 0;
     let total = 0;
@@ -313,57 +298,61 @@ class CreateCustomerInvoice extends React.Component {
   }
 
 
-  // handleSubmit(data) {
-  //   const {
-  //     receiptAttachmentDescription,
-  //     receiptNumber,
-  //     contact_po_number,
-  //     currency,
-  //     invoiceDueDate,
-  //     invoiceDate,
-  //     shippingContact,
-  //     project,
-  //     invoice_number,
-  //     invoiceVATAmount,
-  //     totalAmount,
-  //     notes
-  //   } = data
-  //   let formData = new FormData();
-  //   formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");    
-  //   formData.append("invoiceDate", invoiceDate !== null ? invoiceDate : "");
-  //   formData.append("invoiceDueDate", invoiceDueDate !== null ? invoiceDueDate : "");    
-  //   formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
-  //   formData.append("contactPoNumber", contact_po_number!== null ? contact_po_number : "");    
-  //   formData.append("receiptAttachmentDescription", receiptAttachmentDescription !== null ? receiptAttachmentDescription : "");
-  //   formData.append("notes", notes !== null ? notes : "");    
-  //   formData.append('lineItemsString',JSON.stringify(this.state.data));
-  //   formData.append('totalVatAmount',this.state.initValue.invoiceVATAmount);
-  //   formData.append('totalAmount',this.state.initValue.totalAmount);
-  //   if (shippingContact !== null && shippingContact.value) {
-  //     formData.append("contactId", shippingContact.value);
-  //   }
-  //   if (currency !== null && currency.value) {
-  //     formData.append("currencyCode", currency.value);
-  //   }
-  //   if (project !== null && project.value) {
-  //     formData.append("projectId", project.value);
-  //   }
-  //   if (this.uploadFile.files[0]) {
-  //     formData.append("attchmentFile", this.uploadFile.files[0]);
-  //   }
-  //   this.props.createInvoiceActions.createInvoice(formData).then(res => {
-  //     this.props.commonActions.tostifyAlert('success', 'Creted Successfully.')
-  //     if (this.state.createMore) {
-  //       this.setState({
-  //         createMore: false
-  //       })
-  //     } else {
-  //       this.props.history.push('/admin/revenue/customer-invoice')
-  //     }
-  //   }).catch(err => {
-  //     this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
-  //   })
-  // }
+ 
+  handleSubmit(data) {
+    const {
+      receiptAttachmentDescription,
+      receiptNumber,
+      contact_po_number,
+      currency,
+      invoiceDueDate,
+      invoiceDate,
+      tax_identification_number,
+      customerContact,
+      project,
+      reference_number,
+      customerVATAmount,
+      totalAmount,
+      notes
+    } = data
+    let formData = new FormData();
+    formData.append("type", 2); 
+    formData.append("taxIdentificationNumber", tax_identification_number !== null ? tax_identification_number : ""); 
+    formData.append("referenceNumber", reference_number !== null ? reference_number : "");    
+    formData.append("invoiceDate", invoiceDate !== null ? invoiceDate : "");
+    formData.append("invoiceDueDate", invoiceDueDate !== null ? invoiceDueDate : "");    
+    formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
+    formData.append("contactPoNumber", contact_po_number!== null ? contact_po_number : "");    
+    formData.append("receiptAttachmentDescription", receiptAttachmentDescription !== null ? receiptAttachmentDescription : "");
+    formData.append("notes", notes !== null ? notes : "");    
+    formData.append('lineItemsString',JSON.stringify(this.state.data));
+    formData.append('totalVatAmount',this.state.initValue.customerVATAmount);
+    formData.append('totalAmount',this.state.initValue.totalAmount);
+    if (customerContact !== null && customerContact.value) {
+      formData.append("contactId", customerContact.value);
+    }
+    if (currency !== null && currency.value) {
+      formData.append("currencyCode", currency.value);
+    }
+    if (project !== null && project.value) {
+      formData.append("projectId", project.value);
+    }
+    if (this.uploadFile.files[0]) {
+      formData.append("attchmentFile", this.uploadFile.files[0]);
+    }
+    this.props.createInvoiceActions.createInvoice(formData).then(res => {
+      this.props.commonActions.tostifyAlert('success', 'Creted Successfully.')
+      if (this.state.createMore) {
+        this.setState({
+          createMore: false
+        })
+      } else {
+        this.props.history.push('/admin/revenue/customer-invoice')
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
 
   render() {
 
@@ -403,13 +392,13 @@ class CreateCustomerInvoice extends React.Component {
                           this.handleSubmit(values)
                           resetForm(initValue)
 
-                          this.setState({
-                            selectedCurrency: null,
-                            selectedProject: null,
-                            selectedBankAccount: null,
-                            selectedCustomer: null
+                          // this.setState({
+                          //   selectedCurrency: null,
+                          //   selectedProject: null,
+                          //   selectedBankAccount: null,
+                          //   selectedCustomer: null
 
-                          })
+                          // })
                         }}
 
                       >
@@ -434,7 +423,7 @@ class CreateCustomerInvoice extends React.Component {
                               <Label htmlFor="project">Project</Label>
                               <Select
                                 className="select-default-width"
-                                options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
+                                options={selectOptionsFactory.renderOptions('label', 'value', project_list)}
                                 id="project"
                                 name="project"
                                 value={props.values.project}                                
@@ -449,11 +438,11 @@ class CreateCustomerInvoice extends React.Component {
                               <Label htmlFor="contact">Customer</Label>
                               <Select
                                 className="select-default-width"
-                                options={customer_list ? selectOptionsFactory.renderOptions('firstName', 'contactId', customer_list) : []}
-                                id="shippingContact"
-                                name="shippingContact"
-                                value={props.values.shippingContact}
-                                onChange={option => props.handleChange('shippingContact')(option)}                                
+                                options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list) : []}
+                                id="customerContact"
+                                name="customerContact"
+                                value={props.values.customerContact}
+                                onChange={option => props.handleChange('customerContact')(option)}                                
                               />
                               
                             </FormGroup>
@@ -491,10 +480,10 @@ class CreateCustomerInvoice extends React.Component {
                               <Select
                                 className="select-default-width"
                                 options={selectOptionsFactory.renderOptions('firstName', 'contactId', vendor_list)}
-                                id="shippingContact"
-                                name="shippingContact"
-                                value={props.values.shippingContact}
-                                onChange={option => props.handleChange('shippingContact')(option)}                                
+                                id="customerContact"
+                                name="customerContact"
+                                value={props.values.customerContact}
+                                onChange={option => props.handleChange('customerContact')(option)}                                
                               />
                             </FormGroup>
                           </Col>
@@ -507,9 +496,10 @@ class CreateCustomerInvoice extends React.Component {
                               <div>
                               <DatePicker
                                       className="form-control"
-                                      id="date"
+                                      id="invoiceDate"
                                       name="invoiceDate"
                                       placeholderText=""
+                                      selected={props.values.invoiceDate}
                                       onChange={(value) => {
                                         props.handleChange("invoiceDate")(value)
                                       }}
@@ -530,7 +520,7 @@ class CreateCustomerInvoice extends React.Component {
                                 <DatePicker
                                   className="form-control"
                                   id="invoiceDueDate"
-                                  name="date"
+                                  name="invoiceDate"
                                   placeholderText=""
                                   selected={props.values.invoiceDueDate}
                                   onChange={(value) => {
@@ -666,6 +656,7 @@ class CreateCustomerInvoice extends React.Component {
                               </TableHeaderColumn>
                               <TableHeaderColumn
                                 isKey
+                                width="0"
                                 dataField="product_name"
                                 dataFormat={this.renderProductName}
                               >

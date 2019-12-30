@@ -9,8 +9,8 @@ import lombok.Data;
 public class ProjectRequestModel {
 	private Integer projectId;
 	private String projectName;
-	private BigDecimal projectExpenseBudget = BigDecimal.ZERO;
-	private BigDecimal projectRevenueBudget = BigDecimal.ZERO;
+	private BigDecimal expenseBudget = BigDecimal.ZERO;
+	private BigDecimal revenueBudget = BigDecimal.ZERO;
 	private String contractPoNumber;
 	private Integer contactId;
 	private String vatRegistrationNumber;

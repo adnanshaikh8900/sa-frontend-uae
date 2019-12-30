@@ -6,6 +6,7 @@
 package com.simplevat.rest.contactController;
 
 import com.simplevat.entity.Contact;
+import com.simplevat.enums.ContactTypeEnum;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
@@ -37,6 +38,7 @@ public class ContactHelper {
                 .firstName(contact.getFirstName())
                 .middleName(contact.getMiddleName())
                 .lastName(contact.getLastName())
+                .contactTypeString(contact.getContactType() != null ? ContactTypeEnum.getContactTypeByValue(contact.getContactType()) : null)
                 .mobileNumber(contact.getMobileNumber()).build();
 
     }

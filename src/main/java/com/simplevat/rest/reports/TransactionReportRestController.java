@@ -11,10 +11,10 @@ import com.simplevat.contact.model.InvoiceReportRestModel;
 import com.simplevat.contact.model.TransactionReportRestModel;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.service.InvoiceService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
-import com.simplevat.service.invoice.InvoiceService;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.Date;
@@ -132,8 +132,10 @@ public class TransactionReportRestController {
             if (invoiceDueStartDate != null && invoiceDueEndDate == null) {
                 invoiceDueEndDate = invoiceDueStartDate;
             }
-            List<InvoiceReportRestModel> invoiceReportRestModels = invoiceService.getInvoicesForReports(refNumber, invoiceStartDate, invoiceEndDate, invoiceDueStartDate, invoiceDueEndDate, contactId, pageNo, pageSize);
-            return new ResponseEntity(invoiceReportRestModels, HttpStatus.OK);
+//            List<InvoiceReportRestModel> invoiceReportRestModels = invoiceService.getInvoicesForReports(refNumber, invoiceStartDate, invoiceEndDate, invoiceDueStartDate, invoiceDueEndDate, contactId, pageNo, pageSize);
+            return new ResponseEntity(
+//                    invoiceReportRestModels,
+                    HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -6,7 +6,7 @@
     <groupId>com.simplevat</groupId>
     <artifactId>simplevat-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>simplevat-service</name>
     <description>simplevat-service project for Spring Boot</description>
@@ -155,7 +155,7 @@
     <build>
         <finalName>ROOT</finalName>
         <plugins>
-<!--             <plugin>
+            <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
@@ -211,7 +211,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin> -->
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

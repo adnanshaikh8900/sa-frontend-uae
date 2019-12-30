@@ -121,7 +121,7 @@ class Employee extends React.Component {
                             <FormGroup>
                               <Label htmlFor="select">Email</Label>
                               <Input
-                                type="text"
+                                type="email"
                                 id="email"
                                 name="email"
                                 onChange={(value) => { this.handleChange("email",value) }}                                
@@ -169,7 +169,7 @@ class Employee extends React.Component {
                             <FormGroup>
                               <Label htmlFor="select">Password</Label>
                               <Input
-                                type="text"
+                                type="password"
                                 id="password"
                                 name="password"
                                 onChange={(value) => { this.handleChange("password",value) }}                                                                                                
@@ -181,14 +181,14 @@ class Employee extends React.Component {
                             <FormGroup>
                               <Label htmlFor="select">Confirm Password</Label>
                               <Input
-                                type="text"
+                                type="password"
                                 id="confirmPassword"
                                 name="confirmPassword"
                                 onChange={(value) => { this.handleChange("confirmPassword",value) }}                                                                                                
                                 
                               />
                             </FormGroup>
-                          </Col>
+                          </Col> 
                           <Col md="4">
                             <FormGroup>
                               <Label htmlFor="select">Date of Birth</Label>

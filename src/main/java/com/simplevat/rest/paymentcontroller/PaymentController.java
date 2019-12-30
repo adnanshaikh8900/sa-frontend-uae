@@ -6,31 +6,30 @@
 package com.simplevat.rest.paymentcontroller;
 
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.Currency;
+import com.simplevat.constant.dbfilter.PaymentFilterEnum;
 import com.simplevat.entity.Payment;
-import com.simplevat.entity.Project;
 import com.simplevat.entity.User;
-import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.invoice.Invoice;
 import com.simplevat.helper.PaymentModelHelper;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.rest.payment.model.PaymentPersistModel;
-import com.simplevat.rest.payment.model.PaymentViewModel;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
+import com.simplevat.service.InvoiceService;
 import com.simplevat.service.PaymentService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.UserServiceNew;
-import com.simplevat.service.invoice.InvoiceService;
 
 import io.swagger.annotations.ApiOperation;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,19 +88,41 @@ public class PaymentController implements Serializable {
 
     @ApiOperation(value = "Get All Payments")
     @GetMapping(value = "/getlist")
-    public ResponseEntity getPaymentList() {
-        List<Payment> payments = paymentService.getPayments();
-        List<PaymentViewModel> paymentModels = new ArrayList<>();
-        for (Payment payment : payments) {
-            PaymentViewModel paymentModel = paymentModelHelper.convertToPaymentViewModel(payment);
-            paymentModels.add(paymentModel);
-        }
-        if (paymentModels != null) {
-            return new ResponseEntity<>(paymentModels, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity getPaymentList(PaymentRequestFilterModel filterModel, HttpServletRequest request) {
+        try {
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Map<PaymentFilterEnum, Object> filterDataMap = new HashMap();
+            if (filterModel.getSupplierId()!= null) {
+				filterDataMap.put(PaymentFilterEnum.SUPPLIER,
+						contactService.findByPK(filterModel.getSupplierId()));
+			}
+            if (filterModel.getInvoiceAmount() != null) {
+                filterDataMap.put(PaymentFilterEnum.INVOICE_AMOUNT, filterModel.getInvoiceAmount());
+            }
+            if (filterModel.getPaymentDate() != null && !filterModel.getPaymentDate().isEmpty()) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getPaymentDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                filterDataMap.put(PaymentFilterEnum.PAYMENT_DATE, dateTime);
+            }
+            filterDataMap.put(PaymentFilterEnum.USER_ID, userId);
+            filterDataMap.put(PaymentFilterEnum.DELETE_FLAG, false);
+            List<Payment> payments = paymentService.getPayments(filterDataMap);
+            List<PaymentViewModel> paymentModels = new ArrayList<>();
+            for (Payment payment : payments) {
+                PaymentViewModel paymentModel = paymentModelHelper.convertToPaymentViewModel(payment);
+                paymentModels.add(paymentModel);
+            }
+            if (paymentModels != null) {
+                return new ResponseEntity<>(paymentModels, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @ApiOperation(value = "Get Payment By Id")
     @GetMapping(value = "/getpaymentbyid")
@@ -176,7 +196,10 @@ public class PaymentController implements Serializable {
                     payment.setInvoice(invoiceService.findByPK(paymentModel.getInvoiceId()));
                 }
                 payment.setInvoiceAmount(paymentModel.getInvoiceAmount());
-                payment.setPaymentDate(paymentModel.getPaymentDate());
+                if (paymentModel.getPaymentDate() != null) {
+                    LocalDateTime paymentDate = Instant.ofEpochMilli(paymentModel.getPaymentDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    payment.setPaymentDate(paymentDate);
+                }
                 payment.setDescription(paymentModel.getDescription());
                 payment.setLastUpdateBy(user.getUserId());
                 payment.setLastUpdateDate(LocalDateTime.now());

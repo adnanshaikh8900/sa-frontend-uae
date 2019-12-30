@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.simplevat.entity.Event;
 import com.simplevat.service.EventService;
-import com.simplevat.service.invoice.InvoiceService;
+import com.simplevat.service.InvoiceService;
 
 @Service("eventService")
 public class EventServiceImpl implements EventService {
@@ -26,7 +26,8 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public List<Event> getEvents() {
-		return invoiceService.getInvoiceAsEvent();
+            return new ArrayList<Event>();
+//		return invoiceService.getInvoiceAsEvent();
 	}
 
 }

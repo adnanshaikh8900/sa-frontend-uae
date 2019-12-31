@@ -5,75 +5,7 @@ import {
 } from 'utils'
 import moment from 'moment'
 
-// export const getSupplierInoviceList = () => {
-//   return (dispatch) => {
-//     dispatch({
-//       type: SUPPLIER_INVOICE.SUPPLIER_INVOICE_LIST,
-//       payload: {
-//         data: [{
-//           status: 'paid',
-//           transactionCategoryId: 2,
-//           transactionCategoryCode: 2,
-//           transactionCategoryName: 'temp',
-//           transactionCategoryDescription: 'temp',
-//           parentTransactionCategory: 'Loream Ipsume',
-//           transactionType: 'TEMP'
-//         }, {
-//           status: 'paid',
-//           transactionCategoryId: 1,
-//           transactionCategoryCode: 3,
-//           transactionCategoryName: 'temp',
-//           transactionCategoryDescription: 'temp',
-//           parentTransactionCategory: 'Loream Ipsume',
-//           transactionType: 'TEMP'
-//         }, {
-//           status: 'Partially Paid',
-//           transactionCategoryId: 1,
-//           transactionCategoryCode: 4,
-//           transactionCategoryName: 'temp',
-//           transactionCategoryDescription: 'temp',
-//           parentTransactionCategory: 'Loream Ipsume',
-//           transactionType: 'TEMP'
-//         }, {
-//           status: 'unpaid',
-//           transactionCategoryId: 1,
-//           transactionCategoryCode: 5,
-//           transactionCategoryName: 'temp',
-//           transactionCategoryDescription: 'temp',
-//           parentTransactionCategory: 'Loream Ipsume',
-//           transactionType: 'TEMP'
-//         }, {
-//           status: 'unpaid',
-//           transactionCategoryId: 1,
-//           transactionCategoryCode: 6,
-//           transactionCategoryName: 'temp',
-//           transactionCategoryDescription: 'temp',
-//           parentTransactionCategory: 'Loream Ipsume',
-//           transactionType: 'TEMP'
-//         },{
-//           status: 'paid',
-//           transactionCategoryId: 1,
-//           transactionCategoryCode: 7,
-//           transactionCategoryName: 'temp',
-//           transactionCategoryDescription: 'temp',
-//           parentTransactionCategory: 'Loream Ipsume',
-//           transactionType: 'TEMP'
-//         },{
-//           status: 'unpaid',
-//           transactionCategoryId: 1,
-//           transactionCategoryCode: 8,
-//           transactionCategoryName: 'temp',
-//           transactionCategoryDescription: 'temp',
-//           parentTransactionCategory: 'Loream Ipsume',
-//           transactionType: 'TEMP'
-//         }]
-//       }
-//     })
-//   }
-// }
 
-
- 
 export const getSupplierInoviceList = (postObj) => {
   let supplierName = postObj ? postObj.supplierName : ''
   let referenceNumber =  postObj ? postObj.referenceNumber : ''
@@ -81,9 +13,9 @@ export const getSupplierInoviceList = (postObj) => {
   let invoiceDueDate =  postObj.invoiceDueDate
   let amount =  postObj ? postObj.amount : ''
   let status =  postObj ? postObj.status : ''
-  
+  let contactType = postObj ? postObj.contactType : ''
   return (dispatch) => {
-    let param = `rest/supplierinvoice/getList?supplierName=${supplierName}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}`
+    let param = `rest/invoice/getList?type=${contactType}`
     if(invoiceDate) {
       let date = moment(invoiceDate).format('DD-MM-YYYY')
       param = param +`&invoiceDate=${date}`
@@ -117,7 +49,7 @@ export const getProjectList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/project/getprojects'
+      url: 'rest/project/getProjectsForDropdown'
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
@@ -133,14 +65,14 @@ export const getProjectList = () => {
     })
   }
 }
-
+ 
 
 export const getContactList = (nameCode) => {
   let contactType = nameCode ? nameCode : ""
   return (dispatch) => {
     let data = {
-      method: 'get',
-      url: `rest/contact/getContactList?contactType=${contactType}`
+      method: 'get', 
+      url: `rest/contact/getContactsForDropdown?contactType=${contactType}`
     }
     return authApi(data).then(res => {
       if (res.status == 200) {

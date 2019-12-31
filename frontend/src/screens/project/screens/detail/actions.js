@@ -9,7 +9,7 @@ export const getProjectById = (id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/project/editproject?id=${id}`
+      url: `/rest/project/getProjectById?id=${id}`
     }
 
     return authApi(data).then(res => {
@@ -24,7 +24,7 @@ export const deleteProject = (id) => {
   return (dispatch) => {
     let data = {
       method: 'DELETE',
-      url: `/rest/project/deleteproject?id=${id}`
+      url: `/rest/project/delete?id=${id}`
     }
 
     return authApi(data).then(res => {
@@ -35,11 +35,12 @@ export const deleteProject = (id) => {
   }
 }
 
-export const updateProject = () => {
+export const updateProject = (obj) => {
   return (dispatch) => {
     let data = {
-      method: 'put',
-      url: `/rest/project/update`
+      method: 'post',
+      url: `/rest/project/update`,
+      data: obj
     }
 
     return authApi(data).then(res => {

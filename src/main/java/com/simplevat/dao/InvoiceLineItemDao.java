@@ -5,12 +5,12 @@
  */
 package com.simplevat.dao;
 
-import com.simplevat.entity.SupplierInvoiceLineItem;
+import com.simplevat.entity.InvoiceLineItem;
 
 /**
  *
  * @author daynil
  */
-public interface SupplierInvoiceLineItemDao extends Dao<Integer, SupplierInvoiceLineItem> {
+public interface InvoiceLineItemDao extends Dao<Integer, InvoiceLineItem> {
 
 }

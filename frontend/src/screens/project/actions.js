@@ -4,11 +4,11 @@ import {
   authApi
 } from 'utils'
 
-export const getProjectList = () => {
+export const getProjectList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/project/getprojects`
+      url: `/rest/project/getList?projectName=${obj.projectName}&expenseBudget=${obj.expenseBudget}&revenueBudget=${obj.revenueBudget}&vatRegistrationNumber=${obj.vatRegistrationNumber}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
     }
 
     return authApi(data).then(res => {
@@ -37,7 +37,7 @@ export  const createProjectContact = (project) => {
   return (dispatch) => {
     let data = {
       method: 'POST',
-      url: `/rest/project/saveprojectcontact`,
+      url: `/rest/contact/save`,
       data: project
     }
 
@@ -116,7 +116,7 @@ export const removeBulk = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: 'rest/project/deleteprojects',
+      url: '/rest/project/deletes',
       data: obj
     }
     return authApi(data).then(res => {
@@ -133,7 +133,7 @@ export const getContactList = () => {
     return (dispatch) => {
       let data = {
         method: 'GET',
-        url: '/rest/contact/contactlist'
+        url: '/rest/contact/getContactList'
       }
   
       return authApi(data).then(res => {

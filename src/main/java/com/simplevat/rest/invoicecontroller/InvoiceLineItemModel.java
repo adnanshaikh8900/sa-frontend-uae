@@ -1,4 +1,4 @@
-package com.simplevat.rest.supplierinvoicecontroller;
+package com.simplevat.rest.invoicecontroller;
 
 import java.math.BigDecimal;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SupplierInvoiceLineItemModel {
+public class InvoiceLineItemModel {
 
     private Integer id;
     private Integer quantity;

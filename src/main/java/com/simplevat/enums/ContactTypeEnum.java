@@ -6,7 +6,10 @@
 package com.simplevat.enums;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -38,12 +41,16 @@ public enum ContactTypeEnum {
         return value;
     }
 
-    public static List<ContactTypeEnum> contactTypeList() {
-        List<ContactTypeEnum> contactTypes = new ArrayList<ContactTypeEnum>();
+    public static Map<Integer,ContactTypeEnum> map() {
+        Map<Integer,ContactTypeEnum> contactTypes = new HashMap<>();
         for (ContactTypeEnum contactType : values()) {
-            contactTypes.add(contactType);
+            contactTypes.put(contactType.getValue(), contactType);
         }
         return contactTypes;
+    }
+    
+    public static String getContactTypeByValue(Integer value){
+        return map().get(value).getDesc();
     }
 
 }

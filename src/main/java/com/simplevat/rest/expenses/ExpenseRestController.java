@@ -8,7 +8,7 @@ package com.simplevat.rest.expenses;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
-import com.simplevat.constant.dbfilter.SupplierInvoiceFilterEnum;
+import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Product;
@@ -106,7 +106,7 @@ public class ExpenseRestController {
 			Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
 			expense.setCreatedBy(userId);
 			expense.setCreatedDate(LocalDateTime.now());
-			if (!expenseModel.getAttachmentFile().isEmpty()) {
+			if (expenseModel.getAttachmentFile() != null && !expenseModel.getAttachmentFile().isEmpty()) {
 				String fileName = fileHelper.saveFile(expenseModel.getAttachmentFile(), FileTypeEnum.EXPENSE);
 				expense.setReceiptAttachmentPath(fileName);
 			}

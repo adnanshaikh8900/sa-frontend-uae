@@ -5,8 +5,8 @@
  */
 package com.simplevat.dao;
 
-import com.simplevat.constant.dbfilter.SupplierInvoiceFilterEnum;
-import com.simplevat.entity.SupplierInvoice;
+import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.entity.Invoice;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +14,9 @@ import java.util.Map;
  *
  * @author daynil
  */
-public interface SupplierInvoiceDao extends Dao<Integer, SupplierInvoice> {
+public interface InvoiceDao extends Dao<Integer, Invoice> {
 
-    public List<SupplierInvoice> getSupplierInvoiceList(Map<SupplierInvoiceFilterEnum, Object> map);
+    public List<Invoice> getInvoiceList(Map<InvoiceFilterEnum, Object> map);
 
     public void deleteByIds(List<Integer> ids);
 

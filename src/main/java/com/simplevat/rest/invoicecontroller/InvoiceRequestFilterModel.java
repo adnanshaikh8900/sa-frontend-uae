@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.simplevat.rest.supplierinvoicecontroller;
+package com.simplevat.rest.invoicecontroller;
 
 import com.simplevat.rest.PaginationModel;
 import java.math.BigDecimal;
@@ -15,7 +15,7 @@ import lombok.Data;
  * @author ashish
  */
 @Data
-public class SupplierInvoiceRequestFilterModel extends PaginationModel {
+public class InvoiceRequestFilterModel extends PaginationModel {
 
     private String customerName;
     private String referenceNumber;
@@ -23,4 +23,5 @@ public class SupplierInvoiceRequestFilterModel extends PaginationModel {
     private String invoiceDueDate;
     private BigDecimal amount;
     private String status;
+    private Integer type;
 }

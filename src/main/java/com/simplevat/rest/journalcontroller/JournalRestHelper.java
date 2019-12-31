@@ -17,7 +17,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
-import com.simplevat.rest.supplierinvoicecontroller.SupplierInvoiceRestHelper;
+import com.simplevat.rest.invoicecontroller.InvoiceRestHelper;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.TransactionCategoryService;
@@ -81,7 +81,7 @@ public class JournalRestHelper {
 					System.out.println("====In=Try======" + itemModels.toString());
 				} catch (IOException ex) {
 					System.out.println("====In=catch======" + ex.getMessage());
-					Logger.getLogger(SupplierInvoiceRestHelper.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.getLogger(InvoiceRestHelper.class.getName()).log(Level.SEVERE, null, ex);
 				}
 				System.out.println("====In=if======" + itemModels.size());
 				if (itemModels.size() > 0) {

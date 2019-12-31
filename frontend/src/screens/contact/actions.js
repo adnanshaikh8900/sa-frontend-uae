@@ -8,7 +8,7 @@ export const getContactList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/contact/getContactList?name=${obj.name}&email=${obj.email}&contactType=${obj.contactType}`
+      url: `/rest/contact/getContactList?name=${obj.name}&email=${obj.email}&contactType=${obj.contactType}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
     }
 
     return authApi(data).then(res => {

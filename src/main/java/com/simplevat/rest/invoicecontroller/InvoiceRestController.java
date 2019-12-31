@@ -9,10 +9,12 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.utils.FileHelper;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -91,6 +93,13 @@ public class InvoiceRestController implements Serializable {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @GetMapping(value = "/getInvoicesForDropdown")
+    public ResponseEntity getInvoicesForDropdown() throws IOException {
+        List<DropdownModel> dropdownModels = invoiceService.getInvoicesForDropdown();
+        return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+    }
+
 
     @ApiOperation(value = "Delete Invoice By ID")
     @DeleteMapping(value = "/delete")

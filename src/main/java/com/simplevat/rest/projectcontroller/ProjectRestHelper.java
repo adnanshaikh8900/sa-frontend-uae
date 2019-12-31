@@ -58,30 +58,25 @@ public class ProjectRestHelper {
     }
 
     public Project getEntity(ProjectRequestModel projectRequestModel) {
-
-        if (projectRequestModel != null) {
-            Project project = projectRequestModel.getProjectId() != null
-                    ? projectService.findByPK(projectRequestModel.getProjectId())
-                    : new Project();
-            project.setProjectId(
-                    projectRequestModel.getProjectId() != null ? projectRequestModel.getProjectId() : null);
-            project.setProjectName(projectRequestModel.getProjectName());
-            project.setExpenseBudget(projectRequestModel.getExpenseBudget());
-            project.setRevenueBudget(projectRequestModel.getRevenueBudget());
-            project.setContractPoNumber(projectRequestModel.getContractPoNumber());
-            if (projectRequestModel.getContactId() != null) {
-                project.setContact(contactService.findByPK(projectRequestModel.getContactId()));
-            }
-            project.setVatRegistrationNumber(projectRequestModel.getVatRegistrationNumber());
-            if (projectRequestModel.getInvoiceLanguageCode() != null) {
-                project.setInvoiceLanguageCode(languageService.findByPK(projectRequestModel.getInvoiceLanguageCode()));
-            }
-            if (projectRequestModel.getCurrencyCode() != null) {
-                project.setCurrency(currencyservice.findByPK(projectRequestModel.getCurrencyCode()));
-            }
-
-            return project;
+        Project project = new Project();
+        if (projectRequestModel.getProjectId() != null) {
+            project = projectService.findByPK(projectRequestModel.getProjectId());
+            project.setProjectId(projectRequestModel.getProjectId());
         }
-        return null;
+        project.setProjectName(projectRequestModel.getProjectName());
+        project.setExpenseBudget(projectRequestModel.getExpenseBudget());
+        project.setRevenueBudget(projectRequestModel.getRevenueBudget());
+        project.setContractPoNumber(projectRequestModel.getContractPoNumber());
+        if (projectRequestModel.getContactId() != null) {
+            project.setContact(contactService.findByPK(projectRequestModel.getContactId()));
+        }
+        project.setVatRegistrationNumber(projectRequestModel.getVatRegistrationNumber());
+        if (projectRequestModel.getInvoiceLanguageCode() != null) {
+            project.setInvoiceLanguageCode(languageService.findByPK(projectRequestModel.getInvoiceLanguageCode()));
+        }
+        if (projectRequestModel.getCurrencyCode() != null) {
+            project.setCurrency(currencyservice.findByPK(projectRequestModel.getCurrencyCode()));
+        }
+        return project;
     }
 }

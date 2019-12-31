@@ -6,16 +6,18 @@
 package com.simplevat.rest.contactController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.dbfilter.ContactFilterEnum;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.ContactService;
-import com.simplevat.rest.PaginationModel;
 import com.simplevat.security.JwtTokenUtil;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,19 +48,25 @@ public class ContactController implements Serializable {
     private JwtTokenUtil jwtTokenUtil;
 
     @GetMapping(value = "/getContactList")
-    public ResponseEntity getContactList(PaginationModel paginationModel, ContactRequestFilterModel contactRequestFilterModel) throws IOException {
-        if (paginationModel == null) {
-            paginationModel = new PaginationModel();
+    public ResponseEntity getContactList(ContactRequestFilterModel filterModel, HttpServletRequest request) throws IOException {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+        try {
+            Map<ContactFilterEnum, Object> filterDataMap = new HashMap();
+            filterDataMap.put(ContactFilterEnum.CONTACT_TYPE, filterModel.getContactType());
+            filterDataMap.put(ContactFilterEnum.NAME, filterModel.getName());
+            filterDataMap.put(ContactFilterEnum.EMAIL, filterModel.getEmail());
+            filterDataMap.put(ContactFilterEnum.DELETE_FLAG, false);
+            filterDataMap.put(ContactFilterEnum.USER_ID, userId);
+            List<ContactListModel> contactListModels = new ArrayList<>();
+            List<Contact> contactList = contactService.getContactList(filterDataMap);
+            if (contactList == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            contactList.forEach(contact -> contactListModels.add(contactHelper.getListModel(contact)));
+            return new ResponseEntity<>(contactListModels, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        List<ContactListModel> contactListModels = new ArrayList<>();
-        List<Contact> contactList;
-        if (contactRequestFilterModel == null || contactRequestFilterModel.getContactType() == null) {
-            contactList = contactService.getAllContacts(paginationModel.getPageNo(), paginationModel.getPageSize());
-        } else {
-            contactList = contactService.getContacts(contactRequestFilterModel, paginationModel.getPageNo(), paginationModel.getPageSize());
-        }
-        contactList.forEach(contact -> contactListModels.add(contactHelper.getListModel(contact)));
-        return new ResponseEntity<>(contactListModels, HttpStatus.OK);
     }
 
     @GetMapping(value = "/getContactsForDropdown")
@@ -83,7 +91,7 @@ public class ContactController implements Serializable {
             contact.setCreatedDate(LocalDateTime.now());
             contact.setDeleteFlag(false);
             contactService.persist(contact);
-            return new ResponseEntity<>(contact,HttpStatus.OK);
+            return new ResponseEntity<>(contact, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -16,6 +16,7 @@ import com.simplevat.service.VatCategoryService;
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -65,10 +66,16 @@ public class ProductRestController implements Serializable {
                 filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE, vatCategoryService.findByPK(filterModel.getVatPercentage()));
             }
             List<Product> products = productService.getProductList(filterDataMap);
+            List<ProductListModel> productListModels = new ArrayList<>();
             if (products == null) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
+            } else {
+                for (Product product : products) {
+                    ProductListModel model = productRestHelper.getListModel(product);
+                    productListModels.add(model);
+                }
             }
-            return new ResponseEntity(productRestHelper.getListModel(products), HttpStatus.OK);
+            return new ResponseEntity(productListModels, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,7 +119,7 @@ public class ProductRestController implements Serializable {
             if (product == null) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity<>(product, HttpStatus.OK);
+                return new ResponseEntity<>(productRestHelper.getListModel(product), HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();

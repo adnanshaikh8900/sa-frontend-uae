@@ -10,6 +10,7 @@ import com.simplevat.entity.Invoice;
 import com.simplevat.service.InvoiceService;
 import java.util.Map;
 import com.simplevat.dao.InvoiceDao;
+import com.simplevat.rest.DropdownModel;
 
 @Service("SupplierInvoiceService")
 public class InvoiceServiceImpl extends InvoiceService {
@@ -32,4 +33,8 @@ public class InvoiceServiceImpl extends InvoiceService {
        supplierInvoiceDao.deleteByIds(ids);
     }
 
+    @Override
+    public List<DropdownModel> getInvoicesForDropdown() {
+        return supplierInvoiceDao.getInvoicesForDropdown();
+    }
 }

@@ -1,5 +1,6 @@
 package com.simplevat.service.impl;
 
+import com.simplevat.constant.dbfilter.ContactFilterEnum;
 import com.simplevat.dao.ContactDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.Contact;
@@ -7,6 +8,7 @@ import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.contactController.ContactRequestFilterModel;
 import com.simplevat.service.ContactService;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,11 @@ public class ContactServiceImpl extends ContactService {
     @Override
     public List<DropdownModel> getContactForDropdown(Integer contactType) {
         return this.contactDao.getContactForDropdown(contactType);
+    }
+
+    @Override
+    public List<Contact> getContactList(Map<ContactFilterEnum, Object> filterDataMap) {
+        return this.contactDao.getContactList(filterDataMap);
     }
 
     @Override

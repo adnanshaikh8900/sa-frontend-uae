@@ -26,14 +26,14 @@ import org.springframework.util.MultiValueMap;
 @Service
 public class TranscationCategoryHelper {
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+    @Autowired
+    private TransactionCategoryService transactionCategoryService;
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+    @Autowired
+    private VatCategoryService vatCategoryService;
 
-	@Autowired
-	private TransactionTypeService transactionTypeService;
+    @Autowired
+    private TransactionTypeService transactionTypeService;
 
 //    public TransactionCategoryModel getCategory(TransactionCategory category) {
 //        TransactionCategoryModel model = new TransactionCategoryModel();
@@ -53,7 +53,6 @@ public class TranscationCategoryHelper {
 //        model.setVersionNumber(category.getVersionNumber());
 //        return model;
 //    }
-
 //    public TransactionCategory getTrascationModel(TransactionCategoryModel categoryModel) {
 //        TransactionCategory transactionCategory = new TransactionCategory();
 //        transactionCategory.setCreatedBy(categoryModel.getCreatedBy());
@@ -72,52 +71,61 @@ public class TranscationCategoryHelper {
 //        transactionCategory.setVersionNumber(categoryModel.getVersionNumber());
 //        return transactionCategory;
 //    }
+    public TransactionCategory getEntity(TransactionCategoryBean transactionCategoryBean) {
+        TransactionCategory transactionCategory = new TransactionCategory();
+        if (transactionCategoryBean.getDefaltFlag() != null && !transactionCategoryBean.getDefaltFlag().isEmpty()) {
+            transactionCategory.setDefaltFlag(transactionCategoryBean.getDefaltFlag().charAt(0));
+        } else {
+            transactionCategory.setDefaltFlag(DefualtTypeConstant.NO);
+        }
+        if (transactionCategoryBean.getParentTransactionCategory() != null) {
+            transactionCategory.setParentTransactionCategory(
+                    transactionCategoryService.findByPK(transactionCategoryBean.getParentTransactionCategory()));
+        }
+        if (transactionCategoryBean.getTransactionCategoryId() != null
+                && transactionCategoryBean.getTransactionCategoryId() > 0) {
+            transactionCategory.setTransactionCategoryId(transactionCategoryBean.getTransactionCategoryId());
+        }
+        transactionCategory.setTransactionCategoryCode(transactionCategoryBean.getTransactionCategoryCode());
+        transactionCategory
+                .setTransactionCategoryDescription(transactionCategoryBean.getTransactionCategoryDescription());
+        transactionCategory.setTransactionCategoryName(transactionCategoryBean.getTransactionCategoryName());
+        if (transactionCategoryBean.getTransactionType() != null) {
+            transactionCategory
+                    .setTransactionType(transactionTypeService.findByPK(transactionCategoryBean.getTransactionType()));
+        }
+        if (transactionCategoryBean.getVatCategory() != null) {
+            transactionCategory.setVatCategory(vatCategoryService.findByPK(transactionCategoryBean.getVatCategory()));
+        }
+        if (transactionCategoryBean.getVersionNumber() != null) {
+            transactionCategory.setVersionNumber(transactionCategoryBean.getVersionNumber());
+        } else {
+            transactionCategory.setVersionNumber(0);
+        }
+        return transactionCategory;
+    }
 
-	public TransactionCategory getEntity(TransactionCategoryBean transactionCategoryBean) {
-		TransactionCategory transactionCategory = new TransactionCategory();
-		if (transactionCategoryBean.getDefaltFlag() != null && !transactionCategoryBean.getDefaltFlag().isEmpty()) {
-			transactionCategory.setDefaltFlag(transactionCategoryBean.getDefaltFlag().charAt(0));
-		} else {
-			transactionCategory.setDefaltFlag(DefualtTypeConstant.NO);
-		}
-		if (transactionCategoryBean.getParentTransactionCategory() != null) {
-			transactionCategory.setParentTransactionCategory(
-					transactionCategoryService.findByPK(transactionCategoryBean.getParentTransactionCategory()));
-		}
-		if (transactionCategoryBean.getTransactionCategoryId() != null
-				&& transactionCategoryBean.getTransactionCategoryId() > 0) {
-			transactionCategory.setTransactionCategoryId(transactionCategoryBean.getTransactionCategoryId());
-		}
-		transactionCategory.setTransactionCategoryCode(transactionCategoryBean.getTransactionCategoryCode());
-		transactionCategory
-				.setTransactionCategoryDescription(transactionCategoryBean.getTransactionCategoryDescription());
-		transactionCategory.setTransactionCategoryName(transactionCategoryBean.getTransactionCategoryName());
-		if (transactionCategoryBean.getTransactionType() != null) {
-			transactionCategory
-					.setTransactionType(transactionTypeService.findByPK(transactionCategoryBean.getTransactionType()));
-		}
-		if (transactionCategoryBean.getVatCategory() != null) {
-			transactionCategory.setVatCategory(vatCategoryService.findByPK(transactionCategoryBean.getVatCategory()));
-		}
-		if (transactionCategoryBean.getVersionNumber() != null) {
-			transactionCategory.setVersionNumber(transactionCategoryBean.getVersionNumber());
-		} else {
-			transactionCategory.setVersionNumber(0);
-		}
-		return transactionCategory;
-	}
+    public List<TransactionCategoryModel> getListModel(List<TransactionCategory> transactionCategories) {
+        List<TransactionCategoryModel> transactionCategoryModelList = new ArrayList<TransactionCategoryModel>();
 
-	public List<TransactionCategoryModel> getListModel(List<TransactionCategory> transactionCategories) {
-		List<TransactionCategoryModel> transactionCategoryModelList = new ArrayList<TransactionCategoryModel>();
-
-		if (transactionCategories != null && transactionCategories.size() > 0) {
-			for (TransactionCategory transactionCategory : transactionCategories) {
-				TransactionCategoryModel transactionCategoryModel = new TransactionCategoryModel();
-				BeanUtils.copyProperties(transactionCategory, transactionCategoryModel);
-				transactionCategoryModelList.add(transactionCategoryModel);
-			}
-		}
-		return transactionCategoryModelList;
-	}
+        if (transactionCategories != null && transactionCategories.size() > 0) {
+            for (TransactionCategory transactionCategory : transactionCategories) {
+                TransactionCategoryModel transactionCategoryModel = new TransactionCategoryModel();
+                BeanUtils.copyProperties(transactionCategory, transactionCategoryModel);
+                if (transactionCategory.getTransactionType() != null) {
+                    transactionCategoryModel.setTransactionTypeId(transactionCategory.getTransactionType().getTransactionTypeCode());
+                    transactionCategoryModel.setTransactionTypeName(transactionCategory.getTransactionType().getTransactionTypeName());
+                }
+                if (transactionCategory.getParentTransactionCategory() != null) {
+                    transactionCategoryModel.setParentTransactionCategoryId(transactionCategory.getParentTransactionCategory().getTransactionCategoryId());
+                }
+                if (transactionCategory.getVatCategory() != null) {
+                    transactionCategoryModel.setVatCategoryId(transactionCategory.getVatCategory().getId());
+                }
+                transactionCategoryModelList.add(transactionCategoryModel);
+            }
+        }
+        return transactionCategoryModelList;
+    }
 
 }

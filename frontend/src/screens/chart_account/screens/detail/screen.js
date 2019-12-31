@@ -167,7 +167,8 @@ class DetailChartAccount extends React.Component {
       if (res.status === 200) {
         // this.success('')
         this.props.commonActions.tostifyAlert('success', 'Chart Account Updated Successfully')
-      } else this.props.history.push('/admin/master/chart-account')
+        this.props.history.push('/admin/master/chart-account')
+      } 
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })

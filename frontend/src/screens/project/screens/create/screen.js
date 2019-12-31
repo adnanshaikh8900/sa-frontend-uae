@@ -84,8 +84,8 @@ class CreateProject extends React.Component {
       },
     }
 
-    this.showContactModel = this.showContactModel.bind(this)
-    this.closeContactModel = this.closeContactModel.bind(this)
+    this.showContactModal = this.showContactModal.bind(this)
+    this.closeContactModal = this.closeContactModal.bind(this)
 
     this.projectHandleSubmit = this.projectHandleSubmit.bind(this)
     this.success = this.success.bind(this)
@@ -93,11 +93,14 @@ class CreateProject extends React.Component {
 
 
   // Show Invite User Modal
-  showContactModel() {
+  showContactModal() {
     this.setState({ openContactModal: true })
   }
   // Cloase Confirm Modal
-  closeContactModel() {
+  closeContactModal(res) {
+    if(res) {
+    this.props.projectActions.getContactList();
+    }
     this.setState({ openContactModal: false })
   }
 
@@ -251,7 +254,7 @@ class CreateProject extends React.Component {
                                   )}
                                 </FormGroup>
                                 <FormGroup className="mb-5 text-right">
-                                  <Button color="primary" className="btn-square " onClick={this.showContactModel}>
+                                  <Button color="primary" className="btn-square " onClick={this.showContactModal}>
                                     <i className="fa fa-plus"></i> Add a Contact
                                       </Button>
                                 </FormGroup>
@@ -437,7 +440,7 @@ class CreateProject extends React.Component {
 
         <ContactModal
           openContactModal={this.state.openContactModal}
-          closeContactModel={this.closeContactModel}
+          closeContactModal={(val)=>{this.closeContactModal(val)}}
           currencyList={currency_list}
           countryList={country_list}
           createContact={this.props.projectActions.createProjectContact}

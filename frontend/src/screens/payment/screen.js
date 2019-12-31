@@ -161,7 +161,7 @@ class Payment extends React.Component {
     const { payment_list } = this.props;
     this.props.paymentActions.removeBulkPayments(obj).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      this.props.paymentActions.getPaymentList()
+      this.initializeData();
       if (payment_list.length > 0) {
         this.setState({
           selected_id_list: []

@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
 import com.simplevat.enums.DiscountType;
 import com.simplevat.enums.InvoiceStatusEnum;
@@ -23,6 +24,11 @@ import org.hibernate.annotations.ColumnDefault;
 @NamedQueries({
     @NamedQuery(name = "allInvoices",
             query = "from Invoice i where i.deleteFlag = false order by i.lastUpdateDate desc")
+    ,
+    @NamedQuery(name = "invoiceForDropdown",
+            query = "SELECT new " + CommonConstant.DROPDOWN_MODEL_PACKAGE + "(i.id , i.referenceNumber )"
+            + " FROM Invoice i where i.deleteFlag = FALSE order by i.invoiceDate ")
+
 })
 public class Invoice implements Serializable {
 

@@ -1,10 +1,12 @@
 package com.simplevat.dao;
 
+import com.simplevat.constant.dbfilter.ContactFilterEnum;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.contactController.ContactRequestFilterModel;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -15,6 +17,8 @@ public interface ContactDao extends Dao<Integer, Contact> {
     public List<DropdownModel> getContactForDropdown(Integer contactType);
 
     public List<Contact> getAllContacts(Integer pageNo, Integer pageSize);
+    
+    public List<Contact> getContactList(Map<ContactFilterEnum, Object> filterDataMap);
 
     public List<Contact> getContacts(ContactRequestFilterModel filterModel, Integer pageNo, Integer pageSize);
 

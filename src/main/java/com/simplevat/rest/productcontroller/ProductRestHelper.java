@@ -1,8 +1,10 @@
 package com.simplevat.rest.productcontroller;
 
 import com.simplevat.entity.Product;
+import com.simplevat.entity.ProductCategory;
 import com.simplevat.entity.ProductWarehouse;
 import com.simplevat.entity.VatCategory;
+import com.simplevat.service.ProductCategoryService;
 import com.simplevat.service.ProductService;
 import com.simplevat.service.ProductWarehouseService;
 import com.simplevat.service.VatCategoryService;
@@ -20,6 +22,9 @@ public class ProductRestHelper {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    ProductCategoryService productCategoryService;
 
     @Autowired
     ProductWarehouseService productWarehouseService;
@@ -41,11 +46,10 @@ public class ProductRestHelper {
         product.setProductCode(productModel.getProductCode());
         product.setVersionNumber(productModel.getVersionNumber());
         product.setProductDescription(productModel.getProductDescription());
-        if (productModel.getParentProductId() != null) {
-            Product parentProduct = productService.findByPK(productModel.getParentProductId());
-            product.setParentProduct(parentProduct);
+        if (productModel.getProductCategoryId() != null) {
+            ProductCategory productCategory = productCategoryService.findByPK(productModel.getProductCategoryId());
+            product.setProductCategory(productCategory);
         }
-
         if (productModel.getProductWarehouseId() != null) {
             ProductWarehouse productWarehouse = productWarehouseService.findByPK(productModel.getProductWarehouseId());
             product.setProductWarehouse(productWarehouse);
@@ -71,8 +75,8 @@ public class ProductRestHelper {
         productModel.setProductCode(product.getProductCode());
         productModel.setVersionNumber(product.getVersionNumber());
         productModel.setProductDescription(product.getProductDescription());
-        if (product.getParentProduct() != null) {
-            productModel.setParentProductId(product.getParentProduct().getProductID());
+        if (product.getProductCategory() != null) {
+            productModel.setProductCategoryId(product.getProductCategory().getId());
         }
         if (product.getProductWarehouse() != null) {
             productModel.setProductWarehouseId(product.getProductWarehouse().getWarehouseId());
@@ -82,20 +86,23 @@ public class ProductRestHelper {
         return productModel;
     }
 
-    public List<ProductListModel> getListModel(List<Product> productList) {
-        List<ProductListModel> productListModels = new ArrayList();
-        for (Product product : productList) {
-            ProductListModel productModel = new ProductListModel();
-            productModel.setId(product.getProductID());
-            productModel.setName(product.getProductName());
-            if (product.getVatCategory() != null) {
-                productModel.setVatPercentage(product.getVatCategory().getVatLabel());
-            }
-            productModel.setDescription(product.getProductDescription());
-            productModel.setProductCode(product.getProductCode());
-            productModel.setUnitPrice(product.getUnitPrice());
-            productListModels.add(productModel);
+    public ProductListModel getListModel(Product product) {
+        ProductListModel productModel = new ProductListModel();
+        productModel.setId(product.getProductID());
+        productModel.setName(product.getProductName());
+        if (product.getVatCategory() != null) {
+            productModel.setVatCategoryId(product.getVatCategory().getId());
+            productModel.setVatPercentage(product.getVatCategory().getVatLabel());
         }
-        return productListModels;
+        if (product.getProductCategory() != null) {
+            productModel.setProductCategoryId(product.getProductCategory().getId());
+        }
+        if (product.getProductWarehouse() != null) {
+            productModel.setProductWarehouseId(product.getProductWarehouse().getWarehouseId());
+        }
+        productModel.setDescription(product.getProductDescription());
+        productModel.setProductCode(product.getProductCode());
+        productModel.setUnitPrice(product.getUnitPrice());
+        return productModel;
     }
 }

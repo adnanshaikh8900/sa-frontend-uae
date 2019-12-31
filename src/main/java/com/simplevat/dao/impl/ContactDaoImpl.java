@@ -1,14 +1,18 @@
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.dbfilter.ContactFilterEnum;
+import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ContactDao;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.contactController.ContactRequestFilterModel;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -39,12 +43,23 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
         if (filterModel.getName() != null) {
             typedQuery.setParameter("firstName", filterModel.getName());
         }
-        if (filterModel.getEmail()!= null) {
+        if (filterModel.getEmail() != null) {
             typedQuery.setParameter("email", filterModel.getEmail());
         }
         typedQuery.setMaxResults(pageSize);
         typedQuery.setFirstResult(pageNo * pageSize);
         return typedQuery.getResultList();
+    }
+
+    @Override
+    public List<Contact> getContactList(Map<ContactFilterEnum, Object> filterMap) {
+        List<DbFilter> dbFilters = new ArrayList();
+        filterMap.forEach((productFilter, value) -> dbFilters.add(DbFilter.builder()
+                .dbCoulmnName(productFilter.getDbColumnName())
+                .condition(productFilter.getCondition())
+                .value(value).build()));
+        List<Contact> contacts = this.executeQuery(dbFilters);
+        return contacts;
     }
 
     @Override

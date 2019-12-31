@@ -14,5 +14,8 @@ public class ProductListModel {
     private String productCode;
     private String vatPercentage;
     private BigDecimal unitPrice;
-
+    private Integer vatCategoryId;
+    private Integer productCategoryId;
+    private Integer productWarehouseId;
+    
 }

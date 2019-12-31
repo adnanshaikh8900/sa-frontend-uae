@@ -25,7 +25,7 @@ public class ProductRequestModel {
     private Boolean deleteFlag = Boolean.FALSE;
     private Boolean active;
     private Integer versionNumber;
-    private Integer parentProductId;
+    private Integer productCategoryId;
     private Integer productWarehouseId;
     private Boolean vatIncluded = Boolean.FALSE;
     private BigDecimal unitPrice;

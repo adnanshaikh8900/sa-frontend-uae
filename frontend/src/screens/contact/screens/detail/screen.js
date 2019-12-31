@@ -88,7 +88,7 @@ class DetailContact extends React.Component {
             city: res.data.city && res.data.city,
             contactType: res.data.contactType ?  res.data.contactType : '',
             contractPoNumber: res.data.contractPoNumber && res.data.contractPoNumber ? res.data.contractPoNumber : '',
-            country: res.data.countryId && res.data.countryId !== null?  res.data.countryId : '',
+            countryId: res.data.countryId && res.data.countryId !== null?  res.data.countryId : '',
             currency: res.data.currencyCode && res.data.currencyCode !== null ? res.data.currencyCode : '',
             email: res.data.email && res.data.email !== null ? res.data.email : '',
             firstName: res.data.firstName && res.data.firstName !== null ? res.data.firstName : '',
@@ -126,7 +126,7 @@ class DetailContact extends React.Component {
       city,
       contactType,
       contractPoNumber,
-      country,
+      countryId,
       currency,
       email,
       firstName,
@@ -146,6 +146,8 @@ class DetailContact extends React.Component {
     } = data;
     const id = this.props.location.state.id;
 
+    console.log(data)
+
     const postData = {
       contactId: id,
       billingEmail: billingEmail !== null ? billingEmail : '',
@@ -153,8 +155,8 @@ class DetailContact extends React.Component {
       city: city,
       contactType: contactType !== null ? contactType.value : '',
       contractPoNumber: contractPoNumber,
-      country: country && country.value !== null ? country.value : '',
-      currency: currency && currency.value !== null ? currency.value : '',
+      countryId: countryId && countryId.value !== null ? countryId.value : '',
+      currencyCode: currency && currency.value !== null ? currency.value : '',
       contactType: contactType ? contactType : '',
       email: email,
       firstName: firstName,
@@ -277,7 +279,7 @@ class DetailContact extends React.Component {
                             //         .required('Mobile Number is required'),
                             //     addressLine1: Yup.string()
                             //       .required("Address is required"),
-                            //     country: Yup.string()
+                            //     countryId: Yup.string()
                             //       .required("Please Select Country")
                             //       .nullable(),
                             //     state: Yup.string()
@@ -373,10 +375,10 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                   <FormGroup>
-                                  <Label htmlFor="country">Contact Type</Label>
+                                  <Label htmlFor="contactType">Contact Type</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={contact_type_list ? contact_type_list : []}
+                                    options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list) : []}
                                     value={props.values.contactType}
                                     onChange={option => props.handleChange('contactType')(option.value)}
                                     placeholder="Select Contact Type"
@@ -560,23 +562,26 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="country">Country</Label>
+                                      <Label htmlFor="countryId">Country</Label>
                                       <Select
                                         className="select-default-width"
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
-                                        value={props.values.country}
-                                        onChange={option => props.handleChange('country')(option.value)}
+                                        value={props.values.countryId}
+                                        onChange={option => {
+                                          console.log(option)
+                                          props.handleChange('countryId')(option)
+                                        }}
                                         placeholder="Select Country"
-                                        id="country"
-                                        name="country"
+                                        id="countryId"
+                                        name="countryId"
                                         className={
-                                          props.errors.country && props.touched.country
+                                          props.errors.countryId && props.touched.countryId
                                             ? "is-invalid"
                                             : ""
                                         }
                                       />
-                                      {props.errors.country && props.touched.country && (
-                                        <div className="invalid-feedback">{props.errors.country}</div>
+                                      {props.errors.countryId && props.touched.countryId && (
+                                        <div className="invalid-feedback">{props.errors.countryId}</div>
                                       )}
 
                                     </FormGroup>
@@ -730,7 +735,9 @@ class DetailContact extends React.Component {
                                         className="select-default-width"
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                                         value={props.values.currency}
-                                        onChange={option => props.handleChange('currency')(option.value)}
+                                        onChange={option => {
+                                          props.handleChange('currency')(option)
+                                        }}
                                         placeholder="Select Currency"
                                         id="currency"
                                         name="currency"

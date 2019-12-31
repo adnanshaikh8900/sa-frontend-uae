@@ -97,10 +97,7 @@ class DetailProduct extends React.Component {
               //   value: res.data.vatCategory.id
               // } : '',
               unitPrice: res.data.unitPrice,
-              productCategoryId: res.data.parentProduct ? {
-                label: res.data.parentProduct.productID,
-                value: res.data.parentProduct.productName
-              } : '',
+              productCategoryId: res.data.productCategoryId ? res.data.productCategoryId : '',
               productWarehouseId: res.data.productWarehouse ? res.data.productWarehouse.warehouseId : '',
               //   label: res.data.productWarehouse.warehouseName,
               //   value: res.data.productWarehouse.warehouseId
@@ -287,23 +284,23 @@ class DetailProduct extends React.Component {
                               </Col>
 
                               <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="productCategoryId">Parent Product</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    options={selectOptionsFactory.renderOptions('productName', 'productID', product_category_list)}
-                                    id="productCategoryId"
-                                    name="productCategoryId"
-                                    value={props.values.productCategoryId}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedParentProduct: option.value
-                                      })
-                                      props.handleChange("productCategoryId")(option.value);
-                                    }}
-                                  />
-                                </FormGroup>
-                              </Col>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="productCategoryId">Product Category</Label>
+                                    <Select
+                                      className="select-default-width"
+                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'productCategoryCode', product_category_list) : []}
+                                      id="productCategoryId"
+                                      name="productCategoryId"
+                                      value={props.values.productCategoryId}
+                                      onChange={(option) => {
+                                        // this.setState({
+                                        //   selectedParentProduct: option.value
+                                        // })
+                                        props.handleChange("productCategoryId")(option.value);
+                                      }}
+                                    />
+                                  </FormGroup>
+                                </Col>
                             </Row>
                             <Row>
 

@@ -176,10 +176,6 @@ class CreateExpense extends React.Component {
     const { data } = this.state
     const { initValue } = this.state
     const { currency_list, project_list, expense_categories_list, employee_list } = this.props
-    let currencyList = currency_list.length ? [{ currencyCode: null, currencyName: 'Select..' }, ...currency_list] : currency_list
-    let projectList = project_list.length ? [{ projectId: null, projectName: 'Select..' }, ...project_list] : project_list
-    let expenseCategoryList = expense_categories_list.length ? [{ transactionCategoryId: null, transactionCategoryDescription: 'Select..' }, ...expense_categories_list] : expense_categories_list
-    let employeeList = employee_list.length ? [{ projectId: null, projectName: 'Select..' }, ...employee_list] : employee_list
 
 
     return (
@@ -233,7 +229,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="expenseCategory"
                                     name="expenseCategory"
-                                    options={expenseCategoryList ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expenseCategoryList) : []}
+                                    options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
                                     value={props.values.expenseCategory}
                                     onChange={option => props.handleChange('expenseCategory')(option)}
                                   />
@@ -287,7 +283,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="currencyCode"
                                     name="currencyCode"
-                                    options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currencyList)}
+                                    options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
                                     value={props.values.currency}
                                     onChange={option => props.handleChange('currency')(option)}
 
@@ -301,7 +297,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="employee"
                                     name="employee"
-                                    options={employeeList ? selectOptionsFactory.renderOptions('firstName', 'userId', employeeList) : []}
+                                    options={employee_list ? selectOptionsFactory.renderOptions('firstName', 'userId', employee_list) : []}
                                     value={props.values.employee}
                                     onChange={option => props.handleChange('employee')(option)}
                                   />
@@ -314,7 +310,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="project"
                                     name="project"
-                                    options={selectOptionsFactory.renderOptions('projectName', 'projectId', projectList)}
+                                    options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
                                     value={props.values.project}
                                     onChange={option => props.handleChange('project')(option)}
                                   />

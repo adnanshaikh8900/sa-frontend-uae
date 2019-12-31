@@ -59,7 +59,7 @@ class ContactModal extends React.Component {
     request.then(res => {
       if (res.status === 200) {
       // this.success()
-      this.props.closeContactModal()
+      this.props.closeContactModal(true)
       }
     })
   }
@@ -395,7 +395,7 @@ class ContactModal extends React.Component {
                   </ModalBody>
                   <ModalFooter>
                     <Button color="success" type="submit" className="btn-square">Save</Button>&nbsp;
-                    <Button color="secondary" className="btn-square" onClick={closeContactModal}>Cancel</Button>
+                    <Button color="secondary" type="button" className="btn-square" onClick={()=>{closeContactModal(false)}}>Cancel</Button>
                   </ModalFooter>
               </Form>
               )}

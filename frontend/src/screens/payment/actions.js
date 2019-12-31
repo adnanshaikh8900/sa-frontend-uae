@@ -66,7 +66,7 @@ export const getSupplierInvoiceList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/invoice/invoicelist'
+      url: '/rest/invoice/getInvoicesForDropdown'
     }
     return authApi(data).then(res => {
       if (res.status == 200) {
@@ -149,6 +149,22 @@ export const createSupplier = (obj) => {
     }
     return authApi(data).then(res => {
       return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getInvoiceById = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: `/rest/invoice/getInvoiceById?id=${id}`
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+          return res
+      }
     }).catch(err => {
       throw err
     })

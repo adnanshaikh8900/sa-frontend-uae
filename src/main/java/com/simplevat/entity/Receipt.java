@@ -1,27 +1,20 @@
 package com.simplevat.entity;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -30,62 +23,49 @@ import com.simplevat.entity.converter.DateConverter;
 import lombok.Data;
 
 /**
- * @author saurabhg.
- */
+ * @author Saurabhg
+ * */
 @Entity
-@Table(name = "JOURNAL")
+@Table(name = "RECEIPT")
 @Data
-@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
-public class Journal implements Serializable {
-	/**
-	* 
-	*/
-	private static final long serialVersionUID = -6038849464759772457L;
+public class Receipt {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
-	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
 	@Basic
-	@Column(name = "JOURNAL_DATE")
+	@Column(name = "RECEIPT_NO")
+	private String receiptNo;
+
+	@Basic
+	@Column(name = "RECEIPT_DATE")
 	@Convert(converter = DateConverter.class)
-	private LocalDateTime journalDate;
+	private LocalDateTime receiptDate;
 
 	@Basic
-	@Column(name = "JOURNAL_REFERENCE_CODE")
-	private String journalReferenceCode;
-
-	@Basic
-	@Column(name = "JOURNAL_DESCRIPTION")
-	private String journalDescription;
+	@Column(name = "RECEIPT_REFERENCE_CODE")
+	private String receiptReferenceCode;
 
 	@OneToOne
-	@JoinColumn(name = "CURRENCY_ID")
-	private Currency currency;
+	@JoinColumn(name = "CONTACT_ID")
+	private Contact contact;
+
+	@OneToOne
+	@JoinColumn(name = "INVOICE_ID")
+	private Invoice invoice;
 
 	@Basic
-	@Column(name = "SUB_TOTAL_DEBIT_AMOUNT")
+	@Column(name = "AMOUNT")
 	@ColumnDefault(value = "0.00")
-	private BigDecimal subTotalDebitAmount;
+	private BigDecimal amount;
 
 	@Basic
-	@Column(name = "TOTAL_DEBIT_AMOUNT")
+	@Column(name = "UNUSED_AMOUNT")
 	@ColumnDefault(value = "0.00")
-	private BigDecimal totalDebitAmount;
+	private BigDecimal unusedAmount;
 
-	@Basic
-	@Column(name = "TOTAL_CREDIT_AMOUNT")
-	@ColumnDefault(value = "0.00")
-	private BigDecimal TotalCreditAmount;
-
-	@Basic
-	@Column(name = "SUB_TOTAL_CREDIT_AMOUNT")
-	@ColumnDefault(value = "0.00")
-	private BigDecimal subTotalCreditAmount;
-
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "journal", orphanRemoval = true)
-	private Collection<JournalLineItem> journalLineItems;
 	@Column(name = "CREATED_BY")
 	@Basic(optional = false)
 	private Integer createdBy;
@@ -97,7 +77,7 @@ public class Journal implements Serializable {
 	private LocalDateTime createdDate;
 
 	@Column(name = "LAST_UPDATED_BY")
-	private Integer lastUpdateBy;
+	private Integer lastUpdatedBy;
 
 	@Column(name = "LAST_UPDATE_DATE")
 	@Convert(converter = DateConverter.class)
@@ -118,5 +98,4 @@ public class Journal implements Serializable {
 	public void updateLastUpdatedDate() {
 		lastUpdateDate = LocalDateTime.now();
 	}
-
 }

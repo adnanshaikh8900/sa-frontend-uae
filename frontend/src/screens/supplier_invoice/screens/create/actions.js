@@ -16,7 +16,7 @@ export const createInvoice = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: 'rest/supplierinvoice/save',
+      url: 'rest/invoice/save',
       data: obj
     }
     return authFileUploadApi(data).then(res => {

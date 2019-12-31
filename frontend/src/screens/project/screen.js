@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -20,7 +20,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 
-import { Loader , ConfirmDeleteModal } from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -46,13 +46,19 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class Project extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
       loading: true,
       selected_id_list: [],
-      dialog: false
+      dialog: false,
+      filterData: {
+        projectName: '',
+        vatRegistrationNumber: '',
+        expenseBudget: '',
+        revenueBudget: '',
+      }
     }
 
     this.onRowSelect = this.onRowSelect.bind(this)
@@ -60,14 +66,21 @@ class Project extends React.Component {
     this.goToDetail = this.goToDetail.bind(this)
     this.currencyFormatter = this.currencyFormatter.bind(this)
     this.contactFormatter = this.contactFormatter.bind(this)
-    this.bulkDelete = this.bulkDelete.bind(this);
-    this.removeBulk = this.removeBulk.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-
+    this.bulkDelete = this.bulkDelete.bind(this)
+    this.removeBulk = this.removeBulk.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+    this.onPageChange = this.onPageChange.bind(this);
+    this.onSizePerPageList = this.onSizePerPageList.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
@@ -80,8 +93,14 @@ class Project extends React.Component {
 
   }
 
-  componentDidMount () {
-    this.props.projectActions.getProjectList().then(res => {
+  componentDidMount() {
+    let { filterData } = this.state
+    const data = {
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
+    }
+    filterData = { ...filterData, ...data }
+    this.props.projectActions.getProjectList(filterData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -92,53 +111,62 @@ class Project extends React.Component {
     })
   }
 
-  goToDetail (row) {
-    this.props.history.push(`/admin/master/project/detail`,{id: row.projectId })
+  goToDetail(row) {
+    this.props.history.push(`/admin/master/project/detail`, { id: row.projectId })
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    this.options.page = page
+  }
+
+  onSizePerPageList = (sizePerPage) => {
+    this.options.sizePerPage = sizePerPage
   }
 
   onRowSelect(row, isSelected, e) {
-    let temp_list = []
-    if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
-      temp_list.push(row.projectId);
-    } else {
-      this.state.selected_id_list.map(item => {
-        if (item !== row.projectId) {
-          temp_list.push(item)
-        }
-      });
-    }
-    this.setState({
-      selected_id_list: temp_list
-    })
+    // let temp_list = []
+    // if (isSelected) {
+    //   temp_list = Object.assign([], this.state.selected_id_list)
+    //   temp_list.push(row.projectId);
+    // } else {
+    //   this.state.selected_id_list.map(item => {
+    //     if (item !== row.projectId) {
+    //       temp_list.push(item)
+    //     }
+    //   });
+    // }
+    // this.setState({
+    //   selected_id_list: temp_list
+    // })
   }
   onSelectAll(isSelected, rows) {
-    let temp_list = []
-    if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.projectId)
-      })
-    }
-    this.setState({
-      selected_id_list: temp_list
-    })
+    // let temp_list = []
+    // if (isSelected) {
+    //   rows.map(item => {
+    //     temp_list.push(item.projectId)
+    //   })
+    // }
+    // this.setState({
+    //   selected_id_list: temp_list
+    // })
   }
 
   bulkDelete() {
-    const {
-      selected_id_list
-    } = this.state
-    if (selected_id_list.length > 0) {
-      this.setState({
-        dialog: <ConfirmDeleteModal
-          isOpen={true}
-          okHandler={this.removeBulk}
-          cancelHandler={this.removeDialog}
-        />
-      })
-    } else {
-      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
-    }
+    // const {
+    //   selected_id_list
+    // } = this.state
+    // if (selected_id_list.length > 0) {
+    //   this.setState({
+    //     dialog: <ConfirmDeleteModal
+    //       isOpen={true}
+    //       okHandler={this.removeBulk}
+    //       cancelHandler={this.removeDialog}
+    //     />
+    //   })
+    // } else {
+    //   console.log('aa')
+    //   this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
+    // }
   }
 
   removeBulk() {
@@ -151,10 +179,10 @@ class Project extends React.Component {
     this.props.projectActions.removeBulk(obj).then(() => {
       this.props.projectActions.getProjectList()
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if(project_list && project_list.length > 0) {
-                this.setState({
-        selected_id_list: []
-      })
+      if (project_list && project_list.length > 0) {
+        this.setState({
+          selected_id_list: []
+        })
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
@@ -167,16 +195,29 @@ class Project extends React.Component {
     })
   }
 
-  contactFormatter(cell , row) {
-    return row['contact']['firstName'];
+  handleChange(val, name) {
+    // this.setState({
+    //   filterData: Object.assign(this.state.filterData, {
+    //     [name]: val
+    //   })
+    // })
   }
 
-  currencyFormatter(cell , row) {
-    return row['currency']['currencyName'];
+  handleSearch() {
+    // this.initializeData();
   }
+
+  contactFormatter(cell, row) {
+    return row['contact'] ? row['contact']['firstName'] : '';
+  }
+
+  currencyFormatter(cell, row) {
+    return row['currency'] ? row['currency']['currencyName'] : '';
+  }
+
 
   render() {
-    const { loading ,dialog} = this.state
+    const { loading, dialog } = this.state
     const { project_list } = this.props
     const containerStyle = {
       zIndex: 1999
@@ -199,9 +240,9 @@ class Project extends React.Component {
               </Row>
             </CardHeader>
             <CardBody>
-            {
-              loading ?
-                <Loader></Loader>: 
+              {
+                loading ?
+                  <Loader></Loader> :
                   <Row>
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
@@ -209,7 +250,7 @@ class Project extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={()=>this.table.handleExportCSV()}
+                            onClick={() => this.table.handleExportCSV()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -223,6 +264,7 @@ class Project extends React.Component {
                             New Project
                           </Button>
                           <Button
+                            type="button"
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
@@ -235,52 +277,56 @@ class Project extends React.Component {
                       </div>
                       <div className="py-3">
                         <h5>Filter : </h5>
-                        <Row>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Project Name" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Expense Budget" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Revenue Budget" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="VAT Number" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Currency Code" />
-                          </Col>
-                        </Row>
+                        <form>
+                          <Row>
+                            <Col lg={2} className="mb-1">
+                              <Input type="text" placeholder="Project Name" onChange={(e) => { this.handleChange(e.target.value, 'projectName') }} />
+                            </Col>
+                            <Col lg={2} className="mb-1">
+                              <Input type="text" placeholder="Expense Budget" onChange={(e) => { this.handleChange(e.target.value, 'projectExpenseBudget') }} />
+                            </Col>
+                            <Col lg={2} className="mb-1">
+                              <Input type="text" placeholder="Revenue Budget" onChange={(e) => { this.handleChange(e.target.value, 'projectRevenueBudget') }} />
+                            </Col>
+                            <Col lg={2} className="mb-1">
+                              <Input type="text" placeholder="VAT Number" onChange={(e) => { this.handleChange(e.target.value, 'vatRegistrationNumber') }} />
+                            </Col>
+                            <Col lg={2} className="mb-1">
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                                <i className="fa fa-search"></i> Search
+                            </Button>
+                            </Col>
+                          </Row>
+                        </form>
                       </div>
                       <div>
                         <BootstrapTable
-                          selectRow={ this.selectRowProp }
+                          selectRow={this.selectRowProp}
                           search={false}
-                          options={ this.options }
-                          data={project_list? project_list : []}
+                          options={this.options}
+                          data={project_list ? project_list : []}
                           version="4"
                           hover
+                          keyField="projectId"
                           pagination
                           totalSize={project_list ? project_list.length : 0}
                           className="product-table"
                           trClassName="cursor-pointer"
                         >
                           <TableHeaderColumn
-                            isKey
                             dataField="projectName"
                             dataSort
                           >
                             Project Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="projectExpenseBudget"
+                            dataField="expenseBudget"
                             dataSort
                           >
                             Expense Budget
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="projectRevenueBudget"
+                            dataField="revenueBudget"
                             dataSort
                           >
                             Revenue Budget
@@ -289,22 +335,7 @@ class Project extends React.Component {
                             dataField="vatRegistrationNumber"
                             dataSort
                           >
-                            VAT Number
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="currency"
-                            dataSort
-                            dataFormat={this.currencyFormatter}
-                          >
-                            Currency Code
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="contact"
-                            dataSort
-                            dataFormat={this.contactFormatter}
-
-                          >
-                            Contact Name
+                            Vat Registration Number
                           </TableHeaderColumn>
                         </BootstrapTable>
                       </div>

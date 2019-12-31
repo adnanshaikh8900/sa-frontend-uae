@@ -254,50 +254,50 @@ class DetailContact extends React.Component {
 
                             }}
 
-                            validationSchema={
-                              Yup.object().shape({
-                                firstName: Yup.string()
-                                  .required("FirstName is Required"),
-                                lastName: Yup.string()
-                                  .required("LastName is Required"),
-                                middleName: Yup.string()
-                                  .required("MiddleName is Required"),
-                                contactType: Yup.string()
-                                  .required("Please Select Contact Type"),
-                                organization: Yup.string()
-                                  .required("Organization Name is Required"),
-                                poBoxNumber: Yup.number()
-                                  .required("PO Box Number is Required"),
-                                email: Yup.string()
-                                  .required("Email is Required")
-                                  .email('Invalid Email'),
-                                telephone: Yup.number()
-                                  .required("Telephone Number is Required"),
-                                mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, { message: "Please enter valid number.", excludeEmptyString: false })
-                                    .required('Mobile Number is required'),
-                                addressLine1: Yup.string()
-                                  .required("Address is required"),
-                                country: Yup.string()
-                                  .required("Please Select Country")
-                                  .nullable(),
-                                state: Yup.string()
-                                  .required("State is Required"),
-                                city: Yup.string()
-                                  .required("City is Required"),
-                                postZipCode: Yup.number()
-                                  .required("Postal Code is Required"),
-                                billingEmail: Yup.string()
-                                .email('Invalid Email')
-                                  .required("Billing Email is Required"),
-                                contractPoNumber: Yup.number()
-                                  .required("Contract PoNumber is Required"),
-                                vatRegistrationNumber: Yup.number()
-                                  .required("Vat Registration Number is Required"),
-                                currency: Yup.string()
-                                  .required("Please Select Currency")
-                                  .nullable(),
-                              })
-                            }
+                            // validationSchema={
+                            //   Yup.object().shape({
+                            //     firstName: Yup.string()
+                            //       .required("FirstName is Required"),
+                            //     lastName: Yup.string()
+                            //       .required("LastName is Required"),
+                            //     middleName: Yup.string()
+                            //       .required("MiddleName is Required"),
+                            //     contactType: Yup.string()
+                            //       .required("Please Select Contact Type"),
+                            //     organization: Yup.string()
+                            //       .required("Organization Name is Required"),
+                            //     poBoxNumber: Yup.number()
+                            //       .required("PO Box Number is Required"),
+                            //     email: Yup.string()
+                            //       .required("Email is Required")
+                            //       .email('Invalid Email'),
+                            //     telephone: Yup.number()
+                            //       .required("Telephone Number is Required"),
+                            //     mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, { message: "Please enter valid number.", excludeEmptyString: false })
+                            //         .required('Mobile Number is required'),
+                            //     addressLine1: Yup.string()
+                            //       .required("Address is required"),
+                            //     country: Yup.string()
+                            //       .required("Please Select Country")
+                            //       .nullable(),
+                            //     state: Yup.string()
+                            //       .required("State is Required"),
+                            //     city: Yup.string()
+                            //       .required("City is Required"),
+                            //     postZipCode: Yup.number()
+                            //       .required("Postal Code is Required"),
+                            //     billingEmail: Yup.string()
+                            //     .email('Invalid Email')
+                            //       .required("Billing Email is Required"),
+                            //     contractPoNumber: Yup.number()
+                            //       .required("Contract PoNumber is Required"),
+                            //     vatRegistrationNumber: Yup.number()
+                            //       .required("Vat Registration Number is Required"),
+                            //     currency: Yup.string()
+                            //       .required("Please Select Currency")
+                            //       .nullable(),
+                            //   })
+                            // }
 
                           >
                             {props => (

@@ -33,6 +33,7 @@ import { Loader } from 'components'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
+import moment from 'moment'
 
 import * as CustomerInvoiceActions from './actions'
 
@@ -60,7 +61,8 @@ class CustomerInvoice extends React.Component {
         { value: 'Unpaid', label: 'Unpaid' },
         { value: 'Partially Paid', label: 'Partially Paid' },
       ],
-      actionButtons: {}
+      actionButtons: {},
+      contactType : "2"
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -88,7 +90,7 @@ class CustomerInvoice extends React.Component {
   }
 
   initializeData () {
-    this.props.customerInvoiceActions.getCustomerInoviceList()
+    this.props.customerInvoiceActions.getCustomerInoviceList(this.state.contactType)
   }
 
   renderInvoiceNumber (cell, row) {
@@ -182,12 +184,27 @@ class CustomerInvoice extends React.Component {
 
 
   render() {
-
+ 
     const { loading } = this.state
     const { customer_invoice_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
+ console.log(this.props.customer_invoice_list,"!!!!")
+
+    const customer_invoice_data = this.props.customer_invoice_list ? this.props.customer_invoice_list.map(customer => 
+     
+      ({
+        status : customer.status,
+        customerName : customer.name,
+        invoiceNumber: customer.referenceNumber,        
+        invoiceDate: moment(customer.invoiceDate).format('L'),
+        invoiceDueDate: moment(customer.invoiceDueDate).format('L'),
+        invoiceAmount: customer.totalAmount,
+        vatAmount: customer.totalVatAmount,
+      })
+    ) : ""
+
 
     return (
       <div className="customer-invoice-screen">
@@ -289,6 +306,18 @@ class CustomerInvoice extends React.Component {
                               placeholder="Status"
                             />
                           </Col>
+                          <Col lg={2} className="mb-1">
+                  <Button
+                          color="secondary"
+                          className="btn-square"
+                          type="submit"
+                          name="submit"
+                          // onClick = {this.getSelectedData}
+                        >
+                          <i className="fa glyphicon glyphicon-export fa-search mr-1" />
+                          Search
+                        </Button>
+                        </Col>
                         </Row>
                       </div>
                       <div>
@@ -296,7 +325,7 @@ class CustomerInvoice extends React.Component {
                           selectRow={ this.selectRowProp }
                           search={false}
                           options={ this.options }
-                          data={customer_invoice_list}
+                          data={customer_invoice_data}
                           version="4"
                           hover
                           pagination
@@ -305,44 +334,45 @@ class CustomerInvoice extends React.Component {
                         >
                           <TableHeaderColumn
                             width="130"
+                            dataField="status"
                             dataFormat={this.renderInvoiceStatus}
                           >
                             Status
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             isKey
-                            dataField="transactionCategoryCode"
+                            dataField="customerName"
                             dataSort
                           >
                             Customer Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryName"
-                            dataFormat={this.renderInvoiceNumber}
+                            dataField="invoiceNumber"
+                            // dataFormat={this.renderInvoiceNumber}
                             dataSort
                           >
                             Invoice Number
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryDescription"
+                            dataField="invoiceDate"
                             dataSort
                           >
                             Invoice Date
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="parentTransactionCategory"
+                            dataField="invoiceDueDate"
                             dataSort
                           >
                             Due Date
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="invoiceAmount"
                             dataSort
                           >
                             Invoice Amount
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="vatAmount"
                             dataSort
                           >
                             VAT Amount

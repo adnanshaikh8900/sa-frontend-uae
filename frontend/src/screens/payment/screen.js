@@ -19,6 +19,7 @@ import {
   Input,
   Label,
 } from 'reactstrap'
+import { selectOptionsFactory } from 'utils'
 import Select from 'react-select'
 import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
@@ -27,7 +28,9 @@ import {
   Loader,
   ConfirmDeleteModal
 } from 'components'
+import DatePicker from 'react-datepicker'
 
+import 'react-datepicker/dist/react-datepicker.css'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
@@ -42,7 +45,8 @@ import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    payment_list: state.payment.payment_list
+    payment_list: state.payment.payment_list,
+    supplier_list: state.payment.supplier_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -58,13 +62,13 @@ class Payment extends React.Component {
     super(props)
     this.state = {
       loading: true,
-      stateOptions: [
-        { value: 'Paid', label: 'Paid' },
-        { value: 'Unpaid', label: 'Unpaid' },
-        { value: 'Partially Paid', label: 'Partially Paid' },
-      ],
       selected_id_list: [],
       dialog: null,
+      filterData: {
+        supplierId: '',
+        paymentDate: '',
+        invoiceAmount: ''
+      }
     }
     this.removeDialog = this.removeDialog.bind(this)
     this.bulkDeletePayments = this.bulkDeletePayments.bind(this)
@@ -73,11 +77,18 @@ class Payment extends React.Component {
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
     this.goToDetail = this.goToDetail.bind(this)
+    this.inputHandler = this.inputHandler.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+    this.onPageChange = this.onPageChange.bind(this)
+    this.onSizePerPageList = this.onSizePerPageList.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
+
 
     this.selectRowProp = {
       mode: 'checkbox',
@@ -91,26 +102,28 @@ class Payment extends React.Component {
 
   componentDidMount() {
     this.initializeData()
+    this.props.paymentActions.getSupplierList()
   }
 
   initializeData() {
-    this.props.paymentActions.getPaymentList().then(res=>{
-        if(res.status === 200) {
-          this.setState({loading: false})
-        }
+    const { filterData } = this.state
+    const paginationData = {
+      pageNo: this.options.page ? this.options.page : 1,
+      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+    }
+    const postData = { ...filterData, ...paginationData }
+    this.props.paymentActions.getPaymentList(postData).then(res => {
+      if (res.status === 200) {
+        this.setState({ loading: false })
+      }
     }).catch(err => {
-      this.setState({loading: false})
+      this.setState({ loading: false })
     })
   }
 
-  inputHandler(key, value) {
-    this.setState({
-      [key]: value
-    })
-  }
 
   goToDetail(row) {
-    this.props.history.push('/admin/expense/payment/detail',{id: row.paymentId})
+    this.props.history.push('/admin/expense/payment/detail', { id: row.paymentId })
   }
 
   bulkDeletePayments() {
@@ -146,7 +159,7 @@ class Payment extends React.Component {
       ids: selected_id_list
     }
     const { payment_list } = this.props;
-    this.props.paymentActions.removeBulkPayments(obj).then(() => {
+    this.props.paymentActions.removeBulkPayments(obj).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       this.props.paymentActions.getPaymentList()
       if (payment_list.length > 0) {
@@ -192,14 +205,33 @@ class Payment extends React.Component {
     return rows['paymentDate'] !== null ? moment(rows['paymentDate']).format('DD-MM-YYYY') : ''
   }
 
+  inputHandler(val, name) {
+    this.setState({
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
+    })
+  }
+
+  handleSearch() {
+    this.initializeData()
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    this.options.page = page
+  }
+
+  onSizePerPageList = (sizePerPage) => {
+    this.options.sizePerPage = sizePerPage
+  }
 
   render() {
-    const { loading, dialog } = this.state
-    const { payment_list } = this.props
+    const { loading, dialog, filterData } = this.state
+    const { payment_list, supplier_list } = this.props
+    let supplierList = supplier_list.length ? [{ value: null, label: 'Select..' }, ...supplier_list] : supplier_list
     const containerStyle = {
       zIndex: 1999
     }
-
     return (
       <div className="payment-screen">
         <div className="animated fadeIn">
@@ -258,21 +290,41 @@ class Payment extends React.Component {
                         <h5>Filter : </h5>
                         <Row>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Payment Number" />
+                            <Select
+                              className="select-default-width"
+                              placeholder="Select Supplier"
+                              id="supplier"
+                              name="supplier"
+                              options={supplierList}
+                              value={filterData.supplierId}
+                              onChange={(option) => { this.inputHandler(option.value, 'supplierId') }}
+                            />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Reference Number" />
+                            <DatePicker
+                              className="form-control"
+                              id="date"
+                              name="paymentDate"
+                              placeholderText="Payment Date"
+                              selected={filterData.paymentDate}
+                              value={filterData.paymentDate}
+                              onChange={(value) => {
+                                this.inputHandler(value, "paymentDate")
+                              }}
+                            />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Supplier Name" />
+                            <Input
+                              type="text"
+                              placeholder="Invoice Amount"
+                              value={filterData.invoiceAmount}
+                              onChange={e => this.inputHandler(e.target.value, 'invoiceAmount')}
+                            />
                           </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Invoice" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <DateRangePicker>
-                              <Input type="text" placeholder="Payment Date" />
-                            </DateRangePicker>
+                          <Col lg={1} className="mb-1">
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                              <i className="fa fa-search"></i>
+                            </Button>
                           </Col>
                         </Row>
                       </div>

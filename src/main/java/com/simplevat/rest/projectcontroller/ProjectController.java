@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/rest/project")
 public class ProjectController implements Serializable {
-
+	
     @Autowired
     private ProjectService projectService;
 
@@ -142,5 +142,6 @@ public class ProjectController implements Serializable {
         projectService.update(project);
         return new ResponseEntity(HttpStatus.OK);
     }
+
 
 }

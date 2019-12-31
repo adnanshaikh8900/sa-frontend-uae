@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
 import com.simplevat.dao.InvoiceDao;
+import com.simplevat.rest.DropdownModel;
 
 @Repository
 public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements InvoiceDao {
@@ -24,6 +25,14 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
                 .value(value).build()));
         List<Invoice> invoices = this.executeQuery(dbFilters);
         return invoices;
+    }
+
+    @Override
+    public List<DropdownModel> getInvoicesForDropdown() {
+        List<DropdownModel> empSelectItemModels = getEntityManager()
+                .createNamedQuery("invoiceForDropdown", DropdownModel.class)
+                .getResultList();
+        return empSelectItemModels;
     }
 
     @Override

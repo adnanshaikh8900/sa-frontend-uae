@@ -16,7 +16,7 @@ import com.simplevat.entity.User;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import com.simplevat.utils.FileHelper;
 import io.swagger.annotations.ApiOperation;
 
@@ -52,7 +52,7 @@ public class ExpenseRestController {
 	private ExpenseService expenseService;
 
 	@Autowired
-	private UserServiceNew userServiceNew;
+	private UserService userServiceNew;
 
 	@Autowired
 	private ExpenseRestHelper expenseRestHelper;

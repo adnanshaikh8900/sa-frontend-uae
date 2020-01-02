@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.simplevat.entity.User;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomUserDetailsService implements UserDetailsService
 {
     @Autowired
-    private UserServiceNew userService;
+    private UserService userService;
 
     @Transactional(readOnly = true)
     public CustomUserDetails loadUserByUsername(String emailAddress)

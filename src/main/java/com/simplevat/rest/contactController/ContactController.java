@@ -70,7 +70,7 @@ public class ContactController implements Serializable {
     }
 
     @GetMapping(value = "/getContactsForDropdown")
-    public ResponseEntity getContactsForDropdown(@RequestParam("contactType") Integer contactType) throws IOException {
+    public ResponseEntity getContactsForDropdown(@RequestParam(name = "contactType", required = false) Integer contactType) throws IOException {
         List<DropdownModel> dropdownModels = contactService.getContactForDropdown(contactType);
         return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
     }

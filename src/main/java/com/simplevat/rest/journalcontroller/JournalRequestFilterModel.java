@@ -1,5 +1,13 @@
 package com.simplevat.rest.journalcontroller;
 
-public class JournalRequestFilterModel {
-	// TODO : added required param
+import com.simplevat.rest.PaginationModel;
+import lombok.Data;
+
+@Data
+public class JournalRequestFilterModel extends PaginationModel {
+    // TODO : added required param
+
+    private String journalDate;
+    private String referenceCode;
+    private String description;
 }

@@ -17,66 +17,70 @@ import com.simplevat.service.InvoiceService;
 @Component
 public class ReceiptRestHelper {
 
-	@Autowired
-	private InvoiceService invoiceService;
+    @Autowired
+    private InvoiceService invoiceService;
 
-	@Autowired
-	private ContactService contactService;
+    @Autowired
+    private ContactService contactService;
 
-	public List<ReceiptListModel> getListModel(List<Receipt> receipts) {
+    public List<ReceiptModel> getListModel(List<Receipt> receipts) {
 
-		if (receipts != null && receipts.size() > 0) {
-			List<ReceiptListModel> receiptModelList = new ArrayList<ReceiptListModel>();
+        if (receipts != null && receipts.size() > 0) {
+            List<ReceiptModel> receiptModelList = new ArrayList<ReceiptModel>();
+            for (Receipt receipt : receipts) {
+                ReceiptModel model = new ReceiptModel();
+                model.setReceiptId(receipt.getId());
+                model.setAmount(receipt.getAmount());
+                model.setUnusedAmount(receipt.getUnusedAmount());
+                model.setReferenceCode(receipt.getReferenceCode());
+                model.setReceiptNo(receipt.getReceiptNo());
+                if (receipt.getContact() != null) {
+                    model.setContactId(receipt.getContact().getContactId());
+                    model.setCustomerName(
+                            receipt.getContact().getFirstName() + " " + receipt.getContact().getLastName());
+                }
+                if (receipt.getInvoice() != null) {
+                    model.setInvoiceId(receipt.getInvoice().getId());
+                    model.setInvoiceNumber(receipt.getInvoice().getReferenceNumber());
+                }
+                if (receipt.getReceiptDate() != null) {
+                    Date date = Date.from(receipt.getReceiptDate().atZone(ZoneId.systemDefault()).toInstant());
+                    model.setReceiptDate(date);
+                }
+                receiptModelList.add(model);
+            }
+            return receiptModelList;
+        }
 
-			for (Receipt receipt : receipts) {
-				ReceiptListModel model = new ReceiptListModel();
+        return null;
+    }
 
-				model.setId(receipt.getId());
-				model.setAmount(receipt.getAmount());
-				model.setUnusedAmount(receipt.getUnusedAmount());
-				model.setReceiptReferenceCode(receipt.getReceiptReferenceCode());
-				if (receipt.getContact() != null) {
-					model.setCustomerName(
-							receipt.getContact().getFirstName() + " " + receipt.getContact().getLastName());
-				}
-				if (receipt.getReceiptDate() != null) {
-					Date date = Date.from(receipt.getReceiptDate().atZone(ZoneId.systemDefault()).toInstant());
-					model.setReceiptDate(date);
-				}
-				receiptModelList.add(model);
-			}
-			return receiptModelList;
-		}
+    public Receipt getEntity(ReceiptRequestModel receiptRequestModel) {
 
-		return null;
-	}
+        if (receiptRequestModel != null) {
+            Receipt receipt = new Receipt();
+            if (receiptRequestModel.getId() != null) {
+                receipt = new Receipt();
+            }
+            if (receiptRequestModel.getContactId() != null) {
+                receipt.setContact(contactService.findByPK(receiptRequestModel.getContactId()));
+            }
+            if (receiptRequestModel.getInvoiceId() != null) {
+                receipt.setInvoice(invoiceService.findByPK(receiptRequestModel.getInvoiceId()));
+            }
+            receipt.setAmount(receiptRequestModel.getAmount());
+            receipt.setUnusedAmount(receiptRequestModel.getUnusedAmount());
+            receipt.setReceiptNo(receiptRequestModel.getReceiptNo());
+            receipt.setReferenceCode(receiptRequestModel.getReceiptReferenceCode());
+            if (receiptRequestModel.getReceiptDate() != null) {
+                LocalDateTime date = Instant.ofEpochMilli(receiptRequestModel.getReceiptDate().getTime())
+                        .atZone(ZoneId.systemDefault()).toLocalDateTime();
+                receipt.setReceiptDate(date);
+            }
 
-	public Receipt getEntity(ReceiptRequestModel receiptRequestModel) {
-
-		if (receiptRequestModel != null) {
-			Receipt receipt = new Receipt();
-			if (receiptRequestModel.getId() != null) {
-				receipt = new Receipt();
-			}
-			if (receiptRequestModel.getContactId() != null) {
-				receipt.setContact(contactService.findByPK(receiptRequestModel.getContactId()));
-			}
-			if (receiptRequestModel.getInvoiceId() != null) {
-				receipt.setInvoice(invoiceService.findByPK(receiptRequestModel.getInvoiceId()));
-			}
-			receipt.setAmount(receiptRequestModel.getAmount());
-			receipt.setUnusedAmount(receiptRequestModel.getUnusedAmount());
-			receipt.setReceiptNo(receiptRequestModel.getReceiptNo());
-			receipt.setReceiptReferenceCode(receiptRequestModel.getReceiptReferenceCode());
-			if (receiptRequestModel.getReceiptDate() != null) {
-				LocalDateTime date = Instant.ofEpochMilli(receiptRequestModel.getReceiptDate().getTime())
-						.atZone(ZoneId.systemDefault()).toLocalDateTime();
-				receipt.setReceiptDate(date);
-			}
-
-			return receipt;
-		}
-		return null;
-	}
+            return receipt;
+        }
+        return null;
+    }
 
 }

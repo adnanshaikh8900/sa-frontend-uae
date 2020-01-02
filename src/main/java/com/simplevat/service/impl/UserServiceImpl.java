@@ -7,20 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.simplevat.dao.UserNewDao;
 import com.simplevat.entity.User;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import java.io.Serializable;
+import com.simplevat.dao.UserDao;
 
-@Service("userServiceNew")
-public class UserServiceNewImpl extends UserServiceNew implements Serializable {
+@Service("userService")
+public class UserServiceImpl extends UserService implements Serializable {
 
     @Autowired
     @Qualifier(value = "userDao")
-    private UserNewDao dao;
+    private UserDao dao;
 
     @Override
-    public UserNewDao getDao() {
+    public UserDao getDao() {
         return dao;
     }
 

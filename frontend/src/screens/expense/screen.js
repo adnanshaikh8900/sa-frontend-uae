@@ -77,7 +77,7 @@ class Expense extends React.Component {
     }
 
     this.initializeData = this.initializeData.bind(this)
-    this.inputHandler = this.inputHandler.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
     this.bulkDeleteExpenses = this.bulkDeleteExpenses.bind(this);
     this.removeBulkExpenses = this.removeBulkExpenses.bind(this);
@@ -154,7 +154,7 @@ class Expense extends React.Component {
     return moment(rows.expenseDate).format('DD-MM-YYYY')
   }
 
-  inputHandler(val, name) {
+  handleChange(val, name) {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -285,7 +285,7 @@ class Expense extends React.Component {
                               type="text"
                               placeholder="Payee"
                               value={filterData.payee}
-                              onChange={e => this.inputHandler(e.target.value, 'payee')}
+                              onChange={e => this.handleChange(e.target.value, 'payee')}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -300,7 +300,7 @@ class Expense extends React.Component {
                               selected={filterData.expenseDate}
                               value={filterData.expenseDate}
                               onChange={(value) => {
-                                this.inputHandler(value, "expenseDate")
+                                this.handleChange(value, "expenseDate")
                               }}
                             />
                           </Col>
@@ -314,7 +314,7 @@ class Expense extends React.Component {
                                 name="expenseCategoryId"
                                 value={filterData.transactionCategoryId}
                                 options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
-                                onChange={(option) => { this.inputHandler(option.value, 'transactionCategoryId') }}
+                                onChange={(option) => { this.handleChange(option.value, 'transactionCategoryId') }}
                                 placeholder="Expense Category"
                               />
                             </FormGroup>

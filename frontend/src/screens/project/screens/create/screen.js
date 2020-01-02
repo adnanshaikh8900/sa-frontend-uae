@@ -235,7 +235,6 @@ class CreateProject extends React.Component {
                                       this.setState({
                                         selectedContact: option.value
                                       })
-                                      console.log(option)
                                       props.handleChange("contactId")(option.value);
                                     }}
                                     id="contactId"

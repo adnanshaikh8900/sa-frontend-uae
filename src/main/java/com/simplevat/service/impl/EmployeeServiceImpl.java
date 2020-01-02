@@ -1,11 +1,15 @@
 package com.simplevat.service.impl;
 
+import com.simplevat.constant.dbfilter.EmployeeFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.EmployeeDao;
 import com.simplevat.entity.Employee;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.EmployeeService;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,5 +49,15 @@ public class EmployeeServiceImpl extends EmployeeService {
     protected Dao<Integer, Employee> getDao() {
         return this.employeeDao;
     }
+    
+    @Override
+    public List<Employee> getEmployeeList(Map<EmployeeFilterEnum, Object> filterMap){
+    	return employeeDao.getEmployeeList( filterMap);
+    }
+
+	@Override
+	public void deleteByIds(ArrayList<Integer> ids) {
+		employeeDao. deleteByIds(ids);
+	}
 
 }

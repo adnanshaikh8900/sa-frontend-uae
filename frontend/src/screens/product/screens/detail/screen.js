@@ -92,13 +92,13 @@ class DetailProduct extends React.Component {
               productName: res.data.productName ? res.data.productName : '',
               productDescription: res.data.productDescription,
               productCode: res.data.productCode,
-              vatCategoryId: res.data.vatCategory ? res.data.vatCategory.id : '',
+              vatCategoryId: res.data.vatCategoryId ? res.data.vatCategoryId : '',
               //   label: res.data.vatCategory.name,
               //   value: res.data.vatCategory.id
               // } : '',
               unitPrice: res.data.unitPrice,
               productCategoryId: res.data.productCategoryId ? res.data.productCategoryId : '',
-              productWarehouseId: res.data.productWarehouse ? res.data.productWarehouse.warehouseId : '',
+              productWarehouseId: res.data.productWarehouseId ? res.data.productWarehouseId : '',
               //   label: res.data.productWarehouse.warehouseName,
               //   value: res.data.productWarehouse.warehouseId
               // } : '',
@@ -366,7 +366,7 @@ class DetailProduct extends React.Component {
                                   <Label htmlFor="productWarehouseId">Warehourse</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list)}
+                                    options={product_warehouse_list ? selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list) : []}
                                     id="productWarehouseId"
                                     name="productWarehouseId"
                                     value={props.values.productWarehouseId}

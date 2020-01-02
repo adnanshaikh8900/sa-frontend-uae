@@ -11,7 +11,7 @@ export const checkAuthStatus = () => {
       url: '/rest/user/current'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: AUTH.SIGNED_IN
         })

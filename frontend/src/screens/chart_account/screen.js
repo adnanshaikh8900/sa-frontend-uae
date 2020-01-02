@@ -27,7 +27,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
 import * as ChartAccountActions from './actions'
-import {selectOptionsFactory} from 'utils'
+import { selectOptionsFactory } from 'utils'
 import {
   CommonActions
 } from 'services/global'
@@ -54,7 +54,7 @@ class ChartAccount extends React.Component {
     super(props)
     this.state = {
       loading: true,
-      selected_id_list: [],
+      selectedRows: [],
       dialog: null,
       filterData: {
         transactionCategoryCode: '',
@@ -83,6 +83,8 @@ class ChartAccount extends React.Component {
     this.options = {
       onRowClick: this.goToDetailPage,
       paginationPosition: 'top',
+      page: 1,
+      sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
     }
@@ -103,24 +105,24 @@ class ChartAccount extends React.Component {
 
   componentWillUnmount() {
     this.setState({
-      selected_id_list: []
+      selectedRows: []
     })
   }
 
   initializeData() {
     let { filterData } = this.state
     const data = {
-      pageNo: this.options.page ? this.options.page : 1,
-      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage 
     }
-    filterData = {...filterData,...data}
+    filterData = { ...filterData, ...data }
     this.props.chartOfAccountActions.getTransactionCategoryList(filterData).then(res => {
       if (res.status === 200) {
         this.props.chartOfAccountActions.getTransactionTypes();
         this.setState({ loading: false });
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err!== undefined ? err.data.message : '');
+      this.props.commonActions.tostifyAlert('error', err && err !== undefined ? err.data.message : '');
       this.setState({ loading: false })
     })
 
@@ -136,26 +138,26 @@ class ChartAccount extends React.Component {
 
   onPageChange = (page, sizePerPage) => {
     this.options.page = page
-}
+  }
 
-onSizePerPageList = (sizePerPage) => {
-  this.options.sizePerPage = sizePerPage
-}
+  onSizePerPageList = (sizePerPage) => {
+    this.options.sizePerPage = sizePerPage
+  }
 
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.transactionCategoryId);
     } else {
-      this.state.selected_id_list.map(item => {
+      this.state.selectedRows.map(item => {
         if (item !== row.transactionCategoryId) {
           temp_list.push(item)
         }
       });
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
   onSelectAll(isSelected, rows) {
@@ -166,15 +168,15 @@ onSizePerPageList = (sizePerPage) => {
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
   bulkDelete() {
     const {
-      selected_id_list
+      selectedRows
     } = this.state
-    if (selected_id_list.length > 0) {
+    if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
@@ -189,17 +191,17 @@ onSizePerPageList = (sizePerPage) => {
 
   removeBulk() {
     this.removeDialog()
-    let { selected_id_list } = this.state;
+    let { selectedRows } = this.state;
     const { transaction_category_list } = this.props
     let obj = {
-      ids: selected_id_list
+      ids: selectedRows
     }
     this.props.chartOfAccountActions.removeBulk(obj).then(() => {
       this.initializeData();
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (transaction_category_list && transaction_category_list.length > 0) {
         this.setState({
-          selected_id_list: []
+          selectedRows: []
         })
       }
     }).catch(err => {
@@ -218,27 +220,23 @@ onSizePerPageList = (sizePerPage) => {
 
   }
 
-  onPageChange = (page, sizePerPage) => {
-   }
-
-   handleChange(val, name) {
+  handleChange(val, name) {
     this.setState({
-     filterData: Object.assign(this.state.filterData,{
-      [name]: val
-     })
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
     })
   }
 
   handleSearch() {
     this.initializeData();
-    // this.setState({})
   }
 
 
   render() {
 
-    const { loading, dialog } = this.state
-    const { transaction_category_list , transaction_type_list} = this.props
+    const { loading, dialog ,selectedRows} = this.state
+    const { transaction_category_list, transaction_type_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -275,6 +273,8 @@ onSizePerPageList = (sizePerPage) => {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
+                            disabled={transaction_category_list.length === 0}
+
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -291,6 +291,7 @@ onSizePerPageList = (sizePerPage) => {
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
+                            disabled={selectedRows.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -312,9 +313,9 @@ onSizePerPageList = (sizePerPage) => {
 
                                 <Select
                                   options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list) : []}
-                                  onChange={(val) => { 
-                                    this.handleChange(val['value'], 'transactionType') 
-                                    this.setState({'selectedTransactionType': val['value']})
+                                  onChange={(val) => {
+                                    this.handleChange(val['value'], 'transactionType')
+                                    this.setState({ 'selectedTransactionType': val['value'] })
                                   }}
                                   className="select-default-width"
                                   placeholder="Transaction Type"
@@ -324,9 +325,9 @@ onSizePerPageList = (sizePerPage) => {
 
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
-                                <i className="fa fa-search"></i> Search
-                            </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={transaction_category_list.length === 0}>
+                                <i className="fa fa-search"></i>
+                              </Button>
                             </Col>
                           </Row>
                         </form>

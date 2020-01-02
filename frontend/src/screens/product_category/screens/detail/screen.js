@@ -82,7 +82,7 @@ class DetailProductCategory extends React.Component {
     }
     this.props.detailProductCategoryAction.updateProductCategory(postData).then(res => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Product Category is updated successfully!')
+        this.props.commonActions.tostifyAlert('success', 'Product Category Updated Successfully!')
         this.props.history.push('/admin/master/product-category')
       }
     }).catch(err => {

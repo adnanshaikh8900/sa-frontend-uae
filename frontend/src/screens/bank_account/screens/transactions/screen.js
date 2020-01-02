@@ -137,9 +137,9 @@ class BankTransactions extends React.Component {
 
   renderTransactionStatus (cell, row) {
     let classname = ''
-    if (row.status == 'Explained') {
+    if (row.status === 'Explained') {
       classname = 'badge-success'
-    } else if (row.status == 'Unexplained') {
+    } else if (row.status === 'Unexplained') {
       classname = 'badge-danger'
     } else {
       classname = 'badge-primary'
@@ -152,10 +152,10 @@ class BankTransactions extends React.Component {
   renderTransactionType (cell, row) {
     let classname = ''
     let value = ''
-    if (row.status == 'Explained') {
+    if (row.status === 'Explained') {
       classname = 'badge-success'
       value = 'Withdrawal'
-    } else if (row.status == 'Unexplained') {
+    } else if (row.status === 'Unexplained') {
       classname = 'badge-danger'
       value = 'Deposit'
     } else {
@@ -176,7 +176,7 @@ class BankTransactions extends React.Component {
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
-              this.state.actionButtons[row.reference_number] == true ?
+              this.state.actionButtons[row.reference_number] === true ?
                 <i className="fas fa-chevron-up" />
               :
                 <i className="fas fa-chevron-down" />

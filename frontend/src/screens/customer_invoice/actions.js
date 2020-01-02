@@ -12,7 +12,7 @@ export const getCustomerInoviceList = (contactType) => {
       url: `rest/invoice/getList?type=${type}`
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
           payload:  {
@@ -33,7 +33,7 @@ export const getProjectList = () => {
       url: 'rest/project/getProjectsForDropdown'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.PROJECT_LIST,
           payload:  {
@@ -56,7 +56,7 @@ export const getCustomerList = (nameCode) => {
       url: `rest/contact/getContactsForDropdown?contactType=${contactType}`
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.CUSTOMER_LIST,
           payload:  {
@@ -78,7 +78,7 @@ export const getCustomerList = (nameCode) => {
 //       url: 'rest/contact/contactvendorlist'
 //     }
 //     return authApi(data).then(res => {
-//       if (res.status == 200) {
+//       if (res.status === 200) {
 //         dispatch({
 //           type: CUSTOMER_INVOICE.VENDOR_LIST,
 //           payload:  {
@@ -100,7 +100,7 @@ export const getCurrencyList = () => {
       url: 'rest/bank/getcurrenncy'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.CURRENCY_LIST,
           payload:  {
@@ -122,7 +122,7 @@ export const getVatList = () => {
       url: 'rest/vat/getvat'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.VAT_LIST,
           payload:  {
@@ -145,7 +145,7 @@ export const getContactList = (nameCode) => {
       url: `rest/contact/getContactList?contactType=${contactType}`
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.CONTACT_LIST,
           payload:  {

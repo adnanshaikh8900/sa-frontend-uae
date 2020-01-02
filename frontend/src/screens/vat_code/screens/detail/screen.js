@@ -76,7 +76,7 @@ class DetailVatCode extends React.Component {
   handleSubmit(data){
     this.props.vatActions.createBat(data).then(res => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Vat code is updated successfully!')
+        this.props.commonActions.tostifyAlert('success', 'Vat code Updated Successfully!')
         this.props.history.push('/admin/master/vat-code')
       }
     }).catch(err => {

@@ -106,11 +106,11 @@ class CustomerInvoice extends React.Component {
 
   renderInvoiceStatus (cell, row) {
     let classname = ''
-    if (row.status == 'paid') {
+    if (row.status === 'paid') {
       classname = 'badge-success'
-    } else if (row.status == 'unpaid') {
+    } else if (row.status === 'unpaid') {
       classname = 'badge-danger'
-    } else if (row.status == 'Patially Paid') {
+    } else if (row.status === 'Patially Paid') {
       classname = "badget-info"
     } else {
       classname = 'badge-primary'
@@ -141,7 +141,7 @@ class CustomerInvoice extends React.Component {
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
-              this.state.actionButtons[row.transactionCategoryCode] == true ?
+              this.state.actionButtons[row.transactionCategoryCode] === true ?
                 <i className="fas fa-chevron-up" />
               :
                 <i className="fas fa-chevron-down" />

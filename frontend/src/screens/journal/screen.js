@@ -90,7 +90,7 @@ class Journal extends React.Component {
   renderStatus (cell, row) {
     let label = ''
     let class_name = ''
-    if (row.transactionCategoryCode == 4) {
+    if (row.transactionCategoryCode === 4) {
       label = 'New'
       class_name = 'badge-danger'
     } else {
@@ -122,7 +122,7 @@ class Journal extends React.Component {
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
-              this.state.actionButtons[row.transactionCategoryCode] == true ?
+              this.state.actionButtons[row.transactionCategoryCode] === true ?
                 <i className="fas fa-chevron-up" />
               :
                 <i className="fas fa-chevron-down" />

@@ -12,7 +12,7 @@ export const getAccountTypeList = () => {
       url: 'rest/bank/getaccounttype'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.ACCOUNT_TYPE_LIST,
           payload: {
@@ -33,7 +33,7 @@ export const getCurrencyList = () => {
       url: 'rest/bank/getcurrenncy'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.CURRENCY_LIST,
           payload: {
@@ -54,7 +54,7 @@ export const getCountryList = () => {
       url: 'rest/datalist/getcountry'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.COUNTRY_LIST,
           payload: {
@@ -76,7 +76,7 @@ export const getBankAccountByID = (_id) => {
       url: `rest/bank/getbyid?id=${_id}`
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         return res.data
       } else {
         throw new Error('Some Error detected. ')

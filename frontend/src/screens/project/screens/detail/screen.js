@@ -104,7 +104,7 @@ class DetailProject extends React.Component {
         this.props.projectActions.getContactList()
         this.props.projectActions.getCountryList()
         this.props.projectActions.getCurrencyList()
-        console.log(res.data.contactId)
+
         // this.props.projectActions.getTitleList()
         if (res.status === 200) {
           this.setState({
@@ -144,7 +144,7 @@ class DetailProject extends React.Component {
 
   // Create or Edit Vat
   projectHandleSubmit(data) {
-    console.log(data)
+
     const id = this.props.location.state.id;
     const {
       projectName,
@@ -288,7 +288,7 @@ class DetailProject extends React.Component {
                                       this.setState({
                                         selectedContact: option.value
                                       })
-                                      console.log(option)
+            
                                       props.handleChange("contactId")(option.value);
                                     }}
                                     id="contactId"

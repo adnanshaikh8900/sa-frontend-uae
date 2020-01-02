@@ -109,6 +109,10 @@ class CreateSupplierInvoice extends React.Component {
     this.renderUnitPrice = this.renderUnitPrice.bind(this)
     this.renderVat = this.renderVat.bind(this)
     this.renderSubTotal = this.renderSubTotal.bind(this)
+    this.updateAmount = this.updateAmount.bind(this)
+    this.selectItem = this.selectItem.bind(this)
+    this.addRow = this.addRow.bind(this)
+    this.deleteRow = this.deleteRow.bind(this)
 
     this.closeSupplierModal = this.closeSupplierModal.bind(this)
     this.openSupplierModal = this.openSupplierModal.bind(this)
@@ -151,7 +155,6 @@ class CreateSupplierInvoice extends React.Component {
   }
 
   renderQuantity(cell, row) {
-
     return (
       <Input
         type="number"
@@ -195,18 +198,18 @@ class CreateSupplierInvoice extends React.Component {
   }
 
 
-  handleChange = (e, name) => {
-    this.setState({
-      currentData: _.set(
-        { ...this.state.currentData },
-        e.target.name && e.target.name !== '' ? e.target.name : name,
-        e.target.type === 'checkbox' ? e.target.checked : e.target.value
-      )
-    })
-  }
+  // handleChange = (e, name) => {
+  //   this.setState({
+  //     currentData: _.set(
+  //       { ...this.state.currentData },
+  //       e.target.name && e.target.name !== '' ? e.target.name : name,
+  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
+  //     )
+  //   })
+  // }
 
 
-  addRow = () => {
+  addRow() {
     const data = [...this.state.data]
     this.setState({
       data: data.concat({

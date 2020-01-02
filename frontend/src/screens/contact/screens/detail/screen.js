@@ -510,7 +510,6 @@ class DetailContact extends React.Component {
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
                                         value={props.values.countryId}
                                         onChange={option => {
-                                          console.log(option)
                                           props.handleChange('countryId')(option)
                                         }}
                                         placeholder="Select Country"

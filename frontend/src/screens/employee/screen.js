@@ -49,7 +49,6 @@ class Employee extends React.Component {
   }
 
   handleChange = (name, e) => {
-    console.log(name,e.target.value)
      this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -68,7 +67,6 @@ class Employee extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state.currentData)
   }
   render() {
  

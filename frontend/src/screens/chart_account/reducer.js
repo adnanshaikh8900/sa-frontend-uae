@@ -11,7 +11,7 @@ const ChartAccountReducer = (state = initState, action) => {
   switch(type) {
 
     case CHART_ACCOUNT.TRANSACTION_CATEGORY_LIST:
-      console.log(payload)
+
       return {
         ...state,
         transaction_category_list : Object.assign([], payload)

@@ -30,7 +30,7 @@ automatic_scaling:
 
 env_variables:
   SIMPLEVAT_DB_HOST: "34.68.185.169"
-  SIMPLEVAT_DB: "simplevat_db"
+  SIMPLEVAT_DB: "simplevat_db_new"
   SIMPLEVAT_DB_USER: "proxyuser"
   SIMPLEVAT_DB_PASSWORD: "SimpleVat123$"
   SIMPLEVAT_TOKEN: "XXX"

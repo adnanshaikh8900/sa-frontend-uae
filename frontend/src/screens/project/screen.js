@@ -61,6 +61,7 @@ class Project extends React.Component {
       }
     }
 
+    this.initializeData = this.initializeData.bind(this)
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
     this.goToDetail = this.goToDetail.bind(this)
@@ -77,7 +78,7 @@ class Project extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -94,6 +95,9 @@ class Project extends React.Component {
   }
 
   componentDidMount() {
+    this.initializeData();
+  }
+  initializeData() {
     let { filterData } = this.state
     const data = {
       pageNo: this.options.page,
@@ -124,60 +128,60 @@ class Project extends React.Component {
   }
 
   onRowSelect(row, isSelected, e) {
-    // let temp_list = []
-    // if (isSelected) {
-    //   temp_list = Object.assign([], this.state.selected_id_list)
-    //   temp_list.push(row.projectId);
-    // } else {
-    //   this.state.selected_id_list.map(item => {
-    //     if (item !== row.projectId) {
-    //       temp_list.push(item)
-    //     }
-    //   });
-    // }
-    // this.setState({
-    //   selected_id_list: temp_list
-    // })
+    let temp_list = []
+    if (isSelected) {
+      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list.push(row.projectId);
+    } else {
+      this.state.selected_id_list.map(item => {
+        if (item !== row.projectId) {
+          temp_list.push(item)
+        }
+      });
+    }
+    this.setState({
+      selected_id_list: temp_list
+    })
   }
   onSelectAll(isSelected, rows) {
-    // let temp_list = []
-    // if (isSelected) {
-    //   rows.map(item => {
-    //     temp_list.push(item.projectId)
-    //   })
-    // }
-    // this.setState({
-    //   selected_id_list: temp_list
-    // })
+    let temp_list = []
+    if (isSelected) {
+      rows.map(item => {
+        temp_list.push(item.projectId)
+      })
+    }
+    this.setState({
+      selected_id_list: temp_list
+    })
   }
 
   bulkDelete() {
-    // const {
-    //   selected_id_list
-    // } = this.state
-    // if (selected_id_list.length > 0) {
-    //   this.setState({
-    //     dialog: <ConfirmDeleteModal
-    //       isOpen={true}
-    //       okHandler={this.removeBulk}
-    //       cancelHandler={this.removeDialog}
-    //     />
-    //   })
-    // } else {
-    //   console.log('aa')
-    //   this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
-    // }
+    const {
+      selected_id_list
+    } = this.state
+    if (selected_id_list.length > 0) {
+      this.setState({
+        dialog: <ConfirmDeleteModal
+          isOpen={true}
+          okHandler={this.removeBulk}
+          cancelHandler={this.removeDialog}
+        />
+      })
+    } else {
+      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
+    }
   }
 
   removeBulk() {
+    const { filterData } = this.state;
     this.removeDialog()
     let { selected_id_list } = this.state;
     const { project_list } = this.props
     let obj = {
       ids: selected_id_list
     }
-    this.props.projectActions.removeBulk(obj).then(() => {
-      this.props.projectActions.getProjectList()
+    this.props.projectActions.removeBulk(obj).then((res) => {
+      this.props.projectActions.getProjectList(filterData)
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (project_list && project_list.length > 0) {
         this.setState({
@@ -196,15 +200,15 @@ class Project extends React.Component {
   }
 
   handleChange(val, name) {
-    // this.setState({
-    //   filterData: Object.assign(this.state.filterData, {
-    //     [name]: val
-    //   })
-    // })
+    this.setState({
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
+    })
   }
 
   handleSearch() {
-    // this.initializeData();
+    this.initializeData();
   }
 
   contactFormatter(cell, row) {
@@ -283,10 +287,10 @@ class Project extends React.Component {
                               <Input type="text" placeholder="Project Name" onChange={(e) => { this.handleChange(e.target.value, 'projectName') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Expense Budget" onChange={(e) => { this.handleChange(e.target.value, 'projectExpenseBudget') }} />
+                              <Input type="text" placeholder="Expense Budget" onChange={(e) => { this.handleChange(e.target.value, 'expenseBudget') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Revenue Budget" onChange={(e) => { this.handleChange(e.target.value, 'projectRevenueBudget') }} />
+                              <Input type="text" placeholder="Revenue Budget" onChange={(e) => { this.handleChange(e.target.value, 'revenueBudget') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
                               <Input type="text" placeholder="VAT Number" onChange={(e) => { this.handleChange(e.target.value, 'vatRegistrationNumber') }} />

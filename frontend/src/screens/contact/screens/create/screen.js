@@ -57,7 +57,7 @@ class CreateContact extends React.Component {
         city: '',
         contactType: '',
         contractPoNumber: '',
-        country: '',
+        countryId: '',
         currency: '',
         email: '',
         firstName: '',
@@ -105,7 +105,7 @@ class CreateContact extends React.Component {
       city,
       contactType,
       contractPoNumber,
-      country,
+      countryId,
       currency,
       email,
       firstName,
@@ -129,7 +129,7 @@ class CreateContact extends React.Component {
       city: city.value !== null ? city.value : '',
       contactType: contactType !== null ? contactType : '',
       contractPoNumber: contractPoNumber,
-      countryId: country && country.value !== null ? country.value : '',
+      countryId: countryId && countryId.value !== null ? countryId.value : '',
       currencyCode: currency && currency.value !== null ? currency.value : '',
       email: email,
       firstName: firstName,
@@ -219,7 +219,7 @@ class CreateContact extends React.Component {
                         //       .required("Mobile Number is required"),
                         //     addressLine1: Yup.string()
                         //       .required("Address is required"),
-                        //     country: Yup.string()
+                        //     countryId: Yup.string()
                         //       .required("Please Select Country")
                         //       .nullable(),
                         //     stateRegion: Yup.string()
@@ -314,10 +314,10 @@ class CreateContact extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="country">Contact Type</Label>
+                                  <Label htmlFor="countryId">Contact Type</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={contact_type_list ? contact_type_list : []}
+                                    options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list) : []}
                                     value={props.values.contactType}
                                     onChange={option => props.handleChange('contactType')(option.value)}
                                     placeholder="Select Contact Type"
@@ -501,23 +501,23 @@ class CreateContact extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="country">Country</Label>
+                                  <Label htmlFor="countryId">Country</Label>
                                   <Select
                                     className="select-default-width"
                                     options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
-                                    value={props.values.country}
-                                    onChange={option => props.handleChange('country')(option)}
+                                    value={props.values.countryId}
+                                    onChange={option => props.handleChange('countryId')(option)}
                                     placeholder="Select Country"
-                                    id="country"
-                                    name="country"
+                                    id="countryId"
+                                    name="countryId"
                                     className={
-                                      props.errors.country && props.touched.country
+                                      props.errors.countryId && props.touched.countryId
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.country && props.touched.country && (
-                                    <div className="invalid-feedback">{props.errors.country}</div>
+                                  {props.errors.countryId && props.touched.countryId && (
+                                    <div className="invalid-feedback">{props.errors.countryId}</div>
                                   )}
                                   
                                 </FormGroup>

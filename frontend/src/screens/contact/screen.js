@@ -31,6 +31,7 @@ import * as ContactActions from './actions'
 import {
   CommonActions
 } from 'services/global'
+import {selectOptionsFactory} from 'utils'
 
 
 import './style.scss'
@@ -117,6 +118,7 @@ class Contact extends React.Component {
     filterData = {...filterData,...data}
     this.props.contactActions.getContactList(filterData).then(res => {
       if (res.status === 200) {
+        this.props.contactActions.getContactTypeList();
         this.setState({ loading: false });
       }
     }).catch(err => {
@@ -189,14 +191,15 @@ class Contact extends React.Component {
   }
 
   removeBulk() {
+    const {filterData} = this.state
     this.removeDialog()
     let { selected_id_list } = this.state;
     const { contact_list } = this.props
     let obj = {
       ids: selected_id_list
     }
-    this.props.contactActions.removeBulk(obj).then(() => {
-      this.props.contactActions.getContactList()
+    this.props.contactActions.removeBulk(obj).then((res) => {
+      this.initializeData();
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (contact_list && contact_list.length > 0) {
         this.setState({
@@ -307,7 +310,7 @@ class Contact extends React.Component {
                               <FormGroup className="mb-3">
 
                                 <Select
-                                  options={contact_type_list ? contact_type_list : []}
+                                  options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list) : []}
                                   onChange={(val) => {
                                     this.handleChange(val['value'], 'contactType')
                                     this.setState({ 'selectedContactType': val['value'] })

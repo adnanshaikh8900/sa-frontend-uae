@@ -5,6 +5,7 @@ import {
 } from 'utils'
 
 export const getProjectList = (obj) => {
+  console.log(obj)
   return (dispatch) => {
     let data = {
       method: 'GET',

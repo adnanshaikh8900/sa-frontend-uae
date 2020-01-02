@@ -19,7 +19,7 @@ import _ from 'lodash'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
-import { contactIdModal } from '../../sections'
+import { ContactModal } from '../../sections'
 import { Loader ,ConfirmDeleteModal } from 'components'
 
 import * as ProjectActions from '../../actions'
@@ -39,7 +39,7 @@ const mapStateToProps = (state) => {
   return ({
     currency_list: state.project.currency_list,
     country_list: state.project.country_list,
-    contact_list: state.project.contactId_list,
+    contact_list: state.project.contact_list,
     title_list: state.project.title_list
   })
 }
@@ -491,9 +491,9 @@ class DetailProject extends React.Component {
           </Row>
          )}
         </div>
-        <contactIdModal
+        <ContactModal
           openContactModal={this.state.openContactModal}
-          closeContactModal={this.closeContactModal}
+          closeContactModal={(val)=>{this.closeContactModal(val)}}
           currencyList={currency_list}
           countryList={country_list}
           createContact={this.props.projectActions.createProjectContact}

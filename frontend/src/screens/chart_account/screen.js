@@ -73,13 +73,18 @@ class ChartAccount extends React.Component {
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
-    this.onPageChange = this.onPageChange.bind(this)
+
     this.handleChange = this.handleChange.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
+
+    this.onPageChange = this.onPageChange.bind(this);
+    this.onSizePerPageList = this.onSizePerPageList.bind(this)
+
     this.options = {
       onRowClick: this.goToDetailPage,
       paginationPosition: 'top',
-      onPageChange: this.onPageChange
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
@@ -103,7 +108,12 @@ class ChartAccount extends React.Component {
   }
 
   initializeData() {
-    const {filterData} = this.state
+    let { filterData } = this.state
+    const data = {
+      pageNo: this.options.page ? this.options.page : 1,
+      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+    }
+    filterData = {...filterData,...data}
     this.props.chartOfAccountActions.getTransactionCategoryList(filterData).then(res => {
       if (res.status === 200) {
         this.props.chartOfAccountActions.getTransactionTypes();
@@ -123,6 +133,14 @@ class ChartAccount extends React.Component {
   goToCreatePage() {
     this.props.history.push('/admin/master/chart-account/create')
   }
+
+  onPageChange = (page, sizePerPage) => {
+    this.options.page = page
+}
+
+onSizePerPageList = (sizePerPage) => {
+  this.options.sizePerPage = sizePerPage
+}
 
   onRowSelect(row, isSelected, e) {
     let temp_list = []
@@ -177,7 +195,7 @@ class ChartAccount extends React.Component {
       ids: selected_id_list
     }
     this.props.chartOfAccountActions.removeBulk(obj).then(() => {
-      this.props.chartOfAccountActions.getTransactionCategoryList()
+      this.initializeData();
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (transaction_category_list && transaction_category_list.length > 0) {
         this.setState({
@@ -196,7 +214,7 @@ class ChartAccount extends React.Component {
   }
 
   typeFormatter(cell, row) {
-    return row['transactionType']['transactionTypeName'];
+    return row['transactionTypeName'] ? row['transactionTypeName'] : ''
 
   }
 

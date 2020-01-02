@@ -6,9 +6,13 @@
 package com.simplevat.rest.employeecontroller;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
@@ -16,31 +20,48 @@ import lombok.Data;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeListModel {
 
-    private Integer id;
+	private Integer id;
 
-    private String firstName;
+	private String firstName;
 
-    private String middleName;
+	private String middleName;
 
-    private String lastName;
+	private String lastName;
 
-    private String email;
+	private String email;
 
-    private String mobileNumber;
+	private String password;
 
-    public String getFullName() {
-        StringBuilder sb = new StringBuilder();
-        if (firstName != null && !firstName.isEmpty()) {
-            sb.append(firstName).append(" ");
-        }
-        if (middleName != null && !middleName.isEmpty()) {
-            sb.append(middleName).append(" ");
-        }
-        if (lastName != null && !lastName.isEmpty()) {
-            sb.append(lastName);
-        }
-        return sb.toString();
-    }
+	private LocalDateTime dob;
+
+	private String referenceCode;
+
+	private String title;
+
+	private String billingEmail;
+
+	private String vatRegestationNo;
+
+	private Integer currencyCode;
+	
+	private String poBoxNumber;
+	
+
+	public String getFullName() {
+		StringBuilder sb = new StringBuilder();
+		if (firstName != null && !firstName.isEmpty()) {
+			sb.append(firstName).append(" ");
+		}
+		if (middleName != null && !middleName.isEmpty()) {
+			sb.append(middleName).append(" ");
+		}
+		if (lastName != null && !lastName.isEmpty()) {
+			sb.append(lastName);
+		}
+		return sb.toString();
+	}
 }

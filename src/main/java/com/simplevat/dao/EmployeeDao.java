@@ -1,9 +1,12 @@
 package com.simplevat.dao;
 
+import com.simplevat.constant.dbfilter.EmployeeFilterEnum;
 import com.simplevat.entity.Employee;
 import com.simplevat.rest.DropdownModel;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface EmployeeDao extends Dao<Integer, Employee> {
@@ -15,4 +18,8 @@ public interface EmployeeDao extends Dao<Integer, Employee> {
     public List<Employee> getEmployees(final String searchQuery, Integer pageNo, Integer pageSize);
 
     public Optional<Employee> getEmployeeByEmail(String email);
+
+	public List<Employee> getEmployeeList(Map<EmployeeFilterEnum, Object> filterMap);
+
+	public void deleteByIds(ArrayList<Integer> ids);
 }

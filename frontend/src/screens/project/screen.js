@@ -104,7 +104,6 @@ class Project extends React.Component {
       pageSize: this.options.sizePerPage
     }
     filterData = { ...filterData, ...data }
-
     this.props.projectActions.getProjectList(filterData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.User;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -34,7 +34,7 @@ public class JwtTokenUtil implements Serializable {
 	private String secret;
 	
 	@Autowired
-	UserServiceNew userServiceNew;
+	UserService userServiceNew;
 
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);

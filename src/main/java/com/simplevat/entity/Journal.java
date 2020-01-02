@@ -53,12 +53,12 @@ public class Journal implements Serializable {
 	private LocalDateTime journalDate;
 
 	@Basic
-	@Column(name = "JOURNAL_REFERENCE_CODE")
-	private String journalReferenceCode;
+	@Column(name = "REFERENCE_CODE")
+	private String referenceCode;
 
 	@Basic
-	@Column(name = "JOURNAL_DESCRIPTION")
-	private String journalDescription;
+	@Column(name = "DESCRIPTION")
+	private String description;
 
 	@OneToOne
 	@JoinColumn(name = "CURRENCY_ID")

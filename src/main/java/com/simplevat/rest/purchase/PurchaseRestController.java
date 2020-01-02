@@ -26,7 +26,7 @@ import com.simplevat.service.ProductService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.PurchaseService;
 import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -63,7 +63,7 @@ public class PurchaseRestController {
     private ProductService productService;
 
     @Autowired
-    private UserServiceNew userServiceNew;
+    private UserService userServiceNew;
 
     @Autowired
     private VatCategoryService vatCategoryService;

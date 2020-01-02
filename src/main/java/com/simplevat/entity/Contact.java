@@ -13,10 +13,6 @@ import org.hibernate.annotations.ColumnDefault;
  */
 
 @NamedQueries({
-    @NamedQuery(name = "contactForDropdown",
-            query = "SELECT new "+ CommonConstant.DROPDOWN_MODEL_PACKAGE +"(c.contactId , CONCAT(c.firstName, ' ', c.middleName, ' ', c.lastName))"
-            + " FROM Contact c where c.deleteFlag = FALSE and c.contactType = :contactType order by c.firstName, c.lastName")
-    ,
     @NamedQuery(name = "allContacts",
             query = "SELECT c "
             + "FROM Contact c where c.deleteFlag = FALSE order by c.firstName, c.lastName")

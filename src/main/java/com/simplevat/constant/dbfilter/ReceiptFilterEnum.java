@@ -3,16 +3,14 @@ package com.simplevat.constant.dbfilter;
 import lombok.Getter;
 
 /**
-*@author saurabhg
-*/
-
-
+ * @author saurabhg
+ */
 public enum ReceiptFilterEnum {
-	RECEIPT_DATE("receiptDate","= :receiptDate"),
-	INVOICE("invoice",("= :invoice")),
-	CONTACT("contact","= :contact"),
-	RECEIPT_REFERENCE_CODE("receiptReferenceCode","= :receiptReferenceCode"),
-	DELETE("deleteFlag"," = :deleteFlag"),
+    RECEIPT_DATE("receiptDate", "= :receiptDate"),
+    INVOICE("invoice", ("= :invoice")),
+    CONTACT("contact", "= :contact"),
+    REFERENCE_CODE("referenceCode", "= :referenceCode"),
+    DELETE("deleteFlag", " = :deleteFlag"),
     USER_ID("createdBy", "= :createdBy");
 
     @Getter

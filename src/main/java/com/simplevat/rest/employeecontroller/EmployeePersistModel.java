@@ -6,6 +6,8 @@
 package com.simplevat.rest.employeecontroller;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,17 +29,19 @@ public class EmployeePersistModel {
 
     private String email;
 
-    private String mobileNumber;
-
-    private String addressLine1;
-
-    private String addressLine2;
-
-    private String addressLine3;
-
-    private Integer countryId;
-
-    private String postZipCode;
+	/*
+	 * @Deprecated private String mobileNumber;
+	 * 
+	 * @Deprecated private String addressLine1;
+	 * 
+	 * @Deprecated private String addressLine2;
+	 * 
+	 * @Deprecated private String addressLine3;
+	 * 
+	 * @Deprecated private Integer countryId;
+	 * 
+	 * @Deprecated private String postZipCode;
+	 */
 
     private Integer createdBy;
 
@@ -46,5 +50,26 @@ public class EmployeePersistModel {
     private Integer lastUpdatedBy;
 
     private LocalDateTime lastUpdateDate;
+    
+    
+    //saurabhg 2/1/2020
+    
+
+	private Date dob;
+
+	private String referenceCode;
+
+	private String title;
+
+	private String billingEmail;
+
+	private String vatRegestationNo;
+
+	private Integer currencyCode;
+	
+	private String poBoxNumber;
+	
+	private String password;
+	
 
 }

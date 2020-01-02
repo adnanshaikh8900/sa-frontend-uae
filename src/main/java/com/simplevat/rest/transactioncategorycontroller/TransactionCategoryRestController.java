@@ -17,7 +17,7 @@ import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.rest.productcontroller.ProductRequestFilterModel;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
@@ -53,7 +53,7 @@ public class TransactionCategoryRestController implements Serializable {
 	private TransactionTypeService transactionTypeService;
 
 	@Autowired
-	private UserServiceNew userServiceNew;
+	private UserService userServiceNew;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;

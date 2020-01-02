@@ -10,6 +10,6 @@ public class ReceiptRequestFilterModel {
 	private Integer userId;
 	private Integer contactId;
 	private Integer invoiceId;
-	private String receiptReferenceCode;
-	private Date receiptDate;
+	private String referenceCode;
+	private String receiptDate;
 }

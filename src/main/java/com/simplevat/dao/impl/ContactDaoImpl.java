@@ -1,5 +1,6 @@
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.CommonConstant;
 import com.simplevat.constant.dbfilter.ContactFilterEnum;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.dao.AbstractDao;
@@ -27,11 +28,14 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
 
     @Override
     public List<DropdownModel> getContactForDropdown(Integer contactType) {
-        List<DropdownModel> empSelectItemModels = getEntityManager()
-                .createNamedQuery("contactForDropdown", DropdownModel.class)
-                .setParameter("contactType", contactType)
-                .getResultList();
-        return empSelectItemModels;
+        String query = "SELECT new " + CommonConstant.DROPDOWN_MODEL_PACKAGE + "(c.contactId , CONCAT(c.firstName, ' ', c.middleName, ' ', c.lastName)) "
+                + " FROM Contact c where c.deleteFlag = FALSE ";
+        if (contactType != null && !contactType.toString().isEmpty()) {
+            query += " and c.contactType = :contactType ";
+        }
+        query += " order by c.firstName, c.lastName ";
+        TypedQuery<DropdownModel> typedQuery = getEntityManager().createQuery(query, DropdownModel.class);
+        return typedQuery.getResultList();
     }
 
     @Override

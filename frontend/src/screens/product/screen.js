@@ -114,9 +114,9 @@ class Product extends React.Component {
       pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
     }
     const postData = { ...filterData, ...paginationData }
+    this.props.productActions.getProductVatCategoryList();
     this.props.productActions.getProductList(filterData).then(res => {
       if (res.status === 200) {
-        this.props.productActions.getProductVatCategoryList();
         this.setState({ loading: false })
       }
     }).catch(err => {

@@ -16,7 +16,7 @@ import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.CompanyService;
 import com.simplevat.service.ConfigurationService;
 import com.simplevat.service.RoleService;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import com.simplevat.constant.EmailConstant;
 import com.simplevat.utils.FileHelper;
 import com.simplevat.utils.MailConfigurationModel;
@@ -53,7 +53,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController implements Serializable {
 
     @Autowired
-    private UserServiceNew userService;
+    private UserService userService;
 
     @Autowired
     private FileHelper fileUtility;

@@ -45,8 +45,8 @@ public class Receipt {
 	private LocalDateTime receiptDate;
 
 	@Basic
-	@Column(name = "RECEIPT_REFERENCE_CODE")
-	private String receiptReferenceCode;
+	@Column(name = "REFERENCE_CODE")
+	private String referenceCode;
 
 	@OneToOne
 	@JoinColumn(name = "CONTACT_ID")

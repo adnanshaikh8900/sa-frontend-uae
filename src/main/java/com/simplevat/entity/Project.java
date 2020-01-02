@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,15 @@ import org.hibernate.annotations.ColumnDefault;
 /**
  * Created by mohsinh on 2/26/2017.
  */
+
+
+@NamedQueries({
+    @NamedQuery(name = "projectsForDropdown",
+            query = "SELECT new "+ CommonConstant.DROPDOWN_MODEL_PACKAGE +"(p.projectId , p.projectName)"
+            + " FROM Project p where p.deleteFlag = FALSE  order by p.projectName ")
+    
+})
+
 @Entity
 @Table(name = "PROJECT")
 @Data
@@ -28,13 +38,13 @@ public class Project implements Serializable {
     @Column(name = "PROJECT_NAME")
     private String projectName;
 
-    @Column(name = "PROJECT_EXPENSE_BUDGET")
+    @Column(name = "EXPENSE_BUDGET")
     @ColumnDefault(value = "0.00")
-    private BigDecimal projectExpenseBudget = BigDecimal.ZERO;
+    private BigDecimal expenseBudget = BigDecimal.ZERO;
 
-    @Column(name = "PROJECT_REVENUE_BUDGET")
+    @Column(name = "REVENUE_BUDGET")
     @ColumnDefault(value = "0.00")
-    private BigDecimal projectRevenueBudget = BigDecimal.ZERO;
+    private BigDecimal revenueBudget = BigDecimal.ZERO;
 
     @Column(name = "CONTRACT_PO_NUMBER")
     private String contractPoNumber;

@@ -267,7 +267,7 @@ class AccountBalances extends React.Component {
                   <Col lg={2} className="mb-1">
                     <Select
                       className=""
-                      options={selectOptionsFactory.renderOptions('name', 'id', account_type_list)}
+                      options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list) : []}
                       // options={colourOptions}
                       value={this.state.filter_account}
                       placeholder="Account"
@@ -280,7 +280,7 @@ class AccountBalances extends React.Component {
                     <Select
                       className=""
                       // options={colourOptions}
-                      options={selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list)}
+                      options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list) : []}
                       value={this.state.filter_type}
                       placeholder="Transaction Type"
                       onChange={option => this.setState({
@@ -291,7 +291,7 @@ class AccountBalances extends React.Component {
                   <Col lg={2} className="mb-1">
                     <Select
                       className=""
-                      options={selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list)}
+                      options={transaction_category_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list) : []}
                       // options={colourOptions}
                       value={this.state.filter_category}
                       placeholder="Transaction Category"

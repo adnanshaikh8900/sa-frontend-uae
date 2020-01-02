@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.simplevat.criteria.bankaccount.TransactionCriteria;
 import com.simplevat.criteria.bankaccount.TransactionFilter;
+import com.simplevat.dao.InvoiceDao;
 import com.simplevat.dao.bankaccount.BankAccountDao;
 import com.simplevat.dao.bankaccount.TransactionDao;
 import com.simplevat.dao.bankaccount.TransactionStatusDao;
-import com.simplevat.dao.invoice.InvoiceDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
@@ -307,5 +307,4 @@ public class TransactionServiceImpl extends TransactionService {
         activity.setLoggingRequired(true);
         return activity;
     }
-
 }

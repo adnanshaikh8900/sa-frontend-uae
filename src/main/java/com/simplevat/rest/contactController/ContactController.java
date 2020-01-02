@@ -6,27 +6,19 @@
 package com.simplevat.rest.contactController;
 
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.utils.ContactUtil;
-import com.simplevat.helper.ContactHelper;
+import com.simplevat.constant.dbfilter.ContactFilterEnum;
 import com.simplevat.entity.Contact;
-import com.simplevat.entity.ContactView;
-import com.simplevat.entity.Country;
-import com.simplevat.entity.Currency;
-import com.simplevat.entity.Title;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.ContactService;
-import com.simplevat.service.CountryService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.LanguageService;
-import com.simplevat.service.TitleService;
-import com.simplevat.service.UserServiceNew;
-import com.simplevat.constant.ContactTypeConstant;
-import com.simplevat.contact.model.ContactModel;
-import com.simplevat.contact.model.ContactType;
-import com.simplevat.contact.model.ContactViewModel;
-import com.simplevat.contact.model.CountryModel;
+import com.simplevat.security.JwtTokenUtil;
+import java.io.IOException;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,197 +42,108 @@ public class ContactController implements Serializable {
     private ContactService contactService;
 
     @Autowired
-    private CountryService countryService;
+    private ContactHelper contactHelper;
 
     @Autowired
-    private LanguageService languageService;
+    private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private CurrencyService currencyService;
-
-    @Autowired
-    private TitleService titleService;
-
-    @Autowired
-    private UserServiceNew userServiceNew;
-
-    private ContactHelper contactHelper = new ContactHelper();
-
-    private int totalEmployees;
-
-    private int totalVendors;
-
-    private int totalCustomers;
-
-    private int totalContacts;
-
-    @GetMapping("/contactlist")
-    public ResponseEntity populateContactList() {
-        List<ContactView> contactViewList = contactService.getContactViewList();
-
-        List<ContactViewModel> contactList = new ArrayList<>();
-        if (contactViewList != null) {
-            for (ContactView contactView : contactViewList) {
-                ContactViewModel contactViewModel = contactHelper.getContactViewModel(contactView);
-                contactCountByType(contactViewModel);
-                contactList.add(contactViewModel);
-            }
-        }
-
-        return new ResponseEntity<>(contactList, HttpStatus.OK);
-    }
-
-    private void contactCountByType(ContactViewModel contactViewModel) {
-        totalEmployees = 0;
-        totalCustomers = 0;
-        totalVendors = 0;
-        totalContacts = 0;
-        if (contactViewModel.getContactType() != null) {
-            if (contactViewModel.getContactType().getId() == ContactTypeConstant.EMPLOYEE) {
-                totalEmployees++;
-            } else if (contactViewModel.getContactType().getId() == ContactTypeConstant.CUSTOMER) {
-                totalCustomers++;
-            } else {
-                totalVendors++;
-            }
-        }
-        totalContacts++;
-    }
-
-    @GetMapping(value = "/contactvendorlist")
-    public ResponseEntity populateContactVendorList() {
-        List<ContactView> contactViewList = contactService.getContactViewList();
-        List<ContactViewModel> contactList = new ArrayList<>();
-        if (contactViewList != null) {
-            for (ContactView contactView : contactViewList) {
-                ContactViewModel contactViewModel = contactHelper.getContactViewModel(contactView);
-                if (contactViewModel.getContactType().getId() == ContactTypeConstant.VENDOR) {
-                    contactList.add(contactViewModel);
-                }
-            }
-        }
-        return new ResponseEntity<>(contactList, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/contactcustomerlist")
-    public ResponseEntity populateContactCustomerList() {
-        List<ContactView> contactViews = contactService.getContactViewList();
-
-        List<ContactViewModel> contactViewModels = new ArrayList<>();
-        for (ContactView contactView : contactViews) {
-            ContactViewModel contactViewModel = contactHelper.getContactViewModel(contactView);
-            if (contactViewModel.getContactType().getId() == ContactTypeConstant.CUSTOMER) {
-                contactViewModels.add(contactViewModel);
-            }
-        }
-        return new ResponseEntity<>(contactViewModels, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/contacttype")
-    public ResponseEntity getContactType() {
+    @GetMapping(value = "/getContactList")
+    public ResponseEntity getContactList(ContactRequestFilterModel filterModel, HttpServletRequest request) throws IOException {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         try {
-            List<ContactType> contactTypes = ContactUtil.contactTypeList();
-            if (contactTypes != null && !contactTypes.isEmpty()) {
-                return new ResponseEntity<>(contactTypes, HttpStatus.OK);
-            } else {
+            Map<ContactFilterEnum, Object> filterDataMap = new HashMap();
+            filterDataMap.put(ContactFilterEnum.CONTACT_TYPE, filterModel.getContactType());
+            filterDataMap.put(ContactFilterEnum.NAME, filterModel.getName());
+            filterDataMap.put(ContactFilterEnum.EMAIL, filterModel.getEmail());
+            filterDataMap.put(ContactFilterEnum.DELETE_FLAG, false);
+            filterDataMap.put(ContactFilterEnum.USER_ID, userId);
+            List<ContactListModel> contactListModels = new ArrayList<>();
+            List<Contact> contactList = contactService.getContactList(filterDataMap);
+            if (contactList == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+            contactList.forEach(contact -> contactListModels.add(contactHelper.getListModel(contact)));
+            return new ResponseEntity<>(contactListModels, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/getContactsForDropdown")
+    public ResponseEntity getContactsForDropdown(@RequestParam(name = "contactType", required = false) Integer contactType) throws IOException {
+        List<DropdownModel> dropdownModels = contactService.getContactForDropdown(contactType);
+        return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getContactById")
+    public ResponseEntity getContactById(@RequestParam("contactId") Integer contactId) throws IOException {
+        ContactPersistModel contactPersistModel = contactHelper.getContactPersistModel(contactService.findByPK(contactId));
+        return new ResponseEntity<>(contactPersistModel, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/save")
+    public ResponseEntity save(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+
+        try {
+            Contact contact = contactHelper.getEntity(contactPersistModel, userId);
+            contact.setCreatedBy(userId);
+            contact.setCreatedDate(LocalDateTime.now());
+            contact.setDeleteFlag(false);
+            contactService.persist(contact);
+            return new ResponseEntity<>(contact, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping(value = "/titlelist")
-    public ResponseEntity titleList() {
-        List<Title> titles = titleService.getTitles();
-        return new ResponseEntity<>(titles, HttpStatus.OK);
-    }
+    @PostMapping(value = "/update")
+    public ResponseEntity update(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-    @Deprecated
-    @GetMapping(value = "/countrieslist")
-    public ResponseEntity countryList() {
-        ArrayList<CountryModel> countryModel = new ArrayList<>();
-        List<Country> countrys = countryService.getCountries();
-        for (Country country : countrys) {
-            CountryModel countryModel1 = new CountryModel();
-            countryModel1.setCountryCode(String.valueOf(country.getCountryCode()));
-            countryModel1.setCountryDescription(country.getCountryDescription());
-            countryModel1.setCountryFullName(country.getCountryDescription());
-            countryModel1.setCountryName(country.getCountryName());
-            countryModel1.setIsoAlpha3Code(country.getIsoAlpha3Code());
-            countryModel.add(countryModel1);
-        }
-        if (!countryModel.isEmpty()) {
-            return new ResponseEntity<>(countryModel, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @Deprecated
-    @GetMapping(value = "/currencieslist")
-    public ResponseEntity CurrenciesList() {
         try {
-            List<Currency> currencys = currencyService.getCurrencies();
-            if (currencys != null && !currencys.isEmpty()) {
-                return new ResponseEntity<>(currencys, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(currencys, HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @PostMapping(value = "/savecontact")
-    public ResponseEntity createOrUpdateContact(@RequestBody Contact contact, @RequestParam(value = "id") Integer id) {
-        try {
-            if (contact.getContactId() != null && contact.getContactId() > 0) {
+            if (contactPersistModel.getContactId() != null && contactPersistModel.getContactId() > 0) {
+                Contact contact = contactHelper.getEntity(contactPersistModel, userId);
+                contact.setLastUpdatedBy(userId);
+                contact.setLastUpdateDate(LocalDateTime.now());
                 contactService.update(contact);
-            } else {
-                contact.setCreatedBy(1);
-                contactService.persist(contact);
             }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }
 
-    @GetMapping(value = "/editcontact")
-    public ResponseEntity editContact(@RequestParam(value = "id") Integer id) {
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+
         Contact contact = contactService.findByPK(id);
         if (contact == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        ContactModel contactModel = contactHelper.getContactModel(contact);
-        return new ResponseEntity<>(contactModel, HttpStatus.OK);
-
-    }
-
-    @DeleteMapping(value = "/deletecontact")
-    public ResponseEntity deleteContact(@RequestParam(value = "id") Integer id) {
-        Contact contact1 = contactService.findByPK(id);
-        if (contact1 == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        contact1.setDeleteFlag(Boolean.TRUE);
-        contactService.update(contact1);
+        contact.setDeleteFlag(Boolean.TRUE);
+        contact.setLastUpdatedBy(userId);
+        contactService.update(contact);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
-    @DeleteMapping(value = "/deletecontacts")
-    public ResponseEntity deleteContacts(@RequestBody DeleteModel ids) {
+    @DeleteMapping(value = "/deletes")
+    public ResponseEntity deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
+
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
         try {
             contactService.deleleByIds(ids.getIds());
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

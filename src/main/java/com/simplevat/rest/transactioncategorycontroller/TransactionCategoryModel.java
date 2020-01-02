@@ -24,9 +24,10 @@ public class TransactionCategoryModel {
     private String transactionCategoryName;
     private String transactionCategoryDescription;
     private String transactionCategoryCode;
-    private TransactionType transactionType;
-    private TransactionCategory parentTransactionCategory;
-    private VatCategory vatCategory;
+    private Integer transactionTypeId;
+    private String transactionTypeName;
+    private Integer parentTransactionCategoryId;
+    private Integer vatCategoryId;
     private Character defaltFlag;
     private Integer orderSequence;
     private Integer createdBy;

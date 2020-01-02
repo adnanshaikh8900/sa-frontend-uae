@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -21,12 +21,13 @@ import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import Select from 'react-select'
 
-import { Loader , ConfirmDeleteModal} from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
 import * as ChartAccountActions from './actions'
+import { selectOptionsFactory } from 'utils'
 import {
   CommonActions
 } from 'services/global'
@@ -35,7 +36,9 @@ import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    transaction_category_list: state.chart_account.transaction_category_list
+    transaction_category_list: state.chart_account.transaction_category_list,
+    transaction_type_list: state.chart_account.transaction_type_list
+
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -46,14 +49,19 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class ChartAccount extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
       loading: true,
-      selected_id_list: [],
+      selectedRows: [],
       dialog: null,
-
+      filterData: {
+        transactionCategoryCode: '',
+        transactionCategoryName: '',
+        transactionType: ''
+      },
+      selectedTransactionType: ''
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -66,9 +74,19 @@ class ChartAccount extends React.Component {
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
 
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+
+    this.onPageChange = this.onPageChange.bind(this);
+    this.onSizePerPageList = this.onSizePerPageList.bind(this)
+
     this.options = {
       onRowClick: this.goToDetailPage,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      page: 1,
+      sizePerPage: 10,
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
@@ -81,50 +99,65 @@ class ChartAccount extends React.Component {
 
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.initializeData()
   }
 
   componentWillUnmount() {
     this.setState({
-      selected_id_list: []
+      selectedRows: []
     })
   }
 
-  initializeData () {
-    this.props.chartOfAccountActions.getTransactionCategoryList().then(res=> {
-      if(res.status === 200) {
-        this.setState({loading: false});
-        console.log(this.props)
+  initializeData() {
+    let { filterData } = this.state
+    const data = {
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage 
+    }
+    filterData = { ...filterData, ...data }
+    this.props.chartOfAccountActions.getTransactionCategoryList(filterData).then(res => {
+      if (res.status === 200) {
+        this.props.chartOfAccountActions.getTransactionTypes();
+        this.setState({ loading: false });
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
-      this.setState({loading: false})
+      this.props.commonActions.tostifyAlert('error', err && err !== undefined ? err.data.message : '');
+      this.setState({ loading: false })
     })
+
   }
 
-  goToDetailPage (row) {
-    this.props.history.push(`/admin/master/chart-account/detail`,{id:row.transactionCategoryId})
+  goToDetailPage(row) {
+    this.props.history.push(`/admin/master/chart-account/detail`, { id: row.transactionCategoryId })
   }
 
   goToCreatePage() {
     this.props.history.push('/admin/master/chart-account/create')
   }
 
+  onPageChange = (page, sizePerPage) => {
+    this.options.page = page
+  }
+
+  onSizePerPageList = (sizePerPage) => {
+    this.options.sizePerPage = sizePerPage
+  }
+
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.transactionCategoryId);
     } else {
-      this.state.selected_id_list.map(item => {
+      this.state.selectedRows.map(item => {
         if (item !== row.transactionCategoryId) {
           temp_list.push(item)
         }
       });
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
   onSelectAll(isSelected, rows) {
@@ -135,15 +168,15 @@ class ChartAccount extends React.Component {
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
   bulkDelete() {
     const {
-      selected_id_list
+      selectedRows
     } = this.state
-    if (selected_id_list.length > 0) {
+    if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
@@ -158,18 +191,18 @@ class ChartAccount extends React.Component {
 
   removeBulk() {
     this.removeDialog()
-    let { selected_id_list } = this.state;
+    let { selectedRows } = this.state;
     const { transaction_category_list } = this.props
     let obj = {
-      ids: selected_id_list
+      ids: selectedRows
     }
     this.props.chartOfAccountActions.removeBulk(obj).then(() => {
-      this.props.chartOfAccountActions.getTransactionCategoryList()
+      this.initializeData();
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if(transaction_category_list && transaction_category_list.length > 0) {
-                this.setState({
-        selected_id_list: []
-      })
+      if (transaction_category_list && transaction_category_list.length > 0) {
+        this.setState({
+          selectedRows: []
+        })
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
@@ -182,32 +215,36 @@ class ChartAccount extends React.Component {
     })
   }
 
+  typeFormatter(cell, row) {
+    return row['transactionTypeName'] ? row['transactionTypeName'] : ''
 
-
-
-  typeFormatter(cell,row) {
-    return  row['transactionType']['transactionTypeName'];
-    
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
+  handleChange(val, name) {
+    this.setState({
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
+    })
   }
+
+  handleSearch() {
+    this.initializeData();
+  }
+
 
   render() {
 
-    const { loading , dialog } = this.state
-    const { transaction_category_list } = this.props
+    const { loading, dialog ,selectedRows} = this.state
+    const { transaction_category_list, transaction_type_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
-    console.log(transaction_category_list)
 
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
-        {dialog}
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {dialog}
           <Card>
             <CardHeader>
               <Row>
@@ -227,7 +264,7 @@ class ChartAccount extends React.Component {
                       <Loader />
                     </Col>
                   </Row>
-                :
+                  :
                   <Row>
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
@@ -235,7 +272,9 @@ class ChartAccount extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={()=>this.table.handleExportCSV()}
+                            onClick={() => this.table.handleExportCSV()}
+                            disabled={transaction_category_list.length === 0}
+
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -252,6 +291,7 @@ class ChartAccount extends React.Component {
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
+                            disabled={selectedRows.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -260,28 +300,44 @@ class ChartAccount extends React.Component {
                       </div>
                       <div className="py-3">
                         <h5>Filter : </h5>
-                        <Row>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Code" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Account" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Select
-                              className=""
-                              options={[]}
-                              placeholder="Account Type"
-                            />
-                          </Col>
-                        </Row>
+                        <form>
+                          <Row>
+                            <Col lg={3} className="mb-1">
+                              <Input type="text" placeholder="Code" onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryCode') }} />
+                            </Col>
+                            <Col lg={3} className="mb-2">
+                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryName') }} />
+                            </Col>
+                            <Col lg={3} className="mb-1">
+                              <FormGroup className="mb-3">
+
+                                <Select
+                                  options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list) : []}
+                                  onChange={(val) => {
+                                    this.handleChange(val['value'], 'transactionType')
+                                    this.setState({ 'selectedTransactionType': val['value'] })
+                                  }}
+                                  className="select-default-width"
+                                  placeholder="Transaction Type"
+                                  value={this.state.selectedTransactionType}
+                                />
+                              </FormGroup>
+
+                            </Col>
+                            <Col lg={2} className="mb-1">
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={transaction_category_list.length === 0}>
+                                <i className="fa fa-search"></i>
+                              </Button>
+                            </Col>
+                          </Row>
+                        </form>
                       </div>
                       <div>
                         <BootstrapTable
-                          selectRow={ this.selectRowProp }
+                          selectRow={this.selectRowProp}
                           search={false}
-                          options={ this.options }
-                          data={transaction_category_list ? transaction_category_list : ''}
+                          options={this.options}
+                          data={transaction_category_list ? transaction_category_list : []}
                           version="4"
                           hover
                           pagination

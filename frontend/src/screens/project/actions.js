@@ -4,11 +4,12 @@ import {
   authApi
 } from 'utils'
 
-export const getProjectList = () => {
+export const getProjectList = (obj) => {
+
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/project/getprojectbycriteria`
+      url: `/rest/project/getList?projectName=${obj.projectName}&expenseBudget=${obj.expenseBudget}&revenueBudget=${obj.revenueBudget}&vatRegistrationNumber=${obj.vatRegistrationNumber}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
     }
 
     return authApi(data).then(res => {
@@ -25,47 +26,19 @@ export const getProjectList = () => {
 }
 
 
-// Get Project By ID
-export const getProjectByID = (id) => {
-  return (dispatch) => {
-    let data = {
-      method: 'GET',
-      url: `rest/project/editproject?id=${id}`
-    }
 
-    return authApi(data).then(res => {
-      return res
-    }).catch(err => {
-      throw err
-    })
-  }
-}
 
 
 // Create & Save Project
-export const createAndSaveProject = (project) => {
-  return (dispatch) => {
-    let data = {
-      method: 'POST',
-      url: `/rest/project/saveproject?id=1`,
-      data: project
-    }
 
-    return authApi(data).then(res => {
-      return res
-    }).catch(err => {
-      throw err
-    })
-  }
-}
 
 
 // Create Project Contact
-export const createProjectContact = (project) => {
+export  const createProjectContact = (project) => {
   return (dispatch) => {
     let data = {
       method: 'POST',
-      url: `/rest/project/saveprojectcontact?id=1`,
+      url: `/rest/contact/save`,
       data: project
     }
 
@@ -79,17 +52,17 @@ export const createProjectContact = (project) => {
 
 
 // Get Project Currency
-export const getProjectCurrencyList = () => {
+export const getCurrencyList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/project/getcurrenncy?currencyStr=1'
+      url: '/rest/bank/getcurrenncy'
     }
 
     return authApi(data).then(res => {
       dispatch({
-        type: PROJECT.PROJECT_CURRENCY_LIST,
-        payload: res
+        type: PROJECT.CURRENCY_LIST,
+        payload: res.data
       })
       return res
     }).catch(err => {
@@ -100,17 +73,17 @@ export const getProjectCurrencyList = () => {
 
 
 // Get Project Country
-export const getProjectCountryList = () => {
+export const getCountryList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/project/getcountry?countryStr=1'
+      url: '/rest/datalist/getcountry'
     }
 
     return authApi(data).then(res => {
       dispatch({
-        type: PROJECT.PROJECT_COUNTRY_LIST,
-        payload: res
+        type: PROJECT.COUNTRY_LIST,
+        payload: res.data
       })
       return res
     }).catch(err => {
@@ -121,17 +94,17 @@ export const getProjectCountryList = () => {
 
 
 // Get Project title
-export const getProjectTitleList = () => {
+export const getTitleList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/project/gettitle?titleStr'
+      url: '/rest/project/gettitle/?titleStr'
     }
 
     return authApi(data).then(res => {
       dispatch({
-        type: PROJECT.PROJECT_TITLE_LIST,
-        payload: res
+        type: PROJECT.TITLE_LIST,
+        payload: res.data
       })
       return res
     }).catch(err => {
@@ -139,3 +112,39 @@ export const getProjectTitleList = () => {
     })
   }
 }
+
+export const removeBulk = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'delete',
+      url: '/rest/project/deletes',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getContactList = () => {
+    return (dispatch) => {
+      let data = {
+        method: 'GET',
+        url: '/rest/contact/getContactList'
+      }
+  
+      return authApi(data).then(res => {
+        dispatch({
+          type: PROJECT.CONTACT_LIST,
+          payload: res.data
+        })
+        return res
+      }).catch(err => {
+        throw err
+      })
+    }
+  }

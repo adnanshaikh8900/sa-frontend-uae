@@ -4,11 +4,12 @@ import {
   authApi
 } from 'utils'
 
-export const getProductList = () => {
+export const getProductList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/product/getProductList`
+      url: `/rest/product/getList?name=${obj.name}&productCode=${obj.productCode}&vatPercentage=${obj.vatPercentage}`,
+      // data: obj
     }
 
     return authApi(data).then(res => {
@@ -107,16 +108,16 @@ export const getProductVatCategoryList = () => {
 
 
 // Get Parent Product
-export const getParentProductList = () => {
+export const getProductCategoryList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: 'rest/product/getProductList'
+      url: '/rest/productcategory/getList'
     }
 
     return authApi(data).then(res => {
       dispatch({
-        type: PRODUCT.PRODUCT_PARENT,
+        type: PRODUCT.PRODUCT_CATEGORY,
         payload: res.data
       })
       return res
@@ -130,11 +131,11 @@ export const removeBulk = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: 'rest/product/deleteproducts',
+      url: 'rest/product/deletes',
       data: obj
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         return res
       }
     }).catch(err => {

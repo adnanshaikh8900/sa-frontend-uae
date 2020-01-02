@@ -1,5 +1,8 @@
 package com.simplevat.service.impl;
 
+import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
+
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -12,9 +15,11 @@ import com.simplevat.criteria.TransactionCategoryFilterNew;
 import com.simplevat.criteria.bankaccount.TransactionCategoryCriteria;
 import com.simplevat.dao.bankaccount.TransactionCategoryDaoNew;
 import com.simplevat.entity.Activity;
+import com.simplevat.entity.Product;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.TransactionCategoryService;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +47,11 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
     public List<TransactionCategory> findAllTransactionCategoryByUserId(Integer userId) {
         Map<String, Object> parameterDataMap = new HashMap();
         parameterDataMap.put("createdBy", userId);
-        return getDao().executeNamedQuery("findAllTransactionCategoryByUserId", parameterDataMap);
+        DbFilter dbFilter = DbFilter.builder()
+                .dbCoulmnName("createdBy")
+                .condition(" = :createdBy")
+                .value(userId).build();
+        return getDao().executeQuery(Arrays.asList(dbFilter));
     }
 
     @Override
@@ -63,8 +72,13 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
     }
 
     @Override
-    public List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode, String name) {
-        return dao.findAllTransactionCategoryByTransactionType(transactionTypeCode, name);
+    public List<TransactionCategory> findAllTransactionCategoryByTransactionTypeAndName(Integer transactionTypeCode, String name) {
+        return dao.findAllTransactionCategoryByTransactionTypeAndName(transactionTypeCode, name);
+    }
+
+    @Override
+    public List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode) {
+        return dao.findAllTransactionCategoryByTransactionType(transactionTypeCode);
     }
 
     @Override
@@ -100,5 +114,10 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
     @Override
     public void deleteByIds(List<Integer> ids) {
         dao.deleteByIds(ids);
+    }
+    
+    @Override
+    public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap) {
+        return dao.getTransactionCategoryList(filterMap); 
     }
 }

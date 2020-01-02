@@ -16,9 +16,9 @@ import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.CompanyService;
 import com.simplevat.service.ConfigurationService;
 import com.simplevat.service.RoleService;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import com.simplevat.constant.EmailConstant;
-import com.simplevat.utils.FileUtility;
+import com.simplevat.utils.FileHelper;
 import com.simplevat.utils.MailConfigurationModel;
 import com.simplevat.utils.MailUtility;
 import java.io.File;
@@ -53,10 +53,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController implements Serializable {
 
     @Autowired
-    private UserServiceNew userService;
+    private UserService userService;
 
     @Autowired
-    private CompanyService companyService;
+    private FileHelper fileUtility;
 
     @Autowired
     private RoleService roleService;
@@ -195,8 +195,7 @@ public class UserController implements Serializable {
             ClassLoader classLoader = getClass().getClassLoader();
             File file = new File(classLoader.getResource(NEW_USER_EMAIL_TEMPLATE_FILE).getFile());
             String pathname = file.getAbsolutePath();
-            MessageFormat msgFormat = new MessageFormat(FileUtility.readFile(pathname));
-            FileUtility fileUtility = new FileUtility();
+            MessageFormat msgFormat = new MessageFormat(fileUtility.readFile(pathname));
             MimeMultipart mimeMultipart = fileUtility.getMessageBody(msgFormat.format(args));
             String[] email = {userMail};
             MailConfigurationModel mailDefaultConfigurationModel = MailUtility.getEMailConfigurationList(configurationService.getConfigurationList());

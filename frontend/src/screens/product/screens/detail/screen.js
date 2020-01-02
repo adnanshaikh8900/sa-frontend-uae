@@ -26,22 +26,26 @@ import * as ProductActions from '../../actions'
 
 import { WareHouseModal } from '../../sections'
 
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal} from 'components'
 import { selectOptionsFactory } from 'utils'
 import * as DetailProductActions from './actions'
-
+import {
+  CommonActions
+} from 'services/global'
 
 const mapStateToProps = (state) => {
   return ({
     vat_list: state.product.vat_list,
     product_warehouse_list: state.product.product_warehouse_list,
-    product_parent_list: state.product.product_parent_list
+    product_category_list: state.product.product_category_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
     productActions: bindActionCreators(ProductActions, dispatch),
-    detailProductActions: bindActionCreators(DetailProductActions, dispatch)
+    detailProductActions: bindActionCreators(DetailProductActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch)
+    
   })
 }
 
@@ -52,12 +56,19 @@ class DetailProduct extends React.Component {
     this.state = {
       loading: true,
       initValue: {},
-      currentData: {}
+      currentData: {},
+      openWarehouseModal:false,
+      dialog: null
     }
 
     this.initializeData = this.initializeData.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.showWarehouseModal = this.showWarehouseModal.bind(this)
+    this.closeWarehouseModal = this.closeWarehouseModal.bind(this)
+    this.deleteProduct = this.deleteProduct.bind(this)
+    this.removeProduct = this.removeProduct.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
   }
 
   componentDidMount() {
@@ -68,36 +79,32 @@ class DetailProduct extends React.Component {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
       // this.props.productActions.getVatList();
-      this.props.productActions.getParentProductList();
+      this.props.productActions.getProductCategoryList();
       this.props.productActions.getProductVatCategoryList();
       this.props.productActions.getProductWareHouseList()
       // this.setState({
       // }, () => {
       this.props.detailProductActions.getProductById(id).then(res => {
-        console.log(res.data)
         if (res.status === 200) {
           this.setState({
             loading: false,
             initValue: {
-              productName: res.data.productName,
+              productName: res.data.productName ? res.data.productName : '',
               productDescription: res.data.productDescription,
               productCode: res.data.productCode,
-              vatCategoryId: res.data.vatCategoryId ? {
-                label: res.data.vatCategoryId.name,
-                value: res.data.vatCategoryId.id
-              } : null,
+              vatCategoryId: res.data.vatCategoryId ? res.data.vatCategoryId : '',
+              //   label: res.data.vatCategory.name,
+              //   value: res.data.vatCategory.id
+              // } : '',
               unitPrice: res.data.unitPrice,
-              parentProductId: res.data.parentProductId ? {
-                label: res.data.parentProductId.productID,
-                value: res.data.parentProductId.productName
-              } : null,
-              productWarehouseId: res.data.productWarehouseId ? {
-                label: res.data.productWarehouseId.warehouseName,
-                value: res.data.productWarehouseId.warehouseId
-              } : null,
+              productCategoryId: res.data.productCategoryId ? res.data.productCategoryId : '',
+              productWarehouseId: res.data.productWarehouseId ? res.data.productWarehouseId : '',
+              //   label: res.data.productWarehouse.warehouseName,
+              //   value: res.data.productWarehouse.warehouseId
+              // } : '',
               vatIncluded: res.data.vatIncluded
             }
-          },()=>{console.log(this.state.initValue)})
+          })
         } else { this.props.history.push('/admin/master/product') }
       })
       // })
@@ -124,43 +131,77 @@ class DetailProduct extends React.Component {
       productCode ,
       vatCategoryId,
       unitPrice,
-      parentProductId,
+      productCategoryId,
       productWarehouseId,
       vatIncluded,
     } = data
     const postData = {
-      productId: id,
+      productID : id,
       productName : productName,
       productDescription: productDescription, 
-      productCode: productCode ,
+      productCode: productCode,
       vatCategoryId: vatCategoryId,
       unitPrice: unitPrice,
-      parentProductId: parentProductId,
+      productCategoryId: productCategoryId,
       productWarehouseId: productWarehouseId,
       vatIncluded: vatIncluded,
     }
     this.props.detailProductActions.updateProduct(postData).then(res => {
       if (res.status === 200) {
-        this.success()
-
-        if (this.state.readMore) {
-          this.setState({
-            readMore: false
-          })
-        } else this.props.history.push('/admin/master/product')
+        this.props.commonActions.tostifyAlert('sucess','Product Updated Successfully');
+        this.props.history.push('/admin/master/product')
       }
+    }).catch(err => {
+        this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
     })
-    console.log(postData)
+  }
+
+  showWarehouseModal() {
+    this.setState({ openWarehouseModal: true })
+  }
+  // Cloase Confirm Modal
+  closeWarehouseModal() {
+    this.setState({ openWarehouseModal: false });
+    this.props.productActions.getProductWareHouseList()
+  }
+
+  deleteProduct() {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removeProduct}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeProduct() {
+    const id= this.props.location.state.id;
+    this.props.detailProductActions.deleteProduct(id).then(res=>{
+      if(res.status === 200) {
+        // this.success('Product Deleted Successfully');
+        this.props.history.push('/admin/master/product')
+      }
+    }).catch(err=> {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
   }
 
   render() {
 
-    const { vat_list, product_parent_list, product_warehouse_list } = this.props
-    const { loading } = this.state
+    const { vat_list, product_category_list, product_warehouse_list } = this.props
+    const { loading , dialog} = this.state
 
     return (
       <div className="detail-product-screen">
         <div className="animated fadeIn">
+          {dialog}
         {loading ? (
             <Loader></Loader>
           ) : (
@@ -187,18 +228,20 @@ class DetailProduct extends React.Component {
                           this.handleSubmit(values)
                           resetForm(this.state.initValue)
 
-                          this.setState({
-                            selectedWareHouse: null,
-                            selectedParentProduct: null,
-                            selectedVatCategory: null,
-                          })
+                          // this.setState({
+                          //   selectedWareHouse: null,
+                          //   selectedParentProduct: null,
+                          //   selectedVatCategory: null,
+                          // })
                         }}
                         validationSchema={Yup.object().shape({
                           productName: Yup.string()
                             .required("Product Name is Required"),
-                          vatCategory: Yup.string()
-                            .required("Vat Category is Required"),
-                        })}>
+                          vatCategoryId: Yup.string()
+                            .required("Vat Category is Required")
+                            .nullable()
+                        })}
+                        >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
@@ -212,7 +255,7 @@ class DetailProduct extends React.Component {
                                     id="productName"
                                     name="productName"
                                     onChange={props.handleChange}
-                                    value={props.values.productName}
+                                    defaultValue={props.values.productName}
                                     placeholder="Enter Product Name"
                                     className={
                                       props.errors.productName && props.touched.productName
@@ -234,30 +277,30 @@ class DetailProduct extends React.Component {
                                     id="productCode"
                                     name="productCode"
                                     onChange={props.handleChange}
-                                    value={props.values.productCode}
+                                    defaultValue={props.values.productCode}
                                     placeholder="Enter Product Code"
                                   />
                                 </FormGroup>
                               </Col>
 
                               <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="parentProductId">Parent Product</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    options={selectOptionsFactory.renderOptions('productName', 'productID', product_parent_list)}
-                                    id="parentProductId"
-                                    name="parentProductId"
-                                    value={props.values.parentProductId}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedParentProduct: option.value
-                                      })
-                                      props.handleChange("parentProductId")(option.value);
-                                    }}
-                                  />
-                                </FormGroup>
-                              </Col>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="productCategoryId">Product Category</Label>
+                                    <Select
+                                      className="select-default-width"
+                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'productCategoryCode', product_category_list) : []}
+                                      id="productCategoryId"
+                                      name="productCategoryId"
+                                      value={props.values.productCategoryId}
+                                      onChange={(option) => {
+                                        // this.setState({
+                                        //   selectedParentProduct: option.value
+                                        // })
+                                        props.handleChange("productCategoryId")(option.value);
+                                      }}
+                                    />
+                                  </FormGroup>
+                                </Col>
                             </Row>
                             <Row>
 
@@ -270,7 +313,7 @@ class DetailProduct extends React.Component {
                                     name="unitPrice"
                                     placeholder="Enter Product Price"
                                     onChange={props.handleChange}
-                                    value={props.values.unitPrice}
+                                    defaultValue={props.values.unitPrice}
                                   />
                                 </FormGroup>
                               </Col>
@@ -310,7 +353,7 @@ class DetailProduct extends React.Component {
                                     id="vatIncluded"
                                     name="vatIncluded"
                                     onChange={props.handleChange}
-                                    value={props.values.vatIncluded}
+                                    defaultChecked={props.values.vatIncluded}
                                   />
                                   <Label className="form-check-label" check htmlFor="vatIncluded">Vat Include</Label>
                                 </FormGroup>
@@ -323,14 +366,14 @@ class DetailProduct extends React.Component {
                                   <Label htmlFor="productWarehouseId">Warehourse</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list)}
+                                    options={product_warehouse_list ? selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list) : []}
                                     id="productWarehouseId"
                                     name="productWarehouseId"
                                     value={props.values.productWarehouseId}
                                     onChange={(option) => {
-                                      this.setState({
-                                        selectedWareHouse: option.value
-                                      })
+                                      // this.setState({
+                                      //   selectedWareHouse: option.value
+                                      // })
                                       props.handleChange("productWarehouseId")(option.value);
                                     }}
                                   />
@@ -358,27 +401,31 @@ class DetailProduct extends React.Component {
                                     rows="6"
                                     placeholder="Description..."
                                     onChange={props.handleChange}
-                                    value={props.values.productDescription}
+                                    defaultValue={props.values.productDescription}
                                   />
                                 </FormGroup>
                               </Col>
                             </Row>
                             <Row>
-                              <Col lg={12} className="mt-5">
-                                <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-dot-circle-o"></i> Update
+                                <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                  <FormGroup>
+                                    <Button type="button" name="button" color="danger" className="btn-square"
+                                      onClick={this.deleteProduct}
+                                    >
+                                      <i className="fa fa-trash"></i> Delete
                                     </Button>
-                                  {/* <Button type="submit" color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-repeat"></i> Create and More
-                                    </Button> */}
-                                  <Button color="secondary" className="btn-square"
+                                  </FormGroup>
+                                  <FormGroup className="text-right">
+                                    <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                                      <i className="fa fa-dot-circle-o"></i> Update
+                                    </Button>
+                                    <Button color="secondary" className="btn-square"
                                     onClick={() => { this.props.history.push('/admin/master/product') }}>
                                     <i className="fa fa-ban"></i> Cancel
                                     </Button>
-                                </FormGroup>
-                              </Col>
-                            </Row>
+                                  </FormGroup>
+                                </Col>
+                              </Row>
                           </Form>
                         )}
                       </Formik>
@@ -390,6 +437,8 @@ class DetailProduct extends React.Component {
           </Row>
           )}
         </div>
+        <WareHouseModal openModal={this.state.openWarehouseModal} closeWarehouseModal={this.closeWarehouseModal}/>
+
       </div>
     )
   }

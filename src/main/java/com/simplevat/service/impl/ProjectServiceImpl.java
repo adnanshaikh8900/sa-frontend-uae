@@ -1,16 +1,19 @@
 package com.simplevat.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.simplevat.constant.dbfilter.ProjectFilterEnum;
 import com.simplevat.criteria.ProjectCriteria;
 import com.simplevat.criteria.ProjectFilter;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.ProjectDao;
 import com.simplevat.entity.Project;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.ProjectService;
 import java.math.BigDecimal;
 
@@ -44,19 +47,28 @@ public class ProjectServiceImpl extends ProjectService {
 //        }
 //        update(project);
 //    }
-
     @Override
     public void updateProjectRevenueBudget(BigDecimal revenueAmount, Project project) {
-        if (project.getProjectRevenueBudget() != null) {
-            project.setProjectRevenueBudget(project.getProjectRevenueBudget().add(revenueAmount));
+        if (project.getRevenueBudget()!= null) {
+            project.setRevenueBudget(project.getRevenueBudget().add(revenueAmount));
         } else {
-            project.setProjectRevenueBudget(revenueAmount);
+            project.setRevenueBudget(revenueAmount);
         }
         update(project);
     }
 
     @Override
+    public List<DropdownModel> getProjectsForDropdown() {
+        return this.projectDao.getProjectsForDropdown();
+    }
+
+    @Override
     public void deleteByIds(List<Integer> ids) {
         projectDao.deleteByIds(ids);
+    }
+
+    @Override
+    public List<Project> getProjectList(Map<ProjectFilterEnum, Object> filterMap) {
+        return projectDao.getProjectList(filterMap);
     }
 }

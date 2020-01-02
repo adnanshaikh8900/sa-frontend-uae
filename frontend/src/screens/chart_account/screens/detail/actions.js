@@ -35,3 +35,18 @@ export const updateTransactionCategory = (obj) => {
     })
   }
 }
+
+export const deleteChartAccount = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/transactioncategory/deleteTransactionCategory?id=${id}`
+    }
+
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}

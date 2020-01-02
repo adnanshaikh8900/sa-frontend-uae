@@ -15,6 +15,7 @@ import {
 } from 'reactstrap'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
+import _ from 'lodash'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
@@ -34,7 +35,8 @@ class Employee extends React.Component {
     super(props)
     this.state = {
       loading: false,
-      birthday: new Date()
+      birthday: new Date(),
+      currentData: {}
     }
 
     this.changeBirthday = this.changeBirthday.bind(this)
@@ -46,8 +48,28 @@ class Employee extends React.Component {
     })
   }
 
-  render() {
+  handleChange = (name, e) => {
+     this.setState({
+      currentData: _.set(
+        { ...this.state.currentData },
+        e.target.name && e.target.name !== '' ? e.target.name : name,
+        e.target.type === 'checkbox' ? e.target.checked : e.target.value
+      )
+    })
+    // this.setState({
+    //   currentData: _.set(
+    //     { ...this.state.currentData },
+    //     e.target.name && e.target.name !== '' ? e.target.name : name,
+    //     e.target.type === 'checkbox' ? e.target.checked : e.target.value
+    //   )
+    // })
+  }
 
+  handleSubmit = (e) => {
+    e.preventDefault();
+  }
+  render() {
+ 
     return (
       <div className="employee-screen">
         <div className="animated fadeIn">
@@ -67,7 +89,7 @@ class Employee extends React.Component {
                 <CardBody>
                   <Row>
                     <Col lg={12}>
-                      <Form>
+                      <Form onSubmit={this.handleSubmit}>
                         <h4 className="mb-4">Contact Name</h4>
                         <Row>
                           <Col md="4">
@@ -75,9 +97,10 @@ class Employee extends React.Component {
                               <Label htmlFor="select">Refrence Code</Label>
                               <Input
                                 type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                id="referenceCode"
+                                name="referenceCode"
+                                onChange={(value) => { this.handleChange("referenceCode",value) }}
+                                
                               />
                             </FormGroup>
                           </Col>
@@ -86,9 +109,9 @@ class Employee extends React.Component {
                               <Label htmlFor="select">Title</Label>
                               <Input
                                 type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                id="title"
+                                name="title"
+                                onChange={(value) => { this.handleChange("title",value) }}
                               />
                             </FormGroup>
                           </Col>
@@ -96,10 +119,10 @@ class Employee extends React.Component {
                             <FormGroup>
                               <Label htmlFor="select">Email</Label>
                               <Input
-                                type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                type="email"
+                                id="email"
+                                name="email"
+                                onChange={(value) => { this.handleChange("email",value) }}                                
                               />
                             </FormGroup>
                           </Col>
@@ -110,9 +133,9 @@ class Employee extends React.Component {
                               <Label htmlFor="select">Full Name</Label>
                               <Input
                                 type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                id="fulName"
+                                name="fullName"
+                                onChange={(value) => { this.handleChange("fullName",value) }}                                
                               />
                             </FormGroup>
                           </Col>
@@ -121,9 +144,9 @@ class Employee extends React.Component {
                               <Label htmlFor="select">Middle Name</Label>
                               <Input
                                 type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                id="middleName"
+                                name="middleName"
+                                onChange={(value) => { this.handleChange("middleName",value) }}                                                                
                               />
                             </FormGroup>
                           </Col>
@@ -132,9 +155,9 @@ class Employee extends React.Component {
                               <Label htmlFor="select">Last Name</Label>
                               <Input
                                 type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                id="lastName"
+                                name="lastName"
+                                onChange={(value) => { this.handleChange("lastName",value) }}                                                                                                
                               />
                             </FormGroup>
                           </Col>
@@ -144,10 +167,11 @@ class Employee extends React.Component {
                             <FormGroup>
                               <Label htmlFor="select">Password</Label>
                               <Input
-                                type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                type="password"
+                                id="password"
+                                name="password"
+                                onChange={(value) => { this.handleChange("password",value) }}                                                                                                
+
                               />
                             </FormGroup>
                           </Col>
@@ -155,13 +179,14 @@ class Employee extends React.Component {
                             <FormGroup>
                               <Label htmlFor="select">Confirm Password</Label>
                               <Input
-                                type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                onChange={(value) => { this.handleChange("confirmPassword",value) }}                                                                                                
+                                
                               />
                             </FormGroup>
-                          </Col>
+                          </Col> 
                           <Col md="4">
                             <FormGroup>
                               <Label htmlFor="select">Date of Birth</Label>
@@ -186,9 +211,10 @@ class Employee extends React.Component {
                               <Label htmlFor="select">Billing Email</Label>
                               <Input
                                 type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                id="billingEmail"
+                                name="billingEmail"
+                                onChange={(value) => { this.handleChange("billingEmail",value) }}                                                                                                
+                                
                               />
                             </FormGroup>
                           </Col>
@@ -197,9 +223,10 @@ class Employee extends React.Component {
                               <Label htmlFor="select">Contract PO Number</Label>
                               <Input
                                 type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                id="PONumber"
+                                name="PONumber"
+                                onChange={(value) => { this.handleChange("PONumber",value) }}                                                                                                
+                                
                               />
                             </FormGroup>
                           </Col>
@@ -210,9 +237,10 @@ class Employee extends React.Component {
                               <Label htmlFor="select">Vat Registration Number</Label>
                               <Input
                                 type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                id="VATNumber"
+                                name="VATNumber"
+                                onChange={(value) => { this.handleChange("VATNumber",value) }}                                                                                                
+                                
                               />
                             </FormGroup>
                           </Col>
@@ -221,9 +249,10 @@ class Employee extends React.Component {
                               <Label htmlFor="select">Currency Code</Label>
                               <Input
                                 type="text"
-                                id="text-input"
-                                name="text-input"
-                                required
+                                id="currencyCode"
+                                name="currencyCode"
+                                onChange={(value) => { this.handleChange("currencyCode",value) }} 
+                                selected={this.state.currency}                                                                                                                               
                               />
                             </FormGroup>
                           </Col>

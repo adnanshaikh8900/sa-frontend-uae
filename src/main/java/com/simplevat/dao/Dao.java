@@ -1,5 +1,6 @@
 package com.simplevat.dao;
 
+import com.simplevat.constant.dbfilter.DbFilter;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public interface Dao<PK, ENTITY> {
 
     public List<ENTITY> executeNamedQuery(String namedQuery);
 
-    public List<ENTITY> executeNamedQuery(String namedQuery, Map<String, Object> parameterDataMap);
+    public List<ENTITY> executeQuery(List<DbFilter> dbFilters);
 
     public ENTITY persist(ENTITY entity);
 

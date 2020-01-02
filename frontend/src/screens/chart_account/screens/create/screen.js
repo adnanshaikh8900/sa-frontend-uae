@@ -20,8 +20,11 @@ import { Loader } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
+import {
+  CommonActions
+} from 'services/global'
 
-import {selectOptionsFactory} from 'utils'
+import { selectOptionsFactory } from 'utils'
 
 import * as ChartOfAccontActions from '../../actions'
 import * as CreateChartOfAccontActions from './actions'
@@ -40,14 +43,10 @@ const mapDispatchToProps = (dispatch) => {
   return ({
     ChartOfAccontActions: bindActionCreators(ChartOfAccontActions, dispatch),
     createChartOfAccontActions: bindActionCreators(CreateChartOfAccontActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch),
+
   })
 }
-
-// const CHART_ACCOUNT_TYPES = [
-//   { value: 1, label: 'Sales'},
-//   { value: 2, label: 'Cost of Sales'}
-// ]
-
 class CreateChartAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -55,15 +54,15 @@ class CreateChartAccount extends React.Component {
       initValue: {
         transactionCategoryCode: '',
         transactionCategoryName: '',
-        transactionType:''
+        transactionType: ''
       },
       loading: false,
-      readMore: false
+      createMore: false
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
-    this.success = this.success.bind(this)
+    // this.success = this.success.bind(this)
   }
 
   componentDidMount() {
@@ -74,41 +73,37 @@ class CreateChartAccount extends React.Component {
     this.props.ChartOfAccontActions.getTransactionTypes();
   }
   // Show Success Toast
-  success() {
-    toast.success('Chart Of Account Created Successfully... ', {
-      position: toast.POSITION.TOP_RIGHT
-    })
-  }
+  // success() {
+  //   toast.success('Chart Of Account Created Successfully... ', {
+  //     position: toast.POSITION.TOP_RIGHT
+  //   })
+  // }
 
   // Create or Edit Vat
   handleSubmit(data) {
-    const { transactionCategoryCode,transactionCategoryName,transactionType} = data
-    const postData = {
-      transactionCategoryCode: transactionCategoryCode,
-      transactionCategoryName: transactionCategoryName,
-      transactionType: (transactionType && transactionType.value !== null ? transactionType.value: '')
-    }
-    this.props.createChartOfAccontActions.createTransactionCategory(postData).then(res => {
+    this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
       if (res.status === 200) {
-        this.success()
-
-        if(this.state.readMore){
+        this.props.commonActions.tostifyAlert('success', 'New Account Created Successfully')
+        if (this.state.createMore) {
           this.setState({
-            readMore: false
+            createMore: false
           })
-        } else this.props.history.push('/admin/master/chart-account')
+        } else {
+          this.props.history.push('/admin/master/chart-account')
+        }
       }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
 
   render() {
     const { loading } = this.state
-    const { transactionCategoryCode, transactionCategoryName } = this.state.initValue;
-    const {transaction_type_list} = this.props
+    const { transaction_type_list } = this.props
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
-          
+
           <Row>
             <Col lg={12}>
               <Card>
@@ -123,100 +118,101 @@ class CreateChartAccount extends React.Component {
                     <Col lg={6}>
                       <Formik
                         initialValues={this.state.initValue}
-                        onSubmit={(values, {resetForm}) => {
-                          
+                        onSubmit={(values, { resetForm }) => {
+
                           this.handleSubmit(values)
                           resetForm(this.state.initValue)
                         }}
-                        // validationSchema={Yup.object().shape({
-                        //   code: Yup.string()
-                        //     .required("Code Name is Required"),
-                        //   account: Yup.string()
-                        //     .required("Account is Required"),
-                        //   type: Yup.string()
-                        //     .required("Type is Required")
-                        // })}
-                        >
-                          {props => (
-                            <Form onSubmit={props.handleSubmit} name="simpleForm">
-                              <FormGroup>
-                                <Label htmlFor="transactionCategoryCode">Code</Label>
-                                <Input
-                                  type="text"
-                                  id="transactionCategoryCode"
-                                  name="transactionCategoryCode"
-                                  placeholder="Enter Code"
-                                  onChange={(val)=>{props.handleChange('transactionCategoryCode')(val)}}
-                                  // value={transactionCategoryCode}
-                                  // className={
-                                  //   props.errors.transactionCategoryCode && props.touched.transactionCategoryCode
-                                  //     ? "is-invalid"
-                                  //     : ""
-                                  // }
-                                />
-                                {/* {props.errors.transactionCategoryCode && props.touched.transactionCategoryCode && (
-                                  <div className="invalid-feedback">{props.errors.transactionCategoryCode}</div>
-                                )} */}
-                              </FormGroup>
-                              <FormGroup>
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                  type="text"
-                                  id="transactionCategoryName"
-                                  name="transactionCategoryName"
-                                  placeholder="Enter Name"
-                                  onChange={(value)=>{props.handleChange('transactionCategoryName')(value)}}
-                                  // value={transactionCategoryName}
-                                  className={
-                                    props.errors.transactionCategoryName && props.touched.transactionCategoryName
-                                      ? "is-invalid"
-                                      : ""
-                                  }
-                                />
-                                {props.errors.transactionCategoryName && props.touched.transactionCategoryName && (
-                                  <div className="invalid-feedback">{props.errors.transactionCategoryName}</div>
-                                )}
-                              </FormGroup>       
-                              <FormGroup>
+                        validationSchema={
+                          Yup.object().shape({
+                            transactionCategoryCode: Yup.string()
+                              .required("Code Name is Required"),
+                            transactionCategoryName: Yup.string()
+                              .required("Account is Required"),
+                            transactionType: Yup.string()
+                              .required("Type is Required")
+                          })}
+                      >
+                        {props => (
+                          <Form onSubmit={props.handleSubmit} name="simpleForm">
+                            <FormGroup>
+                              <Label htmlFor="transactionCategoryCode">Code</Label>
+                              <Input
+                                type="text"
+                                id="transactionCategoryCode"
+                                name="transactionCategoryCode"
+                                placeholder="Enter Code"
+                                onChange={(val) => { props.handleChange('transactionCategoryCode')(val) }}
+                                value={props.values.transactionCategoryCode}
+                                className={
+                                  props.errors.transactionCategoryCode && props.touched.transactionCategoryCode
+                                    ? "is-invalid"
+                                    : ""
+                                }
+                              />
+                              {props.errors.transactionCategoryCode && props.touched.transactionCategoryCode && (
+                                <div className="invalid-feedback">{props.errors.transactionCategoryCode}</div>
+                              )}
+                            </FormGroup>
+                            <FormGroup>
+                              <Label htmlFor="name">Name</Label>
+                              <Input
+                                type="text"
+                                id="transactionCategoryName"
+                                name="transactionCategoryName"
+                                placeholder="Enter Name"
+                                onChange={(value) => { props.handleChange('transactionCategoryName')(value) }}
+                                value={props.values.transactionCategoryName}
+                                className={
+                                  props.errors.transactionCategoryName && props.touched.transactionCategoryName
+                                    ? "is-invalid"
+                                    : ""
+                                }
+                              />
+                              {props.errors.transactionCategoryName && props.touched.transactionCategoryName && (
+                                <div className="invalid-feedback">{props.errors.transactionCategoryName}</div>
+                              )}
+                            </FormGroup>
+                            <FormGroup>
                               <Label htmlFor="name">Type</Label>
-                                <Select
-                                  className="select-default-width"
-                                  options={transaction_type_list?selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list):''}
-                                  value={props.values.transactionType}
-                                  onChange={option => props.handleChange('transactionType')(option)}
-                                  placeholder="Select Type"
-                                  id="transactionType"
-                                  name="transactionType"
-                                  className={
-                                    props.errors.transactionType && props.touched.transactionType
-                                      ? "is-invalid"
-                                      : ""
-                                  }
-                                />
-                                {props.errors.transactionType && props.touched.transactionType && (
-                                  <div className="invalid-feedback">{props.errors.transactionType}</div>
-                                )}     
-                              </FormGroup>
-                              
-                              <FormGroup className="text-right mt-5">
-                                <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
-                                  <i className="fa fa-dot-circle-o"></i> Create
+                              <Select
+                                className="select-default-width"
+                                options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list) : ''}
+                                value={props.values.transactionType}
+                                onChange={option => props.handleChange('transactionType')(option.value)}
+                                placeholder="Select Type"
+                                id="transactionType"
+                                name="transactionType"
+                                className={
+                                  props.errors.transactionType && props.touched.transactionType
+                                    ? "is-invalid"
+                                    : ""
+                                }
+                              />
+                              {props.errors.transactionType && props.touched.transactionType && (
+                                <div className="invalid-feedback">{props.errors.transactionType}</div>
+                              )}
+                            </FormGroup>
+
+                            <FormGroup className="text-right mt-5">
+                              <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                                <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
-                                <Button name="button" color="primary" className="btn-square mr-3" 
-                                  onClick={() => {
-                                    this.setState({readMore: true})
-                                    props.handleSubmit()
-                                  }}>
-                                  <i className="fa fa-refresh"></i> Create and More
+                              <Button name="submit" color="primary" className="btn-square mr-3"
+                                onClick={() => {
+                                  this.setState({ createMore: true })
+                                  props.handleSubmit()
+                                }}>
+                                <i className="fa fa-refresh"></i> Create and More
                                 </Button>
-                                <Button type="submit" color="secondary" className="btn-square"
-                                  onClick={() => {this.props.history.push('/admin/master/chart-account')}}>
-                                  <i className="fa fa-ban"></i> Cancel
+                              <Button type="submit" color="secondary" className="btn-square"
+                                onClick={() => { this.props.history.push('/admin/master/chart-account') }}>
+                                <i className="fa fa-ban"></i> Cancel
                                 </Button>
-                              </FormGroup>
-                            </Form>
-                          )}
-                        </Formik>
+                            </FormGroup>
+                          </Form>
+                        )}
+                      </Formik>
                     </Col>
                   </Row>
                 </CardBody>

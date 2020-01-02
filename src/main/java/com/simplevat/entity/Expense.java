@@ -1,9 +1,7 @@
 package com.simplevat.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 
@@ -13,8 +11,6 @@ import javax.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -33,7 +29,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 public class Expense implements Serializable {
 
@@ -48,11 +44,6 @@ public class Expense implements Serializable {
     @Column(name = "EXPENSE_AMOUNT")
     @ColumnDefault(value = "0.00")
     private BigDecimal expenseAmount;
-    
-    @Basic
-    @Column(name = "EXPENSE_VAT_AMOUNT")
-    @ColumnDefault(value = "0.00")
-    private BigDecimal expenseVATAmount;
 
     @Basic
     @Column(name = "EXPENSE_DATE")
@@ -62,22 +53,6 @@ public class Expense implements Serializable {
     @Basic
     @Column(name = "EXPENSE_DESCRIPTION")
     private String expenseDescription;
-
-    @Basic
-    @Column(name = "RECEIPT_NUMBER", length = 20)
-    private String receiptNumber;
-
-    @Basic
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CLAIMANT_ID")
-    @JsonManagedReference
-    private User user;
-
-    @Basic
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TRANSACTION_TYPE_CODE")
-    @JsonManagedReference
-    private TransactionType transactionType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRANSACTION_CATEGORY_CODE")
@@ -94,10 +69,9 @@ public class Expense implements Serializable {
     @JsonManagedReference
     private Project project;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CONTACT_ID")
-    @JsonManagedReference
-    private Contact expenseContact;
+    @Basic
+    @Column(name = "RECEIPT_NUMBER", length = 20)
+    private String receiptNumber;
 
     @Basic
     @Column(name = "RECEIPT_ATTACHMENT_PATH")
@@ -129,78 +103,15 @@ public class Expense implements Serializable {
     @Basic(optional = false)
     private Boolean deleteFlag = Boolean.FALSE;
 
-//    @Column(name = "RECURRING_FLAG")
-//    @ColumnDefault(value = "0")
-//    private Boolean recurringFlag = Boolean.FALSE;
     @Column(name = "VERSION_NUMBER")
     @ColumnDefault(value = "1")
     @Basic(optional = false)
     @Version
     private Integer versionNumber;
 
-//    @Column(name = "RECURRING_INTERVAL")
-//    private Integer recurringInterval;
-//
-//    @Column(name = "RECURRING_WEEK_DAYS")
-//    private Integer recurringWeekDays;
-//
-//    @Column(name = "RECURRING_MONTH")
-//    private Integer recurringMonth;
-//
-//    @Column(name = "RECURRING_DAYS")
-//    private Integer recurringDays;
-//
-//    @Column(name = "RECURRING_FIRST_TO_LAST")
-//    private Integer recurringFistToLast;
-//
-//    @Column(name = "RECURRING_BY_AFTER")
-//    private Integer recurringByAfter;
-//    @Column(name = "STATUS")
-//    private Integer status;
-    @Column(name = "PAYMENTMODE")
-    private Integer paymentMode;
-
-    @Basic
-    @Lob
-    @Column(name = "RECEIPT_ATTACHMENT")
-    private byte[] receiptAttachmentBinary;
-
-    @Basic
-    @Column(name = "RECEIPT_ATTACHMENT_NAME")
-    private String receiptAttachmentName;
-
-    @Basic
-    @Column(name = "RECEIPT_ATTACHMENT_CONTENT_TYPE")
-    private String receiptAttachmentContentType;
-
-    @Basic
-    @ColumnDefault(value = "0.00")
-    @Column(name = "EXPENSE_AMOUNT_COMPANY_CURRENCY")
-    private BigDecimal expencyAmountCompanyCurrency;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BANK_ID")
-    @JsonManagedReference
-    private BankAccount bankAccount;
-
     @Basic
     @Column(name = "PAYEE")
     private String payee;
-
-    @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "expense", orphanRemoval = true)
-    private Collection<ExpenseLineItem> expenseLineItems;
-
-    public Collection<ExpenseLineItem> getExpenseLineItems() {
-        return (expenseLineItems == null) ? (expenseLineItems = new ArrayList<>()) : expenseLineItems;
-    }
-
-    public void setExpenseLineItems(final Collection<ExpenseLineItem> expenseLineItems) {
-
-        final Collection<ExpenseLineItem> thisExpenseLineItems = getExpenseLineItems();
-        thisExpenseLineItems.clear();
-        thisExpenseLineItems.addAll(expenseLineItems);
-    }
 
     @PrePersist
     public void updateDates() {

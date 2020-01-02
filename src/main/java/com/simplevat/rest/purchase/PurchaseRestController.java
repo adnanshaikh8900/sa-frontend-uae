@@ -9,18 +9,14 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.helper.PurchaseRestControllerHelper;
 import com.simplevat.contact.model.PurchaseRestModel;
 import com.simplevat.contact.model.PurchaseItemRestModel;
-import com.simplevat.constant.ContactTypeConstant;
 import com.simplevat.constant.InvoicePurchaseStatusConstant;
 import com.simplevat.constant.TransactionCategoryConsatant;
 import com.simplevat.criteria.ProjectCriteria;
 import com.simplevat.entity.Company;
-import com.simplevat.entity.Contact;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.CurrencyConversion;
-import com.simplevat.entity.Product;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.Purchase;
-import com.simplevat.entity.User;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.CompanyService;
@@ -30,13 +26,12 @@ import com.simplevat.service.ProductService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.PurchaseService;
 import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,7 +63,7 @@ public class PurchaseRestController {
     private ProductService productService;
 
     @Autowired
-    private UserServiceNew userServiceNew;
+    private UserService userServiceNew;
 
     @Autowired
     private VatCategoryService vatCategoryService;
@@ -263,17 +258,6 @@ public class PurchaseRestController {
             }
             List<Project> projects = projectService.getProjectsByCriteria(criteria);
             return new ResponseEntity(projects, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/contacts")
-    public ResponseEntity contacts(@RequestParam("contactName") String searchQuery) {
-        try {
-            List<Contact> contacts = contactService.getContacts(searchQuery, ContactTypeConstant.VENDOR);
-            return new ResponseEntity(contacts, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -31,13 +31,16 @@ import * as ContactActions from './actions'
 import {
   CommonActions
 } from 'services/global'
+import {selectOptionsFactory} from 'utils'
 
 
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    contact_list: state.contact.contact_list
+    contact_list: state.contact.contact_list,
+    contact_type_list: state.contact.contact_type_list
+
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -53,24 +56,38 @@ class Contact extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true,
+      loading: false,
       clickedRow: {},
-      selected_id_list: [],
+      selectedRows: [],
       dialog: null,
+      filterData: {
+        name: '',
+        email: '',
+        contactType: '',
+      },
+      selectedContactType: ''
     }
 
     this.initializeData = this.initializeData.bind(this)
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
     this.goToDetail = this.goToDetail.bind(this)
-    this.typeFormatter = this.typeFormatter.bind(this);
+
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
+    this.onPageChange = this.onPageChange.bind(this);
+    this.onSizePerPageList = this.onSizePerPageList.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      page: 1,
+      sizePerPage: 10,
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
@@ -80,7 +97,6 @@ class Contact extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
   }
 
   componentDidMount() {
@@ -89,41 +105,55 @@ class Contact extends React.Component {
 
   componentWillUnmount() {
     this.setState({
-      selected_id_list: []
+      selectedRows: []
     })
   }
 
   initializeData() {
-    this.props.contactActions.getContactList().then(res => {
-      console.log(res)
+    let { filterData } = this.state
+    const data = {
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
+    }
+    filterData = {...filterData,...data}
+    this.props.contactActions.getContactList(filterData).then(res => {
       if (res.status === 200) {
+        this.props.contactActions.getContactTypeList();
         this.setState({ loading: false });
-        console.log(this.props)
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
       this.setState({ loading: false })
     })
   }
 
-  typeFormatter(cell, row) {
-    return row['contactType'].name;
+
+  onPageChange = (page, sizePerPage) => {
+      this.options.page = page
   }
+
+  onSizePerPageList = (sizePerPage) => {
+    this.options.sizePerPage = sizePerPage
+  }
+
+  // typeFormatter(cell, row) {
+  //   return row['contactType'] ? row['contactType'].name : '';
+  // }
 
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
-      temp_list.push(row.contactId);
+      temp_list = Object.assign([], this.state.selectedRows)
+      temp_list.push(row.id);
     } else {
-      this.state.selected_id_list.map(item => {
-        if (item !== row.contactId) {
+      this.state.selectedRows.map(item => {
+        if (item !== row.id) {
           temp_list.push(item)
         }
       });
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
@@ -131,23 +161,23 @@ class Contact extends React.Component {
     let temp_list = []
     if (isSelected) {
       rows.map(item => {
-        temp_list.push(item.contactId)
+        temp_list.push(item.id)
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
   goToDetail(row) {
-    this.props.history.push('/admin/master/contact/detail',{id: row.contactId})
+    this.props.history.push('/admin/master/contact/detail', { id: row.id })
   }
 
   bulkDelete() {
     const {
-      selected_id_list
+      selectedRows
     } = this.state
-    if (selected_id_list.length > 0) {
+    if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
@@ -161,22 +191,24 @@ class Contact extends React.Component {
   }
 
   removeBulk() {
+    const {filterData} = this.state
     this.removeDialog()
-    let { selected_id_list } = this.state;
+    let { selectedRows } = this.state;
     const { contact_list } = this.props
     let obj = {
-      ids: selected_id_list
+      ids: selectedRows
     }
-    this.props.contactActions.removeBulk(obj).then(() => {
-      this.props.contactActions.getContactList()
+    this.props.contactActions.removeBulk(obj).then((res) => {
+      this.initializeData();
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (contact_list && contact_list.length > 0) {
         this.setState({
-          selected_id_list: []
+          selectedRows: []
         })
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err !== null ? err.data.message : null)
+      this.setState({ isLoading: false })
     })
   }
 
@@ -186,11 +218,24 @@ class Contact extends React.Component {
     })
   }
 
+  handleChange(val, name) {
+    this.setState({
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
+    })
+  }
+
+  handleSearch() {
+    this.initializeData();
+    // this.setState({})
+  }
+
 
   render() {
 
-    const { loading,dialog } = this.state
-    const { contact_list } = this.props
+    const { loading, dialog, filterData,selectedRows} = this.state
+    const { contact_list, contact_type_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -199,7 +244,7 @@ class Contact extends React.Component {
       <div className="contact-screen">
         <div className="animated fadeIn">
           {dialog}
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
             <CardHeader>
               <Row>
@@ -227,8 +272,8 @@ class Contact extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={()=>this.table.handleExportCSV()}
-
+                            onClick={() => this.table.handleExportCSV()}
+                            disabled={contact_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -245,6 +290,7 @@ class Contact extends React.Component {
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
+                            disabled={selectedRows.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -253,21 +299,37 @@ class Contact extends React.Component {
                       </div>
                       <div className="py-3">
                         <h5>Filter : </h5>
-                        <Row>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="User Name" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Email" />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Select
-                              className=""
-                              options={[]}
-                              placeholder="User Type"
-                            />
-                          </Col>
-                        </Row>
+                        <form>
+                          <Row>
+                            <Col lg={3} className="mb-1">
+                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                            </Col>
+                            <Col lg={3} className="mb-2">
+                              <Input type="text" placeholder="Email" onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
+                            </Col>
+                            <Col lg={3} className="mb-1">
+                              <FormGroup className="mb-3">
+
+                                <Select
+                                  options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list) : []}
+                                  onChange={(val) => {
+                                    this.handleChange(val['value'], 'contactType')
+                                    this.setState({ 'selectedContactType': val['value'] })
+                                  }}
+                                  className="select-default-width"
+                                  placeholder="Contact Type"
+                                  value={this.state.selectedContactType}
+                                />
+                              </FormGroup>
+
+                            </Col>
+                            <Col lg={2} className="mb-1">
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={contact_list.length === 0} >
+                                <i className="fa fa-search"></i>
+                            </Button>
+                            </Col>
+                          </Row>
+                        </form>
                       </div>
                       <div>
                         <Row>
@@ -276,7 +338,7 @@ class Contact extends React.Component {
                               selectRow={this.selectRowProp}
                               search={false}
                               options={this.options}
-                              data={contact_list ? contact_list : ''}
+                              data={contact_list ? contact_list : []}
                               version="4"
                               hover
                               pagination
@@ -284,7 +346,9 @@ class Contact extends React.Component {
                               className="product-table"
                               trClassName="cursor-pointer"
                               csvFileName="Contact.csv"
-                              ref={node => this.table = node}
+                              ref={node => {
+                                this.table = node
+                              }}
                             >
                               <TableHeaderColumn
                                 isKey
@@ -300,9 +364,9 @@ class Contact extends React.Component {
                                 email
                               </TableHeaderColumn>
                               <TableHeaderColumn
-                                dataField="contactType"
+                                dataField="contactTypeString"
                                 dataSort
-                                dataFormat={this.typeFormatter}
+                                // dataFormat={this.typeFormatter}
                               >
                                 Type
                               </TableHeaderColumn>

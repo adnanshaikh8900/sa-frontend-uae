@@ -29,7 +29,7 @@ const mapStateToProps = (state) => {
   return ({
     vat_list: state.product.vat_list,
     product_warehouse_list: state.product.product_warehouse_list,
-    product_parent_list: state.product.product_parent_list
+    product_category_list: state.product.product_category_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -46,30 +46,32 @@ class CreateProduct extends React.Component {
       loading: true,
       openWarehouseModal:false,
 
-      selectedParentProduct: null,
-      selectedVatCategory: null,
-      selectedWareHouse: null,
+      // selectedParentProduct: null,
+      // selectedVatCategory: null,
+      // selectedWareHouse: null,
 
-      initProductValue: {
+      initValue: {
         productName: '', 
         productDescription: '',
         productCode:'',
         vatCategoryId : '',
         unitPrice : '',
-        parentProductId: '',
+        productCategoryId: '',
         productWarehouseId: '',
         vatIncluded: false,
       },
+      createMore: false
     }
 
     this.showWarehouseModal = this.showWarehouseModal.bind(this)
     this.closeWarehouseModal = this.closeWarehouseModal.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
 
   componentDidMount(){
     this.props.productActions.getProductVatCategoryList()
-    this.props.productActions.getParentProductList()
+    this.props.productActions.getProductCategoryList()
     this.props.productActions.getProductWareHouseList()
   }
 
@@ -86,38 +88,55 @@ class CreateProduct extends React.Component {
 
 
   // Create or Edit Product
-  productHandleSubmit(data) {
+  handleSubmit(data) {
     const {
       productName, 
       productDescription,
       productCode,
       vatCategoryId,
       unitPrice ,
-      parentProductId,
+      productCategoryId,
       productWarehouseId,
       vatIncluded,
-    } = this.data
+    } = data
 
-    this.props.productActions.createAndSaveProduct(data).then(res => {
+
+    const postData = {
+      productName:  productName,
+      productDescription: productDescription,
+      productCode: productCode,
+      vatCategoryId: vatCategoryId,
+      unitPrice: unitPrice,
+      productCategoryId: productCategoryId,
+      productWarehouseId: productWarehouseId,
+      vatIncluded: vatIncluded
+    }
+
+    this.props.productActions.createAndSaveProduct(postData).then(res => {
       if (res.status === 200) {
-        // this.success()
-
-        if(this.state.readMore){
+        this.props.commonActions.tostifyAlert('success', 'New Product created successfully!')
+        if(this.state.createMore){
           this.setState({
-            readMore: false
+            createMore: false
           })
+          // this.props.history.push('/admin/master/product/create')
         } else this.props.history.push('/admin/master/product')
       }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
-
   }
+
+  // displayMessage(msg) {
+  //   toast.success(msg, {
+  //     position: toast.POSITION.TOP_RIGHT
+  //   })
+  // }
 
   render() {
 
-    const  {vat_list, product_parent_list, product_warehouse_list } = this.props
-
-    console.log()
-
+    const  {vat_list, product_category_list, product_warehouse_list } = this.props
+    const { initValue } = this.state;
     return (
       <div className="create-product-screen">
         <div className="animated fadeIn">
@@ -138,24 +157,27 @@ class CreateProduct extends React.Component {
                   <Row>
                     <Col lg={12}>
                       <Formik
-                        initialValues={this.state.initProductValue}
+                        initialValues={initValue}
                         onSubmit={(values, {resetForm}) => {
 
-                          this.productHandleSubmit(values)
-                          resetForm(this.state.initProductValue)
+                          this.handleSubmit(values)
+                          resetForm(initValue)
 
-                          this.setState({
-                            selectedWareHouse: null,
-                            selectedParentProduct: null,
-                            selectedVatCategory: null,
-                          })
+                          // this.setState({
+                          //   selectedWareHouse: null,
+                          //   selectedParentProduct: null,
+                          //   selectedVatCategory: null,
+                          // })
                         }}
-                        validationSchema={Yup.object().shape({
+                        validationSchema={
+                          Yup.object().shape({
                           productName: Yup.string()
                             .required("Product Name is Required"),
-                          vatCategory: Yup.string()
-                            .required("Vat Category is Required"),
-                        })}>
+                          vatCategoryId: Yup.string()
+                            .required("Vat Category is Required")
+                            .nullable()
+                        })}
+                        >
                           {props => (
                             <Form onSubmit={props.handleSubmit}>
                               <Row>
@@ -168,7 +190,7 @@ class CreateProduct extends React.Component {
                                       type="text"
                                       id="productName"
                                       name="productName"
-                                      onChange={props.handleChange}
+                                      onChange={(value) => {props.handleChange("productName")(value)}}
                                       value={props.values.productName}
                                       placeholder="Enter Product Name"
                                       className={
@@ -190,8 +212,9 @@ class CreateProduct extends React.Component {
                                       type="text"
                                       id="productCode"
                                       name="productCode"
-                                      onChange={props.handleChange}
-                                      value={props.values.productCode}
+                                      onChange={(value) => {props.handleChange("productCode")(value)}}
+
+                                      // value={props.values.productCode}
                                       placeholder="Enter Product Code"
                                     />
                                   </FormGroup>
@@ -199,18 +222,18 @@ class CreateProduct extends React.Component {
 
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="parentProductId">Parent Product</Label>
+                                    <Label htmlFor="productCategoryId">Product Category</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={selectOptionsFactory.renderOptions('productName', 'productID', product_parent_list)}
-                                      id="parentProductId"
-                                      name="parentProductId"
-                                      value={this.state.selectedParentProduct}
+                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'productCategoryCode', product_category_list) : []}
+                                      id="productCategoryId"
+                                      name="productCategoryId"
+                                      value={props.values.productCategoryId}
                                       onChange={(option) => {
-                                        this.setState({
-                                          selectedParentProduct: option.value
-                                        })
-                                        props.handleChange("parentProductId")(option.value);
+                                        // this.setState({
+                                        //   selectedParentProduct: option.value
+                                        // })
+                                        props.handleChange("productCategoryId")(option.value);
                                       }}
                                     />
                                   </FormGroup>
@@ -226,7 +249,8 @@ class CreateProduct extends React.Component {
                                       id="unitPrice"
                                       name="unitPrice"
                                       placeholder="Enter Product Price"
-                                      onChange={props.handleChange}
+                                      onChange={(value) => {props.handleChange("unitPrice")(value)}}
+
                                       value={props.values.unitPrice}
                                     />
                                   </FormGroup>
@@ -239,11 +263,11 @@ class CreateProduct extends React.Component {
                                       options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list): []}
                                       id="vatCategoryId"
                                       name="vatCategoryId"
-                                      value={this.state.selectedVatCategory}
+                                      value={props.values.vatCategoryId}
                                       onChange={(option) => {
-                                        this.setState({
-                                          selectedVatCategory: option.value
-                                        })
+                                        // this.setState({
+                                        //   selectedVatCategory: option.value
+                                        // })
                                         props.handleChange("vatCategoryId")(option.value);
                                       }}
                                       className={
@@ -266,7 +290,8 @@ class CreateProduct extends React.Component {
                                       type="checkbox"
                                       id="vatIncluded"
                                       name="vatIncluded"
-                                      onChange={props.handleChange}
+                                      onChange={(value) => {props.handleChange("vatIncluded")(value)}}
+
                                       value={props.values.vatIncluded}
                                     />
                                     <Label className="form-check-label" check htmlFor="vatIncluded">Vat Include</Label>
@@ -277,18 +302,18 @@ class CreateProduct extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="warehourse">Warehourse</Label>
+                                    <Label htmlFor="productWarehouseId">Warehourse</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list)}
-                                      id="productWarehouse"
-                                      name="productWarehouse"
-                                      value={this.state.selectedWareHouse}
+                                      options={product_warehouse_list ? selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list) : []}
+                                      id="productWarehouseId"
+                                      name="productWarehouseId"
+                                      value={props.values.productWarehouseId}
                                       onChange={(option) => {
-                                        this.setState({
-                                          selectedWareHouse: option.value
-                                        })
-                                        props.handleChange("productWarehouse")(option.value);
+                                        // this.setState({
+                                        //   selectedWareHouse: option.value
+                                        // })
+                                        props.handleChange("productWarehouseId")(option.value);
                                       }}
                                     />
                                   </FormGroup>
@@ -314,7 +339,8 @@ class CreateProduct extends React.Component {
                                       id="productDescription"
                                       rows="6"
                                       placeholder="Description..."
-                                      onChange={props.handleChange}
+                                      onChange={(value) => {props.handleChange('productDescription')(value)}}
+
                                       value={props.values.productDescription}
                                     />
                                   </FormGroup>
@@ -326,7 +352,14 @@ class CreateProduct extends React.Component {
                                     <Button type="submit" color="primary" className="btn-square mr-3">
                                       <i className="fa fa-dot-circle-o"></i> Create
                                     </Button>
-                                    <Button type="submit" color="primary" className="btn-square mr-3">
+                                    <Button type="button" color="primary" className="btn-square mr-3"
+                                      onClick={
+                                        () => {
+                                          this.setState({createMore: true})
+                                          props.handleSubmit()
+                                        }
+                                      }
+                                    >
                                       <i className="fa fa-repeat"></i> Create and More
                                     </Button>
                                     <Button color="secondary" className="btn-square" 

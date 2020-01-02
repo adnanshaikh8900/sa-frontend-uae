@@ -1,13 +1,19 @@
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.CommonConstant;
+import com.simplevat.constant.dbfilter.ContactFilterEnum;
+import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ContactDao;
 import com.simplevat.entity.Contact;
-import com.simplevat.entity.ContactView;
+import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.contactController.ContactRequestFilterModel;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -21,27 +27,61 @@ import org.apache.commons.collections4.CollectionUtils;
 public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements ContactDao {
 
     @Override
-    public List<Contact> getContacts(Integer pageIndex, Integer noOfRecorgs) {
+    public List<DropdownModel> getContactForDropdown(Integer contactType) {
+        String query = "SELECT new " + CommonConstant.DROPDOWN_MODEL_PACKAGE + "(c.contactId , CONCAT(c.firstName, ' ', c.middleName, ' ', c.lastName)) "
+                + " FROM Contact c where c.deleteFlag = FALSE ";
+        if (contactType != null && !contactType.toString().isEmpty()) {
+            query += " and c.contactType = :contactType ";
+        }
+        query += " order by c.firstName, c.lastName ";
+        TypedQuery<DropdownModel> typedQuery = getEntityManager().createQuery(query, DropdownModel.class);
+        return typedQuery.getResultList();
+    }
+
+    @Override
+    public List<Contact> getContacts(ContactRequestFilterModel filterModel, Integer pageNo, Integer pageSize) {
+        TypedQuery<Contact> typedQuery = getEntityManager().createNamedQuery("contactsByType", Contact.class);
+        if (filterModel.getContactType() != null) {
+            typedQuery.setParameter("contactType", filterModel.getContactType());
+        }
+        if (filterModel.getName() != null) {
+            typedQuery.setParameter("firstName", filterModel.getName());
+        }
+        if (filterModel.getEmail() != null) {
+            typedQuery.setParameter("email", filterModel.getEmail());
+        }
+        typedQuery.setMaxResults(pageSize);
+        typedQuery.setFirstResult(pageNo * pageSize);
+        return typedQuery.getResultList();
+    }
+
+    @Override
+    public List<Contact> getContactList(Map<ContactFilterEnum, Object> filterMap) {
+        List<DbFilter> dbFilters = new ArrayList();
+        filterMap.forEach((productFilter, value) -> dbFilters.add(DbFilter.builder()
+                .dbCoulmnName(productFilter.getDbColumnName())
+                .condition(productFilter.getCondition())
+                .value(value).build()));
+        List<Contact> contacts = this.executeQuery(dbFilters);
+        return contacts;
+    }
+
+    @Override
+    public List<Contact> getAllContacts(Integer pageNo, Integer pageSize) {
         List<Contact> contacts = getEntityManager().createNamedQuery("allContacts", Contact.class)
-                .setMaxResults(noOfRecorgs)
-                .setFirstResult(pageIndex * noOfRecorgs).getResultList();
+                .setMaxResults(pageSize)
+                .setFirstResult(pageNo * pageSize).getResultList();
         return contacts;
     }
 
     @Override
-    public List<Contact> getContacts() {
-        List<Contact> contacts = this.executeNamedQuery("allContacts");
-        //List<Contact> contacts = entityManager.createNamedQuery("allContacts", Contact.class).getResultList();
-        return contacts;
-    }
-
-    @Override
-    public List<Contact> getContacts(final String searchQuery, int contactType) {
+    public List<Contact> getContacts(Integer contactType, final String searchQuery, Integer pageNo, Integer pageSize) {
         List<Contact> contacts = getEntityManager()
                 .createNamedQuery("Contact.contactsByName", Contact.class)
                 .setParameter("name", "%" + searchQuery + "%")
                 .setParameter("contactType", contactType)
-                .getResultList();
+                .setMaxResults(pageSize)
+                .setFirstResult(pageNo * pageSize).getResultList();
         return contacts;
     }
 
@@ -55,26 +95,6 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
             return Optional.of((Contact) resultList.get(0));
         }
         return Optional.empty();
-    }
-
-    @Override
-    public List<ContactView> getContactViewList() {
-        TypedQuery<ContactView> query = getEntityManager().createQuery("SELECT c FROM ContactView c", ContactView.class);
-        List<ContactView> contactViewList = query.getResultList();
-        if (contactViewList != null && !contactViewList.isEmpty()) {
-            return contactViewList;
-        }
-        return null;
-    }
-
-    @Override
-    public Contact getLastContact() {
-        TypedQuery<Contact> query = getEntityManager().createQuery("SELECT c FROM Contact c ORDER BY c.contactId DESC", Contact.class);
-        List<Contact> contacts = query.getResultList();
-        if (contacts != null && !contacts.isEmpty()) {
-            return contacts.get(0);
-        }
-        return null;
     }
 
     @Override

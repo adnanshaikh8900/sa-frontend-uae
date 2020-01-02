@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -24,15 +24,20 @@ import {
 import Select from 'react-select'
 import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-import DateRangePicker from 'react-bootstrap-daterangepicker'
+import DatePicker from 'react-datepicker'
 
-import { Loader } from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import 'bootstrap-daterangepicker/daterangepicker.css'
 
 import * as JournalActions from './actions'
+import {
+  CommonActions
+} from 'services/global'
+
+import moment from 'moment'
 
 
 import './style.scss'
@@ -44,28 +49,46 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    journalActions: bindActionCreators(JournalActions, dispatch)
+    journalActions: bindActionCreators(JournalActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch),
+ 
   })
 }
 
 class Journal extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
-      actionButtons: {}
+      loading: true,
+      actionButtons: {},
+      dialog: null,
+      selectedRows: [],
+      filterData: {
+        journalDate: '',
+        referenceCode: '',
+        description: ''
+      }
     }
 
     this.initializeData = this.initializeData.bind(this)
-    this.renderJournalNumber = this.renderJournalNumber.bind(this)
-    this.renderStatus = this.renderStatus.bind(this)
-    this.renderActions = this.renderActions.bind(this)
+    this.renderDate = this.renderDate.bind(this)
+
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+    this.bulkDeleteJournal = this.bulkDeleteJournal.bind(this);
+    this.removeBulkJournal = this.removeBulkJournal.bind(this);
+    this.removeDialog = this.removeDialog.bind(this);
+
+    // this.renderActions = this.renderActions.bind(this)
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
+    this.goToDetail = this.goToDetail.bind(this);
+
     this.toggleActionButton = this.toggleActionButton.bind(this)
 
     this.options = {
+      onRowClick: this.goToDetail,
       paginationPosition: 'top'
     }
 
@@ -79,72 +102,91 @@ class Journal extends React.Component {
 
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.initializeData()
   }
 
-  initializeData () {
-    this.props.journalActions.getJournalList()
+  componentWillUnmount() {
+    this.setState({
+      selectedRows: []
+    })
   }
 
-  renderStatus (cell, row) {
-    let label = ''
-    let class_name = ''
-    if (row.transactionCategoryCode == 4) {
-      label = 'New'
-      class_name = 'badge-danger'
-    } else {
-      label = 'Posted'
-      class_name = 'badge-success'
+  initializeData() {
+    const { filterData } = this.state
+    const paginationData = {
+      pageNo: this.options.page ? this.options.page : 1,
+      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
     }
-    return (
-      <span className={`badge ${class_name} mb-0`}>{ label }</span>
-    )
+    const postData = { ...filterData, ...paginationData }
+    this.props.journalActions.getJournalList(postData).then(res => {
+      if (res.status === 200) {
+        this.setState({ loading: false })
+      }
+    }).catch(err => {
+      this.setState({ loading: false })
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
   }
 
-  renderJournalNumber (cell, row) {
-    return (
-      <label
-        className="mb-0 my-link"
-        onClick={() => this.props.history.push('/admin/accountant/journal/detail')}
-      >
-        { row.transactionCategoryCode }3443543
-      </label>
-    )
-  }
+  // renderStatus (cell, row) {
+  //   let label = ''
+  //   let class_name = ''
+  //   if (row.transactionCategoryCode === 4) {
+  //     label = 'New'
+  //     class_name = 'badge-danger'
+  //   } else {
+  //     label = 'Posted'
+  //     class_name = 'badge-success'
+  //   }
+  //   return (
+  //     <span className={`badge ${class_name} mb-0`}>{ label }</span>
+  //   )
+  // }
 
-  renderActions (cell, row) {
-    return (
-      <div>
-        <ButtonDropdown
-          isOpen={this.state.actionButtons[row.transactionCategoryCode]}
-          toggle={() => this.toggleActionButton(row.transactionCategoryCode)}
-        >
-          <DropdownToggle size="sm" color="primary" className="btn-brand icon">
-            {
-              this.state.actionButtons[row.transactionCategoryCode] == true ?
-                <i className="fas fa-chevron-up" />
-              :
-                <i className="fas fa-chevron-down" />
-            }
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem onClick={() => this.props.history.push('/admin/accountant/journal/detail')}>
-              <i className="fas fa-edit" /> Edit
-            </DropdownItem>
-            <DropdownItem>
-              <i className="fas fa-file" /> Post
-            </DropdownItem>
-            <DropdownItem>
-              <i className="fa fa-trash" /> Cancel
-            </DropdownItem>
-          </DropdownMenu>
-        </ButtonDropdown>
-      </div>
-    )
-  }
+  // renderJournalNumber (cell, row) {
+  //   return (
+  //     <label
+  //       className="mb-0 my-link"
+  //       onClick={() => this.props.history.push('/admin/accountant/journal/detail')}
+  //     >
+  //       { row.transactionCategoryCode }3443543
+  //     </label>
+  //   )
+  // }
 
-  toggleActionButton (index) {
+  // renderActions (cell, row) {
+  //   return (
+  //     <div>
+  //       <ButtonDropdown
+  //         isOpen={this.state.actionButtons[row.transactionCategoryCode]}
+  //         toggle={() => this.toggleActionButton(row.transactionCategoryCode)}
+  //       >
+  //         <DropdownToggle size="sm" color="primary" className="btn-brand icon">
+  //           {
+  //             this.state.actionButtons[row.transactionCategoryCode] === true ?
+  //               <i className="fas fa-chevron-up" />
+  //             :
+  //               <i className="fas fa-chevron-down" />
+  //           }
+  //         </DropdownToggle>
+  //         <DropdownMenu right>
+  //           <DropdownItem onClick={() => this.props.history.push('/admin/accountant/journal/detail')}>
+  //             <i className="fas fa-edit" /> Edit
+  //           </DropdownItem>
+  //           <DropdownItem>
+  //             <i className="fas fa-file" /> Post
+  //           </DropdownItem>
+  //           <DropdownItem>
+  //             <i className="fa fa-trash" /> Cancel
+  //           </DropdownItem>
+  //         </DropdownMenu>
+  //       </ButtonDropdown>
+  //     </div>
+  //   )
+  // }
+
+  toggleActionButton(index) {
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -156,16 +198,107 @@ class Journal extends React.Component {
     })
   }
 
-  onRowSelect (row, isSelected, e) {
-    console.log('one row checked ++++++++', row)
+
+  goToDetail(row) {
+    this.props.history.push('/admin/accountant/journal/detail', { id: row['id'] })
   }
-  onSelectAll (isSelected, rows) {
-    console.log('current page all row checked ++++++++', rows)
+
+  onRowSelect(row, isSelected, e) {
+    let temp_list = []
+    if (isSelected) {
+      temp_list = Object.assign([], this.state.selectedRows)
+      temp_list.push(row.journalId);
+    } else {
+      this.state.selectedRows.map(item => {
+        if (item !== row.journalId) {
+          temp_list.push(item)
+        }
+      });
+    }
+    this.setState({
+      selectedRows: temp_list
+    })
+  }
+  onSelectAll(isSelected, rows) {
+    let temp_list = []
+    if (isSelected) {
+      rows.map(item => {
+        temp_list.push(item.journalId)
+      })
+    }
+    this.setState({
+      selectedRows: temp_list
+    })
+  }
+
+  renderDate(cell, rows) {
+    return moment(rows.journalDate).format('DD-MM-YYYY')
+  }
+
+  handleChange(val, name) {
+    this.setState({
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
+    })
+  }
+
+  handleSearch() {
+    this.initializeData()
+  }
+
+  bulkDeleteJournal() {
+    const {
+      selectedRows
+    } = this.state
+    if (selectedRows.length > 0) {
+      this.setState({
+        dialog: <ConfirmDeleteModal
+          isOpen={true}
+          okHandler={this.removeBulkJournal}
+          cancelHandler={this.removeDialog}
+        />
+      })
+    } else {
+      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
+    }
+  }
+
+  removeBulkJournal() {
+    this.removeDialog()
+    let { selectedRows } = this.state;
+    const { journal_list } = this.props
+    let obj = {
+      ids: selectedRows
+    }
+    this.props.journalActions.removeBulkJournal(obj).then((res) => {
+      if(res.status == 200) {
+        this.initializeData()
+        this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+        if (journal_list && journal_list.length > 0) {
+          this.setState({
+            selectedRows: []
+          })
+        }
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
   }
 
   render() {
 
-    const { loading } = this.state
+    const { loading,
+      dialog,
+      filterData ,
+      selectedRows
+    } = this.state
     const { journal_list } = this.props
     const containerStyle = {
       zIndex: 1999
@@ -175,13 +308,14 @@ class Journal extends React.Component {
       <div className="journal-screen">
         <div className="animated fadeIn">
           <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {dialog}
           <Card>
             <CardHeader>
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
                     <i className="fa fa-diamond" />
-                    <span className="ml-2">Journals</span>
+                    <span className="ml-2">Journal</span>
                   </div>
                 </Col>
               </Row>
@@ -194,7 +328,7 @@ class Journal extends React.Component {
                       <Loader />
                     </Col>
                   </Row>
-                :
+                  :
                   <Row>
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
@@ -202,6 +336,8 @@ class Journal extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
+                            onClick={() => this.table.handleExportCSV()}
+                            disabled={journal_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -217,6 +353,8 @@ class Journal extends React.Component {
                           <Button
                             color="warning"
                             className="btn-square"
+                            onClick={this.bulkDeleteJournal}
+                            disabled={selectedRows.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -227,71 +365,87 @@ class Journal extends React.Component {
                         <h5>Filter : </h5>
                         <Row>
                           <Col lg={2} className="mb-1">
-                            <Select
-                              className=""
-                              options={[]}
-                              placeholder="Status"
+                            <DatePicker
+                              className="form-control"
+                              id="date"
+                              name="journalDate"
+                              placeholderText="Post Date"
+                              selected={filterData.journalDate}
+                              onChange={(value) => {
+                                this.handleChange(value, "journalDate")
+                              }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <DateRangePicker>
-                              <Input type="text" placeholder="Period" />
-                            </DateRangePicker>
+                            <Input type="text" placeholder=" Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'referenceCode') }} />
+                          </Col>
+                          <Col lg={2} className="mb-1">
+                            <Input type="text" placeholder="Description" onChange={(e) => { this.handleChange(e.target.value, 'description') }} />
+                          </Col>
+                          <Col lg={1} className="mb-1">
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={journal_list.length === 0}>
+                              <i className="fa fa-search"></i>
+                            </Button>
                           </Col>
                         </Row>
                       </div>
                       <div>
                         <BootstrapTable
-                          selectRow={ this.selectRowProp }
+                          selectRow={this.selectRowProp}
                           search={false}
-                          options={ this.options }
-                          data={ journal_list }
+                          options={this.options}
+                          data={journal_list}
                           version="4"
                           hover
+                          keyField="journalId"
                           pagination
                           totalSize={journal_list ? journal_list.length : 0}
                           className="journal-table"
                         >
                           <TableHeaderColumn
-                            isKey
-                            dataField="transactionCategoryName"
+                            dataField="journalDate"
                             dataSort
+                            dataFormat={this.renderDate}
                           >
-                            Post Date
+                            POST DATE
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryCode"
-                            dataFormat={this.renderJournalNumber}
+                            dataField="referenceCode"
                             dataSort
                           >
-                            Journal No.
+                            JOURNAL NO.
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
-                            dataFormat={this.renderStatus}
+                            dataField="description"
                             dataSort
                           >
-                            Status
+                            DESCRIPTION
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="createdByName"
                             dataSort
                           >
-                            Amount
+                            CREATED BY
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="totalCreditAmount"
                             dataSort
                           >
-                            Created By
+                            TOTAL CREDIT AMOUNT
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                            dataField="totalDebitAmount"
+                            dataSort
+                          >
+                            TOTAL DEBIT AMOUNT
+                          </TableHeaderColumn>
+                          {/* <TableHeaderColumn
                             className="text-right"
                             columnClassName="text-right"
                             width="55"
                             dataFormat={this.renderActions}
                           >
-                          </TableHeaderColumn>
+                          </TableHeaderColumn> */}
                         </BootstrapTable>
                       </div>
                     </Col>

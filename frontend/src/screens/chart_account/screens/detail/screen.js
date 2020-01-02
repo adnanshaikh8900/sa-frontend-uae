@@ -16,7 +16,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify'
 import Select from 'react-select'
 import _ from 'lodash'
-import { Loader } from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
@@ -29,6 +29,10 @@ import * as DetailChartOfAccontActions from './actions'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
+import {
+  CommonActions
+} from 'services/global'
+
 
 const mapStateToProps = (state) => {
   return ({
@@ -38,14 +42,11 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return ({
     chartOfAccontActions: bindActionCreators(ChartOfAccontActions, dispatch),
-    detailChartOfAccontActions: bindActionCreators(DetailChartOfAccontActions, dispatch)
+    detailChartOfAccontActions: bindActionCreators(DetailChartOfAccontActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch)
+
   })
 }
-
-// const CHART_ACCOUNT_TYPES = [
-//   { value: 1, label: 'Sales'},
-//   { value: 2, label: 'Cost of Sales'}
-// ]
 
 class DetailChartAccount extends React.Component {
   constructor(props) {
@@ -53,15 +54,18 @@ class DetailChartAccount extends React.Component {
     this.state = {
       initValue: null,
       loading: true,
-      readMore: false,
+      createMore: false,
+      dialog: false,
       currentData: {}
-
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this)
     this.initializeData = this.initializeData.bind(this)
     this.success = this.success.bind(this)
+    this.deleteChartAccount = this.deleteChartAccount.bind(this)
+    this.removeChartAccount = this.removeChartAccount.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
   }
 
   componentDidMount() {
@@ -71,12 +75,9 @@ class DetailChartAccount extends React.Component {
   initializeData() {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
-      this.props.chartOfAccontActions.getTransactionTypes();
-      // this.setState({
-      // }, () => {
       this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then(res => {
-        console.log(res.data)
-        if(res.status === 200) {
+        if (res.status === 200) {
+          this.props.chartOfAccontActions.getTransactionTypes();
           this.setState({
             loading: false,
             initValue: {
@@ -88,11 +89,12 @@ class DetailChartAccount extends React.Component {
               } : null,
             }
           })
-        } else {this.props.history.push('/admin/master/chartAccount')}
+        }
+      }).catch(err => {
+        this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
+        this.setState({ loading: false })
+        this.props.history.push('/admin/master/chart-account')
       })
-      // })
-    } else {
-      this.props.history.push('/admin/master/chartAccount')
     }
   }
 
@@ -106,43 +108,66 @@ class DetailChartAccount extends React.Component {
     })
   }
   // Show Success Toast
-  success() {
-    toast.success('Transaction Category Updated successfully... ', {
+  success(msg) {
+    toast.success(msg, {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
+  deleteChartAccount() {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removeChartAccount}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeChartAccount() {
+    const id = this.props.location.state.id;
+    this.props.detailChartOfAccontActions.deleteChartAccount(id).then(res => {
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'Account Deleted Successfully')
+        this.props.history.push('/admin/master/chart-account')
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
   // Create or Edit Vat
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     const id = this.props.location.state.id
     const { transactionCategoryCode, transactionCategoryName, transactionType } = data
-    const postData = {
-      transactionCategoryId: id,
-      transactionCategoryCode: transactionCategoryCode,
-      transactionCategoryName: transactionCategoryName,
-      transactionType: (transactionType && transactionType.value !== null ? transactionType.value : '')
-    }
+    const postData = Object.assign(data, {transactionCategoryId: id})
     this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then(res => {
       if (res.status === 200) {
-        this.success()
-
-        if (this.state.readMore) {
-          this.setState({
-            readMore: false
-          })
-        } else this.props.history.push('/admin/master/chart-account')
+        resetForm()
+        this.props.commonActions.tostifyAlert('success', 'Chart Account Updated Successfully')
+        this.props.history.push('/admin/master/chart-account')
       }
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
-    console.log(postData)
   }
 
   render() {
-    const { loading } = this.state
+    const { loading, dialog } = this.state
     const { transaction_type_list } = this.props
+    const containerStyle = {
+      zIndex: 1999
+    }
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
-
+          {dialog}
           {loading ? (
             <Loader></Loader>
           ) : (
@@ -161,18 +186,18 @@ class DetailChartAccount extends React.Component {
                           <Formik
                             initialValues={this.state.initValue}
                             onSubmit={(values, { resetForm }) => {
-
-                              this.handleSubmit(values)
-                              resetForm(this.state.initValue)
+                              this.handleSubmit(values,resetForm)
                             }}
-                          // validationSchema={Yup.object().shape({
-                          //   code: Yup.string()
-                          //     .required("Code Name is Required"),
-                          //   account: Yup.string()
-                          //     .required("Account is Required"),
-                          //   type: Yup.string()
-                          //     .required("Type is Required")
-                          // })}
+                            validationSchema={
+                              Yup.object().shape({
+                                transactionCategoryCode: Yup.string()
+                                  .required("Code Name is Required"),
+                                transactionCategoryName: Yup.string()
+                                  .required("Account is Required"),
+                                transactionType: Yup.string()
+                                  .required("Type is Required")
+                                  .nullable()
+                              })}
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
@@ -220,7 +245,7 @@ class DetailChartAccount extends React.Component {
                                     className="select-default-width"
                                     options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list) : []}
                                     value={props.values.transactionType}
-                                    onChange={option => props.handleChange('transactionType')(option)}
+                                    onChange={option => props.handleChange('transactionType')(option.value)}
                                     placeholder="Select Type"
                                     id="transactionType"
                                     name="transactionType"
@@ -235,22 +260,26 @@ class DetailChartAccount extends React.Component {
                                   )}
                                 </FormGroup>
 
-                                <FormGroup className="text-right mt-5">
-                                  <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-dot-circle-o"></i> Update
-                                </Button>
-                                  {/* <Button name="button" color="primary" className="btn-square mr-3"
-                                    onClick={() => {
-                                      this.setState({ readMore: true })
-                                      props.handleSubmit()
-                                    }}>
-                                    <i className="fa fa-refresh"></i> Create and More
-                                </Button> */}
-                                  <Button type="submit" color="secondary" className="btn-square"
-                                    onClick={() => { this.props.history.push('/admin/master/chart-account') }}>
-                                    <i className="fa fa-ban"></i> Cancel
-                                </Button>
-                                </FormGroup>
+                                <Row>
+                                  <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                    <FormGroup>
+                                      <Button type="button" name="button" color="danger" className="btn-square"
+                                        onClick={this.deleteChartAccount}
+                                      >
+                                        <i className="fa fa-trash"></i> Delete
+                                    </Button>
+                                    </FormGroup>
+                                    <FormGroup className="text-right">
+                                      <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                                        <i className="fa fa-dot-circle-o"></i> Update
+                                    </Button>
+                                      <Button type="button" name="button" color="secondary" className="btn-square"
+                                        onClick={() => { this.props.history.push("/admin/master/chart-account") }}>
+                                        <i className="fa fa-ban"></i> Cancel
+                                    </Button>
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
                               </Form>
                             )}
                           </Formik>

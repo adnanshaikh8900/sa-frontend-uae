@@ -22,28 +22,35 @@ import { Formik } from 'formik'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import * as Yup from 'yup'
+import { Loader } from 'components'
+import { SupplierModal } from '../../sections'
+
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
 import './style.scss'
-import * as createPaymentActions from './actions'
+import * as PaymentActions from '../../actions'
+import * as CreatePaymentActions from './actions'
+
 import {
   CommonActions
 } from 'services/global'
 
 const mapStateToProps = (state) => {
   return ({
-    // bank_list: state.payment.bank_list,
+    bank_list: state.payment.bank_list,
     currency_list: state.payment.currency_list,
     supplier_list: state.payment.supplier_list,
     project_list: state.payment.project_list,
+    invoice_list: state.payment.invoice_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
     commonActions: bindActionCreators(CommonActions, dispatch),
-    createPaymentActions: bindActionCreators(createPaymentActions, dispatch)
+    createPaymentActions: bindActionCreators(CreatePaymentActions, dispatch),
+    paymentActions: bindActionCreators(PaymentActions, dispatch)
   })
 }
 
@@ -54,39 +61,36 @@ class CreatePayment extends React.Component {
     this.state = {
       loading: false,
       initialVals: {
-        // bank: null,
-        supplier: null,
-        invoiceReferenceNo: null,
-        amount: null,
-        payment_date: null,
-        currency: null,
-        project: null,
-        payment_due_date: null,
-        description: null,
-        receiptNo: null,
-        // referenceNo: null,
-        attachmentDescription: null
+        bank: '',
+        supplier: '',
+        invoiceId: '',
+        amount: '',
+        currency: '',
+        project: '',
+        paymentDate: '',
+        description: '',
       },
-      data: [
-        {},
-        {}
-      ],
-      currentData: {}
+
+      currentData: {},
+      openSupplierModal: false,
+      selectedSupplier: ''
+    }
+
+    this.options = {
     }
 
     this.initializeData = this.initializeData.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.options = {
-    }
-
     this.renderActions = this.renderActions.bind(this)
     this.renderProductName = this.renderProductName.bind(this)
     this.renderQuantity = this.renderQuantity.bind(this)
     this.renderUnitPrice = this.renderUnitPrice.bind(this)
     this.renderVat = this.renderVat.bind(this)
     this.renderSubTotal = this.renderSubTotal.bind(this)
-
+    this.closeSupplierModal = this.closeSupplierModal.bind(this)
+    this.openSupplierModal = this.openSupplierModal.bind(this)
+    this.getCurrentUser = this.getCurrentUser.bind(this)
   }
 
   componentDidMount() {
@@ -95,10 +99,12 @@ class CreatePayment extends React.Component {
 
 
   initializeData() {
-    this.props.createPaymentActions.getCurrencyList()
-    // this.props.createPaymentActions.getBankList()
-    this.props.createPaymentActions.getSupplierList()
-    this.props.createPaymentActions.getProjectList()
+    this.props.paymentActions.getCurrencyList()
+    this.props.paymentActions.getBankList()
+    this.props.paymentActions.getSupplierList()
+    this.props.paymentActions.getProjectList()
+    this.props.paymentActions.getSupplierInvoiceList()
+
   }
 
   renderActions(cell, row) {
@@ -120,47 +126,32 @@ class CreatePayment extends React.Component {
 
   handleSubmit(data) {
     const {
-      // bank,
+      bank,
       supplier,
-      invoiceReferenceNo,
+      invoiceId,
       amount,
-      payment_date,
+      paymentDate,
       currency,
       project,
-      payment_due_date,
       description,
-      // referenceNo,
-      receiptNo,
-      attachmentDescription
     } = data
-    let formData = new FormData();
-    formData.append("paymentDate", payment_date !== null ? payment_date : "");
-    formData.append("paymentDueDate", payment_due_date !== null ? payment_due_date : "");
-    formData.append("description", description);
-    formData.append("invoiceReferenceNo", invoiceReferenceNo);
-    formData.append("amount", amount);
-    formData.append("receiptNo", receiptNo);
-    formData.append("attachmentDescription", attachmentDescription);
-    // if (bank && bank.value) {
-    //   formData.append("bankAccountId", bank.value);
-    // }
-    if (supplier && supplier.value) {
-      formData.append("supplierId", supplier.value);
+
+    const postData = {
+      paymentDate: paymentDate !== null ? paymentDate : "",
+      description: description,
+      invoiceId: invoiceId && invoiceId.value ? invoiceId.value : '',
+      invoiceAmount: amount,
+      bankAccountId: bank && bank.value ? bank.value : '',
+      supplierId: this.state.selectedSupplier.value ? this.state.selectedSupplier.value : supplier && supplier.value ? supplier.value : '',
+      currencyCode: currency && currency.value ? currency.value : '',
+      projectId: project && project.value ? project.value : '',
     }
-    if (currency && currency.value) {
-      formData.append("currencyCode", currency.value);
-    }
-    if (project && project.value) {
-      formData.append("projectId", project.value);
-    }
-    if (this.uploadFile.files[0]) {
-      formData.append("attachmentFile", this.uploadFile.files[0]);
-    }
-    this.props.createPaymentActions.createPayment(formData).then(res => {
-      this.props.commonActions.tostifyAlert('success', 'Creted Successfully.')
+    this.props.createPaymentActions.createPayment(postData).then(res => {
+      this.props.commonActions.tostifyAlert('success', 'Payment Created Successfully.')
       if (this.state.createMore) {
         this.setState({
-          createMore: false
+          createMore: false,
+          selectedSupplier: ''
         })
       } else {
         this.props.history.push('/admin/expense/payment')
@@ -221,214 +212,259 @@ class CreatePayment extends React.Component {
 
   }
 
+  openSupplierModal(e) {
+    e.preventDefault()
+    this.setState({ openSupplierModal: true })
+  }
+
+  getCurrentUser(data) {
+    let option
+    if (data.label || data.value) {
+      option = data
+    } else {
+      option = {
+        label: `${data.firstName} ${data.middleName} ${data.lastName}`,
+        value: data.contactId,
+      }
+    }
+    this.setState({
+      selectedSupplier: option
+    })
+  }
+
+  closeSupplierModal(res) {
+    if (res) {
+      this.props.paymentActions.getSupplierList();
+    }
+    this.setState({ openSupplierModal: false })
+  }
+
+
   render() {
     const {
       currency_list,
-      // bank_list,
+      bank_list,
       supplier_list,
       invoice_list,
       project_list
     } = this.props
+
+
     const {
-      initialVals
+      initialVals,
+      selectedSupplier
     } = this.state
-    const { data } = this.state
+    const { data, loading } = this.state
 
     return (
       <div className="create-payment-screen">
         <div className="animated fadeIn">
-          <Row>
-            <Col lg={12} className="mx-auto">
-              <Card>
-                <CardHeader>
-                  <Row>
-                    <Col lg={12}>
-                      <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fas fa-money-check" />
-                        <span className="ml-2">Create Payment</span>
-                      </div>
-                    </Col>
-                  </Row>
-                </CardHeader>
-                <CardBody>
-                  <Formik
-                    initialValues={initialVals}
-                    onSubmit={
-                      (values, { resetForm }) => {
-                        this.handleSubmit(values)
-                        resetForm(initialVals)
-                      }}
-                    // validationSchema={Yup.object().shape({
-                    //   currency: Yup.object().shape({
-                    //     label: Yup.string().required(),
-                    //     value: Yup.string().required(),
-                    //   }),
-                    //   invoiceReferenceNo: Yup.string()
-                    //   .required('Reference is Required'),
-                    //   amount: Yup.string()
-                    //   .required('Amount is Required'),
-                    //   payment_date: Yup.string()
-                    //     .required('Payment Date is Required'),
-                    //   payment_due_date: Yup.string()
-                    //     .required('Payment Due Date is Required'),
-                    //   receiptNo: Yup.string()
-                    //     .required('Receipt Number is Required'),
-                    //   supplier: Yup.object().shape({
-                    //     label: Yup.string().required(),
-                    //     value: Yup.string().required(),
-                    //   }),
-                    //   project: Yup.object().shape({
-                    //     label: Yup.string().required(),
-                    //     value: Yup.string().required()
-                    //   })
-                    // })
-                    // }
-                  >
-                    {
-                      props => (
-                        <Form onSubmit={props.handleSubmit}>
-                          <Row>
-                            <Col lg={12}>
-
+          {loading ?
+            <Loader />
+            :
+            (
+              <Row>
+                <Col lg={12} className="mx-auto">
+                  <Card>
+                    <CardHeader>
+                      <Row>
+                        <Col lg={12}>
+                          <div className="h4 mb-0 d-flex align-items-center">
+                            <i className="fas fa-money-check" />
+                            <span className="ml-2">Create Payment</span>
+                          </div>
+                        </Col>
+                      </Row>
+                    </CardHeader>
+                    <CardBody>
+                      <Formik
+                        initialValues={initialVals}
+                        onSubmit={
+                          (values, { resetForm }) => {
+                            this.handleSubmit(values)
+                            resetForm(initialVals)
+                          }}
+                        validationSchema={
+                          Yup.object().shape({
+                            supplier: Yup.string()
+                              .required('Supplier is required')
+                              .nullable(),
+                            paymentDate: Yup.date()
+                              .required('Payment Date is Required'),
+                            amount: Yup.string()
+                              .required('Invoice Amount is Required')
+                              .matches(/^[0-9]*$/, "Enter a Valid Amount")
+                          })
+                        }
+                      >
+                        {
+                          props => (
+                            <Form onSubmit={props.handleSubmit}>
                               <Row>
-                                <Col lg={4}>
-                                  <FormGroup className="mb-3">
-                                    <Label htmlFor="supplier">Supplier Name</Label>
-                                    <Select
-                                      className="select-default-width"
-                                      id="supplier"
-                                      name="supplier"
-                                      options={selectOptionsFactory.renderOptions('firstName', 'contactId', supplier_list)}
-                                      value={props.values.supplier}
-                                      onChange={option => props.handleChange('supplier')(option)}
-                                      className={
-                                        props.errors.supplier && props.touched.supplier
-                                          ? 'is-invalid'
-                                          : ''
-                                      }
-                                    />
-                                  </FormGroup>
-                                </Col>
-                                <Col lg={4}>
-                                  <FormGroup className="mb-3">
-                                    <Label htmlFor="invoiceReferenceNo">Invoice Reference Number</Label>
-                                    <Input
-                                      type="text"
-                                      id="invoiceReferenceNo"
-                                      name="invoiceReferenceNo"
-                                      placeholder="Enter Reference Number"
-                                      required
-                                      onChange={option => props.handleChange('invoiceReferenceNo')(option)}
-                                    />
-                                  </FormGroup>
-                                </Col>
-                                <Col lg={4}>
-                                  <FormGroup className="mb-3">
-                                    <Label htmlFor="amount">Invoice Amount</Label>
-                                    <Input
-                                      // className="form-control"
-                                      type="text"
-                                      id="amount"
-                                      name="amount"
-                                      placeholder="Enter Amount"
-                                      required
-                                      onChange={option => props.handleChange('amount')(option)}
-                                    />
+                                <Col lg={12}>
+                                  <Row>
+                                    <Col lg={4}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="supplier">Supplier Name</Label>
+                                        <Select
 
-                                  </FormGroup>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Col lg={4}>
-                                  <FormGroup className="mb-3">
-                                    <Label htmlFor="currency">Currency</Label>
-                                    <Select
-                                      className="select-default-width"
-                                      id="currency"
-                                      name="currency"
-                                      options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
-                                      value={props.values.currency}
-                                      onChange={option => props.handleChange('currency')(option)}
-                                      className={
-                                        props.errors.currency && props.touched.currency
-                                          ? 'is-invalid'
-                                          : ''
-                                      }
-                                    />
-                                  </FormGroup>
-                                </Col>
-                                <Col lg={4}>
-                                  <FormGroup className="mb-3">
-                                    <Label htmlFor="project">Project</Label>
-                                    <Select
-                                      className="select-default-width"
-                                      id="project"
-                                      name="project"
-                                      options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
-                                      value={props.values.project}
-                                      onChange={option => props.handleChange('project')(option)}
-                                      className={
-                                        props.errors.project && props.touched.project
-                                          ? 'is-invalid'
-                                          : ''
-                                      }
-                                    />
-                                  </FormGroup>
-                                </Col>
-                                <Col lg={4}>
-                                  <FormGroup className="mb-3">
-                                    <Label htmlFor="payment_date">Payment Date</Label>
-                                    <div>
-                                      <DatePicker
-                                        className="form-control"
-                                        id="payment_date"
-                                        name="payment_date"
-                                        placeholderText=""
-                                        onChange={option => props.handleChange('payment_date')(option)}
-                                        value={props.values.payment_date}
-                                        selected={props.values.payment_date}
-                                      />
-                                    </div>
+                                          id="supplier"
+                                          name="supplier"
+                                          options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
+                                          value={selectedSupplier}
+                                          onChange={option => {
+                                            props.handleChange('supplier')(option)
+                                            this.getCurrentUser(option)
+                                          }}
+                                          className={
+                                            props.errors.supplier && props.touched.supplier
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
+                                        {props.errors.supplier && props.touched.supplier && (
+                                          <div className="invalid-feedback">{props.errors.supplier}</div>
+                                        )}
+                                      </FormGroup>
+                                      <Button type="button" color="primary" className="btn-square mr-3 mb-3"
+                                        onClick={this.openSupplierModal}
+                                      >
+                                        <i className="fa fa-dot-circle-o"></i> Supplier
+                                  </Button>
+                                    </Col>
+                                    <Col lg={4}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="invoiceId">Invoice</Label>
+                                        <Select
+                                          className="select-default-width"
+                                          id="invoiceId"
+                                          name="invoiceId"
+                                          options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list) : []}
+                                          value={props.values.invoiceId}
+                                          onChange={option => {
+                                            this.props.paymentActions.getInvoiceById(+option.value).then((res) => {
+                                              if (res.status === 200) {
+                                                // console.log(res.data)
+                                              }
+                                              // let data;
+                                              // data = invoice_list.filter(item => item.invoiceId === option.value);
+                                              // props.handleChange('amount')(data[0]['invoiceAmount'])
+                                            }
+                                            )
+                                            props.handleChange('invoiceId')(option.value)
 
-                                  </FormGroup>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Col lg={4}>
-                                  <FormGroup className="mb-3">
-                                    <Label htmlFor="payment_due_date">Payment Due</Label>
-                                    <div>
-                                      <DatePicker
-                                        className="form-control"
-                                        id="payment_due_date"
-                                        name="payment_due_date"
-                                        placeholderText=""
-                                        onChange={option => props.handleChange('payment_due_date')(option)}
-                                        selected={props.values.payment_due_date}
-                                        value={props.values.payment_due_date}
-                                      />
-                                    </div>
-                                  </FormGroup>
-                                </Col>
-                                {/* <Col lg={4}>
-                                  <FormGroup className="mb-3">
-                                    <Label htmlFor="bank">Bank</Label>
-                                    <Select
-                                      className="select-default-width"
-                                      id="bank"
-                                      name="bank"
-                                      options={selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_list)}
-                                      value={props.values.bank}
-                                      onChange={option => props.handleChange('bank')(option)}
-                                      className={
-                                        props.errors.bank && props.touched.bank
-                                          ? 'is-invalid'
-                                          : ''
-                                      }
-                                    />
-                                  </FormGroup>
-                                </Col>
-                                <Col lg={4}>
+                                          }
+                                          }
+                                          className={
+                                            props.errors.invoiceId && props.touched.invoiceId
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                    <Col lg={4}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="amount">Invoice Amount</Label>
+                                        <Input
+                                          // className="form-control"
+                                          type="text"
+                                          id="amount"
+                                          name="amount"
+                                          placeholder="Enter Amount"
+                                          // required
+                                          // defaultValue={props.values.amount}
+                                          className={props.errors.amount && props.touched.amount ? "is-invalid" : ""}
+                                          value={props.values.amount}
+                                          onChange={option => props.handleChange('amount')(option)}
+                                        />
+                                        {props.errors.amount && props.touched.amount && (
+                                          <div className="invalid-feedback">{props.errors.amount}</div>
+                                        )}
+                                      </FormGroup>
+                                    </Col>
+                                  </Row>
+                                  <Row>
+                                    <Col lg={4}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="currency">Currency</Label>
+                                        <Select
+                                          className="select-default-width"
+                                          id="currency"
+                                          name="currency"
+                                          options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                          value={props.values.currency}
+                                          onChange={option =>
+                                            props.handleChange('currency')(option)
+                                          }
+                                          className={
+                                            props.errors.currency && props.touched.currency
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                    <Col lg={4}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="project">Project</Label>
+                                        <Select
+                                          className="select-default-width"
+                                          id="project"
+                                          name="project"
+                                          options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list) : []}
+                                          value={props.values.project}
+                                          onChange={option => props.handleChange('project')(option)}
+                                          className={
+                                            props.errors.project && props.touched.project
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                    <Col lg={4}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="paymentDate">Payment Date</Label>
+                                  <DatePicker
+
+                                    id="date"
+                                    name="paymentDate"
+                                    className={`form-control ${props.errors.paymentDate && props.touched.paymentDate ? "is-invalid" : ""}`}
+                                    placeholderText="Payment Date"
+                                    selected={props.values.paymentDate}
+                                    dateFormat="dd/MM/yyyy"
+                                    maxDate={new Date()}
+                                    onChange={(value) => {
+                                      props.handleChange("paymentDate")(value)
+                                    }}
+                                  />
+                                  {props.errors.paymentDate && props.touched.paymentDate && (
+                                    <div className="invalid-feedback">{props.errors.paymentDate}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                                  </Row>
+                                  <Row>
+                                    <Col lg={4}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="bank">Bank</Label>
+                                        <Select
+                                          className="select-default-width"
+                                          id="bank"
+                                          name="bank"
+                                          options={bank_list ? selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_list) : []}
+                                          value={props.values.bank}
+                                          onChange={option => props.handleChange('bank')(option)}
+                                          className={
+                                            props.errors.bank && props.touched.bank
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                    {/* <Col lg={4}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="referenceNo">Reference Number</Label>
                                     <Input
@@ -447,102 +483,65 @@ class CreatePayment extends React.Component {
                                     />
                                   </FormGroup>
                                 </Col> */}
+                                  </Row>
+                                  <Row>
+                                    <Col lg={8}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="description">Description</Label>
+                                        <Input
+                                          type="textarea"
+                                          name="description"
+                                          id="description"
+                                          rows="6"
+                                          placeholder="Description..."
+                                          onChange={option => props.handleChange('description')(option)}
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                  </Row>
+
+
+                                </Col>
                               </Row>
                               <Row>
-                                <Col lg={8}>
-                                  <FormGroup className="mb-3">
-                                    <Label htmlFor="description">Description</Label>
-                                    <Input
-                                      type="textarea"
-                                      name="description"
-                                      id="description"
-                                      rows="6"
-                                      placeholder="Description..."
-                                      onChange={option => props.handleChange('description')(option)}
-                                    />
+                                <Col lg={12} className="mt-5">
+                                  <FormGroup className="text-right">
+                                    <Button type="submit" color="primary" className="btn-square mr-3">
+                                      <i className="fa fa-dot-circle-o"></i> Create
+                        </Button>
+                                    <Button type="submit" color="primary" className="btn-square mr-3" onClick={() => {
+                                      this.setState({ createMore: true }, () => {
+                                        props.handleSubmit()
+                                      })
+                                    }
+                                    }>
+                                      <i className="fa fa-repeat"></i> Create and More
+                        </Button>
+                                    <Button color="secondary" className="btn-square"
+                                      onClick={() => { this.props.history.push('/admin/expense/payment') }}>
+                                      <i className="fa fa-ban"></i> Cancel
+                        </Button>
                                   </FormGroup>
                                 </Col>
                               </Row>
-                              <hr />
-                              <Row>
-                                <Col lg={8}>
-                                  <Row>
-                                    <Col lg={6}>
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="recieptNo">Reciept Number</Label>
-                                        <Input
-                                          type="text"
-                                          id="recieptNo"
-                                          name="recieptNo"
-                                          placeholder="Enter Reciept Number"
-                                          required
-                                          onChange={option => props.handleChange('recieptNo')(option)}
-                                        />
-                                      </FormGroup>
-                                    </Col>
-                                  </Row>
-                                  <Row>
-                                    <Col lg={12}>
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="attachmentDescription">Attachment Description</Label>
-                                        <Input
-                                          type="textarea"
-                                          name="attachmentDescription"
-                                          id="attachmentDescription"
-                                          rows="5"
-                                          placeholder="Description..."
-                                          onChange={option => props.handleChange('attachmentDescription')(option)}
-                                        />
-                                      </FormGroup>
-                                    </Col>
-                                  </Row>
-                                </Col>
-                                <Col lg={4}>
-                                  <Row>
-                                    <Col lg={12}>
-                                      <FormGroup className="mb-3">
-                                        <Label>Reciept Attachment</Label><br />
-                                        <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                          <i className="fa fa-upload"></i> Upload
-                                  </Button>
-                                        <input id="fileInput" ref={ref => {
-                                          this.uploadFile = ref;
-                                        }}
-                                          type="file" type="file" style={{ display: 'none' }} />
-                                      </FormGroup>
-                                    </Col>
-                                  </Row>
-                                </Col>
-                              </Row>
-
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col lg={12} className="mt-5">
-                              <FormGroup className="text-right">
-                                <Button type="submit" color="primary" className="btn-square mr-3">
-                                  <i className="fa fa-dot-circle-o"></i> Create
-                        </Button>
-                                <Button type="submit" color="primary" className="btn-square mr-3">
-                                  <i className="fa fa-repeat"></i> Create and More
-                        </Button>
-                                <Button color="secondary" className="btn-square"
-                                  onClick={() => { this.props.history.push('/admin/expense/payment') }}>
-                                  <i className="fa fa-ban"></i> Cancel
-                        </Button>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                        </Form>
-                      )
-                    }
-                  </Formik>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+                            </Form>
+                          )
+                        }
+                      </Formik>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            )
+          }
         </div>
-      </div>
+        <SupplierModal
+          openSupplierModal={this.state.openSupplierModal}
+          closeSupplierModal={(e) => { this.closeSupplierModal(e) }}
+          getCurrentUser={e => this.getCurrentUser(e)}
+          createSupplier={this.props.paymentActions.createSupplier}
+        />
+      </div >
     )
   }
 }

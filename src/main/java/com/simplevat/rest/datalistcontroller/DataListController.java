@@ -9,12 +9,18 @@ import com.simplevat.entity.Country;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.enums.ContactTypeEnum;
+import com.simplevat.enums.InvoiceStatusEnum;
+import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,6 +87,46 @@ public class DataListController implements Serializable {
             List<TransactionType> transactionTypes = transactionTypeService.findAll();
             if (transactionTypes != null && !transactionTypes.isEmpty()) {
                 return new ResponseEntity<>(transactionTypes, HttpStatus.OK);
+            } else {
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ApiOperation(value = "All Invoice Status Types")
+    @GetMapping(value = "/getInvoiceStatusTypes")
+    public ResponseEntity getInvoiceStatusTypes() {
+        try {
+            List<InvoiceStatusEnum> statusEnums = InvoiceStatusEnum.getInvoiceStatusList();
+            List<EnumDropdownModel> dropdownModels = new ArrayList<>();
+            if (statusEnums != null && !statusEnums.isEmpty()) {
+                for (InvoiceStatusEnum statusEnum : statusEnums) {
+                    dropdownModels.add(new EnumDropdownModel(statusEnum.name(), statusEnum.getDesc()));
+                }
+                return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+            } else {
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ApiOperation(value = "All Contact Types")
+    @GetMapping(value = "/getContactTypes")
+    public ResponseEntity getContactTypes() {
+        try {
+            List<ContactTypeEnum> typeEnums = Arrays.asList(ContactTypeEnum.values());
+            List<DropdownModel> dropdownModels = new ArrayList<>();
+            if (typeEnums != null && !typeEnums.isEmpty()) {
+                for (ContactTypeEnum typeEnum : typeEnums) {
+                    dropdownModels.add(new DropdownModel(typeEnum.getValue(), typeEnum.getDesc()));
+                }
+                return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
             } else {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             }

@@ -37,11 +37,9 @@ const mapStateToProps = (state) => {
   return ({
     currency_list: state.expense.currency_list,
     project_list: state.expense.project_list,
-    bank_account_list: state.expense.bank_account_list,
-    customer_list: state.expense.customer_list,
-    payment_list: state.expense.payment_list,
+    employee_list: state.expense.employee_list,
     vat_list: state.expense.vat_list,
-    chart_of_account_list: state.expense.chart_of_account_list
+    expense_categories_list: state.expense.expense_categories_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -58,37 +56,24 @@ class CreateExpense extends React.Component {
     super(props)
     this.state = {
       loading: false,
-      data: [{
-        id: 0,
-        transactionCategoryId: null,
-        unitPrice: 0,
-        vatCategoryId: null,
-        subTotal: 0
-      }
-      ],
-      idCount: 0,
-      selectedCurrency: null,
-      selectedProject: null,
-      selectedBankAccount: null,
-      selectedCustomer: null,
-      selectedPayment: null,
+      createMore: false,
+      // selectedCurrency: null,
+      // selectedProject: null,
+      // selectedBankAccount: null,
+      // selectedCustomer: null,
+      // selectedPayment: null,
 
       initValue: {
-        expenseId: null,
         payee: '',
-        expenseDate: null,
-        currency: null,
-        project: null,
-        paymentDate: null,
-        expenseAmount: null,
-        expenseDescription: null,
-        receiptNumber: null,
-        attachmentFile: null,
-        receiptAttachmentDescription: null,
-        bank: null,
-        total_net: 0,
-        expenseVATAmount: 0,
-        totalAmount: 0,
+        expenseDate: '',
+        currency: '',
+        project: '',
+        expenseCategory: '',
+        expenseAmount: '',
+        expenseDescription: '',
+        receiptNumber: '',
+        attachmentFile: '',
+        receiptAttachmentDescription: '',
       },
       currentData: {}
 
@@ -96,18 +81,8 @@ class CreateExpense extends React.Component {
 
 
     this.initializeData = this.initializeData.bind(this)
-
-    this.renderActions = this.renderActions.bind(this)
-    this.renderProductName = this.renderProductName.bind(this)
-    this.renderAmount = this.renderAmount.bind(this)
-    this.renderVat = this.renderVat.bind(this)
-    this.renderSubTotal = this.renderSubTotal.bind(this);
-    this.addRow = this.addRow.bind(this);
-    this.deleteRow = this.deleteRow.bind(this);
-    this.selectItem = this.selectItem.bind(this);
-    this.updateAmount = this.updateAmount.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this)
+    // this.handleChange = this.handleChange.bind(this)
 
     this.options = {
       paginationPosition: 'top'
@@ -119,190 +94,43 @@ class CreateExpense extends React.Component {
     this.initializeData()
   }
 
-  // addData() {
-  //   this.setState({
-  //     data: [{
-  //       id: this.state.idCount + 1
-  //     },
-  //     ], idCount: this.state.idCount + 1
-  //   })
-  // }
 
   initializeData() {
-    this.props.expenseActions.getBankAccountList();
-    this.props.expenseActions.getVatList();
+    // this.props.expenseActions.getVatList();
+    this.props.expenseActions.getExpenseCategoriesList();
     this.props.expenseActions.getCurrencyList();
     this.props.expenseActions.getProjectList();
-    this.props.expenseActions.getCustomerList();
-    this.props.expenseActions.getPaymentList();
-    this.props.expenseActions.getChartOfAccountList();
-  }
-
-  deleteRow(e, row) {
-    const id = row['id'];
-    let newData = []
-    e.preventDefault();
-    const data = this.state.data
-    newData = data.filter(obj => obj.id !== id);
-    console.log(newData)
-    this.updateAmount(newData)
-  }
-
-  renderActions(cell, row) {
-    return (
-      <Button
-        size="sm"
-        className="btn-twitter btn-brand icon"
-        onClick={(e) => { this.deleteRow(e, row) }}
-      >
-        <i className="fas fa-trash"></i>
-      </Button>
-    )
-  }
-
-  selectItem(e, row, name) {
-    e.preventDefault();
-    const data = this.state.data
-    data.map((obj, index) => {
-      if (obj.id === row.id) {
-        obj[name] = e.target.value
-      }
-    });
-    if (name === 'unitPrice' || name === 'vatCategoryId') {
-      this.updateAmount(data);
-    } else {
-      this.setState({ data: data });
-    }
+    this.props.expenseActions.getEmployeeList();
 
   }
 
-  updateAmount(data) {
-    const {vat_list} = this.props;
-    let total_net = 0;
-    let total = 0;
-    let total_vat = 0;
-    console.log(data);
-    console.log(vat_list)
-    data.map(obj => {
-      const index = obj.vatCategoryId !== null ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
-      const vat = index !== '' ? vat_list[index].vat : 0
-      console.log(index)
-      let val = (((+obj.unitPrice) * vat) / 100)
-      obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (+obj.unitPrice) + val : 0;
-      total_net = +(total_net + (+obj.unitPrice));
-      total_vat = +(total_vat + val).toFixed(2);
-      total =  (total_vat + total_net).toFixed(2);
-      console.log(total_vat + ' '+ total_net)
-    })
-    this.setState({
-      data: data,
-      initValue: {
-        total_net: total_net,
-        expenseVATAmount: total_vat,
-        totalAmount: total
-      }
-    }, () => { console.log(this.state.data)})
-  }
 
-  renderProductName(cell, row) {
-    const { chart_of_account_list } = this.props;
-    return (
-      <div className="d-flex align-items-center">
-        <Input type="select"
-          onChange={(e) => { this.selectItem(e, row, 'transactionCategoryId') }}
-          value={row.transactionCategoryId}
-        >
-          {chart_of_account_list ? chart_of_account_list.map(obj => {
-            return <option value={obj.transactionCategoryId}>{obj.transactionCategoryDescription}</option>
-          }) : ''}
-        </Input>
-        <Button
-          size="sm"
-          color="primary"
-          className="btn-brand icon"
-          onClick={() => { }}
-        >
-          <i className="fas fa-plus"></i>
-        </Button>
-      </div>
-    )
-  }
-
-  renderAmount(cell, row) {
-    console.log(row)
-    return (
-      <Input
-        type="number"
-        value={row['unitPrice'] !== 0? row['unitPrice'] : 0}
-        defaultValue={row['unitPrice']}
-        onChange={(e) => { this.selectItem(e, row, 'unitPrice') }}
-      />
-    )
-  }
-
-  renderVat(cell, row) {
-    const { vat_list } = this.props;
-    return (
-      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
-        {vat_list ? vat_list.map(obj => {
-          obj.name = obj.name === 'default' ? '0' : obj.name
-          return <option value={obj.id}>{obj.name}</option>
-        }) : ''}
-      </Input>
-    )
-  }
-
-  renderSubTotal(cell, row) {
-    return (
-      <label className="mb-0">{row.subTotal}</label>
-    )
-  }
-
-  addRow() {
-    const data = [...this.state.data]
-    this.setState({
-      data: data.concat({
-        id: this.state.idCount + 1,
-        transactionCategoryId: null,
-        unitPrice: 0,
-        vatCategoryId: null,
-        subTotal: 0
-      }), idCount: this.state.idCount + 1
-    })
-  }
-
-  handleSubmit(data) {
+  handleSubmit(data, resetForm) {
     const {
-      expenseId,
       payee,
       expenseDate,
       currency,
       project,
-      paymentDate,
+      expenseCategory,
       expenseAmount,
+      employee,
       expenseDescription,
       receiptNumber,
       attachmentFile,
       receiptAttachmentDescription,
-      bank,
-      expenseVATAmount,
-      totalAmount,
     } = data
     let formData = new FormData();
-    // const userId = window.localStorage.getItem('userId');
-    // formData.append("user",userId)
     formData.append("payee", payee);
     formData.append("expenseDate", expenseDate !== null ? expenseDate : "");
-    formData.append("paymentDate", paymentDate !== null ? paymentDate : "");
-    formData.append("expenseAmount", expenseAmount);
     formData.append("expenseDescription", expenseDescription);
     formData.append("receiptNumber", receiptNumber);
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription);
-    formData.append('expenseItemsString',JSON.stringify(this.state.data));
-    formData.append('expenseVATAmount',this.state.initValue.expenseVATAmount);
-    formData.append('totalAmount',this.state.initValue.totalAmount);
-    if (bank && bank.value) {
-      formData.append("bankAccountId", bank.value);
+    formData.append('expenseAmount', expenseAmount);
+    if (expenseCategory && expenseCategory.value) {
+      formData.append("expenseCategory", expenseCategory.value);
+    }
+    if (employee && employee.value) {
+      formData.append("employeeId", employee.value);
     }
     if (currency && currency.value) {
       formData.append("currencyCode", currency.value);
@@ -313,35 +141,40 @@ class CreateExpense extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
+
     this.props.expenseCreateActions.createExpense(formData).then(res => {
-      this.props.commonActions.tostifyAlert('success', 'Creted Successfully.')
-      if (this.state.createMore) {
-        this.setState({
-          createMore: false
-        })
-      } else {
-        this.props.history.push('/admin/expense/expense')
+      if (res.status === 200) {
+        resetForm()
+        this.props.commonActions.tostifyAlert('success', 'New Expense Created Successfully.')
+        if (this.state.createMore) {
+          this.setState({
+            createMore: false
+          })
+        } else {
+          this.props.history.push('/admin/expense/expense')
+        }
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
 
-  handleChange(e, name) {
-    this.setState({
-      currentData: _.set(
-        { ...this.state.currentData },
-        e.target.name && e.target.name !== '' ? e.target.name : name,
-        e.target.type === 'checkbox' ? e.target.checked : e.target.value
-      )
-    })
-  }
+  // handleChange(e, name) {
+  //   this.setState({
+  //     currentData: _.set(
+  //       { ...this.state.currentData },
+  //       e.target.name && e.target.name !== '' ? e.target.name : name,
+  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
+  //     )
+  //   })
+  // }
 
   render() {
 
     const { data } = this.state
     const { initValue } = this.state
-    const { currency_list, project_list, bank_account_list} = this.props
+    const { currency_list, project_list, expense_categories_list, employee_list } = this.props
+
 
     return (
       <div className="create-expense-screen">
@@ -367,7 +200,6 @@ class CreateExpense extends React.Component {
                         onSubmit={(values, { resetForm }) => {
 
                           this.handleSubmit(values)
-                          resetForm(initValue)
 
                           // this.setState({
                           //   selectedCurrency: null,
@@ -377,11 +209,37 @@ class CreateExpense extends React.Component {
 
                           // })
                         }}
-
+                        validationSchema={
+                          Yup.object().shape({
+                            expenseCategory: Yup.string()
+                              .required('Expense Category is required'),
+                            expenseDate: Yup.date()
+                              .required('Expense Date is Required'),
+                              expenseAmount: Yup.string()
+                              .required('Amount is Required')
+                              .matches(/^[0-9]*$/, "Enter a Valid Amount")
+                          })
+                        }
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
+                              <Col lg={4}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="expenseCategoryId">Expense Category</Label>
+                                  <Select
+                                    id="expenseCategory"
+                                    name="expenseCategory"
+                                    options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
+                                    value={props.values.expenseCategory}
+                                    className={props.errors.expenseCategory && props.touched.expenseCategory ? "is-invalid" : ""}
+                                    onChange={option => props.handleChange('expenseCategory')(option)}
+                                  />
+                                  {props.errors.expenseCategory && props.touched.expenseCategory && (
+                                    <div className="invalid-feedback">{props.errors.expenseCategory}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="payee">Payee</Label>
@@ -398,20 +256,25 @@ class CreateExpense extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="expense_date">Expense Date</Label>
-                                  <div>
-                                    <DatePicker
-                                      className="form-control"
-                                      id="date"
-                                      name="expenseDate"
-                                      placeholderText=""
-                                      selected={props.values.expenseDate}
-                                      onChange={(value) => {
-                                        props.handleChange("expenseDate")(value)
-                                      }}
-                                    />
-                                  </div>
+                                  <DatePicker
+
+                                    id="date"
+                                    name="expenseDate"
+                                    className={`form-control ${props.errors.expenseDate && props.touched.expenseDate ? "is-invalid" : ""}`}
+                                    placeholderText="Expense Date"
+                                    selected={props.values.expenseDate}
+                                    dateFormat="dd/MM/yyyy"
+                                    maxDate={new Date()}
+                                    onChange={(value) => {
+                                      props.handleChange("expenseDate")(value)
+                                    }}
+                                  />
+                                  {props.errors.expenseDate && props.touched.expenseDate && (
+                                    <div className="invalid-feedback">{props.errors.expenseDate}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
+
                             </Row>
                             <Row>
                               <Col lg={4}>
@@ -421,10 +284,23 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="currencyCode"
                                     name="currencyCode"
-                                    options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
+                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                                     value={props.values.currency}
                                     onChange={option => props.handleChange('currency')(option)}
 
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col lg={4}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="employee">Employee</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    id="employee"
+                                    name="employee"
+                                    options={employee_list ? selectOptionsFactory.renderOptions('firstName', 'userId', employee_list) : []}
+                                    value={props.values.employee}
+                                    onChange={option => props.handleChange('employee')(option)}
                                   />
                                 </FormGroup>
                               </Col>
@@ -435,7 +311,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="project"
                                     name="project"
-                                    options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
+                                    options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list) : []}
                                     value={props.values.project}
                                     onChange={option => props.handleChange('project')(option)}
                                   />
@@ -445,48 +321,22 @@ class CreateExpense extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="bank">Bank</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    id="bank"
-                                    name="bank"
-                                    options={bank_account_list ? selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_account_list) : ''}
-                                    value={props.values.bank}
-                                    onChange={option => props.handleChange('bank')(option)}
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="paymentDate">Payment Date</Label>
-                                  <div>
-                                    <DatePicker
-                                      className="form-control"
-                                      id="paymentDate"
-                                      name="paymentDate"
-                                      placeholderText=""
-                                      selected={props.values.paymentDate}
-                                      onChange={option => props.handleChange('paymentDate')(option)}
-                                    />
-                                  </div>
-                                </FormGroup>
-                              </Col>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="expenseAmount">Expense Amount</Label>
+                                  <Label htmlFor="expenseAmount">Amount</Label>
                                   <Input
-                                    type="expenseAmount"
+                                    type="text"
                                     name="expenseAmount"
                                     id="expenseAmount"
                                     rows="5"
-                                    placeholder="Amount"
+                                    className={props.errors.expenseAmount && props.touched.expenseAmount ? "is-invalid" : ""}
                                     onChange={option => props.handleChange('expenseAmount')(option)}
-                                    // value={props.values.expenseAmount}
+                                    value={props.values.expenseAmount}
+
                                   />
+                                  {props.errors.expenseAmount && props.touched.expenseAmount && (
+                                    <div className="invalid-feedback">{props.errors.expenseAmount}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
-                            </Row>
-                            <Row>
                               <Col lg={8}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="expenseDescription">Description</Label>
@@ -515,7 +365,6 @@ class CreateExpense extends React.Component {
                                         id="receiptNumber"
                                         name="receiptNumber"
                                         placeholder="Enter Reciept Number"
-                                        required
                                         onChange={option => props.handleChange('receiptNumber')(option)}
                                         value={props.values.receiptNumber}
 
@@ -558,104 +407,19 @@ class CreateExpense extends React.Component {
                                 </Row>
                               </Col>
                             </Row>
-                            <hr />
-                            <Row>
-                              <Col lg={12} className="mb-3">
-                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}>
-                                  <i className="fa fa-plus"></i> Add More
-                            </Button>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col lg={12}>
-                                <BootstrapTable
-                                  options={this.options}
-                                  data={data}
-                                  version="4"
-                                  hover
-                                  className="expense-create-table"
-                                >
-                                  <TableHeaderColumn
-                                    width="55"
-                                    dataAlign="center"
-                                    dataFormat={this.renderActions}
-                                  >
-                                  </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    isKey
-                                    dataField="product_name"
-                                    dataFormat={this.renderProductName}
-                                  >
-                                    Account Code
-                              </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="quantity"
-                                    dataFormat={this.renderAmount}
-                                  >
-                                    Amount
-                              </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="vat"
-                                    dataFormat={this.renderVat}
-                                  >
-                                    Vat (%)
-                              </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="sub_total"
-                                    dataFormat={this.renderSubTotal}
-                                    className="text-right"
-                                    columnClassName="text-right"
-                                  >
-                                    Sub Total (All)
-                              </TableHeaderColumn>
-                                </BootstrapTable>
-                              </Col>
-                            </Row>
-
-
-                            <Row>
-                              <Col lg={4} className="ml-auto">
-                                <div className="">
-                                  <div className="total-item p-2">
-                                    <Row>
-                                      <Col lg={6}>
-                                        <h5 className="mb-0 text-right">Total Net</h5>
-                                      </Col>
-                                      <Col lg={6} className="text-right">
-                                        <label className="mb-0">{initValue.total_net}</label>
-                                      </Col>
-                                    </Row>
-                                  </div>
-                                  <div className="total-item p-2">
-                                    <Row>
-                                      <Col lg={6}>
-                                        <h5 className="mb-0 text-right">Total Vat</h5>
-                                      </Col>
-                                      <Col lg={6} className="text-right">
-                                        <label className="mb-0">{initValue.expenseVATAmount}</label>
-                                      </Col>
-                                    </Row>
-                                  </div>
-                                  <div className="total-item p-2">
-                                    <Row>
-                                      <Col lg={6}>
-                                        <h5 className="mb-0 text-right">Total</h5>
-                                      </Col>
-                                      <Col lg={6} className="text-right">
-                                        <label className="mb-0">{initValue.totalAmount}</label>
-                                      </Col>
-                                    </Row>
-                                  </div>
-                                </div>
-                              </Col>
-                            </Row>
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
                                   <Button type="submit" color="primary" className="btn-square mr-3">
                                     <i className="fa fa-dot-circle-o"></i> Create
                         </Button>
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="button" color="primary" className="btn-square mr-3"
+                                    onClick={() => {
+                                      this.setState({ createMore: true }, () => {
+                                        props.handleSubmit()
+                                      })
+                                    }
+                                    }>
                                     <i className="fa fa-repeat"></i> Create and More
                         </Button>
                                   <Button color="secondary" className="btn-square"

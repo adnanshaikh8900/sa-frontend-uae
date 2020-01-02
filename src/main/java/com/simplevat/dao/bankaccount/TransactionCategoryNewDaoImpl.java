@@ -1,10 +1,14 @@
 package com.simplevat.dao.bankaccount;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
+import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import javax.persistence.TypedQuery;
@@ -13,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository(value = "transactionCategoryDao")
 public class TransactionCategoryNewDaoImpl extends AbstractDao<Integer, TransactionCategory> implements TransactionCategoryDaoNew {
 
-    @Override
+	@Override
     public TransactionCategory getDefaultTransactionCategory() {
         List<TransactionCategory> transactionCategories = findAllTransactionCategory();
 
@@ -34,10 +38,20 @@ public class TransactionCategoryNewDaoImpl extends AbstractDao<Integer, Transact
     }
 
     @Override
-    public List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode, String name) {
+    public List<TransactionCategory> findAllTransactionCategoryByTransactionTypeAndName(Integer transactionTypeCode, String name) {
         TypedQuery<TransactionCategory> query = getEntityManager().createQuery("SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.transactionType.transactionTypeCode =:transactionTypeCode AND t.transactionCategoryName LIKE '%'||:transactionCategoryName||'%' ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC", TransactionCategory.class);
         query.setParameter("transactionTypeCode", transactionTypeCode);
         query.setParameter("transactionCategoryName", name);
+        if (query.getResultList() != null && !query.getResultList().isEmpty()) {
+            return query.getResultList();
+        }
+        return null;
+    }
+    
+    @Override
+    public List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode) {
+        TypedQuery<TransactionCategory> query = getEntityManager().createQuery("SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.transactionType.transactionTypeCode =:transactionTypeCode ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC", TransactionCategory.class);
+        query.setParameter("transactionTypeCode", transactionTypeCode);
         if (query.getResultList() != null && !query.getResultList().isEmpty()) {
             return query.getResultList();
         }
@@ -76,5 +90,15 @@ public class TransactionCategoryNewDaoImpl extends AbstractDao<Integer, Transact
             }
         }
     }
+    
+	@Override
+	public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap) {
+		List<DbFilter> dbFilters = new ArrayList();
+		filterMap.forEach((transactionCategoryFilter, value) -> dbFilters
+				.add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
+						.condition(transactionCategoryFilter.getCondition()).value(value).build()));
+		List<TransactionCategory> transactionCategories = this.executeQuery(dbFilters);
+		return transactionCategories;
+	}
 
 }

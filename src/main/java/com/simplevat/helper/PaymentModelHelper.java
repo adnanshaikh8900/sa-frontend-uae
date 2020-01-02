@@ -2,11 +2,14 @@ package com.simplevat.helper;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.entity.Payment;
-import com.simplevat.rest.payment.model.PaymentPersistModel;
-import com.simplevat.rest.payment.model.PaymentViewModel;
+import com.simplevat.rest.paymentcontroller.PaymentPersistModel;
+import com.simplevat.rest.paymentcontroller.PaymentViewModel;
 import com.simplevat.service.PaymentService;
-import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class PaymentModelHelper {
 
@@ -16,38 +19,60 @@ public class PaymentModelHelper {
             payment.setPaymentId(paymentModel.getPaymentId());
         }
         if (paymentModel.getPaymentDate() != null) {
-            payment.setPaymentDate(paymentModel.getPaymentDate());
-        }
-        if (paymentModel.getPaymentDueDate() != null) {
-            payment.setPaymentDueDate(paymentModel.getPaymentDueDate());
+            LocalDateTime paymentDate = Instant.ofEpochMilli(paymentModel.getPaymentDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+            payment.setPaymentDate(paymentDate);
         }
         payment.setDescription(paymentModel.getDescription());
-        payment.setInvoiceReferenceNo(paymentModel.getInvoiceReferenceNo());
-        if (paymentModel.getAmount() != null) {
-            payment.setInvoiceAmount(new BigDecimal(paymentModel.getAmount()));
-        }
-        payment.setReceiptNo(paymentModel.getReceiptNo());
-        payment.setReceiptAttachmentDescription(paymentModel.getReceiptAttachmentDescription());
+        payment.setInvoiceAmount(paymentModel.getInvoiceAmount());
         return payment;
     }
 
     public PaymentViewModel convertToPaymentViewModel(Payment payment) {
         PaymentViewModel paymentModel = new PaymentViewModel();
         paymentModel.setPaymentId(payment.getPaymentId());
-        paymentModel.setAmount(payment.getInvoiceAmount());
-        paymentModel.setInvoiceReferenceNo(payment.getInvoiceReferenceNo());
-        paymentModel.setPaymentDate(payment.getPaymentDate());
+        paymentModel.setInvoiceAmount(payment.getInvoiceAmount());
         if (payment.getBankAccount() != null) {
             paymentModel.setBankName(payment.getBankAccount().getBankAccountName());
         }
         if (payment.getSupplier() != null) {
             paymentModel.setSupplierName(payment.getSupplier().getFirstName());
         }
-        paymentModel.setPaymentDueDate(payment.getPaymentDueDate());
+        if (payment.getInvoice() != null) {
+            paymentModel.setInvoiceReferenceNo(payment.getInvoice().getReferenceNumber());
+        }
+        if (payment.getPaymentDate() != null) {
+            Date paymentDate = Date.from(payment.getPaymentDate().atZone(ZoneId.systemDefault()).toInstant());
+            paymentModel.setPaymentDate(paymentDate);
+        }
         paymentModel.setDescription(payment.getDescription());
-        paymentModel.setReceiptNo(payment.getReceiptNo());
-        paymentModel.setReceiptAttachmentPath(payment.getReceiptAttachmentPath());
-        paymentModel.setReceiptAttachmentDescription(payment.getReceiptAttachmentDescription());
+        paymentModel.setDeleteFlag(payment.getDeleteFlag());
+        return paymentModel;
+    }
+
+    public PaymentPersistModel convertToPaymentPersistModel(Payment payment) {
+        PaymentPersistModel paymentModel = new PaymentPersistModel();
+        paymentModel.setPaymentId(payment.getPaymentId());
+        paymentModel.setInvoiceAmount(payment.getInvoiceAmount());
+        if (payment.getBankAccount() != null) {
+            paymentModel.setBankAccountId(payment.getBankAccount().getBankAccountId());
+        }
+        if (payment.getSupplier() != null) {
+            paymentModel.setSupplierId(payment.getSupplier().getContactId());
+        }
+        if (payment.getInvoice() != null) {
+            paymentModel.setInvoiceId(payment.getInvoice().getId());
+        }
+        if (payment.getCurrency() != null) {
+            paymentModel.setCurrencyCode(payment.getCurrency().getCurrencyCode());
+        }
+        if (payment.getProject() != null) {
+            paymentModel.setProjectId(payment.getProject().getProjectId());
+        }
+        if (payment.getPaymentDate() != null) {
+            Date paymentDate = Date.from(payment.getPaymentDate().atZone(ZoneId.systemDefault()).toInstant());
+            paymentModel.setPaymentDate(paymentDate);
+        }
+        paymentModel.setDescription(payment.getDescription());
         paymentModel.setDeleteFlag(payment.getDeleteFlag());
         return paymentModel;
     }

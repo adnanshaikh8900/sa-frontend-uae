@@ -26,26 +26,35 @@ import {
 import Select from 'react-select'
 import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-import DateRangePicker from 'react-bootstrap-daterangepicker'
+import DatePicker from 'react-datepicker'
 
-import { Loader } from 'components'
+
+import { Loader ,ConfirmDeleteModal} from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
-import 'bootstrap-daterangepicker/daterangepicker.css'
+import 'react-datepicker/dist/react-datepicker.css'
+
+import moment from 'moment'
 
 import * as SupplierInvoiceActions from './actions'
+import {
+  CommonActions
+} from 'services/global'
 
 import './style.scss'
+import { setNestedObjectValues } from 'formik';
 
 const mapStateToProps = (state) => {
   return ({
-    supplier_invoice_list: state.supplier_invoice.supplier_invoice_list
+    supplier_invoice_list: state.supplier_invoice.supplier_invoice_list,
+    status_list: state.supplier_invoice.status_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    supplierInvoiceActions: bindActionCreators(SupplierInvoiceActions, dispatch)
+    supplierInvoiceActions: bindActionCreators(SupplierInvoiceActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
 
@@ -55,12 +64,19 @@ class SupplierInvoice extends React.Component {
     super(props)
     this.state = {
       loading: false,
-      stateOptions: [
-        { value: 'Paid', label: 'Paid' },
-        { value: 'Unpaid', label: 'Unpaid' },
-        { value: 'Partially Paid', label: 'Partially Paid' },
-      ],
-      actionButtons: {}
+      dialog: false,
+      actionButtons: {},
+      filterData: {
+        supplierName: '',
+        referenceNumber: '',
+        invoiceDate: '',
+        invoiceDueDate: '',
+        amount: '',
+        status: '',
+        contactType : "1"
+      },
+      selectedRows: [],
+
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -70,6 +86,12 @@ class SupplierInvoice extends React.Component {
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
     this.toggleActionButton = this.toggleActionButton.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+    this.bulkDelete = this.bulkDelete.bind(this);
+    this.removeBulk = this.removeBulk.bind(this);
+    this.removeDialog = this.removeDialog.bind(this);
+
 
     this.options = {
       paginationPosition: 'top'
@@ -83,42 +105,48 @@ class SupplierInvoice extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.initializeData()
   }
 
-  initializeData () {
-    this.props.supplierInvoiceActions.getSupplierInoviceList()
+  initializeData() {
+    this.props.supplierInvoiceActions.getSupplierInoviceList(this.state.filterData)
+    this.props.supplierInvoiceActions.getStatusList(this.state.filterData)
+  }
+  componentWillUnmount() {
+    this.setState({
+      selectedRows: []
+    })
   }
 
-  renderInvoiceNumber (cell, row) {
+  renderInvoiceNumber(cell, row) {
     return (
-    <label
-      className="mb-0 my-link"
-      onClick={() => this.props.history.push('/admin/expense/supplier-invoice/detail')}
-    >
-      { row.transactionCategoryName }
-    </label>
+      <label
+        className="mb-0 my-link"
+        onClick={() => this.props.history.push('/admin/expense/supplier-invoice/detail')}
+      >
+        {row.transactionCategoryName}
+      </label>
     )
   }
 
-  renderInvoiceStatus (cell, row) {
+  renderInvoiceStatus(cell, row) {
     let classname = ''
-    if (row.status == 'paid') {
+    if (row.status === 'Paid') {
       classname = 'badge-success'
-    } else if (row.status == 'unpaid') {
+    } else if (row.status === 'Unpaid') {
       classname = 'badge-danger'
-    } else if (row.status == 'Patially Paid') {
+    } else if (row.status === 'PARTIALLY PAID') {
       classname = "badget-info"
     } else {
       classname = 'badge-primary'
     }
     return (
-      <span className={ `badge ${classname} mb-0` }>{ row.status }</span>
+      <span className={`badge ${classname} mb-0`}>{row.status}</span>
     )
   }
 
-  toggleActionButton (index) {
+  toggleActionButton(index) {
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -130,7 +158,9 @@ class SupplierInvoice extends React.Component {
     })
   }
 
-  renderActions (cell, row) {
+
+
+  renderActions(cell, row) {
     return (
       <div>
         <ButtonDropdown
@@ -139,9 +169,9 @@ class SupplierInvoice extends React.Component {
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
-              this.state.actionButtons[row.transactionCategoryCode] == true ?
+              this.state.actionButtons[row.transactionCategoryCode] === true ?
                 <i className="fas fa-chevron-up" />
-              :
+                :
                 <i className="fas fa-chevron-down" />
             }
           </DropdownToggle>
@@ -173,21 +203,111 @@ class SupplierInvoice extends React.Component {
     )
   }
 
-  onRowSelect (row, isSelected, e) {
-    console.log('one row checked ++++++++', row)
+  onRowSelect(row, isSelected, e) {
+    let temp_list = []
+    if (isSelected) {
+      temp_list = Object.assign([], this.state.selectedRows)
+      temp_list.push(row.id);
+    } else {
+      this.state.selectedRows.map(item => {
+        if (item !== row.id) {
+          temp_list.push(item)
+        }
+      });
+    }
+    this.setState({
+      selectedRows: temp_list
+    })
   }
-  onSelectAll (isSelected, rows) {
-    console.log('current page all row checked ++++++++', rows)
+  onSelectAll(isSelected, rows) {
+    let temp_list = []
+    if (isSelected) {
+      rows.map(item => {
+        temp_list.push(item.id)
+      })
+    }
+    this.setState({
+      selectedRows: temp_list
+    })
   }
 
+
+  bulkDelete() {
+    const {
+      selectedRows
+    } = this.state
+    if (selectedRows.length > 0) {
+      this.setState({
+        dialog: <ConfirmDeleteModal
+          isOpen={true}
+          okHandler={this.removeBulk}
+          cancelHandler={this.removeDialog}
+        />
+      })
+    } else {
+      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
+    }
+  }
+
+  removeBulk() {
+    this.removeDialog()
+    let { selectedRows ,filterData} = this.state;
+    const { supplier_invoice_list } = this.props
+    let obj = {
+      ids: selectedRows
+    }
+    this.props.supplierInvoiceActions.removeBulk(obj).then(() => {
+      this.props.supplierInvoiceActions.getSupplierInoviceList(filterData)
+      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+      if (supplier_invoice_list && supplier_invoice_list.length > 0) {
+        this.setState({
+          selectedRows: []
+        })
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
+  handleChange(val, name) {
+    this.setState({
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
+    })
+  }
+
+  handleSearch() {
+    this.initializeData()
+  }
 
   render() {
-
-    const { loading } = this.state
-    const { supplier_invoice_list } = this.props
+    const { loading,filterData,dialog,selectedRows} = this.state
+    const { supplier_invoice_list , status_list} = this.props
     const containerStyle = {
       zIndex: 1999
     }
+
+    const supplier_invoice_data = this.props.supplier_invoice_list ? this.props.supplier_invoice_list.map(supplier =>
+
+      ({
+        id: supplier.id,
+        status: supplier.status,
+        customerName: supplier.name,
+        invoiceNumber: supplier.referenceNumber,
+        invoiceDate: moment(supplier.invoiceDate).format('L'),
+        invoiceDueDate: moment(supplier.invoiceDueDate).format('L'),
+        invoiceAmount: supplier.totalAmount,
+        vatAmount: supplier.totalVatAmount,
+      })
+    ) : ""
+
 
     return (
       <div className="supplier-invoice-screen">
@@ -205,6 +325,7 @@ class SupplierInvoice extends React.Component {
               </Row>
             </CardHeader>
             <CardBody>
+              {dialog}
               {
                 loading ?
                   <Row>
@@ -212,7 +333,7 @@ class SupplierInvoice extends React.Component {
                       <Loader />
                     </Col>
                   </Row>
-                :
+                  :
                   <Row>
                     <Col lg={12}>
                       <div className="mb-4 status-panel p-3">
@@ -240,6 +361,8 @@ class SupplierInvoice extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
+                            onClick={() => this.table.handleExportCSV()}
+                            disabled={supplier_invoice_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -255,6 +378,9 @@ class SupplierInvoice extends React.Component {
                           <Button
                             color="warning"
                             className="btn-square"
+                            onClick={this.bulkDelete}
+                            disabled={selectedRows.length === 0}
+
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -265,84 +391,112 @@ class SupplierInvoice extends React.Component {
                         <h5>Filter : </h5>
                         <Row>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Customer Name" />
+                            <Input type="text" placeholder="Supplier Name" onChange={(e) => { this.handleChange(e.target.value, 'supplierName') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Reference Number" />
+                            <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'referenceNumber') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <DateRangePicker>
-                              <Input type="text" placeholder="Invoice Date" />
-                            </DateRangePicker>
+                            <DatePicker
+                              className="form-control"
+                              id="date"
+                              name="invoiceDate"
+                              placeholderText="Invoice Date"
+                              selected={filterData.invoiceDate}
+                              // value={filterData.invoiceDate}
+                              onChange={(value) => {
+                                this.handleChange(value,"invoiceDate")
+                              }}
+                            />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <DateRangePicker>
-                              <Input type="text" placeholder="Due Date" />
-                            </DateRangePicker>
+                          <DatePicker
+                              className="form-control"
+                              id="date"
+                              name="invoiceDueDate"
+                              placeholderText="Invoice Due Date"
+                              selected={filterData.invoiceDueDate}
+                              onChange={(value) => {
+                                this.handleChange(value,"invoiceDueDate")
+                              }}
+                            />
+                          </Col>
+                          <Col lg={1} className="mb-1">
+                            <Input type="text" placeholder="Amount" onChange={(e) => { this.handleChange(e.target.value, 'amount') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
-                              options={this.state.stateOptions}
-                              value={this.state.status}
-                              onChange={this.changeStatus}
+                              options={status_list ? status_list.map(item => {
+                                return {label: item,value: item}
+                              }): ''}
+                              value={this.state.filterData.status}
+                              onChange={(option) => { this.handleChange(option.value, 'status') }}
                               placeholder="Status"
                             />
+                          </Col>
+                          <Col lg={1} className="mb-1">
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={supplier_invoice_list.length === 0}>
+                              <i className="fa fa-search"></i>
+                            </Button>
                           </Col>
                         </Row>
                       </div>
                       <div>
                         <BootstrapTable
-                          selectRow={ this.selectRowProp }
+                          selectRow={this.selectRowProp}
                           search={false}
-                          options={ this.options }
-                          data={supplier_invoice_list}
+                          options={this.options}
+                          data={supplier_invoice_data}
                           version="4"
                           hover
                           pagination
                           totalSize={supplier_invoice_list ? supplier_invoice_list.length : 0}
                           className="supplier-invoice-table"
                         >
+
                           <TableHeaderColumn
                             width="130"
+                            dataField="status"
                             dataFormat={this.renderInvoiceStatus}
+                            dataSort
                           >
                             Status
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             isKey
-                            dataField="transactionCategoryCode"
+                            dataField="customerName"
                             dataSort
                           >
-                            Customer Name
+                            Supplier Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryName"
-                            dataFormat={this.renderInvoiceNumber}
+                            dataField="invoiceNumber"
+                            // dataFormat={this.renderInvoiceNumber}
                             dataSort
                           >
                             Invoice Number
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionCategoryDescription" 
+                            dataField="invoiceDate"
                             dataSort
                           >
                             Invoice Date
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="parentTransactionCategory"
+                            dataField="invoiceDueDate"
                             dataSort
                           >
                             Due Date
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="invoiceAmount"
                             dataSort
                           >
                             Invoice Amount
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="vatAmount"
                             dataSort
                           >
                             VAT Amount

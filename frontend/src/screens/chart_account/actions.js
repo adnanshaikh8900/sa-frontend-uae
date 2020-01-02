@@ -23,11 +23,11 @@ export const getTransactionTypes = () => {
   }
 }
 
-export const getTransactionCategoryList = () => {
+export const getTransactionCategoryList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/transactioncategory/gettransactioncategory`
+      url: `/rest/transactioncategory/getList?transactionCategoryCode=${obj.transactionCategoryCode}&transactionCategoryName=${obj.transactionCategoryName}&transactionType=${obj.transactionType}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`,
     }
 
     return authApi(data).then(res => {
@@ -53,7 +53,7 @@ export const removeBulk = (obj) => {
       data: obj
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         return res
       }
     }).catch(err => {

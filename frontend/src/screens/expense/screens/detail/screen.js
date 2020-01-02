@@ -23,9 +23,17 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 
+import { Loader, ConfirmDeleteModal } from 'components'
+
+import { selectOptionsFactory } from 'utils'
+
 import * as ExpenseDetailsAction from './actions';
 import * as ExpenseActions from '../../actions';
+import {
+  CommonActions
+} from 'services/global'
 
+import moment from 'moment'
 import './style.scss'
 
 const mapStateToProps = (state) => {
@@ -33,15 +41,16 @@ const mapStateToProps = (state) => {
     expense_detail: state.expense.expense_detail,
     currency_list: state.expense.currency_list,
     project_list: state.expense.project_list,
-    bank_account_list: state.expense.bank_account_list,
-    customer_list: state.expense.customer_list,
-    payment_list: state.expense.payment_list,
+    employee_list: state.expense.employee_list,
+    vat_list: state.expense.vat_list,
+    expense_categories_list: state.expense.expense_categories_list,
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
     expenseDetailActions: bindActionCreators(ExpenseDetailsAction, dispatch),
-    expenseActions: bindActionCreators(ExpenseActions, dispatch)
+    expenseActions: bindActionCreators(ExpenseActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch),
 
   })
 }
@@ -51,10 +60,8 @@ class DetailExpense extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      data: [],
-
-      initialVals: null,
+      loading: true,
+      initValue: null,
     }
 
 
@@ -62,73 +69,12 @@ class DetailExpense extends React.Component {
       paginationPosition: 'top'
     }
 
-    this.renderActions = this.renderActions.bind(this)
-    this.renderProductName = this.renderProductName.bind(this)
-    this.renderAmount = this.renderAmount.bind(this)
-    this.renderVat = this.renderVat.bind(this)
-    this.renderSubTotal = this.renderSubTotal.bind(this)
 
-  }
-
-  renderActions(cell, row) {
-    return (
-      <Button
-        size="sm"
-        className="btn-twitter btn-brand icon"
-      >
-        <i className="fas fa-trash"></i>
-      </Button>
-    )
-  }
-
-  renderProductName(cell, row) {
-    return (
-      <div className="d-flex align-items-center">
-        <Input type="select" className="mr-1">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-        </Input>
-        <Button
-          size="sm"
-          color="primary"
-          className="btn-brand icon"
-        >
-          <i className="fas fa-plus"></i>
-        </Button>
-      </div>
-    )
-  }
-
-  renderAmount(cell, row) {
-    return (
-      <Input
-        type="text"
-        value="0"
-      />
-    )
-  }
-
-  renderVat(cell, row) {
-    return (
-      <Input type="select">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-      </Input>
-    )
-  }
-
-  renderSubTotal(cell, row) {
-    return (
-      <label className="mb-0">0.00</label>
-    )
+    this.initializeData = this.initializeData.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    // this.handleChange = this.handleChange.bind(this)
+    this.deleteExpense = this.deleteExpense.bind(this)
+    this.removeExpense = this.removeExpense.bind(this)
   }
 
   componentDidMount() {
@@ -137,381 +83,393 @@ class DetailExpense extends React.Component {
 
   initializeData() {
     const { expenseId } = this.props.location.state;
-    this.props.expenseDetailActions.getExpenseDetail(expenseId);
-    this.props.expenseActions.getCurrencyList();
-    this.props.expenseActions.getProjectList();
-    this.props.expenseActions.getBankAccountList();
-    this.props.expenseActions.getCustomerList();
-    this.props.expenseActions.getPaymentList();
+    if (this.props.location.state && expenseId) {
+      this.props.expenseActions.getVatList();
+      this.props.expenseDetailActions.getExpenseDetail(expenseId).then(res => {
+        if (res.status === 200) {
+          this.props.expenseActions.getCurrencyList();
+          this.props.expenseActions.getProjectList();
+          this.props.expenseActions.getEmployeeList();
+          this.props.expenseActions.getExpenseCategoriesList();
+          this.setState({
+            loading: false,
+            initValue: {
+              payee: res.data.payee,
+              expenseDate: res.data.expenseDate ? moment(res.data.expenseDate).utc().format('YYYY-MM-DD') : '',
+              currency: res.data.currencyCode ? res.data.currencyCode : '',
+              expenseCategory: res.data.expenseCategory ? res.data.expenseCategory : '',
+              projectId: res.data.projectId ? res.data.projectId : '',
+              expenseAmount: res.data.expenseAmount,
+              expenseDescription: res.data.expenseDescription,
+              receiptNumber: res.data.receiptNumber,
+              attachmentFile: res.data.attachmentFile,
+              receiptAttachmentDescription: res.data.receiptAttachmentDescription,
+              employee: res.data.employeeId ? res.data.employeeId : '',
+            },
+          })
+        }
+      }).catch(err => {
+        this.setState({ loading: false })
+      })
+    }
   }
+
+  handleSubmit(data, resetValue) {
+    const id = this.props.location.state.expenseId;
+    const {
+      payee,
+      expenseDate,
+      currency,
+      project,
+      expenseCategory,
+      expenseAmount,
+      employee,
+      expenseDescription,
+      receiptNumber,
+      attachmentFile,
+      receiptAttachmentDescription,
+    } = data
+
+    let formData = new FormData();
+    formData.append("expenseId", id);
+    formData.append("payee", payee);
+    formData.append("expenseDate", expenseDate !== null ? moment(expenseDate).utc().toDate() : "");
+    formData.append("expenseDescription", expenseDescription);
+    formData.append("receiptNumber", receiptNumber);
+    formData.append("receiptAttachmentDescription", receiptAttachmentDescription);
+    formData.append('expenseAmount', expenseAmount);
+    if (expenseCategory && expenseCategory.value) {
+      formData.append("expenseCategoryId", expenseCategory.value);
+    }
+    if (employee && employee.value) {
+      formData.append("employeeId", employee.value);
+    }
+    if (currency && currency.value) {
+      formData.append("currencyCode", currency.value);
+    }
+    if (project && project.value) {
+      formData.append("projectId", project.value);
+    }
+    if (this.uploadFile.files[0]) {
+      formData.append("attachmentFile", this.uploadFile.files[0]);
+    }
+    this.props.expenseDetailActions.updateExpense(formData).then(res => {
+      if(res.status ===  200) {
+        resetValue({});
+        this.props.commonActions.tostifyAlert('success', 'Expense Updated Successfully.')
+        this.props.history.push('/admin/expense/expense')
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+
+  deleteExpense() {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removeExpense}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeExpense() {
+    const id = this.props.location.state.expenseId;
+    this.props.expenseDetailActions.deleteExpense(id).then(res => {
+      if (res.status === 200) {
+        // this.success('Chart Account Deleted Successfully');
+        this.props.commonActions.tostifyAlert('success', 'Expense Deleted Successfully')
+        this.props.history.push('/admin/expense/expense')
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
 
   render() {
 
-    const { expense_detail, currency_list,project_list,payment_list,bank_account_list,customer_list } = this.props
-    const { data } = this.state
+    const { expense_detail, currency_list, project_list, payment_list, employee_list, expense_categories_list } = this.props
+    const { data, initValue, loading, dialog } = this.state
 
     return (
       <div className="detail-expense-screen">
         <div className="animated fadeIn">
-          <Row>
-            <Col lg={12} className="mx-auto">
-              <Card>
-                <CardHeader>
-                  <Row>
-                    <Col lg={12}>
-                      <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="fab fa-stack-exchange" />
-                        <span className="ml-2">Update Expense</span>
-                      </div>
-                    </Col>
-                  </Row>
-                </CardHeader>
-                <CardBody>
-                  <Row>
-                  <Col lg={12}>
-                      <Formik
-                        initialValues={this.state.ExpenseValue}
-                        onSubmit={(values, { resetForm }) => {
+          {dialog}
+          {loading ? (
+            <Loader />
+          )
+            :
+            (
+              <Row>
+                <Col lg={12} className="mx-auto">
+                  <Card>
+                    <CardHeader>
+                      <Row>
+                        <Col lg={12}>
+                          <div className="h4 mb-0 d-flex align-items-center">
+                            <i className="fab fa-stack-exchange" />
+                            <span className="ml-2">Update Expense</span>
+                          </div>
+                        </Col>
+                      </Row>
+                    </CardHeader>
+                    <CardBody>
+                      <Row>
+                        <Col lg={12}>
+                          <Formik
+                            initialValues={initValue}
+                            onSubmit={(values, { resetForm }) => {
 
-                          this.expenseHandleSubmit(values)
-                          resetForm(this.state.initProductValue)
+                              this.handleSubmit(values)
 
-                          this.setState({
-                            selectedCurrency: null,
-                            selectedProject: null,
-                            selectedBankAccount: null,
-                            selectedCustomer: null
+                              // this.setState({
+                              //   selectedCurrency: null,
+                              //   selectedProject: null,
+                              //   selectedBankAccount: null,
+                              //   selectedCustomer: null
 
-                          })
-                        }}
-                      >
-                        {props => (
-                          <Form onSubmit={props.handleSubmit}>
-                            <Row>
-                              <Col lg={4}>
-                              <FormGroup className="mb-3">
-                                  <Label htmlFor="expenseContactId">Customer</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    options={customer_list}
-                                    id="expenseContactId"
-                                    name="expenseContactId"
-                                    value={this.state.selectedCustomer}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedCustomer: option.value
-                                      })
-                                      props.handleChange("expenseContactId")(option.value);
-                                    }}
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="expense_date">Expense Date</Label>
-                                  <div>
-                                    <DatePicker
-                                      className="form-control"
-                                      id="date"
-                                      name="expenseDate"
-                                      placeholderText=""
-                                      // selected={expenseDate}
-                                      onChange={(val)=> {
-                                        this.setState({
-                                          initExpenseValue: {
-                                            expenseDate: val
-                                          }
-                                        })
-                                        props.handleChange("expenseDate")(val)}
-                                      }
-                                    />
-                                  </div>
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="currency">Currency</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    options={currency_list}
-                                    id="currencyCode"
-                                    name="currencyCode"
-                                    value={this.state.selectedCurrency}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedCurrency: option.value
-                                      })
-                                      props.handleChange("currencyCode")(option.value);
-                                    }}
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="project">Project</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    options={project_list}
-                                    id="project"
-                                    name="project"
-                                    value={this.state.selectedProject}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedProject: option.value
-                                      })
-                                      props.handleChange("project")(option.value);
-                                    }}
-                                  />
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="bank">Bank</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    options={bank_account_list}
-                                    id="bankAccountId"
-                                    name="bankAccountId"
-                                    value={this.state.selectedBankAccount}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedBankAccount: option.value
-                                      })
-                                      props.handleChange("bankAccountId")(option.value);
-                                    }}
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="payment_date">Payment Date</Label>
-                                  <div>
-                                    <DatePicker
-                                      className="form-control"
-                                      id="payment_date"
-                                      name="payment_date"
-                                      placeholderText=""
-                                    />
-                                  </div>
-                                </FormGroup>
-                              </Col>
-                              <Col lg={4}>
-                              <FormGroup className="mb-3">
-                                  <Label htmlFor="paymentId">Payment</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    options={payment_list}
-                                    id="paymentId"
-                                    name="paymentId"
-                                    value={this.state.selectedPayment}
-                                    onChange={(option) => {
-                                      this.setState({
-                                        selectedPayment: option.value
-                                      })
-                                      props.handleChange("paymentId")(option.value);
-                                    }}
-                                  />
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col lg={8}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="expenseDescription">Description</Label>
-                                  <Input
-                                    type="textarea"
-                                    name="expenseDescription"
-                                    id="expenseDescription"
-                                    rows="5"
-                                    placeholder="1024 characters..."
-                                  />
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                            <hr />
-                            <Row>
-                              <Col lg={8}>
+                              // })
+                            }}
+                            validationSchema={
+                              Yup.object().shape({
+                                expenseCategory: Yup.string()
+                                  .required('Expense Category is required'),
+                                expenseDate: Yup.date()
+                                  .required('Expense Date is Required'),
+                                expenseAmount: Yup.string()
+                                  .required('Amount is Required')
+                                  .matches(/^[0-9]*$/, "Enter a Valid Amount")
+                              })
+                            }
+                          >
+                            {props => (
+                              <Form onSubmit={props.handleSubmit}>
                                 <Row>
-                                  <Col lg={6}>
+                                  <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="receiptNumber">Reciept Number</Label>
+                                      <Label htmlFor="expenseCategoryId">Expense Category</Label>
+                                      <Select
+                                        id="expenseCategory"
+                                        name="expenseCategory"
+                                        options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
+                                        value={props.values.expenseCategory}
+                                        className={props.errors.expenseCategory && props.touched.expenseCategory ? "is-invalid" : ""}
+                                        onChange={option => props.handleChange('expenseCategory')(option)}
+                                      />
+                                      {props.errors.expenseCategory && props.touched.expenseCategory && (
+                                        <div className="invalid-feedback">{props.errors.expenseCategory}</div>
+                                      )}
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg={4}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="payee">Payee</Label>
                                       <Input
                                         type="text"
-                                        id="receiptNumber"
-                                        name="receiptNumber"
-                                        placeholder="Enter Reciept Number"
-                                        required
+                                        name="payee"
+                                        id="payee"
+                                        rows="5"
+                                        placeholder="Payee"
+                                        onChange={(value) => { props.handleChange("payee")(value) }}
+                                        defaultValue={props.values.payee}
+                                      />
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg={4}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="expense_date">Expense Date</Label>
+                                      <DatePicker
+
+                                        id="date"
+                                        name="expenseDate"
+                                        className={`form-control ${props.errors.expenseDate && props.touched.expenseDate ? "is-invalid" : ""}`}
+                                        placeholderText="Expense Date"
+                                        value={moment(props.values.expenseDate).format('DD-MM-YYYY')}
+                                        dateFormat="dd/MM/yyyy"
+                                        // maxDate={new Date()}
+                                        onChange={(value) => {
+                                          props.handleChange("expenseDate")(value)
+                                        }}
+                                      />
+                                      {props.errors.expenseDate && props.touched.expenseDate && (
+                                        <div className="invalid-feedback">{props.errors.expenseDate}</div>
+                                      )}
+                                    </FormGroup>
+                                  </Col>
+
+                                </Row>
+                                <Row>
+                                  <Col lg={4}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="currency">Currency</Label>
+                                      <Select
+                                        className="select-default-width"
+                                        id="currencyCode"
+                                        name="currencyCode"
+                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                        value={props.values.currency}
+                                        onChange={option => props.handleChange('currency')(option)}
+
+                                      />
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg={4}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="employee">Employee</Label>
+                                      <Select
+                                        className="select-default-width"
+                                        id="employee"
+                                        name="employee"
+                                        options={employee_list ? selectOptionsFactory.renderOptions('firstName', 'userId', employee_list) : []}
+                                        value={props.values.employee}
+                                        onChange={option => props.handleChange('employee')(option)}
+                                      />
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg={4}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="project">Project</Label>
+                                      <Select
+                                        className="select-default-width"
+                                        id="project"
+                                        name="project"
+                                        options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list) : []}
+                                        value={props.values.projectId}
+                                        onChange={option => props.handleChange('projectId')(option)}
                                       />
                                     </FormGroup>
                                   </Col>
                                 </Row>
                                 <Row>
-                                  <Col lg={12}>
+                                  <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="attachment_description">Attachment Description</Label>
+                                      <Label htmlFor="expenseAmount">Amount</Label>
+                                      <Input
+                                        type="text"
+                                        name="expenseAmount"
+                                        id="expenseAmount"
+                                        rows="5"
+                                        className={props.errors.expenseAmount && props.touched.expenseAmount ? "is-invalid" : ""}
+                                        onChange={option => props.handleChange('expenseAmount')(option)}
+                                        value={props.values.expenseAmount}
+
+                                      />
+                                      {props.errors.expenseAmount && props.touched.expenseAmount && (
+                                        <div className="invalid-feedback">{props.errors.expenseAmount}</div>
+                                      )}
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg={8}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="expenseDescription">Description</Label>
                                       <Input
                                         type="textarea"
-                                        name="attachment_description"
-                                        id="attachment_description"
+                                        name="expenseDescription"
+                                        id="expenseDescription"
                                         rows="5"
                                         placeholder="1024 characters..."
+                                        onChange={option => props.handleChange('expenseDescription')(option)}
+                                        value={props.values.expenseDescription}
+
                                       />
                                     </FormGroup>
                                   </Col>
                                 </Row>
-                              </Col>
-                              <Col lg={4}>
+                                <hr />
                                 <Row>
-                                  <Col lg={12}>
-                                    <FormGroup className="mb-3">
-                                      <Label>Reciept Attachment</Label><br />
-                                      <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                        <i className="fa fa-upload"></i> Upload
+                                  <Col lg={8}>
+                                    <Row>
+                                      <Col lg={6}>
+                                        <FormGroup className="mb-3">
+                                          <Label htmlFor="receiptNumber">Reciept Number</Label>
+                                          <Input
+                                            type="text"
+                                            id="receiptNumber"
+                                            name="receiptNumber"
+                                            placeholder="Enter Reciept Number"
+                                            required
+                                            onChange={option => props.handleChange('receiptNumber')(option)}
+                                            value={props.values.receiptNumber}
+
+                                          />
+                                        </FormGroup>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col lg={12}>
+                                        <FormGroup className="mb-3">
+                                          <Label htmlFor="receiptAttachmentDescription">Attachment Description</Label>
+                                          <Input
+                                            type="textarea"
+                                            name="receiptAttachmentDescription"
+                                            id="receiptAttachmentDescription"
+                                            rows="5"
+                                            placeholder="1024 characters..."
+                                            onChange={option => props.handleChange('receiptAttachmentDescription')(option)}
+                                            value={props.values.receiptAttachmentDescription}
+
+                                          />
+                                        </FormGroup>
+                                      </Col>
+                                    </Row>
+                                  </Col>
+                                  <Col lg={4}>
+                                    <Row>
+                                      <Col lg={12}>
+                                        <FormGroup className="mb-3">
+                                          <Label>Reciept Attachment</Label><br />
+                                          <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                            <i className="fa fa-upload"></i> Upload
                                   </Button>
-                                      <input id="fileInput" ref={ref => {
-                                        this.uploadFile = ref;
-                                      }}
-                                        type="file" type="file" style={{ display: 'none' }} />
+                                          <input id="fileInput" ref={ref => {
+                                            this.uploadFile = ref;
+                                          }}
+                                            type="file" type="file" style={{ display: 'none' }} />
+                                        </FormGroup>
+                                      </Col>
+                                    </Row>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Col lg={12} className="d-flex align-items-center justify-content-between flex-wrap mt-5">
+                                    <FormGroup>
+                                      <Button type="button" name="button" color="danger" className="btn-square"
+                                        onClick={this.deleteExpense}
+                                      >
+                                        <i className="fa fa-trash"></i> Delete
+                                    </Button>
+                                    </FormGroup>
+                                    <FormGroup className="text-right">
+                                      <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                                        <i className="fa fa-dot-circle-o"></i> Update
+                                    </Button>
+                                      <Button type="button" name="button" color="secondary" className="btn-square"
+                                        onClick={() => { this.props.history.push("/admin/expense/expense") }}>
+                                        <i className="fa fa-ban"></i> Cancel
+                                    </Button>
                                     </FormGroup>
                                   </Col>
                                 </Row>
-                              </Col>
-                            </Row>
-                            <hr />
-                            <Row>
-                              <Col lg={12} className="mb-3">
-                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}>
-                                  <i className="fa fa-plus"></i> Add More
-                            </Button>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col lg={12}>
-                                <BootstrapTable
-                                  options={this.options}
-                                  data={data}
-                                  version="4"
-                                  hover
-                                  className="expense-create-table"
-                                >
-                                  <TableHeaderColumn
-                                    width="55"
-                                    dataAlign="center"
-                                    dataFormat={this.renderActions}
-                                  >
-                                  </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    isKey
-                                    dataField="product_name"
-                                    dataFormat={this.renderProductName}
-                                  >
-                                    Account Code
-                              </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="quantity"
-                                    dataFormat={this.renderAmount}
-                                  >
-                                    Amount
-                              </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="vat"
-                                    dataFormat={this.renderVat}
-                                  >
-                                    Vat (%)
-                              </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="sub_total"
-                                    dataFormat={this.renderSubTotal}
-                                    className="text-right"
-                                    columnClassName="text-right"
-                                  >
-                                    Sub Total (All)
-                              </TableHeaderColumn>
-                                </BootstrapTable>
-                              </Col>
-                            </Row>
-                          </Form>
-                        )}
-                      </Formik>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={4} className="ml-auto">
-                      <div className="mb-3">
-                        <div className="total-item p-2">
-                          <Row>
-                            <Col lg={6}>
-                              <h5 className="mb-0 text-right">Total Net</h5>
-                            </Col>
-                            <Col lg={6} className="text-right">
-                              <label className="mb-0">0.00</label>
-                            </Col>
-                          </Row>
-                        </div>
-                        <div className="total-item p-2">
-                          <Row>
-                            <Col lg={6}>
-                              <h5 className="mb-0 text-right">Total Vat</h5>
-                            </Col>
-                            <Col lg={6} className="text-right">
-                              <label className="mb-0">0.00</label>
-                            </Col>
-                          </Row>
-                        </div>
-                        <div className="total-item p-2">
-                          <Row>
-                            <Col lg={6}>
-                              <h5 className="mb-0 text-right">Total</h5>
-                            </Col>
-                            <Col lg={6} className="text-right">
-                              <label className="mb-0">0.00</label>
-                            </Col>
-                          </Row>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                  <hr />
-                  <Row>
-                    <Col lg={6}>
-                      <div className="p-5">
-                        <Row>
-                          <Col lg={6}>
-                            <h5 className="mb-0">Exchange Rate:</h5>
-                          </Col>
-                          <Col lg={6}>
-                            <h5 className="mb-0">Total Value:</h5>
-                          </Col>
-                        </Row>
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={12} className="d-flex flex-wrap align-items-center justify-content-between">
-                      <FormGroup>
-                        <Button color="danger" className="btn-square">
-                          <i className="fa fa-trash"></i> Delete
-                        </Button>
-                      </FormGroup>
-                      <FormGroup className="text-right">
-                        <Button type="submit" color="primary" className="btn-square mr-3">
-                          <i className="fa fa-dot-circle-o"></i> Update
-                        </Button>
-                        <Button color="secondary" className="btn-square"
-                          onClick={() => { this.props.history.push('/admin/expense/expense') }}>
-                          <i className="fa fa-ban"></i> Cancel
-                        </Button>
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+                              </Form>
+                            )}
+                          </Formik>
+                        </Col>
+                      </Row>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            )
+          }
         </div>
       </div>
     )

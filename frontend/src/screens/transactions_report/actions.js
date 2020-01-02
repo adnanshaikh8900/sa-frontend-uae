@@ -27,7 +27,7 @@ export const getCustomerInvoiceReport = (inputObj) => {
       data: inputObj    
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: TEMP.CUSTOMER_INVOICE_REPORT,
           payload: {
@@ -61,7 +61,7 @@ let transactionTypeCode,transactionCategoryId,accountId
       data: postObj
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: TEMP.ACCOUNT_BALANCE_REPORT,
           payload: {
@@ -86,7 +86,7 @@ export const getContactNameList = () => {
       url: 'rest/contact/contactlist'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: TEMP.CONTACT_LIST,
           payload: {
@@ -107,7 +107,7 @@ export const getAccountTypeList = () => {
       url: 'rest/bank/getaccounttype'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: TEMP.ACCOUNT_TYPE_LIST,
           payload: {
@@ -128,7 +128,7 @@ export const getTransactionTypeList = () => {
       url: 'rest/transactionreport/getTransactionTypes'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: TEMP.TRANSACTION_TYPE_LIST,
           payload: {
@@ -149,7 +149,7 @@ export const getTransactionCategoryList = () => {
       url: 'rest/transactioncategory/gettransactioncategory'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: TEMP.TRANSACTION_CATEGORY_LIST,
           payload: {

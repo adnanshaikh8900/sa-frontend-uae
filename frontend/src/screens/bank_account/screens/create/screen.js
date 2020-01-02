@@ -115,7 +115,7 @@ class CreateBankAccount extends React.Component {
       personalCorporateAccountInd: account_is_for.value
     }
     this.props.createBankAccountActions.createBankAccount(obj).then(res => {
-      this.props.commonActions.tostifyAlert('success', 'Creted Successfully.')
+      this.props.commonActions.tostifyAlert('success', 'New Bank Account Created Successfully.')
       if (this.state.createMore) {
         this.setState({
           createMore: false
@@ -222,7 +222,7 @@ class CreateBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="currency"
                                       name="currency"
-                                      options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
+                                      options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                                       value={props.values.currency}
                                       onChange={option => props.handleChange('currency')(option)}
                                       className={
@@ -260,7 +260,7 @@ class CreateBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="account_type"
                                       name="account_type"
-                                      options={selectOptionsFactory.renderOptions('name', 'id', account_type_list)}
+                                      options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list) : []}
                                       value={props.values.account_type}
                                       onChange={option => props.handleChange('account_type')(option)}
                                       className={
@@ -355,7 +355,7 @@ class CreateBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="country"
                                       name="country"
-                                      options={selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list)}
+                                      options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
                                       value={props.values.country}
                                       onChange={option => props.handleChange('country')(option)}
                                       className={

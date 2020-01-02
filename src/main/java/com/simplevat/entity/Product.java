@@ -14,7 +14,7 @@ import org.hibernate.annotations.ColumnDefault;
  */
 @NamedQueries({
     @NamedQuery(name = "allProduct",
-            query = "SELECT p FROM Product p where createdBy = :createdBy and p.deleteFlag = FALSE ")
+            query = "SELECT p FROM Product p where p.createdBy = :createdBy and p.deleteFlag = FALSE ")
 })
 @Entity
 @Table(name = "PRODUCT")
@@ -37,8 +37,8 @@ public class Product implements Serializable {
     @JoinColumn(name = "PRODUCT_VAT")
     private VatCategory vatCategory;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARENT_PRODUCT")
-    private Product parentProduct;
+    @JoinColumn(name = "PRODUCT_CATEGORY")
+    private ProductCategory productCategory;
     @Basic
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_WAREHOUSE")

@@ -34,3 +34,18 @@ export const getProductById = (id) => {
     })
   }
 }
+
+export const deleteProduct = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/product/delete?id=${id}`
+    }
+
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}

@@ -1,7 +1,8 @@
 import { EXPENSE } from 'constants/types'
 import {
   api,
-  authApi
+  authApi,
+  authFileUploadApi
 } from 'utils'
 
 export const getExpenseDetail = (_id) => {
@@ -14,7 +15,7 @@ export const getExpenseDetail = (_id) => {
     return authApi(data).then(res => {
       dispatch({
         type: EXPENSE.EXPENSE_DETAIL,
-        payload: res.data
+        payload: res
       })
       return res
     }).catch(err => {
@@ -30,7 +31,7 @@ export const getCurrencyList = () => {
       url: 'rest/bank/getcurrenncy'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: EXPENSE.CURRENCY_LIST,
           payload: {
@@ -38,6 +39,36 @@ export const getCurrencyList = () => {
           }
         })
       }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const updateExpense = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/expense/update',
+      data: obj
+    }
+    return authFileUploadApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const deleteExpense = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/expense/delete?expenseId=${id}`
+    }
+
+    return authApi(data).then(res => {
+      return res
     }).catch(err => {
       throw err
     })

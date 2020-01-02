@@ -3,13 +3,26 @@ import {
   api,
   authApi
 } from 'utils'
+import moment from 'moment'
 
-export const getExpenseList = () => {
+export const getExpenseList = (expenseData) => {
+  const { expenseDate, payee, transactionCategoryId } = expenseData;
   return (dispatch) => {
+    let param = `rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}`
+    if (expenseDate) {
+      let date = moment(expenseDate).format('DD-MM-YYYY')
+      param = param + `&expenseDate=${date}`
+    }
     let data = {
       method: 'GET',
-      url: '/rest/expense/retrieveExpenseList'
+      url: param
+      // data: postObj
     }
+
+    // let data = {
+    //   method: 'GET',
+    //   url: '/rest/expense/getList'
+    // }
 
     return authApi(data).then(res => {
       dispatch({
@@ -27,10 +40,10 @@ export const getSupplierList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/contact/contactvendorlist'
+      url: 'rest/contact/getContactsForDropdown?contactType=1'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: EXPENSE.SUPPLIER_LIST,
           payload: res.data
@@ -49,7 +62,7 @@ export const getCurrencyList = () => {
       url: 'rest/bank/getcurrenncy'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: EXPENSE.CURRENCY_LIST,
           payload: res.data
@@ -65,10 +78,10 @@ export const getProjectList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/project/getprojects'
+      url: 'rest/project/getList'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: EXPENSE.PROJECT_LIST,
           payload: res.data
@@ -88,7 +101,7 @@ export const removeBulkExpenses = (obj) => {
       data: obj
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         return res
       }
     }).catch(err => {
@@ -105,10 +118,10 @@ export const getBankAccountList = () => {
       url: 'rest/bank/getbanklist'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: EXPENSE.BANK_ACCOUNT_LIST,
-          payload: res.data 
+          payload: res.data
         })
       }
     }).catch(err => {
@@ -124,10 +137,10 @@ export const getCustomerList = () => {
       url: 'rest/contact/contactcustomerlist'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: EXPENSE.CUSTOMER_LIST,
-          payload: res.data 
+          payload: res.data
         })
       }
     }).catch(err => {
@@ -143,10 +156,10 @@ export const getPaymentList = () => {
       url: 'rest/payment/getlist'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: EXPENSE.PAYMENT_LIST,
-          payload: res.data 
+          payload: res.data
         })
       }
       return res;
@@ -156,17 +169,17 @@ export const getPaymentList = () => {
   }
 }
 
-export const getChartOfAccountList = () => {
+export const getExpenseCategoriesList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: '/rest/transactioncategory/gettransactioncategory'
+      url: '/rest/transactioncategory/getForExpenses'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
-          type: EXPENSE.CHART_OF_ACCOUNT_LIST,
-          payload: res.data 
+          type: EXPENSE.EXPENSE_CATEGORIES_LIST,
+          payload: res.data
         })
       }
     }).catch(err => {
@@ -182,12 +195,31 @@ export const getVatList = () => {
       url: 'rest/vat/getvat'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: EXPENSE.VAT_LIST,
-          payload: res.data 
+          payload: res.data
         })
       }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getEmployeeList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: 'rest/employee/getEmployeeList'
+    }
+
+    return authApi(data).then(res => {
+      dispatch({
+        type: EXPENSE.EMPLOYEE_LIST,
+        payload: res.data
+      })
+      return res
     }).catch(err => {
       throw err
     })

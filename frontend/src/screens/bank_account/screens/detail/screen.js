@@ -98,10 +98,10 @@ class DetailBankAccount extends React.Component {
                 label: res.bankCountry.countryName,
                 value: res.bankCountry.countryCode
               } : null,
-              account_is_for: res.personalCorporateAccountInd == 'P' ? {
+              account_is_for: res.personalCorporateAccountInd === 'P' ? {
                 label: 'Personal',
                 value: 'Personal'
-              } : res.personalCorporateAccountInd == 'C' ? {
+              } : res.personalCorporateAccountInd === 'C' ? {
                 label: 'Corporate',
                 value: 'Corporate'
               } : null,
@@ -138,8 +138,8 @@ class DetailBankAccount extends React.Component {
       bankAccountId: this.state.current_bank_account_id,
       bankAccountName: data.account_name,
       bankAccountCurrency: data.currency.value,
-      personalCorporateAccountInd: data.account_is_for.value == 'Personal' ? 'P' :
-        data.account_is_for.value == 'Corporate' ? 'C' : '',
+      personalCorporateAccountInd: data.account_is_for.value === 'Personal' ? 'P' :
+        data.account_is_for.value === 'Corporate' ? 'C' : '',
       bankName: data.bank_name,
       accountNumber: data.account_number,
       ibanNumber: data.iban_number,
@@ -282,7 +282,7 @@ class DetailBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="currency"
                                       name="currency"
-                                      options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
+                                      options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                                       value={props.values.currency}
                                       onChange={option => props.handleChange('currency')(option)}
                                       className={
@@ -322,7 +322,7 @@ class DetailBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="account_type"
                                       name="account_type"
-                                      options={selectOptionsFactory.renderOptions('name', 'id', account_type_list)}
+                                      options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list) : []}
                                       value={props.values.account_type}
                                       onChange={option => props.handleChange('account_type')(option)}
                                       className={
@@ -417,7 +417,7 @@ class DetailBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="country"
                                       name="country"
-                                      options={selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list)}
+                                      options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
                                       value={props.values.country}
                                       onChange={option => props.handleChange('country')(option)}
                                       className={

@@ -51,7 +51,7 @@ class Project extends React.Component {
     super(props)
     this.state = {
       loading: true,
-      selected_id_list: [],
+      selectedRows: [],
       dialog: false,
       filterData: {
         projectName: '',
@@ -104,14 +104,16 @@ class Project extends React.Component {
       pageSize: this.options.sizePerPage
     }
     filterData = { ...filterData, ...data }
+    console.log(data)
     this.props.projectActions.getProjectList(filterData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(() => {
+    }).catch((err) => {
       this.setState({
         loading: false
       })
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
 
@@ -130,17 +132,17 @@ class Project extends React.Component {
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.projectId);
     } else {
-      this.state.selected_id_list.map(item => {
+      this.state.selectedRows.map(item => {
         if (item !== row.projectId) {
           temp_list.push(item)
         }
       });
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
   onSelectAll(isSelected, rows) {
@@ -151,15 +153,15 @@ class Project extends React.Component {
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
   bulkDelete() {
     const {
-      selected_id_list
+      selectedRows
     } = this.state
-    if (selected_id_list.length > 0) {
+    if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
@@ -174,18 +176,18 @@ class Project extends React.Component {
 
   removeBulk() {
     const { filterData } = this.state;
-    this.removeDialog()
-    let { selected_id_list } = this.state;
+    let { selectedRows } = this.state;
     const { project_list } = this.props
     let obj = {
-      ids: selected_id_list
+      ids: selectedRows
     }
+    this.removeDialog()
     this.props.projectActions.removeBulk(obj).then((res) => {
-      this.props.projectActions.getProjectList(filterData)
+      this.initializeData();
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (project_list && project_list.length > 0) {
         this.setState({
-          selected_id_list: []
+          selectedRows: []
         })
       }
     }).catch(err => {
@@ -221,7 +223,7 @@ class Project extends React.Component {
 
 
   render() {
-    const { loading, dialog } = this.state
+    const { loading, dialog,selectedRows} = this.state
     const { project_list } = this.props
     const containerStyle = {
       zIndex: 1999
@@ -230,7 +232,7 @@ class Project extends React.Component {
     return (
       <div className="product-screen">
         <div className="animated fadeIn">
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           {dialog}
           <Card>
             <CardHeader>
@@ -255,6 +257,8 @@ class Project extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
+                            disabled={project_list.length === 0}
+
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -272,6 +276,7 @@ class Project extends React.Component {
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
+                            disabled={selectedRows.length === 0}
 
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
@@ -296,8 +301,8 @@ class Project extends React.Component {
                               <Input type="text" placeholder="VAT Number" onChange={(e) => { this.handleChange(e.target.value, 'vatRegistrationNumber') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
-                                <i className="fa fa-search"></i> Search
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={project_list.length === 0}>
+                                <i className="fa fa-search"></i>
                             </Button>
                             </Col>
                           </Row>
@@ -316,6 +321,10 @@ class Project extends React.Component {
                           totalSize={project_list ? project_list.length : 0}
                           className="product-table"
                           trClassName="cursor-pointer"
+                          csvFileName="project.csv"
+                          ref={node => {
+                            this.table = node
+                          }}
                         >
                           <TableHeaderColumn
                             dataField="projectName"

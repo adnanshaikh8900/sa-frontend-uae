@@ -60,7 +60,7 @@ class CreateProduct extends React.Component {
         productWarehouseId: '',
         vatIncluded: false,
       },
-      readMore: false
+      createMore: false
     }
 
     this.showWarehouseModal = this.showWarehouseModal.bind(this)
@@ -114,15 +114,16 @@ class CreateProduct extends React.Component {
 
     this.props.productActions.createAndSaveProduct(postData).then(res => {
       if (res.status === 200) {
-        // this.success('Product Created Successfully')
-
-        if(this.state.readMore){
+        this.props.commonActions.tostifyAlert('success', 'New Product created successfully!')
+        if(this.state.createMore){
           this.setState({
-            readMore: false
+            createMore: false
           })
           // this.props.history.push('/admin/master/product/create')
         } else this.props.history.push('/admin/master/product')
       }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
 
@@ -354,7 +355,7 @@ class CreateProduct extends React.Component {
                                     <Button type="button" color="primary" className="btn-square mr-3"
                                       onClick={
                                         () => {
-                                          this.setState({readMore: true})
+                                          this.setState({createMore: true})
                                           props.handleSubmit()
                                         }
                                       }

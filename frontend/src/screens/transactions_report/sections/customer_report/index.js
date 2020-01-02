@@ -276,7 +276,7 @@ class CustomerReport extends React.Component {
                     <Select
                       className=""
                       // options={accountOptions}
-                      options={selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list)}
+                      options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list) : []}
                       value={this.state.filter_contactName}
                       onChange={option => this.setState({
                         filter_contactName: option

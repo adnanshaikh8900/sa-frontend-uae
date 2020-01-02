@@ -56,7 +56,7 @@ class Product extends React.Component {
     super(props)
     this.state = {
       loading: false,
-      selected_id_list: [],
+      selectedRows: [],
       dialog: null,
       filterData: {
         name: '',
@@ -77,9 +77,14 @@ class Product extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
 
+    this.onPageChange = this.onPageChange.bind(this)
+    this.onSizePerPageList = this.onSizePerPageList.bind(this)
+
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
@@ -98,21 +103,25 @@ class Product extends React.Component {
 
   componentWillUnmount() {
     this.setState({
-      selected_id_list: []
+      selectedRows: []
     })
   }
 
   initializeData() {
-    this.props.productActions.getProductVatCategoryList();
-    const { filterData } = this.state;
+    const { filterData } = this.state
+    const paginationData = {
+      pageNo: this.options.page ? this.options.page : 1,
+      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+    }
+    const postData = { ...filterData, ...paginationData }
     this.props.productActions.getProductList(filterData).then(res => {
       if (res.status === 200) {
+        this.props.productActions.getProductVatCategoryList();
         this.setState({ loading: false })
       }
-    }).catch(() => {
-      this.setState({
-        loading: false
-      })
+    }).catch(err => {
+      this.setState({ loading: false })
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
 
@@ -123,17 +132,17 @@ class Product extends React.Component {
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.id);
     } else {
-      this.state.selected_id_list.map(item => {
+      this.state.selectedRows.map(item => {
         if (item !== row.id) {
           temp_list.push(item)
         }
       });
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
   onSelectAll(isSelected, rows) {
@@ -144,15 +153,15 @@ class Product extends React.Component {
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
   bulkDelete() {
     const {
-      selected_id_list
+      selectedRows
     } = this.state
-    if (selected_id_list.length > 0) {
+    if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
@@ -166,22 +175,21 @@ class Product extends React.Component {
   }
 
   removeBulk() {
-    const {filterData} = this.state
     this.removeDialog()
-    let { selected_id_list } = this.state;
+    let { selectedRows } = this.state;
     const { product_list } = this.props
     let obj = {
-      ids: selected_id_list
+      ids: selectedRows
     }
     this.props.productActions.removeBulk(obj).then(res => {
-      if(res.status === 200) {
+      if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+        this.initializeData();
         if (product_list && product_list.length > 0) {
           this.setState({
-            selected_id_list: []
+            selectedRows: []
           })
         }
-        this.props.productActions.getProductList(filterData)
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
@@ -200,9 +208,9 @@ class Product extends React.Component {
 
   handleChange(val, name) {
     this.setState({
-     filterData: Object.assign(this.state.filterData,{
-      [name]: val
-     })
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
     })
   }
 
@@ -211,9 +219,17 @@ class Product extends React.Component {
     // this.setState({})
   }
 
+  onPageChange = (page, sizePerPage) => {
+    this.options.page = page
+  }
+
+  onSizePerPageList = (sizePerPage) => {
+    this.options.sizePerPage = sizePerPage
+  }
+
   render() {
 
-    const { loading, dialog } = this.state
+    const { loading, dialog , filterData , selectedRows} = this.state
     const { product_list, vat_list } = this.props
     const containerStyle = {
       zIndex: 1999
@@ -223,7 +239,7 @@ class Product extends React.Component {
       <div className="product-screen">
         <div className="animated fadeIn">
           {dialog}
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
             <CardHeader>
               <Row>
@@ -252,6 +268,7 @@ class Product extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
+                            disabled={product_list.length === 0}
 
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -269,7 +286,7 @@ class Product extends React.Component {
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
-
+                            disabled={selectedRows.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -288,24 +305,21 @@ class Product extends React.Component {
                             </Col>
                             <Col lg={3} className="mb-1">
                               <FormGroup className="mb-3">
-
                                 <Select
                                   options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list) : []}
-                                  onChange={(val) => { 
-                                    this.handleChange(val['value'], 'vatPercentage') 
-                                    this.setState({'selectedVat': val['value']})
-                                  }}
                                   className="select-default-width"
                                   placeholder="Vat Percentage"
-                                  value={this.state.selectedVat}
+                                  value={filterData.vatPercentage}
+                                  onChange={(option) => {
+                                    this.handleChange(option.value, 'vatPercentage')
+                                  }}
                                 />
                               </FormGroup>
-
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
-                                <i className="fa fa-search"></i> Search
-                            </Button>
+                              <Button type="button" color="primary" className="btn-square" disabled={product_list.length===0} onClick={this.handleSearch}>
+                                <i className="fa fa-search"></i>
+                              </Button>
                             </Col>
                           </Row>
                         </form>
@@ -347,14 +361,14 @@ class Product extends React.Component {
                           <TableHeaderColumn
                             dataField="vatPercentage"
                             dataSort
-                            // dataFormat={this.vatCategoryFormatter}
+                          // dataFormat={this.vatCategoryFormatter}
                           >
                             Vat Percentage
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="unitPrice"
                             dataSort
-                            // dataFormat={this.vatCategoryFormatter}
+                          // dataFormat={this.vatCategoryFormatter}
                           >
                             Unit Price
                           </TableHeaderColumn>

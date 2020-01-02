@@ -12,7 +12,7 @@ export const getCurrencyList = () => {
       url: 'rest/bank/getcurrenncy'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: PAYMENT.CURRENCY_LIST,
           payload: res
@@ -31,7 +31,7 @@ export const getBankList = () => {
       url: 'rest/bank/getbanklist'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: PAYMENT.BANK_LIST,
           payload: res
@@ -43,14 +43,14 @@ export const getBankList = () => {
   }
 }
 
-export const getSupplierList = () => {
+export const getSupplierList = (id) => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: `/rest/contact/getContactsForDropdown?contactType=1`
+      url: `/rest/contact/getContactsForDropdown?contactType=${id}`
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: PAYMENT.SUPPLIER_LIST,
           payload: res
@@ -69,7 +69,7 @@ export const getSupplierInvoiceList = () => {
       url: '/rest/invoice/getInvoicesForDropdown'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: PAYMENT.INVOICE_LIST,
           payload: res
@@ -88,7 +88,7 @@ export const getProjectList = () => {
       url: 'rest/project/getList'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: PAYMENT.PROJECT_LIST,
           payload: res
@@ -162,7 +162,7 @@ export const getInvoiceById = (id) => {
       url: `/rest/invoice/getInvoiceById?id=${id}`
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
           return res
       }
     }).catch(err => {

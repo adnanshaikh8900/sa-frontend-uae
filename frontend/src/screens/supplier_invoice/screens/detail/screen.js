@@ -397,7 +397,7 @@ class DetailSupplierInvoice extends React.Component {
                                     </FormGroup>
                                   </Col>
                                   {
-                                    discount_option == 'Percentage' ?
+                                    discount_option === 'Percentage' ?
                                       <Col lg={6}>
                                         <FormGroup>
                                           <Label htmlFor="discount_percentage">Percentage</Label>

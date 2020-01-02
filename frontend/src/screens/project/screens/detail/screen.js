@@ -171,11 +171,10 @@ class DetailProject extends React.Component {
     }
     this.props.detailProjectActions.updateProject(postData).then(res => {
       if (res.status === 200) {
-        // this.success()
-
-        if (this.state.readMore) {
+        this.props.commonActions.tostifyAlert('success', 'Updated successfully!')
+        if (this.state.createMore) {
           this.setState({
-            readMore: false
+            createMore: false
           })
         } else this.props.history.push('/admin/master/project')
       }

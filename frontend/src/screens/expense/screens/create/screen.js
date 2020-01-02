@@ -38,8 +38,6 @@ const mapStateToProps = (state) => {
     currency_list: state.expense.currency_list,
     project_list: state.expense.project_list,
     employee_list: state.expense.employee_list,
-    customer_list: state.expense.customer_list,
-    payment_list: state.expense.payment_list,
     vat_list: state.expense.vat_list,
     expense_categories_list: state.expense.expense_categories_list
   })
@@ -58,7 +56,7 @@ class CreateExpense extends React.Component {
     super(props)
     this.state = {
       loading: false,
-      readMore: false,
+      createMore: false,
       // selectedCurrency: null,
       // selectedProject: null,
       // selectedBankAccount: null,
@@ -84,7 +82,7 @@ class CreateExpense extends React.Component {
 
     this.initializeData = this.initializeData.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this)
+    // this.handleChange = this.handleChange.bind(this)
 
     this.options = {
       paginationPosition: 'top'
@@ -98,7 +96,7 @@ class CreateExpense extends React.Component {
 
 
   initializeData() {
-    this.props.expenseActions.getVatList();
+    // this.props.expenseActions.getVatList();
     this.props.expenseActions.getExpenseCategoriesList();
     this.props.expenseActions.getCurrencyList();
     this.props.expenseActions.getProjectList();
@@ -107,7 +105,7 @@ class CreateExpense extends React.Component {
   }
 
 
-  handleSubmit(data) {
+  handleSubmit(data, resetForm) {
     const {
       payee,
       expenseDate,
@@ -143,16 +141,16 @@ class CreateExpense extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
-    console.log(data)
 
     this.props.expenseCreateActions.createExpense(formData).then(res => {
       if (res.status === 200) {
-        if (this.state.readMore) {
+        resetForm()
+        this.props.commonActions.tostifyAlert('success', 'New Expense Created Successfully.')
+        if (this.state.createMore) {
           this.setState({
-            readMore: false
+            createMore: false
           })
         } else {
-          this.props.commonActions.tostifyAlert('success', 'Created Successfully.')
           this.props.history.push('/admin/expense/expense')
         }
       }
@@ -161,15 +159,15 @@ class CreateExpense extends React.Component {
     })
   }
 
-  handleChange(e, name) {
-    this.setState({
-      currentData: _.set(
-        { ...this.state.currentData },
-        e.target.name && e.target.name !== '' ? e.target.name : name,
-        e.target.type === 'checkbox' ? e.target.checked : e.target.value
-      )
-    })
-  }
+  // handleChange(e, name) {
+  //   this.setState({
+  //     currentData: _.set(
+  //       { ...this.state.currentData },
+  //       e.target.name && e.target.name !== '' ? e.target.name : name,
+  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
+  //     )
+  //   })
+  // }
 
   render() {
 
@@ -202,7 +200,6 @@ class CreateExpense extends React.Component {
                         onSubmit={(values, { resetForm }) => {
 
                           this.handleSubmit(values)
-                          resetForm(initValue)
 
                           // this.setState({
                           //   selectedCurrency: null,
@@ -212,12 +209,17 @@ class CreateExpense extends React.Component {
 
                           // })
                         }}
-                        // validationSchema={
-                        //   Yup.object().shape({
-                        //     expenseDate: Yup.date()
-                        //     .required('Date is Required')
-                        //   })
-                        // }
+                        validationSchema={
+                          Yup.object().shape({
+                            expenseCategory: Yup.string()
+                              .required('Expense Category is required'),
+                            expenseDate: Yup.date()
+                              .required('Expense Date is Required'),
+                              expenseAmount: Yup.string()
+                              .required('Amount is Required')
+                              .matches(/^[0-9]*$/, "Enter a Valid Amount")
+                          })
+                        }
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -226,13 +228,16 @@ class CreateExpense extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="expenseCategoryId">Expense Category</Label>
                                   <Select
-                                    className="select-default-width"
                                     id="expenseCategory"
                                     name="expenseCategory"
                                     options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
                                     value={props.values.expenseCategory}
+                                    className={props.errors.expenseCategory && props.touched.expenseCategory ? "is-invalid" : ""}
                                     onChange={option => props.handleChange('expenseCategory')(option)}
                                   />
+                                  {props.errors.expenseCategory && props.touched.expenseCategory && (
+                                    <div className="invalid-feedback">{props.errors.expenseCategory}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
@@ -251,26 +256,22 @@ class CreateExpense extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="expense_date">Expense Date</Label>
-                                  <div>
-                                    <DatePicker
-                                      className="form-control"
-                                      id="date"
-                                      name="expenseDate"
-                                      placeholderText=""
-                                      selected={props.values.expenseDate}
-                                      onChange={(value) => {
-                                        props.handleChange("expenseDate")(value)
-                                      }}
-                                      // className={
-                                      //   props.errors.expenseDate && props.touched.expenseDate
-                                      //     ? "is-invalid"
-                                      //     : ""
-                                      // }
-                                    />
-                                    {/* {props.errors.expenseDate && props.touched.expenseDate && (
-                                      <div className="invalid-feedback">{props.errors.expenseDate}</div>
-                                    )} */}
-                                  </div>
+                                  <DatePicker
+
+                                    id="date"
+                                    name="expenseDate"
+                                    className={`form-control ${props.errors.expenseDate && props.touched.expenseDate ? "is-invalid" : ""}`}
+                                    placeholderText="Expense Date"
+                                    selected={props.values.expenseDate}
+                                    dateFormat="dd/MM/yyyy"
+                                    maxDate={new Date()}
+                                    onChange={(value) => {
+                                      props.handleChange("expenseDate")(value)
+                                    }}
+                                  />
+                                  {props.errors.expenseDate && props.touched.expenseDate && (
+                                    <div className="invalid-feedback">{props.errors.expenseDate}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
 
@@ -283,7 +284,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="currencyCode"
                                     name="currencyCode"
-                                    options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
+                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                                     value={props.values.currency}
                                     onChange={option => props.handleChange('currency')(option)}
 
@@ -310,7 +311,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="project"
                                     name="project"
-                                    options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
+                                    options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list) : []}
                                     value={props.values.project}
                                     onChange={option => props.handleChange('project')(option)}
                                   />
@@ -326,10 +327,14 @@ class CreateExpense extends React.Component {
                                     name="expenseAmount"
                                     id="expenseAmount"
                                     rows="5"
+                                    className={props.errors.expenseAmount && props.touched.expenseAmount ? "is-invalid" : ""}
                                     onChange={option => props.handleChange('expenseAmount')(option)}
                                     value={props.values.expenseAmount}
 
                                   />
+                                  {props.errors.expenseAmount && props.touched.expenseAmount && (
+                                    <div className="invalid-feedback">{props.errors.expenseAmount}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col lg={8}>
@@ -410,10 +415,11 @@ class CreateExpense extends React.Component {
                         </Button>
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={() => {
-                                      this.setState({ readMore: true })
-                                      props.handleSubmit()
-                                    }}
-                                  >
+                                      this.setState({ createMore: true }, () => {
+                                        props.handleSubmit()
+                                      })
+                                    }
+                                    }>
                                     <i className="fa fa-repeat"></i> Create and More
                         </Button>
                                   <Button color="secondary" className="btn-square"

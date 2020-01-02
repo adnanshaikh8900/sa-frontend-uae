@@ -185,7 +185,6 @@ class DetailPayment extends React.Component {
     const id = this.props.location.state.id;
     this.props.detailPaymentActions.deletePayment(id).then(res => {
       if (res.status === 200) {
-        // this.success('Chart Account Deleted Successfully');
         this.props.commonActions.tostifyAlert('success', 'Payment Deleted Successfully')
         this.props.history.push('/admin/expense/payment')
       }
@@ -288,7 +287,7 @@ class DetailPayment extends React.Component {
                                           className="select-default-width"
                                           id="supplier"
                                           name="supplier"
-                                          options={selectOptionsFactory.renderOptions('label', 'value', supplier_list)}
+                                          options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
                                           value={selectedSupplier}
                                           onChange={option => {
                                             props.handleChange('supplier')(option)
@@ -356,7 +355,7 @@ class DetailPayment extends React.Component {
                                           className="select-default-width"
                                           id="currency"
                                           name="currency"
-                                          options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
+                                          options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                                           value={props.values.currency}
                                           onChange={option => props.handleChange('currency')(option)}
                                           className={
@@ -374,7 +373,7 @@ class DetailPayment extends React.Component {
                                           className="select-default-width"
                                           id="project"
                                           name="project"
-                                          options={selectOptionsFactory.renderOptions('projectName', 'projectId', project_list)}
+                                          options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list) : []}
                                           value={props.values.project}
                                           onChange={option => props.handleChange('project')(option)}
                                           className={
@@ -411,7 +410,7 @@ class DetailPayment extends React.Component {
                                           className="select-default-width"
                                           id="bank"
                                           name="bank"
-                                          options={selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_list)}
+                                          options={bank_list ? selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_list) : []}
                                           value={props.values.bank}
                                           onChange={option => props.handleChange('bank')(option)}
                                           className={

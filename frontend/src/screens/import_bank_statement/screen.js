@@ -66,10 +66,10 @@ class ImportBankStatement extends React.Component {
   renderTransactionType (cell, row) {
     let classname = ''
     let value = ''
-    if (row.status == 'Explained') {
+    if (row.status === 'Explained') {
       classname = 'badge-success'
       value = 'Cost of Goods Sold'
-    } else if (row.status == 'Unexplained') {
+    } else if (row.status === 'Unexplained') {
       classname = 'badge-danger'
       value = 'Expense'
     } else {

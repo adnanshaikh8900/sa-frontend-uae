@@ -258,7 +258,7 @@ class BankAccount extends React.Component {
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
-              this.state.actionButtons[row.bankAccountId] == true ?
+              this.state.actionButtons[row.bankAccountId] === true ?
                 <i className="fas fa-chevron-up" />
               :
                 <i className="fas fa-chevron-down" />
@@ -499,7 +499,7 @@ class BankAccount extends React.Component {
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
-                              options={selectOptionsFactory.renderOptions('name', 'id', account_type_list)}
+                              options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list) : []}
                               value={filter_account_type}
                               onChange={option => this.setState({
                                 filter_account_type: option
@@ -526,7 +526,7 @@ class BankAccount extends React.Component {
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
-                              options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
+                              options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                               value={filter_currency}
                               onChange={option => this.setState({
                                 filter_currency: option

@@ -231,7 +231,7 @@ class VatCode extends React.Component {
                           color="warning"
                           className="btn-square"
                           onClick={this.showConfirmModal}
-                          disabled={selectedRows.length == 0}
+                          disabled={selectedRows.length === 0}
                         >
                           <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                           Bulk Delete
@@ -275,6 +275,10 @@ class VatCode extends React.Component {
                       selectRow={ this.selectRowProp }
                       options={ this.options }
                       trClassName="cursor-pointer"
+                      csvFileName="vat_code.csv"
+                      ref={node => {
+                        this.table = node
+                      }}
                     >
                       <TableHeaderColumn
                         isKey

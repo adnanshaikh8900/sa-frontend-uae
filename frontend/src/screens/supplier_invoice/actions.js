@@ -30,7 +30,7 @@ export const getSupplierInoviceList = (postObj) => {
       // data: postObj
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.SUPPLIER_INVOICE_LIST,
           payload: {
@@ -52,7 +52,7 @@ export const getProjectList = () => {
       url: 'rest/project/getProjectsForDropdown'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.PROJECT_LIST,
           payload:  {
@@ -75,7 +75,7 @@ export const getContactList = (nameCode) => {
       url: `rest/contact/getContactsForDropdown?contactType=${contactType}`
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.CONTACT_LIST,
           payload:  {
@@ -97,7 +97,7 @@ export const getStatusList = () => {
       url: '/rest/datalist/getInvoiceStatusTypes'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.STATUS_LIST,
           payload: res
@@ -117,7 +117,7 @@ export const getCurrencyList = () => {
       url: 'rest/bank/getcurrenncy'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.CURRENCY_LIST,
           payload:  {
@@ -139,7 +139,7 @@ export const getVatList = () => {
       url: 'rest/vat/getvat'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.VAT_LIST,
           payload:  {
@@ -147,6 +147,39 @@ export const getVatList = () => {
           }
         })
       }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getSupplierList = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: `/rest/contact/getContactsForDropdown?contactType=${id}`
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: SUPPLIER_INVOICE.SUPPLIER_LIST,
+          payload: res
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+export const createSupplier = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: 'rest/contact/save',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      return res
     }).catch(err => {
       throw err
     })
@@ -161,7 +194,7 @@ export const removeBulk = (obj) => {
       data: obj
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         return res
       }
     }).catch(err => {

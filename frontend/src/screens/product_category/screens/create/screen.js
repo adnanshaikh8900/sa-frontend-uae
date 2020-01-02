@@ -52,12 +52,12 @@ class CreateProductCategory extends React.Component {
         productCategoryName : ''
       },
       loading: false,
-      readMore: false
+      createMore: false
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.success = this.success.bind(this)
+    // this.success = this.success.bind(this)
   }
 
   componentDidMount() {
@@ -75,26 +75,27 @@ class CreateProductCategory extends React.Component {
   }
 
   // Show Success Toast
-  success() {
-    toast.success('Product Category Created successfully... ', {
-      position: toast.POSITION.TOP_RIGHT
-    })
-  }
+  // success() {
+  //   toast.success('Product Category Created successfully... ', {
+  //     position: toast.POSITION.TOP_RIGHT
+  //   })
+  // }
 
   // Create or Edit Vat
   handleSubmit(data) {
     this.props.createProductCategoryActions.createProductCategory(data).then(res => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'New Product Category is created successfully!')
+        this.props.commonActions.tostifyAlert('success', 'New Product Category is Created Successfully!')
 
-        if(this.state.readMore){
+        if(this.state.createMore){
           this.setState({
-            readMore: false
+            createMore: false
           })
         } else this.props.history.push('/admin/master/product-category')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data.message)
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+
     })
   }
 
@@ -122,12 +123,12 @@ class CreateProductCategory extends React.Component {
                           onSubmit={values => {
                             this.handleSubmit(values)
                           }}
-                          // validationSchema={Yup.object().shape({
-                          //   name: Yup.string()
-                          //     .required("Product Category Name is Required"),
-                          //   code: Yup.string()
-                          //     .required("Code is Required")
-                          // })}
+                          validationSchema={Yup.object().shape({
+                            productCategoryName: Yup.string()
+                              .required("Product Category Name is Required"),
+                              productCategoryCode: Yup.string()
+                              .required("Product Category Code is Required")
+                          })}
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
@@ -173,15 +174,17 @@ class CreateProductCategory extends React.Component {
                                 <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
                                   <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
+
                                 <Button name="button" color="primary" className="btn-square mr-3" 
                                   onClick={() => {
-                                    this.setState({readMore: true}, () => {
+                                    this.setState({createMore: true}, () => {
                                       props.handleSubmit()
                                     })
                                   }}>
                                   <i className="fa fa-refresh"></i> Create and More
                                 </Button>
-                                <Button type="submit" color="secondary" className="btn-square"
+
+                                <Button type="button" color="secondary" className="btn-square"
                                   onClick={() => {this.props.history.push('/admin/master/product-category')}}>
                                   <i className="fa fa-ban"></i> Cancel
                                 </Button>

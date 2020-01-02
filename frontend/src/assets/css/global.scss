@@ -42,7 +42,7 @@ body, span, label, h1, h2, h3, h4, p, em {
 }
 
 
-.is-invalid ~ .invalid-feedback {
+.is-invalid ~ .invalid-feedback ,.react-datepicker-wrapper + .invalid-feedback{
   display: block;
 }
 

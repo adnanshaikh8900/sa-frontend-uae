@@ -48,9 +48,9 @@ class CreateVatCode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      initValue: {name: '', vat: ''},
+      initValue: { name: '', vat: '' },
       loading: false,
-      readMore: false
+      createMore: false
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -83,11 +83,11 @@ class CreateVatCode extends React.Component {
   handleSubmit(data) {
     this.props.vatActions.createBat(data).then(res => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'New vat code is created successfully!')
+        this.props.commonActions.tostifyAlert('success', 'New vat code Created Successfully!')
 
-        if(this.state.readMore){
+        if (this.state.createMore) {
           this.setState({
-            readMore: false
+            createMore: false
           })
         } else this.props.history.push('/admin/master/vat-code')
       }
@@ -102,7 +102,7 @@ class CreateVatCode extends React.Component {
     return (
       <div className="vat-code-create-screen">
         <div className="animated fadeIn">
-          
+
           <Row>
             <Col lg={12}>
               <Card>
@@ -117,8 +117,8 @@ class CreateVatCode extends React.Component {
                     <Col lg={6}>
                       <Formik
                         initialValues={this.state.initValue}
-                        onSubmit={(values, {resetForm}) => {
-                          
+                        onSubmit={(values, { resetForm }) => {
+
                           this.handleSubmit(values)
                           resetForm(this.state.initValue)
                         }}
@@ -128,65 +128,67 @@ class CreateVatCode extends React.Component {
                           vat: Yup.string()
                             .required("Vat Percentage is Required")
                         })}>
-                          {props => (
-                            <Form onSubmit={props.handleSubmit} name="simpleForm">
-                              <FormGroup>
-                                <Label htmlFor="name">Vat Code Name</Label>
-                                <Input
-                                  type="text"
-                                  id="name"
-                                  name="name"
-                                  placeholder="Enter Vat Code Name"
-                                  onChange={props.handleChange}
-                                  value={props.values.name}
-                                  className={
-                                    props.errors.name && props.touched.name
-                                      ? "is-invalid"
-                                      : ""
-                                  }
-                                />
-                                {props.errors.name && props.touched.name && (
-                                  <div className="invalid-feedback">{props.errors.name}</div>
-                                )}
-                              </FormGroup>
-                              <FormGroup>
-                                <Label htmlFor="name">Percentage</Label>
-                                <Input
-                                  type="number"
-                                  id="name"
-                                  name="vat"
-                                  placeholder="Enter Percentage"
-                                  onChange={props.handleChange}
-                                  value={props.values.vat}
-                                  className={
-                                    props.errors.vat && props.touched.vat
-                                      ? "is-invalid"
-                                      : ""
-                                  }
-                                />
-                                {props.errors.vat && props.touched.vat && (
-                                  <div className="invalid-feedback">{props.errors.vat}</div>
-                                )}
-                              </FormGroup>            
-                              <FormGroup className="text-right mt-5">
-                                <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
-                                  <i className="fa fa-dot-circle-o"></i> Create
+                        {props => (
+                          <Form onSubmit={props.handleSubmit} name="simpleForm">
+                            <FormGroup>
+                              <Label htmlFor="name">Vat Code Name</Label>
+                              <Input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="Enter Vat Code Name"
+                                onChange={props.handleChange}
+                                value={props.values.name}
+                                className={
+                                  props.errors.name && props.touched.name
+                                    ? "is-invalid"
+                                    : ""
+                                }
+                              />
+                              {props.errors.name && props.touched.name && (
+                                <div className="invalid-feedback">{props.errors.name}</div>
+                              )}
+                            </FormGroup>
+                            <FormGroup>
+                              <Label htmlFor="name">Percentage</Label>
+                              <Input
+                                type="number"
+                                id="name"
+                                name="vat"
+                                placeholder="Enter Percentage"
+                                onChange={props.handleChange}
+                                value={props.values.vat}
+                                className={
+                                  props.errors.vat && props.touched.vat
+                                    ? "is-invalid"
+                                    : ""
+                                }
+                              />
+                              {props.errors.vat && props.touched.vat && (
+                                <div className="invalid-feedback">{props.errors.vat}</div>
+                              )}
+                            </FormGroup>
+                            <FormGroup className="text-right mt-5">
+                              <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                                <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
-                                <Button name="button" color="primary" className="btn-square mr-3" 
-                                  onClick={() => {
-                                    this.setState({readMore: true})
+                              <Button name="button" color="primary" className="btn-square mr-3"
+                                onClick={() => {
+                                    this.setState({ createMore: true },()=>{
                                     props.handleSubmit()
-                                  }}>
-                                  <i className="fa fa-refresh"></i> Create and More
+                                  })
+                                }}
+                              >
+                                <i className="fa fa-refresh"></i> Create and More
                                 </Button>
-                                <Button type="submit" color="secondary" className="btn-square"
-                                  onClick={() => {this.props.history.push('/admin/master/vat-code')}}>
-                                  <i className="fa fa-ban"></i> Cancel
+                              <Button type="submit" color="secondary" className="btn-square"
+                                onClick={() => { this.props.history.push('/admin/master/vat-code') }}>
+                                <i className="fa fa-ban"></i> Cancel
                                 </Button>
-                              </FormGroup>
-                            </Form>
-                          )}
-                        </Formik>
+                            </FormGroup>
+                          </Form>
+                        )}
+                      </Formik>
                     </Col>
                   </Row>
                 </CardBody>

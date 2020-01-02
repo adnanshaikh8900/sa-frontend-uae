@@ -47,12 +47,6 @@ const mapDispatchToProps = (dispatch) => {
 
   })
 }
-
-// const CHART_ACCOUNT_TYPES = [
-//   { value: 1, label: 'Sales'},
-//   { value: 2, label: 'Cost of Sales'}
-// ]
-
 class CreateChartAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -87,30 +81,24 @@ class CreateChartAccount extends React.Component {
 
   // Create or Edit Vat
   handleSubmit(data) {
-    const { transactionCategoryCode, transactionCategoryName, transactionType } = data
-    const postData = {
-      transactionCategoryCode: transactionCategoryCode,
-      transactionCategoryName: transactionCategoryName,
-      transactionType: (transactionType && transactionType.value !== null ? transactionType.value : '')
-    }
-    this.props.createChartOfAccontActions.createTransactionCategory(postData).then(res => {
+    this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
       if (res.status === 200) {
-
-        this.props.commonActions.tostifyAlert('success', 'Created Successfully')
-
+        this.props.commonActions.tostifyAlert('success', 'New Account Created Successfully')
         if (this.state.createMore) {
           this.setState({
             createMore: false
           })
-
-        } else this.props.history.push('/admin/master/chart-account')
+        } else {
+          this.props.history.push('/admin/master/chart-account')
+        }
       }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
 
   render() {
     const { loading } = this.state
-    const { transactionCategoryCode, transactionCategoryName } = this.state.initValue;
     const { transaction_type_list } = this.props
     return (
       <div className="chart-account-screen">
@@ -191,7 +179,7 @@ class CreateChartAccount extends React.Component {
                                 className="select-default-width"
                                 options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list) : ''}
                                 value={props.values.transactionType}
-                                onChange={option => props.handleChange('transactionType')(option)}
+                                onChange={option => props.handleChange('transactionType')(option.value)}
                                 placeholder="Select Type"
                                 id="transactionType"
                                 name="transactionType"

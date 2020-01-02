@@ -48,21 +48,15 @@ const mapDispatchToProps = (dispatch) => {
   })
 }
 
-// const CHART_ACCOUNT_TYPES = [
-//   { value: 1, label: 'Sales'},
-//   { value: 2, label: 'Cost of Sales'}
-// ]
-
 class DetailChartAccount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       initValue: null,
       loading: true,
-      readMore: false,
+      createMore: false,
       dialog: false,
       currentData: {}
-
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -81,11 +75,9 @@ class DetailChartAccount extends React.Component {
   initializeData() {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
-      this.props.chartOfAccontActions.getTransactionTypes();
-      // this.setState({
-      // }, () => {
       this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then(res => {
         if (res.status === 200) {
+          this.props.chartOfAccontActions.getTransactionTypes();
           this.setState({
             loading: false,
             initValue: {
@@ -97,13 +89,11 @@ class DetailChartAccount extends React.Component {
               } : null,
             }
           })
-        } else {
-          this.setState({ loading: false })
         }
       }).catch(err => {
         this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
+        this.setState({ loading: false })
         this.props.history.push('/admin/master/chart-account')
-        // this.setState({loading: false})
       })
     }
   }
@@ -138,7 +128,6 @@ class DetailChartAccount extends React.Component {
     const id = this.props.location.state.id;
     this.props.detailChartOfAccontActions.deleteChartAccount(id).then(res => {
       if (res.status === 200) {
-        // this.success('Chart Account Deleted Successfully');
         this.props.commonActions.tostifyAlert('success', 'Account Deleted Successfully')
         this.props.history.push('/admin/master/chart-account')
       }
@@ -154,21 +143,16 @@ class DetailChartAccount extends React.Component {
   }
 
   // Create or Edit Vat
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     const id = this.props.location.state.id
     const { transactionCategoryCode, transactionCategoryName, transactionType } = data
-    const postData = {
-      transactionCategoryId: id,
-      transactionCategoryCode: transactionCategoryCode,
-      transactionCategoryName: transactionCategoryName,
-      transactionType: (transactionType && transactionType.value !== null ? transactionType.value : '')
-    }
+    const postData = Object.assign(data, {transactionCategoryId: id})
     this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then(res => {
       if (res.status === 200) {
-        // this.success('')
+        resetForm()
         this.props.commonActions.tostifyAlert('success', 'Chart Account Updated Successfully')
         this.props.history.push('/admin/master/chart-account')
-      } 
+      }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
@@ -202,9 +186,7 @@ class DetailChartAccount extends React.Component {
                           <Formik
                             initialValues={this.state.initValue}
                             onSubmit={(values, { resetForm }) => {
-
-                              this.handleSubmit(values)
-                              resetForm(this.state.initValue)
+                              this.handleSubmit(values,resetForm)
                             }}
                             validationSchema={
                               Yup.object().shape({
@@ -263,7 +245,7 @@ class DetailChartAccount extends React.Component {
                                     className="select-default-width"
                                     options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list) : []}
                                     value={props.values.transactionType}
-                                    onChange={option => props.handleChange('transactionType')(option)}
+                                    onChange={option => props.handleChange('transactionType')(option.value)}
                                     placeholder="Select Type"
                                     id="transactionType"
                                     name="transactionType"

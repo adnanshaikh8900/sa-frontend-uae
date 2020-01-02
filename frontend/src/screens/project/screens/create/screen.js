@@ -145,11 +145,10 @@ class CreateProject extends React.Component {
     }
     this.props.createProjectActions.createAndSaveProject(postData).then(res => {
       if (res.status === 200) {
-        // this.success()
-
-        if (this.state.readMore) {
+        this.props.commonActions.tostifyAlert('success', 'New Project Created Successfully!')
+        if (this.state.createMore) {
           this.setState({
-            readMore: false
+            createMore: false
           })
         } else this.props.history.push('/admin/master/project')
       }
@@ -311,7 +310,7 @@ class CreateProject extends React.Component {
                                       </Label>
                                   <Select
                                     className="select-default-width"
-                                    options={selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list)}
+                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedCurrency: option.value
@@ -415,8 +414,9 @@ class CreateProject extends React.Component {
                                       </Button>
                                   <Button name="button" color="primary" className="btn-square mr-3"
                                     onClick={() => {
-                                      this.setState({ readMore: true })
+                                      this.setState({ createMore: true },() => {
                                       props.handleSubmit()
+                                      })
                                     }}>
                                     <i className="fa fa-refresh"></i> Create and More
                                       </Button>

@@ -31,7 +31,7 @@ export const removeBulk = (obj) => {
       data: obj
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         return res
       }
     }).catch(err => {
@@ -47,7 +47,7 @@ export const getCurrencyList = () => {
       url: 'rest/bank/getcurrenncy'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: CONTACT.CURRENCY_LIST,
           payload: res.data
@@ -66,7 +66,7 @@ export const getCountryList = () => {
       url: 'rest/datalist/getcountry'
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: CONTACT.COUNTRY_LIST,
           payload: res.data
@@ -85,7 +85,7 @@ export const getContactTypeList = () => {
       url: `/rest/datalist/getContactTypes`
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         dispatch({
           type: CONTACT.CONTACT_TYPE_LIST,
           payload: res.data

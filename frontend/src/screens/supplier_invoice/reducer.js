@@ -6,7 +6,8 @@ const initState = {
   contact_list : [],
   status_list : [],
   currency_list : [],
-  vat_list : []
+  vat_list : [],
+  supplier_list: []
 }
 
 const SupplierInvoiceReducer = (state = initState, action) => {
@@ -44,7 +45,12 @@ const SupplierInvoiceReducer = (state = initState, action) => {
         currency_list: Object.assign([], payload.data)
       }
 
-      
+      case SUPPLIER_INVOICE.SUPPLIER_LIST:
+        return {
+          ...state,
+          supplier_list: Object.assign([], payload.data)
+        }
+
       case SUPPLIER_INVOICE.VAT_LIST:
       return {
         ...state,

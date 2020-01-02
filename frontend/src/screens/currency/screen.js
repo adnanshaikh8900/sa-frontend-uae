@@ -159,7 +159,7 @@ class Currency extends React.Component {
                     </div>
           
                     <BootstrapTable 
-                      data={currencyList} 
+                      data={currencyList ? currencyList : []} 
                       hover
                       pagination
                       version="4"

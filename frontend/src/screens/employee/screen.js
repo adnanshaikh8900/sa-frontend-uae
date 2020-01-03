@@ -1,278 +1,357 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
   CardHeader,
   CardBody,
   Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   Row,
   Col,
+  ButtonGroup,
   Form,
   FormGroup,
   Input,
-  Label
 } from 'reactstrap'
 import Select from 'react-select'
-import DatePicker from 'react-datepicker'
-import _ from 'lodash'
 
-import 'react-datepicker/dist/react-datepicker.css'
+import { ToastContainer, toast } from 'react-toastify'
+import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+
+import { Loader, ConfirmDeleteModal } from 'components'
+
+
+import 'react-toastify/dist/ReactToastify.css'
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
+import { selectOptionsFactory } from 'utils'
+
+import * as EmployeeActions from './actions'
+import {
+  CommonActions
+} from 'services/global'
+
+
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
+    employee_list: state.employee.employee_list,
+    vat_list: state.employee.vat_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
+    employeeActions: bindActionCreators(EmployeeActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
 
 class Employee extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
       loading: false,
-      birthday: new Date(),
-      currentData: {}
+      selectedRows: [],
+      dialog: null,
+      filterData: {
+        name: '',
+        email: ''
+      }
     }
 
-    this.changeBirthday = this.changeBirthday.bind(this)
+    this.initializeData = this.initializeData.bind(this)
+    this.onRowSelect = this.onRowSelect.bind(this)
+    this.onSelectAll = this.onSelectAll.bind(this)
+    this.goToDetail = this.goToDetail.bind(this)
+    this.bulkDelete = this.bulkDelete.bind(this);
+    this.removeBulk = this.removeBulk.bind(this);
+    this.removeDialog = this.removeDialog.bind(this);
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+
+    this.onPageChange = this.onPageChange.bind(this)
+    this.onSizePerPageList = this.onSizePerPageList.bind(this)
+
+    this.options = {
+      onRowClick: this.goToDetail,
+      paginationPosition: 'top',
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
+    }
+
+    this.selectRowProp = {
+      mode: 'checkbox',
+      bgColor: 'rgba(0,0,0, 0.05)',
+      clickToSelect: false,
+      onSelect: this.onRowSelect,
+      onSelectAll: this.onSelectAll
+    }
+
   }
 
-  changeBirthday(date){
+  componentDidMount() {
+    this.initializeData()
+  }
+
+  componentWillUnmount() {
     this.setState({
-      birthday: date
+      selectedRows: []
     })
   }
 
-  handleChange = (name, e) => {
-     this.setState({
-      currentData: _.set(
-        { ...this.state.currentData },
-        e.target.name && e.target.name !== '' ? e.target.name : name,
-        e.target.type === 'checkbox' ? e.target.checked : e.target.value
-      )
+  initializeData() {
+    const { filterData } = this.state
+    const paginationData = {
+      pageNo: this.options.page ? this.options.page : 1,
+      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+    }
+    const postData = { ...filterData, ...paginationData }
+     this.props.employeeActions.getEmployeeList(postData).then(res => {
+      if (res.status === 200) {
+        this.setState({ loading: false })
+      }
+    }).catch(err => {
+      this.setState({ loading: false })
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
     })
-    // this.setState({
-    //   currentData: _.set(
-    //     { ...this.state.currentData },
-    //     e.target.name && e.target.name !== '' ? e.target.name : name,
-    //     e.target.type === 'checkbox' ? e.target.checked : e.target.value
-    //   )
-    // })
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  goToDetail(row) {
+    this.props.history.push('/admin/master/employee/detail', { id: row.id })
   }
+
+  onRowSelect(row, isSelected, e) {
+    let temp_list = []
+    if (isSelected) {
+      temp_list = Object.assign([], this.state.selectedRows)
+      temp_list.push(row.id);
+    } else {
+      this.state.selectedRows.map(item => {
+        if (item !== row.id) {
+          temp_list.push(item)
+        }
+      });
+    }
+    this.setState({
+      selectedRows: temp_list
+    })
+  }
+  onSelectAll(isSelected, rows) {
+    let temp_list = []
+    if (isSelected) {
+      rows.map(item => {
+        temp_list.push(item.id)
+      })
+    }
+    this.setState({
+      selectedRows: temp_list
+    })
+  }
+
+  bulkDelete() {
+    const {
+      selectedRows
+    } = this.state
+    if (selectedRows.length > 0) {
+      this.setState({
+        dialog: <ConfirmDeleteModal
+          isOpen={true}
+          okHandler={this.removeBulk}
+          cancelHandler={this.removeDialog}
+        />
+      })
+    } else {
+      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
+    }
+  }
+
+  removeBulk() {
+    this.removeDialog()
+    let { selectedRows } = this.state;
+    const { employee_list } = this.props
+    let obj = {
+      ids: selectedRows
+    }
+    this.props.employeeActions.removeBulk(obj).then(res => {
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+        this.initializeData();
+        if (employee_list && employee_list.length > 0) {
+          this.setState({
+            selectedRows: []
+          })
+        }
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
+  handleChange(val, name) {
+    this.setState({
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
+    })
+  }
+
+  handleSearch() {
+    this.initializeData();
+    // this.setState({})
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    this.options.page = page
+  }
+
+  onSizePerPageList = (sizePerPage) => {
+    this.options.sizePerPage = sizePerPage
+  }
+
   render() {
- 
+
+    const { loading, dialog , filterData , selectedRows} = this.state
+    const { employee_list, vat_list } = this.props
+    const containerStyle = {
+      zIndex: 1999
+    }
+
     return (
       <div className="employee-screen">
         <div className="animated fadeIn">
-          <Row>
-            <Col lg={12} className="mx-auto">
-              <Card>
-                <CardHeader>
+          {dialog}
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+          <Card>
+            <CardHeader>
+              <Row>
+                <Col lg={12}>
+                  <div className="h4 mb-0 d-flex align-items-center">
+                    <i className="fas fa-object-group" />
+                    <span className="ml-2">Employees</span>
+                  </div>
+                </Col>
+              </Row>
+            </CardHeader>
+            <CardBody>
+              {
+                loading ?
                   <Row>
                     <Col lg={12}>
-                      <div className="h4 mb-0 d-flex align-items-center">
-                        <i className="nav-icon fas fa-user-tie" />
-                        <span className="ml-2">Employee</span>
+                      <Loader />
+                    </Col>
+                  </Row>
+                  :
+                  <Row>
+                    <Col lg={12}>
+                      <div className="d-flex justify-content-end">
+                        <ButtonGroup size="sm">
+                          <Button
+                            color="success"
+                            className="btn-square"
+                            onClick={() => this.table.handleExportCSV()}
+                            disabled={employee_list.length === 0}
+
+                          >
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                            Export to CSV
+                          </Button>
+                          <Button
+                            color="primary"
+                            className="btn-square"
+                            onClick={() => this.props.history.push(`/admin/master/employee/create`)}
+                          >
+                            <i className="fas fa-plus mr-1" />
+                            New Employee
+                          </Button>
+                          <Button
+                            color="warning"
+                            className="btn-square"
+                            onClick={this.bulkDelete}
+                            disabled={selectedRows.length === 0}
+                          >
+                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+                            Bulk Delete
+                          </Button>
+                        </ButtonGroup>
+                      </div>
+                      <div className="py-3">
+                        <h5>Filter : </h5>
+                        <form>
+                          <Row>
+                            <Col lg={3} className="mb-1">
+                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                            </Col>
+                            <Col lg={3} className="mb-2">
+                              <Input type="text" placeholder="Email" onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
+                            </Col>
+                            <Col lg={2} className="mb-1">
+                              <Button type="button" color="primary" className="btn-square"  onClick={this.handleSearch}>
+                                <i className="fa fa-search"></i>
+                              </Button>
+                            </Col>
+                          </Row>
+                        </form>
+                      </div>
+                      <div>
+                        <BootstrapTable
+                          selectRow={this.selectRowProp}
+                          search={false}
+                          options={this.options}
+                          data={employee_list ? employee_list : []}
+                          version="4"
+                          hover
+                          pagination
+                          keyField="id"
+                          totalSize={employee_list ? employee_list.length : 0}
+                          className="employee-table"
+                          trClassName="cursor-pointer"
+                          csvFileName="employee_list.csv"
+                          ref={node => this.table = node}
+                        >
+                          <TableHeaderColumn
+            
+                            dataField="firstName"
+                            dataSort
+                          >
+                            First Name
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
+                            dataField="refernceCode"
+                            dataSort
+                          >
+                            Reference Code
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
+                            dataField="email"
+                            dataSort
+                          >
+                            Email
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
+                            dataField="vatRegestationNo"
+                            dataSort
+                          // dataFormat={this.vatCategoryFormatter}
+                          >
+                            Vat Registration No
+                          </TableHeaderColumn>
+                        </BootstrapTable>
                       </div>
                     </Col>
                   </Row>
-                </CardHeader>
-                <CardBody>
-                  <Row>
-                    <Col lg={12}>
-                      <Form onSubmit={this.handleSubmit}>
-                        <h4 className="mb-4">Contact Name</h4>
-                        <Row>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Refrence Code</Label>
-                              <Input
-                                type="text"
-                                id="referenceCode"
-                                name="referenceCode"
-                                onChange={(value) => { this.handleChange("referenceCode",value) }}
-                                
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Title</Label>
-                              <Input
-                                type="text"
-                                id="title"
-                                name="title"
-                                onChange={(value) => { this.handleChange("title",value) }}
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Email</Label>
-                              <Input
-                                type="email"
-                                id="email"
-                                name="email"
-                                onChange={(value) => { this.handleChange("email",value) }}                                
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row className="row-wrapper">
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Full Name</Label>
-                              <Input
-                                type="text"
-                                id="fulName"
-                                name="fullName"
-                                onChange={(value) => { this.handleChange("fullName",value) }}                                
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Middle Name</Label>
-                              <Input
-                                type="text"
-                                id="middleName"
-                                name="middleName"
-                                onChange={(value) => { this.handleChange("middleName",value) }}                                                                
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Last Name</Label>
-                              <Input
-                                type="text"
-                                id="lastName"
-                                name="lastName"
-                                onChange={(value) => { this.handleChange("lastName",value) }}                                                                                                
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row className="row-wrapper">
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Password</Label>
-                              <Input
-                                type="password"
-                                id="password"
-                                name="password"
-                                onChange={(value) => { this.handleChange("password",value) }}                                                                                                
-
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Confirm Password</Label>
-                              <Input
-                                type="password"
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                onChange={(value) => { this.handleChange("confirmPassword",value) }}                                                                                                
-                                
-                              />
-                            </FormGroup>
-                          </Col> 
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Date of Birth</Label>
-                              <div>
-                                <DatePicker
-                                  className="form-control"
-                                  id="date"
-                                  name="date"
-                                  selected={this.state.birthday}
-                                  onChange={this.changeBirthday}
-                                  placeholderText=""
-                                />
-                              </div>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <hr/>
-                        <h4 className="mb-3 mt-3">Invoicing Details</h4>
-                        <Row className="row-wrapper">
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Billing Email</Label>
-                              <Input
-                                type="text"
-                                id="billingEmail"
-                                name="billingEmail"
-                                onChange={(value) => { this.handleChange("billingEmail",value) }}                                                                                                
-                                
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Contract PO Number</Label>
-                              <Input
-                                type="text"
-                                id="PONumber"
-                                name="PONumber"
-                                onChange={(value) => { this.handleChange("PONumber",value) }}                                                                                                
-                                
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row className="row-wrapper">
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Vat Registration Number</Label>
-                              <Input
-                                type="text"
-                                id="VATNumber"
-                                name="VATNumber"
-                                onChange={(value) => { this.handleChange("VATNumber",value) }}                                                                                                
-                                
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="select">Currency Code</Label>
-                              <Input
-                                type="text"
-                                id="currencyCode"
-                                name="currencyCode"
-                                onChange={(value) => { this.handleChange("currencyCode",value) }} 
-                                selected={this.state.currency}                                                                                                                               
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={12} className="mt-5">
-                            <FormGroup className="text-right">
-                              <Button type="submit" color="primary" className="btn-square mr-3">
-                                <i className="fa fa-dot-circle-o"></i> Create
-                              </Button>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                      </Form>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+              }
+            </CardBody>
+          </Card>
         </div>
       </div>
     )
@@ -280,4 +359,3 @@ class Employee extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Employee)
-

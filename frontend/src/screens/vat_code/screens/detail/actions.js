@@ -10,7 +10,7 @@ export const getVatByID = (id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/vat/getbyid?id=${id}`
+      url: `/rest/vat/getById?id=${id}`
     }
 
     return authApi(data).then(res => {
@@ -25,14 +25,26 @@ export const getVatByID = (id) => {
   }
 }
 
-
-// Create & Save Bat
-export const createBat = (bat) => {
+export const updateVat = (obj) => {
   return (dispatch) => {
     let data = {
-      method: 'POST',
-      url: `rest/vat/savevat?id=1`,
-      data: bat
+      method: 'post',
+      url: '/rest/vat/update',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const deleteVat = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/vat/delete?id=${id}`
     }
 
     return authApi(data).then(res => {
@@ -42,3 +54,5 @@ export const createBat = (bat) => {
     })
   }
 }
+
+

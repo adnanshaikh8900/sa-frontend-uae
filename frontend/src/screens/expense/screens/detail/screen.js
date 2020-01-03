@@ -75,6 +75,7 @@ class DetailExpense extends React.Component {
     // this.handleChange = this.handleChange.bind(this)
     this.deleteExpense = this.deleteExpense.bind(this)
     this.removeExpense = this.removeExpense.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
   }
 
   componentDidMount() {

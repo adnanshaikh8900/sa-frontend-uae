@@ -45,118 +45,130 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/rest/invoice")
 public class InvoiceRestController implements Serializable {
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private InvoiceRestHelper invoiceRestHelper;
+	@Autowired
+	private InvoiceRestHelper invoiceRestHelper;
 
-    @Autowired
-    private InvoiceService invoiceService;
+	@Autowired
+	private InvoiceService invoiceService;
 
-    @Autowired
-    private FileHelper fileHelper;
+	@Autowired
+	private FileHelper fileHelper;
 
-    @ApiOperation(value = "Get Invoice List")
-    @GetMapping(value = "/getList")
-    public ResponseEntity getInvoiceList(InvoiceRequestFilterModel filterModel,
-            HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            Map<InvoiceFilterEnum, Object> filterDataMap = new HashMap();
+	@ApiOperation(value = "Get Invoice List")
+	@GetMapping(value = "/getList")
+	public ResponseEntity getInvoiceList(InvoiceRequestFilterModel filterModel, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			Map<InvoiceFilterEnum, Object> filterDataMap = new HashMap();
 //        filterDataMap.put(SupplierInvoiceFilterEnum.CUSTOMER_NAME, filterModel.getCustomerName());
-            filterDataMap.put(InvoiceFilterEnum.INVOICE_NUMBER, filterModel.getReferenceNumber());
-            if (filterModel.getAmount() != null) {
-                filterDataMap.put(InvoiceFilterEnum.INVOICE_AMOUNT, filterModel.getAmount());
-            }
-            if (filterModel.getInvoiceDate() != null && !filterModel.getInvoiceDate().isEmpty()) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-                filterDataMap.put(InvoiceFilterEnum.INVOICE_DATE, dateTime);
-            }
-            if (filterModel.getInvoiceDueDate() != null && !filterModel.getInvoiceDueDate().isEmpty()) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDueDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-                filterDataMap.put(InvoiceFilterEnum.INVOICE_DUE_DATE, dateTime);
-            }
-            filterDataMap.put(InvoiceFilterEnum.STATUS, filterModel.getStatus());
-            filterDataMap.put(InvoiceFilterEnum.USER_ID, userId);
-            filterDataMap.put(InvoiceFilterEnum.DELETE_FLAG, false);
-            filterDataMap.put(InvoiceFilterEnum.TYPE, filterModel.getType());
-            List<Invoice> invoices = invoiceService.getInvoiceList(filterDataMap);
-            if (invoices == null) {
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity(invoiceRestHelper.getListModel(invoices), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    
-    @GetMapping(value = "/getInvoicesForDropdown")
-    public ResponseEntity getInvoicesForDropdown() throws IOException {
-        List<DropdownModel> dropdownModels = invoiceService.getInvoicesForDropdown();
-        return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
-    }
+			filterDataMap.put(InvoiceFilterEnum.INVOICE_NUMBER, filterModel.getReferenceNumber());
+			if (filterModel.getAmount() != null) {
+				filterDataMap.put(InvoiceFilterEnum.INVOICE_AMOUNT, filterModel.getAmount());
+			}
+			if (filterModel.getInvoiceDate() != null && !filterModel.getInvoiceDate().isEmpty()) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDate()).getTime())
+						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+				filterDataMap.put(InvoiceFilterEnum.INVOICE_DATE, dateTime);
+			}
+			if (filterModel.getInvoiceDueDate() != null && !filterModel.getInvoiceDueDate().isEmpty()) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				LocalDateTime dateTime = Instant
+						.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDueDate()).getTime())
+						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+				filterDataMap.put(InvoiceFilterEnum.INVOICE_DUE_DATE, dateTime);
+			}
+			filterDataMap.put(InvoiceFilterEnum.STATUS, filterModel.getStatus());
+			filterDataMap.put(InvoiceFilterEnum.USER_ID, userId);
+			filterDataMap.put(InvoiceFilterEnum.DELETE_FLAG, false);
+			filterDataMap.put(InvoiceFilterEnum.TYPE, filterModel.getType());
+			List<Invoice> invoices = invoiceService.getInvoiceList(filterDataMap);
+			if (invoices == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity(invoiceRestHelper.getListModel(invoices), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
+	@GetMapping(value = "/getInvoicesForDropdown")
+	public ResponseEntity getInvoicesForDropdown() throws IOException {
+		List<DropdownModel> dropdownModels = invoiceService.getInvoicesForDropdown();
+		return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+	}
 
-    @ApiOperation(value = "Delete Invoice By ID")
-    @DeleteMapping(value = "/delete")
-    public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
-        Invoice invoice = invoiceService.findByPK(id);
-        if (invoice != null) {
-            invoice.setDeleteFlag(Boolean.TRUE);
-            invoiceService.update(invoice, invoice.getId());
-        }
-        return new ResponseEntity(HttpStatus.OK);
+	@ApiOperation(value = "Delete Invoice By ID")
+	@DeleteMapping(value = "/delete")
+	public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
+		Invoice invoice = invoiceService.findByPK(id);
+		if (invoice != null) {
+			invoice.setDeleteFlag(Boolean.TRUE);
+			invoiceService.update(invoice, invoice.getId());
+		}
+		return new ResponseEntity(HttpStatus.OK);
 
-    }
+	}
 
-    @ApiOperation(value = "Delete Invoices in Bulk")
-    @DeleteMapping(value = "/deletes")
-    public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
-        try {
-            invoiceService.deleteByIds(ids.getIds());
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	@ApiOperation(value = "Delete Invoices in Bulk")
+	@DeleteMapping(value = "/deletes")
+	public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
+		try {
+			invoiceService.deleteByIds(ids.getIds());
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
-    }
+	}
 
-    @ApiOperation(value = "Get Invoice By ID")
-    @GetMapping(value = "/getInvoiceById")
-    public ResponseEntity getInvoiceById(@RequestParam(value = "id") Integer id) {
-        Invoice invoice = invoiceService.findByPK(id);
-        if (invoice == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(invoice, HttpStatus.OK);
-        }
-    }
+	@ApiOperation(value = "Get Invoice By ID")
+	@GetMapping(value = "/getInvoiceById")
+	public ResponseEntity getInvoiceById(@RequestParam(value = "id") Integer id) {
+		Invoice invoice = invoiceService.findByPK(id);
+		if (invoice == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity<>(invoice, HttpStatus.OK);
+		}
+	}
 
-    @ApiOperation(value = "Add New Invoice")
-    @PostMapping(value = "/save")
-    public ResponseEntity save(
-            @ModelAttribute InvoiceRequestModel requestModel,
-            HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
-            invoice.setCreatedBy(userId);
-            invoice.setCreatedDate(LocalDateTime.now());
-            invoice.setDeleteFlag(Boolean.FALSE);
-            if (requestModel.getAttachmentFile() != null && !requestModel.getAttachmentFile().isEmpty()) {
-                String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(), FileTypeEnum.SUPPLIER_INVOICE);
-                invoice.setReceiptAttachmentPath(fileName);
-            }
-            invoiceService.persist(invoice);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+	@ApiOperation(value = "Add New Invoice")
+	@PostMapping(value = "/save")
+	public ResponseEntity save(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
+			invoice.setCreatedBy(userId);
+			invoice.setCreatedDate(LocalDateTime.now());
+			invoice.setDeleteFlag(Boolean.FALSE);
+			if (requestModel.getAttachmentFile() != null && !requestModel.getAttachmentFile().isEmpty()) {
+				String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(), FileTypeEnum.SUPPLIER_INVOICE);
+				invoice.setReceiptAttachmentPath(fileName);
+			}
+			invoiceService.persist(invoice);
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@ApiOperation(value = "Update Invoice")
+	@PostMapping(value = "/update")
+	public ResponseEntity update(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
+		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+		Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
+		invoice.setLastUpdateBy(userId);
+		invoice.setLastUpdateDate(LocalDateTime.now());
+		invoiceService.update(invoice);
+
+		return ResponseEntity.status(HttpStatus.OK).build();
+
+	}
 }

@@ -12,11 +12,16 @@ import com.simplevat.dao.InvoiceLineItemDao;
 public class InvoiceLineItemServiceImpl extends InvoiceLineItemService {
 
     @Autowired
-    private InvoiceLineItemDao supplierInvoiceLineItemDao;
+    private InvoiceLineItemDao invoiceLineItemDao;
 
     @Override
     protected Dao<Integer, InvoiceLineItem> getDao() {
-        return supplierInvoiceLineItemDao;
+        return invoiceLineItemDao;
+    }
+    
+      @Override
+    public void deleteByInvoiceId(Integer invoiceId) {
+        invoiceLineItemDao.deleteByInvoiceId(invoiceId);
     }
   
 }

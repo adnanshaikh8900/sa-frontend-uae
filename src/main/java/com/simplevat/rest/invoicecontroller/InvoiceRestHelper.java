@@ -32,185 +32,208 @@ import org.springframework.stereotype.Service;
 @Service
 public class InvoiceRestHelper {
 
-	@Autowired
-	VatCategoryService vatCategoryService;
+    @Autowired
+    VatCategoryService vatCategoryService;
 
-	@Autowired
-	ProjectService projectService;
+    @Autowired
+    ProjectService projectService;
 
-	@Autowired
-	ContactService contactService;
+    @Autowired
+    ContactService contactService;
 
-	@Autowired
-	CurrencyService currencyService;
+    @Autowired
+    CurrencyService currencyService;
 
-	@Autowired
-	InvoiceLineItemService invoiceLineItemService;
+    @Autowired
+    InvoiceLineItemService invoiceLineItemService;
 
-	@Autowired
-	private InvoiceService invoiceService;
+    @Autowired
+    private InvoiceService invoiceService;
 
-	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
-		Invoice invoice = new Invoice();
+    public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
+        Invoice invoice = new Invoice();
 
-		if (invoiceModel.getId() != null) {
-			invoice = invoiceService.findByPK(invoiceModel.getId());
-		}
-		if (invoiceModel.getTotalAmount() != null) {
-			invoice.setTotalAmount(invoiceModel.getTotalAmount());
-		}
-		if (invoiceModel.getTotalVatAmount() != null) {
-			invoice.setTotalVatAmount(invoiceModel.getTotalVatAmount());
-		}
-		if (invoiceModel.getId() != null) {
-			invoice.setId(invoiceModel.getId());
-		}
-		invoice.setReferenceNumber(invoiceModel.getReferenceNumber());
-		// Type supplier = 1
-		// Type customer = 2
-		if (invoiceModel.getType() != null && !invoiceModel.getType().isEmpty()) {
-			invoice.setType(Integer.parseInt(invoiceModel.getType()));
-		}
-		if (invoiceModel.getProjectId() != null) {
-			Project project = projectService.findByPK(invoiceModel.getProjectId());
-			invoice.setProject(project);
-		}
-		if (invoiceModel.getContactId() != null) {
-			Contact contact = contactService.findByPK(invoiceModel.getContactId());
-			invoice.setContact(contact);
-		}
-		if (invoiceModel.getInvoiceDate() != null) {
-			LocalDateTime invoiceDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDate().getTime())
-					.atZone(ZoneId.systemDefault()).toLocalDateTime();
-			invoice.setInvoiceDate(invoiceDate);
-		}
-		if (invoiceModel.getInvoiceDueDate() != null) {
-			LocalDateTime invoiceDueDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDueDate().getTime())
-					.atZone(ZoneId.systemDefault()).toLocalDateTime();
-			invoice.setInvoiceDueDate(invoiceDueDate);
-		}
-		if (invoiceModel.getCurrencyCode() != null) {
-			Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
-			invoice.setCurrency(currency);
-		}
-		List<InvoiceLineItemModel> itemModels = new ArrayList<>();
-		if (invoiceModel.getLineItemsString() != null && !invoiceModel.getLineItemsString().isEmpty()) {
-			ObjectMapper mapper = new ObjectMapper();
-			try {
-				itemModels = mapper.readValue(invoiceModel.getLineItemsString(),
-						new TypeReference<List<InvoiceLineItemModel>>() {
-						});
-			} catch (IOException ex) {
-				Logger.getLogger(InvoiceRestHelper.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			if (itemModels.size() > 0) {
+        if (invoiceModel.getInvoiceId() != null) {
+            invoice = invoiceService.findByPK(invoiceModel.getInvoiceId());
+            if (invoice.getInvoiceLineItems() != null) {
+                invoiceLineItemService.deleteByInvoiceId(invoiceModel.getInvoiceId());
+            }
+        }
+        if (invoiceModel.getTotalAmount() != null) {
+            invoice.setTotalAmount(invoiceModel.getTotalAmount());
+        }
+        if (invoiceModel.getTotalVatAmount() != null) {
+            invoice.setTotalVatAmount(invoiceModel.getTotalVatAmount());
+        }
+        invoice.setReferenceNumber(invoiceModel.getReferenceNumber());
+        // Type supplier = 1
+        // Type customer = 2
+        if (invoiceModel.getType() != null && !invoiceModel.getType().isEmpty()) {
+            invoice.setType(Integer.parseInt(invoiceModel.getType()));
+        }
+        if (invoiceModel.getProjectId() != null) {
+            Project project = projectService.findByPK(invoiceModel.getProjectId());
+            invoice.setProject(project);
+        }
+        if (invoiceModel.getContactId() != null) {
+            Contact contact = contactService.findByPK(invoiceModel.getContactId());
+            invoice.setContact(contact);
+        }
+        if (invoiceModel.getInvoiceDate() != null) {
+            LocalDateTime invoiceDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDate().getTime())
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime();
+            invoice.setInvoiceDate(invoiceDate);
+        }
+        if (invoiceModel.getInvoiceDueDate() != null) {
+            LocalDateTime invoiceDueDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDueDate().getTime())
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime();
+            invoice.setInvoiceDueDate(invoiceDueDate);
+        }
+        if (invoiceModel.getCurrencyCode() != null) {
+            Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
+            invoice.setCurrency(currency);
+        }
+        List<InvoiceLineItemModel> itemModels = new ArrayList<>();
+        if (invoiceModel.getLineItemsString() != null && !invoiceModel.getLineItemsString().isEmpty()) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                itemModels = mapper.readValue(invoiceModel.getLineItemsString(),
+                        new TypeReference<List<InvoiceLineItemModel>>() {
+                });
+            } catch (IOException ex) {
+                Logger.getLogger(InvoiceRestHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (itemModels.size() > 0) {
+                List<InvoiceLineItem> InvoiceLineItemList = getLineItems(itemModels, invoice, userId);
+                invoice.setInvoiceLineItems(InvoiceLineItemList);
+            }
+        }
+        if (invoiceModel.getTaxIdentificationNumber() != null) {
+            invoice.setTaxIdentificationNumber(invoiceModel.getTaxIdentificationNumber());
+        }
+        invoice.setContactPoNumber(invoiceModel.getContactPoNumber());
+        invoice.setReceiptAttachmentDescription(invoiceModel.getReceiptAttachmentDescription());
+        invoice.setNotes(invoiceModel.getNotes());
+        invoice.setDiscountType(invoiceModel.getDiscountType());
+        invoice.setDiscount(invoiceModel.getDiscount());
+        invoice.setStatus(InvoiceStatusEnum.PENDING); // default set, will change in transaction
 
-				List<InvoiceLineItem> InvoiceLineItemList = getLineItems(itemModels, invoice, userId);
-				if (invoice.getInvoiceLineItems() != null) {
-					invoice.getInvoiceLineItems().clear();
-					invoice.getInvoiceLineItems().addAll(InvoiceLineItemList);
+        return invoice;
+    }
 
-				} else {
+    public List<InvoiceLineItem> getLineItems(List<InvoiceLineItemModel> itemModels, Invoice invoice, Integer userId) {
+        List<InvoiceLineItem> lineItems = new ArrayList<>();
+        int i = 0;
+        for (InvoiceLineItemModel model : itemModels) {
+            try {
+                InvoiceLineItem lineItem = new InvoiceLineItem();
+                lineItem.setCreatedBy(userId);
+                lineItem.setCreatedDate(LocalDateTime.now());
+                lineItem.setDeleteFlag(false);
+                lineItem.setQuantity(model.getQuantity());
+                lineItem.setDescription(model.getDescription());
+                lineItem.setUnitPrice(model.getUnitPrice());
+                lineItem.setSubTotal(model.getSubTotal());
+                if (model.getVatCategoryId() != null) {
+                    lineItem.setVatCategory(vatCategoryService.findByPK(Integer.parseInt(model.getVatCategoryId())));
+                }
+                lineItem.setInvoice(invoice);
+                lineItems.add(lineItem);
+                i++;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return lineItems;
+    }
 
-					invoice.setInvoiceLineItems(InvoiceLineItemList);
-				}
-			}
-		}
+    public InvoiceRequestModel getRequestModel(Invoice invoice) {
+        InvoiceRequestModel requestModel = new InvoiceRequestModel();
+        requestModel.setInvoiceId(invoice.getId());
+        requestModel.setReferenceNumber(invoice.getReferenceNumber());
+        if (invoice.getContact() != null) {
+            requestModel.setContactId(invoice.getContact().getContactId());
+        }
+        if (invoice.getProject() != null) {
+            requestModel.setProjectId(invoice.getProject().getProjectId());
+        }
+        if (invoice.getCurrency() != null) {
+            requestModel.setCurrencyCode(invoice.getCurrency().getCurrencyCode());
+        }
+        if (invoice.getInvoiceDate() != null) {
+            Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
+            requestModel.setInvoiceDate(date);
+        }
+        if (invoice.getInvoiceDueDate() != null) {
+            Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
+            requestModel.setInvoiceDueDate(date);
+        }
+        requestModel.setTotalAmount(invoice.getTotalAmount());
+        requestModel.setContactPoNumber(invoice.getContactPoNumber());
+        requestModel.setTotalVatAmount(invoice.getTotalVatAmount());
+        requestModel.setReceiptNumber(invoice.getReceiptNumber());
+        requestModel.setNotes(invoice.getNotes());
+        if (invoice.getType() != null) {
+            requestModel.setType(InvoiceStatusEnum.getContactTypeByValue(invoice.getType()));
+        }
+        requestModel.setReceiptAttachmentDescription(invoice.getReceiptAttachmentDescription());
+        if (invoice.getTaxIdentificationNumber() != null) {
+            requestModel.setTaxIdentificationNumber(invoice.getTaxIdentificationNumber());
+        }
+        if (invoice.getStatus() != null) {
+            requestModel.setStatus(invoice.getStatus().name());
+        }
+        List<InvoiceLineItemModel> lineItemModels = new ArrayList<>();
+        if (invoice.getInvoiceLineItems() != null && !invoice.getInvoiceLineItems().isEmpty()) {
+            for (InvoiceLineItem lineItem : invoice.getInvoiceLineItems()) {
+                InvoiceLineItemModel model = getLineItemModel(lineItem);
+                lineItemModels.add(model);
+            }
+            requestModel.setInvoiceLineItems(lineItemModels);
+        }
+        return requestModel;
+    }
 
-		if (invoiceModel.getTaxIdentificationNumber() != null) {
-			invoice.setTaxIdentificationNumber(invoiceModel.getTaxIdentificationNumber());
-		}
-		invoice.setContactPoNumber(invoiceModel.getContactPoNumber());
-		invoice.setReferenceNumber(invoiceModel.getReceiptNumber());
-		invoice.setReceiptAttachmentDescription(invoiceModel.getReceiptAttachmentDescription());
-		invoice.setNotes(invoiceModel.getNotes());
-		invoice.setDiscountType(invoiceModel.getDiscountType());
-		invoice.setDiscount(invoiceModel.getDiscount());
-		invoice.setStatus(InvoiceStatusEnum.PENDING); // default set, will change in transaction
+    public InvoiceLineItemModel getLineItemModel(InvoiceLineItem lineItem) {
+        InvoiceLineItemModel lineItemModel = new InvoiceLineItemModel();
+        lineItemModel.setId(lineItem.getId());
+        lineItemModel.setDescription(lineItem.getDescription());
+        lineItemModel.setQuantity(lineItem.getQuantity());
+        lineItemModel.setUnitPrice(lineItem.getUnitPrice());
+        if (lineItem.getVatCategory() != null && lineItem.getVatCategory().getId() != null) {
+            lineItemModel.setVatCategoryId(lineItem.getVatCategory().getId().toString());
+        }
+        return lineItemModel;
+    }
 
-		return invoice;
-	}
+    public List<InvoiceListModel> getListModel(List<Invoice> invoices) {
+        List<InvoiceListModel> invoiceListModels = new ArrayList();
+        for (Invoice invoice : invoices) {
+            InvoiceListModel model = new InvoiceListModel();
+            model.setId(invoice.getId());
+            if (invoice.getContact() != null) {
+                if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
+                    model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
+                }
+            }
+            model.setReferenceNumber(invoice.getReferenceNumber());
+            if (invoice.getInvoiceDate() != null) {
+                Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
+                model.setInvoiceDate(date);
+            }
+            if (invoice.getInvoiceDueDate() != null) {
+                Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
+                model.setInvoiceDueDate(date);
+            }
+            model.setTotalAmount(invoice.getTotalAmount());
+            model.setTotalVatAmount(invoice.getTotalVatAmount());
+            if (invoice.getStatus() != null) {
+                model.setStatus(invoice.getStatus().name());
+            }
+            invoiceListModels.add(model);
+        }
+        return invoiceListModels;
+    }
 
-	public List<InvoiceLineItem> getLineItems(List<InvoiceLineItemModel> itemModels, Invoice invoice, Integer userId) {
-		List<InvoiceLineItem> lineItems = new ArrayList<>();
-		int i = 0;
-		for (InvoiceLineItemModel model : itemModels) {
-			try {
-				InvoiceLineItem lineItem = new InvoiceLineItem();
-				lineItem.setCreatedBy(userId);
-				lineItem.setCreatedDate(LocalDateTime.now());
-				lineItem.setDeleteFlag(false);
-				lineItem.setQuantity(model.getQuantity());
-				lineItem.setDescription(model.getDescription());
-				lineItem.setUnitPrice(model.getUnitPrice());
-				lineItem.setSubTotal(model.getSubTotal());
-				if (model.getVatCategoryId() != null) {
-					lineItem.setVatCategory(vatCategoryService.findByPK(Integer.parseInt(model.getVatCategoryId())));
-				}
-				lineItem.setInvoice(invoice);
-				lineItems.add(lineItem);
-				i++;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-		return lineItems;
-	}
-//
-//    public ProductRequestModel getRequestModel(Product product) {
-//        ProductRequestModel productModel = new ProductRequestModel();
-//        productModel.setProductID(product.getProductID());
-//        productModel.setProductName(product.getProductName());
-//        if (product.getVatCategory() != null) {
-//            productModel.setVatCategoryId(product.getVatCategory().getId());
-//        }
-//        productModel.setCreatedBy(product.getCreatedBy());
-//        productModel.setCreatedDate(product.getCreatedDate());
-//        productModel.setDeleteFlag(product.getDeleteFlag());
-//        productModel.setLastUpdateDate(product.getLastUpdateDate());
-//        productModel.setLastUpdatedBy(product.getLastUpdatedBy());
-//        productModel.setProductCode(product.getProductCode());
-//        productModel.setVersionNumber(product.getVersionNumber());
-//        productModel.setProductDescription(product.getProductDescription());
-//        if (product.getParentProduct() != null) {
-//            productModel.setParentProductId(product.getParentProduct().getProductID());
-//        }
-//        if (product.getProductWarehouse() != null) {
-//            productModel.setProductWarehouseId(product.getProductWarehouse().getWarehouseId());
-//        }
-//        productModel.setVatIncluded(product.getVatIncluded());
-//        productModel.setUnitPrice(product.getUnitPrice());
-//        return productModel;
-//    }
-//
-
-	public List<InvoiceListModel> getListModel(List<Invoice> invoices) {
-		List<InvoiceListModel> invoiceListModels = new ArrayList();
-		for (Invoice invoice : invoices) {
-			InvoiceListModel model = new InvoiceListModel();
-			model.setId(invoice.getId());
-			if (invoice.getContact() != null) {
-				if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
-					model.setName(invoice.getContact().getFirstName() + invoice.getContact().getLastName());
-				}
-			}
-			model.setReferenceNumber(invoice.getReferenceNumber());
-			if (invoice.getInvoiceDate() != null) {
-				Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
-				model.setInvoiceDate(date);
-			}
-			if (invoice.getInvoiceDueDate() != null) {
-				Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
-				model.setInvoiceDueDate(date);
-			}
-			model.setTotalAmount(invoice.getTotalAmount());
-			model.setTotalVatAmount(invoice.getTotalVatAmount());
-			if (invoice.getStatus() != null) {
-				model.setStatus(invoice.getStatus().name());
-			}
-			invoiceListModels.add(model);
-		}
-		return invoiceListModels;
-	}
 }

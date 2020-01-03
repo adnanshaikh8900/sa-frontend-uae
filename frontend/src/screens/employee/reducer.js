@@ -19,7 +19,7 @@ const EmployeeReducer = (state = initState, action) => {
       case EMPLOYEE.CURRENCY_LIST: 
       return {
         ...state,
-        currency_list: Object.assign([],payload)
+        currency_list: Object.assign([],payload.data)
       }
 
     default:

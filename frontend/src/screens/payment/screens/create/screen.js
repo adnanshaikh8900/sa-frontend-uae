@@ -73,7 +73,8 @@ class CreatePayment extends React.Component {
 
       currentData: {},
       openSupplierModal: false,
-      selectedSupplier: ''
+      selectedSupplier: '',
+      contactType: 1
     }
 
     this.options = {
@@ -101,7 +102,7 @@ class CreatePayment extends React.Component {
   initializeData() {
     this.props.paymentActions.getCurrencyList()
     this.props.paymentActions.getBankList()
-    this.props.paymentActions.getSupplierList()
+    this.props.paymentActions.getSupplierContactList(this.state.contactType)
     this.props.paymentActions.getProjectList()
     this.props.paymentActions.getSupplierInvoiceList()
 
@@ -136,13 +137,13 @@ class CreatePayment extends React.Component {
       description,
     } = data
 
-    const postData = {
+    let postData = {
       paymentDate: paymentDate !== null ? paymentDate : "",
       description: description,
       invoiceId: invoiceId && invoiceId.value ? invoiceId.value : '',
       invoiceAmount: amount,
       bankAccountId: bank && bank.value ? bank.value : '',
-      supplierId: this.state.selectedSupplier.value ? this.state.selectedSupplier.value : supplier && supplier.value ? supplier.value : '',
+      contactId: this.state.selectedSupplier.value ? this.state.selectedSupplier.value : supplier && supplier.value ? supplier.value : '',
       currencyCode: currency && currency.value ? currency.value : '',
       projectId: project && project.value ? project.value : '',
     }
@@ -234,7 +235,7 @@ class CreatePayment extends React.Component {
 
   closeSupplierModal(res) {
     if (res) {
-      this.props.paymentActions.getSupplierList();
+      this.props.paymentActions.getSupplierContactList(this.state.contactType);
     }
     this.setState({ openSupplierModal: false })
   }
@@ -342,16 +343,16 @@ class CreatePayment extends React.Component {
                                           options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list) : []}
                                           value={props.values.invoiceId}
                                           onChange={option => {
-                                            this.props.paymentActions.getInvoiceById(+option.value).then((res) => {
-                                              if (res.status === 200) {
+                                            // this.props.paymentActions.getInvoiceById(+option.value).then((res) => {
+                                              // if (res.status === 200) {
                                                 // console.log(res.data)
-                                              }
+                                              // }
                                               // let data;
                                               // data = invoice_list.filter(item => item.invoiceId === option.value);
                                               // props.handleChange('amount')(data[0]['invoiceAmount'])
-                                            }
-                                            )
-                                            props.handleChange('invoiceId')(option.value)
+                                            // }
+                                            // )
+                                            props.handleChange('invoiceId')(option)
 
                                           }
                                           }
@@ -424,26 +425,26 @@ class CreatePayment extends React.Component {
                                       </FormGroup>
                                     </Col>
                                     <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="paymentDate">Payment Date</Label>
-                                  <DatePicker
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="paymentDate">Payment Date</Label>
+                                        <DatePicker
 
-                                    id="date"
-                                    name="paymentDate"
-                                    className={`form-control ${props.errors.paymentDate && props.touched.paymentDate ? "is-invalid" : ""}`}
-                                    placeholderText="Payment Date"
-                                    selected={props.values.paymentDate}
-                                    dateFormat="dd/MM/yyyy"
-                                    maxDate={new Date()}
-                                    onChange={(value) => {
-                                      props.handleChange("paymentDate")(value)
-                                    }}
-                                  />
-                                  {props.errors.paymentDate && props.touched.paymentDate && (
-                                    <div className="invalid-feedback">{props.errors.paymentDate}</div>
-                                  )}
-                                </FormGroup>
-                              </Col>
+                                          id="date"
+                                          name="paymentDate"
+                                          className={`form-control ${props.errors.paymentDate && props.touched.paymentDate ? "is-invalid" : ""}`}
+                                          placeholderText="Payment Date"
+                                          selected={props.values.paymentDate}
+                                          dateFormat="dd/MM/yyyy"
+                                          maxDate={new Date()}
+                                          onChange={(value) => {
+                                            props.handleChange("paymentDate")(value)
+                                          }}
+                                        />
+                                        {props.errors.paymentDate && props.touched.paymentDate && (
+                                          <div className="invalid-feedback">{props.errors.paymentDate}</div>
+                                        )}
+                                      </FormGroup>
+                                    </Col>
                                   </Row>
                                   <Row>
                                     <Col lg={4}>

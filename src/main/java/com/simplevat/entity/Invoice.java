@@ -113,7 +113,7 @@ public class Invoice implements Serializable {
     @JoinColumn(name = "DOCUMENT_TEMPLATE_ID")
     private DocumentTemplate documentTemplate;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "invoice", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "invoice")
     private Collection<InvoiceLineItem> invoiceLineItems;
 
     @Column(name = "TOTAL_AMOUNT")
@@ -127,6 +127,10 @@ public class Invoice implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
     private InvoiceStatusEnum status;
+
+    @Basic
+    @Column(name = "RECEIPT_NUMBER", length = 20)
+    private String receiptNumber;
 
     @Basic
     @Column(name = "RECEIPT_ATTACHMENT_PATH")

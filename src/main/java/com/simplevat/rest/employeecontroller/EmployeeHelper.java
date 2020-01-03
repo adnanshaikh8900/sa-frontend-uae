@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,116 +29,94 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmployeeHelper {
 
-	@Autowired
-	CountryService countryService;
+    @Autowired
+    CountryService countryService;
 
-	@Autowired
-	CurrencyService currencyService;
-	
-	@Autowired
-	private EmployeeService employeeService; 
+    @Autowired
+    CurrencyService currencyService;
 
-	public List<EmployeeListModel> getListModel(List<Employee> employeList) {
+    @Autowired
+    private EmployeeService employeeService;
 
-		List<EmployeeListModel> employeeListModels = new ArrayList<>();
-		/*
-		 * return EmployeeListModel.builder() .id(employee.getId())
-		 * .email(employee.getEmail()) .firstName(employee.getFirstName())
-		 * .middleName(employee.getMiddleName()) .lastName(employee.getLastName())
-		 * .mobileNumber(employee.getMobileNumber()).build();
-		 * 
-		 */
+    public List<EmployeeListModel> getListModel(List<Employee> employeList) {
 
-		for (Employee employee : employeList) {
+        List<EmployeeListModel> employeeListModels = new ArrayList<>();
+        for (Employee employee : employeList) {
+            EmployeeListModel empModel = new EmployeeListModel();
+            empModel.setId(employee.getId());
+            empModel.setReferenceCode(employee.getReferenceCode());
+            empModel.setTitle(employee.getTitle());
+            empModel.setEmail(employee.getEmail());
+            empModel.setFirstName(employee.getFirstName());
+            empModel.setMiddleName(employee.getMiddleName());
+            empModel.setLastName(employee.getLastName());
+            empModel.setDob(employee.getDob());
+            empModel.setBillingEmail(employee.getBillingEmail());
+            empModel.setPoBoxNumber(employee.getPoBoxNumber());
+            empModel.setVatRegestationNo(employee.getVatRegistrationNo());
+            if (employee.getCurrency() != null) {
+                empModel.setCurrencyCode(employee.getCurrency().getCurrencyCode());
+            }
+            employeeListModels.add(empModel);
+        }
 
-			EmployeeListModel empModel = new EmployeeListModel();
+        return employeeListModels;
+    }
 
-			empModel.setId(employee.getId());
-			empModel.setFirstName(employee.getFirstName());
-			empModel.setMiddleName(employee.getMiddleName());
-			empModel.setLastName(employee.getLastName());
-			empModel.setEmail(employee.getEmail());
-			empModel.setDob(employee.getDob());
-			empModel.setReferenceCode(employee.getReferenceCode());
+    public Employee getEntity(EmployeePersistModel employeePersistModel, Integer userId) {
+        Employee employee = new Employee();
+        if (employeePersistModel.getId() != null) {
+            employee = employeeService.findByPK(employeePersistModel.getId());
+        }
+        employee.setEmail(employeePersistModel.getEmail());
+        employee.setFirstName(employeePersistModel.getFirstName());
+        employee.setMiddleName(employeePersistModel.getMiddleName());
+        employee.setLastName(employeePersistModel.getLastName());
+        if (employeePersistModel.getId() != null) {
+            employee.setCreatedBy(userId);
+            employee.setCreatedDate(LocalDateTime.now());
+        } else {
+            employee.setLastUpdatedBy(userId);
+            employee.setLastUpdateDate(LocalDateTime.now());
+        }
+        employee.setTitle(employeePersistModel.getTitle());
+        if (employeePersistModel.getPassword() != null && !employeePersistModel.getPassword().trim().isEmpty()) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = passwordEncoder.encode(employeePersistModel.getPassword());
+            employee.setPassword(encodedPassword);
+        }
+        if (employeePersistModel.getDob() != null) {
+            LocalDateTime dob = Instant.ofEpochMilli(employeePersistModel.getDob().getTime())
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime();
+            employee.setDob(dob);
+        }
+        employee.setBillingEmail(employeePersistModel.getBillingEmail());
+        employee.setPoBoxNumber(employeePersistModel.getPoBoxNumber());
+        employee.setReferenceCode(employeePersistModel.getReferenceCode());
+        employee.setVatRegistrationNo(employeePersistModel.getVatRegestationNo());
+        if (employeePersistModel.getCurrencyCode() != null) {
+            employee.setCurrency(currencyService.getCurrency(employeePersistModel.getCurrencyCode()));
+        }
+        return employee;
+    }
 
-			employeeListModels.add(empModel);
-		}
-
-		return employeeListModels;
-	}
-
-	public Employee getEntity(EmployeePersistModel employeePersistModel, Integer userId) {
-		Employee employee = new Employee();
-		employee.setId(employeePersistModel.getId());
-		
-		if(employeePersistModel.getId() != null) {
-			employee = employeeService.findByPK(employeePersistModel.getId()); 
-		}
-		/*
-		 * if (employeePersistModel.getCountryId() != null) {
-		 * employee.setCountry(countryService.getCountry(employeePersistModel.
-		 * getCountryId())); }
-		 */
-		employee.setEmail(employeePersistModel.getEmail());
-		employee.setFirstName(employeePersistModel.getFirstName());
-		employee.setMiddleName(employeePersistModel.getMiddleName());
-		employee.setLastName(employeePersistModel.getLastName());
-		// employee.setMobileNumber(employeePersistModel.getMobileNumber());
-		// employee.setPostZipCode(employeePersistModel.getPostZipCode());
-		// employee.setAddressLine1(employeePersistModel.getAddressLine1());
-		// employee.setAddressLine2(employeePersistModel.getAddressLine2());
-		// employee.setAddressLine3(employeePersistModel.getAddressLine3());
-		if (employeePersistModel.getId() != null) {
-			employee.setCreatedBy(userId);
-			employee.setCreatedDate(LocalDateTime.now());
-		} else {
-			employee.setLastUpdatedBy(userId);
-			employee.setLastUpdateDate(LocalDateTime.now());
-		}
-
-		employee.setTitle(employeePersistModel.getTitle());
-		// employee.setReferalCode(employeePersistModel.getReferenceCode());
-		employee.setPassword(employeePersistModel.getPassword());
-		if (employeePersistModel.getDob() != null) {
-			LocalDateTime dob = Instant.ofEpochMilli(employeePersistModel.getDob().getTime())
-					.atZone(ZoneId.systemDefault()).toLocalDateTime();
-			employee.setDob(dob);
-		}
-		employee.setBillingEmail(employeePersistModel.getBillingEmail());
-		employee.setPoBoxNumber(employeePersistModel.getPoBoxNumber());
-		employee.setReferenceCode(employeePersistModel.getReferenceCode());
-		employee.setVatRegistrationNo(employeePersistModel.getVatRegestationNo());
-		if (employeePersistModel.getCurrencyCode() != null) {
-			employee.setCurrency(currencyService.getCurrency(employeePersistModel.getCurrencyCode()));
-		}
-
-		return employee;
-	}
-
-	public EmployeeListModel getModel(Employee employee) {
-
-		if (employee != null) {
-			EmployeeListModel empModel = new EmployeeListModel();
-
-			empModel.setId(employee.getId());
-			empModel.setReferenceCode(employee.getReferenceCode());
-			empModel.setTitle(employee.getTitle());
-			empModel.setEmail(employee.getEmail());
-			empModel.setFirstName(employee.getFirstName());
-			empModel.setMiddleName(employee.getMiddleName());
-			empModel.setLastName(employee.getLastName());
-			empModel.setPassword(employee.getPassword());
-			empModel.setDob(employee.getDob());
-			empModel.setBillingEmail(employee.getBillingEmail());
-			empModel.setPoBoxNumber(employee.getPoBoxNumber());
-			empModel.setVatRegestationNo(employee.getVatRegistrationNo());
-			if (employee.getCurrency() != null) {
-				empModel.setCurrencyCode(employee.getCurrency().getCurrencyCode());
-			}
-
-			return empModel;
-		}
-		return null;
-	}
+    public EmployeeListModel getModel(Employee employee) {
+        EmployeeListModel empModel = new EmployeeListModel();
+        empModel.setId(employee.getId());
+        empModel.setReferenceCode(employee.getReferenceCode());
+        empModel.setTitle(employee.getTitle());
+        empModel.setEmail(employee.getEmail());
+        empModel.setFirstName(employee.getFirstName());
+        empModel.setMiddleName(employee.getMiddleName());
+        empModel.setLastName(employee.getLastName());
+        empModel.setDob(employee.getDob());
+        empModel.setBillingEmail(employee.getBillingEmail());
+        empModel.setPoBoxNumber(employee.getPoBoxNumber());
+        empModel.setVatRegestationNo(employee.getVatRegistrationNo());
+        if (employee.getCurrency() != null) {
+            empModel.setCurrencyCode(employee.getCurrency().getCurrencyCode());
+        }
+        return empModel;
+    }
 
 }

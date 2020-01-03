@@ -1,12 +1,14 @@
 package com.simplevat.service.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.simplevat.constant.dbfilter.UserFilterEnum;
 import com.simplevat.dao.UserNewDao;
 import com.simplevat.entity.User;
 import com.simplevat.service.UserServiceNew;
@@ -53,4 +55,9 @@ public class UserServiceNewImpl extends UserServiceNew implements Serializable {
     public void deleteByIds(List<Integer> ids) {
         getDao().deleteByIds(ids);
     }
+    
+    @Override
+	public List<User> getUserList(Map<UserFilterEnum, Object> filterMap){
+		return dao.getUserList(filterMap); 
+	}
 }

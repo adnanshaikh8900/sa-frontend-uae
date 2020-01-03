@@ -2,8 +2,10 @@ package com.simplevat.dao;
 
 import java.util.Optional;
 
+import com.simplevat.constant.dbfilter.UserFilterEnum;
 import com.simplevat.entity.User;
 import java.util.List;
+import java.util.Map;
 
 public interface UserNewDao extends Dao<Integer, User> {
 
@@ -16,5 +18,7 @@ public interface UserNewDao extends Dao<Integer, User> {
     public List<User> getAllUserNotEmployee();
 
     public void deleteByIds(List<Integer> ids);
+
+	public List<User> getUserList(Map<UserFilterEnum, Object> filterMap);
 }
     

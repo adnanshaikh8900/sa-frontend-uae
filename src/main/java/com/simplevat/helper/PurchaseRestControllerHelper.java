@@ -14,8 +14,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import lombok.NonNull;
 
+@Component
 public class PurchaseRestControllerHelper {
 
     public Purchase getPurchase(PurchaseRestModel model) {

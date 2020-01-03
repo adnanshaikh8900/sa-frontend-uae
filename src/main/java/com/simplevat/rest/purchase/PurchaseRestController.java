@@ -77,7 +77,8 @@ public class PurchaseRestController {
     @Autowired
     private CompanyService companyService;
 
-    PurchaseRestControllerHelper purchaseControllerRestHelper = new PurchaseRestControllerHelper();
+    @Autowired
+    PurchaseRestControllerHelper purchaseControllerRestHelper;
 
     @RequestMapping(method = RequestMethod.GET, value = "/populatepurchases")
     public ResponseEntity populatePurchases() {

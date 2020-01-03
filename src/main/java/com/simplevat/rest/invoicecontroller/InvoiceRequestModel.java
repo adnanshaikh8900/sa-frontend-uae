@@ -4,6 +4,7 @@ import com.simplevat.enums.DiscountType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class InvoiceRequestModel {
 
-    private Integer id;
+    private Integer invoiceId;
     private String referenceNumber;
     private Integer projectId;
     private Integer contactId;
@@ -29,6 +30,8 @@ public class InvoiceRequestModel {
     private String lineItemsString;
     private String type;
     private String taxIdentificationNumber;
+    private List<InvoiceLineItemModel> invoiceLineItems;
+    private String status;
     
     private DiscountType discountType;
     private BigDecimal discount;

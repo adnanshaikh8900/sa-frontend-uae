@@ -13,6 +13,7 @@ import com.simplevat.rest.expenses.ExpenseListModel;
 import com.simplevat.rest.expenses.ExpenseModel;
 import com.simplevat.rest.expenses.ExpenseRestModel;
 import com.simplevat.service.CurrencyService;
+import com.simplevat.service.EmployeeService;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryService;
@@ -39,119 +40,128 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExpenseRestHelper implements Serializable {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(ExpenseRestHelper.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ExpenseRestHelper.class);
 
-	@Autowired
-	private VatCategoryService vatCategoryService;
+    @Autowired
+    private VatCategoryService vatCategoryService;
 
-	@Autowired
-	private CurrencyService currencyService;
+    @Autowired
+    private CurrencyService currencyService;
 
-	@Autowired
-	private ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
-	@Autowired
-	private ExpenseService expenseService;
+    @Autowired
+    private ExpenseService expenseService;
 
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+    @Autowired
+    private EmployeeService employeeService;
 
-	public Expense getExpenseEntity(ExpenseModel model, User user) throws Exception {
-		Expense expense = new Expense();
-		if (model.getExpenseId() != null) {
-			expense = expenseService.findByPK(model.getExpenseId());
-		}
-		Expense.ExpenseBuilder expenseBuilder = expense.toBuilder();
-		expenseBuilder.expenseAmount(model.getExpenseAmount()).payee(model.getPayee());
-		if (model.getExpenseDate() != null) {
-			LocalDateTime expenseDate = Instant.ofEpochMilli(model.getExpenseDate().getTime())
-					.atZone(ZoneId.systemDefault()).toLocalDateTime();
-			expenseBuilder.expenseDate(expenseDate);
-		}
-		expenseBuilder.expenseDescription(model.getExpenseDescription())
-				.receiptAttachmentDescription(model.getReceiptAttachmentDescription())
-				.receiptNumber(model.getReceiptNumber());
-		if (model.getCurrencyCode() != null) {
-			expenseBuilder.currency(currencyService.findByPK(model.getCurrencyCode()));
-		}
-		if (model.getProjectId() != null) {
-			expenseBuilder.project(projectService.findByPK(model.getProjectId()));
-		}
-		if (model.getExpenseCategory() != null) {
-			expenseBuilder.transactionCategory(transactionCategoryService.findByPK(model.getExpenseCategory()));
-		}
+    @Autowired
+    private TransactionCategoryService transactionCategoryService;
 
-		return expenseBuilder.build();
-	}
+    public Expense getExpenseEntity(ExpenseModel model, User user) throws Exception {
+        Expense expense = new Expense();
+        if (model.getExpenseId() != null) {
+            expense = expenseService.findByPK(model.getExpenseId());
+        }
+        Expense.ExpenseBuilder expenseBuilder = expense.toBuilder();
+        expenseBuilder.expenseAmount(model.getExpenseAmount()).payee(model.getPayee());
+        if (model.getExpenseDate() != null) {
+            LocalDateTime expenseDate = Instant.ofEpochMilli(model.getExpenseDate().getTime())
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime();
+            expenseBuilder.expenseDate(expenseDate);
+        }
+        expenseBuilder.expenseDescription(model.getExpenseDescription())
+                .receiptAttachmentDescription(model.getReceiptAttachmentDescription())
+                .receiptNumber(model.getReceiptNumber());
+        if (model.getCurrencyCode() != null) {
+            expenseBuilder.currency(currencyService.findByPK(model.getCurrencyCode()));
+        }
+        if (model.getProjectId() != null) {
+            expenseBuilder.project(projectService.findByPK(model.getProjectId()));
+        }
+        if (model.getEmployeeId() != null) {
+            expenseBuilder.employee(employeeService.findByPK(model.getEmployeeId()));
+        }
+        if (model.getExpenseCategory() != null) {
+            expenseBuilder.transactionCategory(transactionCategoryService.findByPK(model.getExpenseCategory()));
+        }
 
-	public ExpenseModel getExpenseModel(Expense entity) {
-		try {
-			ExpenseModel expenseModel = new ExpenseModel();
-			expenseModel.setExpenseId(entity.getExpenseId());
-			expenseModel.setCreatedBy(entity.getCreatedBy());
-			expenseModel.setCreatedDate(entity.getCreatedDate());
-			if (entity.getCurrency() != null) {
-				expenseModel.setCurrencyCode(entity.getCurrency().getCurrencyCode());
-			}
-			expenseModel.setDeleteFlag(entity.getDeleteFlag());
-			expenseModel.setExpenseAmount(entity.getExpenseAmount());
-			expenseModel.setPayee(entity.getPayee());
-			if (entity.getExpenseDate() != null) {
-				Date expenseDate = Date.from(entity.getExpenseDate().atZone(ZoneId.systemDefault()).toInstant());
-				expenseModel.setExpenseDate(expenseDate);
-			}
-			expenseModel.setExpenseDescription(entity.getExpenseDescription());
-			expenseModel.setLastUpdateDate(entity.getLastUpdateDate());
-			expenseModel.setLastUpdatedBy(entity.getLastUpdateBy());
-			if (entity.getProject() != null) {
-				expenseModel.setProjectId(entity.getProject().getProjectId());
-			}
-			expenseModel.setReceiptAttachmentDescription(entity.getReceiptAttachmentDescription());
-			expenseModel.setReceiptNumber(entity.getReceiptNumber());
-			if (entity.getTransactionCategory() != null) {
-				expenseModel.setExpenseCategory(entity.getTransactionCategory().getTransactionCategoryId());
-			}
-			expenseModel.setVersionNumber(entity.getVersionNumber());
+        return expenseBuilder.build();
+    }
 
-			return expenseModel;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    public ExpenseModel getExpenseModel(Expense entity) {
+        try {
+            ExpenseModel expenseModel = new ExpenseModel();
+            expenseModel.setExpenseId(entity.getExpenseId());
+            expenseModel.setCreatedBy(entity.getCreatedBy());
+            expenseModel.setCreatedDate(entity.getCreatedDate());
+            if (entity.getCurrency() != null) {
+                expenseModel.setCurrencyCode(entity.getCurrency().getCurrencyCode());
+            }
+            expenseModel.setDeleteFlag(entity.getDeleteFlag());
+            expenseModel.setExpenseAmount(entity.getExpenseAmount());
+            expenseModel.setPayee(entity.getPayee());
+            if (entity.getExpenseDate() != null) {
+                Date expenseDate = Date.from(entity.getExpenseDate().atZone(ZoneId.systemDefault()).toInstant());
+                expenseModel.setExpenseDate(expenseDate);
+            }
+            expenseModel.setExpenseDescription(entity.getExpenseDescription());
+            expenseModel.setLastUpdateDate(entity.getLastUpdateDate());
+            expenseModel.setLastUpdatedBy(entity.getLastUpdateBy());
+            if (entity.getProject() != null) {
+                expenseModel.setProjectId(entity.getProject().getProjectId());
+            }
+            if (entity.getEmployee() != null) {
+                expenseModel.setEmployeeId(entity.getEmployee().getId());
+            }
+            expenseModel.setReceiptAttachmentDescription(entity.getReceiptAttachmentDescription());
+            expenseModel.setReceiptNumber(entity.getReceiptNumber());
+            if (entity.getTransactionCategory() != null) {
+                expenseModel.setExpenseCategory(entity.getTransactionCategory().getTransactionCategoryId());
+            }
+            expenseModel.setVersionNumber(entity.getVersionNumber());
 
-	public List<ExpenseListModel> getExpenseList(List<Expense> expenseList) {
+            return expenseModel;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-		if (expenseList != null && expenseList.size() > 0) {
+    public List<ExpenseListModel> getExpenseList(List<Expense> expenseList) {
 
-			List<ExpenseListModel> expenseDtoList = new ArrayList<ExpenseListModel>();
+        if (expenseList != null && expenseList.size() > 0) {
 
-			for (Expense expense : expenseList) {
+            List<ExpenseListModel> expenseDtoList = new ArrayList<ExpenseListModel>();
 
-				ExpenseListModel expenseModel = new ExpenseListModel();
+            for (Expense expense : expenseList) {
 
-				expenseModel.setExpenseId(expense.getExpenseId());
-				expenseModel.setPayee(expense.getPayee());
-				expenseModel.setExpenseDescription(expense.getExpenseDescription());
-				if (expense.getExpenseDate() != null) {
-					Date date = Date.from(expense.getExpenseDate().atZone(ZoneId.systemDefault()).toInstant());
-					expenseModel.setExpenseDate(date);
-				}
-				if (expense.getTransactionCategory() != null
-						&& expense.getTransactionCategory().getTransactionCategoryName() != null) {
-					expenseModel
-							.setTransactionCategoryName(expense.getTransactionCategory().getTransactionCategoryName());
-				}
-				expenseModel.setExpenseAmount(expense.getExpenseAmount());
-				expenseDtoList.add(expenseModel);
-			}
-			return expenseDtoList;
-		}
-		return null;
+                ExpenseListModel expenseModel = new ExpenseListModel();
+                expenseModel.setReceiptNumber(expense.getReceiptNumber());
+                expenseModel.setExpenseId(expense.getExpenseId());
+                expenseModel.setPayee(expense.getPayee());
+                expenseModel.setExpenseDescription(expense.getExpenseDescription());
+                if (expense.getExpenseDate() != null) {
+                    Date date = Date.from(expense.getExpenseDate().atZone(ZoneId.systemDefault()).toInstant());
+                    expenseModel.setExpenseDate(date);
+                }
+                if (expense.getTransactionCategory() != null
+                        && expense.getTransactionCategory().getTransactionCategoryName() != null) {
+                    expenseModel
+                            .setTransactionCategoryName(expense.getTransactionCategory().getTransactionCategoryName());
+                }
+                expenseModel.setExpenseAmount(expense.getExpenseAmount());
+                expenseDtoList.add(expenseModel);
+            }
+            return expenseDtoList;
+        }
+        return null;
 
-	}
-	// private void updateSubTotal(@NonNull final ExpenseItemModel expenseItemModel)
-	// {
+    }
+    // private void updateSubTotal(@NonNull final ExpenseItemModel expenseItemModel)
+    // {
 //        final BigDecimal unitPrice = expenseItemModel.getUnitPrice();
 //        VatCategory vatCategory = vatCategoryService.findByPK(expenseItemModel.getVatCategoryId());
 //        if (null != unitPrice) {

@@ -35,7 +35,9 @@ public class PaymentModelHelper {
             paymentModel.setBankName(payment.getBankAccount().getBankAccountName());
         }
         if (payment.getSupplier() != null) {
-            paymentModel.setSupplierName(payment.getSupplier().getFirstName());
+            if (payment.getSupplier().getFirstName() != null || payment.getSupplier().getMiddleName() != null || payment.getSupplier().getLastName() != null) {
+                paymentModel.setSupplierName(payment.getSupplier().getFirstName() + " " + payment.getSupplier().getMiddleName() + " " + payment.getSupplier().getLastName());
+            }
         }
         if (payment.getInvoice() != null) {
             paymentModel.setInvoiceReferenceNo(payment.getInvoice().getReferenceNumber());
@@ -57,7 +59,7 @@ public class PaymentModelHelper {
             paymentModel.setBankAccountId(payment.getBankAccount().getBankAccountId());
         }
         if (payment.getSupplier() != null) {
-            paymentModel.setSupplierId(payment.getSupplier().getContactId());
+            paymentModel.setContactId(payment.getSupplier().getContactId());
         }
         if (payment.getInvoice() != null) {
             paymentModel.setInvoiceId(payment.getInvoice().getId());

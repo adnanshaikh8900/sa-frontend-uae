@@ -5,6 +5,7 @@
  */
 package com.simplevat.rest.employeecontroller;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -22,46 +23,45 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeListModel {
+public class EmployeeListModel implements Serializable{
 
-	private Integer id;
+    private Integer id;
 
-	private String firstName;
+    private String firstName;
 
-	private String middleName;
+    private String middleName;
 
-	private String lastName;
+    private String lastName;
 
-	private String email;
+    private String email;
 
-	private String password;
+    private String password;
 
-	private LocalDateTime dob;
+    private LocalDateTime dob;
 
-	private String referenceCode;
+    private String referenceCode;
 
-	private String title;
+    private String title;
 
-	private String billingEmail;
+    private String billingEmail;
 
-	private String vatRegestationNo;
+    private String vatRegestationNo;
 
-	private Integer currencyCode;
-	
-	private String poBoxNumber;
-	
+    private Integer currencyCode;
 
-	public String getFullName() {
-		StringBuilder sb = new StringBuilder();
-		if (firstName != null && !firstName.isEmpty()) {
-			sb.append(firstName).append(" ");
-		}
-		if (middleName != null && !middleName.isEmpty()) {
-			sb.append(middleName).append(" ");
-		}
-		if (lastName != null && !lastName.isEmpty()) {
-			sb.append(lastName);
-		}
-		return sb.toString();
-	}
+    private String poBoxNumber;
+
+    public String getFullName() {
+        StringBuilder sb = new StringBuilder();
+        if (firstName != null && !firstName.isEmpty()) {
+            sb.append(firstName).append(" ");
+        }
+        if (middleName != null && !middleName.isEmpty()) {
+            sb.append(middleName).append(" ");
+        }
+        if (lastName != null && !lastName.isEmpty()) {
+            sb.append(lastName);
+        }
+        return sb.toString();
+    }
 }

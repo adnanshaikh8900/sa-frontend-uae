@@ -13,4 +13,5 @@ import com.simplevat.entity.InvoiceLineItem;
  */
 public interface InvoiceLineItemDao extends Dao<Integer, InvoiceLineItem> {
 
+    public void deleteByInvoiceId(Integer invoiceId);
 }

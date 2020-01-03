@@ -150,8 +150,8 @@ public class PaymentController implements Serializable {
             if (paymentModel.getBankAccountId() != null) {
                 payment.setBankAccount(bankAccountService.findByPK(paymentModel.getBankAccountId()));
             }
-            if (paymentModel.getSupplierId() != null) {
-                payment.setSupplier(contactService.findByPK(paymentModel.getSupplierId()));
+            if (paymentModel.getContactId() != null) {
+                payment.setSupplier(contactService.findByPK(paymentModel.getContactId()));
             }
             if (paymentModel.getCurrencyCode() != null) {
                 payment.setCurrency(currencyService.findByPK(paymentModel.getCurrencyCode()));
@@ -183,8 +183,8 @@ public class PaymentController implements Serializable {
                 if (paymentModel.getBankAccountId() != null) {
                     payment.setBankAccount(bankAccountService.findByPK(paymentModel.getBankAccountId()));
                 }
-                if (paymentModel.getSupplierId() != null) {
-                    payment.setSupplier(contactService.findByPK(paymentModel.getSupplierId()));
+                if (paymentModel.getContactId()!= null) {
+                    payment.setSupplier(contactService.findByPK(paymentModel.getContactId()));
                 }
                 if (paymentModel.getCurrencyCode() != null) {
                     payment.setCurrency(currencyService.findByPK(paymentModel.getCurrencyCode()));

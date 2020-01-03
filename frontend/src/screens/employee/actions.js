@@ -10,7 +10,6 @@ export const getEmployeeList = (obj) => {
       method: 'GET',
       url: `/rest/employee/getList?name=${obj.name}&email=${obj.email}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
     }
-
     return authApi(data).then(res => {
       dispatch({
         type: EMPLOYEE.EMPLOYEE_LIST,
@@ -33,7 +32,7 @@ export const getCurrencyList = () => {
       if (res.status === 200) {
         dispatch({
           type: EMPLOYEE.CURRENCY_LIST,
-          payload: res.data
+          payload: res
         })
       }
     }).catch(err => {
@@ -41,7 +40,6 @@ export const getCurrencyList = () => {
     })
   }
 }
-
 export const removeBulkEmployee = (obj) => {
   return (dispatch) => {
     let data = {

@@ -64,7 +64,8 @@ class DetailPayment extends React.Component {
       dialog: null,
       initValue: {},
       openSupplierModal: false,
-      selectedSupplier: ''
+      selectedSupplier: '',
+      contactType: 1
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -90,13 +91,13 @@ class DetailPayment extends React.Component {
           this.getCurrentUser({ value: res.data.supplierId })
           this.props.paymentActions.getCurrencyList()
           this.props.paymentActions.getBankList()
-          this.props.paymentActions.getSupplierList()
+          this.props.paymentActions.getSupplierContactList(this.state.contactType)
           this.props.paymentActions.getProjectList()
           this.props.paymentActions.getSupplierInvoiceList()
           this.setState({
             initValue: {
               paymentId: res.data.paymentId,
-              supplier: res.data.supplierId,
+              supplier: res.data.contactId,
               invoice: res.data.invoiceId,
               invoiceAmount: res.data.invoiceAmount,
               currency: res.data.currencyCode,
@@ -105,6 +106,7 @@ class DetailPayment extends React.Component {
               description: res.data.description,
               bank: res.data.bankAccountId
             },
+            selectedSupplier: res.data.contactId,
             loading: false
 
           })
@@ -132,7 +134,7 @@ class DetailPayment extends React.Component {
       invoiceId: invoiceId && invoiceId.value ? invoiceId.value : '',
       invoiceAmount: invoiceAmount,
       bankAccountId: bank && bank.value ? bank.value : '',
-      supplierId: this.state.selectedSupplier.value ? this.state.selectedSupplier.value : supplier && supplier.value ? supplier.value : '',
+      contactId: this.state.selectedSupplier.value ? this.state.selectedSupplier.value : supplier && supplier.value ? supplier.value : '',
       currencyCode: currency && currency.value ? currency.value : '',
       projectId: project && project.value ? project.value : '',
     }
@@ -166,7 +168,7 @@ class DetailPayment extends React.Component {
 
   closeSupplierModal(res) {
     if (res) {
-      this.props.paymentActions.getSupplierList();
+      this.props.paymentActions.getSupplierContactList(this.state.contactType);
     }
     this.setState({ openSupplierModal: false })
   }

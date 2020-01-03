@@ -11,7 +11,7 @@ public class PaymentPersistModel {
 
     private Integer paymentId;
     private Integer bankAccountId;
-    private Integer supplierId;
+    private Integer contactId;
     private Integer invoiceId;
     private BigDecimal invoiceAmount;
     private Integer currencyCode;

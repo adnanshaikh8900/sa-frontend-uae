@@ -156,7 +156,7 @@ class DetailExpense extends React.Component {
     }
     this.props.expenseDetailActions.updateExpense(formData).then(res => {
       if(res.status ===  200) {
-        resetValue({});
+        // resetValue({});
         this.props.commonActions.tostifyAlert('success', 'Expense Updated Successfully.')
         this.props.history.push('/admin/expense/expense')
       }
@@ -330,7 +330,7 @@ class DetailExpense extends React.Component {
                                         className="select-default-width"
                                         id="employee"
                                         name="employee"
-                                        options={employee_list ? selectOptionsFactory.renderOptions('firstName', 'userId', employee_list) : []}
+                                        options={employee_list ? selectOptionsFactory.renderOptions('label', 'value', employee_list) : []}
                                         value={props.values.employee}
                                         onChange={option => props.handleChange('employee')(option)}
                                       />
@@ -343,7 +343,7 @@ class DetailExpense extends React.Component {
                                         className="select-default-width"
                                         id="project"
                                         name="project"
-                                        options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list) : []}
+                                        options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list) : []}
                                         value={props.values.projectId}
                                         onChange={option => props.handleChange('projectId')(option)}
                                       />

@@ -68,6 +68,11 @@ public class Expense implements Serializable {
     @JoinColumn(name = "PROJECT_ID")
     @JsonManagedReference
     private Project project;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EMPLOYEE_ID")
+    @JsonManagedReference
+    private Employee employee;
 
     @Basic
     @Column(name = "RECEIPT_NUMBER", length = 20)

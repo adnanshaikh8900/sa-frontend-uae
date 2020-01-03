@@ -50,7 +50,7 @@ public class JournalRestHelper {
         Journal journal = new Journal();
         if (journalRequestModel.getJournalId() != null) {
             journal = journalService.findByPK(journalRequestModel.getJournalId());
-            if (journal.getJournalLineItems() != null && !journal.getJournalLineItems().isEmpty() && journalRequestModel.getJournalLineItems() != null && !journalRequestModel.getJournalLineItems().isEmpty()) {
+            if (journal.getJournalLineItems() != null) {
                 journalLineItemService.deleteByJournalId(journalRequestModel.getJournalId());
             }
         }

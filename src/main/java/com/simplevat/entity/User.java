@@ -55,7 +55,6 @@ public class User implements Serializable {
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-    @Convert(converter = DateConverter.class)
     private LocalDateTime createdDate;
 
     @Basic
@@ -70,7 +69,7 @@ public class User implements Serializable {
     @Basic(optional = false)
     @ColumnDefault(value = "0")
     @Column(name = "IS_ACTIVE")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Column(name = "DELETE_FLAG")
     @ColumnDefault(value = "0")
@@ -100,6 +99,7 @@ public class User implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "EMPLOYEE_ID")
     private Contact employeeId;
+    
     
     @PrePersist
     public void updateDates() {

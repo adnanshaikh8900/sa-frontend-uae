@@ -21,6 +21,9 @@ import com.simplevat.constant.EmailConstant;
 import com.simplevat.utils.FileHelper;
 import com.simplevat.utils.MailConfigurationModel;
 import com.simplevat.utils.MailUtility;
+
+import io.swagger.annotations.ApiOperation;
+
 import java.io.File;
 import java.io.Serializable;
 import java.text.MessageFormat;
@@ -69,6 +72,7 @@ public class UserController implements Serializable {
 
     private boolean isEmailPresent = false;
 
+    @ApiOperation(value = "Get User List")
     @GetMapping(value = "/getuserlist")
     private ResponseEntity<List<User>> getUserList() {
         List<User> userList = null;
@@ -80,6 +84,7 @@ public class UserController implements Serializable {
         return new ResponseEntity(userList, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Delete User")
     @DeleteMapping(value = "/deleteuser")
     public ResponseEntity deleteUser(@RequestParam(value = "id") Integer id) {
         User user = userService.findByPK(id);
@@ -95,6 +100,7 @@ public class UserController implements Serializable {
 
     }
 
+    @ApiOperation(value = "Delete User In Bulks")
     @DeleteMapping(value = "/deleteusers")
     public ResponseEntity deleteUsers(@RequestBody DeleteModel ids) {
         try {
@@ -106,6 +112,7 @@ public class UserController implements Serializable {
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ApiOperation(value = "Update User" )
     @GetMapping(value = "/edituser")
     public ResponseEntity<User> editUser(@RequestParam(value = "id") Integer id) {
         User user = null;
@@ -118,6 +125,7 @@ public class UserController implements Serializable {
 
     }
 
+    @ApiOperation(value = "Get Role List")
     @GetMapping(value = "/getrole")
     public ResponseEntity<List<Role>> comoleteRole() {
         List<Role> roles = roleService.getRoles();
@@ -129,6 +137,7 @@ public class UserController implements Serializable {
 
     }
     
+    @ApiOperation(value = "Get Current User")
     @GetMapping(value = "/current")
     public ResponseEntity<User> currentUser(HttpServletRequest request) {
         try {
@@ -140,6 +149,7 @@ public class UserController implements Serializable {
 		}
     }
 
+    @ApiOperation(value = "Save New User")
     @PostMapping(value = "/saveuser")
     public ResponseEntity save(@RequestBody UserModel selectedUser, @RequestParam("id") Integer id) {
         boolean isUserNew = true;

@@ -3,6 +3,7 @@ package com.simplevat.dao.impl;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.UserDao;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.Query;
@@ -10,6 +11,8 @@ import javax.persistence.Query;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
+import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.UserFilterEnum;
 import com.simplevat.entity.User;
 import java.util.ArrayList;
 import javax.persistence.TypedQuery;
@@ -69,5 +72,16 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
                 update(user);
             }
         }
+    }
+    
+    @Override
+    public List<User> getUserList(Map<UserFilterEnum, Object> filterMap) {
+        List<DbFilter> dbFilters = new ArrayList();
+        filterMap.forEach((productFilter, value) -> dbFilters.add(DbFilter.builder()
+                .dbCoulmnName(productFilter.getDbColumnName())
+                .condition(productFilter.getCondition())
+                .value(value).build()));
+        List<User> users = this.executeQuery(dbFilters);
+        return users;
     }
 }

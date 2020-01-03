@@ -5,13 +5,14 @@
  */
 package com.simplevat.dao;
 
-import com.simplevat.entity.InvoiceLineItem;
+import com.simplevat.entity.JournalLineItem;
 
 /**
  *
  * @author daynil
  */
-public interface InvoiceLineItemDao extends Dao<Integer, InvoiceLineItem> {
+public interface JournalLineItemDao extends Dao<Integer, JournalLineItem> {
+    
+    public void deleteByJournalId(Integer journalId);
 
-    public void deleteByInvoiceId(Integer invoiceId);
 }

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
+
 import java.io.Serializable;
 
 @RestController
@@ -15,6 +17,7 @@ public class ConfigController implements Serializable {
 	@Autowired
 	private Environment env;
 
+	@ApiOperation(value = "Get Release Number")
 	@GetMapping(value = "/getreleasenumber")
 	private SimpleVatConfigModel getReleaseNumber()
 	{

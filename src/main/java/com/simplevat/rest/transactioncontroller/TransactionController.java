@@ -40,6 +40,7 @@ public class TransactionController implements Serializable {
     @Autowired
     private TransactionHelper transactionHelper;
 
+    @ApiOperation(value = "Get Transaction List")
     @GetMapping(value = "/gettransactions")
     public ResponseEntity getAllTransaction() {
         List<Transaction> transactions = transactionService.getAllTransactions();

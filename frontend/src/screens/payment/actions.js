@@ -43,7 +43,7 @@ export const getBankList = () => {
   }
 }
 
-export const getSupplierList = (id) => {
+export const getSupplierContactList = (id) => {
   return (dispatch) => {
     let data = {
       method: 'get',

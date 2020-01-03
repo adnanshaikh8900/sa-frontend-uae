@@ -1,7 +1,12 @@
 package com.simplevat.enums;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -9,32 +14,44 @@ import java.util.List;
  */
 public enum InvoiceStatusEnum {
 
-    SAVED("Saved"),
-    PENDING("Pending"),
-    APPROVED("Approved"),
-    PARTIALLY_PAID("Partially Paid"),
-    PAID("Paid");
+	SAVED("Saved", 1), PENDING("Pending", 2), APPROVED("Approved", 3), PARTIALLY_PAID("Partially Paid", 4),
+	PAID("Paid", 5);
 
-    private String desc;
+	@Getter
+	@Setter
+	private String desc;
 
-    InvoiceStatusEnum(final String desc) {
-        this.desc = desc;
-    }
+	@Getter
+	@Setter
+	private Integer value;
 
-    @Override
-    public String toString() {
-        return this.desc;
-    }
+	InvoiceStatusEnum(final String desc, Integer value) {
+		this.desc = desc;
+		this.value = value;
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	@Override
+	public String toString() {
+		return this.desc;
+	}
 
-    public static List<InvoiceStatusEnum> getInvoiceStatusList() {
-        List<InvoiceStatusEnum> statusEnums = new ArrayList<InvoiceStatusEnum>();
-        for (InvoiceStatusEnum statusEnum : values()) {
-            statusEnums.add(statusEnum);
-        }
-        return statusEnums;
-    }
+	public static List<InvoiceStatusEnum> getInvoiceStatusList() {
+		List<InvoiceStatusEnum> statusEnums = new ArrayList<InvoiceStatusEnum>();
+		for (InvoiceStatusEnum statusEnum : values()) {
+			statusEnums.add(statusEnum);
+		}
+		return statusEnums;
+	}
+
+	public static Map<Integer, InvoiceStatusEnum> map() {
+		Map<Integer, InvoiceStatusEnum> invoiceStatusMap = new HashMap<>();
+		for (InvoiceStatusEnum status : values()) {
+			invoiceStatusMap.put(status.getValue(), status);
+		}
+		return invoiceStatusMap;
+	}
+
+	public static String getContactTypeByValue(Integer value) {
+		return getInvoiceStatusList().get(value).getDesc();
+	}
 }

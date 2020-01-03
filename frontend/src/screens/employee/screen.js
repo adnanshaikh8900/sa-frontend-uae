@@ -177,7 +177,7 @@ class Employee extends React.Component {
     let obj = {
       ids: selectedRows
     }
-    this.props.employeeActions.removeBulk(obj).then(res => {
+    this.props.employeeActions.removeBulkEmployee(obj).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
         this.initializeData();
@@ -327,7 +327,7 @@ class Employee extends React.Component {
                             First Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="refernceCode"
+                            dataField="referenceCode"
                             dataSort
                           >
                             Reference Code

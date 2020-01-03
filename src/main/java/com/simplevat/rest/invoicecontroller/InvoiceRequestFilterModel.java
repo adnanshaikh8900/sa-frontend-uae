@@ -7,7 +7,6 @@ package com.simplevat.rest.invoicecontroller;
 
 import com.simplevat.rest.PaginationModel;
 import java.math.BigDecimal;
-import java.util.Date;
 import lombok.Data;
 
 /**
@@ -17,7 +16,7 @@ import lombok.Data;
 @Data
 public class InvoiceRequestFilterModel extends PaginationModel {
 
-    private String customerName;
+    private Integer contact;
     private String referenceNumber;
     private String invoiceDate;
     private String invoiceDueDate;

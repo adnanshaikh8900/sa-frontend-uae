@@ -136,7 +136,7 @@ class CreateEmployee extends React.Component {
                       <Formik
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.projectHandleSubmit(values)
+                          this.handleSubmit(values)
                           // resetForm(this.state.initValue)
 
                           // this.setState({
@@ -154,9 +154,9 @@ class CreateEmployee extends React.Component {
                             .required("Middle Name is Required"),
                           password: Yup.string()
                             .required("Password is Required")
-                            .min(8,"Password Too Short")
+                            // .min(8, "Password Too Short")
                             .matches(
-                              /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])$/,
+                              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                               "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
                             ),
                           confirmPassword: Yup.string()
@@ -215,10 +215,10 @@ class CreateEmployee extends React.Component {
                                     name="firstName"
                                     onChange={(value) => { props.handleChange('firstName')(value) }}
                                     className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
-                                    />
-                                    {props.errors.firstName && props.touched.firstName && (
-                                      <div className="invalid-feedback">{props.errors.firstName}</div>
-                                    )}
+                                  />
+                                  {props.errors.firstName && props.touched.firstName && (
+                                    <div className="invalid-feedback">{props.errors.firstName}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -230,10 +230,10 @@ class CreateEmployee extends React.Component {
                                     name="middleName"
                                     onChange={(value) => { props.handleChange('middleName')(value) }}
                                     className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
-                                    />
-                                    {props.errors.middleName && props.touched.middleName && (
-                                      <div className="invalid-feedback">{props.errors.middleName}</div>
-                                    )}
+                                  />
+                                  {props.errors.middleName && props.touched.middleName && (
+                                    <div className="invalid-feedback">{props.errors.middleName}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -245,10 +245,10 @@ class CreateEmployee extends React.Component {
                                     name="lastName"
                                     onChange={(value) => { props.handleChange('lastName')(value) }}
                                     className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
-                                    />
-                                    {props.errors.lastName && props.touched.lastName && (
-                                      <div className="invalid-feedback">{props.errors.lastName}</div>
-                                    )}
+                                  />
+                                  {props.errors.lastName && props.touched.lastName && (
+                                    <div className="invalid-feedback">{props.errors.lastName}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -262,10 +262,10 @@ class CreateEmployee extends React.Component {
                                     name="password"
                                     onChange={(value) => { props.handleChange('password')(value) }}
                                     className={props.errors.password && props.touched.password ? "is-invalid" : ""}
-                                    />
-                                    {props.errors.password && props.touched.password && (
-                                      <div className="invalid-feedback">{props.errors.password}</div>
-                                    )}
+                                  />
+                                  {props.errors.password && props.touched.password && (
+                                    <div className="invalid-feedback">{props.errors.password}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -277,10 +277,10 @@ class CreateEmployee extends React.Component {
                                     name="confirmPassword"
                                     onChange={(value) => { props.handleChange('confirmPassword')(value) }}
                                     className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
-                                    />
-                                    {props.errors.confirmPassword && props.touched.confirmPassword && (
-                                      <div className="invalid-feedback">{props.errors.confirmPassword}</div>
-                                    )}
+                                  />
+                                  {props.errors.confirmPassword && props.touched.confirmPassword && (
+                                    <div className="invalid-feedback">{props.errors.confirmPassword}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">

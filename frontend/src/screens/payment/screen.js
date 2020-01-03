@@ -64,6 +64,7 @@ class Payment extends React.Component {
       loading: true,
       selectedRows: [],
       dialog: null,
+      contactType:1,
       filterData: {
         supplierId: '',
         paymentDate: '',
@@ -113,7 +114,7 @@ class Payment extends React.Component {
     const postData = { ...filterData, ...paginationData }
     this.props.paymentActions.getPaymentList(postData).then(res => {
       if (res.status === 200) {
-        this.props.paymentActions.getSupplierList()
+        this.props.paymentActions.getSupplierContactList(this.state.contactType);
         this.setState({ loading: false })
       }
     }).catch(err => {

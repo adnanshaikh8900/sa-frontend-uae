@@ -17,7 +17,7 @@ export const getCashFlowGraphData = (daterange) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getvat'
+      url: '/rest/vat/getList'
     }
 
     return authApi(data).then(res => {
@@ -50,7 +50,7 @@ export const getInvoiceGraphData = (daterange) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getvat'
+      url: '/rest/vat/getList'
     }
 
     return authApi(data).then(res => {
@@ -85,7 +85,7 @@ export const getBankAccountTypes = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getvat'
+      url: '/rest/vat/getList'
     }
 
     return authApi(data).then(res => {
@@ -108,7 +108,7 @@ export const getBankAccountGraphData = (account, daterange) => {
   return (dispatch) => {
     // let data = {
     //   method: 'GET',
-    //   url: '/rest/vat/getvat'
+    //   url: '/rest/vat/getList'
     // }
     // return authApi(data).then(res => {
     //   dispatch({
@@ -140,7 +140,7 @@ export const getProfitAndLossData = (startDate, endDate) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getvat'
+      url: '/rest/vat/getList'
     }
 
     return authApi(data).then(res => {
@@ -165,7 +165,7 @@ export const getExpensesGraphData = (startDate, endDate) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getvat'
+      url: '/rest/vat/getList'
     }
 
     return authApi(data).then(res => {
@@ -187,7 +187,7 @@ export const getRevenuesGraphData = (startDate, endDate) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getvat'
+      url: '/rest/vat/getList'
     }
 
     return authApi(data).then(res => {

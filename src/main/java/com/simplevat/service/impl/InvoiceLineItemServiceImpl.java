@@ -8,7 +8,7 @@ import com.simplevat.entity.InvoiceLineItem;
 import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.dao.InvoiceLineItemDao;
 
-@Service("SupplierInvoiceLineItemService")
+@Service("InvoiceLineItemService")
 public class InvoiceLineItemServiceImpl extends InvoiceLineItemService {
 
     @Autowired

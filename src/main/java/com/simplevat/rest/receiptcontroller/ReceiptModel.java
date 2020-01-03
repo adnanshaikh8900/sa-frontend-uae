@@ -6,13 +6,17 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class ReceiptListModel {
+public class ReceiptModel {
 
-	private int id;
+	private Integer receiptId;
 	private Date receiptDate;
-	private String receiptReferenceCode;
+	private String referenceCode;
+	private String receiptNo;
 	private String customerName;
+	private Integer contactId;
 	private BigDecimal amount;
 	private BigDecimal unusedAmount;
+        private String invoiceNumber;
+        private Integer invoiceId;
 
 }

@@ -20,7 +20,7 @@ import com.simplevat.exceptions.ServiceException;
 import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.BankAccountStatusService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
@@ -67,7 +67,7 @@ public class CurrencyController implements Serializable {
     JwtTokenUtil jwtTokenUtil;
     
     @Autowired
-    UserServiceNew userServiceNew;
+    UserService userServiceNew;
     
     @ApiOperation(value = "Get Currency List", response = List.class)
     @GetMapping

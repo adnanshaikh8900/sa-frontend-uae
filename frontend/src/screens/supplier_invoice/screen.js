@@ -65,11 +65,6 @@ class SupplierInvoice extends React.Component {
     this.state = {
       loading: false,
       dialog: false,
-      // stateOptions: [
-      //   { value: 'Paid', label: 'Paid' },
-      //   { value: 'Unpaid', label: 'Unpaid' },
-      //   { value: 'Partially Paid', label: 'Partially Paid' },
-      // ],
       actionButtons: {},
       filterData: {
         supplierName: '',
@@ -80,7 +75,7 @@ class SupplierInvoice extends React.Component {
         status: '',
         contactType : "1"
       },
-      selected_id_list: [],
+      selectedRows: [],
 
     }
 
@@ -120,7 +115,7 @@ class SupplierInvoice extends React.Component {
   }
   componentWillUnmount() {
     this.setState({
-      selected_id_list: []
+      selectedRows: []
     })
   }
 
@@ -137,11 +132,11 @@ class SupplierInvoice extends React.Component {
 
   renderInvoiceStatus(cell, row) {
     let classname = ''
-    if (row.status == 'Paid') {
+    if (row.status === 'Paid') {
       classname = 'badge-success'
-    } else if (row.status == 'Unpaid') {
+    } else if (row.status === 'Unpaid') {
       classname = 'badge-danger'
-    } else if (row.status == 'PARTIALLY PAID') {
+    } else if (row.status === 'PARTIALLY PAID') {
       classname = "badget-info"
     } else {
       classname = 'badge-primary'
@@ -174,7 +169,7 @@ class SupplierInvoice extends React.Component {
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
-              this.state.actionButtons[row.transactionCategoryCode] == true ?
+              this.state.actionButtons[row.transactionCategoryCode] === true ?
                 <i className="fas fa-chevron-up" />
                 :
                 <i className="fas fa-chevron-down" />
@@ -211,17 +206,17 @@ class SupplierInvoice extends React.Component {
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.id);
     } else {
-      this.state.selected_id_list.map(item => {
+      this.state.selectedRows.map(item => {
         if (item !== row.id) {
           temp_list.push(item)
         }
       });
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
   onSelectAll(isSelected, rows) {
@@ -232,16 +227,16 @@ class SupplierInvoice extends React.Component {
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
 
   bulkDelete() {
     const {
-      selected_id_list
+      selectedRows
     } = this.state
-    if (selected_id_list.length > 0) {
+    if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
@@ -256,17 +251,17 @@ class SupplierInvoice extends React.Component {
 
   removeBulk() {
     this.removeDialog()
-    let { selected_id_list ,filterData} = this.state;
+    let { selectedRows ,filterData} = this.state;
     const { supplier_invoice_list } = this.props
     let obj = {
-      ids: selected_id_list
+      ids: selectedRows
     }
     this.props.supplierInvoiceActions.removeBulk(obj).then(() => {
       this.props.supplierInvoiceActions.getSupplierInoviceList(filterData)
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (supplier_invoice_list && supplier_invoice_list.length > 0) {
         this.setState({
-          selected_id_list: []
+          selectedRows: []
         })
       }
     }).catch(err => {
@@ -293,7 +288,7 @@ class SupplierInvoice extends React.Component {
   }
 
   render() {
-    const { loading,filterData,dialog } = this.state
+    const { loading,filterData,dialog,selectedRows} = this.state
     const { supplier_invoice_list , status_list} = this.props
     const containerStyle = {
       zIndex: 1999
@@ -366,6 +361,8 @@ class SupplierInvoice extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
+                            onClick={() => this.table.handleExportCSV()}
+                            disabled={supplier_invoice_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -382,6 +379,8 @@ class SupplierInvoice extends React.Component {
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
+                            disabled={selectedRows.length === 0}
+
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -437,7 +436,7 @@ class SupplierInvoice extends React.Component {
                             />
                           </Col>
                           <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={supplier_invoice_list.length === 0}>
                               <i className="fa fa-search"></i>
                             </Button>
                           </Col>

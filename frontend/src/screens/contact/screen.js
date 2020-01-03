@@ -58,7 +58,7 @@ class Contact extends React.Component {
     this.state = {
       loading: false,
       clickedRow: {},
-      selected_id_list: [],
+      selectedRows: [],
       dialog: null,
       filterData: {
         name: '',
@@ -84,7 +84,7 @@ class Contact extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -105,7 +105,7 @@ class Contact extends React.Component {
 
   componentWillUnmount() {
     this.setState({
-      selected_id_list: []
+      selectedRows: []
     })
   }
 
@@ -143,17 +143,17 @@ class Contact extends React.Component {
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.id);
     } else {
-      this.state.selected_id_list.map(item => {
+      this.state.selectedRows.map(item => {
         if (item !== row.id) {
           temp_list.push(item)
         }
       });
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
@@ -165,7 +165,7 @@ class Contact extends React.Component {
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
@@ -175,9 +175,9 @@ class Contact extends React.Component {
 
   bulkDelete() {
     const {
-      selected_id_list
+      selectedRows
     } = this.state
-    if (selected_id_list.length > 0) {
+    if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
@@ -193,17 +193,17 @@ class Contact extends React.Component {
   removeBulk() {
     const {filterData} = this.state
     this.removeDialog()
-    let { selected_id_list } = this.state;
+    let { selectedRows } = this.state;
     const { contact_list } = this.props
     let obj = {
-      ids: selected_id_list
+      ids: selectedRows
     }
     this.props.contactActions.removeBulk(obj).then((res) => {
       this.initializeData();
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (contact_list && contact_list.length > 0) {
         this.setState({
-          selected_id_list: []
+          selectedRows: []
         })
       }
     }).catch(err => {
@@ -234,7 +234,7 @@ class Contact extends React.Component {
 
   render() {
 
-    const { loading, dialog, filterData } = this.state
+    const { loading, dialog, filterData,selectedRows} = this.state
     const { contact_list, contact_type_list } = this.props
     const containerStyle = {
       zIndex: 1999
@@ -244,7 +244,7 @@ class Contact extends React.Component {
       <div className="contact-screen">
         <div className="animated fadeIn">
           {dialog}
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
             <CardHeader>
               <Row>
@@ -273,7 +273,7 @@ class Contact extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-
+                            disabled={contact_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -290,6 +290,7 @@ class Contact extends React.Component {
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDelete}
+                            disabled={selectedRows.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -323,8 +324,8 @@ class Contact extends React.Component {
 
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
-                                <i className="fa fa-search"></i> Search
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} >
+                                <i className="fa fa-search"></i>
                             </Button>
                             </Col>
                           </Row>
@@ -340,14 +341,12 @@ class Contact extends React.Component {
                               data={contact_list ? contact_list : []}
                               version="4"
                               hover
-                              remote
                               pagination
                               totalSize={contact_list ? contact_list.length : 0}
                               className="product-table"
                               trClassName="cursor-pointer"
                               csvFileName="Contact.csv"
                               ref={node => {
-                                console.log(this.options)
                                 this.table = node
                               }}
                             >

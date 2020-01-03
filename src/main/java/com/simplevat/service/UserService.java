@@ -7,7 +7,7 @@ import java.util.Optional;
 import com.simplevat.constant.dbfilter.UserFilterEnum;
 import com.simplevat.entity.User;
 
-public abstract class UserServiceNew extends SimpleVatService<Integer, User> {
+public abstract class UserService extends SimpleVatService<Integer, User> {
 
 	public abstract Optional<User> getUserByEmail(String emailAddress);
 

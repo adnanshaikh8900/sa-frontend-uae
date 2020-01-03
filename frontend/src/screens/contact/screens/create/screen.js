@@ -58,7 +58,7 @@ class CreateContact extends React.Component {
         contactType: '',
         contractPoNumber: '',
         countryId: '',
-        currency: '',
+        currencyCode: '',
         email: '',
         firstName: '',
         addressLine1: '',
@@ -75,16 +75,10 @@ class CreateContact extends React.Component {
         telephone: '',
         vatRegistrationNumber: '',
       },
-      readMore: false
+      createMore: false
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
-    this.success = this.success.bind(this)
-    // this.contactType = [
-    //   {label: 'supplier',value: 1},
-    //   {label: 'customer',value: 2},
-    //   {label: 'both',value: 3},
-    // ]
   }
 
 
@@ -99,60 +93,13 @@ class CreateContact extends React.Component {
     
   }
 
-  handleSubmit(data) {
-    const {
-      billingEmail,
-      city,
-      contactType,
-      contractPoNumber,
-      countryId,
-      currency,
-      email,
-      firstName,
-      addressLine1,
-      addressLine2,
-      addressLine3,
-      // language(Language, optional),
-      lastName,
-      middleName,
-      mobileNumber,
-      organization,
-      poBoxNumber,
-      postZipCode,
-      stateRegion,
-      telephone,
-      vatRegistrationNumber
-    } = data;
-
-    const postData = {
-      billingEmail: billingEmail !== null ? billingEmail : '',
-      city: city.value !== null ? city.value : '',
-      contactType: contactType !== null ? contactType : '',
-      contractPoNumber: contractPoNumber,
-      countryId: countryId && countryId.value !== null ? countryId.value : '',
-      currencyCode: currency && currency.value !== null ? currency.value : '',
-      email: email,
-      firstName: firstName,
-      addressLine1: addressLine1,
-      addressLine2: addressLine2,
-      addressLine3: addressLine3,
-      // language(Language: optional):
-      lastName: lastName,
-      middleName: middleName,
-      mobileNumber: mobileNumber,
-      organization: organization,
-      poBoxNumber: poBoxNumber,
-      stateRegion: stateRegion,
-      postZipCode: postZipCode,
-      telephone: telephone,
-      vatRegistrationNumber: vatRegistrationNumber
-    }
-
-    this.props.createContactActions.createContact(postData).then(res => {
+  handleSubmit(data,resetForm) {
+    this.props.createContactActions.createContact(data).then(res => {
       if (res.status === 200) {
-        this.success();
-        if (this.state.readMore) {
-          this.setState({ readMore: false });
+        resetForm();
+        this.props.commonActions.tostifyAlert('success', 'New Contact Created Successfully')
+        if (this.state.createMore) {
+          this.setState({ createMore: false });
         } else {
           this.props.history.push('/admin/master/contact');
         }
@@ -161,11 +108,7 @@ class CreateContact extends React.Component {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
-  success() {
-    toast.success('Contact Created Successfully... ', {
-      position: toast.POSITION.TOP_RIGHT
-    })
-  }
+
   render() {
     const { currency_list, country_list, loading ,contact_type_list} = this.props;
     const { initValue } = this.state;
@@ -192,36 +135,34 @@ class CreateContact extends React.Component {
                       <Formik
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
-
-                          this.handleSubmit(values)
-                          resetForm(initValue)
+                          this.handleSubmit(values,resetForm)
                         }}
-                        // validationSchema={
-                        //   Yup.object().shape({
-                        //     firstName: Yup.string()
-                        //       .required("FirstName is Required"),
-                        //     lastName: Yup.string()
-                        //       .required("LastName is Required"),
-                        //     middleName: Yup.string()
-                        //       .required("MiddleName is Required"),
-                        //       contactType: Yup.string()
-                        //       .required("Please Select Contact Type"),
+                        validationSchema={
+                          Yup.object().shape({
+                            firstName: Yup.string()
+                              .required("FirstName is Required"),
+                            lastName: Yup.string()
+                              .required("LastName is Required"),
+                            middleName: Yup.string()
+                              .required("MiddleName is Required"),
+                              // contactType: Yup.string()
+                              // .required("Please Select Contact Type"),
                         //       organization: Yup.string()
                         //       .required("Organization Name is Required"),
                         //     poBoxNumber: Yup.number()
                         //       .required("PO Box Number is Required"),
-                        //     email: Yup.string()
-                        //       .required("Email is Required")
-                        //       .email('Invalid Email'),
+                            email: Yup.string()
+                              .required("Email is Required")
+                              .email('Invalid Email'),
                         //     telephone: Yup.number()
                         //       .required("Telephone Number is Required"),
                         //     mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, {message: "Please enter valid number.", excludeEmptyString: false})
                         //       .required("Mobile Number is required"),
                         //     addressLine1: Yup.string()
                         //       .required("Address is required"),
-                        //     countryId: Yup.string()
-                        //       .required("Please Select Country")
-                        //       .nullable(),
+                            countryId: Yup.string()
+                              .required("Please Select Country")
+                              // .nullable(),
                         //     stateRegion: Yup.string()
                         //       .required("State is Required"),
                         //     city: Yup.string()
@@ -235,11 +176,11 @@ class CreateContact extends React.Component {
                         //       .required("Contract PoNumber is Required"),
                         //       vatRegistrationNumber: Yup.number()
                         //       .required("Vat Registration Number is Required"),
-                        //       currency: Yup.string()
+                        //       currencyCode: Yup.string()
                         //       .required("Please Select Currency")
                         //       .nullable(),
-                        //   })
-                        // }
+                          })
+                        }
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -506,7 +447,7 @@ class CreateContact extends React.Component {
                                     className="select-default-width"
                                     options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
                                     value={props.values.countryId}
-                                    onChange={option => props.handleChange('countryId')(option)}
+                                    onChange={option => props.handleChange('countryId')(option.value)}
                                     placeholder="Select Country"
                                     id="countryId"
                                     name="countryId"
@@ -666,23 +607,23 @@ class CreateContact extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="currency">Currency Code</Label>
+                                  <Label htmlFor="currencyCode">Currency Code</Label>
                                   <Select
                                     className="select-default-width"
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
-                                    value={props.values.currency}
-                                    onChange={option => props.handleChange('currency')(option)}
+                                    value={props.values.currencyCode}
+                                    onChange={option => props.handleChange('currencyCode')(option.value)}
                                     placeholder="Select Currency"
-                                    id="currency"
-                                    name="currency"
+                                    id="currencyCode"
+                                    name="currencyCode"
                                     className={
-                                      props.errors.currency && props.touched.currency
+                                      props.errors.currencyCode && props.touched.currencyCode
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.currency && props.touched.currency && (
-                                    <div className="invalid-feedback">{props.errors.currency}</div>
+                                  {props.errors.currencyCode && props.touched.currencyCode && (
+                                    <div className="invalid-feedback">{props.errors.currencyCode}</div>
                                   )}
                                   
                                 </FormGroup>
@@ -696,8 +637,9 @@ class CreateContact extends React.Component {
                                 </Button>
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={() => {
-                                      this.setState({ readMore: true });
-                                      props.handleSubmit();
+                                      this.setState({ createMore: true },()=>{
+                                        props.handleSubmit();
+                                      })
                                     }}>
                                     <i className="fa fa-repeat"></i> Create and More
                                 </Button>

@@ -82,7 +82,7 @@ class ProductCategory extends React.Component {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
       // onPageChange: this.onPageChange,
-      onSizePerPageList: (page,pageSize) => {
+      onSizePerPageList: (page, pageSize) => {
         this.setState({
           filterData: {
             pageNo: page
@@ -183,8 +183,8 @@ class ProductCategory extends React.Component {
         this.setState({ loading: false })
         this.initializeData()
       }
-    }).catch(err=>{
-    this.setState({ openDeleteModal: false })
+    }).catch(err => {
+      this.setState({ openDeleteModal: false })
     })
   }
 
@@ -250,6 +250,8 @@ class ProductCategory extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
+                            onClick={() => this.table.handleExportCSV()}
+                            disabled={product_category_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -266,7 +268,7 @@ class ProductCategory extends React.Component {
                             color="warning"
                             className="btn-square"
                             onClick={this.showConfirmModal}
-                            disabled={selectedRows.length == 0}
+                            disabled={selectedRows.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -279,23 +281,23 @@ class ProductCategory extends React.Component {
                           <Row>
                             <Col lg={4} className="mb-1">
                               <Input type="text"
-                                name="name"
-                                placeholder="Product Category Name"
+                                name="code"
+                                placeholder="Product Category Code"
                                 // value={productCategoryCode ? productCategoryCode: ''}
                                 onChange={(e) => { this.handleFilterChange(e, 'productCategoryCode') }} />
                             </Col>
                             <Col lg={4} className="mb-1">
                               <Input type="text"
-                                name="Code"
-                                placeholder="Code"
+                                name="name"
+                                placeholder="Product Category Name"
                                 // value={productCategoryName ?  productCategoryName : ''}
                                 onChange={(e) => { this.handleFilterChange(e, 'productCategoryName') }} />
                             </Col>
 
                             <Col lg={2} className="mb-1">
                               <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
-                                <i className="fa fa-search"></i> Search
-                            </Button>
+                                <i className="fa fa-search"></i>
+                              </Button>
                             </Col>
                           </Row>
                         </form>
@@ -304,15 +306,14 @@ class ProductCategory extends React.Component {
                         selectRow={this.selectRowProp}
                         search={false}
                         options={this.options}
-                        data={product_category_list ? product_category_list : ''}
+                        data={product_category_list ? product_category_list : []}
                         version="4"
                         hover
                         pagination
-
                         totalSize={product_category_list ? product_category_list.length : 0}
                         className="product-table"
                         trClassName="cursor-pointer"
-                        csvFileName="Product_Category.csv"
+                        csvFileName="product_category.csv"
                         ref={node => this.table = node}
                       >
                         <TableHeaderColumn

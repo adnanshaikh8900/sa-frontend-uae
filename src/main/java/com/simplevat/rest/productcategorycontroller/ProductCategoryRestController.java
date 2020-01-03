@@ -23,7 +23,7 @@ import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.transactioncategorycontroller.TransactionCategoryBean;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ProductCategoryService;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 
 import io.swagger.annotations.ApiOperation;
@@ -43,7 +43,7 @@ public class ProductCategoryRestController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private UserServiceNew userServiceNew;
+    private UserService userServiceNew;
 
     @Autowired
     private ProductCategoryRestHelper productCategoryRestHelper;

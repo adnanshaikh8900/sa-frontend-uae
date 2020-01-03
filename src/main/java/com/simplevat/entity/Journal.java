@@ -53,12 +53,12 @@ public class Journal implements Serializable {
 	private LocalDateTime journalDate;
 
 	@Basic
-	@Column(name = "JOURNAL_REFERENCE_CODE")
-	private String journalReferenceCode;
+	@Column(name = "REFERENCE_CODE")
+	private String referenceCode;
 
 	@Basic
-	@Column(name = "JOURNAL_DESCRIPTION")
-	private String journalDescription;
+	@Column(name = "DESCRIPTION")
+	private String description;
 
 	@OneToOne
 	@JoinColumn(name = "CURRENCY_ID")
@@ -84,7 +84,7 @@ public class Journal implements Serializable {
 	@ColumnDefault(value = "0.00")
 	private BigDecimal subTotalCreditAmount;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "journal", orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "journal")
 	private Collection<JournalLineItem> journalLineItems;
 	@Column(name = "CREATED_BY")
 	@Basic(optional = false)

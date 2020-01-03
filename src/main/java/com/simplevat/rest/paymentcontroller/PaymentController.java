@@ -17,7 +17,7 @@ import com.simplevat.service.CurrencyService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.PaymentService;
 import com.simplevat.service.ProjectService;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -66,7 +66,7 @@ public class PaymentController implements Serializable {
 
     private final PaymentModelHelper paymentModelHelper;
 
-    private final UserServiceNew userServiceNew;
+    private final UserService userServiceNew;
 
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -74,7 +74,7 @@ public class PaymentController implements Serializable {
     public PaymentController(PaymentService paymentService,
             ContactService contactService, InvoiceService invoiceService,
             CurrencyService currencyService, ProjectService projectService,
-            BankAccountService bankAccountService, JwtTokenUtil jwtTokenUtil, UserServiceNew userServiceNew) {
+            BankAccountService bankAccountService, JwtTokenUtil jwtTokenUtil, UserService userServiceNew) {
         this.paymentService = paymentService;
         this.contactService = contactService;
         this.invoiceService = invoiceService;

@@ -68,7 +68,7 @@ class Expense extends React.Component {
     this.state = {
       loading: false,
       dialog: null,
-      selected_id_list: [],
+      selectedRows: [],
       filterData: {
         expenseDate: '',
         transactionCategoryId: '',
@@ -77,7 +77,7 @@ class Expense extends React.Component {
     }
 
     this.initializeData = this.initializeData.bind(this)
-    this.inputHandler = this.inputHandler.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
     this.bulkDeleteExpenses = this.bulkDeleteExpenses.bind(this);
     this.removeBulkExpenses = this.removeBulkExpenses.bind(this);
@@ -105,7 +105,7 @@ class Expense extends React.Component {
 
   componentWillUnmount() {
     this.setState({
-      selected_id_list: []
+      selectedRows: []
     })
   }
 
@@ -125,17 +125,17 @@ class Expense extends React.Component {
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.expenseId);
     } else {
-      this.state.selected_id_list.map(item => {
+      this.state.selectedRows.map(item => {
         if (item !== row.expenseId) {
           temp_list.push(item)
         }
       });
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
   onSelectAll(isSelected, rows) {
@@ -146,7 +146,7 @@ class Expense extends React.Component {
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
@@ -154,7 +154,7 @@ class Expense extends React.Component {
     return moment(rows.expenseDate).format('DD-MM-YYYY')
   }
 
-  inputHandler(val, name) {
+  handleChange(val, name) {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -168,9 +168,9 @@ class Expense extends React.Component {
 
   bulkDeleteExpenses() {
     const {
-      selected_id_list
+      selectedRows
     } = this.state
-    if (selected_id_list.length > 0) {
+    if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
@@ -185,17 +185,17 @@ class Expense extends React.Component {
 
   removeBulkExpenses() {
     this.removeDialog()
-    let { selected_id_list } = this.state;
+    let { selectedRows } = this.state;
     const { expense_list } = this.props
     let obj = {
-      ids: selected_id_list
+      ids: selectedRows
     }
     this.props.expenseActions.removeBulkExpenses(obj).then(() => {
       this.props.expenseActions.getExpenseList()
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (expense_list && expense_list.length > 0) {
         this.setState({
-          selected_id_list: []
+          selectedRows: []
         })
       }
     }).catch(err => {
@@ -212,7 +212,8 @@ class Expense extends React.Component {
   render() {
     const { loading,
       dialog,
-      filterData
+      filterData ,
+      selectedRows
     } = this.state
     const { expense_list, expense_categories_list } = this.props
     const containerStyle = {
@@ -223,7 +224,7 @@ class Expense extends React.Component {
       <div className="expense-screen">
         <div className="animated fadeIn">
           {dialog}
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
             <CardHeader>
               <Row>
@@ -252,6 +253,7 @@ class Expense extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
+                            disabled={expense_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -268,6 +270,7 @@ class Expense extends React.Component {
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDeleteExpenses}
+                            disabled={selectedRows.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -277,6 +280,14 @@ class Expense extends React.Component {
                       <div className="py-3">
                         <h5>Filter : </h5>
                         <Row>
+                        <Col lg={2} className="mb-1">
+                            <Input
+                              type="text"
+                              placeholder="Payee"
+                              value={filterData.payee}
+                              onChange={e => this.handleChange(e.target.value, 'payee')}
+                            />
+                          </Col>
                           <Col lg={2} className="mb-1">
                             {/* <DateRangePicker>
                               <Input type="text" placeholder="Expense Date" />
@@ -285,33 +296,26 @@ class Expense extends React.Component {
                               className="form-control"
                               id="date"
                               name="expenseDate"
-                              placeholderText="Invoice Date"
+                              placeholderText="Expense Date"
                               selected={filterData.expenseDate}
                               value={filterData.expenseDate}
                               onChange={(value) => {
-                                this.inputHandler(value, "expenseDate")
+                                this.handleChange(value, "expenseDate")
                               }}
                             />
                           </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input
-                              type="text"
-                              placeholder="Payee"
-                              value={filterData.payee}
-                              onChange={e => this.inputHandler(e.target.value, 'payee')}
-                            />
-                          </Col>
+
                           <Col lg={2} className="mb-1">
                             {/* <Input type="text" placeholder="Supplier Name" /> */}
                             <FormGroup className="mb-3">
                               <Select
                                 className="select-default-width"
-                                id="supplier"
-                                name="supplier"
+                                id="expenseCategoryId"
+                                name="expenseCategoryId"
                                 value={filterData.transactionCategoryId}
                                 options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
-                                onChange={(option) => { this.inputHandler(option.value, 'transactionCategoryId') }}
-                                placeholder="Supplier Name"
+                                onChange={(option) => { this.handleChange(option.value, 'transactionCategoryId') }}
+                                placeholder="Expense Category"
                               />
                             </FormGroup>
                           </Col>
@@ -327,7 +331,7 @@ class Expense extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={expense_list}
+                          data={expense_list ? expense_list : []}
                           version="4"
                           hover
                           keyField="expenseId"
@@ -336,7 +340,7 @@ class Expense extends React.Component {
                           className="expense-table"
                           trClassName="cursor-pointer"
                           ref={node => this.table = node}
-                          csvFileName="ExpenseList.csv"
+                          csvFileName="expense_list.csv"
                         >
                           <TableHeaderColumn
                             dataField="payee"
@@ -367,7 +371,7 @@ class Expense extends React.Component {
                             dataSort
                             dataFormat={this.renderDate}
                           >
-                            Date
+                            Expense Date
                           </TableHeaderColumn>
                         </BootstrapTable>
                       </div>

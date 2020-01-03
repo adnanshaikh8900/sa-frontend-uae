@@ -56,7 +56,8 @@ class DetailContact extends React.Component {
       loading: true,
       initValue: {},
       currentData: {},
-      dialog: null
+      dialog: null,
+      id: props.location.state.id
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
@@ -71,7 +72,7 @@ class DetailContact extends React.Component {
   }
 
   initializeData() {
-    const id = this.props.location.state.id;
+    const { id } = this.state
     if (this.props.location.state && id) {
       this.props.contactActions.getContactTypeList();
       this.props.contactActions.getCountryList();
@@ -81,34 +82,26 @@ class DetailContact extends React.Component {
           loading: false,
           initValue: {
             billingEmail: res.data.billingEmail && res.data.billingEmail !== null ? res.data.billingEmail : '',
-            // city: res.data.city ? {
-            //   label: res.data.city.name,
-            //   value: res.data.city.value
-            // } : '',
             city: res.data.city && res.data.city,
-            contactType: res.data.contactType ?  res.data.contactType : '',
+            contactType: res.data.contactType ? res.data.contactType : '',
             contractPoNumber: res.data.contractPoNumber && res.data.contractPoNumber ? res.data.contractPoNumber : '',
-            countryId: res.data.countryId && res.data.countryId !== null?  res.data.countryId : '',
-            currency: res.data.currencyCode && res.data.currencyCode !== null ? res.data.currencyCode : '',
+            countryId: res.data.countryId && res.data.countryId !== null ? res.data.countryId : '',
+            currencyCode: res.data.currencyCode && res.data.currencyCode !== null ? res.data.currencyCode : '',
             email: res.data.email && res.data.email !== null ? res.data.email : '',
             firstName: res.data.firstName && res.data.firstName !== null ? res.data.firstName : '',
             addressLine1: res.data.addressLine1 && res.data.addressLine1 ? res.data.addressLine1 : '',
             addressLine2: res.data.addressLine2,
             addressLine3: res.data.addressLine3,
             // language(Language, optional),
-            lastName: res.data.lastName && res.data.lastName !== null ? res.data.lastName: '',
-            middleName: res.data.middleName && res.data.middleName !== null ? res.data.middleName: '',
-            mobileNumber: res.data.mobileNumber && res.data.mobileNumber !== null ? res.data.mobileNumber: '',
-            organization: res.data.organization && res.data.organization !== null ? res.data.organization: '',
-            poBoxNumber: res.data.poBoxNumber && res.data.poBoxNumber !== null ? res.data.poBoxNumber: '',
-            postZipCode: res.data.postZipCode && res.data.postZipCode !== null ? res.data.postZipCode: '',
-            // state: res.data.state ? {
-            //   label: res.data.country.countryName,
-            //   value: res.data.country.countryCode
-            // } : '',
-            state: res.data.state && res.data.state !== null ? res.data.state: '',
-            telephone: res.data.telephone && res.data.telephone !== null ? res.data.telephone: '',
-            vatRegistrationNumber: res.data.vatRegistrationNumber && res.data.vatRegistrationNumber !== null ? res.data.vatRegistrationNumber: ''
+            lastName: res.data.lastName && res.data.lastName !== null ? res.data.lastName : '',
+            middleName: res.data.middleName && res.data.middleName !== null ? res.data.middleName : '',
+            mobileNumber: res.data.mobileNumber && res.data.mobileNumber !== null ? res.data.mobileNumber : '',
+            organization: res.data.organization && res.data.organization !== null ? res.data.organization : '',
+            poBoxNumber: res.data.poBoxNumber && res.data.poBoxNumber !== null ? res.data.poBoxNumber : '',
+            postZipCode: res.data.postZipCode && res.data.postZipCode !== null ? res.data.postZipCode : '',
+            state: res.data.state && res.data.state !== null ? res.data.state : '',
+            telephone: res.data.telephone && res.data.telephone !== null ? res.data.telephone : '',
+            vatRegistrationNumber: res.data.vatRegistrationNumber && res.data.vatRegistrationNumber !== null ? res.data.vatRegistrationNumber : ''
           }
         })
       }).catch(err => {
@@ -121,63 +114,12 @@ class DetailContact extends React.Component {
   }
 
   handleSubmit(data) {
-    const {
-      billingEmail,
-      city,
-      contactType,
-      contractPoNumber,
-      countryId,
-      currency,
-      email,
-      firstName,
-      addressLine1,
-      addressLine2,
-      addressLine3,
-      // language(Language, optional),
-      lastName,
-      middleName,
-      mobileNumber,
-      organization,
-      poBoxNumber,
-      postZipCode,
-      state,
-      telephone,
-      vatRegistrationNumber
-    } = data;
-    const id = this.props.location.state.id;
-
-    console.log(data)
-
-    const postData = {
-      contactId: id,
-      billingEmail: billingEmail !== null ? billingEmail : '',
-      // city: city.value !== null ? city.value : '',
-      city: city,
-      contactType: contactType !== null ? contactType.value : '',
-      contractPoNumber: contractPoNumber,
-      countryId: countryId && countryId.value !== null ? countryId.value : '',
-      currencyCode: currency && currency.value !== null ? currency.value : '',
-      contactType: contactType ? contactType : '',
-      email: email,
-      firstName: firstName,
-      addressLine1: addressLine1,
-      addressLine2: addressLine2,
-      addressLine3: addressLine3,
-      // language(Language: optional):
-      lastName: lastName,
-      middleName: middleName,
-      mobileNumber: mobileNumber,
-      organization: organization,
-      poBoxNumber: poBoxNumber,
-      postZipCode: postZipCode,
-      state: state,
-      telephone: telephone,
-      vatRegistrationNumber: vatRegistrationNumber
-    }
+    const { id } = this.state
+    const postData = {...data, ...{ contactId: id } }
 
     this.props.detailContactActions.updateContact(postData).then(res => {
       if (res.status === 200) {
-        this.success();
+        this.props.commonActions.tostifyAlert('success', ' Contact Updated Successfully')
         this.props.history.push('/admin/master/contact');
       }
     }).catch(err => {
@@ -205,7 +147,7 @@ class DetailContact extends React.Component {
     const id = this.props.location.state.id;
     this.props.detailContactActions.deleteContact(id).then(res => {
       if (res.status === 200) {
-        this.success('Contact Deleted Successfully');
+        this.props.commonActions.tostifyAlert('success', 'Contact Deleted Successfully')
         this.props.history.push('/admin/master/contact')
       }
     }).catch(err => {
@@ -256,50 +198,50 @@ class DetailContact extends React.Component {
 
                             }}
 
-                            // validationSchema={
-                            //   Yup.object().shape({
-                            //     firstName: Yup.string()
-                            //       .required("FirstName is Required"),
-                            //     lastName: Yup.string()
-                            //       .required("LastName is Required"),
-                            //     middleName: Yup.string()
-                            //       .required("MiddleName is Required"),
-                            //     contactType: Yup.string()
-                            //       .required("Please Select Contact Type"),
-                            //     organization: Yup.string()
-                            //       .required("Organization Name is Required"),
-                            //     poBoxNumber: Yup.number()
-                            //       .required("PO Box Number is Required"),
-                            //     email: Yup.string()
-                            //       .required("Email is Required")
-                            //       .email('Invalid Email'),
-                            //     telephone: Yup.number()
-                            //       .required("Telephone Number is Required"),
-                            //     mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, { message: "Please enter valid number.", excludeEmptyString: false })
-                            //         .required('Mobile Number is required'),
-                            //     addressLine1: Yup.string()
-                            //       .required("Address is required"),
-                            //     countryId: Yup.string()
-                            //       .required("Please Select Country")
-                            //       .nullable(),
-                            //     state: Yup.string()
-                            //       .required("State is Required"),
-                            //     city: Yup.string()
-                            //       .required("City is Required"),
-                            //     postZipCode: Yup.number()
-                            //       .required("Postal Code is Required"),
-                            //     billingEmail: Yup.string()
-                            //     .email('Invalid Email')
-                            //       .required("Billing Email is Required"),
-                            //     contractPoNumber: Yup.number()
-                            //       .required("Contract PoNumber is Required"),
-                            //     vatRegistrationNumber: Yup.number()
-                            //       .required("Vat Registration Number is Required"),
-                            //     currency: Yup.string()
-                            //       .required("Please Select Currency")
-                            //       .nullable(),
-                            //   })
-                            // }
+                          // validationSchema={
+                          //   Yup.object().shape({
+                          //     firstName: Yup.string()
+                          //       .required("FirstName is Required"),
+                          //     lastName: Yup.string()
+                          //       .required("LastName is Required"),
+                          //     middleName: Yup.string()
+                          //       .required("MiddleName is Required"),
+                          //     contactType: Yup.string()
+                          //       .required("Please Select Contact Type"),
+                          //     organization: Yup.string()
+                          //       .required("Organization Name is Required"),
+                          //     poBoxNumber: Yup.number()
+                          //       .required("PO Box Number is Required"),
+                          //     email: Yup.string()
+                          //       .required("Email is Required")
+                          //       .email('Invalid Email'),
+                          //     telephone: Yup.number()
+                          //       .required("Telephone Number is Required"),
+                          //     mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, { message: "Please enter valid number.", excludeEmptyString: false })
+                          //         .required('Mobile Number is required'),
+                          //     addressLine1: Yup.string()
+                          //       .required("Address is required"),
+                          //     countryId: Yup.string()
+                          //       .required("Please Select Country")
+                          //       .nullable(),
+                          //     state: Yup.string()
+                          //       .required("State is Required"),
+                          //     city: Yup.string()
+                          //       .required("City is Required"),
+                          //     postZipCode: Yup.number()
+                          //       .required("Postal Code is Required"),
+                          //     billingEmail: Yup.string()
+                          //     .email('Invalid Email')
+                          //       .required("Billing Email is Required"),
+                          //     contractPoNumber: Yup.number()
+                          //       .required("Contract PoNumber is Required"),
+                          //     vatRegistrationNumber: Yup.number()
+                          //       .required("Vat Registration Number is Required"),
+                          //     currencyCode: Yup.string()
+                          //       .required("Please Select Currency")
+                          //       .nullable(),
+                          //   })
+                          // }
 
                           >
                             {props => (
@@ -374,27 +316,27 @@ class DetailContact extends React.Component {
                                 <h4 className="mb-3 mt-3">Contact Details</h4>
                                 <Row className="row-wrapper">
                                   <Col md="4">
-                                  <FormGroup>
-                                  <Label htmlFor="contactType">Contact Type</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list) : []}
-                                    value={props.values.contactType}
-                                    onChange={option => props.handleChange('contactType')(option.value)}
-                                    placeholder="Select Contact Type"
-                                    id="contactType"
-                                    name="contactType"
-                                    className={
-                                      props.errors.contactType && props.touched.contactType
-                                        ? "is-invalid"
-                                        : ""
-                                    }
-                                  />
-                                  {props.errors.contactType && props.touched.contactType && (
-                                    <div className="invalid-feedback">{props.errors.contactType}</div>
-                                  )}
-                
-                                </FormGroup>
+                                    <FormGroup>
+                                      <Label htmlFor="contactType">Contact Type</Label>
+                                      <Select
+                                        className="select-default-width"
+                                        options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list) : []}
+                                        value={props.values.contactType}
+                                        onChange={option => props.handleChange('contactType')(option.value)}
+                                        placeholder="Select Contact Type"
+                                        id="contactType"
+                                        name="contactType"
+                                        className={
+                                          props.errors.contactType && props.touched.contactType
+                                            ? "is-invalid"
+                                            : ""
+                                        }
+                                      />
+                                      {props.errors.contactType && props.touched.contactType && (
+                                        <div className="invalid-feedback">{props.errors.contactType}</div>
+                                      )}
+
+                                    </FormGroup>
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
@@ -568,7 +510,6 @@ class DetailContact extends React.Component {
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
                                         value={props.values.countryId}
                                         onChange={option => {
-                                          console.log(option)
                                           props.handleChange('countryId')(option)
                                         }}
                                         placeholder="Select Country"
@@ -730,25 +671,25 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="currency">Currency Code</Label>
+                                      <Label htmlFor="currencyCode">Currency Code</Label>
                                       <Select
                                         className="select-default-width"
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
-                                        value={props.values.currency}
+                                        value={props.values.currencyCode}
                                         onChange={option => {
-                                          props.handleChange('currency')(option)
+                                          props.handleChange('currencyCode')(option)
                                         }}
                                         placeholder="Select Currency"
-                                        id="currency"
-                                        name="currency"
+                                        id="currencyCode"
+                                        name="currencyCode"
                                         className={
-                                          props.errors.currency && props.touched.currency
+                                          props.errors.currencyCode && props.touched.currencyCode
                                             ? "is-invalid"
                                             : ""
                                         }
                                       />
-                                      {props.errors.currency && props.touched.currency && (
-                                        <div className="invalid-feedback">{props.errors.currency}</div>
+                                      {props.errors.currencyCode && props.touched.currencyCode && (
+                                        <div className="invalid-feedback">{props.errors.currencyCode}</div>
                                       )}
 
                                     </FormGroup>

@@ -1,5 +1,7 @@
-package com.simplevat.dao;
+package com.simplevat.dao.impl;
 
+import com.simplevat.dao.AbstractDao;
+import com.simplevat.dao.UserDao;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,7 +19,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository(value = "userDao")
-public class UserNewDaoImpl extends AbstractDao<Integer, User> implements UserNewDao {
+public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
 
     public Optional<User> getUserByEmail(String emailAddress) {
         Query query = this.getEntityManager().createQuery("SELECT u FROM User AS u WHERE u.userEmail =:email");

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.simplevat.entity.User;
 import com.simplevat.service.RoleService;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 
 @Component
 public class UserRestHelper {
@@ -21,7 +21,7 @@ public class UserRestHelper {
 	private RoleService roleService;
 
 	@Autowired
-	private UserServiceNew userService;
+	private UserService userService;
 
 	public List<UserModel> getModelList(List<User> userList) {
 

@@ -16,7 +16,7 @@ import com.simplevat.constant.TransactionEntryTypeConstant;
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.service.UserServiceNew;
+import com.simplevat.service.UserService;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
@@ -60,7 +60,7 @@ public class TransactionImportController implements Serializable {
     private TransactionStatusService transactionStatusService;
 
     @Autowired
-    private UserServiceNew userServiceNew;
+    private UserService userServiceNew;
 
 
 

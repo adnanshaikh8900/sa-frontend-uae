@@ -3,63 +3,124 @@ import {
   api,
   authApi
 } from 'utils'
+import moment from 'moment'
 
-export const getJournalList = () => {
+
+export const getJournalList = (obj) => {
+  const { journalDate , referenceCode , description , pageNo , pageSize } = obj
+  let url = `/rest/journal/getList?referenceCode=${referenceCode}&description=${description}&pageNo=${pageNo}&pageSize=${pageSize}`
+  if(journalDate) {
+    let date = moment(journalDate).format('DD-MM-YYYY')
+    url = url + `&journalDate=${date}`
+  }
   return (dispatch) => {
-    dispatch({
-      type: JOURNAL.JOURNAL_LIST,
-      payload: {
-        data: [{
-          transactionCategoryId: 2,
-          transactionCategoryCode: 2,
-          transactionCategoryName: 'temp1',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        }, {
-          transactionCategoryId: 1,
-          transactionCategoryCode: 3,
-          transactionCategoryName: 'temp2',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        }, {
-          transactionCategoryId: 1,
-          transactionCategoryCode: 4,
-          transactionCategoryName: 'temp3',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        }, {
-          transactionCategoryId: 1,
-          transactionCategoryCode: 5,
-          transactionCategoryName: 'temp4',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        }, {
-          transactionCategoryId: 1,
-          transactionCategoryCode: 6,
-          transactionCategoryName: 'temp5',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        },{
-          transactionCategoryId: 1,
-          transactionCategoryCode: 7,
-          transactionCategoryName: 'temp6',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        },{
-          transactionCategoryId: 1,
-          transactionCategoryCode: 8,
-          transactionCategoryName: 'temp7',
-          transactionCategoryDescription: 'temp',
-          parentTransactionCategory: 'Loream Ipsume',
-          transactionType: 'TEMP'
-        }]
+    let data = {
+      method: 'GET',
+      url: url
+    }
+
+    return authApi(data).then(res => {
+      dispatch({
+        type: JOURNAL.JOURNAL_LIST,
+        payload: res
+      })
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+
+export const getCurrencyList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: 'rest/bank/getcurrenncy'
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: JOURNAL.CURRENCY_LIST,
+          payload: res
+        })
       }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getTransactionCategoryList = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/transactioncategory/gettransactioncategory`,
+    }
+
+    return authApi(data).then(res => {
+      dispatch({
+        type: JOURNAL.TRANSACTION_CATEGORY_LIST,
+        payload: res
+      })
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+
+export const getContactList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/contact/getContactsForDropdown`
+    }
+
+    return authApi(data).then(res => {
+      dispatch({
+        type: JOURNAL.CONTACT_LIST,
+        payload: res
+      })
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getVatList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: '/rest/vat/getList'
+    }
+
+    return authApi(data).then(res => {
+      dispatch({
+        type: JOURNAL.VAT_LIST,
+        payload: res
+      })
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+
+export const removeBulkJournal  = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'delete',
+      url: '/rest/journal/deletes',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
     })
   }
 }

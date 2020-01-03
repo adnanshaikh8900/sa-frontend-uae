@@ -62,7 +62,7 @@ class Payment extends React.Component {
     super(props)
     this.state = {
       loading: true,
-      selected_id_list: [],
+      selectedRows: [],
       dialog: null,
       filterData: {
         supplierId: '',
@@ -77,7 +77,7 @@ class Payment extends React.Component {
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
     this.goToDetail = this.goToDetail.bind(this)
-    this.inputHandler = this.inputHandler.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
     this.onPageChange = this.onPageChange.bind(this)
     this.onSizePerPageList = this.onSizePerPageList.bind(this)
@@ -102,7 +102,6 @@ class Payment extends React.Component {
 
   componentDidMount() {
     this.initializeData()
-    this.props.paymentActions.getSupplierList()
   }
 
   initializeData() {
@@ -114,10 +113,13 @@ class Payment extends React.Component {
     const postData = { ...filterData, ...paginationData }
     this.props.paymentActions.getPaymentList(postData).then(res => {
       if (res.status === 200) {
+        this.props.paymentActions.getSupplierList()
         this.setState({ loading: false })
       }
     }).catch(err => {
       this.setState({ loading: false })
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+
     })
   }
 
@@ -129,9 +131,9 @@ class Payment extends React.Component {
   bulkDeletePayments() {
 
     let {
-      selected_id_list
+      selectedRows
     } = this.state
-    if (selected_id_list.length > 0) {
+    if (selectedRows.length > 0) {
       this.setState({
         dialog: <ConfirmDeleteModal
           isOpen={true}
@@ -153,10 +155,10 @@ class Payment extends React.Component {
   removeBulkPayments() {
     this.removeDialog()
     let {
-      selected_id_list
+      selectedRows
     } = this.state
     let obj = {
-      ids: selected_id_list
+      ids: selectedRows
     }
     const { payment_list } = this.props;
     this.props.paymentActions.removeBulkPayments(obj).then((res) => {
@@ -164,7 +166,7 @@ class Payment extends React.Component {
       this.initializeData();
       if (payment_list.length > 0) {
         this.setState({
-          selected_id_list: []
+          selectedRows: []
         })
       }
     }).catch(err => {
@@ -176,17 +178,17 @@ class Payment extends React.Component {
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
+      temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.paymentId)
     } else {
-      this.state.selected_id_list.map(item => {
+      this.state.selectedRows.map(item => {
         if (item != row.paymentId) {
           temp_list.push(item)
         }
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
   onSelectAll(isSelected, rows) {
@@ -197,7 +199,7 @@ class Payment extends React.Component {
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selectedRows: temp_list
     })
   }
 
@@ -205,7 +207,7 @@ class Payment extends React.Component {
     return rows['paymentDate'] !== null ? moment(rows['paymentDate']).format('DD-MM-YYYY') : ''
   }
 
-  inputHandler(val, name) {
+  handleChange(val, name) {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -226,9 +228,8 @@ class Payment extends React.Component {
   }
 
   render() {
-    const { loading, dialog, filterData } = this.state
+    const { loading, dialog, filterData,selectedRows} = this.state
     const { payment_list, supplier_list } = this.props
-    let supplierList = supplier_list.length ? [{ value: null, label: 'Select..' }, ...supplier_list] : supplier_list
     const containerStyle = {
       zIndex: 1999
     }
@@ -236,7 +237,7 @@ class Payment extends React.Component {
       <div className="payment-screen">
         <div className="animated fadeIn">
           {dialog}
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
             <CardHeader>
               <Row>
@@ -264,6 +265,8 @@ class Payment extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
+                            onClick={() => this.table.handleExportCSV()}
+                            disabled={payment_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -280,6 +283,7 @@ class Payment extends React.Component {
                             color="warning"
                             className="btn-square"
                             onClick={this.bulkDeletePayments}
+                            disabled={selectedRows.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                             Bulk Delete
@@ -295,9 +299,9 @@ class Payment extends React.Component {
                               placeholder="Select Supplier"
                               id="supplier"
                               name="supplier"
-                              options={supplierList}
+                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
                               value={filterData.supplierId}
-                              onChange={(option) => { this.inputHandler(option.value, 'supplierId') }}
+                              onChange={(option) => { this.handleChange(option.value, 'supplierId') }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -309,7 +313,7 @@ class Payment extends React.Component {
                               selected={filterData.paymentDate}
                               value={filterData.paymentDate}
                               onChange={(value) => {
-                                this.inputHandler(value, "paymentDate")
+                                this.handleChange(value, "paymentDate")
                               }}
                             />
                           </Col>
@@ -318,7 +322,7 @@ class Payment extends React.Component {
                               type="text"
                               placeholder="Invoice Amount"
                               value={filterData.invoiceAmount}
-                              onChange={e => this.inputHandler(e.target.value, 'invoiceAmount')}
+                              onChange={e => this.handleChange(e.target.value, 'invoiceAmount')}
                             />
                           </Col>
                           <Col lg={1} className="mb-1">
@@ -333,7 +337,7 @@ class Payment extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={payment_list}
+                          data={payment_list ? payment_list : []}
                           version="4"
                           hover
                           keyField="paymentId"
@@ -341,6 +345,10 @@ class Payment extends React.Component {
                           totalSize={payment_list ? payment_list.length : 0}
                           className="payment-table"
                           trClassName="cursor-pointer"
+                          csvFileName="payment.csv"
+                          ref={node => {
+                            this.table = node
+                          }}
                         >
                           <TableHeaderColumn
                             dataField="supplierName"

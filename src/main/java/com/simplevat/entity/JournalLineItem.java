@@ -54,6 +54,10 @@ public class JournalLineItem implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "CONTACT")
 	private Contact contact;
+        
+	@OneToOne
+	@JoinColumn(name = "VAT_CATEGORY")
+	private VatCategory vatCategory;
 
 	@Basic
 	@Column(name = "DEBIT_AMOUNT")

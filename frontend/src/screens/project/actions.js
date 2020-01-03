@@ -5,7 +5,7 @@ import {
 } from 'utils'
 
 export const getProjectList = (obj) => {
-  console.log(obj)
+
   return (dispatch) => {
     let data = {
       method: 'GET',
@@ -121,7 +121,7 @@ export const removeBulk = (obj) => {
       data: obj
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         return res
       }
     }).catch(err => {

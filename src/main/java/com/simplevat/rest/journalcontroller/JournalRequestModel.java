@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 public class JournalRequestModel implements Serializable{
-	private Integer id;
+	private Integer journalId;
 	private Date journalDate;
 	private String referenceCode;
 	private String description;

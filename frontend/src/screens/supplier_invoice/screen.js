@@ -29,7 +29,7 @@ import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-
 import DatePicker from 'react-datepicker'
 
 
-import { Loader ,ConfirmDeleteModal} from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -41,6 +41,10 @@ import * as SupplierInvoiceActions from './actions'
 import {
   CommonActions
 } from 'services/global'
+import {
+  selectOptionsFactory,
+  filterFactory
+} from 'utils'
 
 import './style.scss'
 import { setNestedObjectValues } from 'formik';
@@ -48,6 +52,7 @@ import { setNestedObjectValues } from 'formik';
 const mapStateToProps = (state) => {
   return ({
     supplier_invoice_list: state.supplier_invoice.supplier_invoice_list,
+    supplier_list: state.supplier_invoice.supplier_list,
     status_list: state.supplier_invoice.status_list
   })
 }
@@ -67,15 +72,16 @@ class SupplierInvoice extends React.Component {
       dialog: false,
       actionButtons: {},
       filterData: {
-        supplierName: '',
+        supplierId: '',
         referenceNumber: '',
         invoiceDate: '',
         invoiceDueDate: '',
         amount: '',
         status: '',
-        contactType : "1"
+        contactType: 1
       },
       selectedRows: [],
+      contactType: 1,
 
     }
 
@@ -112,6 +118,8 @@ class SupplierInvoice extends React.Component {
   initializeData() {
     this.props.supplierInvoiceActions.getSupplierInoviceList(this.state.filterData)
     this.props.supplierInvoiceActions.getStatusList(this.state.filterData)
+    this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
+
   }
   componentWillUnmount() {
     this.setState({
@@ -176,7 +184,7 @@ class SupplierInvoice extends React.Component {
             }
           </DropdownToggle>
           <DropdownMenu right>
-            <DropdownItem onClick={() => this.props.history.push('/admin/expense/supplier-invoice/detail')}>
+            <DropdownItem onClick={() => this.props.history.push('/admin/expense/supplier-invoice/detail', { id: row.id })}>
               <i className="fas fa-edit" /> Edit
             </DropdownItem>
             <DropdownItem>
@@ -251,7 +259,7 @@ class SupplierInvoice extends React.Component {
 
   removeBulk() {
     this.removeDialog()
-    let { selectedRows ,filterData} = this.state;
+    let { selectedRows, filterData } = this.state;
     const { supplier_invoice_list } = this.props
     let obj = {
       ids: selectedRows
@@ -288,8 +296,8 @@ class SupplierInvoice extends React.Component {
   }
 
   render() {
-    const { loading,filterData,dialog,selectedRows} = this.state
-    const { supplier_invoice_list , status_list} = this.props
+    const { loading, filterData, dialog, selectedRows } = this.state
+    const { supplier_invoice_list, status_list ,supplier_list} = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -391,7 +399,15 @@ class SupplierInvoice extends React.Component {
                         <h5>Filter : </h5>
                         <Row>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Supplier Name" onChange={(e) => { this.handleChange(e.target.value, 'supplierName') }} />
+                            <Select
+                              className="select-default-width"
+                              placeholder="Select Supplier"
+                              id="supplier"
+                              name="supplier"
+                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
+                              value={filterData.supplierId}
+                              onChange={(option) => { this.handleChange(option.value, 'supplierId') }}
+                            />
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'referenceNumber') }} />
@@ -405,19 +421,19 @@ class SupplierInvoice extends React.Component {
                               selected={filterData.invoiceDate}
                               // value={filterData.invoiceDate}
                               onChange={(value) => {
-                                this.handleChange(value,"invoiceDate")
+                                this.handleChange(value, "invoiceDate")
                               }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                          <DatePicker
+                            <DatePicker
                               className="form-control"
                               id="date"
                               name="invoiceDueDate"
                               placeholderText="Invoice Due Date"
                               selected={filterData.invoiceDueDate}
                               onChange={(value) => {
-                                this.handleChange(value,"invoiceDueDate")
+                                this.handleChange(value, "invoiceDueDate")
                               }}
                             />
                           </Col>
@@ -428,15 +444,15 @@ class SupplierInvoice extends React.Component {
                             <Select
                               className=""
                               options={status_list ? status_list.map(item => {
-                                return {label: item,value: item}
-                              }): ''}
+                                return { label: item, value: item }
+                              }) : ''}
                               value={this.state.filterData.status}
                               onChange={(option) => { this.handleChange(option.value, 'status') }}
                               placeholder="Status"
                             />
                           </Col>
                           <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={supplier_invoice_list.length === 0}>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
                             </Button>
                           </Col>

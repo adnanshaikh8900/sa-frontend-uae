@@ -22,13 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.entity.Journal;
+import com.simplevat.entity.JournalLineItem;
 import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.JournalService;
 
 import io.swagger.annotations.ApiOperation;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.ArrayList;
 
 /**
  *
@@ -47,6 +50,9 @@ public class JournalRestController {
     @Autowired
     private JournalRestHelper journalRestHelper;
 
+    @Autowired
+    private JournalLineItemService journalLineItemService;
+
     @ApiOperation(value = "Get Journal List")
     @GetMapping(value = "/getList")
     public ResponseEntity getList(JournalRequestFilterModel filterModel, HttpServletRequest request) {
@@ -56,7 +62,7 @@ public class JournalRestController {
             filterDataMap.put(JournalFilterEnum.USER_ID, userId);
             filterDataMap.put(JournalFilterEnum.DESCRIPTION, filterModel.getDescription());
             filterDataMap.put(JournalFilterEnum.REFERENCE_CODE, filterModel.getReferenceCode());
-            if (filterModel.getJournalDate()!= null && !filterModel.getJournalDate().isEmpty()) {
+            if (filterModel.getJournalDate() != null && !filterModel.getJournalDate().isEmpty()) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getJournalDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
                 filterDataMap.put(JournalFilterEnum.JOURNAL_DATE, dateTime);
@@ -78,6 +84,12 @@ public class JournalRestController {
     public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
         Journal journal = journalService.findByPK(id);
         if (journal != null) {
+            if (journal.getJournalLineItems() != null) {
+                for (JournalLineItem lineItem : journal.getJournalLineItems()) {
+                    lineItem.setDeleteFlag(Boolean.TRUE);
+                    journalLineItemService.update(lineItem);
+                }
+            }
             journal.setDeleteFlag(Boolean.TRUE);
             journalService.update(journal, journal.getId());
         }
@@ -89,7 +101,9 @@ public class JournalRestController {
     @DeleteMapping(value = "/deletes")
     public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
         try {
-            journalService.deleteByIds(ids.getIds());
+            for (Integer id : ids.getIds()) {
+                deleteProduct(id);
+            }
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,7 +119,7 @@ public class JournalRestController {
         if (journal == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(journal, HttpStatus.OK);
+            return new ResponseEntity<>(journalRestHelper.getModel(journal), HttpStatus.OK);
         }
     }
 

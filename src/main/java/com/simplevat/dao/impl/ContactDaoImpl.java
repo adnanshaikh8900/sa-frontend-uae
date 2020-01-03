@@ -35,6 +35,9 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
         }
         query += " order by c.firstName, c.lastName ";
         TypedQuery<DropdownModel> typedQuery = getEntityManager().createQuery(query, DropdownModel.class);
+        if (contactType != null && !contactType.toString().isEmpty()) {
+            typedQuery.setParameter("contactType", contactType);
+        }
         return typedQuery.getResultList();
     }
 

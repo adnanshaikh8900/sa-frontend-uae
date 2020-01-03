@@ -5,34 +5,13 @@ import {
 } from 'utils'
 
 
-// Get Vat By ID
-export const getVatByID = (id) => {
-  return (dispatch) => {
-    let data = {
-      method: 'GET',
-      url: `rest/vat/getbyid?id=${id}`
-    }
-
-    return authApi(data).then(res => {
-      dispatch({
-        type: VAT.VAT_ROW,
-        payload: res.data
-      })
-      return res
-    }).catch(err => {
-      throw err
-    })
-  }
-}
-
-
 // Create & Save Bat
-export const createBat = (bat) => {
+export const createVat = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'POST',
-      url: `rest/vat/savevat?id=1`,
-      data: bat
+      url: `/rest/vat/save`,
+      data: obj
     }
 
     return authApi(data).then(res => {

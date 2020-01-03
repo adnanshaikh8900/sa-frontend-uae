@@ -15,7 +15,7 @@ import {
 } from 'reactstrap'
 import { ToastContainer, toast } from 'react-toastify'
 import _ from "lodash"
-import { Loader } from 'components'
+import { Loader ,ConfirmDeleteModal} from 'components'
 import {
   selectOptionsFactory
 } from 'utils'
@@ -26,7 +26,7 @@ import {
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
 
-import * as VatActions from '../../actions'
+import * as VatDetailActions from './actions'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
@@ -40,7 +40,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return ({
     commonActions: bindActionCreators(CommonActions, dispatch),
-    vatActions: bindActionCreators(VatActions, dispatch)
+    vatDetailActions: bindActionCreators(VatDetailActions, dispatch)
   })
 }
 
@@ -49,12 +49,16 @@ class DetailVatCode extends React.Component {
     super(props);
     this.state = {
       vatData: {},
-      loading: false
+      loading: false,
+      dialog: false
     }
 
     this.saveAndContinue = false;
 
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.deleteVat = this.deleteVat.bind(this)
+    this.removeVat = this.removeVat.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
 
     this.id = new URLSearchParams(props.location.search).get('id')
   }
@@ -62,7 +66,7 @@ class DetailVatCode extends React.Component {
   componentDidMount() {
     if (this.id) {
       this.setState({ loading: true });
-      this.props.vatActions.getVatByID(this.id).then(res => {
+      this.props.vatDetailActions.getVatByID(this.id).then(res => {
         if (res.status === 200)
           this.setState({ 
             loading: false,
@@ -74,7 +78,7 @@ class DetailVatCode extends React.Component {
 
   // Create or Edit Vat
   handleSubmit(data){
-    this.props.vatActions.createBat(data).then(res => {
+    this.props.vatDetailActions.updateVat(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Vat code Updated Successfully!')
         this.props.history.push('/admin/master/vat-code')
@@ -84,8 +88,36 @@ class DetailVatCode extends React.Component {
     })
   }
 
+  deleteVat() {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removeVat}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeVat() {
+    this.props.vatDetailActions.deleteVat(this.id).then(res => {
+      if (res.status === 200) {
+        // this.success('Chart Account Deleted Successfully');
+        this.props.commonActions.tostifyAlert('success', 'Vat Deleted Successfully')
+        this.props.history.push('/admin/master/vat-code')
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
   render() {
-    const { loading } = this.state
+    const { loading , dialog} = this.state
 
     return (
       <div className="detail-vat-code-screen">
@@ -100,6 +132,7 @@ class DetailVatCode extends React.Component {
                   </div>
                 </CardHeader>
                 <CardBody>
+                  {dialog}
                   {loading ? (
                     <Loader></Loader>
                   ) : (
@@ -159,7 +192,7 @@ class DetailVatCode extends React.Component {
                                 <Row>
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                     <FormGroup>
-                                      <Button type="button" color="danger" className="btn-square">
+                                      <Button type="button" color="danger" className="btn-square" onClick={this.deleteVat}>
                                         <i className="fa fa-trash"></i> Delete
                                       </Button>
                                     </FormGroup>

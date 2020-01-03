@@ -200,7 +200,7 @@ class Journal extends React.Component {
 
 
   goToDetail(row) {
-    this.props.history.push('/admin/accountant/journal/detail', { id: row['id'] })
+    this.props.history.push('/admin/accountant/journal/detail', { id: row['journalId'] })
   }
 
   onRowSelect(row, isSelected, e) {
@@ -383,7 +383,7 @@ class Journal extends React.Component {
                             <Input type="text" placeholder="Description" onChange={(e) => { this.handleChange(e.target.value, 'description') }} />
                           </Col>
                           <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={journal_list.length === 0}>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
                             </Button>
                           </Col>

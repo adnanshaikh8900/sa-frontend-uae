@@ -141,10 +141,9 @@ class CreateExpense extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
-
     this.props.expenseCreateActions.createExpense(formData).then(res => {
       if (res.status === 200) {
-        resetForm()
+        // resetForm()
         this.props.commonActions.tostifyAlert('success', 'New Expense Created Successfully.')
         if (this.state.createMore) {
           this.setState({
@@ -215,7 +214,7 @@ class CreateExpense extends React.Component {
                               .required('Expense Category is required'),
                             expenseDate: Yup.date()
                               .required('Expense Date is Required'),
-                              expenseAmount: Yup.string()
+                            expenseAmount: Yup.string()
                               .required('Amount is Required')
                               .matches(/^[0-9]*$/, "Enter a Valid Amount")
                           })
@@ -298,7 +297,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="employee"
                                     name="employee"
-                                    options={employee_list ? selectOptionsFactory.renderOptions('firstName', 'userId', employee_list) : []}
+                                    options={employee_list ? selectOptionsFactory.renderOptions('label', 'value', employee_list) : []}
                                     value={props.values.employee}
                                     onChange={option => props.handleChange('employee')(option)}
                                   />
@@ -311,7 +310,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="project"
                                     name="project"
-                                    options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list) : []}
+                                    options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list) : []}
                                     value={props.values.project}
                                     onChange={option => props.handleChange('project')(option)}
                                   />

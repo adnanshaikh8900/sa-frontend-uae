@@ -325,7 +325,7 @@ class ChartAccount extends React.Component {
 
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={transaction_category_list.length === 0}>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
                               </Button>
                             </Col>

@@ -1,37 +1,438 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Row,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+  Label
+} from 'reactstrap'
+import Select from 'react-select'
+import DatePicker from 'react-datepicker'
+import { Formik } from 'formik';
+import * as Yup from "yup";
+import _ from 'lodash'
 
+import {
+  CommonActions
+} from 'services/global'
+import { selectOptionsFactory } from 'utils'
+import * as EmployeeActions from '../../actions';
+import * as EmployeeCreateActions from './actions';
+
+import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
+    currency_list: state.employee.currency_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
+    commonActions: bindActionCreators(CommonActions, dispatch),
+    employeeActions: bindActionCreators(EmployeeActions, dispatch),
+    employeeCreateActions: bindActionCreators(EmployeeCreateActions, dispatch)
+
   })
 }
 
 class CreateEmployee extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
-      
+      loading: false,
+      createMore: false,
+      initValue: {
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        dob: '',
+        referenceCode: '',
+        title: '',
+        billingEmail: '',
+        vatRegestationNo: '',
+        currencyCode: '',
+        poBoxNumber: '',
+      },
     }
 
+    // this.changeBirthday = this.changeBirthday.bind(this)
   }
 
+  // changeBirthday(date){
+  //   this.setState({
+  //     birthday: date
+  //   })
+  // }
+
+  // handleChange = (name, e) => {
+  //    this.setState({
+  //     currentData: _.set(
+  //       { ...this.state.currentData },
+  //       e.target.name && e.target.name !== '' ? e.target.name : name,
+  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
+  //     )
+  //   })
+  // this.setState({
+  //   currentData: _.set(
+  //     { ...this.state.currentData },
+  //     e.target.name && e.target.name !== '' ? e.target.name : name,
+  //     e.target.type === 'checkbox' ? e.target.checked : e.target.value
+  //   )
+  // })
+
+  componentDidMount() {
+    this.props.employeeActions.getCurrencyList()
+  }
+
+  handleSubmit(data) {
+    this.props.employeeCreateActions.createEmployee(data).then(res => {
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'New Employee Created Successfully')
+        if (this.state.createMore) {
+          this.setState({
+            createMore: false
+          })
+        } else {
+          this.props.history.push('/admin/master/employee')
+        }
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    })
+  }
   render() {
 
+    const { currency_list } = this.props
     return (
       <div className="create-employee-screen">
         <div className="animated fadeIn">
+          <Row>
+            <Col lg={12} className="mx-auto">
+              <Card>
+                <CardHeader>
+                  <Row>
+                    <Col lg={12}>
+                      <div className="h4 mb-0 d-flex align-items-center">
+                        <i className="nav-icon fas fa-user-tie" />
+                        <span className="ml-2">Create Employee</span>
+                      </div>
+                    </Col>
+                  </Row>
+                </CardHeader>
+                <CardBody>
+                  <Row>
+                    <Col lg={12}>
+                      <Formik
+                        initialValues={this.state.initValue}
+                        onSubmit={(values, { resetForm }) => {
+                          this.handleSubmit(values)
+                          // resetForm(this.state.initValue)
+
+                          // this.setState({
+                          //   selectedContactCurrency: null,
+                          //   selectedCurrency: null,
+                          //   selectedInvoiceLanguage: null
+                          // })
+                        }}
+                        validationSchema={Yup.object().shape({
+                          firstName: Yup.string()
+                            .required("First Name is Required"),
+                          lastName: Yup.string()
+                            .required("Last Name is Required"),
+                          middleName: Yup.string()
+                            .required("Middle Name is Required"),
+                          password: Yup.string()
+                            .required("Password is Required")
+                            // .min(8, "Password Too Short")
+                            .matches(
+                              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                              "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+                            ),
+                          confirmPassword: Yup.string()
+                            .required('Confirm Password is Required')
+                            .oneOf([Yup.ref("password"), null], "Passwords must match"),
+                          dob: Yup.date()
+                            .required('DOB is Required')
+                        })}
+                      >
+                        {props => (
+
+                          <Form onSubmit={props.handleSubmit}>
+                            <h4 className="mb-4">Contact Name</h4>
+                            <Row>
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="select">Reference Code</Label>
+                                  <Input
+                                    type="text"
+                                    id="referenceCode"
+                                    name="referenceCode"
+                                    onChange={(value) => { props.handleChange('referenceCode')(value) }}
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="select">Title</Label>
+                                  <Input
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    onChange={(value) => { props.handleChange('title')(value) }}
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="select">Email</Label>
+                                  <Input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    onChange={(value) => { props.handleChange('email')(value) }}
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row className="row-wrapper">
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="select">First Name</Label>
+                                  <Input
+                                    type="text"
+                                    id="firstName"
+                                    name="firstName"
+                                    onChange={(value) => { props.handleChange('firstName')(value) }}
+                                    className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
+                                  />
+                                  {props.errors.firstName && props.touched.firstName && (
+                                    <div className="invalid-feedback">{props.errors.firstName}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="select">Middle Name</Label>
+                                  <Input
+                                    type="text"
+                                    id="middleName"
+                                    name="middleName"
+                                    onChange={(value) => { props.handleChange('middleName')(value) }}
+                                    className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
+                                  />
+                                  {props.errors.middleName && props.touched.middleName && (
+                                    <div className="invalid-feedback">{props.errors.middleName}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="select">Last Name</Label>
+                                  <Input
+                                    type="text"
+                                    id="lastName"
+                                    name="lastName"
+                                    onChange={(value) => { props.handleChange('lastName')(value) }}
+                                    className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
+                                  />
+                                  {props.errors.lastName && props.touched.lastName && (
+                                    <div className="invalid-feedback">{props.errors.lastName}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row className="row-wrapper">
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="select">Password</Label>
+                                  <Input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    onChange={(value) => { props.handleChange('password')(value) }}
+                                    className={props.errors.password && props.touched.password ? "is-invalid" : ""}
+                                  />
+                                  {props.errors.password && props.touched.password && (
+                                    <div className="invalid-feedback">{props.errors.password}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="select">Confirm Password</Label>
+                                  <Input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    onChange={(value) => { props.handleChange('confirmPassword')(value) }}
+                                    className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
+                                  />
+                                  {props.errors.confirmPassword && props.touched.confirmPassword && (
+                                    <div className="invalid-feedback">{props.errors.confirmPassword}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                              <Col md="4">
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="date">Date Of Birth</Label>
+                                  <DatePicker
+                                    className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
+                                    id="dob"
+                                    name="dob"
+                                    placeholderText="Enter Birth Date"
+                                    selected={props.values.dob}
+                                    onChange={(value) => {
+                                      props.handleChange("dob")(value)
+                                    }}
+                                  />
+                                  {props.errors.dob && props.touched.dob && (
+                                    <div className="invalid-feedback">{props.errors.dob}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <hr />
+                            <h4 className="mb-3 mt-3">Invoicing Details</h4>
+                            <Row className="row-wrapper">
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="billingEmail">Billing Email</Label>
+                                  <Input
+                                    type="text"
+                                    id="billingEmail"
+                                    name="billingEmail"
+
+                                    onChange={(value) => { props.handleChange("billingEmail")(value) }}
+                                    value={props.values.billingEmail}
+                                    className={
+                                      props.errors.billingEmail && props.touched.billingEmail
+                                        ? "is-invalid"
+                                        : ""
+                                    }
+                                  />
+                                  {props.billingEmail && props.touched.billingEmail && (
+                                    <div className="invalid-feedback">{props.errors.billingEmail}</div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="contractPoNumber">Contract PO Number</Label>
+                                  <Input
+                                    type="text"
+                                    id="contractPoNumber"
+                                    name="contractPoNumber"
+
+                                    onChange={(value) => { props.handleChange("contractPoNumber")(value) }}
+                                    value={props.values.contractPoNumber}
+                                    className={
+                                      props.errors.contractPoNumber && props.touched.contractPoNumber
+                                        ? "is-invalid"
+                                        : ""
+                                    }
+                                  />
+                                  {props.errors.contractPoNumber && props.touched.contractPoNumber && (
+                                    <div className="invalid-feedback">{props.errors.contractPoNumber}</div>
+                                  )}
+
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row className="row-wrapper">
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="vatRegistrationNumber">Vat Registration Number</Label>
+                                  <Input
+                                    type="text"
+                                    id="vatRegistrationNumber"
+                                    name="vatRegistrationNumber"
+
+                                    onChange={(value) => { props.handleChange("vatRegistrationNumber")(value) }}
+                                    value={props.values.vatRegistrationNumber}
+                                    className={
+                                      props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber
+                                        ? "is-invalid"
+                                        : ""
+                                    }
+                                  />
+                                  {props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber && (
+                                    <div className="invalid-feedback">{props.errors.vatRegistrationNumber}</div>
+                                  )}
+
+                                </FormGroup>
+                              </Col>
+                              <Col md="4">
+                                <FormGroup>
+                                  <Label htmlFor="currencyCode">Currency Code</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                    value={props.values.currencyCode}
+                                    onChange={option => props.handleChange('currencyCode')(option.value)}
+                                    placeholder="Select Currency"
+                                    id="currencyCode"
+                                    name="currencyCode"
+                                    className={
+                                      props.errors.currencyCode && props.touched.currencyCode
+                                        ? "is-invalid"
+                                        : ""
+                                    }
+                                  />
+                                  {props.errors.currencyCode && props.touched.currencyCode && (
+                                    <div className="invalid-feedback">{props.errors.currencyCode}</div>
+                                  )}
+
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col lg={12} className="mt-5">
+                                <FormGroup className="text-right">
+                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                    <i className="fa fa-dot-circle-o"></i> Create
+                                      </Button>
+                                  <Button name="button" color="primary" className="btn-square mr-3"
+                                    onClick={() => {
+                                      this.setState({ createMore: true }, () => {
+                                        props.handleSubmit()
+                                      })
+                                    }}>
+                                    <i className="fa fa-refresh"></i> Create and More
+                                      </Button>
+                                  <Button color="secondary" className="btn-square"
+                                    onClick={() => { this.props.history.push('/admin/master/employee') }}>
+                                    <i className="fa fa-ban"></i> Cancel
+                                      </Button>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                          </Form>
+                        )
+                        }
+                      </Formik>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
         </div>
       </div>
     )
   }
 }
 
+
 export default connect(mapStateToProps, mapDispatchToProps)(CreateEmployee)
+

@@ -10,6 +10,7 @@ public class ExpenseListModel {
 	private Integer expenseId;
 	private String payee;
 	private String expenseDescription;
+	private String receiptNumber;
 	private String transactionCategoryName;
 	private BigDecimal expenseAmount;
 	private Date expenseDate;

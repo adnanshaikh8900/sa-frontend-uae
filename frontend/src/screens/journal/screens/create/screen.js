@@ -271,6 +271,9 @@ class CreateJournal extends React.Component {
     const {data,initValue} = this.state
     data.map(item => {
       delete item.id
+      item.transactionCategoryId = item.transactionCategoryId ? item.transactionCategoryId :  ''
+      item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
+      item.contactId = item.contactId ? item.contactId : ''
     })
     const postData = {...values,...initValue,...{journalLineItems: this.state.data}}
     this.props.journalCreateActions.createJournal(postData).then(res => {

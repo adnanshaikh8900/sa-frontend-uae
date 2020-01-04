@@ -94,7 +94,7 @@ export const getVatList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getvat'
+      url: '/rest/vat/getList'
     }
 
     return authApi(data).then(res => {

@@ -11,6 +11,7 @@ import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.ContactService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.utils.FileHelper;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,39 +44,46 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/rest/invoice")
 public class InvoiceRestController implements Serializable {
-
+    
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-
+    
     @Autowired
     private InvoiceRestHelper invoiceRestHelper;
-
+    
     @Autowired
     private InvoiceService invoiceService;
-
+    
+    @Autowired
+    private ContactService contactService;
+    
     @Autowired
     private FileHelper fileHelper;
-
+    
     @ApiOperation(value = "Get Invoice List")
     @GetMapping(value = "/getList")
-    public ResponseEntity getInvoiceList(InvoiceRequestFilterModel filterModel,
-            HttpServletRequest request) {
+    public ResponseEntity getInvoiceList(InvoiceRequestFilterModel filterModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             Map<InvoiceFilterEnum, Object> filterDataMap = new HashMap();
-//        filterDataMap.put(SupplierInvoiceFilterEnum.CUSTOMER_NAME, filterModel.getCustomerName());
+            if (filterModel.getContact() != null) {
+                filterDataMap.put(InvoiceFilterEnum.CONTACT, contactService.findByPK(filterModel.getContact()));
+            }
             filterDataMap.put(InvoiceFilterEnum.INVOICE_NUMBER, filterModel.getReferenceNumber());
             if (filterModel.getAmount() != null) {
                 filterDataMap.put(InvoiceFilterEnum.INVOICE_AMOUNT, filterModel.getAmount());
             }
             if (filterModel.getInvoiceDate() != null && !filterModel.getInvoiceDate().isEmpty()) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDate()).getTime())
+                        .atZone(ZoneId.systemDefault()).toLocalDateTime();
                 filterDataMap.put(InvoiceFilterEnum.INVOICE_DATE, dateTime);
             }
             if (filterModel.getInvoiceDueDate() != null && !filterModel.getInvoiceDueDate().isEmpty()) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDueDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                LocalDateTime dateTime = Instant
+                        .ofEpochMilli(dateFormat.parse(filterModel.getInvoiceDueDate()).getTime())
+                        .atZone(ZoneId.systemDefault()).toLocalDateTime();
                 filterDataMap.put(InvoiceFilterEnum.INVOICE_DUE_DATE, dateTime);
             }
             filterDataMap.put(InvoiceFilterEnum.STATUS, filterModel.getStatus());
@@ -99,8 +106,7 @@ public class InvoiceRestController implements Serializable {
         List<DropdownModel> dropdownModels = invoiceService.getInvoicesForDropdown();
         return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
     }
-
-
+    
     @ApiOperation(value = "Delete Invoice By ID")
     @DeleteMapping(value = "/delete")
     public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
@@ -110,9 +116,9 @@ public class InvoiceRestController implements Serializable {
             invoiceService.update(invoice, invoice.getId());
         }
         return new ResponseEntity(HttpStatus.OK);
-
+        
     }
-
+    
     @ApiOperation(value = "Delete Invoices in Bulk")
     @DeleteMapping(value = "/deletes")
     public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
@@ -123,9 +129,9 @@ public class InvoiceRestController implements Serializable {
             e.printStackTrace();
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-
+        
     }
-
+    
     @ApiOperation(value = "Get Invoice By ID")
     @GetMapping(value = "/getInvoiceById")
     public ResponseEntity getInvoiceById(@RequestParam(value = "id") Integer id) {
@@ -133,15 +139,13 @@ public class InvoiceRestController implements Serializable {
         if (invoice == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(invoice, HttpStatus.OK);
+            return new ResponseEntity<>(invoiceRestHelper.getRequestModel(invoice), HttpStatus.OK);
         }
     }
-
+    
     @ApiOperation(value = "Add New Invoice")
     @PostMapping(value = "/save")
-    public ResponseEntity save(
-            @ModelAttribute InvoiceRequestModel requestModel,
-            HttpServletRequest request) {
+    public ResponseEntity save(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
@@ -158,5 +162,18 @@ public class InvoiceRestController implements Serializable {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+    
+    @ApiOperation(value = "Update Invoice")
+    @PostMapping(value = "/update")
+    public ResponseEntity update(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
+        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+        Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
+        invoice.setLastUpdateBy(userId);
+        invoice.setLastUpdateDate(LocalDateTime.now());
+        invoiceService.update(invoice);
+        
+        return ResponseEntity.status(HttpStatus.OK).build();
+        
     }
 }

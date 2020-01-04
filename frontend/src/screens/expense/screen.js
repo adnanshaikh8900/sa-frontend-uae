@@ -320,7 +320,7 @@ class Expense extends React.Component {
                             </FormGroup>
                           </Col>
                           <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={expense_list.length === 0}>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
                             </Button>
                           </Col>

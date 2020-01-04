@@ -64,6 +64,7 @@ class Payment extends React.Component {
       loading: true,
       selectedRows: [],
       dialog: null,
+      contactType:1,
       filterData: {
         supplierId: '',
         paymentDate: '',
@@ -113,7 +114,7 @@ class Payment extends React.Component {
     const postData = { ...filterData, ...paginationData }
     this.props.paymentActions.getPaymentList(postData).then(res => {
       if (res.status === 200) {
-        this.props.paymentActions.getSupplierList()
+        this.props.paymentActions.getSupplierContactList(this.state.contactType);
         this.setState({ loading: false })
       }
     }).catch(err => {
@@ -326,7 +327,7 @@ class Payment extends React.Component {
                             />
                           </Col>
                           <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} disabled={payment_list.length === 0}>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
                             </Button>
                           </Col>

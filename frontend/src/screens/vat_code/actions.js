@@ -11,7 +11,7 @@ export const getVatList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getvat'
+      url: '/rest/vat/getList'
     }
 
     return authApi(data).then(res => {
@@ -32,7 +32,7 @@ export const getVatByID = (id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/vat/getbyid?id=${id}`
+      url: `/rest/vat/getById?id=${id}`
     }
 
     return authApi(data).then(res => {
@@ -49,35 +49,35 @@ export const getVatByID = (id) => {
 
 
 // Create & Save Bat
-export const createBat = (bat) => {
-  return (dispatch) => {
-    let data = {
-      method: 'POST',
-      url: `rest/vat/savevat?id=1`,
-      data: bat
-    }
+// export const createBat = (bat) => {
+//   return (dispatch) => {
+//     let data = {
+//       method: 'POST',
+//       url: `rest/vat/savevat?id=1`,
+//       data: bat
+//     }
 
-    return authApi(data).then(res => {
-      return res
-    }).catch(err => {
-      throw err
-    })
-  }
-}
+//     return authApi(data).then(res => {
+//       return res
+//     }).catch(err => {
+//       throw err
+//     })
+//   }
+// }
 
-// Delete Vat Row
-export const deleteVat = (ids) => {
-  return (dispatch) => {
-    let data = {
-      method: 'DELETE',
-      url: `rest/vat/deletevats?id=1`,
-      data: {ids: ids}
-    }
+// // Delete Vat Row
+// export const deleteVat = (ids) => {
+//   return (dispatch) => {
+//     let data = {
+//       method: 'DELETE',
+//       url: `rest/vat/deletevats?id=1`,
+//       data: {ids: ids}
+//     }
 
-    return authApi(data).then(res => {
-      return res
-    }).catch(err => {
-      throw err
-    })
-  }
-}
+//     return authApi(data).then(res => {
+//       return res
+//     }).catch(err => {
+//       throw err
+//     })
+//   }
+// }

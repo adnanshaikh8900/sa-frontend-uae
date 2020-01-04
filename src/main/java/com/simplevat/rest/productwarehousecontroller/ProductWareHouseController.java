@@ -9,6 +9,9 @@ import com.simplevat.rest.productcontroller.ProductRestHelper;
 import com.simplevat.entity.ProductWarehouse;
 import com.simplevat.service.ProductWarehouseService;
 import com.simplevat.service.VatCategoryService;
+
+import io.swagger.annotations.ApiOperation;
+
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,8 @@ public class ProductWareHouseController implements Serializable {
     @Autowired
     private ProductWarehouseService productWarehouseService;
 
-    @GetMapping(value = "/getwarehouse")
+    @ApiOperation(value = "get Ware House List")
+    @GetMapping(value = "/getWareHouse")
     public ResponseEntity getProductWarehouse() {
         List<ProductWarehouse> productWarehouseList = productWarehouseService.getProductWarehouseList();
         if (productWarehouseList == null) {
@@ -40,7 +44,8 @@ public class ProductWareHouseController implements Serializable {
         return new ResponseEntity<>(productWarehouseList, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/savewarehouse")
+    @ApiOperation(value = "Save Ware House")
+    @PostMapping(value = "/saveWareHouse")
     public ResponseEntity createNewWarehouse(@RequestBody ProductWarehouse productWarehouse) {
 
         if (productWarehouse != null) {

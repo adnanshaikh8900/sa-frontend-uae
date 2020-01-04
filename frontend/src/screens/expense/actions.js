@@ -78,7 +78,7 @@ export const getProjectList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/project/getList'
+      url: 'rest/project/getProjectsForDropdown'
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
@@ -211,7 +211,7 @@ export const getEmployeeList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: 'rest/employee/getEmployeeList'
+      url: 'rest/employee/getEmployeesForDropdown'
     }
 
     return authApi(data).then(res => {

@@ -18,8 +18,8 @@ import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import _ from 'lodash'
-import * as createInvoiceActions from './actions';
-import * as  createSupplier from "../../actions";
+import * as SupplierInvoiceCreateActions from './actions';
+import * as  SupplierInvoiceActions from "../../actions";
 
 import { SupplierModal } from '../../sections'
 import { Loader } from 'components'
@@ -49,8 +49,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    createSupplier: bindActionCreators(createSupplier, dispatch),
-    createInvoiceActions: bindActionCreators(createInvoiceActions, dispatch),
+    supplierInvoiceActions: bindActionCreators(SupplierInvoiceActions, dispatch),
+    supplierInvoiceCreateActions: bindActionCreators(SupplierInvoiceCreateActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
 
   })
@@ -84,7 +84,7 @@ class CreateSupplierInvoice extends React.Component {
         currency: '',
         invoiceDueDate: '',
         invoiceDate: '',
-        shippingContact: '',
+        contactId: '',
         project: '',
         invoice_number: '',
         total_net: 0,
@@ -93,7 +93,7 @@ class CreateSupplierInvoice extends React.Component {
         notes: ''
       },
       currentData: {},
-      contactType: "1",
+      contactType: 1,
       openSupplierModal: false,
       selectedContact: ''
     }
@@ -189,11 +189,10 @@ class CreateSupplierInvoice extends React.Component {
   }
 
   getInitialData = () => {
-    this.props.createSupplier.getProjectList();
-    this.props.createSupplier.getContactList(this.state.contactType);
-    this.props.createSupplier.getCurrencyList();
-    this.props.createSupplier.getVatList();
-    this.props.createSupplier.getSupplierList()
+    this.props.supplierInvoiceActions.getProjectList();
+    this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
+    this.props.supplierInvoiceActions.getCurrencyList();
+    this.props.supplierInvoiceActions.getVatList();
 
   }
 
@@ -310,7 +309,7 @@ class CreateSupplierInvoice extends React.Component {
       currency,
       invoiceDueDate,
       invoiceDate,
-      shippingContact,
+      contactId,
       project,
       invoice_number,
       invoiceVATAmount,
@@ -331,8 +330,8 @@ class CreateSupplierInvoice extends React.Component {
     formData.append('lineItemsString', JSON.stringify(this.state.data));
     formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
     formData.append('totalAmount', this.state.initValue.totalAmount);
-    if (shippingContact !== null && shippingContact.value) {
-      formData.append("contactId", shippingContact.value);
+    if (contactId !== null && contactId.value) {
+      formData.append("contactId", contactId.value);
     }
     if (currency !== null && currency.value) {
       formData.append("currencyCode", currency.value);
@@ -343,7 +342,7 @@ class CreateSupplierInvoice extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attchmentFile", this.uploadFile.files[0]);
     }
-    this.props.createInvoiceActions.createInvoice(formData).then(res => {
+    this.props.supplierInvoiceCreateActions.createInvoice(formData).then(res => {
       this.props.commonActions.tostifyAlert('success', 'New Invoice Created Successfully.')
       if (this.state.createMore) {
         this.setState({
@@ -380,7 +379,7 @@ class CreateSupplierInvoice extends React.Component {
 
   closeSupplierModal(res) {
     if (res) {
-      this.props.paymentActions.getSupplierList();
+      this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
     }
     this.setState({ openSupplierModal: false })
   }
@@ -464,25 +463,25 @@ class CreateSupplierInvoice extends React.Component {
                             <Row>
                             <Col lg={4}>
                                       <FormGroup className="mb-3">
-                                        <Label htmlFor="shippingContact">Supplier Name</Label>
+                                        <Label htmlFor="contactId">Supplier Name</Label>
                                         <Select
 
-                                          id="shippingContact"
-                                          name="shippingContact"
+                                          id="contactId"
+                                          name="contactId"
                                           options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
                                           value={selectedContact}
                                           onChange={option => {
-                                            props.handleChange('shippingContact')(option)
+                                            props.handleChange('contactId')(option)
                                             this.getCurrentUser(option)
                                           }}
                                           className={
-                                            props.errors.shippingContact && props.touched.shippingContact
+                                            props.errors.contactId && props.touched.contactId
                                               ? 'is-invalid'
                                               : ''
                                           }
                                         />
-                                        {props.errors.shippingContact && props.touched.shippingContact && (
-                                          <div className="invalid-feedback">{props.errors.shippingContact}</div>
+                                        {props.errors.contactId && props.touched.contactId && (
+                                          <div className="invalid-feedback">{props.errors.contactId}</div>
                                         )}
                                       </FormGroup>
                                       <Button type="button" color="primary" className="btn-square mr-3 mb-3"
@@ -842,7 +841,7 @@ class CreateSupplierInvoice extends React.Component {
           openSupplierModal={this.state.openSupplierModal}
           closeSupplierModal={(e) => { this.closeSupplierModal(e) }}
           getCurrentUser={e => this.getCurrentUser(e)}
-          createSupplier={this.props.createSupplier.createSupplier}
+          createSupplier={this.props.supplierInvoiceActions.createSupplier}
         />
       </div>
     )

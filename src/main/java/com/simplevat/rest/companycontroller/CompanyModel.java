@@ -7,19 +7,20 @@ import lombok.Data;
 @Data
 public class CompanyModel {
 
-	private MultipartFile companyLogo;
-	private Integer id;
-	private String CompanyName;
-	private Integer industryTypeCode;
-	private String companyAddressLine1;
-	private String companyAddressLine2;
-	private String companyCity;
-	private String companyState;
-	private Integer companycountryCode;
-	private String companyPostZipCode;
-	private String contactPersionName;
-	private String emailAddress;
-	private String phoneNumber;
-	private String CompanyId;
-	private String vatRegistrationNumber;
+    private MultipartFile companyLogo;
+    private Integer id;
+    private String name;
+    private Integer industryTypeCode;
+    private String addressLine1;
+    private String addressLine2;
+    private String city;
+    private String state;
+    private Integer countryCode;
+    private String postZipCode;
+    private String contactPersonName;
+    private String contactEmailAddress;
+    private String contactPhoneNumber;
+    private String phoneNumber;
+    private String companyRegistrationId;
+    private String vatNumber;
 }

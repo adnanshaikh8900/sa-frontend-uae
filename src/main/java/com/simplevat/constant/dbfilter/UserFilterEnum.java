@@ -4,26 +4,26 @@ import lombok.Getter;
 
 public enum UserFilterEnum {
 
-		FIRST_NAME("firstName", " like CONCAT(:firstName,'%')"),
-		DOB("dob", " = :dob"),
-	    ROLE("role", " like CONCAT(:role,'%')"),
-	    ACTIVE("isActive", " = :disActive"),
-	    COMPANY("company", " = :company"),
-	    DELETE_FLAG("deleteFlag", " = :deleteFlag");
+    FIRST_NAME("firstName", " like CONCAT(:firstName,'%')"),
+    DOB("dob", " = :dob"),
+    ROLE("role", " like CONCAT(:role,'%')"),
+    ACTIVE("isActive", " = :isActive"),
+    COMPANY("company", " = :company"),
+    DELETE_FLAG("deleteFlag", " = :deleteFlag");
 
-	    @Getter
-	    String dbColumnName;
+    @Getter
+    String dbColumnName;
 
-	    @Getter
-	    String condition;
+    @Getter
+    String condition;
 
-	    private UserFilterEnum(String dbColumnName) {
-	        this.dbColumnName = dbColumnName;
-	    }
+    private UserFilterEnum(String dbColumnName) {
+        this.dbColumnName = dbColumnName;
+    }
 
-	    private UserFilterEnum(String dbColumnName, String condition) {
-	        this.dbColumnName = dbColumnName;
-	        this.condition = condition;
-	    }
+    private UserFilterEnum(String dbColumnName, String condition) {
+        this.dbColumnName = dbColumnName;
+        this.condition = condition;
+    }
 
 }

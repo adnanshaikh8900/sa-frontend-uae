@@ -17,39 +17,39 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserModel {
 
-	private Integer id;
+    private Integer id;
 
-	private String firstName;
+    private String firstName;
 
-	private String lastName;
+    private String lastName;
 
-	private boolean active;
+    private Boolean active;
 
-	@JsonFormat(pattern="yyyy-MM-dd")
-	private Date dob;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date dob;
 
-	private Integer roleId;
+    private Integer roleId;
 
-	private String roleName;
+    private String roleName;
 
-	private Integer companyId;
+    private Integer companyId;
 
-	private String companyName;
+    private String companyName;
 
-	private String password;
+    private String password;
 
-	private String email;
+    private String email;
 
-	private MultipartFile profilePic;
+    private MultipartFile profilePic;
 
-	public String getFullName() {
-		StringBuilder sb = new StringBuilder();
-		if (firstName != null && !firstName.isEmpty()) {
-			sb.append(firstName).append(" ");
-		}
-		if (lastName != null && !lastName.isEmpty()) {
-			sb.append(lastName);
-		}
-		return sb.toString();
-	}
+    public String getFullName() {
+        StringBuilder sb = new StringBuilder();
+        if (firstName != null && !firstName.isEmpty()) {
+            sb.append(firstName).append(" ");
+        }
+        if (lastName != null && !lastName.isEmpty()) {
+            sb.append(lastName);
+        }
+        return sb.toString();
+    }
 }

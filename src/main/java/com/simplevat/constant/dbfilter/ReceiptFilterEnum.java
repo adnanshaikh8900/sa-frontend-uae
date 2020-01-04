@@ -9,7 +9,7 @@ public enum ReceiptFilterEnum {
     RECEIPT_DATE("receiptDate", "= :receiptDate"),
     INVOICE("invoice", ("= :invoice")),
     CONTACT("contact", "= :contact"),
-    REFERENCE_CODE("referenceCode", "= :referenceCode"),
+    REFERENCE_CODE("referenceCode", " like CONCAT(:referenceCode,'%')"),
     DELETE("deleteFlag", " = :deleteFlag"),
     USER_ID("createdBy", "= :createdBy");
 

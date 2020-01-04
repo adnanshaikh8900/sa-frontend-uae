@@ -5,7 +5,12 @@
  */
 package com.simplevat.dao;
 
+import java.util.List;
+import java.util.Map;
+
+import com.simplevat.constant.dbfilter.CompanyFilterEnum;
 import com.simplevat.entity.Company;
+import com.simplevat.rest.DropdownModel;
 
 /**
  *
@@ -13,5 +18,11 @@ import com.simplevat.entity.Company;
  */
 public interface CompanyDao extends Dao<Integer, Company> {
 
-    Company getCompany();
+    public Company getCompany();
+
+    public List<Company> getCompanyList(Map<CompanyFilterEnum, Object> filterMap);
+
+    public List<DropdownModel> getCompaniesForDropdown();
+
+    public void deleteByIds(List<Integer> ids);
 }

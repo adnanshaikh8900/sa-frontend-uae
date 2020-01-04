@@ -120,7 +120,7 @@ public class ReceiptController {
             if (receipt == null) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity<>(receipt, HttpStatus.OK);
+                return new ResponseEntity<>(receiptRestHelper.getRequestModel(receipt), HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();

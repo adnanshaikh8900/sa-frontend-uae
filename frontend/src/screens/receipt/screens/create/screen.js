@@ -121,14 +121,17 @@ class CreateReceipt extends React.Component {
 
                           this.handleSubmit(values)
                         }}
-                      // validationSchema={
-                      //   Yup.object().shape({
-                      //   productName: Yup.string()
-                      //     .required("Product Name is Required"),
-                      //   vatCategoryId: Yup.string()
-                      //     .required("Vat Category is Required")
-                      //     .nullable()
-                      // })}
+                      validationSchema={
+                        Yup.object().shape({
+                        receiptDate: Yup.date()
+                          .required("Receipt Date is Required"),
+                        referenceCode: Yup.string()
+                          .required("Reference Number is Required"),
+                        contactId: Yup.string()
+                        .required('Customer is required'),
+                        amount: Yup.string()
+                        .required('Amount is required')
+                      })}
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -151,7 +154,7 @@ class CreateReceipt extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="receipt_date">Receipt Date</Label>
                                   <DatePicker
-                                   className="form-control"
+                                  
                                    id="date"
                                    name="receiptDate"
                                   placeholderText="Receipt Date"
@@ -159,7 +162,12 @@ class CreateReceipt extends React.Component {
                                   onChange={(value) => {
                                   props.handleChange("receiptDate")(value)
                               }}
-                            />
+                              className={`form-control ${props.errors.receiptDate && props.touched.receiptDate ? "is-invalid" : ""}`}
+
+                              />
+                              {props.errors.receiptDate && props.touched.receiptDate && (
+                                <div className="invalid-feedback">{props.errors.receiptDate}</div>
+                              )}
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -173,7 +181,12 @@ class CreateReceipt extends React.Component {
                                     name="referenceCode"
                                     placeholder="Reference Number"
                                     onChange={option => {props.handleChange('referenceCode')(option)}}
-                                  />
+                                    className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
+
+                                    />
+                                    {props.errors.referenceCode && props.touched.referenceCode && (
+                                      <div className="invalid-feedback">{props.errors.referenceCode}</div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
@@ -181,7 +194,7 @@ class CreateReceipt extends React.Component {
                                   <Label htmlFor="customer_name">Customer Name</Label>
                                   <Select
                                 options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list) : []}
-                                className="select-default-width"
+                                // className="select-default-width"
                                 placeholder="Customer Name"
                                 value={props.values.contactId}
                                 onChange={(option) => {
@@ -190,7 +203,12 @@ class CreateReceipt extends React.Component {
                                     props.handleChange('contactId')(option.value)
                                   }
                                 }}
-                              />
+                                className={`${props.errors.contactId && props.touched.contactId ? "is-invalid" : ""}`}
+
+                                />
+                                {props.errors.contactId && props.touched.contactId && (
+                                  <div className="invalid-feedback">{props.errors.contactId}</div>
+                                )}
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -237,7 +255,12 @@ class CreateReceipt extends React.Component {
                                     placeholder="Amount"
                                     onChange={(value) => {props.handleChange('amount')(value)}}
 
-                                  />
+                                    className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
+
+                                    />
+                                    {props.errors.amount && props.touched.amount && (
+                                      <div className="invalid-feedback">{props.errors.amount}</div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>

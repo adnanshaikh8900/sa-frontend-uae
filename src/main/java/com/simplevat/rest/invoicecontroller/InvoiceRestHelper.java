@@ -169,6 +169,9 @@ public class InvoiceRestHelper {
             Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
             requestModel.setInvoiceDueDate(date);
         }
+        if(invoice.getReceiptAttachmentFileName() != null){
+            requestModel.setFileName(invoice.getReceiptAttachmentFileName());
+        }
         requestModel.setTotalAmount(invoice.getTotalAmount());
         requestModel.setContactPoNumber(invoice.getContactPoNumber());
         requestModel.setTotalVatAmount(invoice.getTotalVatAmount());

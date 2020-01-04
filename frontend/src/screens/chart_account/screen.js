@@ -345,11 +345,11 @@ class ChartAccount extends React.Component {
                           className="product-table"
                           trClassName="cursor-pointer"
                           csvFileName="Chart_Of_Account.csv"
+                          keyField="transactionCategoryId"
                           ref={node => this.table = node}
 
                         >
                           <TableHeaderColumn
-                            isKey
                             dataField="transactionCategoryCode"
                             dataSort
                           >

@@ -39,6 +39,7 @@
     "react-draft-wysiwyg": "^1.13.2",
     "react-google-maps": "9.4.5",
     "react-grid-layout": "^0.16.6",
+    "react-images-upload": "^1.2.7",
     "react-images-uploader": "^1.2.0-rc1",
     "react-ladda": "6.0.0",
     "react-progress-button": "^5.1.0",

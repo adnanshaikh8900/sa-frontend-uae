@@ -14,7 +14,8 @@ import {
   Label
 } from 'reactstrap'
 import Select from 'react-select'
-import ImagesUploader from 'react-images-uploader'
+import ImageUploader from 'react-images-upload'
+
 import DatePicker from 'react-datepicker'
 
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -56,9 +57,12 @@ class DetailUser extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
-      dialog:  null,
-      initValue: {}
+      loading: true,
+      dialog: null,
+      initValue: {},
+      selectedStatus: false,
+      pictures: [],
+
     }
 
 
@@ -66,7 +70,9 @@ class DetailUser extends React.Component {
     this.deleteUser = this.deleteUser.bind(this)
     this.removeUser = this.removeUser.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
-    // this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.uploadImage = this.uploadImage.bind(this);
+
 
 
   }
@@ -76,8 +82,36 @@ class DetailUser extends React.Component {
   }
 
   initializeData() {
-    const { id } = this.props.location.state.id
-    this.props.userDetailActions.getUserById(id)
+    console.log(this.props.location.state.id)
+    const { id } = this.props.location.state
+    this.props.userDetailActions.getUserById(id).then(res => {
+      this.props.userActions.getRoleList();
+      if (res.status === 200) {
+        this.setState({
+          initValue: {
+            firstName: res.data.firstName ? res.data.firstName : '',
+            lastName: res.data.lastName ? res.data.lastName : '',
+            email: res.data.email ? res.data.email : '',
+            password: '',
+            dob: res.data.dob ? res.data.dob : '',
+            active: res.data.active ? res.data.active : '',
+            confirmPassword: '',
+            roleId: res.data.roleId ? res.data.roleId : '',
+            companyId: res.data.companyId ? res.data.companyId : '',
+          },
+          loading: false,
+          selectedStatus: res.data.active ? true : false,
+        })
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    })
+  }
+
+  uploadImage(picture) {
+    this.setState({
+      pictures: picture,
+    });
   }
 
   deleteUser() {
@@ -109,8 +143,53 @@ class DetailUser extends React.Component {
     })
   }
 
-  render() {
+  handleSubmit(data) {
+    const {
+      firstName,
+      lastName,
+      email,
+      dob,
+      password,
+      roleId,
+      companyId,
+      active,
+    } = data;
+    const {id} = this.props.location.state;
+    const { pictures } = this.state;
+    let formData = new FormData();
+    formData.append("id", id);
 
+    formData.append("firstName", firstName ? firstName : '');
+    formData.append("lastName", lastName ? lastName : '');
+    formData.append("email", email ? email : '');
+    formData.append("dob", dob ? (typeof dob === "string" ? moment(dob).toDate() : dob) : (''));
+    formData.append("roleId", roleId ? roleId : '');
+    formData.append("active", this.state.selectedStatus);
+    formData.append("password", password ? password : '');
+    formData.append("companyId", companyId ? companyId : '');
+    if (pictures.length > 0) {
+      formData.append("attachmentFile ", pictures[0]);
+    }
+
+
+    this.props.userDetailActions.updateUser(formData).then(res => {
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'User Updated Successfully')
+        if (this.state.createMore) {
+          this.setState({
+            createMore: false
+          })
+        } else {
+          this.props.history.push('/admin/settings/user')
+        }
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    })
+  }
+
+  render() {
+    const {loading , dialog} = this.state
     const { role_list } = this.props
 
     return (
@@ -130,241 +209,318 @@ class DetailUser extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
-                  <Row>
-                    <Col lg={12}>
-                      <Formik
-                        initialValues={this.state.initValue}
-                        onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values)
-                          // resetForm(this.state.initValue)
+                  {dialog}
+                  {loading ? 
+                  (
+                    <Loader />
+                  )
+                    :
+                    (
+                      <Row>
+                  <Col lg={12}>
+                    <Formik
+                      initialValues={this.state.initValue}
+                      onSubmit={(values, { resetForm }) => {
+                        this.handleSubmit(values)
+                        // resetForm(this.state.initValue)
 
-                          // this.setState({
-                          //   selectedContactCurrency: null,
-                          //   selectedCurrency: null,
-                          //   selectedInvoiceLanguage: null
-                          // })
-                        }}
-                        validationSchema={Yup.object().shape({
-                          firstName: Yup.string()
-                            .required("First Name is Required"),
-                          lastName: Yup.string()
-                            .required("Last Name is Required"),
-                          password: Yup.string()
-                            .required("Password is Required")
-                            // .min(8, "Password Too Short")
-                            .matches(
-                              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                              "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
-                            ),
-                          confirmPassword: Yup.string()
-                            .required('Confirm Password is Required')
-                            .oneOf([Yup.ref("password"), null], "Passwords must match"),
-                          dateOfBirth: Yup.date()
-                            .required('DOB is Required')
-                        })}
-                      >
-                        {props => (
-
-                          <Form onSubmit={props.handleSubmit}>
-                            <Row>
-                              <Col lg={2}>
-                                <FormGroup className="mb-3 text-center">
-                                  <ImagesUploader
-                                    url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                    optimisticPreviews
-                                    multiple={false}
-                                    onLoadEnd={(err) => {
-                                      console.log(err)
-                                      if (err) {
-                                        console.error(err);
-                                      }
-                                    }}
-
+                        
+                        // this.setState({
+                        //   selectedContactCurrency: null,
+                        //   selectedCurrency: null,
+                        //   selectedInvoiceLanguage: null
+                        // })
+                      }}
+                      validationSchema={Yup.object().shape({
+                        firstName: Yup.string()
+                          .required("First Name is Required"),
+                        lastName: Yup.string()
+                          .required("Last Name is Required"),
+                        password: Yup.string()
+                          // .required("Password is Required")
+                          // .min(8, "Password Too Short")
+                          .matches(
+                            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                            "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+                          ),
+                        confirmPassword: Yup.string()
+                          // .required('Confirm Password is Required')
+                          .oneOf([Yup.ref("password"), null], "Passwords must match"),
+                        dob: Yup.date()
+                          .required('DOB is Required')
+                      })}
+                    >
+                      {props => (
+                        <Form onSubmit={props.handleSubmit}>
+                          <Row>
+                            <Col lg={2}>
+                              <FormGroup className="mb-3 text-center">
+                                {/* <ImagesUploader
+                                  // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                  optimisticPreviews
+                                  multiple={false}
+                                  onLoadEnd={(err) => {
+                                    console.log(err)
+                                    if (err) {
+                                      console.error(err);
+                                    }
+                                  }}
+                                  onChange={(e)=>{console.log(e)}}
+                                /> */}
+                                  <ImageUploader
+                                    withIcon={true}
+                                    buttonText='Choose images'
+                                    onChange={this.uploadImage}
+                                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                    maxFileSize={1048576}
+                                    withPreview={true}
+                                    singleImage={true}
+                                    withIcon={false}
+                                    buttonText="Choose Profile Image"
+                                    label="'Max file size: 1mb"
+                                    fileContainerStyle = {{
+                                    position: "relative",
+                                    height: "150px",
+                                    boxShadow: "2px 2px 3px 0 rgba(0, 0, 0)"
+                                  }}
+                                  buttonStyles={{
+                                    position: "absolute",
+                                    bottom:"-50px"
+                                  }}
                                   />
-                                </FormGroup>
-                              </Col>
-                              <Col lg={10}>
-                                <Row>
-                                  <Col lg={6}>
-                                    <FormGroup>
-                                      <Label htmlFor="select">First Name</Label>
-                                      <Input
-                                        type="text"
-                                        id="firstName"
-                                        name="firstName"
-                                        onChange={(value) => { props.handleChange('firstName')(value) }}
-                                        className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
-                                      />
-                                      {props.errors.firstName && props.touched.firstName && (
-                                        <div className="invalid-feedback">{props.errors.firstName}</div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={6}>
-                                    <FormGroup>
-                                      <Label htmlFor="select">Last Name</Label>
-                                      <Input
-                                        type="text"
-                                        id="lastName"
-                                        name="lastName"
-                                        onChange={(value) => { props.handleChange('lastName')(value) }}
-                                        className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
-                                      />
-                                      {props.errors.lastName && props.touched.lastName && (
-                                        <div className="invalid-feedback">{props.errors.lastName}</div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col lg={6}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="product_code">Email ID</Label>
-                                      <Input
-                                        type="text"
-                                        id="product_code"
-                                        name="product_code"
-                                        placeholder="Enter Email ID"
-                                        required
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={6}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="date">Date Of Birth</Label>
-                                      <DatePicker
-                                        className={`form-control ${props.errors.dateOfBirth && props.touched.dateOfBirth ? "is-invalid" : ""}`}
-                                        id="dateOfBirth "
-                                        name="dateOfBirth "
-                                        placeholderText="Enter Birth Date"
-                                        selected={props.values.dateOfBirth}
-                                        onChange={(value) => {
-                                          props.handleChange("dateOfBirth")(value)
-                                        }}
-                                      />
-                                      {props.errors.dateOfBirth && props.touched.dateOfBirth && (
-                                        <div className="invalid-feedback">{props.errors.dateOfBirth}</div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col lg={6}>
-                                    <FormGroup>
-                                      <Label htmlFor="role">Role</Label>
-                                      <Select
-                                        className="select-default-width"
-                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
-                                        value={props.values.role}
-                                        onChange={option => props.handleChange('role')(option.value)}
-                                        placeholder="Select Role"
-                                        id="role"
-                                        name="role"
-                                        className={
-                                          props.errors.role && props.touched.role
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.role && props.touched.role && (
-                                        <div className="invalid-feedback">{props.errors.role}</div>
-                                      )}
+                              </FormGroup>
+                            </Col>
+                            <Col lg={10}>
+                              <Row>
+                                <Col lg={6}>
+                                  <FormGroup>
+                                    <Label htmlFor="select">First Name</Label>
+                                    <Input
+                                      type="text"
+                                      id="firstName"
+                                      name="firstName"
+                                      onChange={(value) => { props.handleChange('firstName')(value) }}
+                                      value={props.values.firstName}
+                                      className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
+                                    />
+                                    {props.errors.firstName && props.touched.firstName && (
+                                      <div className="invalid-feedback">{props.errors.firstName}</div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                                <Col lg={6}>
+                                  <FormGroup>
+                                    <Label htmlFor="select">Last Name</Label>
+                                    <Input
+                                      type="text"
+                                      id="lastName"
+                                      name="lastName"
+                                      onChange={(value) => { props.handleChange('lastName')(value) }}
+                                      value={props.values.lastName}
+                                      className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
+                                    />
+                                    {props.errors.lastName && props.touched.lastName && (
+                                      <div className="invalid-feedback">{props.errors.lastName}</div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={6}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="email">Email ID</Label>
+                                    <Input
+                                      type="text"
+                                      id="email"
+                                      name="email"
+                                      placeholder="Enter Email ID"
+                                      value={props.values.email}
 
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col lg={6}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="product_code">Status</Label>
-                                      <div>
-                                        <FormGroup check inline>
-                                          <div className="custom-radio custom-control">
-                                            <input
-                                              className="custom-control-input"
-                                              type="radio"
-                                              id="inline-radio1"
-                                              name="isActive"
-                                              value="Y"
-                                              onChange={option => props.handleChange('isActive')(option)}
-                                            />
-                                            <label className="custom-control-label" htmlFor="inline-radio1">Active</label>
-                                          </div>
-                                        </FormGroup>
-                                        <FormGroup check inline>
-                                          <div className="custom-radio custom-control">
-                                            <input
-                                              className="custom-control-input"
-                                              type="radio"
-                                              id="inline-radio2"
-                                              name="isActive"
-                                              value="N"
-                                              onChange={option => props.handleChange('isActive')(option)}
-                                            />
-                                            <label className="custom-control-label" htmlFor="inline-radio2">Inactive</label>
-                                          </div>
-                                        </FormGroup>
-                                      </div>
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col lg={6}>
-                                    <FormGroup>
-                                      <Label htmlFor="select">Password</Label>
-                                      <Input
-                                        type="password"
-                                        id="password"
-                                        name="password"
-                                        onChange={(value) => { props.handleChange('password')(value) }}
-                                        className={props.errors.password && props.touched.password ? "is-invalid" : ""}
-                                      />
-                                      {props.errors.password && props.touched.password && (
-                                        <div className="invalid-feedback">{props.errors.password}</div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={6}>
-                                    <FormGroup>
-                                      <Label htmlFor="select">Confirm Password</Label>
-                                      <Input
-                                        type="password"
-                                        id="confirmPassword"
-                                        name="confirmPassword"
-                                        onChange={(value) => { props.handleChange('confirmPassword')(value) }}
-                                        className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
-                                      />
-                                      {props.errors.confirmPassword && props.touched.confirmPassword && (
-                                        <div className="invalid-feedback">{props.errors.confirmPassword}</div>
-                                      )}
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col lg={10} className="ml-auto mt-5 d-flex flex-wrap align-items-center justify-content-between">
-                                <FormGroup>
-                                  <Button color="danger" className="btn-square">
-                                    <i className="fa fa-trash"></i> Delete
-                              </Button>
-                                </FormGroup>
-                                <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-dot-circle-o"></i> Update
-                              </Button>
-                                  <Button color="secondary" className="btn-square"
-                                    onClick={() => { this.props.history.push('/admin/settings/user') }}>
-                                    <i className="fa fa-ban"></i> Cancel
-                              </Button>
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                          </Form>
-                        )}
-                      </Formik>
-                    </Col>
-                  </Row>
+                                      onChange={(value) => {
+                                        props.handleChange("email")(value)
+                                      }}
+                                    />
+                                  </FormGroup>
+                                </Col>
+                                <Col lg={6}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="date">Date Of Birth</Label>
+                                    <DatePicker
+                                      className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
+                                      id="dob "
+                                      name="dob "
+                                      placeholderText="Enter Birth Date"
+                                      // selected={props.values.dob}
+                                      value={props.values.dob ? moment(props.values.dob).format('DD-MM-YYYY') : ''}
+
+                                      onChange={(value) => {
+                                        props.handleChange("dob")(value)
+                                      }}
+                                    />
+                                    {props.errors.dob && props.touched.dob && (
+                                      <div className="invalid-feedback">{props.errors.dob}</div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={6}>
+                                  <FormGroup>
+                                    <Label htmlFor="roleId">Role</Label>
+                                    <Select
+                                      className="select-default-width"
+                                      options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
+                                      value={props.values.roleId}
+                                      onChange={option => props.handleChange('roleId')(option.value)}
+                                      placeholder="Select Role"
+                                      id="roleId"
+                                      name="roleId"
+                                      className={
+                                        props.errors.roleId && props.touched.roleId
+                                          ? "is-invalid"
+                                          : ""
+                                      }
+                                    />
+                                    {props.errors.roleId && props.touched.roleId && (
+                                      <div className="invalid-feedback">{props.errors.roleId}</div>
+                                    )}
+
+                                  </FormGroup>
+                                </Col>
+                                <Col lg={6}>
+                                  <FormGroup>
+                                    <Label htmlFor="companyId">Company</Label>
+                                    <Select
+                                      className="select-default-width"
+                                      options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
+                                      value={props.values.companyId}
+                                      onChange={option => props.handleChange('companyId')(option.value)}
+                                      placeholder="Select Company"
+                                      id="companyId"
+                                      name="companyId"
+                                      className={
+                                        props.errors.companyId && props.touched.companyId
+                                          ? "is-invalid"
+                                          : ""
+                                      }
+                                    />
+                                    {props.errors.companyId && props.touched.companyId && (
+                                      <div className="invalid-feedback">{props.errors.companyId}</div>
+                                    )}
+
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={6}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="active">Status</Label>
+                                    <div>
+                                      <FormGroup check inline>
+                                        <div className="custom-radio custom-control">
+                                          <input
+                                            className="custom-control-input"
+                                            type="radio"
+                                            id="inline-radio1"
+                                            name="active"
+                                            checked={this.state.selectedStatus}
+                                            value={true}
+                                            onChange={e => {
+                                              console.log(e.target.value)
+                                              if(e.target.value) {
+                                                this.setState({selectedStatus: true},()=>{
+                                                  console.log(this.state)
+                                                })
+                                              }
+                                            }}
+                                          />
+                                          <label className="custom-control-label" htmlFor="inline-radio1">Active</label>
+                                        </div>
+                                      </FormGroup>
+                                      <FormGroup check inline>
+                                        <div className="custom-radio custom-control">
+                                          <input
+                                            className="custom-control-input"
+                                            type="radio"
+                                            id="inline-radio2"
+                                            name="active"
+                                            value={false}
+                                            checked={!this.state.selectedStatus}
+                                            onChange={e => {
+                                              console.log(e.target.value);
+                                              console.log(typeof e.target.value)
+                                              if(e.target.value === 'false') {
+                                                console.log(e.target.value)
+                                                this.setState({selectedStatus: false})
+                                              }
+                                            }}
+                                          />
+                                          <label className="custom-control-label" htmlFor="inline-radio2">Inactive</label>
+                                        </div>
+                                      </FormGroup>
+                                    </div>
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={6}>
+                                  <FormGroup>
+                                    <Label htmlFor="select">Password</Label>
+                                    <Input
+                                      type="password"
+                                      id="password"
+                                      name="password"
+                                      onChange={(value) => { props.handleChange('password')(value) }}
+                                      className={props.errors.password && props.touched.password ? "is-invalid" : ""}
+                                    />
+                                    {props.errors.password && props.touched.password && (
+                                      <div className="invalid-feedback">{props.errors.password}</div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                                <Col lg={6}>
+                                  <FormGroup>
+                                    <Label htmlFor="select">Confirm Password</Label>
+                                    <Input
+                                      type="password"
+                                      id="confirmPassword"
+                                      name="confirmPassword"
+                                      onChange={(value) => { props.handleChange('confirmPassword')(value) }}
+                                      className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
+                                    />
+                                    {props.errors.confirmPassword && props.touched.confirmPassword && (
+                                      <div className="invalid-feedback">{props.errors.confirmPassword}</div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
+                              <FormGroup>
+                                <Button type="button" color="danger" className="btn-square" onClick={this.deleteInvoice}>
+                                  <i className="fa fa-trash"></i> Delete
+                                </Button>
+                              </FormGroup>
+                              <FormGroup className="text-right">
+                                <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <i className="fa fa-dot-circle-o"></i> Update
+                                </Button>
+                                <Button color="secondary" className="btn-square"
+                                  onClick={() => { this.props.history.push('/admin/expense/supplier-invoice') }}>
+                                  <i className="fa fa-ban"></i> Cancel
+                                </Button>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        </Form>
+                      )}
+                    </Formik>
+                  </Col>
+                </Row>
+                 )
+                }
                 </CardBody>
               </Card>
             </Col>
@@ -376,3 +532,4 @@ class DetailUser extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailUser)
+

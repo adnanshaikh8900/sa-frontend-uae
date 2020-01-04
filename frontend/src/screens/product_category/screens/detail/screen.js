@@ -61,9 +61,10 @@ class DetailProductCategory extends React.Component {
       this.setState({ loading: true });
       this.props.detailProductCategoryAction.getProductCategoryById(this.id).then(res => {
         if (res.status === 200)
-          this.setState({ 
+          this.setState({
             loading: false,
             initValue: {
+              id:res.data.id ? res.data.id : '',
               productCategoryCode: res.data.productCategoryCode ? res.data.productCategoryCode : '',
               productCategoryName: res.data.productCategoryName ? res.data.productCategoryName : ''
             }
@@ -73,8 +74,8 @@ class DetailProductCategory extends React.Component {
   }
 
   // Create or Edit Vat
-  handleSubmit(data){
-    const {id,productCategoryName,productCategoryCode} = data;
+  handleSubmit(data) {
+    const { id, productCategoryName, productCategoryCode } = data;
     const postData = {
       id: id,
       productCategoryName: productCategoryName ? productCategoryName : '',
@@ -91,7 +92,7 @@ class DetailProductCategory extends React.Component {
   }
 
   render() {
-    const { loading , initValue} = this.state
+    const { loading, initValue } = this.state
 
     return (
       <div className="detail-vat-code-screen">
@@ -109,13 +110,13 @@ class DetailProductCategory extends React.Component {
                   {loading ? (
                     <Loader></Loader>
                   ) : (
-                    <Row>
-                      <Col lg={6}>
-                      <Formik
-                          initialValues={initValue}
-                          onSubmit={values => {
-                            this.handleSubmit(values)
-                          }}
+                      <Row>
+                        <Col lg={6}>
+                          <Formik
+                            initialValues={initValue}
+                            onSubmit={values => {
+                              this.handleSubmit(values)
+                            }}
                           // validationSchema={Yup.object().shape({
                           //   name: Yup.string()
                           //     .required("Product Category Name is Required"),
@@ -135,13 +136,13 @@ class DetailProductCategory extends React.Component {
                                     onChange={props.handleChange}
                                     defaultValue={props.values.productCategoryCode}
                                     className={
-                                      props.errors.productCategoryCode  && props.touched.productCategoryCode 
+                                      props.errors.productCategoryCode && props.touched.productCategoryCode
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.productCategoryCode  && props.touched.productCategoryCode  && (
-                                    <div className="invalid-feedback">{props.errors.productCategoryCode }</div>
+                                  {props.errors.productCategoryCode && props.touched.productCategoryCode && (
+                                    <div className="invalid-feedback">{props.errors.productCategoryCode}</div>
                                   )}
                                 </FormGroup>
                                 <FormGroup>
@@ -154,13 +155,13 @@ class DetailProductCategory extends React.Component {
                                     onChange={props.handleChange}
                                     defaultValue={props.values.productCategoryName}
                                     className={
-                                      props.errors.productCategoryName  && props.touched.productCategoryName 
+                                      props.errors.productCategoryName && props.touched.productCategoryName
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.productCategoryName  && props.touched.productCategoryName  && (
-                                    <div className="invalid-feedback">{props.errors.productCategoryName }</div>
+                                  {props.errors.productCategoryName && props.touched.productCategoryName && (
+                                    <div className="invalid-feedback">{props.errors.productCategoryName}</div>
                                   )}
                                 </FormGroup>
                                 <Row>
@@ -175,7 +176,7 @@ class DetailProductCategory extends React.Component {
                                         <i className="fa fa-dot-circle-o"></i> Update
                                       </Button>
                                       <Button type="submit" color="secondary" className="btn-square"
-                                        onClick={() => {this.props.history.push('/admin/master/product-category')}}>
+                                        onClick={() => { this.props.history.push('/admin/master/product-category') }}>
                                         <i className="fa fa-ban"></i> Cancel
                                       </Button>
                                     </FormGroup>

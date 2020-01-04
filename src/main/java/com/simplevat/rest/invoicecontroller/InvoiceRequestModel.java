@@ -32,6 +32,7 @@ public class InvoiceRequestModel {
     private String taxIdentificationNumber;
     private List<InvoiceLineItemModel> invoiceLineItems;
     private String status;
+    private String fileName;
     
     private DiscountType discountType;
     private BigDecimal discount;

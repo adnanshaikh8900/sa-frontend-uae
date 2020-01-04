@@ -81,21 +81,16 @@ class ProductCategory extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      // onPageChange: this.onPageChange,
-      onSizePerPageList: (page, pageSize) => {
-        this.setState({
-          filterData: {
-            pageNo: page
-          }
-        })
-      },
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
       mode: 'checkbox',
       bgColor: 'rgba(0,0,0, 0.05)',
       onSelect: this.onRowSelect,
-      onSelectAll: this.onSelectAll
+      onSelectAll: this.onSelectAll,
+      clickToSelect: false,
     }
   }
 
@@ -142,7 +137,13 @@ class ProductCategory extends React.Component {
   }
 
   initializeData() {
-    this.props.productCategoryActions.getProductCategoryList().then(res => {
+    const { filterData } = this.state
+    const paginationData = {
+      pageNo: this.options.page ? this.options.page : 1,
+      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+    }
+    const postData = { ...filterData, ...paginationData }
+    this.props.productCategoryActions.getProductCategoryList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }

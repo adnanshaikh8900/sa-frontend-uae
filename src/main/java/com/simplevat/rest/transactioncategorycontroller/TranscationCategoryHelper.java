@@ -128,4 +128,20 @@ public class TranscationCategoryHelper {
         return transactionCategoryModelList;
     }
 
+    public TransactionCategoryModel getModel(TransactionCategory transactionCategory) {
+        TransactionCategoryModel transactionCategoryModel = new TransactionCategoryModel();
+        BeanUtils.copyProperties(transactionCategory, transactionCategoryModel);
+        if (transactionCategory.getTransactionType() != null) {
+            transactionCategoryModel.setTransactionTypeId(transactionCategory.getTransactionType().getTransactionTypeCode());
+            transactionCategoryModel.setTransactionTypeName(transactionCategory.getTransactionType().getTransactionTypeName());
+        }
+        if (transactionCategory.getParentTransactionCategory() != null) {
+            transactionCategoryModel.setParentTransactionCategoryId(transactionCategory.getParentTransactionCategory().getTransactionCategoryId());
+        }
+        if (transactionCategory.getVatCategory() != null) {
+            transactionCategoryModel.setVatCategoryId(transactionCategory.getVatCategory().getId());
+        }
+        return transactionCategoryModel;
+    }
+
 }

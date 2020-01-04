@@ -430,8 +430,7 @@ class CreatePayment extends React.Component {
                                         <DatePicker
 
                                           id="date"
-                                          name="paymentDate"
-                                          className={`form-control ${props.errors.paymentDate && props.touched.paymentDate ? "is-invalid" : ""}`}
+                                          name="paymentDate"                                        
                                           placeholderText="Payment Date"
                                           selected={props.values.paymentDate}
                                           dateFormat="dd/MM/yyyy"
@@ -439,6 +438,7 @@ class CreatePayment extends React.Component {
                                           onChange={(value) => {
                                             props.handleChange("paymentDate")(value)
                                           }}
+                                          className={`form-control ${props.errors.paymentDate && props.touched.paymentDate ? "is-invalid" : ""}`}
                                         />
                                         {props.errors.paymentDate && props.touched.paymentDate && (
                                           <div className="invalid-feedback">{props.errors.paymentDate}</div>

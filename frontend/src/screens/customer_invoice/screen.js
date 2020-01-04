@@ -377,7 +377,7 @@ class CustomerInvoice extends React.Component {
                           <Button
                             color="primary"
                             className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/expense/customer-invoice/create`)}
+                            onClick={() => this.props.history.push(`/admin/revenue/customer-invoice/create`)}
                           >
                             <i className="fas fa-plus mr-1" />
                             New Invoice

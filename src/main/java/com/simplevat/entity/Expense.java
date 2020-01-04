@@ -83,6 +83,10 @@ public class Expense implements Serializable {
     private String receiptAttachmentPath;
 
     @Basic
+    @Column(name = "RECEIPT_ATTACHMENT_FILE_NAME")
+    private String receiptAttachmentFileName;
+
+    @Basic
     @Column(name = "RECEIPT_ATTACHMENT_DESCRIPTION")
     private String receiptAttachmentDescription;
 

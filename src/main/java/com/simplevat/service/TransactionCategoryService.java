@@ -14,7 +14,7 @@ public abstract class TransactionCategoryService extends SimpleVatService<Intege
     public abstract List<TransactionCategory> findAllTransactionCategoryByUserId(Integer userId);
 
     public abstract List<TransactionCategory> findAllTransactionCategoryByTransactionTypeAndName(Integer transactionTypeCode, String name);
-    
+
     public abstract List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode);
 
     public abstract List<TransactionCategory> findTransactionCategoryListByParentCategory(Integer parentCategoryId);
@@ -27,5 +27,5 @@ public abstract class TransactionCategoryService extends SimpleVatService<Intege
 
     public abstract void deleteByIds(List<Integer> ids);
 
-	public abstract List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap);
+    public abstract List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap);
 }

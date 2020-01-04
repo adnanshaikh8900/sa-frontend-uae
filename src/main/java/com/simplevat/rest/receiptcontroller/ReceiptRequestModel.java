@@ -8,10 +8,10 @@ import lombok.Data;
 @Data
 public class ReceiptRequestModel {
 
-	private Integer id;
+	private Integer receiptId;
 	private Date receiptDate;
 	private String receiptNo;
-	private String receiptReferenceCode;
+	private String referenceCode;
 	private Integer contactId;
 	private Integer invoiceId;
 	private BigDecimal amount;

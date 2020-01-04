@@ -141,6 +141,18 @@ public class Company implements Serializable {
     @ColumnDefault(value = "0.00")
     private BigDecimal companyRevenueBudget;
 
+    
+    @Basic
+    @Column(name = "COMPANY_ID_STR")
+    private String companyIdStr;
+    
+    
+    @Basic
+    @Column(name = "CONTACT_PERSON_NAME")
+    private String contactPersionName;
+    
+    
+    
     @Column(name = "CREATED_BY")
     @Basic(optional = false)
     private Integer createdBy;

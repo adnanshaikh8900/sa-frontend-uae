@@ -141,10 +141,9 @@ class CreateExpense extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
-
     this.props.expenseCreateActions.createExpense(formData).then(res => {
       if (res.status === 200) {
-        resetForm()
+        // resetForm()
         this.props.commonActions.tostifyAlert('success', 'New Expense Created Successfully.')
         if (this.state.createMore) {
           this.setState({

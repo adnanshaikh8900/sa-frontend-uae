@@ -1,7 +1,8 @@
 import { USER } from 'constants/types'
 
 const initState = {
-  user_list: []
+  user_list: [],
+  role_list: []
 }
 
 const UserReducer = (state = initState, action) => {
@@ -12,9 +13,14 @@ const UserReducer = (state = initState, action) => {
     case USER.USER_LIST:
       return {
         ...state,
-        user_list: Object.assign([], payload.data)
+        user_list: Object.assign([], payload)
       }
 
+      case USER.ROLE_LIST:
+        return {
+          ...state,
+          role_list: Object.assign([], payload)
+        }
     default:
       return state
   }

@@ -98,7 +98,7 @@ class DetailProject extends React.Component {
   }
 
   componentDidMount() {
-    const id = this.props.location.state.id;
+    const id = this.props.location.state.id ? this.props.location.state.id : '';
     if (this.props.location.state && id) {
       this.props.detailProjectActions.getProjectById(id).then(res => {
         this.props.projectActions.getContactList()

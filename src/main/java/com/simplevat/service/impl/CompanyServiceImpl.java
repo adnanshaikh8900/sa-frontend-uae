@@ -5,11 +5,17 @@
  */
 package com.simplevat.service.impl;
 
+import com.simplevat.constant.dbfilter.CompanyFilterEnum;
 import com.simplevat.dao.CompanyDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.Company;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.service.CompanyService;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +51,21 @@ public class CompanyServiceImpl extends CompanyService {
     @Override
     public Company getCompany() {
         return companyDao.getCompany();
+    }
+
+    @Override
+    public List<Company> getCompanyList(Map<CompanyFilterEnum, Object> filterMap) {
+        return companyDao.getCompanyList(filterMap);
+    }
+
+    @Override
+    public void deleteByIds(ArrayList<Integer> ids) {
+        companyDao.deleteByIds(ids);
+    }
+
+    @Override
+    public List<DropdownModel> getCompaniesForDropdown() {
+       return companyDao.getCompaniesForDropdown();
     }
 
 }

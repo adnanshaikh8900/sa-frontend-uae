@@ -8,7 +8,7 @@ import lombok.Data;
 public class UserRequestFilterModel {
 
 	private String name;
-	private Date dob;
+	private String dob;
 	private Integer roleId;
 	private boolean active;
 	private Integer companyId;

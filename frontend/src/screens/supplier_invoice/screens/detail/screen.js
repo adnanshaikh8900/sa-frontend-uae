@@ -18,6 +18,7 @@ import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import _ from 'lodash'
+import * as Yup from 'yup'
 import * as SupplierInvoiceDetailActions from './actions';
 import * as  SupplierInvoiceActions from "../../actions";
 
@@ -151,11 +152,11 @@ class DetailSupplierInvoice extends React.Component {
               idCount: idCount
             })
           }
-        )
-      }
-    })
+          )
+        }
+      })
 
-  }
+    }
   }
   calTotalNet(data) {
     let total_net = 0
@@ -223,7 +224,7 @@ class DetailSupplierInvoice extends React.Component {
         vatCategoryId: '',
         subTotal: 0
       }), idCount: this.state.idCount + 1
-    },()=>{
+    }, () => {
       console.log(this.state.data)
     })
   }
@@ -292,16 +293,16 @@ class DetailSupplierInvoice extends React.Component {
       let vat = 0;
       let val = 0;
       console.log(typeof index)
-      if (index !== '' && index !== -1 ) {
+      if (index !== '' && index !== -1) {
         vat = vat_list[index].vat
         val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
         obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : '-';
       } else {
         console.log(index)
       }
-  
 
-    console.log(data)
+
+      console.log(data)
 
       // console.log(index)
 
@@ -341,7 +342,7 @@ class DetailSupplierInvoice extends React.Component {
     formData.append("type", 1);
     formData.append("invoiceId", id);
     formData.append("referenceNumber", invoice_reference_number !== null ? invoice_reference_number : "");
-    formData.append("invoiceDate",typeof invoiceDate === "date" ? invoiceDate : moment(invoiceDate).toDate());
+    formData.append("invoiceDate", typeof invoiceDate === "date" ? invoiceDate : moment(invoiceDate).toDate());
     formData.append("invoiceDueDate", typeof invoiceDueDate === "date" ? invoiceDueDate : moment(invoiceDueDate).toDate())
     formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
     formData.append("contactPoNumber", contact_po_number !== null ? contact_po_number : "");
@@ -450,7 +451,15 @@ class DetailSupplierInvoice extends React.Component {
 
                               // })
                             }}
-
+                            validationSchema={
+                              Yup.object().shape({
+                                invoice_number: Yup.string()
+                                  .required("Invoice Number is Required"),
+                                contactId: Yup.string()
+                                  .required("Supplier is Required"),
+                                invoiceDate: Yup.date()
+                                  .required('Invoice Date is Required'),
+                              })}
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit}>
@@ -465,10 +474,17 @@ class DetailSupplierInvoice extends React.Component {
                                         placeholder=""
                                         value={props.values.invoice_reference_number}
                                         onChange={(value) => {
-                                          console.log(props)
                                           props.handleChange("invoice_reference_number")(value)
                                         }}
+                                        className={
+                                          props.errors.invoice_number && props.touched.invoice_number
+                                            ? 'is-invalid'
+                                            : ''
+                                        }
                                       />
+                                      {props.errors.invoice_number && props.touched.invoice_number && (
+                                        <div className="invalid-feedback">{props.errors.invoice_number}</div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                   <Col lg={4}>
@@ -553,7 +569,6 @@ class DetailSupplierInvoice extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="date">Invoice Date</Label>
                                       <DatePicker
-                                        className="form-control"
                                         id="invoiceDate"
                                         name="invoiceDate"
                                         placeholderText=""
@@ -562,7 +577,11 @@ class DetailSupplierInvoice extends React.Component {
                                         onChange={(value) => {
                                           props.handleChange("invoiceDate")(value)
                                         }}
+                                        className={`form-control ${props.errors.invoiceDate && props.touched.invoiceDate ? "is-invalid" : ""}`}
                                       />
+                                      {props.errors.invoiceDate && props.touched.invoiceDate && (
+                                        <div className="invalid-feedback">{props.errors.invoiceDate}</div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                   <Col lg={4}>

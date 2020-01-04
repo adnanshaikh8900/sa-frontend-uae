@@ -5,7 +5,7 @@ import {
 } from 'utils'
 
 
-// Create & Save Bat
+// Create & Save Vat
 export const createVat = (obj) => {
   return (dispatch) => {
     let data = {

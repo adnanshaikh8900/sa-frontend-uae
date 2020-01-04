@@ -5,12 +5,21 @@
  */
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.dbfilter.CompanyFilterEnum;
+import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.CompanyDao;
 import com.simplevat.entity.Company;
+import com.simplevat.entity.Product;
+import com.simplevat.rest.DropdownModel;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -20,11 +29,40 @@ import org.springframework.stereotype.Repository;
 public class CompanyDaoImpl extends AbstractDao<Integer, Company> implements CompanyDao {
 
     public Company getCompany() {
-         TypedQuery<Company> query = getEntityManager().createQuery("SELECT c FROM Company c", Company.class);
+        TypedQuery<Company> query = getEntityManager().createQuery("SELECT c FROM Company c", Company.class);
         List<Company> companys = query.getResultList();
         if (companys != null && !companys.isEmpty()) {
             return companys.get(0);
         }
         return null;
+    }
+
+    @Override
+    public List<Company> getCompanyList(Map<CompanyFilterEnum, Object> filterMap) {
+        List<DbFilter> dbFilters = new ArrayList();
+        filterMap.forEach(
+                (productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
+                        .condition(productFilter.getCondition()).value(value).build()));
+        List<Company> companies = this.executeQuery(dbFilters);
+        return companies;
+    }
+
+    @Override
+    public List<DropdownModel> getCompaniesForDropdown() {
+        List<DropdownModel> empSelectItemModels = getEntityManager()
+                .createNamedQuery("companiesForDropdown", DropdownModel.class).getResultList();
+        return empSelectItemModels;
+    }
+
+    @Override
+    @Transactional
+    public void deleteByIds(List<Integer> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            for (Integer id : ids) {
+                Company company = findByPK(id);
+                company.setDeleteFlag(Boolean.TRUE);
+                update(company);
+            }
+        }
     }
 }

@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository(value = "transactionCategoryDao")
 public class TransactionCategoryNewDaoImpl extends AbstractDao<Integer, TransactionCategory> implements TransactionCategoryDaoNew {
 
-	@Override
+    @Override
     public TransactionCategory getDefaultTransactionCategory() {
         List<TransactionCategory> transactionCategories = findAllTransactionCategory();
 
@@ -47,7 +47,7 @@ public class TransactionCategoryNewDaoImpl extends AbstractDao<Integer, Transact
         }
         return null;
     }
-    
+
     @Override
     public List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode) {
         TypedQuery<TransactionCategory> query = getEntityManager().createQuery("SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.transactionType.transactionTypeCode =:transactionTypeCode ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC", TransactionCategory.class);
@@ -90,15 +90,15 @@ public class TransactionCategoryNewDaoImpl extends AbstractDao<Integer, Transact
             }
         }
     }
-    
-	@Override
-	public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap) {
-		List<DbFilter> dbFilters = new ArrayList();
-		filterMap.forEach((transactionCategoryFilter, value) -> dbFilters
-				.add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
-						.condition(transactionCategoryFilter.getCondition()).value(value).build()));
-		List<TransactionCategory> transactionCategories = this.executeQuery(dbFilters);
-		return transactionCategories;
-	}
+
+    @Override
+    public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap) {
+        List<DbFilter> dbFilters = new ArrayList();
+        filterMap.forEach((transactionCategoryFilter, value) -> dbFilters
+                .add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
+                        .condition(transactionCategoryFilter.getCondition()).value(value).build()));
+        List<TransactionCategory> transactionCategories = this.executeQuery(dbFilters);
+        return transactionCategories;
+    }
 
 }

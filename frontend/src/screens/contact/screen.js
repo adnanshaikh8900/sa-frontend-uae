@@ -333,7 +333,7 @@ class Contact extends React.Component {
                       </div>
                       <div>
                         <Row>
-                          <Col xs="12" lg="8">
+                          <Col xs="12" lg="12">
                             <BootstrapTable
                               selectRow={this.selectRowProp}
                               search={false}
@@ -372,7 +372,7 @@ class Contact extends React.Component {
                               </TableHeaderColumn>
                             </BootstrapTable>
                           </Col>
-                          <Col xs="12" lg="4">
+                          {/* <Col xs="12" lg="4">
                             <div className="contact-info p-4">
                               <h4>Mr. Admin Admin</h4>
                               <hr />
@@ -399,7 +399,7 @@ class Contact extends React.Component {
                                 </Button>
                               </div>
                             </div>
-                          </Col>
+                          </Col> */}
                         </Row>
                       </div>
                     </Col>

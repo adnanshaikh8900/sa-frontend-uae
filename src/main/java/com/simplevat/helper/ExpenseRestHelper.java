@@ -100,6 +100,9 @@ public class ExpenseRestHelper implements Serializable {
             if (entity.getCurrency() != null) {
                 expenseModel.setCurrencyCode(entity.getCurrency().getCurrencyCode());
             }
+            if(entity.getReceiptAttachmentFileName() != null){
+                expenseModel.setFileName(entity.getReceiptAttachmentFileName());
+            }
             expenseModel.setDeleteFlag(entity.getDeleteFlag());
             expenseModel.setExpenseAmount(entity.getExpenseAmount());
             expenseModel.setPayee(entity.getPayee());

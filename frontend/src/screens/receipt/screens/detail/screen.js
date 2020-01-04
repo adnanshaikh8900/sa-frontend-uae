@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -28,8 +28,8 @@ import { selectOptionsFactory } from 'utils'
 import * as ReceiptActions from '../../actions';
 import * as ReceiptDetailActions from './actions';
 
-import {Loader, ConfirmDeleteModal} from 'components'
- 
+import { Loader, ConfirmDeleteModal } from 'components'
+
 
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -44,13 +44,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return ({
     commonActions: bindActionCreators(CommonActions, dispatch),
-    receiptDetailActions: bindActionCreators(ReceiptDetailActions,dispatch),
+    receiptDetailActions: bindActionCreators(ReceiptDetailActions, dispatch),
     receiptActions: bindActionCreators(ReceiptActions, dispatch)
   })
 }
 
 class DetailReceipt extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
@@ -72,33 +72,33 @@ class DetailReceipt extends React.Component {
   }
 
   initializeData() {
-    const id = this.props.location.state.id ? this.props.location.state.id : '' 
+    const id = this.props.location.state.id ? this.props.location.state.id : ''
     if (this.props.location.state && id) {
       this.props.receiptActions.getContactList();
       this.props.receiptActions.getInvoiceList();
       this.props.receiptDetailActions.getReceiptById(id).then(res => {
         // this.props.receiptActions.getTitleList()
-        const {receiptDate} = res.data 
+        const { receiptDate } = res.data
         if (res.status === 200) {
           this.setState({
             initValue: {
               receiptNo: res.data.receiptNo,
-              contactId: res.data.contactId ? res.data.contactId: '',
+              contactId: res.data.contactId ? res.data.contactId : '',
               referenceCode: res.data.referenceCode,
               receiptDate: res.data.receiptDate ? res.data.receiptDate : '',
               unusedAmount: res.data.unusedAmount,
               amount: res.data.amount,
-              invoiceId: res.data.invoiceId ? res.data.currencyCode : ''
+              invoiceId: res.data.invoiceId ? res.data.invoiceId : ''
             },
             loading: false,
 
-          },()=>{
+          }, () => {
             console.log(this.state.initValue)
           })
         }
       }).catch(err => {
         this.props.commonActions.tostifyAlert('error', err ? err.data.message : null)
-        this.setState({loading: false})
+        this.setState({ loading: false })
       })
     }
   }
@@ -119,20 +119,27 @@ class DetailReceipt extends React.Component {
     const postData = {
       receiptId: id,
       receiptNo: receiptNo ? receiptNo : '',
-      referenceCode: referenceCode ? referenceCode: '',
+      referenceCode: referenceCode ? referenceCode : '',
       receiptDate: receiptDate ? receiptDate : '',
       contactId: contactId && contactId !== null ? contactId : '',
       amount: amount ? amount : '',
       unusedAmount: unusedAmount ? unusedAmount : '',
-      invoiceId: invoiceId && invoiceId!== null ? invoiceId : ''
+      invoiceId: invoiceId && invoiceId !== null ? invoiceId : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
     this.props.receiptDetailActions.updateReceipt(postData).then(res => {
       if (res.status === 200) {
+<<<<<<< HEAD
         this.props.commonActions.tostifyAlert('success', 'Updated successfully!')
         this.props.history.push('/admin/revenue/receipt')
     }
   }).catch((err) => {
+=======
+        this.props.commonActions.tostifyAlert('success', 'Updated successfully!');
+        this.props.history.push('/admin/revenue/receipt');
+      }
+    }).catch((err) => {
+>>>>>>> 43bd1f603b57c194882e90fe248e758d958b4594
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
@@ -148,13 +155,13 @@ class DetailReceipt extends React.Component {
   }
 
   removeReceipt() {
-    const id= this.props.location.state.id;
-    this.props.receiptDetailActions.deleteReceipt(id).then(res=>{
-      if(res.status === 200) {
-        this.success('Receipt Deleted Successfully');
+    const id = this.props.location.state.id;
+    this.props.receiptDetailActions.deleteReceipt(id).then(res => {
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success','Receipt Deleted Successfully');
         this.props.history.push('/admin/revenue/receipt')
       }
-    }).catch(err=> {
+    }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
@@ -167,8 +174,8 @@ class DetailReceipt extends React.Component {
 
   render() {
 
-    const { contact_list , invoice_list } = this.props
-    const { loading , dialog ,initValue} = this.state
+    const { contact_list, invoice_list } = this.props
+    const { loading, dialog, initValue } = this.state
 
     return (
       <div className="detail-receipt-screen">
@@ -188,9 +195,9 @@ class DetailReceipt extends React.Component {
                 </CardHeader>
                 <CardBody>
                   {dialog}
-                  {loading ? 
-                  (
-                    <Loader />
+                  {loading ?
+                    (
+                      <Loader />
                     )
                     :
                     (
@@ -348,28 +355,28 @@ class DetailReceipt extends React.Component {
                                 <Button color="danger" className="btn-square" onClick={this.deleteReceipt}>
                                   <i className="fa fa-trash"></i> Delete
                                 </Button>
-                              </FormGroup>
-                              <FormGroup className="text-right">
-                                <Button type="submit" color="primary" className="btn-square mr-3">
-                                  <i className="fa fa-dot-circle-o"></i> Update
+                                    </FormGroup>
+                                    <FormGroup className="text-right">
+                                      <Button type="submit" color="primary" className="btn-square mr-3">
+                                        <i className="fa fa-dot-circle-o"></i> Update
                                 </Button>
-                                <Button color="secondary" className="btn-square" 
-                                  onClick={() => {this.props.history.push('/admin/revenue/receipt')}}>
-                                  <i className="fa fa-ban"></i> Cancel
+                                      <Button color="secondary" className="btn-square"
+                                        onClick={() => { this.props.history.push('/admin/revenue/receipt') }}>
+                                        <i className="fa fa-ban"></i> Cancel
                                 </Button>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                            </Form>
-                          )
-                        }
-                       </Formik>
-  
-                      </Col>
-                    </Row>
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
+                              </Form>
+                            )
+                            }
+                          </Formik>
+
+                        </Col>
+                      </Row>
                     )
-                  
-                
+
+
                   }
 
                 </CardBody>

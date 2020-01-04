@@ -26,7 +26,7 @@ import {
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
 
-import * as VatActions from '../../actions'
+import * as VatActions from './actions'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
@@ -81,7 +81,7 @@ class CreateVatCode extends React.Component {
 
   // Create or Edit Vat
   handleSubmit(data) {
-    this.props.vatActions.createBat(data).then(res => {
+    this.props.vatActions.createVat(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New vat code Created Successfully!')
 

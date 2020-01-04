@@ -29,6 +29,7 @@ public class ExpenseModel {
     private Integer projectId;
     private String receiptAttachmentDescription;
     private MultipartFile attachmentFile;
+    private String fileName;
     private String payee;
     private Integer userId;
     private Integer createdBy;

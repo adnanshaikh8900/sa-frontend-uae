@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,6 +13,10 @@ import org.hibernate.annotations.ColumnDefault;
 /**
  * Created by mohsinh on 2/26/2017.
  */
+@NamedQueries({
+    @NamedQuery(name = "companiesForDropdown", query = "SELECT  new " + CommonConstant.DROPDOWN_MODEL_PACKAGE + "(c.companyId , c.companyName) "
+            + " FROM Company c where c.deleteFlag = FALSE order by c.companyName ")
+})
 @Entity
 @Table(name = "COMPANY")
 @Data
@@ -41,8 +46,8 @@ public class Company implements Serializable {
     private IndustryType industryTypeCode;
 
     @Basic
-    @Column(name = "VAT_REGISTRATION_NUMBER")
-    private String vatRegistrationNumber;
+    @Column(name = "VAT_NUMBER")
+    private String vatNumber;
 
     @Basic
     @Lob
@@ -141,6 +146,18 @@ public class Company implements Serializable {
     @ColumnDefault(value = "0.00")
     private BigDecimal companyRevenueBudget;
 
+    @Basic
+    @Column(name = "COMPANY_ID_STR")
+    private String companyIdStr;
+
+    @Basic
+    @Column(name = "CONTACT_PERSON_NAME")
+    private String contactPersionName;
+
+    @Basic
+    @Column(name = "CONTACT_PHONE_NUMBER")
+    private String contactPhoneNumber;
+
     @Column(name = "CREATED_BY")
     @Basic(optional = false)
     private Integer createdBy;
@@ -170,7 +187,7 @@ public class Company implements Serializable {
     @Basic(optional = false)
     @Version
     private Integer versionNumber = 1;
-    
+
     @Basic
     @Column(name = "DATE_FORMAT")
     private String dateFormat;

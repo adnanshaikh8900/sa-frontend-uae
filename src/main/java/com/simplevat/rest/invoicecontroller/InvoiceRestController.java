@@ -44,22 +44,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/rest/invoice")
 public class InvoiceRestController implements Serializable {
-    
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-    
+
     @Autowired
     private InvoiceRestHelper invoiceRestHelper;
-    
+
     @Autowired
     private InvoiceService invoiceService;
-    
+
     @Autowired
     private ContactService contactService;
-    
+
     @Autowired
     private FileHelper fileHelper;
-    
+
     @ApiOperation(value = "Get Invoice List")
     @GetMapping(value = "/getList")
     public ResponseEntity getInvoiceList(InvoiceRequestFilterModel filterModel, HttpServletRequest request) {
@@ -100,13 +100,13 @@ public class InvoiceRestController implements Serializable {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     @GetMapping(value = "/getInvoicesForDropdown")
     public ResponseEntity getInvoicesForDropdown() throws IOException {
         List<DropdownModel> dropdownModels = invoiceService.getInvoicesForDropdown();
         return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "Delete Invoice By ID")
     @DeleteMapping(value = "/delete")
     public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
@@ -116,9 +116,9 @@ public class InvoiceRestController implements Serializable {
             invoiceService.update(invoice, invoice.getId());
         }
         return new ResponseEntity(HttpStatus.OK);
-        
+
     }
-    
+
     @ApiOperation(value = "Delete Invoices in Bulk")
     @DeleteMapping(value = "/deletes")
     public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
@@ -129,9 +129,9 @@ public class InvoiceRestController implements Serializable {
             e.printStackTrace();
         }
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        
+
     }
-    
+
     @ApiOperation(value = "Get Invoice By ID")
     @GetMapping(value = "/getInvoiceById")
     public ResponseEntity getInvoiceById(@RequestParam(value = "id") Integer id) {
@@ -142,7 +142,7 @@ public class InvoiceRestController implements Serializable {
             return new ResponseEntity<>(invoiceRestHelper.getRequestModel(invoice), HttpStatus.OK);
         }
     }
-    
+
     @ApiOperation(value = "Add New Invoice")
     @PostMapping(value = "/save")
     public ResponseEntity save(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
@@ -154,6 +154,7 @@ public class InvoiceRestController implements Serializable {
             invoice.setDeleteFlag(Boolean.FALSE);
             if (requestModel.getAttachmentFile() != null && !requestModel.getAttachmentFile().isEmpty()) {
                 String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(), FileTypeEnum.SUPPLIER_INVOICE);
+                invoice.setReceiptAttachmentFileName(requestModel.getAttachmentFile().getOriginalFilename());
                 invoice.setReceiptAttachmentPath(fileName);
             }
             invoiceService.persist(invoice);
@@ -163,17 +164,26 @@ public class InvoiceRestController implements Serializable {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
+
     @ApiOperation(value = "Update Invoice")
     @PostMapping(value = "/update")
     public ResponseEntity update(@ModelAttribute InvoiceRequestModel requestModel, HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
-        invoice.setLastUpdateBy(userId);
-        invoice.setLastUpdateDate(LocalDateTime.now());
-        invoiceService.update(invoice);
-        
-        return ResponseEntity.status(HttpStatus.OK).build();
-        
+        try {
+            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
+            if (requestModel.getAttachmentFile() != null && !requestModel.getAttachmentFile().isEmpty()) {
+                String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(), FileTypeEnum.SUPPLIER_INVOICE);
+                invoice.setReceiptAttachmentFileName(requestModel.getAttachmentFile().getOriginalFilename());
+                invoice.setReceiptAttachmentPath(fileName);
+            }
+            invoice.setLastUpdateBy(userId);
+            invoice.setLastUpdateDate(LocalDateTime.now());
+            invoiceService.update(invoice);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
     }
 }

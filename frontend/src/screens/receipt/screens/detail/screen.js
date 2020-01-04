@@ -129,10 +129,17 @@ class DetailReceipt extends React.Component {
     }
     this.props.receiptDetailActions.updateReceipt(postData).then(res => {
       if (res.status === 200) {
+<<<<<<< HEAD
+        this.props.commonActions.tostifyAlert('success', 'Updated successfully!')
+        this.props.history.push('/admin/revenue/receipt')
+    }
+  }).catch((err) => {
+=======
         this.props.commonActions.tostifyAlert('success', 'Updated successfully!');
         this.props.history.push('/admin/revenue/receipt');
       }
     }).catch((err) => {
+>>>>>>> 43bd1f603b57c194882e90fe248e758d958b4594
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
@@ -195,155 +202,158 @@ class DetailReceipt extends React.Component {
                     :
                     (
                       <Row>
-                        <Col lg={12}>
-                          <Formik
-                            initialValues={initValue}
-                            onSubmit={(values, { resetForm }) => {
-
-                              this.handleSubmit(values)
-                            }}
-                          // validationSchema={
-                          //   Yup.object().shape({
-                          //   productName: Yup.string()
-                          //     .required("Product Name is Required"),
-                          //   vatCategoryId: Yup.string()
-                          //     .required("Vat Category is Required")
-                          //     .nullable()
-                          // })}
-                          >
-                            {props => (
-                              <Form onSubmit={props.handleSubmit}>
-                                <Row>
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="receiptNo">Receipt Number</Label>
-                                      <Input
-                                        type="text"
-                                        id="receiptNo"
-                                        name="receiptNo"
-                                        placeholder="Receipt Number"
-                                        onChange={(value) => {
-                                          props.handleChange("receiptNo")(value)
-                                        }}
-                                        value={props.values.receiptNo}
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="receipt_date">Receipt Date</Label>
-                                      <DatePicker
-                                        className="form-control"
-                                        id="date"
-                                        name="receiptDate"
-                                        placeholderText="Receipt Date"
-                                        value={props.values.receiptDate ? moment(props.values.receiptDate).format('DD-MM-YYYY') : ''}
-                                        onChange={(value) => {
-                                          props.handleChange("receiptDate")(value)
-                                        }}
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="referenceCode">Reference Number</Label>
-                                      <Input
-                                        type="text"
-                                        id="referenceCode"
-                                        name="referenceCode"
-                                        placeholder="Reference Number"
-                                        value={props.values.referenceCode}
-                                        onChange={option => { props.handleChange('referenceCode')(option) }}
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="customer_name">Customer Name</Label>
-                                      <Select
-                                        options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list) : []}
-                                        className="select-default-width"
-                                        placeholder="Customer Name"
-                                        value={props.values.contactId}
-                                        onChange={(option) => {
-                                          if (option && option.value) {
-                                            console.log(option.value)
-                                            props.handleChange('contactId')(option.value)
-                                          }
-                                        }}
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="invoice">Invoice</Label>
-                                      <Select
-                                        options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list) : []}
-                                        className="select-default-width"
-                                        placeholder="Invoice Number"
-                                        value={props.values.invoiceId}
-                                        onChange={(option) => {
-                                          if (option && option.value) {
-                                            props.handleChange('invoiceId')(option.value)
-                                          }
-                                        }}
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <hr />
-                                <Row>
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="mode">Mode</Label>
-                                      <Select
-                                        className="select-default-width"
-                                        options={[]}
-                                        id="mode"
-                                        name="mode"
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="amount">Amount</Label>
-                                      <Input
-                                        type="text"
-                                        id="amount"
-                                        name="amount"
-                                        placeholder="Amount"
-                                        value={props.values.amount}
-                                        onChange={(value) => { props.handleChange('amount')(value) }}
-
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="unusedAmount">Unused Amount</Label>
-                                      <Input
-                                        type="text"
-                                        id="unusedAmount"
-                                        name="unusedAmount"
-                                        placeholder="Unused Amount"
-                                        value={props.values.unusedAmount}
-                                        onChange={(value) => { props.handleChange('unusedAmount')(value) }}
-
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
-                                    <FormGroup>
-                                      <Button color="danger" className="btn-square" onClick={this.deleteReceipt}>
-                                        <i className="fa fa-trash"></i> Delete
+                      <Col lg={12}>
+                      <Formik
+                          initialValues={initValue}
+                          onSubmit={(values, { resetForm }) => {
+  
+                            this.handleSubmit(values)
+                          }}
+                          validationSchema={
+                            Yup.object().shape({
+                            receiptDate: Yup.date()
+                              .required("Receipt Date is Required"),
+                            referenceCode: Yup.string()
+                              .required("Reference Number is Required"),
+                            contactId: Yup.string()
+                            .required('Customer is required'),
+                            amount: Yup.string()
+                            .required('Amount is required')
+                          })}
+                        >
+                          {props => (
+                            <Form onSubmit={props.handleSubmit}>
+                              <Row>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="receiptNo">Receipt Number</Label>
+                                    <Input
+                                      type="text"
+                                      id="receiptNo"
+                                      name="receiptNo"
+                                      placeholder="Receipt Number"
+                                      onChange={(value) => {
+                                        props.handleChange("receiptNo")(value)
+                                      }}
+                                      value={props.values.receiptNo}
+                                    />
+                                  </FormGroup>
+                                </Col>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="receipt_date">Receipt Date</Label>
+                                    <DatePicker
+                                     className="form-control"
+                                     id="date"
+                                     name="receiptDate"
+                                    placeholderText="Receipt Date"
+                                    value={props.values.receiptDate ? moment(props.values.receiptDate).format('DD-MM-YYYY') : ''}
+                                    onChange={(value) => {
+                                    props.handleChange("receiptDate")(value)
+                                }}
+                              />
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="referenceCode">Reference Number</Label>
+                                    <Input
+                                      type="text"
+                                      id="referenceCode"
+                                      name="referenceCode"
+                                      placeholder="Reference Number"
+                                      value={props.values.referenceCode}
+                                      onChange={option => {props.handleChange('referenceCode')(option)}}
+                                    />
+                                  </FormGroup>
+                                </Col>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="customer_name">Customer Name</Label>
+                                    <Select
+                                  options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list) : []}
+                                  className="select-default-width"
+                                  placeholder="Customer Name"
+                                  value={props.values.contactId}
+                                  onChange={(option) => {
+                                    if (option && option.value) {
+                                      console.log(option.value)
+                                      props.handleChange('contactId')(option.value)
+                                    }
+                                  }}
+                                />
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="invoice">Invoice</Label>
+                                    <Select
+                                   options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list) : []}
+                                    className="select-default-width"
+                                    placeholder="Invoice Number"
+                                   value={props.values.invoiceId}
+                                    onChange={(option) => {
+                                    if (option && option.value) {
+                                      props.handleChange('invoiceId')(option.value)
+                                    }
+                                  }}
+                                />
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <hr />
+                              <Row>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="mode">Mode</Label>
+                                    <Select
+                                      className="select-default-width"
+                                      options={[]}
+                                      id="mode"
+                                      name="mode"
+                                    />
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="amount">Amount</Label>
+                                    <Input
+                                      type="text"
+                                      id="amount"
+                                      name="amount"
+                                      placeholder="Amount"
+                                      value={props.values.amount}
+                                      onChange={(value) => {props.handleChange('amount')(value)}}
+  
+                                    />
+                                  </FormGroup>
+                                </Col>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="unusedAmount">Unused Amount</Label>
+                                    <Input
+                                      type="text"
+                                      id="unusedAmount"
+                                      name="unusedAmount"
+                                      placeholder="Unused Amount"
+                                      value={props.values.unusedAmount}
+                                      onChange={(value) => {props.handleChange('unusedAmount')(value)}}
+                                      
+                                    />
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                            <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
+                              <FormGroup>
+                                <Button color="danger" className="btn-square" onClick={this.deleteReceipt}>
+                                  <i className="fa fa-trash"></i> Delete
                                 </Button>
                                     </FormGroup>
                                     <FormGroup className="text-right">

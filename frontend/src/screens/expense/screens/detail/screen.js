@@ -397,7 +397,7 @@ class DetailExpense extends React.Component {
                                             id="receiptNumber"
                                             name="receiptNumber"
                                             placeholder="Enter Reciept Number"
-                                            required
+                                            
                                             onChange={option => props.handleChange('receiptNumber')(option)}
                                             value={props.values.receiptNumber}
 

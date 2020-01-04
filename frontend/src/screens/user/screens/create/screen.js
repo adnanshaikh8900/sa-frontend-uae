@@ -15,11 +15,11 @@ import {
   Label
 } from 'reactstrap'
 import Select from 'react-select'
-import ImagesUploader from 'react-images-uploader'
+import ImageUploader from 'react-images-upload'
 import DatePicker from 'react-datepicker'
 
-import 'react-images-uploader/styles.css'
-import 'react-images-uploader/font.css'
+// import 'react-images-upload/styles.css'
+// import 'react-images-upload/font.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -61,15 +61,16 @@ class CreateUser extends React.Component {
       initValue: {
         firstName: '',
         lastName: '',
-        userEmail: '',
+        email: '',
         password: '',
-        dateOfBirth: '',
-        isActive: 'Y',
-        profileImageBinary: '',
+        dob: '',
+        active: false,
         confirmPassword: '',
-        role: ''
+        roleId: ''
       },
+      pictures: [],
     }
+    this.uploadImage = this.uploadImage.bind(this);
     this.initializeData = this.initializeData.bind(this)
   }
 
@@ -81,8 +82,39 @@ class CreateUser extends React.Component {
     this.props.userActions.getRoleList()
   }
 
+  uploadImage(picture) {
+    this.setState({
+      pictures: picture,
+    });
+  }
+
   handleSubmit(data) {
-    this.props.userCreateActions.createUser(data).then(res => {
+    const {
+      firstName,
+      lastName,
+      email,
+      dob,
+      password,
+      roleId,
+      companyId,
+      active,
+    } = data;
+    const { pictures } = this.state;
+    let formData = new FormData();
+    formData.append("firstName", firstName ? firstName : '');
+    formData.append("lastName", lastName ? lastName : '');
+    formData.append("email", email ? email : '');
+    formData.append("dob", dob ? dob : '');
+    formData.append("roleId", roleId ? roleId : '');
+    formData.append("active", active ? active : '');
+    formData.append("password", password ? password : '');
+    formData.append("companyId", companyId ? companyId : '');
+    if (pictures.length > 0) {
+      formData.append("attachmentFile ", pictures[0]);
+    }
+
+
+    this.props.userCreateActions.createUser(formData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Employee Created Successfully')
         if (this.state.createMore) {
@@ -90,7 +122,7 @@ class CreateUser extends React.Component {
             createMore: false
           })
         } else {
-          this.props.history.push('/admin/master/employee')
+          this.props.history.push('/admin/settings/user')
         }
       }
     }).catch(err => {
@@ -148,7 +180,7 @@ class CreateUser extends React.Component {
                           confirmPassword: Yup.string()
                             .required('Confirm Password is Required')
                             .oneOf([Yup.ref("password"), null], "Passwords must match"),
-                          dateOfBirth: Yup.date()
+                          dob: Yup.date()
                             .required('DOB is Required')
                         })}
                       >
@@ -158,8 +190,8 @@ class CreateUser extends React.Component {
                             <Row>
                               <Col lg={2}>
                                 <FormGroup className="mb-3 text-center">
-                                  <ImagesUploader
-                                    url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                  {/* <ImagesUploader
+                                    // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                                     optimisticPreviews
                                     multiple={false}
                                     onLoadEnd={(err) => {
@@ -168,7 +200,28 @@ class CreateUser extends React.Component {
                                         console.error(err);
                                       }
                                     }}
-
+                                    onChange={(e)=>{console.log(e)}}
+                                  /> */}
+                                  <ImageUploader
+                                    withIcon={true}
+                                    buttonText='Choose images'
+                                    onChange={this.uploadImage}
+                                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                    maxFileSize={1048576}
+                                    withPreview={true}
+                                    singleImage={true}
+                                    withIcon={false}
+                                    buttonText="Choose Profile Image"
+                                    label="'Max file size: 1mb"
+                                    fileContainerStyle = {{
+                                    position: "relative",
+                                    height: "150px",
+                                    boxShadow: "2px 2px 3px 0 rgba(0, 0, 0)"
+                                  }}
+                                  buttonStyles={{
+                                    position: "absolute",
+                                    bottom:"-50px"
+                                  }}
                                   />
                                 </FormGroup>
                               </Col>
@@ -208,13 +261,15 @@ class CreateUser extends React.Component {
                                 <Row>
                                   <Col lg={6}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="product_code">Email ID</Label>
+                                      <Label htmlFor="email">Email ID</Label>
                                       <Input
                                         type="text"
-                                        id="product_code"
-                                        name="product_code"
+                                        id="email"
+                                        name="email"
                                         placeholder="Enter Email ID"
-                                        required
+                                        onChange={(value) => {
+                                          props.handleChange("email")(value)
+                                        }}
                                       />
                                     </FormGroup>
                                   </Col>
@@ -222,17 +277,17 @@ class CreateUser extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="date">Date Of Birth</Label>
                                       <DatePicker
-                                        className={`form-control ${props.errors.dateOfBirth && props.touched.dateOfBirth ? "is-invalid" : ""}`}
-                                        id="dateOfBirth "
-                                        name="dateOfBirth "
+                                        className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
+                                        id="dob "
+                                        name="dob "
                                         placeholderText="Enter Birth Date"
-                                        selected={props.values.dateOfBirth}
+                                        selected={props.values.dob}
                                         onChange={(value) => {
-                                          props.handleChange("dateOfBirth")(value)
+                                          props.handleChange("dob")(value)
                                         }}
                                       />
-                                      {props.errors.dateOfBirth && props.touched.dateOfBirth && (
-                                        <div className="invalid-feedback">{props.errors.dateOfBirth}</div>
+                                      {props.errors.dob && props.touched.dob && (
+                                        <div className="invalid-feedback">{props.errors.dob}</div>
                                       )}
                                     </FormGroup>
                                   </Col>
@@ -240,23 +295,46 @@ class CreateUser extends React.Component {
                                 <Row>
                                   <Col lg={6}>
                                     <FormGroup>
-                                      <Label htmlFor="role">Role</Label>
+                                      <Label htmlFor="roleId">Role</Label>
                                       <Select
                                         className="select-default-width"
-                                        options={role_list  ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list ) : []}
-                                        value={props.values.role}
-                                        onChange={option => props.handleChange('role')(option.value)}
+                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
+                                        value={props.values.roleId}
+                                        onChange={option => props.handleChange('roleId')(option.value)}
                                         placeholder="Select Role"
-                                        id="role"
-                                        name="role"
+                                        id="roleId"
+                                        name="roleId"
                                         className={
-                                          props.errors.role && props.touched.role
+                                          props.errors.roleId && props.touched.roleId
                                             ? "is-invalid"
                                             : ""
                                         }
                                       />
-                                      {props.errors.role && props.touched.role && (
-                                        <div className="invalid-feedback">{props.errors.role}</div>
+                                      {props.errors.roleId && props.touched.roleId && (
+                                        <div className="invalid-feedback">{props.errors.roleId}</div>
+                                      )}
+
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg={6}>
+                                    <FormGroup>
+                                      <Label htmlFor="companyId">Company</Label>
+                                      <Select
+                                        className="select-default-width"
+                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
+                                        value={props.values.companyId}
+                                        onChange={option => props.handleChange('companyId')(option.value)}
+                                        placeholder="Select Company"
+                                        id="companyId"
+                                        name="companyId"
+                                        className={
+                                          props.errors.companyId && props.touched.companyId
+                                            ? "is-invalid"
+                                            : ""
+                                        }
+                                      />
+                                      {props.errors.companyId && props.touched.companyId && (
+                                        <div className="invalid-feedback">{props.errors.companyId}</div>
                                       )}
 
                                     </FormGroup>
@@ -265,7 +343,7 @@ class CreateUser extends React.Component {
                                 <Row>
                                   <Col lg={6}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="product_code">Status</Label>
+                                      <Label htmlFor="active">Status</Label>
                                       <div>
                                         <FormGroup check inline>
                                           <div className="custom-radio custom-control">
@@ -273,10 +351,10 @@ class CreateUser extends React.Component {
                                               className="custom-control-input"
                                               type="radio"
                                               id="inline-radio1"
-                                              name="isActive"
-                                              value="Y"
-                                              onChange={option => props.handleChange('isActive')(option)}
-                                               />
+                                              name="active"
+                                              value={true}
+                                              onChange={option => props.handleChange('active')(option)}
+                                            />
                                             <label className="custom-control-label" htmlFor="inline-radio1">Active</label>
                                           </div>
                                         </FormGroup>
@@ -286,10 +364,10 @@ class CreateUser extends React.Component {
                                               className="custom-control-input"
                                               type="radio"
                                               id="inline-radio2"
-                                              name="isActive"
-                                              value="N"
-                                              onChange={option => props.handleChange('isActive')(option)}
-                                              />
+                                              name="active"
+                                              value={false}
+                                              onChange={option => props.handleChange('active')(option)}
+                                            />
                                             <label className="custom-control-label" htmlFor="inline-radio2">Inactive</label>
                                           </div>
                                         </FormGroup>

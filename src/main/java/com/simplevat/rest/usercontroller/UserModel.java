@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +25,7 @@ public class UserModel {
 
 	private boolean active;
 
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date dob;
 
 	private Integer roleId;
@@ -37,7 +40,7 @@ public class UserModel {
 
 	private String email;
 
-	private MultipartFile attachmentFile;
+	private MultipartFile profilePic;
 
 	public String getFullName() {
 		StringBuilder sb = new StringBuilder();

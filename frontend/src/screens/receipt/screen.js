@@ -127,7 +127,8 @@ class Receipt extends React.Component {
   }
 
   goToDetail(row) {
-    this.props.history.push('/admin/revenue/receipt/detail')
+    console.log(row)
+    this.props.history.push('/admin/revenue/receipt/detail',{id:row.receiptId})
   }
 
   renderMode(cell, row) {

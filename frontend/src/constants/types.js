@@ -130,7 +130,8 @@ export const TRANSACTION = {
 }
 
 export const USER = {
-  USER_LIST: 'USER_LIST'
+  USER_LIST: 'USER_LIST',
+  ROLE_LIST: 'ROLE_LIST'
 }
 
 export const VAT = {

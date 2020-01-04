@@ -9,7 +9,7 @@ export const getUserById = (_id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/user/edituser?id=${_id}`
+      url: `/rest/user/getById?id=${_id}`
     }
 
     return authApi(data).then(res => {
@@ -24,7 +24,7 @@ export const updateUser = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/invoice/update',
+      url: '/rest/user/update',
       data: obj
     }
     return authFileUploadApi(data).then(res => {
@@ -39,7 +39,7 @@ export const deleteUser = (id) => {
   return (dispatch) => {
     let data = {
       method: 'DELETE',
-      url: `/rest/user/deleteuser?id=${id}`
+      url: `/rest/user/delete?id=${id}`
     }
 
     return authApi(data).then(res => {

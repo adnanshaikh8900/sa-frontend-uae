@@ -7,11 +7,11 @@ import {
 
 
 // Get Vat List
-export const getProductCategoryList = () => {
+export const getProductCategoryList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/productcategory/getList'
+      url: '/rest/productcategory/getList?productCategoryCode=${obj.productCategoryCode}&productCategoryName=${obj.productCategoryName}'
     }
 
     return authApi(data).then(res => {

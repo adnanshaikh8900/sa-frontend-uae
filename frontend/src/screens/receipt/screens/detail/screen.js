@@ -130,6 +130,7 @@ class DetailReceipt extends React.Component {
     this.props.receiptDetailActions.updateReceipt(postData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Updated successfully!')
+        this.props.history.push('/admin/revenue/receipt')
     }
   }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
@@ -201,14 +202,17 @@ class DetailReceipt extends React.Component {
   
                             this.handleSubmit(values)
                           }}
-                        // validationSchema={
-                        //   Yup.object().shape({
-                        //   productName: Yup.string()
-                        //     .required("Product Name is Required"),
-                        //   vatCategoryId: Yup.string()
-                        //     .required("Vat Category is Required")
-                        //     .nullable()
-                        // })}
+                          validationSchema={
+                            Yup.object().shape({
+                            receiptDate: Yup.date()
+                              .required("Receipt Date is Required"),
+                            referenceCode: Yup.string()
+                              .required("Reference Number is Required"),
+                            contactId: Yup.string()
+                            .required('Customer is required'),
+                            amount: Yup.string()
+                            .required('Amount is required')
+                          })}
                         >
                           {props => (
                             <Form onSubmit={props.handleSubmit}>

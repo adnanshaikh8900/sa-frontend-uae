@@ -1,11 +1,14 @@
 package com.simplevat.rest.usercontroller;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -76,6 +79,14 @@ public class UserRestHelper {
 			user.setIsActive(userModel.isActive());
 			if (userModel.getPassword() != null && userModel.getPassword().equals("")) {
 				user.setPassword(userModel.getPassword());
+			}
+			if (userModel.getProfilePic() != null) {
+				try {
+					user.setProfileImageBinary(userModel.getProfilePic().getBytes());
+				} catch (IOException e) {
+					e.printStackTrace();
+					Logger.getLogger(UserRestHelper.class.getName()).log(Level.SEVERE, null, e);
+				}
 			}
 			return user;
 		}

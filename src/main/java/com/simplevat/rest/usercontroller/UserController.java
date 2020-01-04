@@ -44,6 +44,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -148,7 +149,7 @@ public class UserController implements Serializable {
 
 	@ApiOperation(value = "Save New User")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody UserModel selectedUser, HttpServletRequest request) {
+	public ResponseEntity save(@ModelAttribute UserModel selectedUser, HttpServletRequest request) {
 
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
@@ -197,7 +198,7 @@ public class UserController implements Serializable {
 
 	@ApiOperation(value = "Update User")
 	@PostMapping(value = "/update")
-	public ResponseEntity editUser(@RequestBody UserModel userModel, HttpServletRequest request) {
+	public ResponseEntity editUser(@ModelAttribute UserModel userModel, HttpServletRequest request) {
 		User user = null;
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

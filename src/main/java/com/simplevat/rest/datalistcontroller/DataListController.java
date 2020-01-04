@@ -7,6 +7,7 @@ package com.simplevat.rest.datalistcontroller;
 
 import com.simplevat.entity.Country;
 import com.simplevat.entity.Currency;
+import com.simplevat.entity.IndustryType;
 import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.enums.ContactTypeEnum;
@@ -16,6 +17,7 @@ import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
+import com.simplevat.service.IndustryTypeService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
@@ -48,6 +50,9 @@ public class DataListController implements Serializable {
 
     @Autowired
     private TransactionTypeService transactionTypeService;
+
+    @Autowired
+    private IndustryTypeService industryTypeService;
 
     @GetMapping(value = "/getcountry")
     public ResponseEntity getCountry() {
@@ -125,6 +130,26 @@ public class DataListController implements Serializable {
             if (typeEnums != null && !typeEnums.isEmpty()) {
                 for (ContactTypeEnum typeEnum : typeEnums) {
                     dropdownModels.add(new DropdownModel(typeEnum.getValue(), typeEnum.getDesc()));
+                }
+                return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+            } else {
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ApiOperation(value = "All Industry Types")
+    @GetMapping(value = "/getIndustryTypes")
+    public ResponseEntity getIndustryTypes() {
+        try {
+            List<DropdownModel> dropdownModels = new ArrayList<>();
+            List<IndustryType> industryTypes = industryTypeService.getIndustryTypes();
+            if (industryTypes != null && !industryTypes.isEmpty()) {
+                for (IndustryType type : industryTypes) {
+                    dropdownModels.add(new DropdownModel(type.getId(), type.getIndustryTypeName()));
                 }
                 return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
             } else {

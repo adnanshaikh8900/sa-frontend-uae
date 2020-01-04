@@ -17,6 +17,7 @@ import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
+import { Yup } from 'yup'
 import _ from 'lodash'
 import * as CustomerInvoiceDetailActions from './actions';
 import * as  CustomerInvoiceActions from "../../actions";
@@ -284,7 +285,6 @@ class DetailCustomerInvoice extends React.Component {
 
   updateAmount(data) {
     const { vat_list } = this.props;
-    console.log(vat_list)
     let total_net = 0;
     let total = 0;
     let total_vat = 0;
@@ -292,17 +292,12 @@ class DetailCustomerInvoice extends React.Component {
       const index = obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : -1;
       let vat = 0;
       let val = 0;
-      console.log(typeof index)
       if (index !== '' && index !== -1) {
         vat = vat_list[index].vat
         val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
         obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : '-';
       } else {
-        console.log(index)
       }
-
-
-      console.log(data)
 
       // console.log(index)
 
@@ -451,7 +446,15 @@ class DetailCustomerInvoice extends React.Component {
 
                               // })
                             }}
-
+                            validationSchema={
+                              Yup.object().shape({
+                                invoice_number: Yup.string()
+                                  .required("Invoice Number is Required"),
+                                contactId: Yup.string()
+                                  .required("Customer is Required"),
+                                invoiceDate: Yup.date()
+                                  .required('Invoice Date is Required'),
+                              })}
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit}>
@@ -466,10 +469,17 @@ class DetailCustomerInvoice extends React.Component {
                                         placeholder=""
                                         value={props.values.invoice_reference_number}
                                         onChange={(value) => {
-                                          console.log(props)
                                           props.handleChange("invoice_reference_number")(value)
                                         }}
+                                        className={
+                                          props.errors.invoice_number && props.touched.invoice_number
+                                            ? 'is-invalid'
+                                            : ''
+                                        }
                                       />
+                                      {props.errors.invoice_number && props.touched.invoice_number && (
+                                        <div className="invalid-feedback">{props.errors.invoice_number}</div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                   <Col lg={4}>
@@ -571,7 +581,6 @@ class DetailCustomerInvoice extends React.Component {
                                       <Label htmlFor="due_date">Invoice Due Date</Label>
                                       <div>
                                         <DatePicker
-                                          className="form-control"
                                           id="invoiceDueDate"
                                           name="invoiceDueDate"
                                           placeholderText=""
@@ -579,7 +588,11 @@ class DetailCustomerInvoice extends React.Component {
                                           onChange={(value) => {
                                             props.handleChange("invoiceDueDate")(value)
                                           }}
+                                          className={`form-control ${props.errors.invoiceDate && props.touched.invoiceDate ? "is-invalid" : ""}`}
                                         />
+                                        {props.errors.invoiceDate && props.touched.invoiceDate && (
+                                          <div className="invalid-feedback">{props.errors.invoiceDate}</div>
+                                        )}
                                       </div>
                                     </FormGroup>
                                   </Col>

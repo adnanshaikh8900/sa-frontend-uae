@@ -83,10 +83,7 @@ class DetailChartAccount extends React.Component {
             initValue: {
               transactionCategoryCode: res.data.transactionCategoryCode,
               transactionCategoryName: res.data.transactionCategoryName,
-              transactionType: res.data.transactionType ? {
-                label: res.data.transactionType.transactionTypeName,
-                value: res.data.transactionType.transactionTypeCode
-              } : null,
+              transactionType: res.data.transactionTypeId ? res.data.transactionTypeId : '',
             }
           })
         }
@@ -143,10 +140,10 @@ class DetailChartAccount extends React.Component {
   }
 
   // Create or Edit Vat
-  handleSubmit(data,resetForm) {
+  handleSubmit(data, resetForm) {
     const id = this.props.location.state.id
     const { transactionCategoryCode, transactionCategoryName, transactionType } = data
-    const postData = Object.assign(data, {transactionCategoryId: id})
+    const postData = Object.assign(data, { transactionCategoryId: id })
     this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then(res => {
       if (res.status === 200) {
         resetForm()
@@ -186,7 +183,7 @@ class DetailChartAccount extends React.Component {
                           <Formik
                             initialValues={this.state.initValue}
                             onSubmit={(values, { resetForm }) => {
-                              this.handleSubmit(values,resetForm)
+                              this.handleSubmit(values, resetForm)
                             }}
                             validationSchema={
                               Yup.object().shape({

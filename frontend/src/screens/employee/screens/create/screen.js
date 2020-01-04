@@ -56,6 +56,7 @@ class CreateEmployee extends React.Component {
         lastName: '',
         email: '',
         password: '',
+        confirmPassword: '',
         dob: '',
         referenceCode: '',
         title: '',
@@ -152,6 +153,8 @@ class CreateEmployee extends React.Component {
                             .required("Last Name is Required"),
                           middleName: Yup.string()
                             .required("Middle Name is Required"),
+                          email: Yup.string().email("Valid Email Required"),
+                          billingEmail: Yup.string().email("Valid Email Required"),
                           password: Yup.string()
                             .required("Password is Required")
                             // .min(8, "Password Too Short")
@@ -197,11 +200,15 @@ class CreateEmployee extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="select">Email</Label>
                                   <Input
-                                    type="email"
+                                    type="text"
                                     id="email"
                                     name="email"
                                     onChange={(value) => { props.handleChange('email')(value) }}
+                                    className={props.errors.email && props.touched.email ? "is-invalid" : ""}
                                   />
+                                  {props.errors.email && props.touched.email && (
+                                    <div className="invalid-feedback">{props.errors.email}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                             </Row>

@@ -2,11 +2,12 @@ package com.simplevat.entity;
 
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
-import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 /**
@@ -14,7 +15,8 @@ import org.hibernate.annotations.ColumnDefault;
  */
 @Entity
 @Table(name = "INVOICE_LINE_ITEM")
-@Data
+@Getter
+@Setter
 public class InvoiceLineItem implements Serializable {
 
     private static final long serialVersionUID = 848122185643690684L;

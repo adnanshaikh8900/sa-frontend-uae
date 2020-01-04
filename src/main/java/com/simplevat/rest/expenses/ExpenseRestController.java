@@ -108,6 +108,7 @@ public class ExpenseRestController {
             expense.setCreatedDate(LocalDateTime.now());
             if (expenseModel.getAttachmentFile() != null && !expenseModel.getAttachmentFile().isEmpty()) {
                 String fileName = fileHelper.saveFile(expenseModel.getAttachmentFile(), FileTypeEnum.EXPENSE);
+                expense.setReceiptAttachmentFileName(expenseModel.getAttachmentFile().getOriginalFilename());
                 expense.setReceiptAttachmentPath(fileName);
             }
             expenseService.persist(expense);
@@ -128,6 +129,7 @@ public class ExpenseRestController {
                 Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
                 if (expenseModel.getAttachmentFile() != null && !expenseModel.getAttachmentFile().isEmpty()) {
                     String fileName = fileHelper.saveFile(expenseModel.getAttachmentFile(), FileTypeEnum.EXPENSE);
+                    expense.setReceiptAttachmentFileName(expenseModel.getAttachmentFile().getOriginalFilename());
                     expense.setReceiptAttachmentPath(fileName);
                 }
                 expense.setLastUpdateBy(userId);

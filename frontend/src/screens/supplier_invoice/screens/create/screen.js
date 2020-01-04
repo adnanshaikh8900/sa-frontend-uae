@@ -17,6 +17,7 @@ import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
+import * as Yup from 'yup'
 import _ from 'lodash'
 import * as SupplierInvoiceCreateActions from './actions';
 import * as  SupplierInvoiceActions from "../../actions";
@@ -243,7 +244,7 @@ class CreateSupplierInvoice extends React.Component {
     const { vat_list } = this.props;
     return (
       <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
-        {vat_list ? vat_list.map((obj,index) => {
+        {vat_list ? vat_list.map((obj, index) => {
           // obj.name = obj.name === 'default' ? '0' : obj.name
           return <option value={obj.id} key={obj.id}>{obj.name}</option>
         }) : []}
@@ -315,7 +316,7 @@ class CreateSupplierInvoice extends React.Component {
       invoiceVATAmount,
       totalAmount,
       notes
-    } = data    
+    } = data
 
 
     let formData = new FormData();
@@ -394,7 +395,7 @@ class CreateSupplierInvoice extends React.Component {
       selectedContact
     } = this.state
 
-    const { project_list, contact_list, currency_list ,supplier_list} = this.props
+    const { project_list, contact_list, currency_list, supplier_list } = this.props
     return (
       <div className="create-supplier-invoice-screen">
         <div className="animated fadeIn">
@@ -429,7 +430,15 @@ class CreateSupplierInvoice extends React.Component {
 
                           // })
                         }}
-
+                        validationSchema={
+                          Yup.object().shape({
+                            invoice_number: Yup.string()
+                              .required("Invoice Number is Required"),
+                              contactId: Yup.string()
+                              .required("Supplier is Required"),
+                              invoiceDate: Yup.date()
+                              .required('Invoice Date is Required'),
+                          })}
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -443,7 +452,15 @@ class CreateSupplierInvoice extends React.Component {
                                     name="invoice_number"
                                     placeholder=""
                                     onChange={(value) => { props.handleChange("invoice_number")(value) }}
+                                    className={
+                                      props.errors.invoice_number && props.touched.invoice_number
+                                        ? 'is-invalid'
+                                        : ''
+                                    }
                                   />
+                                  {props.errors.invoice_number && props.touched.invoice_number && (
+                                    <div className="invalid-feedback">{props.errors.invoice_number}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
@@ -461,35 +478,35 @@ class CreateSupplierInvoice extends React.Component {
                               </Col>
                             </Row>
                             <Row>
-                            <Col lg={4}>
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="contactId">Supplier Name</Label>
-                                        <Select
+                              <Col lg={4}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="contactId">Supplier Name</Label>
+                                  <Select
 
-                                          id="contactId"
-                                          name="contactId"
-                                          options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
-                                          value={selectedContact}
-                                          onChange={option => {
-                                            props.handleChange('contactId')(option)
-                                            this.getCurrentUser(option)
-                                          }}
-                                          className={
-                                            props.errors.contactId && props.touched.contactId
-                                              ? 'is-invalid'
-                                              : ''
-                                          }
-                                        />
-                                        {props.errors.contactId && props.touched.contactId && (
-                                          <div className="invalid-feedback">{props.errors.contactId}</div>
-                                        )}
-                                      </FormGroup>
-                                      <Button type="button" color="primary" className="btn-square mr-3 mb-3"
-                                        onClick={this.openSupplierModal}
-                                      >
-                                     <i className="fa fa-plus"></i> Add a Supplier
+                                    id="contactId"
+                                    name="contactId"
+                                    options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
+                                    value={selectedContact}
+                                    onChange={option => {
+                                      props.handleChange('contactId')(option)
+                                      this.getCurrentUser(option)
+                                    }}
+                                    className={
+                                      props.errors.contactId && props.touched.contactId
+                                        ? 'is-invalid'
+                                        : ''
+                                    }
+                                  />
+                                  {props.errors.contactId && props.touched.contactId && (
+                                    <div className="invalid-feedback">{props.errors.contactId}</div>
+                                  )}
+                                </FormGroup>
+                                <Button type="button" color="primary" className="btn-square mr-3 mb-3"
+                                  onClick={this.openSupplierModal}
+                                >
+                                  <i className="fa fa-plus"></i> Add a Supplier
                                   </Button>
-                                    </Col>
+                              </Col>
                             </Row>
                             <hr />
                             {/* <Row>
@@ -527,16 +544,19 @@ class CreateSupplierInvoice extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="date">Invoice Date</Label>
-                                    <DatePicker
-                                      className="form-control"
-                                      id="invoiceDate"
-                                      name="invoiceDate"
-                                      placeholderText=""
-                                      selected={props.values.invoiceDate}
-                                      onChange={(value) => {
-                                        props.handleChange("invoiceDate")(value)
-                                      }}
+                                  <DatePicker
+                                    id="invoiceDate"
+                                    name="invoiceDate"
+                                    placeholderText=""
+                                    selected={props.values.invoiceDate}
+                                    onChange={(value) => {
+                                      props.handleChange("invoiceDate")(value)
+                                    }}
+                                    className={`form-control ${props.errors.invoiceDate && props.touched.invoiceDate ? "is-invalid" : ""}`}
                                     />
+                                    {props.errors.invoiceDate && props.touched.invoiceDate && (
+                                      <div className="invalid-feedback">{props.errors.invoiceDate}</div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
@@ -665,7 +685,7 @@ class CreateSupplierInvoice extends React.Component {
                                   >
                                   </TableHeaderColumn>
                                   <TableHeaderColumn
-                                    
+
                                     width="0"
                                     dataField="product_name"
                                     dataFormat={this.renderProductName}
@@ -812,10 +832,10 @@ class CreateSupplierInvoice extends React.Component {
                                   <Button type="submit" color="primary" className="btn-square mr-3"
                                     onClick={
                                       () => {
-                                        this.setState({ createMore: true }, ()=>{
-                                        props.handleSubmit()
-                                      })
-                                    }
+                                        this.setState({ createMore: true }, () => {
+                                          props.handleSubmit()
+                                        })
+                                      }
                                     }
                                   >
                                     <i className="fa fa-repeat"></i> Create and More

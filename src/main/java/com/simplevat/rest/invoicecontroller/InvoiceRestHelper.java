@@ -116,7 +116,7 @@ public class InvoiceRestHelper {
         invoice.setNotes(invoiceModel.getNotes());
         invoice.setDiscountType(invoiceModel.getDiscountType());
         invoice.setDiscount(invoiceModel.getDiscount());
-        invoice.setStatus(InvoiceStatusEnum.PENDING); // default set, will change in transaction
+        invoice.setStatus(InvoiceStatusEnum.PENDING.getValue()); // default set, will change in transaction
 
         return invoice;
     }
@@ -178,14 +178,14 @@ public class InvoiceRestHelper {
         requestModel.setReceiptNumber(invoice.getReceiptNumber());
         requestModel.setNotes(invoice.getNotes());
         if (invoice.getType() != null) {
-            requestModel.setType(InvoiceStatusEnum.getContactTypeByValue(invoice.getType()));
+            requestModel.setType(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getType()));
         }
         requestModel.setReceiptAttachmentDescription(invoice.getReceiptAttachmentDescription());
         if (invoice.getTaxIdentificationNumber() != null) {
             requestModel.setTaxIdentificationNumber(invoice.getTaxIdentificationNumber());
         }
         if (invoice.getStatus() != null) {
-            requestModel.setStatus(invoice.getStatus().name());
+            requestModel.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
         }
         List<InvoiceLineItemModel> lineItemModels = new ArrayList<>();
         if (invoice.getInvoiceLineItems() != null && !invoice.getInvoiceLineItems().isEmpty()) {
@@ -232,7 +232,7 @@ public class InvoiceRestHelper {
             model.setTotalAmount(invoice.getTotalAmount());
             model.setTotalVatAmount(invoice.getTotalVatAmount());
             if (invoice.getStatus() != null) {
-                model.setStatus(invoice.getStatus().name());
+                model.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
             }
             invoiceListModels.add(model);
         }

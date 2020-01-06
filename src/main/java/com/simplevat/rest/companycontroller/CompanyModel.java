@@ -39,5 +39,6 @@ public class CompanyModel {
 	private BigDecimal companyExpenseBudget;
 	private BigDecimal companyRevenueBudget;
 	private String dateFormat;
+	private byte[] companyLogoByteArray;
 
 }

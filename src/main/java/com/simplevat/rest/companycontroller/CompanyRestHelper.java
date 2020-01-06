@@ -98,7 +98,8 @@ public class CompanyRestHelper {
 		}
 		companyModel.setCompanyPoBoxNumber(company.getCompanyPoBoxNumber());
 		companyModel.setCompanyPostZipCode(company.getCompanyPostZipCode());
-
+		companyModel.setCompanyLogoByteArray(company.getCompanyLogo()); 
+		
 		return companyModel;
 	}
 

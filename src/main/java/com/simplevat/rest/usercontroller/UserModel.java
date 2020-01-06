@@ -41,7 +41,9 @@ public class UserModel {
     private String email;
 
     private MultipartFile profilePic;
-
+    
+    private byte[] profilePicByteArray;
+    
     public String getFullName() {
         StringBuilder sb = new StringBuilder();
         if (firstName != null && !firstName.isEmpty()) {

@@ -98,8 +98,10 @@ public class CompanyRestHelper {
 		}
 		companyModel.setCompanyPoBoxNumber(company.getCompanyPoBoxNumber());
 		companyModel.setCompanyPostZipCode(company.getCompanyPostZipCode());
-		companyModel.setCompanyLogoByteArray(company.getCompanyLogo()); 
-		
+		if (company.getCompanyLogo() != null) {
+			companyModel.setCompanyLogoByteArray(company.getCompanyLogo());
+		}
+
 		return companyModel;
 	}
 
@@ -129,7 +131,7 @@ public class CompanyRestHelper {
 
 		company.setCompanyExpenseBudget(companyModel.getCompanyExpenseBudget());
 		company.setCompanyRevenueBudget(companyModel.getCompanyRevenueBudget());
-		
+
 		company.setInvoicingAddressLine1(companyModel.getInvoicingAddressLine1());
 		company.setInvoicingAddressLine2(companyModel.getInvoicingAddressLine2());
 		company.setInvoicingAddressLine3(companyModel.getInvoicingAddressLine3());

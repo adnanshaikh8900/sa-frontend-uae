@@ -129,17 +129,10 @@ class DetailReceipt extends React.Component {
     }
     this.props.receiptDetailActions.updateReceipt(postData).then(res => {
       if (res.status === 200) {
-<<<<<<< HEAD
         this.props.commonActions.tostifyAlert('success', 'Updated successfully!')
         this.props.history.push('/admin/revenue/receipt')
     }
   }).catch((err) => {
-=======
-        this.props.commonActions.tostifyAlert('success', 'Updated successfully!');
-        this.props.history.push('/admin/revenue/receipt');
-      }
-    }).catch((err) => {
->>>>>>> 43bd1f603b57c194882e90fe248e758d958b4594
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }

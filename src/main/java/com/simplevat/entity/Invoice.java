@@ -124,9 +124,9 @@ public class Invoice implements Serializable {
     @ColumnDefault(value = "0.00")
     private BigDecimal totalVatAmount;
 
-    @Enumerated(EnumType.STRING)
+    @Basic
     @Column(name = "STATUS")
-    private InvoiceStatusEnum status;
+    private Integer status;
 
     @Basic
     @Column(name = "RECEIPT_NUMBER", length = 20)

@@ -526,7 +526,7 @@ class BankAccount extends React.Component {
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
-                              options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                              options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                               value={filter_currency}
                               onChange={option => this.setState({
                                 filter_currency: option

@@ -258,7 +258,7 @@ class CreateContact extends React.Component {
                                   <Label htmlFor="countryId">Contact Type</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list) : []}
+                                    options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list,'Contact Type') : []}
                                     value={props.values.contactType}
                                     onChange={option => props.handleChange('contactType')(option.value)}
                                     placeholder="Select Contact Type"
@@ -445,7 +445,7 @@ class CreateContact extends React.Component {
                                   <Label htmlFor="countryId">Country</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
+                                    options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                     value={props.values.countryId}
                                     onChange={option => props.handleChange('countryId')(option.value)}
                                     placeholder="Select Country"
@@ -610,7 +610,7 @@ class CreateContact extends React.Component {
                                   <Label htmlFor="currencyCode">Currency Code</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currencyCode}
                                     onChange={option => props.handleChange('currencyCode')(option.value)}
                                     placeholder="Select Currency"

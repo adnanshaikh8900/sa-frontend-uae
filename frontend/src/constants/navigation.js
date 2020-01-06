@@ -169,11 +169,11 @@ export default {
           url: '/admin/settings/user',
           icon: 'fas fa-users',
         },
-        {
-          name: 'Organization',
-          url: '/admin/settings/organization',
-          icon: 'fas fa-sitemap',
-        }
+        // {
+        //   name: 'Organization',
+        //   url: '/admin/settings/organization',
+        //   icon: 'fas fa-sitemap',
+        // }
       ]
     }
   ]

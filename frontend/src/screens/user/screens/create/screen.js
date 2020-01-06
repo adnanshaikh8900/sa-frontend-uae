@@ -15,14 +15,14 @@ import {
   Label
 } from 'reactstrap'
 import Select from 'react-select'
-import ImageUploader from 'react-images-upload'
+// import ImageUploader from 'react-images-upload'
 import DatePicker from 'react-datepicker'
 
 // import 'react-images-upload/styles.css'
 // import 'react-images-upload/font.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
-import { Loader, ConfirmDeleteModal } from 'components'
+import { Loader, ConfirmDeleteModal , ImageUploader } from 'components'
 
 import * as UserActions from '../../actions'
 import * as UserCreateActions from './actions'
@@ -69,6 +69,7 @@ class CreateUser extends React.Component {
         roleId: ''
       },
       pictures: [],
+      showIcon: false
     }
     this.uploadImage = this.uploadImage.bind(this);
     this.initializeData = this.initializeData.bind(this)
@@ -80,6 +81,7 @@ class CreateUser extends React.Component {
 
   initializeData() {
     this.props.userActions.getRoleList()
+    this.setState({showIcon: false})
   }
 
   uploadImage(picture) {
@@ -188,7 +190,7 @@ class CreateUser extends React.Component {
 
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
-                              <Col lg={2}>
+                              <Col xs="4" md="4" lg={2}>
                                 <FormGroup className="mb-3 text-center">
                                   {/* <ImagesUploader
                                     // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -203,25 +205,19 @@ class CreateUser extends React.Component {
                                     onChange={(e)=>{console.log(e)}}
                                   /> */}
                                   <ImageUploader
-                                    withIcon={true}
+                                    // withIcon={true}
                                     buttonText='Choose images'
                                     onChange={this.uploadImage}
                                     imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                                    maxFileSize={1048576}
+                                    maxFileSize={11048576}
                                     withPreview={true}
                                     singleImage={true}
-                                    withIcon={false}
-                                    buttonText="Choose Profile Image"
+                                    withIcon={this.state.showIcon}
+                                    // buttonText="Choose Profile Image"
+                                    flipHeight={this.state.pictures.length > 0 ? {height: "inherit"} : {}}
                                     label="'Max file size: 1mb"
-                                    fileContainerStyle = {{
-                                    position: "relative",
-                                    height: "150px",
-                                    boxShadow: "2px 2px 3px 0 rgba(0, 0, 0)"
-                                  }}
-                                  buttonStyles={{
-                                    position: "absolute",
-                                    bottom:"-50px"
-                                  }}
+                                    labelClass={this.state.pictures.length > 0 ? 'hideLabel' : 'showLabel'}
+                                    buttonClassName={this.state.pictures.length > 0 ? 'hideButton' : 'showButton'}
                                   />
                                 </FormGroup>
                               </Col>
@@ -298,7 +294,7 @@ class CreateUser extends React.Component {
                                       <Label htmlFor="roleId">Role</Label>
                                       <Select
                                         className="select-default-width"
-                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
+                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
                                         value={props.values.roleId}
                                         onChange={option => props.handleChange('roleId')(option.value)}
                                         placeholder="Select Role"
@@ -321,7 +317,7 @@ class CreateUser extends React.Component {
                                       <Label htmlFor="companyId">Company</Label>
                                       <Select
                                         className="select-default-width"
-                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
+                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
                                         value={props.values.companyId}
                                         onChange={option => props.handleChange('companyId')(option.value)}
                                         placeholder="Select Company"

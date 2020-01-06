@@ -11,7 +11,7 @@ export const getProductCategoryList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/productcategory/getList?productCategoryCode=${obj.productCategoryCode}&productCategoryName=${obj.productCategoryName}'
+      url: `/rest/productcategory/getList?productCategoryCode=${obj.productCategoryCode}&productCategoryName=${obj.productCategoryName}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
     }
 
     return authApi(data).then(res => {

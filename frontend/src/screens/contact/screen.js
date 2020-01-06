@@ -311,7 +311,7 @@ class Contact extends React.Component {
                               <FormGroup className="mb-3">
 
                                 <Select
-                                  options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list) : []}
+                                  options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list,'Contact Type') : []}
                                   onChange={(val) => {
                                     this.handleChange(val['value'], 'contactType')
                                     this.setState({ 'selectedContactType': val['value'] })

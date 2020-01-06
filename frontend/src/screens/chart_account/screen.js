@@ -312,7 +312,7 @@ class ChartAccount extends React.Component {
                               <FormGroup className="mb-3">
 
                                 <Select
-                                  options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list) : []}
+                                  options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list,'Type') : []}
                                   onChange={(val) => {
                                     this.handleChange(val['value'], 'transactionType')
                                     this.setState({ 'selectedTransactionType': val['value'] })

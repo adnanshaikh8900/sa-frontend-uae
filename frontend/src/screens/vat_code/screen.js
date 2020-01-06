@@ -54,7 +54,10 @@ class VatCode extends React.Component {
       openDeleteModal: false,
       loading: true,
       selectedRows: [],
-      filters: {}
+      filterData: {
+        name: '',
+        vatPercentage: ''
+      }
     }
 
     this.deleteVat = this.deleteVat.bind(this)
@@ -68,13 +71,19 @@ class VatCode extends React.Component {
     this.onSelectAll = this.onSelectAll.bind(this)
     this.onRowSelect = this.onRowSelect.bind(this)
 
-    this.filterVatList = this.filterVatList.bind(this)
-
-    this.handleFilterChange = this.handleFilterChange.bind(this)
+    // this.filterVatList = this.filterVatList.bind(this)
+    this.initializeData = this.initializeData.bind(this)
+    // this.handleFilterChange = this.handleFilterChange.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
+    this.onPageChange = this.onPageChange.bind(this);
+    this.onSizePerPageList = this.onSizePerPageList.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
@@ -85,6 +94,23 @@ class VatCode extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.initializeData();
+  }
+
+  initializeData() {
+    let { filterData } = this.state
+    const data = {
+      pageNo: this.options.page ? this.options.page : 1,
+      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+    }
+    filterData = { ...filterData, ...data }
+    this.props.vatActions.getVatList(filterData).then(res => {
+      if (res.status === 200) {
+        this.setState({ loading: false })
+      }
+    })
+  }
 
   onRowSelect(row, isSelected) {
     if(isSelected) {
@@ -128,14 +154,16 @@ class VatCode extends React.Component {
     })
   }
 
-  
-  componentDidMount() {
-    this.props.vatActions.getVatList().then(res => {
-      if (res.status === 200) {
-        this.setState({ loading: false })
-      }
-    })
+  onPageChange = (page, sizePerPage) => {
+    this.options.page = page
   }
+
+  onSizePerPageList = (sizePerPage) => {
+    this.options.sizePerPage = sizePerPage
+  }
+
+  
+
 
 
   // -------------------------
@@ -149,7 +177,7 @@ class VatCode extends React.Component {
     this.props.vatActions.deleteVat(this.state.selectedRows).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
-        this.getVatListData()
+        this.initializeData()
       }
     })
   }
@@ -164,35 +192,46 @@ class VatCode extends React.Component {
   }
 
 
-  handleFilterChange(e, name) {
+  // handleFilterChange(e, name) {
+  //   this.setState({
+  //     filters: _.set(
+  //       { ...this.state.filters },
+  //       e.target.name && e.target.name !== '' ? e.target.name : name,
+  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
+  //     )
+  //   })
+  // }
+
+  // filterVatList(vat_list) {
+  //   const {filters} = this.state
+
+  //   const data = vat_list.filter(item => {
+  //     for (var key in filters) {
+  //       if (item[key] === undefined || !item[key].toString().includes(filters[key]))
+  //         return false;
+  //     }
+  //     return true;
+  //   })
+
+  //   return data
+  // }  // }  // }
+  handleChange(val, name) {
     this.setState({
-      filters: _.set(
-        { ...this.state.filters },
-        e.target.name && e.target.name !== '' ? e.target.name : name,
-        e.target.type === 'checkbox' ? e.target.checked : e.target.value
-      )
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
     })
   }
 
-  filterVatList(vat_list) {
-    const {filters} = this.state
-
-    const data = vat_list.filter(item => {
-      for (var key in filters) {
-        if (item[key] === undefined || !item[key].toString().includes(filters[key]))
-          return false;
-      }
-      return true;
-    })
-
-    return data
+  handleSearch() {
+    this.initializeData();
   }
 
   render() {
     const { loading, selectedRows, filters } = this.state
-    const vatList = this.props.vat_list
+    const {vat_list} = this.props
    
-    let display_data = this.filterVatList(vatList)
+    // let display_data = this.filterVatList(vatList)
 
     return (
       <div className="vat-code-screen">
@@ -242,17 +281,22 @@ class VatCode extends React.Component {
                       <h5>Filter : </h5>
                       <Row>
                         <Col lg={4} className="mb-1">
-                          <Input type="text" 
-                            name="name"
-                            placeholder="Vat Name" 
-                            onChange={this.handleFilterChange}/>
+                        <Input type="text" placeholder="Name" onChange={(e) => { 
+                          e.preventDefault()
+                          this.handleChange(e.target.value, 'name') 
+                          }} />
                         </Col>
                         <Col lg={4} className="mb-1">
-                          <Input type="number" 
-                            name="vat"
-                            placeholder="Vat Percentage" 
-                            onChange={this.handleFilterChange}/>
+                        <Input type="number" placeholder="Vat Percentage" onChange={(e) => { 
+                          e.preventDefault()
+                          this.handleChange(e.target.value, 'vatPercentage')
+                           }} />
                         </Col>
+                        <Col lg={2} className="mb-1">
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                                <i className="fa fa-search"></i>
+                            </Button>
+                            </Col>
                         {/* <Col>
                           <Select
                             className=""
@@ -267,7 +311,7 @@ class VatCode extends React.Component {
                       </Row>
                     </div>
                     <BootstrapTable 
-                      data={display_data}
+                      data={vat_list.length > 0 ? vat_list : []}
                       hover
                       version="4"
                       pagination

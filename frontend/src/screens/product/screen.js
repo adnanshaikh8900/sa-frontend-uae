@@ -306,7 +306,7 @@ class Product extends React.Component {
                             <Col lg={3} className="mb-1">
                               <FormGroup className="mb-3">
                                 <Select
-                                  options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list) : []}
+                                  options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list,'Vat') : []}
                                   className="select-default-width"
                                   placeholder="Vat Percentage"
                                   value={filterData.vatPercentage}

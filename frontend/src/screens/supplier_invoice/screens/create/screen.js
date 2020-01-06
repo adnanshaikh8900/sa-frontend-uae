@@ -149,6 +149,7 @@ class CreateSupplierInvoice extends React.Component {
         type="text"
         value={row['description'] !== '' ? row['description'] : ''}
         // defaultValue={row['description']}
+        placeholder="Description"
         onChange={(e) => { this.selectItem(e, row, 'description') }}
 
       />
@@ -242,12 +243,14 @@ class CreateSupplierInvoice extends React.Component {
 
   renderVat(cell, row) {
     const { vat_list } = this.props;
+    let vatList = vat_list.length ? [{ id: '', name: 'Select Vat' }, ...vat_list] : vat_list
+
     return (
       <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
-        {vat_list ? vat_list.map((obj, index) => {
+        {vatList ? vatList.map(obj => {
           // obj.name = obj.name === 'default' ? '0' : obj.name
           return <option value={obj.id} key={obj.id}>{obj.name}</option>
-        }) : []}
+        }) : ''}
       </Input>
     )
   }
@@ -450,7 +453,7 @@ class CreateSupplierInvoice extends React.Component {
                                     type="text"
                                     id="invoice_number"
                                     name="invoice_number"
-                                    placeholder=""
+                                    placeholder="Invoice Number"
                                     onChange={(value) => { props.handleChange("invoice_number")(value) }}
                                     className={
                                       props.errors.invoice_number && props.touched.invoice_number
@@ -468,7 +471,7 @@ class CreateSupplierInvoice extends React.Component {
                                   <Label htmlFor="project">Project</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list) : []}
+                                    options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                     id="project"
                                     name="project"
                                     value={props.values.project}
@@ -485,7 +488,7 @@ class CreateSupplierInvoice extends React.Component {
 
                                     id="contactId"
                                     name="contactId"
-                                    options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
+                                    options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list,'Supplier Name') : []}
                                     value={selectedContact}
                                     onChange={option => {
                                       props.handleChange('contactId')(option)
@@ -547,7 +550,7 @@ class CreateSupplierInvoice extends React.Component {
                                   <DatePicker
                                     id="invoiceDate"
                                     name="invoiceDate"
-                                    placeholderText=""
+                                    placeholderText="Invoice Date"
                                     selected={props.values.invoiceDate}
                                     onChange={(value) => {
                                       props.handleChange("invoiceDate")(value)
@@ -567,7 +570,7 @@ class CreateSupplierInvoice extends React.Component {
                                       className="form-control"
                                       id="invoiceDueDate"
                                       name="invoiceDueDate"
-                                      placeholderText=""
+                                      placeholderText="Invoice Due Date"
                                       selected={props.values.invoiceDueDate}
                                       onChange={(value) => {
                                         props.handleChange("invoiceDueDate")(value)
@@ -583,7 +586,7 @@ class CreateSupplierInvoice extends React.Component {
                                   <Label htmlFor="currency">Currency</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     id="currency"
                                     name="currency"
                                     value={props.values.currency}
@@ -598,7 +601,7 @@ class CreateSupplierInvoice extends React.Component {
                                     type="text"
                                     id="contact_po_number"
                                     name="contact_po_number"
-                                    placeholder=""
+                                    placeholder="Contact PO Number"
                                     onChange={(value) => { props.handleChange("contact_po_number")(value) }}
                                   />
                                 </FormGroup>
@@ -616,7 +619,7 @@ class CreateSupplierInvoice extends React.Component {
                                         type="text"
                                         id="receiptNumber"
                                         name="receiptNumber"
-                                        placeholder="Enter Reciept Number"
+                                        placeholder="Reciept Number"
                                         onChange={option => props.handleChange('receiptNumber')(option)}
                                         value={props.values.receiptNumber}
 
@@ -771,6 +774,7 @@ class CreateSupplierInvoice extends React.Component {
                                               <Input
                                                 id="discount_percentage"
                                                 name="discount_percentage"
+                                                placeholder="Discount Percentage"
                                               />
                                             </FormGroup>
                                           </Col>
@@ -785,6 +789,8 @@ class CreateSupplierInvoice extends React.Component {
                                           <Input
                                             id="discount_amount"
                                             name="discount_amount"
+                                            placeholder="Discount Amount"
+                                            
                                           />
                                         </FormGroup>
                                       </Col>

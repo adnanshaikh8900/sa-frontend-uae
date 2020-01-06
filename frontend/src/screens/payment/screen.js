@@ -300,7 +300,7 @@ class Payment extends React.Component {
                               placeholder="Select Supplier"
                               id="supplier"
                               name="supplier"
-                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
+                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list , 'Supplier Name') : []}
                               value={filterData.supplierId}
                               onChange={(option) => { this.handleChange(option.value, 'supplierId') }}
                             />

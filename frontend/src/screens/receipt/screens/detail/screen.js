@@ -266,7 +266,7 @@ class DetailReceipt extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="customer_name">Customer Name</Label>
                                     <Select
-                                  options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list) : []}
+                                  options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list,'Customer Name') : []}
                                   className="select-default-width"
                                   placeholder="Customer Name"
                                   value={props.values.contactId}
@@ -285,7 +285,7 @@ class DetailReceipt extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="invoice">Invoice</Label>
                                     <Select
-                                   options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list) : []}
+                                   options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list,'Invoice Number') : []}
                                     className="select-default-width"
                                     placeholder="Invoice Number"
                                    value={props.values.invoiceId}

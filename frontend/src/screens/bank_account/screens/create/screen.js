@@ -355,7 +355,7 @@ class CreateBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="country"
                                       name="country"
-                                      options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
+                                      options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                       value={props.values.country}
                                       onChange={option => props.handleChange('country')(option)}
                                       className={

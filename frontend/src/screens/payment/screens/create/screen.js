@@ -311,7 +311,7 @@ class CreatePayment extends React.Component {
 
                                           id="supplier"
                                           name="supplier"
-                                          options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
+                                          options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list , 'Supplier Name') : []}
                                           value={selectedSupplier}
                                           onChange={option => {
                                             props.handleChange('supplier')(option)
@@ -340,7 +340,7 @@ class CreatePayment extends React.Component {
                                           className="select-default-width"
                                           id="invoiceId"
                                           name="invoiceId"
-                                          options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list) : []}
+                                          options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
                                           value={props.values.invoiceId}
                                           onChange={option => {
                                             // this.props.paymentActions.getInvoiceById(+option.value).then((res) => {
@@ -393,7 +393,7 @@ class CreatePayment extends React.Component {
                                           className="select-default-width"
                                           id="currency"
                                           name="currency"
-                                          options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                          options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                           value={props.values.currency}
                                           onChange={option =>
                                             props.handleChange('currency')(option)
@@ -413,7 +413,7 @@ class CreatePayment extends React.Component {
                                           className="select-default-width"
                                           id="project"
                                           name="project"
-                                          options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list) : []}
+                                          options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list, 'Project') : []}
                                           value={props.values.project}
                                           onChange={option => props.handleChange('project')(option)}
                                           className={
@@ -454,7 +454,7 @@ class CreatePayment extends React.Component {
                                           className="select-default-width"
                                           id="bank"
                                           name="bank"
-                                          options={bank_list ? selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_list) : []}
+                                          options={bank_list ? selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_list, 'Bank') : []}
                                           value={props.values.bank}
                                           onChange={option => props.handleChange('bank')(option)}
                                           className={

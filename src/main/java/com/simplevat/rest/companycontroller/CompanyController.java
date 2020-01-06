@@ -41,7 +41,8 @@ public class CompanyController {
 
     @Autowired
     private CompanyRestHelper companyRestHelper;
-
+    
+    @Deprecated
     @ApiOperation(value = "Get Company List")
     @GetMapping(value = "/getList")
     public ResponseEntity getCompanyList(HttpServletRequest request) {
@@ -65,6 +66,7 @@ public class CompanyController {
         return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
     }
 
+    @Deprecated
     @ApiOperation(value = "delete By Id")
     @DeleteMapping(value = "/delete")
     public ResponseEntity deleteCompany(@RequestParam(value = "id") Integer id) {
@@ -81,6 +83,7 @@ public class CompanyController {
         }
     }
 
+    @Deprecated
     @ApiOperation(value = "Delete Companies in Bulk")
     @DeleteMapping(value = "/deletes")
     public ResponseEntity deleteCompanies(@RequestBody DeleteModel ids) {

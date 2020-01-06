@@ -14,11 +14,10 @@ import {
   Label
 } from 'reactstrap'
 import Select from 'react-select'
-import ImageUploader from 'react-images-upload'
 
 import DatePicker from 'react-datepicker'
 
-import { Loader, ConfirmDeleteModal } from 'components'
+import { Loader, ConfirmDeleteModal,ImageUploader } from 'components'
 
 
 import * as UserActions from '../../actions'
@@ -32,8 +31,8 @@ import moment from 'moment'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
-import 'react-images-uploader/styles.css'
-import 'react-images-uploader/font.css'
+// import 'react-images-uploader/styles.css'
+// import 'react-images-uploader/font.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import './style.scss'
@@ -62,7 +61,7 @@ class DetailUser extends React.Component {
       initValue: {},
       selectedStatus: false,
       pictures: [],
-
+      showIcon: false
     }
 
 
@@ -82,7 +81,11 @@ class DetailUser extends React.Component {
   }
 
   initializeData() {
-    console.log(this.props.location.state.id)
+    // this.setState({
+    //   loading: false,
+    //   pictures: this.state.pictures.concat(`https://i.picsum.photos/id/1/5616/3744.jpg`),
+    // });
+    // console.log(this.props.location.state.id)
     const { id } = this.props.location.state
     this.props.userDetailActions.getUserById(id).then(res => {
       this.props.userActions.getRoleList();
@@ -175,13 +178,7 @@ class DetailUser extends React.Component {
     this.props.userDetailActions.updateUser(formData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'User Updated Successfully')
-        if (this.state.createMore) {
-          this.setState({
-            createMore: false
-          })
-        } else {
           this.props.history.push('/admin/settings/user')
-        }
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
@@ -253,43 +250,38 @@ class DetailUser extends React.Component {
                       {props => (
                         <Form onSubmit={props.handleSubmit}>
                           <Row>
-                            <Col lg={2}>
-                              <FormGroup className="mb-3 text-center">
-                                {/* <ImagesUploader
-                                  // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                  optimisticPreviews
-                                  multiple={false}
-                                  onLoadEnd={(err) => {
-                                    console.log(err)
-                                    if (err) {
-                                      console.error(err);
-                                    }
-                                  }}
-                                  onChange={(e)=>{console.log(e)}}
-                                /> */}
+          <Col xs="4" md="4" lg={2}>
+                                <FormGroup className="mb-3 text-center">
+                                  {/* <ImagesUploader
+                                    // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                    optimisticPreviews
+                                    multiple={false}
+                                    onLoadEnd={(err) => {
+                                      console.log(err)
+                                      if (err) {
+                                        console.error(err);
+                                      }
+                                    }}
+                                    onChange={(e)=>{console.log(e)}}
+                                  /> */}
                                   <ImageUploader
-                                    withIcon={true}
+                                    // withIcon={true}
                                     buttonText='Choose images'
                                     onChange={this.uploadImage}
                                     imgExtension={['.jpg', '.gif', '.png', '.gif']}
                                     maxFileSize={1048576}
                                     withPreview={true}
                                     singleImage={true}
-                                    withIcon={false}
-                                    buttonText="Choose Profile Image"
+                                    withIcon={this.state.showIcon}
+                                    // buttonText="Choose Profile Image"
+                                    flipHeight={this.state.pictures.length > 0 ? {height: "inherit"} : {}}
                                     label="'Max file size: 1mb"
-                                    fileContainerStyle = {{
-                                    position: "relative",
-                                    height: "150px",
-                                    boxShadow: "2px 2px 3px 0 rgba(0, 0, 0)"
-                                  }}
-                                  buttonStyles={{
-                                    position: "absolute",
-                                    bottom:"-50px"
-                                  }}
+                                    labelClass={this.state.pictures.length > 0 ? 'hideLabel' : 'showLabel'}
+                                    buttonClassName={this.state.pictures.length > 0 ? 'hideButton' : 'showButton'}
+                                    defaultImages={this.state.pictures}
                                   />
-                              </FormGroup>
-                            </Col>
+                                </FormGroup>
+                              </Col>
                             <Col lg={10}>
                               <Row>
                                 <Col lg={6}>
@@ -369,7 +361,7 @@ class DetailUser extends React.Component {
                                     <Label htmlFor="roleId">Role</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
+                                      options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
                                       value={props.values.roleId}
                                       onChange={option => props.handleChange('roleId')(option.value)}
                                       placeholder="Select Role"
@@ -392,7 +384,7 @@ class DetailUser extends React.Component {
                                     <Label htmlFor="companyId">Company</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
+                                      options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
                                       value={props.values.companyId}
                                       onChange={option => props.handleChange('companyId')(option.value)}
                                       placeholder="Select Company"
@@ -508,7 +500,7 @@ class DetailUser extends React.Component {
                                   <i className="fa fa-dot-circle-o"></i> Update
                                 </Button>
                                 <Button color="secondary" className="btn-square"
-                                  onClick={() => { this.props.history.push('/admin/expense/supplier-invoice') }}>
+                                  onClick={() => { this.props.history.push('/admin/settings/users') }}>
                                   <i className="fa fa-ban"></i> Cancel
                                 </Button>
                               </FormGroup>

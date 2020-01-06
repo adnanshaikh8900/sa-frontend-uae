@@ -433,7 +433,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="currencyCode">Currency Code</Label>
                                       <Select
                                         className="select-default-width"
-                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currencyCode}
                                         onChange={option => props.handleChange('currencyCode')(option.value)}
                                         placeholder="Select Currency"

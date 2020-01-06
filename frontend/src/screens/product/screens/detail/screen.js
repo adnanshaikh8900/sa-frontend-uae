@@ -288,7 +288,7 @@ class DetailProduct extends React.Component {
                                     <Label htmlFor="productCategoryId">Product Category</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'productCategoryCode', product_category_list) : []}
+                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'productCategoryCode', product_category_list,'Product Category') : []}
                                       id="productCategoryId"
                                       name="productCategoryId"
                                       value={props.values.productCategoryId}
@@ -322,7 +322,7 @@ class DetailProduct extends React.Component {
                                   <Label htmlFor="vatCategoryId"><span className="text-danger">*</span>Vat Percentage</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list) : []}
+                                    options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list,'Vat') : []}
                                     id="vatCategoryId"
                                     name="vatCategoryId"
                                     value={props.values.vatCategoryId}
@@ -366,7 +366,7 @@ class DetailProduct extends React.Component {
                                   <Label htmlFor="productWarehouseId">Warehourse</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={product_warehouse_list ? selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list) : []}
+                                    options={product_warehouse_list ? selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list,'WareHouse') : []}
                                     id="productWarehouseId"
                                     name="productWarehouseId"
                                     value={props.values.productWarehouseId}

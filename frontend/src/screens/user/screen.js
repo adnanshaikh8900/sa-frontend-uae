@@ -226,7 +226,7 @@ class User extends React.Component {
   }
 
   renderDate(cell,row) {
-    return row['dob'] ? moment(row['dob']).format('DD-MM-YYYY') : ''
+    return row['dob'] !== null ? moment(row['dob']).format('DD-MM-YYYY') : ''
   }
 
   renderRole(cell,row) {
@@ -343,7 +343,7 @@ class User extends React.Component {
                               placeholder="Select Role"
                               id="roleId"
                               name="roleId"
-                              options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
+                              options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
                               value={filterData.roleId}
                               onChange={(option) => { this.handleChange(option.value, 'roleId') }}
                             />
@@ -354,7 +354,7 @@ class User extends React.Component {
                               placeholder="Select Status"
                               id="active"
                               name="active"
-                              options={this.statusOption ? selectOptionsFactory.renderOptions('label', 'value', this.statusOption) : []}
+                              options={this.statusOption ? selectOptionsFactory.renderOptions('label', 'value', this.statusOption,'Status') : []}
                               // value={filterData.supplierId}
                               value={selectedStatus}
                               onChange={(option) => { 
@@ -369,7 +369,7 @@ class User extends React.Component {
                               placeholder="Select Company"
                               id="companyId"
                               name="companyId"
-                              options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list) : []}
+                              options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Company') : []}
                               value={filterData.companyId}
                               onChange={(option) => { this.handleChange(option.value, 'companyId') }}
                             />

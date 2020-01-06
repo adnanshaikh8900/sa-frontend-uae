@@ -129,17 +129,10 @@ class DetailReceipt extends React.Component {
     }
     this.props.receiptDetailActions.updateReceipt(postData).then(res => {
       if (res.status === 200) {
-<<<<<<< HEAD
         this.props.commonActions.tostifyAlert('success', 'Updated successfully!')
         this.props.history.push('/admin/revenue/receipt')
     }
   }).catch((err) => {
-=======
-        this.props.commonActions.tostifyAlert('success', 'Updated successfully!');
-        this.props.history.push('/admin/revenue/receipt');
-      }
-    }).catch((err) => {
->>>>>>> 43bd1f603b57c194882e90fe248e758d958b4594
       this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
     })
   }
@@ -273,7 +266,7 @@ class DetailReceipt extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="customer_name">Customer Name</Label>
                                     <Select
-                                  options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list) : []}
+                                  options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list,'Customer Name') : []}
                                   className="select-default-width"
                                   placeholder="Customer Name"
                                   value={props.values.contactId}
@@ -292,7 +285,7 @@ class DetailReceipt extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="invoice">Invoice</Label>
                                     <Select
-                                   options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list) : []}
+                                   options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list,'Invoice Number') : []}
                                     className="select-default-width"
                                     placeholder="Invoice Number"
                                    value={props.values.invoiceId}

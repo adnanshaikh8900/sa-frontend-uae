@@ -303,7 +303,7 @@ class Organization extends React.Component {
                                   <Col xs="12" md="3">
                                     <Select
                                       className="select-default-width"
-                                      options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list) : []}
+                                      options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                       value={props.values.countryCode}
                                       onChange={option => props.handleChange('countryCode')(option.value)}
                                       placeholder="Select Role"

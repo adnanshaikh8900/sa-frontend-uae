@@ -469,7 +469,7 @@ class DetailJournal extends React.Component {
                                       <Label htmlFor="currencyCode">Currency</Label>
                                       <Select
                                         className="select-default-width"
-                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         id="currencyCode"
                                         name="currencyCode"
                                         value={props.values.currencyCode}

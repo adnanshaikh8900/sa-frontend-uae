@@ -313,7 +313,7 @@ class Expense extends React.Component {
                                 id="expenseCategoryId"
                                 name="expenseCategoryId"
                                 value={filterData.transactionCategoryId}
-                                options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
+                                options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
                                 onChange={(option) => { this.handleChange(option.value, 'transactionCategoryId') }}
                                 placeholder="Expense Category"
                               />

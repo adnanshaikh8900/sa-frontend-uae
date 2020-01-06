@@ -403,7 +403,7 @@ class CustomerInvoice extends React.Component {
                               placeholder="Select Customer"
                               id="customer"
                               name="customer"
-                              options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list) : []}
+                              options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list,'Customer') : []}
                               value={filterData.customerId}
                               onChange={(option) => { this.handleChange(option.value, 'customerId') }}
                             />
@@ -442,9 +442,7 @@ class CustomerInvoice extends React.Component {
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
-                              options={status_list ? status_list.map(item => {
-                                return { label: item, value: item }
-                              }) : ''}
+                              options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list,'Status') : []}
                               value={this.state.filterData.status}
                               onChange={(option) => { this.handleChange(option.value, 'status') }}
                               placeholder="Status"

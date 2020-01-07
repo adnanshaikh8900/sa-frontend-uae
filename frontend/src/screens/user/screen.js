@@ -43,7 +43,7 @@ const mapStateToProps = (state) => {
   return ({
     user_list: state.user.user_list,
     role_list: state.user.role_list,
-
+    company_type_list : state.user.company_type_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -130,13 +130,15 @@ class User extends React.Component {
     this.props.userActions.getUserList(filterData).then(res => {
       if (res.status === 200) {
         this.props.userActions.getRoleList()
+        this.props.userActions.getCompanyTypeList()
+
         this.setState({ loading: false })
       }
     }).catch((err) => {
       this.setState({
         loading: false
       })
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -215,7 +217,7 @@ class User extends React.Component {
         })
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -256,7 +258,7 @@ class User extends React.Component {
   render() {
 
     const { loading, dialog,selectedRows , selectedStatus , filterData} = this.state
-    const { user_list , role_list} = this.props
+    const { user_list , role_list,company_type_list} = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -369,7 +371,7 @@ class User extends React.Component {
                               placeholder="Select Company"
                               id="companyId"
                               name="companyId"
-                              options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Company') : []}
+                              options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list , 'Company') : []}
                               value={filterData.companyId}
                               onChange={(option) => { this.handleChange(option.value, 'companyId') }}
                             />

@@ -69,3 +69,22 @@ export const removeBulk = (obj) => {
     })
   }
 }
+
+export const getCompanyTypeList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: `/rest/company/getCompaniesForDropdown`
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: USER.COMPANY_TYPE_LIST,
+          payload: res.data
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}

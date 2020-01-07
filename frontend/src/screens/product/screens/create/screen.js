@@ -21,6 +21,9 @@ import * as Yup from "yup";
 import './style.scss'
 
 import * as ProductActions from '../../actions'
+import {
+  CommonActions
+} from 'services/global'
 
 import {WareHouseModal} from '../../sections'
 import {selectOptionsFactory} from 'utils'
@@ -34,7 +37,9 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    productActions: bindActionCreators(ProductActions, dispatch)
+    productActions: bindActionCreators(ProductActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch),
+
   })
 }
 
@@ -123,7 +128,7 @@ class CreateProduct extends React.Component {
         } else this.props.history.push('/admin/master/product')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 

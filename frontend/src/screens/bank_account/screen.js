@@ -315,7 +315,7 @@ class BankAccount extends React.Component {
         selected_id_list: temp_List
       })
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -400,7 +400,7 @@ class BankAccount extends React.Component {
         selected_id_list: []
       })
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 

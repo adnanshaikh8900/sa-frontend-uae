@@ -4,7 +4,8 @@ const initState = {
   currency_list: [],
   country_list: [],
   industry_type_list: [],
-  company_type_list: []
+  company_type_list: [],
+  role_list: []
 }
 
 const ProfileReducer = (state = initState, action) => {
@@ -32,6 +33,11 @@ const ProfileReducer = (state = initState, action) => {
         industry_type_list: Object.assign([], payload)
       }
 
+      case PROFILE.ROLE_LIST:
+        return {
+          ...state,
+          role_list: Object.assign([], payload)
+        }
 
     case PROFILE.COMPANY_TYPE_LIST:
       return {

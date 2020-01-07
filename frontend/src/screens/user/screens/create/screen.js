@@ -41,6 +41,7 @@ import './style.scss'
 const mapStateToProps = (state) => {
   return ({
     role_list: state.user.role_list,
+    company_type_list: state.user.company_type_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -68,7 +69,8 @@ class CreateUser extends React.Component {
         confirmPassword: '',
         roleId: ''
       },
-      pictures: [],
+      userPhoto: [],
+      userPhotoFile: [],
       showIcon: false
     }
     this.uploadImage = this.uploadImage.bind(this);
@@ -81,12 +83,14 @@ class CreateUser extends React.Component {
 
   initializeData() {
     this.props.userActions.getRoleList()
+    this.props.userActions.getCompanyTypeList()
     this.setState({showIcon: false})
   }
 
-  uploadImage(picture) {
+  uploadImage(picture,file) {
     this.setState({
-      pictures: picture,
+      userPhoto: picture,
+      userPhotoFile: file
     });
   }
 
@@ -101,7 +105,7 @@ class CreateUser extends React.Component {
       companyId,
       active,
     } = data;
-    const { pictures } = this.state;
+    const { userPhoto } = this.state;
     let formData = new FormData();
     formData.append("firstName", firstName ? firstName : '');
     formData.append("lastName", lastName ? lastName : '');
@@ -111,14 +115,14 @@ class CreateUser extends React.Component {
     formData.append("active", active ? active : '');
     formData.append("password", password ? password : '');
     formData.append("companyId", companyId ? companyId : '');
-    if (pictures.length > 0) {
-      formData.append("attachmentFile ", pictures[0]);
+    if (this.state.userPhotoFile.length > 0) {
+      formData.append("profilePic ", this.state.userPhotoFile[0]);
     }
 
 
     this.props.userCreateActions.createUser(formData).then(res => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'New Employee Created Successfully')
+        this.props.commonActions.tostifyAlert('success', 'New User Created Successfully')
         if (this.state.createMore) {
           this.setState({
             createMore: false
@@ -134,7 +138,7 @@ class CreateUser extends React.Component {
 
   render() {
 
-    const { role_list } = this.props;
+    const { role_list , company_type_list} = this.props;
 
     return (
       <div className="create-user-screen">
@@ -214,10 +218,10 @@ class CreateUser extends React.Component {
                                     singleImage={true}
                                     withIcon={this.state.showIcon}
                                     // buttonText="Choose Profile Image"
-                                    flipHeight={this.state.pictures.length > 0 ? {height: "inherit"} : {}}
+                                    flipHeight={this.state.userPhoto.length > 0 ? {height: "inherit"} : {}}
                                     label="'Max file size: 1mb"
-                                    labelClass={this.state.pictures.length > 0 ? 'hideLabel' : 'showLabel'}
-                                    buttonClassName={this.state.pictures.length > 0 ? 'hideButton' : 'showButton'}
+                                    labelClass={this.state.userPhoto.length > 0 ? 'hideLabel' : 'showLabel'}
+                                    buttonClassName={this.state.userPhoto.length > 0 ? 'hideButton' : 'showButton'}
                                   />
                                 </FormGroup>
                               </Col>
@@ -317,7 +321,7 @@ class CreateUser extends React.Component {
                                       <Label htmlFor="companyId">Company</Label>
                                       <Select
                                         className="select-default-width"
-                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
+                                        options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list , 'Company') : []}
                                         value={props.values.companyId}
                                         onChange={option => props.handleChange('companyId')(option.value)}
                                         placeholder="Select Company"

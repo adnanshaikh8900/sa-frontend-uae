@@ -60,8 +60,11 @@ class DetailUser extends React.Component {
       dialog: null,
       initValue: {},
       selectedStatus: false,
-      pictures: [],
-      showIcon: false
+      userPhoto: [],
+      showIcon: false,
+      userPhotoFile: {},
+      imageState: true,
+
     }
 
 
@@ -83,7 +86,7 @@ class DetailUser extends React.Component {
   initializeData() {
     // this.setState({
     //   loading: false,
-    //   pictures: this.state.pictures.concat(`https://i.picsum.photos/id/1/5616/3744.jpg`),
+    //   userPhoto: this.state.userPhoto.concat(`https://i.picsum.photos/id/1/5616/3744.jpg`),
     // });
     // console.log(this.props.location.state.id)
     const { id } = this.props.location.state
@@ -104,6 +107,7 @@ class DetailUser extends React.Component {
           },
           loading: false,
           selectedStatus: res.data.active ? true : false,
+          userPhoto: res.data.profilePicByteArray ? this.state.userPhoto.concat(res.data.profilePicByteArray) : [],
         })
       }
     }).catch(err => {
@@ -111,9 +115,15 @@ class DetailUser extends React.Component {
     })
   }
 
-  uploadImage(picture) {
+  uploadImage(picture,file) {
+    if(this.state.userPhoto[0] && this.state.userPhoto[0].indexOf('data') < 0 ){
+      this.setState({imageState: true})
+     }  else {
+       this.setState({imageState: false})
+     }
     this.setState({
-      pictures: picture,
+      userPhoto: picture,
+      userPhotoFile: file
     });
   }
 
@@ -136,7 +146,7 @@ class DetailUser extends React.Component {
         this.props.history.push('/admin/settings/user')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -158,7 +168,7 @@ class DetailUser extends React.Component {
       active,
     } = data;
     const {id} = this.props.location.state;
-    const { pictures } = this.state;
+    const { userPhotoFile } = this.state;
     let formData = new FormData();
     formData.append("id", id);
 
@@ -170,10 +180,9 @@ class DetailUser extends React.Component {
     formData.append("active", this.state.selectedStatus);
     formData.append("password", password ? password : '');
     formData.append("companyId", companyId ? companyId : '');
-    if (pictures.length > 0) {
-      formData.append("attachmentFile ", pictures[0]);
+    if (this.state.userPhotoFile.length > 0) {
+      formData.append("profilePic", userPhotoFile[0]);
     }
-
 
     this.props.userDetailActions.updateUser(formData).then(res => {
       if (res.status === 200) {
@@ -274,11 +283,12 @@ class DetailUser extends React.Component {
                                     singleImage={true}
                                     withIcon={this.state.showIcon}
                                     // buttonText="Choose Profile Image"
-                                    flipHeight={this.state.pictures.length > 0 ? {height: "inherit"} : {}}
+                                    flipHeight={this.state.userPhoto.length > 0 ? {height: "inherit"} : {}}
                                     label="'Max file size: 1mb"
-                                    labelClass={this.state.pictures.length > 0 ? 'hideLabel' : 'showLabel'}
-                                    buttonClassName={this.state.pictures.length > 0 ? 'hideButton' : 'showButton'}
-                                    defaultImages={this.state.pictures}
+                                    labelClass={this.state.userPhoto.length > 0 ? 'hideLabel' : 'showLabel'}
+                                    buttonClassName={this.state.userPhoto.length > 0 ? 'hideButton' : 'showButton'}
+                                    defaultImages={this.state.userPhoto}
+                                    imageState={this.state.imageState}
                                   />
                                 </FormGroup>
                               </Col>

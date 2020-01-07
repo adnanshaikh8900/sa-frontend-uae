@@ -108,7 +108,7 @@ class DetailBankAccount extends React.Component {
             }
           })
         }).catch(err => {
-          this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+          this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
           this.props.history.push('/admin/banking/bank-account')
         })
       })
@@ -149,7 +149,7 @@ class DetailBankAccount extends React.Component {
       bankAccountType: data.account_type.value
     }
     this.props.detailBankAccountActions.updateBankAccount(obj).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -172,7 +172,7 @@ class DetailBankAccount extends React.Component {
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       this.props.history.push('/admin/banking/bank-account')
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 

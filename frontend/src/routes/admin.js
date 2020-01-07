@@ -497,21 +497,21 @@ const adminRoutes = [
     name: 'General Settings',
     component: GeneralSettings.screen
   },
-  {
-    path: '/admin/settings/transaction-category/create',
-    name: 'Create',
-    component: CreateTransactionCategory.screen
-  },
-  {
-    path: '/admin/settings/transaction-category/detail',
-    name: 'Detail',
-    component: DetailTransactionCategory.screen
-  },
-  {
-    path: '/admin/settings/transaction-category',
-    name: 'Transaction Category',
-    component: TransactionCategory.screen
-  },
+  // {
+  //   path: '/admin/settings/transaction-category/create',
+  //   name: 'Create',
+  //   component: CreateTransactionCategory.screen
+  // },
+  // {
+  //   path: '/admin/settings/transaction-category/detail',
+  //   name: 'Detail',
+  //   component: DetailTransactionCategory.screen
+  // },
+  // {
+  //   path: '/admin/settings/transaction-category',
+  //   name: 'Transaction Category',
+  //   component: TransactionCategory.screen
+  // },
   {
     path: '/admin/settings/user-role',
     name: 'Users & Roles',

@@ -161,7 +161,7 @@ class DetailExpense extends React.Component {
         this.props.history.push('/admin/expense/expense')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -185,7 +185,7 @@ class DetailExpense extends React.Component {
         this.props.history.push('/admin/expense/expense')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 

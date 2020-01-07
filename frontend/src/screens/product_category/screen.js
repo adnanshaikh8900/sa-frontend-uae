@@ -311,6 +311,7 @@ class ProductCategory extends React.Component {
                         version="4"
                         hover
                         pagination
+                        keyField="id"
                         totalSize={product_category_list ? product_category_list.length : 0}
                         className="product-table"
                         trClassName="cursor-pointer"
@@ -318,7 +319,6 @@ class ProductCategory extends React.Component {
                         ref={node => this.table = node}
                       >
                         <TableHeaderColumn
-                          isKey
                           dataField="productCategoryCode"
                           dataSort
                         >

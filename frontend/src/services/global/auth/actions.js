@@ -21,6 +21,7 @@ export const checkAuthStatus = () => {
             data: res.data
           }
         })
+        window.localStorage.setItem('profilePic', res.data.profileImageBinary);
       } else {
         throw new Error('Auth Failed')
       }

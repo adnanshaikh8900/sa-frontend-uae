@@ -317,7 +317,7 @@ class DetailJournal extends React.Component {
         this.props.history.push('/admin/accountant/journal')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -360,7 +360,7 @@ class DetailJournal extends React.Component {
         }
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 

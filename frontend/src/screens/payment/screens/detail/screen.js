@@ -142,7 +142,7 @@ class DetailPayment extends React.Component {
       this.props.commonActions.tostifyAlert('success', 'Update Successfully.')
       this.props.history.push('/admin/expense/payment')
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -191,7 +191,7 @@ class DetailPayment extends React.Component {
         this.props.history.push('/admin/expense/payment')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 

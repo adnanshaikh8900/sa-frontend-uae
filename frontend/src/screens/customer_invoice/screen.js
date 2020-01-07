@@ -272,7 +272,7 @@ class CustomerInvoice extends React.Component {
         })
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 

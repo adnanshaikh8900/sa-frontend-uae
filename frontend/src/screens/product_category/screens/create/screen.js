@@ -94,7 +94,7 @@ class CreateProductCategory extends React.Component {
         } else this.props.history.push('/admin/master/product-category')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
 
     })
   }
@@ -140,6 +140,9 @@ class CreateProductCategory extends React.Component {
                                     name="productCategoryCode"
                                     placeholder="Enter Product Category Code"
                                     onChange={props.handleChange}
+                                    onBlur={(e)=>{
+                                      console.log(e)
+                                    }}
                                     // value={props.values.productCategoryCode}
                                     className={
                                       props.errors.productCategoryCode  && props.touched.productCategoryCode 

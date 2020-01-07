@@ -89,6 +89,8 @@ public class UserRestHelper {
 					Logger.getLogger(UserRestHelper.class.getName()).log(Level.SEVERE, null, e);
 				}
 			}
+			user.setIsActive(userModel.getActive());
+			
 			return user;
 		}
 

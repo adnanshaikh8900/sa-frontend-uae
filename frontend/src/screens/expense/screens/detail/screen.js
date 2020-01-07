@@ -261,7 +261,7 @@ class DetailExpense extends React.Component {
                                       <Select
                                         id="expenseCategory"
                                         name="expenseCategory"
-                                        options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
+                                        options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list,'Expense Category') : []}
                                         value={props.values.expenseCategory}
                                         className={props.errors.expenseCategory && props.touched.expenseCategory ? "is-invalid" : ""}
                                         onChange={option => props.handleChange('expenseCategory')(option)}
@@ -316,7 +316,7 @@ class DetailExpense extends React.Component {
                                         className="select-default-width"
                                         id="currencyCode"
                                         name="currencyCode"
-                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currency}
                                         onChange={option => props.handleChange('currency')(option)}
 
@@ -330,7 +330,7 @@ class DetailExpense extends React.Component {
                                         className="select-default-width"
                                         id="employee"
                                         name="employee"
-                                        options={employee_list ? selectOptionsFactory.renderOptions('label', 'value', employee_list) : []}
+                                        options={employee_list ? selectOptionsFactory.renderOptions('label', 'value', employee_list,'Employee') : []}
                                         value={props.values.employee}
                                         onChange={option => props.handleChange('employee')(option)}
                                       />
@@ -343,7 +343,7 @@ class DetailExpense extends React.Component {
                                         className="select-default-width"
                                         id="project"
                                         name="project"
-                                        options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list) : []}
+                                        options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                         value={props.values.projectId}
                                         onChange={option => props.handleChange('projectId')(option)}
                                       />

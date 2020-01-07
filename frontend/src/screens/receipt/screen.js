@@ -318,7 +318,7 @@ class Receipt extends React.Component {
                           <Col lg={3} className="mb-1">
                             <FormGroup className="mb-3">
                               <Select
-                                options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list) : []}
+                                options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list,'Invoice Number') : []}
                                 className="select-default-width"
                                 placeholder="Invoice Number"
                                 value={filterData.invoiceId}
@@ -333,7 +333,7 @@ class Receipt extends React.Component {
                           <Col lg={3} className="mb-1">
                             <FormGroup className="mb-3">
                               <Select
-                                options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list) : []}
+                                options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list,'Customer') : []}
                                 className="select-default-width"
                                 placeholder="Customer Name"
                                 value={filterData.contactId}

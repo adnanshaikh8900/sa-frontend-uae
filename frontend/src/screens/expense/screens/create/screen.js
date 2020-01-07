@@ -229,7 +229,7 @@ class CreateExpense extends React.Component {
                                   <Select
                                     id="expenseCategory"
                                     name="expenseCategory"
-                                    options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list) : []}
+                                    options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list,'Expense Category') : []}
                                     value={props.values.expenseCategory}
                                     className={props.errors.expenseCategory && props.touched.expenseCategory ? "is-invalid" : ""}
                                     onChange={option => props.handleChange('expenseCategory')(option)}
@@ -283,7 +283,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="currencyCode"
                                     name="currencyCode"
-                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currency}
                                     onChange={option => props.handleChange('currency')(option)}
 
@@ -297,7 +297,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="employee"
                                     name="employee"
-                                    options={employee_list ? selectOptionsFactory.renderOptions('label', 'value', employee_list) : []}
+                                    options={employee_list ? selectOptionsFactory.renderOptions('label', 'value', employee_list,'Employee') : []}
                                     value={props.values.employee}
                                     onChange={option => props.handleChange('employee')(option)}
                                   />
@@ -310,7 +310,7 @@ class CreateExpense extends React.Component {
                                     className="select-default-width"
                                     id="project"
                                     name="project"
-                                    options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list) : []}
+                                    options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                     value={props.values.project}
                                     onChange={option => props.handleChange('project')(option)}
                                   />
@@ -329,7 +329,7 @@ class CreateExpense extends React.Component {
                                     className={props.errors.expenseAmount && props.touched.expenseAmount ? "is-invalid" : ""}
                                     onChange={option => props.handleChange('expenseAmount')(option)}
                                     value={props.values.expenseAmount}
-
+                                    placeholder="Amount"
                                   />
                                   {props.errors.expenseAmount && props.touched.expenseAmount && (
                                     <div className="invalid-feedback">{props.errors.expenseAmount}</div>

@@ -21,6 +21,6 @@ public class InvoiceRequestFilterModel extends PaginationModel {
     private String invoiceDate;
     private String invoiceDueDate;
     private BigDecimal amount;
-    private String status;
+    private Integer status;
     private Integer type;
 }

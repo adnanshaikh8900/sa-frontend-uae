@@ -51,7 +51,7 @@ public enum InvoiceStatusEnum {
 		return invoiceStatusMap;
 	}
 
-	public static String getContactTypeByValue(Integer value) {
+	public static String getInvoiceTypeByValue(Integer value) {
 		return getInvoiceStatusList().get(value).getDesc();
 	}
 }

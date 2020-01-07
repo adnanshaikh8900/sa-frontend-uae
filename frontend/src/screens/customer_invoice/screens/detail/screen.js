@@ -17,7 +17,7 @@ import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
-import { Yup } from 'yup'
+import * as Yup from 'yup'
 import _ from 'lodash'
 import * as CustomerInvoiceDetailActions from './actions';
 import * as  CustomerInvoiceActions from "../../actions";
@@ -451,7 +451,7 @@ class DetailCustomerInvoice extends React.Component {
                                 invoice_number: Yup.string()
                                   .required("Invoice Number is Required"),
                                 contactId: Yup.string()
-                                  .required("Customer is Required"),
+                                  .required("Supplier is Required"),
                                 invoiceDate: Yup.date()
                                   .required('Invoice Date is Required'),
                               })}
@@ -487,7 +487,7 @@ class DetailCustomerInvoice extends React.Component {
                                       <Label htmlFor="project">Project</Label>
                                       <Select
                                         className="select-default-width"
-                                        options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list) : []}
+                                        options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                         id="project"
                                         name="project"
                                         value={props.values.project}
@@ -504,7 +504,7 @@ class DetailCustomerInvoice extends React.Component {
 
                                         id="contactId"
                                         name="contactId"
-                                        options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list) : []}
+                                        options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
                                         value={selectedContact}
                                         onChange={option => {
                                           props.handleChange('contactId')(option)
@@ -603,7 +603,7 @@ class DetailCustomerInvoice extends React.Component {
                                       <Label htmlFor="currency">Currency</Label>
                                       <Select
                                         className="select-default-width"
-                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         id="currency"
                                         name="currency"
                                         value={props.values.currency}
@@ -786,7 +786,9 @@ class DetailCustomerInvoice extends React.Component {
                                                       <Input
                                                         id="discount_percentage"
                                                         name="discount_percentage"
-                                                      />
+                                                        placeholder="Discount Percentage"
+                                                     
+                                                     />
                                                     </FormGroup>
                                                   </Col>
                                                   :
@@ -800,6 +802,8 @@ class DetailCustomerInvoice extends React.Component {
                                                   <Input
                                                     id="discount_amount"
                                                     name="discount_amount"
+                                                    placeholder="Discount Amounts"
+
                                                   />
                                                 </FormGroup>
                                               </Col>
@@ -854,7 +858,7 @@ class DetailCustomerInvoice extends React.Component {
                                         <i className="fa fa-dot-circle-o"></i> Update
                                   </Button>
                                       <Button color="secondary" className="btn-square"
-                                        onClick={() => { this.props.history.push('/admin/expense/customer-invoice') }}>
+                                        onClick={() => { this.props.history.push('/admin/revenue/customer-invoice') }}>
                                         <i className="fa fa-ban"></i> Cancel
                                   </Button>
                                     </FormGroup>

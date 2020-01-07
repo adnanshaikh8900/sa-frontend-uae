@@ -177,7 +177,7 @@ class CreateChartAccount extends React.Component {
                               <Label htmlFor="name">Type</Label>
                               <Select
                                 className="select-default-width"
-                                options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list) : ''}
+                                options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list,'Type') : ''}
                                 value={props.values.transactionType}
                                 onChange={option => props.handleChange('transactionType')(option.value)}
                                 placeholder="Select Type"

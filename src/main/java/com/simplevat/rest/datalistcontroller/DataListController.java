@@ -106,10 +106,10 @@ public class DataListController implements Serializable {
     public ResponseEntity getInvoiceStatusTypes() {
         try {
             List<InvoiceStatusEnum> statusEnums = InvoiceStatusEnum.getInvoiceStatusList();
-            List<EnumDropdownModel> dropdownModels = new ArrayList<>();
+            List<DropdownModel> dropdownModels = new ArrayList<>();
             if (statusEnums != null && !statusEnums.isEmpty()) {
                 for (InvoiceStatusEnum statusEnum : statusEnums) {
-                    dropdownModels.add(new EnumDropdownModel(statusEnum.name(), statusEnum.getDesc()));
+                    dropdownModels.add(new DropdownModel(statusEnum.getValue(), statusEnum.getDesc()));
                 }
                 return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
             } else {

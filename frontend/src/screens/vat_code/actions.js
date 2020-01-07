@@ -7,11 +7,11 @@ import {
 
 
 // Get Vat List
-export const getVatList = () => {
+export const getVatList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getList'
+      url: `/rest/vat/getList?name=${obj.name}&vatPercentage=${obj.vatPercentage}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
     }
 
     return authApi(data).then(res => {

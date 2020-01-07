@@ -404,7 +404,7 @@ class SupplierInvoice extends React.Component {
                               placeholder="Select Supplier"
                               id="supplier"
                               name="supplier"
-                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list) : []}
+                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list,'Supplier Name') : []}
                               value={filterData.supplierId}
                               onChange={(option) => { this.handleChange(option.value, 'supplierId') }}
                             />
@@ -443,9 +443,10 @@ class SupplierInvoice extends React.Component {
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
-                              options={status_list ? status_list.map(item => {
-                                return { label: item, value: item }
-                              }) : ''}
+                              // options={status_list ? status_list.map(item => {
+                              //   return { label: item, value: item }
+                              // }) : ''}
+                              options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list,'Status') : []}
                               value={this.state.filterData.status}
                               onChange={(option) => { this.handleChange(option.value, 'status') }}
                               placeholder="Status"

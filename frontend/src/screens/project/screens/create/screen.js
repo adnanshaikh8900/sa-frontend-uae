@@ -230,7 +230,7 @@ class CreateProject extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="contactId"><span className="text-danger">*</span>Contact</Label>
                                   <Select
-                                    options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'id', contact_list) : []}
+                                    options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'id', contact_list,'Contact Name') : []}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedContact: option.value
@@ -309,7 +309,7 @@ class CreateProject extends React.Component {
                                       </Label>
                                   <Select
                                     className="select-default-width"
-                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedCurrency: option.value
@@ -378,7 +378,7 @@ class CreateProject extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="">
                                   <Label htmlFor="invoiceLanguageCode">
-                                    <span className="text-danger">*</span>Invoice Language
+                                    <span className="text-danger">*</span>Invoice Language(TBD)
                                       </Label>
                                   <Select
                                     className="select-default-width"

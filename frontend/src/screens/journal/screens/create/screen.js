@@ -126,7 +126,7 @@ class CreateJournal extends React.Component {
 
   renderAccount(cell, row) {
     const { transaction_category_list } = this.props;
-    let transactionCategoryList = transaction_category_list.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select..' }, ...transaction_category_list] : transaction_category_list
+    let transactionCategoryList = transaction_category_list.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select Account' }, ...transaction_category_list] : transaction_category_list
     return (
       <Input type="select" onChange={(e) => { this.selectItem(e, row, 'transactionCategoryId') }} value={row.transactionCategoryId}>
         {transactionCategoryList ? transactionCategoryList.map(obj => {
@@ -142,13 +142,14 @@ class CreateJournal extends React.Component {
         type="text"
         value={row['description'] !== '' ? row['description'] : ''}
         onChange={(e) => { this.selectItem(e, row, 'description') }}
+        placeholder="Description"
       />
     )
   }
 
   renderContact(cell, row) {
     const { contact_list } = this.props;
-    let contactList = contact_list.length ? [{ value: '', label: 'Select..' }, ...contact_list] : contact_list
+    let contactList = contact_list.length ? [{ value: '', label: 'Select Contact' }, ...contact_list] : contact_list
 
     return (
       <Input type="select" onChange={(e) => { this.selectItem(e, row, 'contactId') }} value={row.value}>
@@ -162,12 +163,12 @@ class CreateJournal extends React.Component {
 
   renderVatCode(cell, row) {
     const { vat_list } = this.props;
-    let vatList = vat_list.length ? [{ id: '', name: 'Select..' }, ...vat_list] : vat_list
+    let vatList = vat_list.length ? [{ id: '', name: 'Select Vat' }, ...vat_list] : vat_list
 
     return (
       <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
         {vatList ? vatList.map(obj => {
-          obj.name = obj.name === 'default' ? '0' : obj.name
+          // obj.name = obj.name === 'default' ? '0' : obj.name
           return <option value={obj.id} key={obj.id}>{obj.name}</option>
         }) : ''}
       </Input>
@@ -343,7 +344,7 @@ class CreateJournal extends React.Component {
                                     className="form-control"
                                     id="journalDate"
                                     name="journalDate"
-                                    placeholderText=""
+                                    placeholderText="Journal Date"
                                     selected={props.values.journalDate}
                                     onChange={(value) => {
                                       props.handleChange("journalDate")(value)
@@ -387,7 +388,7 @@ class CreateJournal extends React.Component {
                                   <Label htmlFor="currencyCode">Currency</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     id="currencyCode"
                                     name="currencyCode"
                                     value={props.values.currencyCode}

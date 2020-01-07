@@ -53,7 +53,7 @@ export const createAndSaveProduct = (product) => {
 export const createWarehouse = (warehouse) => {
   let data = {
     method: 'POST',
-    url: `rest/productwarehouse/savewarehouse`,
+    url: `/rest/productwarehouse/saveWareHouse`,
     data: warehouse
   }
 
@@ -70,7 +70,7 @@ export const getProductWareHouseList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: 'rest/productwarehouse/getwarehouse'
+      url: '/rest/productwarehouse/getWareHouse'
     }
 
     return authApi(data).then(res => {
@@ -91,7 +91,7 @@ export const getProductVatCategoryList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: 'rest/vat/getvat'
+      url: 'rest/vat/getList'
     }
 
     return authApi(data).then(res => {

@@ -28,8 +28,6 @@ import lombok.Data;
 @Data
 public class ProductCategory {
 
-
-
     private static final long serialVersionUID = 848122185643690684L;
 
     @Id

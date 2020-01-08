@@ -8,7 +8,7 @@ import com.simplevat.entity.ProductCategory;
 
 public interface ProductCategoryDao extends Dao<Integer, ProductCategory> {
 
-	public List<ProductCategory> getProductList(Map<ProductCategoryFilterEnum, Object> filterMap);
-
 	public void deleteByIds(List<Integer> ids);
+
+	public List<ProductCategory> getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterMap);
 }

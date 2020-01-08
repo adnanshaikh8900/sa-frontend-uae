@@ -20,11 +20,11 @@ export const getUserById = (_id) => {
   }
 }
 
-export const getCompanyById = (_id) => {
+export const getCompanyById = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/company/getById?id=${_id}`
+      url: `/rest/company/getCompanyDetails`
     }
 
     return authApi(data).then(res => {

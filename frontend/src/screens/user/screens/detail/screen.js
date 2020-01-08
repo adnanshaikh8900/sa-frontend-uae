@@ -389,7 +389,7 @@ class DetailUser extends React.Component {
 
                                   </FormGroup>
                                 </Col>
-                                <Col lg={6}>
+                                {/* <Col lg={6}>
                                   <FormGroup>
                                     <Label htmlFor="companyId">Company</Label>
                                     <Select
@@ -411,10 +411,8 @@ class DetailUser extends React.Component {
                                     )}
 
                                   </FormGroup>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Col lg={6}>
+                                </Col> */}
+                                 <Col lg={6}>
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="active">Status</Label>
                                     <div>
@@ -463,6 +461,9 @@ class DetailUser extends React.Component {
                                     </div>
                                   </FormGroup>
                                 </Col>
+                              </Row>
+                              <Row>
+                               
                               </Row>
                               <Row>
                                 <Col lg={6}>

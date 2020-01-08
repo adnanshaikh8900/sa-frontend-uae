@@ -174,14 +174,14 @@ class ProductCategory extends React.Component {
 
   // Delete Vat By ID
   deleteProductCategory() {
-    this.setState({ loading: true })
+    // this.setState({ loading: true })
     this.setState({ openDeleteModal: false })
     const data = {
       ids: this.state.selectedRows
     }
     this.props.productCategoryActions.deleteProductCategory(data).then(res => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        // this.setState({ loading: false })
         this.initializeData()
       }
     }).catch(err => {

@@ -16,7 +16,8 @@ import {
   TabPane,
   Nav,
   NavItem,
-  NavLink
+  NavLink,
+  FormText
 } from 'reactstrap'
 import Select from 'react-select'
 // import ImagesUploader from 'react-images-uploader'
@@ -69,9 +70,38 @@ class Profile extends React.Component {
       userPhoto: [],
       companyLogo: [],
       companyLogoFile: [],
-      initUserData: [],
-      initCompanyData: {},
-      companyId: '',
+      initUserData: {},
+      initCompanyData: {
+        companyName: '',
+        companyRegistrationNumber: '',
+        vatRegistrationNumber: '',
+        companyTypeCode: '',
+        industryTypeCode: '',
+        phoneNumber: '',
+        emailAddress: '',
+        website: '',
+        invoicingAddressLine1: '',
+        invoicingAddressLine2: '',
+        invoicingAddressLine3: '',
+        invoicingCity: '',
+        invoicingStateRegion: '',
+        invoicingPostZipCode: '',
+        invoicingPoBoxNumber: '',
+        invoicingCountryCode: '',
+        currencyCode: '',
+        companyAddressLine1: '',
+        companyAddressLine2: '',
+        companyAddressLine3: '',
+        companyCity: '',
+        companyStateRegion: '',
+        companyPostZipCode: '',
+        companyPoBoxNumber: '',
+        companyCountryCode: '',
+        companyExpenseBudget: '',
+        companyRevenueBudget: '', 			 
+        dateFormat: '' 	
+      },
+      // companyId: '',
       imageState: true,
       flag: true,
       selectedStatus: false,
@@ -162,16 +192,17 @@ class Profile extends React.Component {
             active: res.data.active ? res.data.active : '',
             // confirmPassword: '',
             roleId: res.data.roleId ? res.data.roleId : '',
-            companyId: res.data.companyId ? res.data.companyId : '',
+            // companyId: res.data.companyId ? res.data.companyId : '',
           },
           loading: false,
           selectedStatus: res.data.active ? true : false,
           userPhoto: res.data.profilePicByteArray ? this.state.userPhoto.concat(res.data.profilePicByteArray) : [],
-          companyId: res.data.companyId ? res.data.companyId : ''
+          // companyId: res.data.companyId ? res.data.companyId : ''
       })
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+      this.setState({loading: false})
     })
   }
 
@@ -183,7 +214,7 @@ class Profile extends React.Component {
       dob,
       password,
       roleId,
-      companyId,
+      // companyId,
       active,
     } = data;
     const userId = localStorage.getItem('userId')
@@ -195,7 +226,7 @@ class Profile extends React.Component {
     formData.append("email", email ? email : '');
     formData.append("dob", dob ? (typeof dob === "string" ? moment(dob).toDate() : dob) : (''));
     formData.append("active", this.state.selectedStatus);
-    formData.append("companyId", companyId ? companyId : '');
+    // formData.append("companyId", companyId ? companyId : '');
     formData.append("roleId", roleId ? roleId : '');
 
     if (password.length > 0) {
@@ -218,12 +249,13 @@ class Profile extends React.Component {
   }
 
   getCompanyData() {
-    const {companyId} = this.state;
-    this.props.profileActions.getCompanyById(companyId).then(res => {
+    // const {companyId} = this.state;
+    this.props.profileActions.getCompanyById().then(res => {
       if (res.status === 200 ) {
           if(this.state.flag) {
             this.setState({
               initCompanyData: {
+                ...this.state.initCompanyData,
                 companyName: res.data.companyName ? res.data.companyName : '',
                 companyRegistrationNumber: res.data.companyRegistrationNumber ? res.data.companyRegistrationNumber : '',
                 vatRegistrationNumber: res.data.vatRegistrationNumber ? res.data.vatRegistrationNumber : '',
@@ -312,10 +344,10 @@ class Profile extends React.Component {
       companyRevenueBudget, 			 
       dateFormat 	
     } = data;
-    const { companyId } = this.state;
+    const { companyAddress ,isSame } = this.state;
     const { userPhotoFile } = this.state;
     let formData = new FormData();
-    formData.append("id", companyId);
+    // formData.append("id", companyId);
     formData.append("companyName", companyName ? companyName : '');
     formData.append("companyRegistrationNumber", companyRegistrationNumber ? companyRegistrationNumber : '');
     formData.append("vatRegistrationNumber", vatRegistrationNumber ? vatRegistrationNumber : '');
@@ -336,21 +368,21 @@ class Profile extends React.Component {
     formData.append("invoicingCountryCode", invoicingCountryCode ? invoicingCountryCode : '');
     formData.append("currencyCode", currencyCode ? currencyCode : '');
     formData.append("dateFormat", dateFormat ? dateFormat : '');
-    formData.append("companyAddressLine1", companyAddressLine1 ? companyAddressLine1 : '');
-    formData.append("companyAddressLine2", companyAddressLine2 ? companyAddressLine2 : '');
-    formData.append("companyAddressLine3", companyAddressLine3 ? companyAddressLine3 : '');
-    formData.append("companyCity", companyCity ? companyCity : '');
-    formData.append("companyStateRegion", companyStateRegion ? companyStateRegion : '');
-    formData.append("companyPostZipCode", companyPostZipCode ? companyPostZipCode : '');
-    formData.append("companyPoBoxNumber", companyPoBoxNumber ? companyPoBoxNumber : '');
-    formData.append("companyCountryCode", companyCountryCode ? companyCountryCode : '');
+    formData.append("companyAddressLine1", isSame ? companyAddress.companyAddressLine1 :  companyAddressLine1);
+    formData.append("companyAddressLine2", isSame ? companyAddress.companyAddressLine2 : companyAddressLine2);
+    formData.append("companyAddressLine3", isSame ? companyAddress.companyAddressLine3 : companyAddressLine3);
+    formData.append("companyCity", isSame ? companyAddress.companyCity : companyCity);
+    formData.append("companyStateRegion", isSame ? companyAddress.companyStateRegion : companyStateRegion);
+    formData.append("companyPostZipCode", isSame ? companyAddress.companyPostZipCode : companyPostZipCode);
+    formData.append("companyPoBoxNumber", isSame ? companyAddress.companyPoBoxNumber : companyPoBoxNumber);
+    formData.append("companyCountryCode", isSame ?companyAddress.companyCountryCode : companyCountryCode);
     if (this.state.companyLogoFile.length > 0) {
       formData.append("companyLogo", this.state.companyLogoFile[0]);
     }
     this.props.profileActions.updateCompany(formData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Company Updated Successfully')
-          this.props.history.push('/admin/profile')
+          this.props.history.push('/admin/dashboard')
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
@@ -418,24 +450,24 @@ class Profile extends React.Component {
                                   //   selectedInvoiceLanguage: null
                                   // })
                                 }}
-                                // validationSchema={Yup.object().shape({
-                                //   firstName: Yup.string()
-                                //     .required("First Name is Required"),
-                                //   lastName: Yup.string()
-                                //     .required("Last Name is Required"),
-                                //   password: Yup.string()
-                                //     // .required("Password is Required")
-                                //     // .min(8, "Password Too Short")
-                                //     .matches(
-                                //       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                                //       "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
-                                //     ),
-                                //   confirmPassword: Yup.string()
-                                //     // .required('Confirm Password is Required')
-                                //     .oneOf([Yup.ref("password"), null], "Passwords must match"),
-                                //   dob: Yup.date()
-                                //     .required('DOB is Required')
-                                // })}
+                                validationSchema={Yup.object().shape({
+                                  firstName: Yup.string()
+                                    .required("First Name is Required"),
+                                  lastName: Yup.string()
+                                    .required("Last Name is Required"),
+                                  password: Yup.string()
+                                    // .required("Password is Required")
+                                    // .min(8, "Password Too Short")
+                                    .matches(
+                                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+                                    ),
+                                  confirmPassword: Yup.string()
+                                    // .required('Confirm Password is Required')
+                                    .oneOf([Yup.ref("password"), null], "Passwords must match"),
+                                  dob: Yup.date()
+                                    .required('DOB is Required')
+                                })}
                               >
                                 {props => (
                                   <Form onSubmit={props.handleSubmit} encType="multipart/form-data">
@@ -572,7 +604,49 @@ class Profile extends React.Component {
                                         </FormGroup>
                                       </Col>
                                       <Col lg={6}>
-                                        <FormGroup>
+                                      <FormGroup className="mb-3">
+                                          <Label htmlFor="active">Status</Label>
+                                          <div>
+                                            <FormGroup check inline>
+                                              <div className="custom-radio custom-control">
+                                                <input
+                                                  className="custom-control-input"
+                                                  type="radio"
+                                                  id="inline-radio1"
+                                                  name="active"
+                                                  checked={this.state.selectedStatus}
+                                                  value={true}
+                                                  onChange={e => {
+                                                    if(e.target.value) {
+                                                      this.setState({selectedStatus: true},()=>{
+                                                      })
+                                                    }
+                                                  }}
+                                                />
+                                                <label className="custom-control-label" htmlFor="inline-radio1">Active</label>
+                                              </div>
+                                            </FormGroup>
+                                            <FormGroup check inline>
+                                              <div className="custom-radio custom-control">
+                                                <input
+                                                  className="custom-control-input"
+                                                  type="radio"
+                                                  id="inline-radio2"
+                                                  name="active"
+                                                  value={false}
+                                                  checked={!this.state.selectedStatus}
+                                                  onChange={e => {
+                                                    if(e.target.value === 'false') {
+                                                      this.setState({selectedStatus: false})
+                                                    }
+                                                  }}
+                                                />
+                                                <label className="custom-control-label" htmlFor="inline-radio2">Inactive</label>
+                                              </div>
+                                            </FormGroup>
+                                          </div>
+                                        </FormGroup>
+                                        {/* <FormGroup>
                                           <Label htmlFor="companyId">Company</Label>
                                           <Select
                                             className="select-default-width"
@@ -592,11 +666,11 @@ class Profile extends React.Component {
                                             <div className="invalid-feedback">{props.errors.companyId}</div>
                                           )}
       
-                                        </FormGroup>
+                                        </FormGroup> */}
                                       </Col>
                                     </Row>
                                        <Row>
-                                      <Col lg={6}>
+                                      {/* <Col lg={6}>
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="active">Status</Label>
                                           <div>
@@ -639,7 +713,7 @@ class Profile extends React.Component {
                                             </FormGroup>
                                           </div>
                                         </FormGroup>
-                                      </Col>
+                                      </Col> */}
                                     </Row>
                                         <Row>
                                           <Col lg={6}>
@@ -652,7 +726,11 @@ class Profile extends React.Component {
                                                 onChange={(value) => { props.handleChange('password')(value) }}
                                                 className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                               />
-                                              {props.errors.password && props.touched.password && (
+                                              {!props.errors.password ? 
+                                                (
+                                                <FormText>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
+                                                ) : null }
+                                                {props.errors.password && props.touched.password && (
                                                 <div className="invalid-feedback">{props.errors.password}</div>
                                               )}
                                             </FormGroup>
@@ -970,12 +1048,11 @@ class Profile extends React.Component {
                                             placeholder="Enter Invoicing Address Line1"
                                             rows="5"
                                             onChange={option => {
-                                              console.log(option)
                                               props.handleChange('invoicingAddressLine1')(option)
                                               this.setState({
-                                                companyAddress: {
+                                                companyAddress: {...this.state.companyAddress,...{
                                                   companyAddressLine1: option.target.value
-                                                }
+                                                }}
                                               })
                                             }}
                                           />
@@ -994,9 +1071,9 @@ class Profile extends React.Component {
                                             onChange={option => {
                                               props.handleChange('invoicingAddressLine2')(option)
                                               this.setState({
-                                                companyAddress: {
+                                                companyAddress: {...this.state.companyAddress,...{
                                                   companyAddressLine2: option.target.value
-                                                }
+                                                }}
                                               })
                                             }}
                                           />
@@ -1011,13 +1088,13 @@ class Profile extends React.Component {
                                             name="categoryDiscription"
                                             placeholder="Enter Invoicing Address Line3"
                                             rows="5"
-                                            value={props.values.invoicingAddressLine3}
+                                            value={props.values.invoicingAddressLine3 || ''}
                                             onChange={option => {
                                               props.handleChange('invoicingAddressLine3')(option)
                                               this.setState({
-                                                companyAddress: {
+                                                companyAddress: {...this.state.companyAddress,...{
                                                   companyAddressLine3: option.target.value
-                                                }
+                                                }}
                                               })
                                             }}
                                           />
@@ -1034,13 +1111,13 @@ class Profile extends React.Component {
                                             id="invoicingCity"
                                             name="invoicingCity"
                                             placeholder="Enter City"
-                                            value={props.values.invoicingCity}
+                                            value={props.values.invoicingCity || ''}
                                             onChange={option => {
                                               props.handleChange('invoicingCity')(option)
                                               this.setState({
-                                                companyAddress: {
+                                                companyAddress: {...this.state.companyAddress,...{
                                                   companyCity: option.target.value
-                                                }
+                                                }}
                                               })
                                             }}
                                           />
@@ -1054,13 +1131,13 @@ class Profile extends React.Component {
                                             id="invoicingStateRegion"
                                             name="invoicingStateRegion"
                                             placeholder="Enter State Region"
-                                            value={props.values.invoicingStateRegion}
+                                            value={props.values.invoicingStateRegion || ''}
                                             onChange={option => {
                                               props.handleChange('invoicingStateRegion')(option)
                                               this.setState({
-                                                companyAddress: {
+                                                companyAddress: {...this.state.companyAddress,...{
                                                   companyStateRegion: option.target.value
-                                                }
+                                                }}
                                               })
                                             }}
                                           />
@@ -1076,9 +1153,9 @@ class Profile extends React.Component {
                                             onChange={option => {
                                               props.handleChange('invoicingCountryCode')(option.value)
                                               this.setState({
-                                                companyAddress: {
-                                                  companyCountryCode: option.value
-                                                }
+                                                companyAddress: {...this.state.companyAddress,...{
+                                                  companyCountryCode: option.target.value
+                                                }}
                                               })
                                             }}
                                             placeholder="Select Currency"
@@ -1106,13 +1183,13 @@ class Profile extends React.Component {
                                             id="invoicingPoBoxNumber"
                                             name="invoicingPoBoxNumber"
                                             placeholder="Enter PO Box No"
-                                            value={props.values.invoicingPoBoxNumber}
+                                            value={props.values.invoicingPoBoxNumber|| ''}
                                             onChange={option => {
                                               props.handleChange('invoicingPoBoxNumber')(option)
                                               this.setState({
-                                                companyAddress: {
-                                                  companyPoBoxNumber: option.target.value
-                                                }
+                                                  companyAddress: {...this.state.companyAddress,...{
+                                                    companyPoBoxNumber: option.target.value
+                                                  }}
                                               })
                                             }}
                                           />
@@ -1126,13 +1203,13 @@ class Profile extends React.Component {
                                             id="invoicingPostZipCode"
                                             name="invoicingPostZipCode"
                                             placeholder="Enter Post Zip Code"
-                                            value={props.values.invoicingPostZipCode}
+                                            value={props.values.invoicingPostZipCode || ''}
                                             onChange={option => {
                                               props.handleChange('invoicingPostZipCode')(option)
                                               this.setState({
-                                                companyAddress: {
+                                                companyAddress: {...this.state.companyAddress,...{
                                                   companyPostZipCode: option.target.value
-                                                }
+                                                }}
                                               })
                                             }}
                                           />
@@ -1180,7 +1257,6 @@ class Profile extends React.Component {
                                         </FormGroup>
                                       </Col>
                                     </Row>
-
                                     <Row>
                                       <Col lg={4}>
                                         <FormGroup className="mb-3">
@@ -1192,6 +1268,7 @@ class Profile extends React.Component {
                                             placeholder="Enter Company Address Line1"
                                             rows="5"
                                             value={isSame ? this.state.companyAddress.companyAddressLine1 : props.values.companyAddressLine1}
+
                                             onChange={option => {
                                               props.handleChange('companyAddressLine1')(option)
                                             }}

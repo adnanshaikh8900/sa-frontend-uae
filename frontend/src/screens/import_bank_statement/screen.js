@@ -171,7 +171,8 @@ class ImportBankStatement extends React.Component {
                   <Row>
                     <Col lg={12} className="mt-5">
                       <FormGroup className="text-right">
-                        <Button type="submit" color="primary" className="btn-square mr-3">
+                        <Button type="button" color="primary" className="btn-square mr-3"  
+                         onClick={() => this.props.history.push('/admin/banking/upload-statement/transaction')}>
                           <i className="fa fa-dot-circle-o"></i> Import
                         </Button>
                         <Button color="secondary" className="btn-square" 

@@ -69,14 +69,15 @@ class CreateCustomerInvoice extends React.Component {
       ],
       discount_option: '',
 
-      data: [{
-        id: 0,
-        description: '',
-        quantity: 0,
-        unitPrice: 0,
-        vatCategoryId: '',
-        subTotal: 0
-      }],
+      // data: [{
+      //   id: 0,
+      //   description: '',
+      //   quantity: 0,
+      //   unitPrice: 0,
+      //   vatCategoryId: '',
+      //   subTotal: 0
+      // }],
+      data: [],
       idCount: 0,
       initValue: {
         receiptAttachmentDescription: '',
@@ -361,8 +362,7 @@ class CreateCustomerInvoice extends React.Component {
     })
   }
 
-  openCustomerModal(e) {
-    e.preventDefault()
+  openCustomerModal(props) {
     this.setState({ openCustomerModal: true })
   }
 
@@ -420,6 +420,7 @@ class CreateCustomerInvoice extends React.Component {
                     <Col lg={12}>
                       <Formik
                         initialValues={initValue}
+                        enableReinitialize={true}
                         onSubmit={(values, { resetForm }) => {
 
                           this.handleSubmit(values)
@@ -441,6 +442,8 @@ class CreateCustomerInvoice extends React.Component {
                               .required("Customer is Required"),
                             invoiceDate: Yup.date()
                               .required('Invoice Date is Required'),
+                            invoiceDueDate: Yup.date()
+                              .required('Invoice Due Date is Required'),
                           })}
                       >
                         {props => (
@@ -505,7 +508,7 @@ class CreateCustomerInvoice extends React.Component {
                                   )}
                                 </FormGroup>
                                 <Button type="button" color="primary" className="btn-square mr-3 mb-3"
-                                  onClick={this.openCustomerModal}
+                                  onClick={(e,props)=>{this.openCustomerModal(props)}}
                                 >
                                   <i className="fa fa-plus"></i> Add a Customer
                                   </Button>
@@ -575,7 +578,11 @@ class CreateCustomerInvoice extends React.Component {
                                       onChange={(value) => {
                                         props.handleChange("invoiceDueDate")(value)
                                       }}
+                                      className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}
                                     />
+                                    {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
+                                      <div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
+                                    )}
                                   </div>
                                 </FormGroup>
                               </Col>
@@ -732,7 +739,9 @@ class CreateCustomerInvoice extends React.Component {
                                 </BootstrapTable>
                               </Col>
                             </Row>
-                            <Row>
+                            {this.state.data.length > 0 ? 
+                            (
+                              <Row>
                               <Col lg={8}>
                                 <FormGroup className="py-2">
                                   <Label htmlFor="notes">Notes</Label>
@@ -828,6 +837,9 @@ class CreateCustomerInvoice extends React.Component {
                                 </div>
                               </Col>
                             </Row>
+                            ) :
+                            null
+                            }
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">

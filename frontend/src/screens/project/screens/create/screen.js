@@ -378,7 +378,7 @@ class CreateProject extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="">
                                   <Label htmlFor="invoiceLanguageCode">
-                                    <span className="text-danger">*</span>Invoice Language(TBD)
+                                    <span className="text-danger"></span>Invoice Language(TBD)
                                       </Label>
                                   <Select
                                     className="select-default-width"
@@ -393,15 +393,15 @@ class CreateProject extends React.Component {
                                     placeholder="Select invoiceLanguageCode"
                                     value={this.state.selectedInvoiceLanguage}
                                     name="invoiceLanguageCode"
-                                  // className={
-                                  //   props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode
-                                  //     ? "is-invalid"
-                                  //     : ""
-                                  // }
+                                  className={
+                                    props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode
+                                      ? "is-invalid"
+                                      : ""
+                                  }
                                   />
-                                  {/* {props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode && (
+                                  {props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode && (
                                     <div className="invalid-feedback">{props.errors.invoiceLanguageCode}</div>
-                                  )} */}
+                                  )}
                                 </FormGroup>
                               </Col>
                             </Row>

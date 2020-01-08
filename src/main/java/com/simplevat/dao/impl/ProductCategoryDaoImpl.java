@@ -19,7 +19,7 @@ import com.simplevat.entity.ProductCategory;
 public class ProductCategoryDaoImpl extends AbstractDao<Integer, ProductCategory> implements ProductCategoryDao {
 
 	@Override
-	public List<ProductCategory> getProductList(Map<ProductCategoryFilterEnum, Object> filterMap) {
+	public List<ProductCategory> getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterMap) {
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach((productCategoryFilter, value) -> dbFilters
 				.add(DbFilter.builder().dbCoulmnName(productCategoryFilter.getDbColumnName())

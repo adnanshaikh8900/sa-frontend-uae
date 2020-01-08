@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.ProductCategoryFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.ProductCategoryDao;
 import com.simplevat.entity.Activity;
@@ -69,6 +70,12 @@ public class ProductCategoryServiceImpl extends ProductCategoryService {
 	@Override
 	public void deleteByIds(ArrayList<Integer> ids) {
 		productCategoryDao.deleteByIds(ids);
+	}
+	
+	@Override
+	public List<ProductCategory> getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterList){
+		return productCategoryDao.getProductCategoryList(filterList);
+			
 	}
 
 }

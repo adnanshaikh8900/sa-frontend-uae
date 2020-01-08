@@ -8,10 +8,16 @@ import {
 
 // Get Vat List
 export const getProductCategoryList = (obj) => {
+  let url;
+  if(obj) {
+    url = `/rest/productcategory/getList?name=${obj.name}&vatPercentage=${obj.vatPercentage}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+  } else {
+    url=`/rest/productcategory/getList`
+  }
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/productcategory/getList?productCategoryCode=${obj.productCategoryCode}&productCategoryName=${obj.productCategoryName}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+      url: url
     }
 
     return authApi(data).then(res => {

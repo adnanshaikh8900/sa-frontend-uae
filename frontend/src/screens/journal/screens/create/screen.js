@@ -276,7 +276,18 @@ class CreateJournal extends React.Component {
       item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
       item.contactId = item.contactId ? item.contactId : ''
     })
-    const postData = {...values,...initValue,...{journalLineItems: this.state.data}}
+    const postData = {
+      journalDate: values.journalDate ? values.journalDate : '',
+      referenceCode: values.referenceCode ? values.referenceCode : '',
+      description: values.description ? values.description : '',
+      currencyCode: values.currencyCode ? values.currencyCode : '',
+      subTotalCreditAmount: initValue.subTotalCreditAmount,
+      subTotalDebitAmount: initValue.subTotalDebitAmount,
+      totalCreditAmount: initValue.totalCreditAmount,
+      totalDebitAmount: initValue.totalDebitAmount,
+      journalLineItems: data
+    }
+    // const postData = {...initValue,...values,...{journalLineItems: this.state.data}}
     this.props.journalCreateActions.createJournal(postData).then(res => {
       if (res.status === 200) {
         // resetForm();
@@ -322,17 +333,14 @@ class CreateJournal extends React.Component {
                       <Formik
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
-
                           this.handleSubmit(values)
-                          // this.setState({
-                          //   selectedCurrency: null,
-                          //   selectedProject: null,
-                          //   selectedBankAccount: null,
-                          //   selectedCustomer: null
-
-                          // })
                         }}
-
+                        validationSchema={
+                          Yup.object().shape({
+                            journalDate: Yup.date()
+                              .required('Journal Date is Required')
+                          })
+                        }
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -349,7 +357,11 @@ class CreateJournal extends React.Component {
                                     onChange={(value) => {
                                       props.handleChange("journalDate")(value)
                                     }}
-                                  />
+                                    className={`form-control ${props.errors.journalDate && props.touched.journalDate ? "is-invalid" : ""}`}
+                                    />
+                                    {props.errors.journalDate && props.touched.journalDate && (
+                                      <div className="invalid-feedback">{props.errors.journalDate}</div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </Row>

@@ -27,6 +27,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
 
 import * as CreateProductCategoryActions from './actions'
+import * as ProductCategoryActions from '../../actions'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
@@ -34,12 +35,14 @@ import * as Yup from "yup";
 
 const mapStateToProps = (state) => {
   return ({
+    product_category_list: state.product_category.product_category_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
     commonActions: bindActionCreators(CommonActions, dispatch),
-    createProductCategoryActions: bindActionCreators(CreateProductCategoryActions, dispatch)
+    createProductCategoryActions: bindActionCreators(CreateProductCategoryActions, dispatch),
+    productCategoryActions: bindActionCreators(ProductCategoryActions, dispatch)
   })
 }
 
@@ -61,6 +64,7 @@ class CreateProductCategory extends React.Component {
   }
 
   componentDidMount() {
+    this.props.productCategoryActions.getProductCategoryList()
   }
 
   // Save Updated Field's Value to State
@@ -101,6 +105,10 @@ class CreateProductCategory extends React.Component {
 
   render() {
     const { loading , initValue} = this.state
+    const { product_category_list } = this.props
+    const ProductCategoryList = product_category_list.map(item => {
+      return item.productCategoryCode
+    })
 
     return (
       <div className="vat-code-create-screen">
@@ -123,12 +131,29 @@ class CreateProductCategory extends React.Component {
                           onSubmit={values => {
                             this.handleSubmit(values)
                           }}
-                          validationSchema={Yup.object().shape({
-                            productCategoryName: Yup.string()
-                              .required("Product Category Name is Required"),
-                              productCategoryCode: Yup.string()
-                              .required("Product Category Code is Required")
-                          })}
+                          // validationSchema={Yup.object().shape({
+                          //   productCategoryName: Yup.string()
+                          //     .required("Product Category Name is Required"),
+                          //     productCategoryCode: Yup.string()
+                          //     .required("Product Category Code is Required")
+                          // })}
+                          validate = {values => {
+                            let status: boolean;
+                            let errors = {};
+                            if(!values.productCategoryName) {
+                              errors.productCategoryName = 'Product Category Name is  required';
+                            }
+  
+                            if(ProductCategoryList.includes(values.productCategoryCode)) {
+                              errors.productCategoryCode = 'Product Category Code already Exists'
+                            }
+                            
+                            if(!values.productCategoryCode) {
+                                errors.productCategoryCode = 'Product Category Code is Required';
+                            }
+                            console.log(errors)
+                            return errors;
+                          }}
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">

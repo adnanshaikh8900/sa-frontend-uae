@@ -191,7 +191,7 @@ class Expense extends React.Component {
       ids: selectedRows
     }
     this.props.expenseActions.removeBulkExpenses(obj).then(() => {
-      this.props.expenseActions.getExpenseList()
+      this.initializeData()
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (expense_list && expense_list.length > 0) {
         this.setState({

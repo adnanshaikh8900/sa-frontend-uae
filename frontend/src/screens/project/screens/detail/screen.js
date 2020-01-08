@@ -434,7 +434,7 @@ class DetailProject extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="">
                                   <Label htmlFor="invoiceLanguageCode">
-                                    <span className="text-danger">*</span>Invoice Language(TBD)
+                                    <span className="text-danger"></span>Invoice Language(TBD)
                                       </Label>
                                   <Select
                                     className="select-default-width"

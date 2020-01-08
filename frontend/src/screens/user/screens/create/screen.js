@@ -317,31 +317,6 @@ class CreateUser extends React.Component {
                                     </FormGroup>
                                   </Col>
                                   <Col lg={6}>
-                                    <FormGroup>
-                                      <Label htmlFor="companyId">Company</Label>
-                                      <Select
-                                        className="select-default-width"
-                                        options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list , 'Company') : []}
-                                        value={props.values.companyId}
-                                        onChange={option => props.handleChange('companyId')(option.value)}
-                                        placeholder="Select Company"
-                                        id="companyId"
-                                        name="companyId"
-                                        className={
-                                          props.errors.companyId && props.touched.companyId
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.companyId && props.touched.companyId && (
-                                        <div className="invalid-feedback">{props.errors.companyId}</div>
-                                      )}
-
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col lg={6}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="active">Status</Label>
                                       <div>
@@ -374,6 +349,32 @@ class CreateUser extends React.Component {
                                       </div>
                                     </FormGroup>
                                   </Col>
+                                  {/* <Col lg={6}>
+                                    <FormGroup>
+                                      <Label htmlFor="companyId">Company</Label>
+                                      <Select
+                                        className="select-default-width"
+                                        options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list , 'Company') : []}
+                                        value={props.values.companyId}
+                                        onChange={option => props.handleChange('companyId')(option.value)}
+                                        placeholder="Select Company"
+                                        id="companyId"
+                                        name="companyId"
+                                        className={
+                                          props.errors.companyId && props.touched.companyId
+                                            ? "is-invalid"
+                                            : ""
+                                        }
+                                      />
+                                      {props.errors.companyId && props.touched.companyId && (
+                                        <div className="invalid-feedback">{props.errors.companyId}</div>
+                                      )}
+
+                                    </FormGroup>
+                                  </Col> */}
+                                </Row>
+                                <Row>
+                                
                                 </Row>
                                 <Row>
                                   <Col lg={6}>

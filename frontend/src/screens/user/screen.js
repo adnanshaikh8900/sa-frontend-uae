@@ -66,7 +66,7 @@ class User extends React.Component {
         name: '',
         dob: '',
         active: true,
-        companyId: '',
+        // companyId: '',
         roleId: ''
       },
       selectedStatus: ''
@@ -323,7 +323,7 @@ class User extends React.Component {
                       <div className="py-3">
                         <h5>Filter : </h5>
                         <Row>
-                        <Col lg={1} className="mb-1">
+                        <Col lg={2} className="mb-1">
                             <Input type="text" placeholder="User Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -365,7 +365,7 @@ class User extends React.Component {
                               }}
                             />
                           </Col>
-                          <Col lg={2} className="mb-1">
+                          {/* <Col lg={2} className="mb-1">
                           <Select
                               className="select-default-width"
                               placeholder="Select Company"
@@ -375,7 +375,7 @@ class User extends React.Component {
                               value={filterData.companyId}
                               onChange={(option) => { this.handleChange(option.value, 'companyId') }}
                             />
-                          </Col>
+                          </Col> */}
                           <Col lg={1} className="mb-1">
                             <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
@@ -427,13 +427,13 @@ class User extends React.Component {
                           >
                             Status
                           </TableHeaderColumn>
-                          <TableHeaderColumn
+                          {/* <TableHeaderColumn
                             dataField="companyName"
                             dataSort
                             // dataFormat={this.renderCompany}
                           >
                             Company
-                          </TableHeaderColumn>
+                          </TableHeaderColumn> */}
                         </BootstrapTable>
                       </div>
                     </Col>

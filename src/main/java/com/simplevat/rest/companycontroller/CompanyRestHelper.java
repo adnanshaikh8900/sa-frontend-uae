@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.entity.Company;
+import com.simplevat.entity.User;
 import com.simplevat.service.CompanyService;
 import com.simplevat.service.CompanyTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
+import com.simplevat.service.UserService;
 
 @Component
 public class CompanyRestHelper {
@@ -32,12 +34,15 @@ public class CompanyRestHelper {
 	@Autowired
 	private CurrencyService currencyService;
 
-	public List<CompanyModel> getModelList(List<Company> companyList) {
-		List<CompanyModel> coModelList = new ArrayList<CompanyModel>();
+	@Autowired
+	UserService userService;
+
+	public List<CompanyListModel> getModelList(List<Company> companyList) {
+		List<CompanyListModel> coModelList = new ArrayList<>();
 		if (companyList != null && companyList.size() > 0) {
 			for (Company company : companyList) {
 
-				CompanyModel companyModel = new CompanyModel();
+				CompanyListModel companyModel = new CompanyListModel();
 
 				companyModel.setId(company.getCompanyId());
 				companyModel.setCompanyName(company.getCompanyName());
@@ -52,9 +57,7 @@ public class CompanyRestHelper {
 	public CompanyModel getModel(Company company) {
 
 		CompanyModel companyModel = new CompanyModel();
-
-		companyModel.setId(company.getCompanyId());
-
+		
 		companyModel.setCompanyName(company.getCompanyName());
 		companyModel.setCompanyRegistrationNumber(company.getCompanyRegistrationNumber());
 		companyModel.setVatRegistrationNumber(company.getVatNumber());
@@ -105,10 +108,12 @@ public class CompanyRestHelper {
 		return companyModel;
 	}
 
-	public Company getEntity(CompanyModel companyModel) {
+	public Company getEntity(CompanyModel companyModel,Integer userId) {
 		Company company = new Company();
-		if (companyModel.getId() != null) {
-			company = companyService.findByPK(companyModel.getId());
+		if (userId != null) {
+			User user = userService.findByPK(userId);
+			// XXX : assumption company allways present
+			company = user.getCompany();
 		}
 
 		company.setCompanyName(companyModel.getCompanyName());

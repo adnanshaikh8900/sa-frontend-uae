@@ -85,7 +85,7 @@ public class ProductCategoryRestController {
 
 	@ApiOperation(value = "Delete Product Category")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity delete(@RequestParam("id") Integer id) {
+	public ResponseEntity deleteTransactionCategory(@RequestParam("id") Integer id) {
 		ProductCategory productCategories = productCategoryService.findByPK(id);
 		if (productCategories == null) {
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -97,7 +97,7 @@ public class ProductCategoryRestController {
 
 	@ApiOperation(value = "Delete Product Category In Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deletes(@RequestBody DeleteModel ids) {
+	public ResponseEntity deleteTransactionCategories(@RequestBody DeleteModel ids) {
 		try {
 			productCategoryService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);

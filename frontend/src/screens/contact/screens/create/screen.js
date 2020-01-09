@@ -260,7 +260,13 @@ class CreateContact extends React.Component {
                                     className="select-default-width"
                                     options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list,'Contact Type') : []}
                                     value={props.values.contactType}
-                                    onChange={option => props.handleChange('contactType')(option.value)}
+                                    onChange={option => {
+                                      if(option && option.value) {
+                                        props.handleChange('contactType')(option.value)
+                                      } else {
+                                        props.handleChange('contactType')('')
+                                      }
+                                    }}
                                     placeholder="Select Contact Type"
                                     id="contactType"
                                     name="contactType"
@@ -447,7 +453,13 @@ class CreateContact extends React.Component {
                                     className="select-default-width"
                                     options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                     value={props.values.countryId}
-                                    onChange={option => props.handleChange('countryId')(option.value)}
+                                    onChange={option => {
+                                      if(option && option.value) {
+                                        props.handleChange('countryId')(option.value)
+                                      } else {
+                                        props.handleChange('countryId')('')
+                                      }
+                                    }}
                                     placeholder="Select Country"
                                     id="countryId"
                                     name="countryId"
@@ -612,7 +624,13 @@ class CreateContact extends React.Component {
                                     className="select-default-width"
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currencyCode}
-                                    onChange={option => props.handleChange('currencyCode')(option.value)}
+                                    onChange={option => {
+                                      if(option && option.value) {
+                                        props.handleChange('currencyCode')(option.value)
+                                      } else {
+                                        props.handleChange('currencyCode')('')
+                                      }
+                                    }}
                                     placeholder="Select Currency"
                                     id="currencyCode"
                                     name="currencyCode"

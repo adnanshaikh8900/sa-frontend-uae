@@ -407,7 +407,13 @@ class CreateJournal extends React.Component {
                                     id="currencyCode"
                                     name="currencyCode"
                                     value={props.values.currencyCode}
-                                    onChange={option => props.handleChange('currencyCode')(option.value)}
+                                    onChange={option => {
+                                      if(option && option.value) {
+                                        props.handleChange('currencyCode')(option.value)
+                                      } else {
+                                        props.handleChange('currencyCode')('')
+                                      }
+                                    }}
                                   />
                                 </FormGroup>
                               </Col>

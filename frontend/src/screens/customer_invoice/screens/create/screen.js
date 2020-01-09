@@ -502,8 +502,13 @@ class CreateCustomerInvoice extends React.Component {
                                     options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
                                     value={props.values.contactId}
                                     onChange={option => {
-                                      props.handleChange('contactId')(option.value)
                                       // this.getCurrentUser(option)
+                                      if(option.value) {
+                                        props.handleChange('contactId')(option.value)
+                                      } else {
+                                        props.handleChange('contactId')('')
+
+                                      }
                                     }}
                                     className={
                                       props.errors.contactId && props.touched.contactId

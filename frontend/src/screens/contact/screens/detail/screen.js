@@ -321,7 +321,13 @@ class DetailContact extends React.Component {
                                         className="select-default-width"
                                         options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list,'Contact Type') : []}
                                         value={props.values.contactType}
-                                        onChange={option => props.handleChange('contactType')(option.value)}
+                                        onChange={option => {
+                                          if(option && option.value) {
+                                            props.handleChange('contactType')(option.value)
+                                          } else {
+                                            props.handleChange('contactType')('')
+                                          }
+                                        }}
                                         placeholder="Select Contact Type"
                                         id="contactType"
                                         name="contactType"

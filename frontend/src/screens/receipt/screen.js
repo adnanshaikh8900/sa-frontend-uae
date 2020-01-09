@@ -328,6 +328,9 @@ class Receipt extends React.Component {
                                 onChange={(option) => {
                                   if (option && option.value) {
                                     this.handleChange(option.value, 'invoiceId')
+                                  } else {
+                                    this.handleChange('', 'invoiceId')
+
                                   }
                                 }}
                               />
@@ -343,6 +346,9 @@ class Receipt extends React.Component {
                                 onChange={(option) => {
                                   if (option && option.value) {
                                     this.handleChange(option.value, 'contactId')
+                                  } else {
+                                    this.handleChange('', 'contactId')
+
                                   }
                                 }}
                               />

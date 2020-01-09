@@ -277,8 +277,9 @@ class DetailReceipt extends React.Component {
                                   value={props.values.contactId}
                                   onChange={(option) => {
                                     if (option && option.value) {
-                                      console.log(option.value)
                                       props.handleChange('contactId')(option.value)
+                                    } else {
+                                      props.handleChange('contactId')('')
                                     }
                                   }}
                                 />
@@ -295,9 +296,12 @@ class DetailReceipt extends React.Component {
                                     placeholder="Invoice Number"
                                    value={props.values.invoiceId}
                                     onChange={(option) => {
-                                    if (option && option.value) {
-                                      props.handleChange('invoiceId')(option.value)
-                                    }
+                                      if (option && option.value) {
+                                        props.handleChange('invoiceId')(option.value)
+                                      } else {
+                                        props.handleChange('invoiceId')('')
+    
+                                      }
                                   }}
                                 />
                                   </FormGroup>

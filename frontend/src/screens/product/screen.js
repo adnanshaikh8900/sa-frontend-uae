@@ -311,7 +311,11 @@ class Product extends React.Component {
                                   placeholder="Vat Percentage"
                                   value={filterData.vatPercentage}
                                   onChange={(option) => {
-                                    this.handleChange(option.value, 'vatPercentage')
+                                    if(option && option.value) {
+                                      this.handleChange(option.value, 'vatPercentage')
+                                    } else {
+                                      this.handleChange('', 'vatPercentage')
+                                    }
                                   }}
                                 />
                               </FormGroup>

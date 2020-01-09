@@ -438,7 +438,13 @@ class DetailEmployee extends React.Component {
                                         className="select-default-width"
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currencyCode}
-                                        onChange={option => props.handleChange('currencyCode')(option.value)}
+                                        onChange={option => {
+                                          if(option && option.value) {
+                                            props.handleChange('currencyCode')(option.value)
+                                          } else {
+                                            props.handleChange('currencyCode')('')
+                                          }
+                                        }}
                                         placeholder="Select Currency"
                                         id="currencyCode"
                                         name="currencyCode"

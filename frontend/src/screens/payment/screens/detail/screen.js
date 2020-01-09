@@ -395,6 +395,9 @@ class DetailPayment extends React.Component {
                                             id="payment_date"
                                             name="payment_date"
                                             placeholderText=""
+                                            showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                             onChange={option => props.handleChange('payment_date')(option)}
                                             value={moment(props.values.payment_date).format('DD-MM-YYYY')}
                                           // selected={props.values.payment_date}

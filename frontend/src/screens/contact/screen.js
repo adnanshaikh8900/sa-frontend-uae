@@ -244,7 +244,7 @@ class Contact extends React.Component {
       <div className="contact-screen">
         <div className="animated fadeIn">
           {dialog}
-          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+          {/* // <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
             <CardHeader>
               <Row>

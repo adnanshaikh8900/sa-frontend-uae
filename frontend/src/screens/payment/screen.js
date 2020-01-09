@@ -312,6 +312,9 @@ class Payment extends React.Component {
                               name="paymentDate"
                               placeholderText="Payment Date"
                               selected={filterData.paymentDate}
+                              showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                               value={filterData.paymentDate}
                               onChange={(value) => {
                                 this.handleChange(value, "paymentDate")

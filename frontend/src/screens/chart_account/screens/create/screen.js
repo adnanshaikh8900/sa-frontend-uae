@@ -80,7 +80,7 @@ class CreateChartAccount extends React.Component {
   // }
 
   // Create or Edit Vat
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Account Created Successfully')
@@ -88,6 +88,7 @@ class CreateChartAccount extends React.Component {
           this.setState({
             createMore: false
           })
+          resetForm()
         } else {
           this.props.history.push('/admin/master/chart-account')
         }
@@ -119,9 +120,7 @@ class CreateChartAccount extends React.Component {
                       <Formik
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-
-                          this.handleSubmit(values)
-                          resetForm(this.state.initValue)
+                          this.handleSubmit(values,resetForm)
                         }}
                         validationSchema={
                           Yup.object().shape({
@@ -195,10 +194,13 @@ class CreateChartAccount extends React.Component {
                             </FormGroup>
 
                             <FormGroup className="text-right mt-5">
-                              <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                              <Button type="button" name="submit" color="primary" className="btn-square mr-3"  onClick={() => {
+                                  this.setState({ createMore: false })
+                                  props.handleSubmit()
+                                }}>
                                 <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
-                              <Button name="submit" color="primary" className="btn-square mr-3"
+                              <Button name="button" color="primary" className="btn-square mr-3"
                                 onClick={() => {
                                   this.setState({ createMore: true })
                                   props.handleSubmit()

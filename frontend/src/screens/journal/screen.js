@@ -370,6 +370,9 @@ class Journal extends React.Component {
                               id="date"
                               name="journalDate"
                               placeholderText="Post Date"
+                              showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                               selected={filterData.journalDate}
                               onChange={(value) => {
                                 this.handleChange(value, "journalDate")

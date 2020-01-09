@@ -93,7 +93,7 @@ class CreateProduct extends React.Component {
 
 
   // Create or Edit Product
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     const {
       productName, 
       productDescription,
@@ -124,6 +124,7 @@ class CreateProduct extends React.Component {
           this.setState({
             createMore: false
           })
+          resetForm()
           // this.props.history.push('/admin/master/product/create')
         } else this.props.history.push('/admin/master/product')
       }
@@ -165,8 +166,8 @@ class CreateProduct extends React.Component {
                         initialValues={initValue}
                         onSubmit={(values, {resetForm}) => {
 
-                          this.handleSubmit(values)
-                          resetForm(initValue)
+                          this.handleSubmit(values,resetForm)
+                          // resetForm(initValue)
 
                           // this.setState({
                           //   selectedWareHouse: null,
@@ -354,7 +355,13 @@ class CreateProduct extends React.Component {
                               <Row>
                                 <Col lg={12} className="mt-5">
                                   <FormGroup className="text-right">
-                                    <Button type="submit" color="primary" className="btn-square mr-3">
+                                    <Button type="button" color="primary" className="btn-square mr-3"  onClick={
+                                        () => {
+                                          this.setState({createMore: false})
+                                          props.handleSubmit()
+                                        }
+                                      }
+                                    >
                                       <i className="fa fa-dot-circle-o"></i> Create
                                     </Button>
                                     <Button type="button" color="primary" className="btn-square mr-3"

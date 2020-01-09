@@ -98,8 +98,8 @@ class Profile extends React.Component {
         companyPoBoxNumber: '',
         companyCountryCode: '',
         companyExpenseBudget: '',
-        companyRevenueBudget: '', 			 
-        dateFormat: '' 	
+        companyRevenueBudget: '',
+        dateFormat: ''
       },
       // companyId: '',
       imageState: true,
@@ -114,7 +114,7 @@ class Profile extends React.Component {
         companyStateRegion: '',
         companyPostZipCode: '',
         companyPoBoxNumber: '',
-        companyCountryCode: '' 	
+        companyCountryCode: ''
       }
     }
 
@@ -135,28 +135,28 @@ class Profile extends React.Component {
       activeTab: newArray
     })
     if (tab === '1') {
-     if(this.state.userPhoto[0] && this.state.userPhoto[0].indexOf('data') < 0 ){
-       this.setState({imageState: true})
-      }  else {
-        this.setState({imageState: false})
+      if (this.state.userPhoto[0] && this.state.userPhoto[0].indexOf('data') < 0) {
+        this.setState({ imageState: true })
+      } else {
+        this.setState({ imageState: false })
       }
     } else {
-        this.setState({loading: true})
-        this.getCompanyData()
-      }
+      this.setState({ loading: true })
+      this.getCompanyData()
+    }
   }
   componentDidMount() {
     this.getUserData()
   }
 
-  uploadUserImage(picture,file) {
+  uploadUserImage(picture, file) {
     this.setState({
       userPhoto: picture,
       userPhotoFile: file,
       imageState: false
     })
   }
-  uploadCompanyImage(picture,file) {
+  uploadCompanyImage(picture, file) {
     this.setState({
       companyLogo: picture,
       companyLogoFile: file,
@@ -165,7 +165,7 @@ class Profile extends React.Component {
   }
 
   stopLoading() {
-    this.setState({loading: false})
+    this.setState({ loading: false })
   }
 
   getUserData() {
@@ -198,11 +198,11 @@ class Profile extends React.Component {
           selectedStatus: res.data.active ? true : false,
           userPhoto: res.data.profilePicByteArray ? this.state.userPhoto.concat(res.data.profilePicByteArray) : [],
           // companyId: res.data.companyId ? res.data.companyId : ''
-      })
+        })
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
-      this.setState({loading: false})
+      this.setState({ loading: false })
     })
   }
 
@@ -241,7 +241,7 @@ class Profile extends React.Component {
     this.props.profileActions.updateUser(formData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'User Updated Successfully')
-          this.props.history.push('/admin/dashboard')
+        this.props.history.push('/admin/dashboard')
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
@@ -251,60 +251,60 @@ class Profile extends React.Component {
   getCompanyData() {
     // const {companyId} = this.state;
     this.props.profileActions.getCompanyById().then(res => {
-      if (res.status === 200 ) {
-          if(this.state.flag) {
-            this.setState({
-              initCompanyData: {
-                ...this.state.initCompanyData,
-                companyName: res.data.companyName ? res.data.companyName : '',
-                companyRegistrationNumber: res.data.companyRegistrationNumber ? res.data.companyRegistrationNumber : '',
-                vatRegistrationNumber: res.data.vatRegistrationNumber ? res.data.vatRegistrationNumber : '',
-                companyTypeCode: res.data.companyTypeCode ? res.data.companyTypeCode : '',
-                industryTypeCode: res.data.industryTypeCode ? res.data.industryTypeCode : '',
-                phoneNumber: res.data.phoneNumber ? res.data.phoneNumber : '',
-                emailAddress: res.data.emailAddress ? res.data.emailAddress : '',
-                website: res.data.website ? res.data.website : '',
-                invoicingAddressLine1: res.data.invoicingAddressLine1 ? res.data.invoicingAddressLine1 : '',
-                invoicingAddressLine2: res.data.invoicingAddressLine2 ? res.data.invoicingAddressLine2 : '',
-                invoicingAddressLine3: res.data.invoicingAddressLine3 ? res.data.invoicingAddressLine3 : '',
-                invoicingCity: res.data.invoicingCity ? res.data.invoicingCity : '',
-                invoicingStateRegion: res.data.invoicingStateRegion ? res.data.invoicingStateRegion : '',
-                invoicingPostZipCode: res.data.invoicingPostZipCode ? res.data.invoicingPostZipCode : '',
-                invoicingPoBoxNumber: res.data.invoicingPoBoxNumber ? res.data.invoicingPoBoxNumber : '',
-                invoicingCountryCode: res.data.invoicingCountryCode ? res.data.invoicingCountryCode : '',
-                currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
-                companyAddressLine1: res.data.companyAddressLine1 ? res.data.companyAddressLine1 : '',
-                companyAddressLine2: res.data.companyAddressLine2 ? res.data.companyAddressLine2 : '',
-                companyAddressLine3: res.data.companyAddressLine3 ? res.data.companyAddressLine3 : '',
-                companyCity: res.data.companyCity ? res.data.companyCity : '',
-                companyStateRegion: res.data.companyStateRegion ? res.data.companyStateRegion : '',
-                companyPostZipCode: res.data.companyPostZipCode ? res.data.companyPostZipCode : '',
-                companyPoBoxNumber: res.data.companyPoBoxNumber ? res.data.companyPoBoxNumber : '',
-                companyCountryCode: res.data.companyCountryCode ? res.data.companyCountryCode : '',
-                companyExpenseBudget: res.data.companyExpenseBudget ? res.data.companyExpenseBudget : '',
-                companyRevenueBudget: res.data.companyRevenueBudget ? res.data.companyRevenueBudget : '',
-                dateFormat: res.data.dateFormat ? res.data.dateFormat : '',
-    
-              },
-              companyLogo: res.data.companyLogoByteArray ? this.state.companyLogo.concat(res.data.companyLogoByteArray) : [],
-              loading: false,
-              flag: false
-            })
-          } else {
-            this.setState({
-              loading: false
-            })
-          }
+      if (res.status === 200) {
+        if (this.state.flag) {
+          this.setState({
+            initCompanyData: {
+              ...this.state.initCompanyData,
+              companyName: res.data.companyName ? res.data.companyName : '',
+              companyRegistrationNumber: res.data.companyRegistrationNumber ? res.data.companyRegistrationNumber : '',
+              vatRegistrationNumber: res.data.vatRegistrationNumber ? res.data.vatRegistrationNumber : '',
+              companyTypeCode: res.data.companyTypeCode ? res.data.companyTypeCode : '',
+              industryTypeCode: res.data.industryTypeCode ? res.data.industryTypeCode : '',
+              phoneNumber: res.data.phoneNumber ? res.data.phoneNumber : '',
+              emailAddress: res.data.emailAddress ? res.data.emailAddress : '',
+              website: res.data.website ? res.data.website : '',
+              invoicingAddressLine1: res.data.invoicingAddressLine1 ? res.data.invoicingAddressLine1 : '',
+              invoicingAddressLine2: res.data.invoicingAddressLine2 ? res.data.invoicingAddressLine2 : '',
+              invoicingAddressLine3: res.data.invoicingAddressLine3 ? res.data.invoicingAddressLine3 : '',
+              invoicingCity: res.data.invoicingCity ? res.data.invoicingCity : '',
+              invoicingStateRegion: res.data.invoicingStateRegion ? res.data.invoicingStateRegion : '',
+              invoicingPostZipCode: res.data.invoicingPostZipCode ? res.data.invoicingPostZipCode : '',
+              invoicingPoBoxNumber: res.data.invoicingPoBoxNumber ? res.data.invoicingPoBoxNumber : '',
+              invoicingCountryCode: res.data.invoicingCountryCode ? res.data.invoicingCountryCode : '',
+              currencyCode: res.data.currencyCode ? res.data.currencyCode : '',
+              companyAddressLine1: res.data.companyAddressLine1 ? res.data.companyAddressLine1 : '',
+              companyAddressLine2: res.data.companyAddressLine2 ? res.data.companyAddressLine2 : '',
+              companyAddressLine3: res.data.companyAddressLine3 ? res.data.companyAddressLine3 : '',
+              companyCity: res.data.companyCity ? res.data.companyCity : '',
+              companyStateRegion: res.data.companyStateRegion ? res.data.companyStateRegion : '',
+              companyPostZipCode: res.data.companyPostZipCode ? res.data.companyPostZipCode : '',
+              companyPoBoxNumber: res.data.companyPoBoxNumber ? res.data.companyPoBoxNumber : '',
+              companyCountryCode: res.data.companyCountryCode ? res.data.companyCountryCode : '',
+              companyExpenseBudget: res.data.companyExpenseBudget ? res.data.companyExpenseBudget : '',
+              companyRevenueBudget: res.data.companyRevenueBudget ? res.data.companyRevenueBudget : '',
+              dateFormat: res.data.dateFormat ? res.data.dateFormat : '',
 
-        if(this.state.companyLogo[0] && this.state.companyLogo[0].indexOf('data') < 0 ){
+            },
+            companyLogo: res.data.companyLogoByteArray ? this.state.companyLogo.concat(res.data.companyLogoByteArray) : [],
+            loading: false,
+            flag: false
+          })
+        } else {
+          this.setState({
+            loading: false
+          })
+        }
+
+        if (this.state.companyLogo[0] && this.state.companyLogo[0].indexOf('data') < 0) {
           this.setState({
             imageState: true,
           })
-        }  else {
-           this.setState({
-             imageState: false,
-            })
-         }
+        } else {
+          this.setState({
+            imageState: false,
+          })
+        }
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
@@ -341,10 +341,10 @@ class Profile extends React.Component {
       companyPoBoxNumber,
       companyCountryCode,
       companyExpenseBudget,
-      companyRevenueBudget, 			 
-      dateFormat 	
+      companyRevenueBudget,
+      dateFormat
     } = data;
-    const { companyAddress ,isSame } = this.state;
+    const { companyAddress, isSame } = this.state;
     const { userPhotoFile } = this.state;
     let formData = new FormData();
     // formData.append("id", companyId);
@@ -368,21 +368,21 @@ class Profile extends React.Component {
     formData.append("invoicingCountryCode", invoicingCountryCode ? invoicingCountryCode : '');
     formData.append("currencyCode", currencyCode ? currencyCode : '');
     formData.append("dateFormat", dateFormat ? dateFormat : '');
-    formData.append("companyAddressLine1", isSame ? companyAddress.companyAddressLine1 :  companyAddressLine1);
+    formData.append("companyAddressLine1", isSame ? companyAddress.companyAddressLine1 : companyAddressLine1);
     formData.append("companyAddressLine2", isSame ? companyAddress.companyAddressLine2 : companyAddressLine2);
     formData.append("companyAddressLine3", isSame ? companyAddress.companyAddressLine3 : companyAddressLine3);
     formData.append("companyCity", isSame ? companyAddress.companyCity : companyCity);
     formData.append("companyStateRegion", isSame ? companyAddress.companyStateRegion : companyStateRegion);
     formData.append("companyPostZipCode", isSame ? companyAddress.companyPostZipCode : companyPostZipCode);
     formData.append("companyPoBoxNumber", isSame ? companyAddress.companyPoBoxNumber : companyPoBoxNumber);
-    formData.append("companyCountryCode", isSame ?companyAddress.companyCountryCode : companyCountryCode);
+    formData.append("companyCountryCode", isSame ? companyAddress.companyCountryCode : companyCountryCode);
     if (this.state.companyLogoFile.length > 0) {
       formData.append("companyLogo", this.state.companyLogoFile[0]);
     }
     this.props.profileActions.updateCompany(formData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Company Updated Successfully')
-          this.props.history.push('/admin/dashboard')
+        this.props.history.push('/admin/dashboard')
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
@@ -390,8 +390,8 @@ class Profile extends React.Component {
   }
 
   render() {
-    const { loading ,isSame} = this.state
-    const {currency_list,country_list,industry_type_list,company_type_list,role_list} = this.props
+    const { loading, isSame } = this.state
+    const { currency_list, country_list, industry_type_list, company_type_list, role_list } = this.props
     return (
       <div className="profile-screen">
         <div className="animated fadeIn">
@@ -565,6 +565,9 @@ class Profile extends React.Component {
                                                 className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                                 id="dob "
                                                 name="dob "
+                                                showMonthDropdown
+                                                showYearDropdown
+                                                dropdownMode="select"
                                                 placeholderText="Enter Birth Date"
                                                 // selected={props.values.dob}
                                                 value={props.values.dob ? moment(props.values.dob).format('DD-MM-YYYY') : ''}
@@ -580,73 +583,73 @@ class Profile extends React.Component {
                                           </Col>
                                         </Row>
                                         <Row>
-                                      <Col lg={6}>
-                                        <FormGroup>
-                                          <Label htmlFor="roleId">Role</Label>
-                                          <Select
-                                            className="select-default-width"
-                                            options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
-                                            value={props.values.roleId}
-                                            onChange={option => props.handleChange('roleId')(option.value)}
-                                            placeholder="Select Role"
-                                            id="roleId"
-                                            name="roleId"
-                                            className={
-                                              props.errors.roleId && props.touched.roleId
-                                                ? "is-invalid"
-                                                : ""
-                                            }
-                                          />
-                                          {props.errors.roleId && props.touched.roleId && (
-                                            <div className="invalid-feedback">{props.errors.roleId}</div>
-                                          )}
-      
-                                        </FormGroup>
-                                      </Col>
-                                      <Col lg={6}>
-                                      <FormGroup className="mb-3">
-                                          <Label htmlFor="active">Status</Label>
-                                          <div>
-                                            <FormGroup check inline>
-                                              <div className="custom-radio custom-control">
-                                                <input
-                                                  className="custom-control-input"
-                                                  type="radio"
-                                                  id="inline-radio1"
-                                                  name="active"
-                                                  checked={this.state.selectedStatus}
-                                                  value={true}
-                                                  onChange={e => {
-                                                    if(e.target.value) {
-                                                      this.setState({selectedStatus: true},()=>{
-                                                      })
-                                                    }
-                                                  }}
-                                                />
-                                                <label className="custom-control-label" htmlFor="inline-radio1">Active</label>
+                                          <Col lg={6}>
+                                            <FormGroup>
+                                              <Label htmlFor="roleId">Role</Label>
+                                              <Select
+                                                className="select-default-width"
+                                                options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
+                                                value={props.values.roleId}
+                                                onChange={option => props.handleChange('roleId')(option.value)}
+                                                placeholder="Select Role"
+                                                id="roleId"
+                                                name="roleId"
+                                                className={
+                                                  props.errors.roleId && props.touched.roleId
+                                                    ? "is-invalid"
+                                                    : ""
+                                                }
+                                              />
+                                              {props.errors.roleId && props.touched.roleId && (
+                                                <div className="invalid-feedback">{props.errors.roleId}</div>
+                                              )}
+
+                                            </FormGroup>
+                                          </Col>
+                                          <Col lg={6}>
+                                            <FormGroup className="mb-3">
+                                              <Label htmlFor="active">Status</Label>
+                                              <div>
+                                                <FormGroup check inline>
+                                                  <div className="custom-radio custom-control">
+                                                    <input
+                                                      className="custom-control-input"
+                                                      type="radio"
+                                                      id="inline-radio1"
+                                                      name="active"
+                                                      checked={this.state.selectedStatus}
+                                                      value={true}
+                                                      onChange={e => {
+                                                        if (e.target.value) {
+                                                          this.setState({ selectedStatus: true }, () => {
+                                                          })
+                                                        }
+                                                      }}
+                                                    />
+                                                    <label className="custom-control-label" htmlFor="inline-radio1">Active</label>
+                                                  </div>
+                                                </FormGroup>
+                                                <FormGroup check inline>
+                                                  <div className="custom-radio custom-control">
+                                                    <input
+                                                      className="custom-control-input"
+                                                      type="radio"
+                                                      id="inline-radio2"
+                                                      name="active"
+                                                      value={false}
+                                                      checked={!this.state.selectedStatus}
+                                                      onChange={e => {
+                                                        if (e.target.value === 'false') {
+                                                          this.setState({ selectedStatus: false })
+                                                        }
+                                                      }}
+                                                    />
+                                                    <label className="custom-control-label" htmlFor="inline-radio2">Inactive</label>
+                                                  </div>
+                                                </FormGroup>
                                               </div>
                                             </FormGroup>
-                                            <FormGroup check inline>
-                                              <div className="custom-radio custom-control">
-                                                <input
-                                                  className="custom-control-input"
-                                                  type="radio"
-                                                  id="inline-radio2"
-                                                  name="active"
-                                                  value={false}
-                                                  checked={!this.state.selectedStatus}
-                                                  onChange={e => {
-                                                    if(e.target.value === 'false') {
-                                                      this.setState({selectedStatus: false})
-                                                    }
-                                                  }}
-                                                />
-                                                <label className="custom-control-label" htmlFor="inline-radio2">Inactive</label>
-                                              </div>
-                                            </FormGroup>
-                                          </div>
-                                        </FormGroup>
-                                        {/* <FormGroup>
+                                            {/* <FormGroup>
                                           <Label htmlFor="companyId">Company</Label>
                                           <Select
                                             className="select-default-width"
@@ -667,10 +670,10 @@ class Profile extends React.Component {
                                           )}
       
                                         </FormGroup> */}
-                                      </Col>
-                                    </Row>
-                                       <Row>
-                                      {/* <Col lg={6}>
+                                          </Col>
+                                        </Row>
+                                        <Row>
+                                          {/* <Col lg={6}>
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="active">Status</Label>
                                           <div>
@@ -714,7 +717,7 @@ class Profile extends React.Component {
                                           </div>
                                         </FormGroup>
                                       </Col> */}
-                                    </Row>
+                                        </Row>
                                         <Row>
                                           <Col lg={6}>
                                             <FormGroup>
@@ -726,11 +729,11 @@ class Profile extends React.Component {
                                                 onChange={(value) => { props.handleChange('password')(value) }}
                                                 className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                               />
-                                              {!props.errors.password ? 
+                                              {!props.errors.password ?
                                                 (
-                                                <FormText>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
-                                                ) : null }
-                                                {props.errors.password && props.touched.password && (
+                                                  <FormText>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
+                                                ) : null}
+                                              {props.errors.password && props.touched.password && (
                                                 <div className="invalid-feedback">{props.errors.password}</div>
                                               )}
                                             </FormGroup>
@@ -1050,9 +1053,11 @@ class Profile extends React.Component {
                                             onChange={option => {
                                               props.handleChange('invoicingAddressLine1')(option)
                                               this.setState({
-                                                companyAddress: {...this.state.companyAddress,...{
-                                                  companyAddressLine1: option.target.value
-                                                }}
+                                                companyAddress: {
+                                                  ...this.state.companyAddress, ...{
+                                                    companyAddressLine1: option.target.value
+                                                  }
+                                                }
                                               })
                                             }}
                                           />
@@ -1071,9 +1076,11 @@ class Profile extends React.Component {
                                             onChange={option => {
                                               props.handleChange('invoicingAddressLine2')(option)
                                               this.setState({
-                                                companyAddress: {...this.state.companyAddress,...{
-                                                  companyAddressLine2: option.target.value
-                                                }}
+                                                companyAddress: {
+                                                  ...this.state.companyAddress, ...{
+                                                    companyAddressLine2: option.target.value
+                                                  }
+                                                }
                                               })
                                             }}
                                           />
@@ -1092,9 +1099,11 @@ class Profile extends React.Component {
                                             onChange={option => {
                                               props.handleChange('invoicingAddressLine3')(option)
                                               this.setState({
-                                                companyAddress: {...this.state.companyAddress,...{
-                                                  companyAddressLine3: option.target.value
-                                                }}
+                                                companyAddress: {
+                                                  ...this.state.companyAddress, ...{
+                                                    companyAddressLine3: option.target.value
+                                                  }
+                                                }
                                               })
                                             }}
                                           />
@@ -1115,9 +1124,11 @@ class Profile extends React.Component {
                                             onChange={option => {
                                               props.handleChange('invoicingCity')(option)
                                               this.setState({
-                                                companyAddress: {...this.state.companyAddress,...{
-                                                  companyCity: option.target.value
-                                                }}
+                                                companyAddress: {
+                                                  ...this.state.companyAddress, ...{
+                                                    companyCity: option.target.value
+                                                  }
+                                                }
                                               })
                                             }}
                                           />
@@ -1135,9 +1146,11 @@ class Profile extends React.Component {
                                             onChange={option => {
                                               props.handleChange('invoicingStateRegion')(option)
                                               this.setState({
-                                                companyAddress: {...this.state.companyAddress,...{
-                                                  companyStateRegion: option.target.value
-                                                }}
+                                                companyAddress: {
+                                                  ...this.state.companyAddress, ...{
+                                                    companyStateRegion: option.target.value
+                                                  }
+                                                }
                                               })
                                             }}
                                           />
@@ -1153,9 +1166,11 @@ class Profile extends React.Component {
                                             onChange={option => {
                                               props.handleChange('invoicingCountryCode')(option.value)
                                               this.setState({
-                                                companyAddress: {...this.state.companyAddress,...{
-                                                  companyCountryCode: option.target.value
-                                                }}
+                                                companyAddress: {
+                                                  ...this.state.companyAddress, ...{
+                                                    companyCountryCode: option.target.value
+                                                  }
+                                                }
                                               })
                                             }}
                                             placeholder="Select Currency"
@@ -1183,13 +1198,15 @@ class Profile extends React.Component {
                                             id="invoicingPoBoxNumber"
                                             name="invoicingPoBoxNumber"
                                             placeholder="Enter PO Box No"
-                                            value={props.values.invoicingPoBoxNumber|| ''}
+                                            value={props.values.invoicingPoBoxNumber || ''}
                                             onChange={option => {
                                               props.handleChange('invoicingPoBoxNumber')(option)
                                               this.setState({
-                                                  companyAddress: {...this.state.companyAddress,...{
+                                                companyAddress: {
+                                                  ...this.state.companyAddress, ...{
                                                     companyPoBoxNumber: option.target.value
-                                                  }}
+                                                  }
+                                                }
                                               })
                                             }}
                                           />
@@ -1207,9 +1224,11 @@ class Profile extends React.Component {
                                             onChange={option => {
                                               props.handleChange('invoicingPostZipCode')(option)
                                               this.setState({
-                                                companyAddress: {...this.state.companyAddress,...{
-                                                  companyPostZipCode: option.target.value
-                                                }}
+                                                companyAddress: {
+                                                  ...this.state.companyAddress, ...{
+                                                    companyPostZipCode: option.target.value
+                                                  }
+                                                }
                                               })
                                             }}
                                           />
@@ -1224,6 +1243,9 @@ class Profile extends React.Component {
                                             name="dateFormat"
                                             placeholder="Enter Date Format"
                                             value={props.values.dateFormat}
+                                            showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                             onChange={option => {
                                               props.handleChange('dateFormat')(option)
                                             }}
@@ -1244,13 +1266,13 @@ class Profile extends React.Component {
                                               id="inline-radio1"
                                               name="SMTP-auth"
                                               checked={this.state.isSame}
-                                              onChange={(e)=>{
+                                              onChange={(e) => {
                                                 this.setState({
                                                   isSame: !this.state.isSame
                                                 })
                                               }}
                                             />
-                                            <label  htmlFor="inline-radio1">
+                                            <label htmlFor="inline-radio1">
                                               Company Address is same as Invoicing Address
                                     </label>
                                           </div>
@@ -1344,30 +1366,30 @@ class Profile extends React.Component {
                                         </FormGroup>
                                       </Col>
                                       <Col lg={4}>
-                                      <FormGroup>
-                                              <Label htmlFor="companyCountryCode">Country Code</Label>
-                                              <Select
-                                                className="select-default-width"
-                                                options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
-                                                value={props.values.companyCountryCode}
-                                                onChange={option => {
-                          
-                                                  props.handleChange('companyCountryCode')(option.value)
-                                                }}
-                                                placeholder="Select Currency"
-                                                id="companyCountryCode"
-                                                name="companyCountryCode"
-                                                className={
-                                                  props.errors.companyCountryCode && props.touched.companyCountryCode
-                                                    ? "is-invalid"
-                                                    : ""
-                                                }
-                                              />
-                                              {props.errors.companyCountryCode && props.touched.companyCountryCode && (
-                                                <div className="invalid-feedback">{props.errors.companyCountryCode}</div>
-                                              )}
+                                        <FormGroup>
+                                          <Label htmlFor="companyCountryCode">Country Code</Label>
+                                          <Select
+                                            className="select-default-width"
+                                            options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
+                                            value={props.values.companyCountryCode}
+                                            onChange={option => {
 
-                                            </FormGroup>
+                                              props.handleChange('companyCountryCode')(option.value)
+                                            }}
+                                            placeholder="Select Currency"
+                                            id="companyCountryCode"
+                                            name="companyCountryCode"
+                                            className={
+                                              props.errors.companyCountryCode && props.touched.companyCountryCode
+                                                ? "is-invalid"
+                                                : ""
+                                            }
+                                          />
+                                          {props.errors.companyCountryCode && props.touched.companyCountryCode && (
+                                            <div className="invalid-feedback">{props.errors.companyCountryCode}</div>
+                                          )}
+
+                                        </FormGroup>
                                       </Col>
                                     </Row>
                                     <Row>

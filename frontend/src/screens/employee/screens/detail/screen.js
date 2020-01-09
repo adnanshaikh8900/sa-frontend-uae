@@ -348,6 +348,9 @@ class DetailEmployee extends React.Component {
                                         className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                         id="dob"
                                         name="dob"
+                                        showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                         placeholderText="Enter Birth Date"
                                         value={moment(props.values.dob).format('DD-MM-YYYY')}
                                         onChange={(value) => {

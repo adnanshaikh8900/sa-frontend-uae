@@ -96,8 +96,8 @@ class CreateContact extends React.Component {
   handleSubmit(data,resetForm) {
     this.props.createContactActions.createContact(data).then(res => {
       if (res.status === 200) {
-        resetForm();
         this.props.commonActions.tostifyAlert('success', 'New Contact Created Successfully')
+        resetForm();
         if (this.state.createMore) {
           this.setState({ createMore: false });
         } else {
@@ -632,7 +632,11 @@ class CreateContact extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="button" color="primary" className="btn-square mr-3"  onClick={() => {
+                                      this.setState({ createMore: false },()=>{
+                                        props.handleSubmit();
+                                      })
+                                    }}>
                                     <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
                                   <Button type="button" color="primary" className="btn-square mr-3"

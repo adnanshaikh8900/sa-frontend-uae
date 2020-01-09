@@ -113,12 +113,13 @@ class DetailContact extends React.Component {
     }
   }
 
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     const { id } = this.state
     const postData = {...data, ...{ contactId: id } }
 
     this.props.detailContactActions.updateContact(postData).then(res => {
       if (res.status === 200) {
+        resetForm()
         this.props.commonActions.tostifyAlert('success', ' Contact Updated Successfully')
         this.props.history.push('/admin/master/contact');
       }
@@ -193,9 +194,7 @@ class DetailContact extends React.Component {
                             initialValues={initValue}
                             onSubmit={(values, { resetForm }) => {
 
-                              this.handleSubmit(values)
-                              resetForm(initValue)
-
+                              this.handleSubmit(values,resetForm)
                             }}
 
                           // validationSchema={

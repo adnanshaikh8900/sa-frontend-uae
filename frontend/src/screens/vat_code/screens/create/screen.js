@@ -65,7 +65,7 @@ class CreateVatCode extends React.Component {
   }
 
   componentDidMount() {
-     this.props.vatActions.getVatList()
+    this.props.vatActions.getVatList()
   }
 
   // Save Updated Field's Value to State
@@ -87,11 +87,11 @@ class CreateVatCode extends React.Component {
   }
 
   // Create or Edit Vat
-  handleSubmit(data) {
+  handleSubmit(data, resetForm) {
     this.props.vatCreateActions.createVat(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New vat code Created Successfully!')
-
+        resetForm()
         if (this.state.createMore) {
           this.setState({
             createMore: false
@@ -104,7 +104,7 @@ class CreateVatCode extends React.Component {
   }
 
   render() {
-    const { loading} = this.state
+    const { loading } = this.state
     const { vat_list } = this.props
     const VatList = vat_list.map(item => {
       return item.name
@@ -130,8 +130,8 @@ class CreateVatCode extends React.Component {
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
 
-                          this.handleSubmit(values)
-                          resetForm(this.state.initValue)
+                          this.handleSubmit(values, resetForm)
+                          // resetForm(this.state.initValue)
                         }}
                         // validateOnBlur={true}
                         // validationSchema={Yup.object().shape({
@@ -140,26 +140,26 @@ class CreateVatCode extends React.Component {
                         //   vat: Yup.string()
                         //     .required("Vat Percentage is Required")
                         // })}
-                        validate = {values => {
+                        validate={values => {
                           let status: boolean;
                           let errors = {};
-                          if(!values.name) {
+                          if (!values.name) {
                             errors.name = 'Name is  required';
                           }
 
-                          if(VatList.includes(values.name)) {
+                          if (VatList.includes(values.name)) {
                             console.log(VatList)
                             errors.name = 'Vat Code already Exists'
                           }
-                          
-                          if(!values.vat) {
+
+                          if (!values.vat) {
                             {
                               errors.vat = 'Percentage is  required';
                             }
                           }
                           return errors;
                         }}
-                        >
+                      >
                         {props => (
                           <Form onSubmit={props.handleSubmit} name="simpleForm">
                             <FormGroup>
@@ -202,12 +202,17 @@ class CreateVatCode extends React.Component {
                               )}
                             </FormGroup>
                             <FormGroup className="text-right mt-5">
-                              <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
+                              <Button type="button" name="submit" color="primary" className="btn-square mr-3" onClick={() => {
+                                this.setState({ createMore: false }, () => {
+                                  props.handleSubmit()
+                                })
+                              }}
+                              >
                                 <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
                               <Button name="button" color="primary" className="btn-square mr-3"
                                 onClick={() => {
-                                    this.setState({ createMore: true },()=>{
+                                  this.setState({ createMore: true }, () => {
                                     props.handleSubmit()
                                   })
                                 }}

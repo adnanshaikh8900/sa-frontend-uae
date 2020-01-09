@@ -183,7 +183,10 @@ class CustomerInvoice extends React.Component {
             }
           </DropdownToggle>
           <DropdownMenu right>
-            <DropdownItem onClick={() => this.props.history.push('/admin/revenue/customer-invoice/detail', { id: row.id })}>
+            <DropdownItem onClick={() => {
+              console.log('se')
+              this.props.history.push('/admin/revenue/customer-invoice/detail', { id: row.id })
+            }}>
               <i className="fas fa-edit" /> Edit
             </DropdownItem>
             <DropdownItem>
@@ -263,13 +266,16 @@ class CustomerInvoice extends React.Component {
     let obj = {
       ids: selectedRows
     }
-    this.props.customerInvoiceActions.removeBulk(obj).then(() => {
-      this.props.customerInvoiceActions.getCustomerInoviceList(filterData)
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if (customer_invoice_list && customer_invoice_list.length > 0) {
-        this.setState({
-          selectedRows: []
-        })
+    this.props.customerInvoiceActions.removeBulk(obj).then((res) => {
+      console.log(typeof res.status)
+      if (res.status == 200) {
+        this.initializeData()
+        this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+        if (customer_invoice_list && customer_invoice_list.length > 0) {
+          this.setState({
+            selectedRows: []
+          })
+        }
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
@@ -296,7 +302,7 @@ class CustomerInvoice extends React.Component {
 
   render() {
     const { loading, filterData, dialog, selectedRows } = this.state
-    const { customer_invoice_list, status_list ,customer_list} = this.props
+    const { customer_invoice_list, status_list, customer_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -319,7 +325,7 @@ class CustomerInvoice extends React.Component {
     return (
       <div className="customer-invoice-screen">
         <div className="animated fadeIn">
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
             <CardHeader>
               <Row>
@@ -403,7 +409,7 @@ class CustomerInvoice extends React.Component {
                               placeholder="Select Customer"
                               id="customer"
                               name="customer"
-                              options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list,'Customer') : []}
+                              options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
                               value={filterData.customerId}
                               onChange={(option) => { this.handleChange(option.value, 'customerId') }}
                             />
@@ -418,6 +424,9 @@ class CustomerInvoice extends React.Component {
                               name="invoiceDate"
                               placeholderText="Invoice Date"
                               selected={filterData.invoiceDate}
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
                               // value={filterData.invoiceDate}
                               onChange={(value) => {
                                 this.handleChange(value, "invoiceDate")
@@ -430,6 +439,9 @@ class CustomerInvoice extends React.Component {
                               id="date"
                               name="invoiceDueDate"
                               placeholderText="Invoice Due Date"
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
                               selected={filterData.invoiceDueDate}
                               onChange={(value) => {
                                 this.handleChange(value, "invoiceDueDate")
@@ -442,7 +454,7 @@ class CustomerInvoice extends React.Component {
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
-                              options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list,'Status') : []}
+                              options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list, 'Status') : []}
                               value={this.state.filterData.status}
                               onChange={(option) => { this.handleChange(option.value, 'status') }}
                               placeholder="Status"

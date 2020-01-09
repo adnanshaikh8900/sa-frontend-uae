@@ -295,6 +295,9 @@ class DetailExpense extends React.Component {
                                         className={`form-control ${props.errors.expenseDate && props.touched.expenseDate ? "is-invalid" : ""}`}
                                         placeholderText="Expense Date"
                                         value={moment(props.values.expenseDate).format('DD-MM-YYYY')}
+                                        showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                         dateFormat="dd/MM/yyyy"
                                         // maxDate={new Date()}
                                         onChange={(value) => {

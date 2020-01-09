@@ -23,7 +23,7 @@ import * as CustomerInvoiceDetailActions from './actions';
 import * as  CustomerInvoiceActions from "../../actions";
 
 import { CustomerModal } from '../../sections'
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -80,6 +80,8 @@ class DetailCustomerInvoice extends React.Component {
     // this.options = {
     //   paginationPosition: 'top'
     // }
+    this.formRef = React.createRef()
+
 
     this.initializeData = this.initializeData.bind(this)
     this.renderActions = this.renderActions.bind(this)
@@ -97,6 +99,9 @@ class DetailCustomerInvoice extends React.Component {
     this.closeCustomerModal = this.closeCustomerModal.bind(this)
     this.openCustomerModal = this.openCustomerModal.bind(this)
     this.getCurrentUser = this.getCurrentUser.bind(this)
+    this.deleteInvoice = this.deleteInvoice.bind(this)
+    this.removeInvoice = this.removeInvoice.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
   }
 
   // renderActions (cell, row) {
@@ -135,7 +140,7 @@ class DetailCustomerInvoice extends React.Component {
               invoiceDate: res.data.invoiceDate ? res.data.invoiceDate : '',
               contactId: res.data.contactId ? res.data.contactId : '',
               project: res.data.projectId ? res.data.projectId : '',
-              invoice_reference_number: res.data.referenceNumber ? res.data.referenceNumber : '',
+              invoice_number: res.data.referenceNumber ? res.data.referenceNumber : '',
               total_net: 0,
               invoiceVATAmount: res.data.totalVatAmount ? res.data.totalVatAmount : '',
               totalAmount: res.data.totalAmount ? res.data.totalAmount : '',
@@ -327,7 +332,7 @@ class DetailCustomerInvoice extends React.Component {
       invoiceDate,
       contactId,
       project,
-      invoice_reference_number,
+      invoice_number,
       invoiceVATAmount,
       totalAmount,
       notes
@@ -336,7 +341,7 @@ class DetailCustomerInvoice extends React.Component {
     let formData = new FormData();
     formData.append("type", 1);
     formData.append("invoiceId", id);
-    formData.append("referenceNumber", invoice_reference_number !== null ? invoice_reference_number : "");
+    formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
     formData.append("invoiceDate", typeof invoiceDate === "date" ? invoiceDate : moment(invoiceDate).toDate());
     formData.append("invoiceDueDate", typeof invoiceDueDate === "date" ? invoiceDueDate : moment(invoiceDueDate).toDate())
     formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
@@ -346,8 +351,8 @@ class DetailCustomerInvoice extends React.Component {
     formData.append('lineItemsString', JSON.stringify(this.state.data));
     formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
     formData.append('totalAmount', this.state.initValue.totalAmount);
-    if (contactId !== null && contactId.value) {
-      formData.append("contactId", contactId.value);
+    if (contactId) {
+      formData.append("contactId", contactId);
     }
     if (currency !== null && currency.value) {
       formData.append("currencyCode", currency.value);
@@ -382,9 +387,11 @@ class DetailCustomerInvoice extends React.Component {
         value: data.contactId,
       }
     }
-    this.setState({
-      selectedContact: option
-    })
+    // this.setState({
+    //   selectedContact: option
+    // })
+    this.formRef.current.setFieldValue('contactId', option, true)
+
   }
 
   closeCustomerModal(res) {
@@ -394,6 +401,36 @@ class DetailCustomerInvoice extends React.Component {
     this.setState({ openCustomerModal: false })
   }
 
+  deleteInvoice() {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removeInvoice}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeInvoice() {
+    const id= this.props.location.state.id;
+    this.props.customerInvoiceDetailActions.deleteInvoice(id).then(res=>{
+      console.log(res.status)
+      if(res.status == 200) {
+        this.props.commonActions.tostifyAlert('success','Data Removed Successfully')
+        this.props.history.push('/admin/revenue/customer-invoice')
+      }
+    }).catch(err=> {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
+
   render() {
 
     const {
@@ -402,7 +439,8 @@ class DetailCustomerInvoice extends React.Component {
       discount_option,
       initValue,
       selectedContact,
-      loading
+      loading,
+      dialog
     } = this.state
 
     const { project_list, contact_list, currency_list, customer_list } = this.props
@@ -423,6 +461,7 @@ class DetailCustomerInvoice extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
+                  {dialog}
                   {loading ?
                     (
                       <Loader />
@@ -433,6 +472,8 @@ class DetailCustomerInvoice extends React.Component {
                         <Col lg={12}>
                           <Formik
                             initialValues={this.state.initValue}
+                            ref={this.formRef}
+
                             onSubmit={(values, { resetForm }) => {
 
                               this.handleSubmit(values)
@@ -454,6 +495,8 @@ class DetailCustomerInvoice extends React.Component {
                                   .required("Supplier is Required"),
                                 invoiceDate: Yup.date()
                                   .required('Invoice Date is Required'),
+                                invoiceDueDate: Yup.date()
+                                  .required('Invoice Due Date is Required'),
                               })}
                           >
                             {props => (
@@ -461,15 +504,15 @@ class DetailCustomerInvoice extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="invoice_reference_number">Invoice Number</Label>
+                                      <Label htmlFor="invoice_number">Invoice Number</Label>
                                       <Input
                                         type="text"
-                                        id="invoice_reference_number"
-                                        name="invoice_reference_number"
+                                        id="invoice_number"
+                                        name="invoice_number"
                                         placeholder=""
-                                        value={props.values.invoice_reference_number}
+                                        value={props.values.invoice_number}
                                         onChange={(value) => {
-                                          props.handleChange("invoice_reference_number")(value)
+                                          props.handleChange("invoice_number")(value)
                                         }}
                                         className={
                                           props.errors.invoice_number && props.touched.invoice_number
@@ -505,10 +548,10 @@ class DetailCustomerInvoice extends React.Component {
                                         id="contactId"
                                         name="contactId"
                                         options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
-                                        value={selectedContact}
+                                        value={props.values.contactId}
                                         onChange={option => {
-                                          props.handleChange('contactId')(option)
-                                          this.getCurrentUser(option)
+                                          props.handleChange('contactId')(option.value)
+                                          // this.getCurrentUser(option)
                                         }}
                                         className={
                                           props.errors.contactId && props.touched.contactId
@@ -516,6 +559,7 @@ class DetailCustomerInvoice extends React.Component {
                                             : ''
                                         }
                                       />
+                                      {console.log(props.errors)}
                                       {props.errors.contactId && props.touched.contactId && (
                                         <div className="invalid-feedback">{props.errors.contactId}</div>
                                       )}
@@ -569,7 +613,9 @@ class DetailCustomerInvoice extends React.Component {
                                         name="invoiceDate"
                                         placeholderText=""
                                         value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
-
+                                        showMonthDropdown
+                                        showYearDropdown
+                                        dropdownMode="select"
                                         onChange={(value) => {
                                           props.handleChange("invoiceDate")(value)
                                         }}
@@ -584,6 +630,9 @@ class DetailCustomerInvoice extends React.Component {
                                           id="invoiceDueDate"
                                           name="invoiceDueDate"
                                           placeholderText=""
+                                          showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                           value={moment(props.values.invoiceDueDate).format('DD-MM-YYYY')}
                                           onChange={(value) => {
                                             props.handleChange("invoiceDueDate")(value)
@@ -787,8 +836,8 @@ class DetailCustomerInvoice extends React.Component {
                                                         id="discount_percentage"
                                                         name="discount_percentage"
                                                         placeholder="Discount Percentage"
-                                                     
-                                                     />
+
+                                                      />
                                                     </FormGroup>
                                                   </Col>
                                                   :

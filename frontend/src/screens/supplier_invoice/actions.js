@@ -190,7 +190,7 @@ export const removeBulk = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: '/rest/supplierinvoice/deletes',
+      url: '/rest/invoice/deletes',
       data: obj
     }
     return authApi(data).then(res => {

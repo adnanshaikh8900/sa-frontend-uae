@@ -290,7 +290,7 @@ class CreateJournal extends React.Component {
     // const postData = {...initValue,...values,...{journalLineItems: this.state.data}}
     this.props.journalCreateActions.createJournal(postData).then(res => {
       if (res.status === 200) {
-        // resetForm();
+        resetForm();
         this.props.commonActions.tostifyAlert('success', 'New Journal Created Successfully')
         if (this.state.createMore) {
           this.setState({ createMore: false });
@@ -333,7 +333,7 @@ class CreateJournal extends React.Component {
                       <Formik
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values)
+                          this.handleSubmit(values,resetForm)
                         }}
                         validationSchema={
                           Yup.object().shape({
@@ -354,6 +354,9 @@ class CreateJournal extends React.Component {
                                     name="journalDate"
                                     placeholderText="Journal Date"
                                     selected={props.values.journalDate}
+                                    showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                     onChange={(value) => {
                                       props.handleChange("journalDate")(value)
                                     }}
@@ -516,7 +519,14 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={
+                                      () => {
+                                        this.setState({ createMore: false }, () => {
+                                          props.handleSubmit()
+                                        })
+                                      }
+                                    }
+                                  >
                                     <i className="fa fa-dot-circle-o"></i> Create
                               </Button>
                                   <Button type="button" color="primary" className="btn-square mr-3"

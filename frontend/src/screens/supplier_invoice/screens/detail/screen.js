@@ -23,7 +23,7 @@ import * as SupplierInvoiceDetailActions from './actions';
 import * as  SupplierInvoiceActions from "../../actions";
 
 import { SupplierModal } from '../../sections'
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal} from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -80,7 +80,7 @@ class DetailSupplierInvoice extends React.Component {
     // this.options = {
     //   paginationPosition: 'top'
     // }
-
+    this.formRef = React.createRef()
     this.initializeData = this.initializeData.bind(this)
     this.renderActions = this.renderActions.bind(this)
     this.renderDescription = this.renderDescription.bind(this)
@@ -97,6 +97,9 @@ class DetailSupplierInvoice extends React.Component {
     this.closeSupplierModal = this.closeSupplierModal.bind(this)
     this.openSupplierModal = this.openSupplierModal.bind(this)
     this.getCurrentUser = this.getCurrentUser.bind(this)
+    this.deleteInvoice = this.deleteInvoice.bind(this)
+    this.removeInvoice = this.removeInvoice.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
   }
 
   // renderActions (cell, row) {
@@ -134,7 +137,7 @@ class DetailSupplierInvoice extends React.Component {
               invoiceDate: res.data.invoiceDate ? res.data.invoiceDate : '',
               contactId: res.data.contactId ? res.data.contactId : '',
               project: res.data.projectId ? res.data.projectId : '',
-              invoice_reference_number: res.data.referenceNumber ? res.data.referenceNumber : '',
+              invoice_number: res.data.referenceNumber ? res.data.referenceNumber : '',
               total_net: 0,
               invoiceVATAmount: res.data.totalVatAmount ? res.data.totalVatAmount : '',
               totalAmount: res.data.totalAmount ? res.data.totalAmount : '',
@@ -283,6 +286,35 @@ class DetailSupplierInvoice extends React.Component {
     )
   }
 
+  deleteInvoice() {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removeInvoice}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeInvoice() {
+    const id= this.props.location.state.id;
+    this.props.supplierInvoiceDetailActions.deleteInvoice(id).then(res=>{
+      console.log(res.status)
+      if(res.status == 200) {
+        this.props.commonActions.tostifyAlert('success','Data Removed Successfully')
+        this.props.history.push('/admin/expense/supplier-invoice')
+      }
+    }).catch(err=> {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
 
   updateAmount(data) {
     const { vat_list } = this.props;
@@ -334,16 +366,17 @@ class DetailSupplierInvoice extends React.Component {
       invoiceDate,
       contactId,
       project,
-      invoice_reference_number,
+      invoice_number,
       invoiceVATAmount,
       totalAmount,
       notes
     } = data
 
+
     let formData = new FormData();
     formData.append("type", 1);
     formData.append("invoiceId", id);
-    formData.append("referenceNumber", invoice_reference_number !== null ? invoice_reference_number : "");
+    formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
     formData.append("invoiceDate", typeof invoiceDate === "date" ? invoiceDate : moment(invoiceDate).toDate());
     formData.append("invoiceDueDate", typeof invoiceDueDate === "date" ? invoiceDueDate : moment(invoiceDueDate).toDate())
     formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
@@ -353,8 +386,8 @@ class DetailSupplierInvoice extends React.Component {
     formData.append('lineItemsString', JSON.stringify(this.state.data));
     formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
     formData.append('totalAmount', this.state.initValue.totalAmount);
-    if (contactId !== null && contactId.value) {
-      formData.append("contactId", contactId.value);
+    if (contactId) {
+      formData.append("contactId", contactId);
     }
     if (currency !== null && currency.value) {
       formData.append("currencyCode", currency.value);
@@ -381,7 +414,7 @@ class DetailSupplierInvoice extends React.Component {
 
   getCurrentUser(data) {
     let option
-    if (data.label || data.value) {
+    if (data && data.label || data.value) {
       option = data
     } else {
       option = {
@@ -389,9 +422,11 @@ class DetailSupplierInvoice extends React.Component {
         value: data.contactId,
       }
     }
-    this.setState({
-      selectedContact: option
-    })
+    // this.setState({
+    //   selectedContact: option
+    // })
+    this.formRef.current.setFieldValue('contactId',option,true)
+
   }
 
   closeSupplierModal(res) {
@@ -409,7 +444,8 @@ class DetailSupplierInvoice extends React.Component {
       discount_option,
       initValue,
       selectedContact,
-      loading
+      loading,
+      dialog
     } = this.state
 
     const { project_list, contact_list, currency_list, supplier_list } = this.props
@@ -430,6 +466,7 @@ class DetailSupplierInvoice extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
+                  {dialog}
                   {loading ?
                     (
                       <Loader />
@@ -440,6 +477,8 @@ class DetailSupplierInvoice extends React.Component {
                         <Col lg={12}>
                           <Formik
                             initialValues={this.state.initValue}
+                            ref={this.formRef}
+                            
                             onSubmit={(values, { resetForm }) => {
 
                               this.handleSubmit(values)
@@ -456,11 +495,15 @@ class DetailSupplierInvoice extends React.Component {
                             validationSchema={
                               Yup.object().shape({
                                 invoice_number: Yup.string()
-                                  .required("Invoice Number is Required"),
+                                .required("Invoice Number is Required"),
+
                                 contactId: Yup.string()
                                   .required("Supplier is Required"),
+
                                 invoiceDate: Yup.date()
                                   .required('Invoice Date is Required'),
+                                  invoiceDueDate: Yup.date()
+                                  .required('Invoice Due Date is Required'),
                               })}
                           >
                             {props => (
@@ -468,15 +511,15 @@ class DetailSupplierInvoice extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="invoice_reference_number">Invoice Number</Label>
+                                      <Label htmlFor="invoice_number">Invoice Number</Label>
                                       <Input
                                         type="text"
-                                        id="invoice_reference_number"
-                                        name="invoice_reference_number"
+                                        id="invoice_number"
+                                        name="invoice_number"
                                         placeholder=""
-                                        value={props.values.invoice_reference_number}
+                                        value={props.values.invoice_number }
                                         onChange={(value) => {
-                                          props.handleChange("invoice_reference_number")(value)
+                                          props.handleChange("invoice_number")(value)
                                         }}
                                         className={
                                           props.errors.invoice_number && props.touched.invoice_number
@@ -508,14 +551,16 @@ class DetailSupplierInvoice extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="contactId">Supplier Name</Label>
                                       <Select
-
                                         id="contactId"
                                         name="contactId"
+                                        onBlur={props.handlerBlur}
                                         options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list , 'Supplier Name') : []}
-                                        value={selectedContact}
+                                        value={props.values.contactId || ''}
+
+                                        
                                         onChange={option => {
-                                          props.handleChange('contactId')(option)
-                                          this.getCurrentUser(option)
+                                          props.handleChange('contactId')(option.value)
+                                          // this.getCurrentUser(option)
                                         }}
                                         className={
                                           props.errors.contactId && props.touched.contactId
@@ -523,6 +568,7 @@ class DetailSupplierInvoice extends React.Component {
                                             : ''
                                         }
                                       />
+                                      {console.log(props.errors)}
                                       {props.errors.contactId && props.touched.contactId && (
                                         <div className="invalid-feedback">{props.errors.contactId}</div>
                                       )}
@@ -574,6 +620,9 @@ class DetailSupplierInvoice extends React.Component {
                                         id="invoiceDate"
                                         name="invoiceDate"
                                         placeholderText=""
+                                        showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                         value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
 
                                         onChange={(value) => {
@@ -591,15 +640,21 @@ class DetailSupplierInvoice extends React.Component {
                                       <Label htmlFor="due_date">Invoice Due Date</Label>
                                       <div>
                                         <DatePicker
-                                          className="form-control"
+                                         className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}  
                                           id="invoiceDueDate"
                                           name="invoiceDueDate"
                                           placeholderText=""
+                                          showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                           value={moment(props.values.invoiceDueDate).format('DD-MM-YYYY')}
                                           onChange={(value) => {
                                             props.handleChange("invoiceDueDate")(value)
                                           }}
-                                        />
+                                          />
+                                          {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
+                                            <div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
+                                          )}
                                       </div>
                                     </FormGroup>
                                   </Col>

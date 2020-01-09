@@ -332,6 +332,9 @@ class User extends React.Component {
                               id="date"
                               name="dob"
                               placeholderText="Date of Birth"
+                              showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                               selected={filterData.dob}
                               value={filterData.dob}
                               onChange={(value) => {

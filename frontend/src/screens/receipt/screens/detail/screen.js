@@ -212,6 +212,8 @@ class DetailReceipt extends React.Component {
                             .required('Customer is required'),
                             amount: Yup.string()
                             .required('Amount is required')
+                            .matches(/^[0-9]+$/, {message: "Please enter valid Amount.", excludeEmptyString: false})
+
                           })}
                         >
                           {props => (
@@ -239,6 +241,9 @@ class DetailReceipt extends React.Component {
                                      className="form-control"
                                      id="date"
                                      name="receiptDate"
+                                     showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                     placeholderText="Receipt Date"
                                     value={props.values.receiptDate ? moment(props.values.receiptDate).format('DD-MM-YYYY') : ''}
                                     onChange={(value) => {
@@ -323,8 +328,11 @@ class DetailReceipt extends React.Component {
                                       placeholder="Amount"
                                       value={props.values.amount}
                                       onChange={(value) => {props.handleChange('amount')(value)}}
-  
-                                    />
+                                      className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
+                                      />
+                                      {props.errors.amount && props.touched.amount && (
+                                        <div className="invalid-feedback">{props.errors.amount}</div>
+                                      )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={4}>

@@ -320,7 +320,7 @@ class SupplierInvoice extends React.Component {
     return (
       <div className="supplier-invoice-screen">
         <div className="animated fadeIn">
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
             <CardHeader>
               <Row>
@@ -418,6 +418,9 @@ class SupplierInvoice extends React.Component {
                               id="date"
                               name="invoiceDate"
                               placeholderText="Invoice Date"
+                              showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                               selected={filterData.invoiceDate}
                               // value={filterData.invoiceDate}
                               onChange={(value) => {
@@ -431,6 +434,9 @@ class SupplierInvoice extends React.Component {
                               id="date"
                               name="invoiceDueDate"
                               placeholderText="Invoice Due Date"
+                              showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                               selected={filterData.invoiceDueDate}
                               onChange={(value) => {
                                 this.handleChange(value, "invoiceDueDate")

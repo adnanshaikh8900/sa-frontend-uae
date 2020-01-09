@@ -75,7 +75,7 @@ class CreateReceipt extends React.Component {
     this.props.receiptActions.getInvoiceList();
   }
 
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     this.props.receiptCreateActions.createReceipt(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Receipt Created Successfully!')
@@ -83,6 +83,7 @@ class CreateReceipt extends React.Component {
           this.setState({
             createMore: false
           })
+          resetForm()
         } else this.props.history.push('/admin/revenue/receipt')
       }
     }).catch((err) => {
@@ -119,7 +120,7 @@ class CreateReceipt extends React.Component {
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
 
-                          this.handleSubmit(values)
+                          this.handleSubmit(values,resetForm)
                         }}
                       validationSchema={
                         Yup.object().shape({
@@ -131,6 +132,7 @@ class CreateReceipt extends React.Component {
                         .required('Customer is required'),
                         amount: Yup.string()
                         .required('Amount is required')
+                        .matches(/^[0-9]+$/, {message: "Please enter valid Amount.", excludeEmptyString: false})
                       })}
                       >
                         {props => (
@@ -144,6 +146,7 @@ class CreateReceipt extends React.Component {
                                     id="receiptNo"
                                     name="receiptNo"
                                     placeholder="Receipt Number"
+                                    value={props.values.receiptNo}
                                     onChange={(value) => {
                                       props.handleChange("receiptNo")(value)
                                     }}
@@ -159,6 +162,9 @@ class CreateReceipt extends React.Component {
                                    name="receiptDate"
                                   placeholderText="Receipt Date"
                                   selected={props.values.receiptDate}
+                                  showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                   onChange={(value) => {
                                   props.handleChange("receiptDate")(value)
                               }}
@@ -182,6 +188,7 @@ class CreateReceipt extends React.Component {
                                     placeholder="Reference Number"
                                     onChange={option => {props.handleChange('referenceCode')(option)}}
                                     className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
+                                    value={props.values.referenceCode}
 
                                     />
                                     {props.errors.referenceCode && props.touched.referenceCode && (
@@ -254,6 +261,7 @@ class CreateReceipt extends React.Component {
                                     name="amount"
                                     placeholder="Amount"
                                     onChange={(value) => {props.handleChange('amount')(value)}}
+                                    value={props.values.amount}
 
                                     className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
 
@@ -272,6 +280,7 @@ class CreateReceipt extends React.Component {
                                     name="unusedAmount"
                                     placeholder="Unused Amount"
                                     onChange={(value) => {props.handleChange('unusedAmount')(value)}}
+                                    value={props.values.unusedAmount}
                                     
                                   />
                                 </FormGroup>
@@ -280,7 +289,12 @@ class CreateReceipt extends React.Component {
                             <Row>
                                 <Col lg={12} className="mt-5">
                                   <FormGroup className="text-right">
-                                    <Button type="submit" color="primary" className="btn-square mr-3">
+                                    <Button type="button" color="primary" className="btn-square mr-3"  onClick={
+                                        () => {
+                                          this.setState({createMore: false})
+                                          props.handleSubmit()
+                                        }
+                                      }>
                                       <i className="fa fa-dot-circle-o"></i> Create
                                     </Button>
                                     <Button type="button" color="primary" className="btn-square mr-3"
@@ -303,7 +317,7 @@ class CreateReceipt extends React.Component {
                           </Form>
                         )
                       }
-                     </Formik>}
+                     </Formik>
                     
                  </Col>
                   </Row>

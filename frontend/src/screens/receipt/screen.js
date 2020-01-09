@@ -243,7 +243,7 @@ class Receipt extends React.Component {
     return (
       <div className="receipt-screen">
         <div className="animated fadeIn">
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          // <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
           {dialog}
           <Card>
             <CardHeader>
@@ -307,6 +307,9 @@ class Receipt extends React.Component {
                               name="receiptDate"
                               placeholderText="Receipt Date"
                               selected={filterData.receiptDate}
+                              showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                               onChange={(value) => {
                                 this.handleChange(value, "receiptDate")
                               }}

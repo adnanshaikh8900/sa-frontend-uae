@@ -125,7 +125,7 @@ class CreatePayment extends React.Component {
     })
   }
 
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     const {
       bank,
       supplier,
@@ -282,8 +282,8 @@ class CreatePayment extends React.Component {
                         initialValues={initialVals}
                         onSubmit={
                           (values, { resetForm }) => {
-                            this.handleSubmit(values)
-                            resetForm(initialVals)
+                            this.handleSubmit(values,resetForm)
+                           
                           }}
                         validationSchema={
                           Yup.object().shape({
@@ -435,6 +435,9 @@ class CreatePayment extends React.Component {
                                           selected={props.values.paymentDate}
                                           dateFormat="dd/MM/yyyy"
                                           maxDate={new Date()}
+                                          showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                           onChange={(value) => {
                                             props.handleChange("paymentDate")(value)
                                           }}
@@ -507,7 +510,12 @@ class CreatePayment extends React.Component {
                               <Row>
                                 <Col lg={12} className="mt-5">
                                   <FormGroup className="text-right">
-                                    <Button type="submit" color="primary" className="btn-square mr-3">
+                                    <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                      this.setState({ createMore: false }, () => {
+                                        props.handleSubmit()
+                                      })
+                                    }
+                                    }>
                                       <i className="fa fa-dot-circle-o"></i> Create
                         </Button>
                                     <Button type="submit" color="primary" className="btn-square mr-3" onClick={() => {

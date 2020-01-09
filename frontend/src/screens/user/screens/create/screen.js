@@ -94,7 +94,7 @@ class CreateUser extends React.Component {
     });
   }
 
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     const {
       firstName,
       lastName,
@@ -127,6 +127,7 @@ class CreateUser extends React.Component {
           this.setState({
             createMore: false
           })
+          resetForm()
         } else {
           this.props.history.push('/admin/settings/user')
         }
@@ -162,7 +163,7 @@ class CreateUser extends React.Component {
                       <Formik
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values)
+                          this.handleSubmit(values,resetForm)
                           // resetForm(this.state.initValue)
 
                           // this.setState({
@@ -280,6 +281,9 @@ class CreateUser extends React.Component {
                                         className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                         id="dob "
                                         name="dob "
+                                        showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                         placeholderText="Enter Birth Date"
                                         selected={props.values.dob}
                                         onChange={(value) => {
@@ -413,12 +417,21 @@ class CreateUser extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                    this.setState({ createMore: false }, () => {
+                                      props.handleSubmit()
+                                    })
+                                  }}>
                                     <i className="fa fa-dot-circle-o"></i> Create
-                              </Button>
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-repeat"></i> Create and More
-                              </Button>
+                                      </Button>
+                                  <Button name="button" color="primary" className="btn-square mr-3"
+                                    onClick={() => {
+                                      this.setState({ createMore: true }, () => {
+                                        props.handleSubmit()
+                                      })
+                                    }}>
+                                    <i className="fa fa-refresh"></i> Create and More
+                                      </Button>
                                   <Button color="secondary" className="btn-square"
                                     onClick={() => { this.props.history.push('/admin/settings/user') }}>
                                     <i className="fa fa-ban"></i> Cancel

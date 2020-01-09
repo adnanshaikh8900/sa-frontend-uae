@@ -314,8 +314,13 @@ class ChartAccount extends React.Component {
                                 <Select
                                   options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list,'Type') : []}
                                   onChange={(val) => {
-                                    this.handleChange(val['value'], 'transactionType')
+                                    if(val && val['value']) {
+                                      this.handleChange(val['value'], 'transactionType')
                                     this.setState({ 'selectedTransactionType': val['value'] })
+                                    } else {
+                                      this.handleChange('', 'transactionType')
+                                      this.setState({ 'selectedTransactionType': '' })
+                                    }
                                   }}
                                   className="select-default-width"
                                   placeholder="Transaction Type"

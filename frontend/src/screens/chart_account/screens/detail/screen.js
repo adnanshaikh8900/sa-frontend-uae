@@ -242,7 +242,13 @@ class DetailChartAccount extends React.Component {
                                     className="select-default-width"
                                     options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list,'Type') : []}
                                     value={props.values.transactionType}
-                                    onChange={option => props.handleChange('transactionType')(option.value)}
+                                    onChange={option => {
+                                      if(option && option.value) {
+                                        props.handleChange('transactionType')(option.value)
+                                      } else {
+                                        props.handleChange('transactionType')('')
+                                      }
+                                    }}
                                     placeholder="Select Type"
                                     id="transactionType"
                                     name="transactionType"

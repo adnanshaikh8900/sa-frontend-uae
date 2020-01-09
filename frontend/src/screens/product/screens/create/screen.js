@@ -239,7 +239,11 @@ class CreateProduct extends React.Component {
                                         // this.setState({
                                         //   selectedParentProduct: option.value
                                         // })
-                                        props.handleChange("productCategoryId")(option.value);
+                                       if(option.value) {
+                                        props.handleChange("productCategoryId")(option.value)
+                                       } else {
+                                        props.handleChange("productCategoryId")('')
+                                       }
                                       }}
                                     />
                                   </FormGroup>
@@ -274,7 +278,11 @@ class CreateProduct extends React.Component {
                                         // this.setState({
                                         //   selectedVatCategory: option.value
                                         // })
-                                        props.handleChange("vatCategoryId")(option.value);
+                                        if(option.value) {
+                                          props.handleChange("vatCategoryId")(option.value)
+                                        } else {
+                                          props.handleChange("vatCategoryId")('')
+                                        }
                                       }}
                                       className={
                                         props.errors.vatCategoryId && props.touched.vatCategoryId
@@ -319,7 +327,11 @@ class CreateProduct extends React.Component {
                                         // this.setState({
                                         //   selectedWareHouse: option.value
                                         // })
-                                        props.handleChange("productWarehouseId")(option.value);
+                                        if(option.value) {
+                                          props.handleChange("productWarehouseId")(option.value)
+                                        } else {
+                                          props.handleChange("productWarehouseId")('')
+                                        }
                                       }}
                                     />
                                   </FormGroup>

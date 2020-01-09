@@ -411,7 +411,13 @@ class CustomerInvoice extends React.Component {
                               name="customer"
                               options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
                               value={filterData.customerId}
-                              onChange={(option) => { this.handleChange(option.value, 'customerId') }}
+                              onChange={(option) => { 
+                                if(option && option.value) {
+                                  this.handleChange(option.value, 'customerId')
+                                } else {
+                                  this.handleChange('', 'customerId')
+                                }
+                               }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -456,7 +462,13 @@ class CustomerInvoice extends React.Component {
                               className=""
                               options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list, 'Status') : []}
                               value={this.state.filterData.status}
-                              onChange={(option) => { this.handleChange(option.value, 'status') }}
+                              onChange={(option) => { 
+                                if(option && option.value) {
+                                  this.handleChange(option.value, 'status')
+                                } else {
+                                  this.handleChange('', 'status')
+                                }
+                               }}
                               placeholder="Status"
                             />
                           </Col>

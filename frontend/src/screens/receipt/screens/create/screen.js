@@ -206,8 +206,9 @@ class CreateReceipt extends React.Component {
                                 value={props.values.contactId}
                                 onChange={(option) => {
                                   if (option && option.value) {
-                                    console.log(option.value)
                                     props.handleChange('contactId')(option.value)
+                                  } else {
+                                    props.handleChange('contactId')('')
                                   }
                                 }}
                                 className={`${props.errors.contactId && props.touched.contactId ? "is-invalid" : ""}`}
@@ -231,6 +232,9 @@ class CreateReceipt extends React.Component {
                                   onChange={(option) => {
                                   if (option && option.value) {
                                     props.handleChange('invoiceId')(option.value)
+                                  } else {
+                                    props.handleChange('invoiceId')('')
+
                                   }
                                 }}
                               />

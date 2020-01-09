@@ -236,7 +236,11 @@ class CreateProject extends React.Component {
                                       this.setState({
                                         selectedContact: option.value
                                       })
-                                      props.handleChange("contactId")(option.value);
+                                      if(option.value) {
+                                        props.handleChange("contactId")(option.value)
+                                      } else {
+                                        props.handleChange("contactId")('')
+                                      }
                                     }}
                                     id="contactId"
                                     name="contactId"
@@ -315,7 +319,11 @@ class CreateProject extends React.Component {
                                       this.setState({
                                         selectedCurrency: option.value
                                       })
-                                      props.handleChange("currency")(option.value);
+                                      if(option && option.value) {
+                                        props.handleChange('currencyCode')(option.value)
+                                      } else {
+                                        props.handleChange('currencyCode')('')
+                                      }
                                     }}
                                     placeholder="Select currency"
                                     value={props.values.currency}

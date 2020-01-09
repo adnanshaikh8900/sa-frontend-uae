@@ -322,7 +322,11 @@ class ContactModal extends React.Component {
                           this.setState({
                           selectedContactCountry: option.value
                           })
-                          props.handleChange("country")(option.value);
+                          if(option.value) {
+                            props.handleChange("country")(option.value);
+                          } else {
+                            props.handleChange("country")('');
+                          }
                         }}
                         placeholder="Select country"
                         value={this.state.selectedContactCountry}
@@ -351,10 +355,14 @@ class ContactModal extends React.Component {
                         id="currency"
                         onChange={(option) => {
                           this.setState({
-                          selectedContactCurrency: option.value
+                          selectedContactCurrency: option.value ?  option.value : ''
                           })
-                          props.handleChange("currency")(option.value);
-                        }}
+                            if(option && option.value) {
+                              props.handleChange('currencyCode')(option.value)
+                            } else {
+                              props.handleChange('currencyCode')('')
+                            }
+                          }}
                         placeholder="Select currency"
                         value={this.state.selectedContactCurrency}
                         name="currency"

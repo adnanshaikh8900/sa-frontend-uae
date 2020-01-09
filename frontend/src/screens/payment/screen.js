@@ -302,7 +302,13 @@ class Payment extends React.Component {
                               name="supplier"
                               options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list , 'Supplier Name') : []}
                               value={filterData.supplierId}
-                              onChange={(option) => { this.handleChange(option.value, 'supplierId') }}
+                              onChange={(option) => { 
+                                if(option && option.value) {
+                                  this.handleChange(option.value, 'supplierId')
+                                } else {
+                                  this.handleChange('', 'supplierId')
+                                }
+                               }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">

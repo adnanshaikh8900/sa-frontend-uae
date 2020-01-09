@@ -1,0 +1,58 @@
+.import-transaction-screen {
+    fieldset {
+        border: 1px solid black!important;
+        padding: 20px !important;
+    }
+    label {
+  
+      font-size: 1rem;
+      font-weight: 500;
+  }
+    legend{
+        width: inherit !important;
+        padding: 10px !important;
+        line-height: 0!important;
+        margin-bottom: 0 !important;
+    }
+    .control {
+        margin: 0 10px;
+        label {
+            margin: 10px;
+        }
+    }
+    .table_option {
+        .form-group {
+            display: flex!important;
+        }
+        label {
+            width: 20%;
+        }
+        Input{
+            width: 50%!important;
+            border: 1px solid black!important; 
+          }
+          Input::placeholder{
+              color: black!important;
+              opacity: 1;
+             }
+      .Select {
+              width: 50% !important;
+      }
+      }
+           .Select {
+              border: 0.5px solid rgba(#0000, .8)!important;
+              input{
+                  border:none!important;
+              }
+              .Select-placeholder {
+                  color: black!important;
+              }
+          }
+          #name{
+              border: 1px solid black!important;
+            }
+            #name::placeholder{
+              color: black!important;
+              opacity: 1;
+             }
+}

@@ -555,12 +555,13 @@ class DetailSupplierInvoice extends React.Component {
                                         name="contactId"
                                         onBlur={props.handlerBlur}
                                         options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list , 'Supplier Name') : []}
-                                        value={props.values.contactId || ''}
-
-                                        
-                                        onChange={option => {
-                                          props.handleChange('contactId')(option.value)
-                                          // this.getCurrentUser(option)
+                                        value={props.values.contactId}
+                                        onChange={(option) => {
+                                          if (option && option.value) {
+                                            props.handleChange('contactId')(option.value)
+                                          } else {
+                                            props.handleChange('contactId')('')
+                                          }
                                         }}
                                         className={
                                           props.errors.contactId && props.touched.contactId

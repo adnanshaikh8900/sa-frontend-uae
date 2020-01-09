@@ -498,9 +498,12 @@ class CreateSupplierInvoice extends React.Component {
                                     name="contactId"
                                     options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list,'Supplier Name') : []}
                                     value={props.values.contactId}
-                                    onChange={option => {
-                                      props.handleChange('contactId')(option.value)
-                                      // this.getCurrentUser(option)
+                                    onChange={(option) => {
+                                      if (option && option.value) {
+                                        props.handleChange('contactId')(option.value)
+                                      } else {
+                                        props.handleChange('contactId')('')
+                                      }
                                     }}
                                     className={
                                       props.errors.contactId && props.touched.contactId

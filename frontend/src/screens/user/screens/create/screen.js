@@ -304,7 +304,13 @@ class CreateUser extends React.Component {
                                         className="select-default-width"
                                         options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
                                         value={props.values.roleId}
-                                        onChange={option => props.handleChange('roleId')(option.value)}
+                                        onChange={option => {
+                                          if(option.value) {
+                                            props.handleChange('roleId')(option.value)
+                                          } else {
+                                            props.handleChange('roleId')('')
+                                          }
+                                        }}
                                         placeholder="Select Role"
                                         id="roleId"
                                         name="roleId"

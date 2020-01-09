@@ -590,7 +590,13 @@ class Profile extends React.Component {
                                                 className="select-default-width"
                                                 options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                                                 value={props.values.roleId}
-                                                onChange={option => props.handleChange('roleId')(option.value)}
+                                                onChange={option => {
+                                                  if(option.value) {
+                                                    props.handleChange('roleId')(option.value)
+                                                  } else {
+                                                    props.handleChange('roleId')('')
+                                                  }
+                                                }}
                                                 placeholder="Select Role"
                                                 id="roleId"
                                                 name="roleId"
@@ -890,7 +896,13 @@ class Profile extends React.Component {
                                                 className="select-default-width"
                                                 options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list, 'Company Type Code') : []}
                                                 value={props.values.companyTypeCode}
-                                                onChange={option => props.handleChange('companyTypeCode')(option.value)}
+                                                onChange={option => {
+                                                  if(option.value) {
+                                                    props.handleChange('companyTypeCode')(option.value)
+                                                  } else {
+                                                    props.handleChange('companyTypeCode')('')
+                                                  }
+                                                }}
                                                 placeholder="Select Company"
                                                 id="companyTypeCode"
                                                 name="companyTypeCode"
@@ -913,7 +925,13 @@ class Profile extends React.Component {
                                                 className="select-default-width"
                                                 options={industry_type_list ? selectOptionsFactory.renderOptions('label', 'value', industry_type_list, 'Industry Type') : []}
                                                 value={props.values.industryTypeCode}
-                                                onChange={option => props.handleChange('industryTypeCode')(option.value)}
+                                                onChange={option => {
+                                                  if(option.value) {
+                                                    props.handleChange('industryTypeCode')(option.value)
+                                                  } else {
+                                                    props.handleChange('industryTypeCode')('')
+                                                  }
+                                                }}
                                                 placeholder="Select Industry Type Code"
                                                 id="industryTypeCode"
                                                 name="industryTypeCode"
@@ -936,8 +954,14 @@ class Profile extends React.Component {
                                                 className="select-default-width"
                                                 options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                                 value={props.values.currencyCode}
-                                                onChange={option => {
-                                                  props.handleChange('currencyCode')(option.value)
+                                          
+                                                  onChange={option => {
+                                                    if(option && option.value) {
+                                                      props.handleChange('currencyCode')(option.value)
+                                                    } else {
+                                                      props.handleChange('currencyCode')('')
+                                                    }
+                                             
                                                 }}
                                                 placeholder="Select Currency"
                                                 id="currencyCode"
@@ -1373,8 +1397,11 @@ class Profile extends React.Component {
                                             options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                             value={props.values.companyCountryCode}
                                             onChange={option => {
-
-                                              props.handleChange('companyCountryCode')(option.value)
+                                              if(option.value) {
+                                                props.handleChange('companyCountryCode')(option.value)
+                                              } else {
+                                                props.handleChange('companyCountryCode')('')
+                                              }
                                             }}
                                             placeholder="Select Currency"
                                             id="companyCountryCode"

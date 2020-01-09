@@ -288,9 +288,12 @@ class DetailProject extends React.Component {
                                       this.setState({
                                         selectedContact: option.value
                                       })
-            
-                                      props.handleChange("contactId")(option.value);
-                                    }}
+                                        if (option && option.value) {
+                                          props.handleChange('contactId')(option.value)
+                                        } else {
+                                          props.handleChange('contactId')('')
+                                        }
+                                      }}
                                     id="contactId"
                                     name="contactId"
                                     placeholder="Select Contact"
@@ -367,9 +370,13 @@ class DetailProject extends React.Component {
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     onChange={(option) => {
                                       this.setState({
-                                        selectedCurrency: option.value
+                                        selectedCurrency: option.value ? option.value : ''
                                       })
-                                      props.handleChange("currencyCode")(option.value);
+                                      if(option && option.value) {
+                                        props.handleChange('currencyCode')(option.value)
+                                      } else {
+                                        props.handleChange('currencyCode')('')
+                                      }
                                     }}
                                     placeholder="Select currencyCode"
                                     value={props.values.currencyCode}

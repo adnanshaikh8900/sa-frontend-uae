@@ -297,7 +297,7 @@ class SupplierInvoice extends React.Component {
 
   render() {
     const { loading, filterData, dialog, selectedRows } = this.state
-    const { supplier_invoice_list, status_list ,supplier_list} = this.props
+    const { supplier_invoice_list, status_list, supplier_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -404,9 +404,15 @@ class SupplierInvoice extends React.Component {
                               placeholder="Select Supplier"
                               id="supplier"
                               name="supplier"
-                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list,'Supplier Name') : []}
+                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list, 'Supplier Name') : []}
                               value={filterData.supplierId}
-                              onChange={(option) => { this.handleChange(option.value, 'supplierId') }}
+                              onChange={(option) => { 
+                                if(option && option.value) {
+                                  this.handleChange(option.value, 'supplierId')
+                                } else {
+                                  this.handleChange('', 'supplierId')
+                                }
+                               }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -419,8 +425,8 @@ class SupplierInvoice extends React.Component {
                               name="invoiceDate"
                               placeholderText="Invoice Date"
                               showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                              showYearDropdown
+                              dropdownMode="select"
                               selected={filterData.invoiceDate}
                               // value={filterData.invoiceDate}
                               onChange={(value) => {
@@ -435,8 +441,8 @@ class SupplierInvoice extends React.Component {
                               name="invoiceDueDate"
                               placeholderText="Invoice Due Date"
                               showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                              showYearDropdown
+                              dropdownMode="select"
                               selected={filterData.invoiceDueDate}
                               onChange={(value) => {
                                 this.handleChange(value, "invoiceDueDate")
@@ -452,9 +458,15 @@ class SupplierInvoice extends React.Component {
                               // options={status_list ? status_list.map(item => {
                               //   return { label: item, value: item }
                               // }) : ''}
-                              options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list,'Status') : []}
+                              options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list, 'Status') : []}
                               value={this.state.filterData.status}
-                              onChange={(option) => { this.handleChange(option.value, 'status') }}
+                              onChange={(option) => { 
+                                if(option && option.value) {
+                                  this.handleChange(option.value, 'status')
+                                } else {
+                                  this.handleChange('', 'status')
+                                }
+                               }}
                               placeholder="Status"
                             />
                           </Col>

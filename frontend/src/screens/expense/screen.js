@@ -317,7 +317,13 @@ class Expense extends React.Component {
                                 name="expenseCategoryId"
                                 value={filterData.transactionCategoryId}
                                 options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
-                                onChange={(option) => { this.handleChange(option.value, 'transactionCategoryId') }}
+                                onChange={(option) => { 
+                                  if(option && option.value) {
+                                    this.handleChange(option.value, 'transactionCategoryId')
+                                  } else {
+                                    this.handleChange('', 'transactionCategoryId')
+                                  }
+                                 }}
                                 placeholder="Expense Category"
                               />
                             </FormGroup>

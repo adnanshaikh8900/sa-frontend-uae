@@ -65,7 +65,7 @@ class User extends React.Component {
       filterData: {
         name: '',
         dob: '',
-        active: true,
+        active: 'true',
         // companyId: '',
         roleId: ''
       },
@@ -73,8 +73,9 @@ class User extends React.Component {
     }
 
     this.statusOption = [
-      { label: 'Active', value: true },
-      { label: 'InActive', value: false },
+      { label: 'Select Status', value: ''},
+      { label: 'Active', value: 'true' },
+      { label: 'InActive', value: 'false' },
     ]
 
     this.initializeData = this.initializeData.bind(this)
@@ -364,7 +365,7 @@ class User extends React.Component {
                               placeholder="Select Status"
                               id="active"
                               name="active"
-                              options={this.statusOption ? selectOptionsFactory.renderOptions('label', 'value', this.statusOption, 'Status') : []}
+                              options={this.statusOption ? this.statusOption : []}
                               // value={filterData.supplierId}
                               value={selectedStatus}
                               onChange={(option) => {
@@ -372,8 +373,8 @@ class User extends React.Component {
                                   this.handleChange(option.value, 'active')
                                 this.setState({ selectedStatus: option.value })
                                 } else {
-                                this.handleChange(true, 'active')
-                                this.setState({ selectedStatus: true })
+                                this.handleChange('true', 'active')
+                                this.setState({ selectedStatus: 'true' })
                                 }
                               }}
                             />

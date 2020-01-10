@@ -168,26 +168,27 @@ class CustomerInvoice extends React.Component {
 
 
   renderActions(cell, row) {
+    console.log(row)
     return (
       <div>
         <ButtonDropdown
-          isOpen={this.state.actionButtons[row.transactionCategoryCode]}
-          toggle={() => this.toggleActionButton(row.transactionCategoryCode)}
+          isOpen={this.state.actionButtons[row.id]}
+          toggle={() => this.toggleActionButton(row.id)}
         >
+          {console.log( this.state.actionButtons[row.id])}
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
-              this.state.actionButtons[row.transactionCategoryCode] === true ?
+              this.state.actionButtons[row.id] === true ?
                 <i className="fas fa-chevron-up" />
                 :
                 <i className="fas fa-chevron-down" />
             }
           </DropdownToggle>
           <DropdownMenu right>
-            <DropdownItem onClick={() => {
-              console.log('se')
-              this.props.history.push('/admin/revenue/customer-invoice/detail', { id: row.id })
-            }}>
+            <DropdownItem >
+              <div onClick={() => {this.props.history.push('/admin/revenue/customer-invoice/detail', { id: row.id })}}>
               <i className="fas fa-edit" /> Edit
+              </div>
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-heart" /> Post
@@ -484,10 +485,11 @@ class CustomerInvoice extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={customer_invoice_data}
+                          data={customer_invoice_data ? customer_invoice_data : []}
                           version="4"
                           hover
                           pagination
+                          keyField="id"
                           totalSize={customer_invoice_list ? customer_invoice_list.length : 0}
                           className="customer-invoice-table"
                         >
@@ -501,7 +503,7 @@ class CustomerInvoice extends React.Component {
                             Status
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            isKey
+                           
                             dataField="customerName"
                             dataSort
                           >

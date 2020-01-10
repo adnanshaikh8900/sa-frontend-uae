@@ -172,12 +172,12 @@ class SupplierInvoice extends React.Component {
     return (
       <div>
         <ButtonDropdown
-          isOpen={this.state.actionButtons[row.transactionCategoryCode]}
-          toggle={() => this.toggleActionButton(row.transactionCategoryCode)}
+          isOpen={this.state.actionButtons[row.id]}
+          toggle={() => this.toggleActionButton(row.id)}
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
-              this.state.actionButtons[row.transactionCategoryCode] === true ?
+              this.state.actionButtons[row.id] === true ?
                 <i className="fas fa-chevron-up" />
                 :
                 <i className="fas fa-chevron-down" />
@@ -485,6 +485,7 @@ class SupplierInvoice extends React.Component {
                           data={supplier_invoice_data}
                           version="4"
                           hover
+                          keyField="id"
                           pagination
                           totalSize={supplier_invoice_list ? supplier_invoice_list.length : 0}
                           className="supplier-invoice-table"
@@ -498,8 +499,7 @@ class SupplierInvoice extends React.Component {
                           >
                             Status
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            isKey
+                          <TableHeaderColumn                           
                             dataField="customerName"
                             dataSort
                           >

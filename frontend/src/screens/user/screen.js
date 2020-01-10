@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -28,7 +28,7 @@ import * as UserActions from './actions'
 import {
   CommonActions
 } from 'services/global'
-import {selectOptionsFactory} from 'utils'
+import { selectOptionsFactory } from 'utils'
 
 import moment from 'moment'
 
@@ -43,19 +43,19 @@ const mapStateToProps = (state) => {
   return ({
     user_list: state.user.user_list,
     role_list: state.user.role_list,
-
+    company_type_list: state.user.company_type_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
     userActions: bindActionCreators(UserActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch)
-    
+
   })
 }
 
 class User extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
@@ -66,15 +66,15 @@ class User extends React.Component {
         name: '',
         dob: '',
         active: true,
-        companyId: '',
+        // companyId: '',
         roleId: ''
       },
       selectedStatus: ''
     }
 
     this.statusOption = [
-      {label: 'Active',value: true},
-      {label: 'InActive',value: false},
+      { label: 'Active', value: true },
+      { label: 'InActive', value: false },
     ]
 
     this.initializeData = this.initializeData.bind(this)
@@ -116,11 +116,11 @@ class User extends React.Component {
 
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.initializeData()
   }
 
-  initializeData () {
+  initializeData() {
     let { filterData } = this.state
     const data = {
       pageNo: this.options.page,
@@ -130,19 +130,20 @@ class User extends React.Component {
     this.props.userActions.getUserList(filterData).then(res => {
       if (res.status === 200) {
         this.props.userActions.getRoleList()
+        this.props.userActions.getCompanyTypeList()
         this.setState({ loading: false })
       }
     }).catch((err) => {
       this.setState({
         loading: false
       })
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
   goToDetail(row) {
     console.log(row)
-    this.props.history.push('/admin/settings/user/detail',{ id: row.id })
+    this.props.history.push('/admin/settings/user/detail', { id: row.id })
   }
 
   onPageChange = (page, sizePerPage) => {
@@ -215,7 +216,7 @@ class User extends React.Component {
         })
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -225,19 +226,19 @@ class User extends React.Component {
     })
   }
 
-  renderDate(cell,row) {
+  renderDate(cell, row) {
     return row['dob'] !== null ? moment(row['dob']).format('DD-MM-YYYY') : ''
   }
 
-  renderRole(cell,row) {
+  renderRole(cell, row) {
     return row['role'] ? row['role']['roleName'] : ''
   }
 
-  renderCompany(cell,row) {
+  renderCompany(cell, row) {
     return row['company'] ? row['company']['companyName'] : ''
   }
 
-  renderStatus(cell,row) {
+  renderStatus(cell, row) {
     return (row['active'] !== '') ? (row['active'] === true ? 'Active' : 'InActive') : ''
   }
 
@@ -255,8 +256,8 @@ class User extends React.Component {
 
   render() {
 
-    const { loading, dialog,selectedRows , selectedStatus , filterData} = this.state
-    const { user_list , role_list} = this.props
+    const { loading, dialog, selectedRows, selectedStatus, filterData } = this.state
+    const { user_list, role_list, company_type_list } = this.props
     const containerStyle = {
       zIndex: 1999
     }
@@ -285,11 +286,11 @@ class User extends React.Component {
                       <Loader />
                     </Col>
                   </Row>
-                :
+                  :
                   <Row>
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
-                      <ButtonGroup size="sm">
+                        <ButtonGroup size="sm">
                           <Button
                             color="success"
                             className="btn-square"
@@ -321,7 +322,7 @@ class User extends React.Component {
                       <div className="py-3">
                         <h5>Filter : </h5>
                         <Row>
-                        <Col lg={1} className="mb-1">
+                          <Col lg={2} className="mb-1">
                             <Input type="text" placeholder="User Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -330,6 +331,9 @@ class User extends React.Component {
                               id="date"
                               name="dob"
                               placeholderText="Date of Birth"
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
                               selected={filterData.dob}
                               value={filterData.dob}
                               onChange={(value) => {
@@ -338,42 +342,53 @@ class User extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                          <Select
+                            <Select
                               className="select-default-width"
                               placeholder="Select Role"
                               id="roleId"
                               name="roleId"
-                              options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
+                              options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                               value={filterData.roleId}
-                              onChange={(option) => { this.handleChange(option.value, 'roleId') }}
+                              onChange={(option) => { 
+                                if(option && option.value) {
+                                  this.handleChange(option.value, 'roleId')
+                                } else {
+                                  this.handleChange('', 'roleId')
+                                }
+                               }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                          <Select
+                            <Select
                               className="select-default-width"
                               placeholder="Select Status"
                               id="active"
                               name="active"
-                              options={this.statusOption ? selectOptionsFactory.renderOptions('label', 'value', this.statusOption,'Status') : []}
+                              options={this.statusOption ? selectOptionsFactory.renderOptions('label', 'value', this.statusOption, 'Status') : []}
                               // value={filterData.supplierId}
                               value={selectedStatus}
-                              onChange={(option) => { 
-                                this.handleChange(option.value, 'active') 
-                                this.setState({selectedStatus: option.value})
+                              onChange={(option) => {
+                                if(option) {
+                                  this.handleChange(option.value, 'active')
+                                this.setState({ selectedStatus: option.value })
+                                } else {
+                                this.handleChange(true, 'active')
+                                this.setState({ selectedStatus: true })
+                                }
                               }}
                             />
                           </Col>
-                          <Col lg={2} className="mb-1">
+                          {/* <Col lg={2} className="mb-1">
                           <Select
                               className="select-default-width"
                               placeholder="Select Company"
                               id="companyId"
                               name="companyId"
-                              options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Company') : []}
+                              options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list , 'Company') : []}
                               value={filterData.companyId}
                               onChange={(option) => { this.handleChange(option.value, 'companyId') }}
                             />
-                          </Col>
+                          </Col> */}
                           <Col lg={1} className="mb-1">
                             <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
@@ -383,9 +398,9 @@ class User extends React.Component {
                       </div>
                       <div>
                         <BootstrapTable
-                          selectRow={ this.selectRowProp }
+                          selectRow={this.selectRowProp}
                           search={false}
-                          options={ this.options }
+                          options={this.options}
                           data={user_list ? user_list : []}
                           version="4"
                           hover
@@ -414,7 +429,7 @@ class User extends React.Component {
                           <TableHeaderColumn
                             dataField="roleName"
                             dataSort
-                            // dataFormat={this.renderRole}
+                          // dataFormat={this.renderRole}
                           >
                             Role Name
                           </TableHeaderColumn>
@@ -425,13 +440,13 @@ class User extends React.Component {
                           >
                             Status
                           </TableHeaderColumn>
-                          <TableHeaderColumn
+                          {/* <TableHeaderColumn
                             dataField="companyName"
                             dataSort
                             // dataFormat={this.renderCompany}
                           >
                             Company
-                          </TableHeaderColumn>
+                          </TableHeaderColumn> */}
                         </BootstrapTable>
                       </div>
                     </Col>

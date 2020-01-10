@@ -4,9 +4,10 @@ import lombok.Getter;
 
 public enum ProductCategoryFilterEnum {
 
-    ID("ID", " = :id"),
-    PRODUCT_CATEGORY_NAME("PRODUCT_CATEGORY_NAME", " like '%:productCategoryName%'"),
-    PRODUCT_CATEGORY_DESCRIPTION("PRODUCT_CATEGORY_DESCRIPTION", " = :productCategoryDescription"),   
+    ID("id", " = :id"),
+    PRODUCT_CATEGORY_CODE("productCategoryCode" ," like CONCAT(:productCategoryCode,'%')"),
+    PRODUCT_CATEGORY_NAME("productCategoryName", " like CONCAT(:productCategoryName,'%')"),
+    DELETE_FLAG("deleteFlag", " = :deleteFlag"),
     USER_ID("createdBy", "= :createdBy");
 
     @Getter

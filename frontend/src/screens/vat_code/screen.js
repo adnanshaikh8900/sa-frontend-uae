@@ -172,11 +172,11 @@ class VatCode extends React.Component {
 
   // Delete Vat By ID
   deleteVat() {
-    this.setState({ loading: true })
+    // this.setState({ loading: true })
     this.setState({ openDeleteModal: false })
     this.props.vatActions.deleteVat(this.state.selectedRows).then(res => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        // this.setState({ loading: false })
         this.initializeData()
       }
     })

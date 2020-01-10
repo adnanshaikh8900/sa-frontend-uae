@@ -125,7 +125,7 @@ class Journal extends React.Component {
       }
     }).catch(err => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -282,7 +282,7 @@ class Journal extends React.Component {
         }
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -307,7 +307,7 @@ class Journal extends React.Component {
     return (
       <div className="journal-screen">
         <div className="animated fadeIn">
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           {dialog}
           <Card>
             <CardHeader>
@@ -370,6 +370,9 @@ class Journal extends React.Component {
                               id="date"
                               name="journalDate"
                               placeholderText="Post Date"
+                              showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                               selected={filterData.journalDate}
                               onChange={(value) => {
                                 this.handleChange(value, "journalDate")
@@ -401,6 +404,7 @@ class Journal extends React.Component {
                           pagination
                           totalSize={journal_list ? journal_list.length : 0}
                           className="journal-table"
+                          ref={node => this.table = node}
                         >
                           <TableHeaderColumn
                             dataField="journalDate"

@@ -119,7 +119,7 @@ class Payment extends React.Component {
       }
     }).catch(err => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
 
     })
   }
@@ -171,7 +171,7 @@ class Payment extends React.Component {
         })
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -302,7 +302,13 @@ class Payment extends React.Component {
                               name="supplier"
                               options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list , 'Supplier Name') : []}
                               value={filterData.supplierId}
-                              onChange={(option) => { this.handleChange(option.value, 'supplierId') }}
+                              onChange={(option) => { 
+                                if(option && option.value) {
+                                  this.handleChange(option.value, 'supplierId')
+                                } else {
+                                  this.handleChange('', 'supplierId')
+                                }
+                               }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -312,6 +318,9 @@ class Payment extends React.Component {
                               name="paymentDate"
                               placeholderText="Payment Date"
                               selected={filterData.paymentDate}
+                              showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                               value={filterData.paymentDate}
                               onChange={(value) => {
                                 this.handleChange(value, "paymentDate")

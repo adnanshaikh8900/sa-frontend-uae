@@ -309,3 +309,15 @@ th {
 .Toastify__toast {
   margin-top: 50px !important;
 }
+
+
+
+// disabled style
+.btn-success.disabled, .btn-success:disabled {
+	color: #fff;
+  background-color: #4dbd74!important;
+  border-color: #4dbd74!important;
+}
+.btn.disabled, .btn:disabled{
+  opacity: 1!important;
+}

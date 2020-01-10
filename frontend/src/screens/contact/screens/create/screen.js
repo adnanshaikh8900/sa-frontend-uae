@@ -96,8 +96,8 @@ class CreateContact extends React.Component {
   handleSubmit(data,resetForm) {
     this.props.createContactActions.createContact(data).then(res => {
       if (res.status === 200) {
-        resetForm();
         this.props.commonActions.tostifyAlert('success', 'New Contact Created Successfully')
+        resetForm();
         if (this.state.createMore) {
           this.setState({ createMore: false });
         } else {
@@ -105,7 +105,7 @@ class CreateContact extends React.Component {
         }
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -260,7 +260,13 @@ class CreateContact extends React.Component {
                                     className="select-default-width"
                                     options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list,'Contact Type') : []}
                                     value={props.values.contactType}
-                                    onChange={option => props.handleChange('contactType')(option.value)}
+                                    onChange={option => {
+                                      if(option && option.value) {
+                                        props.handleChange('contactType')(option.value)
+                                      } else {
+                                        props.handleChange('contactType')('')
+                                      }
+                                    }}
                                     placeholder="Select Contact Type"
                                     id="contactType"
                                     name="contactType"
@@ -447,7 +453,13 @@ class CreateContact extends React.Component {
                                     className="select-default-width"
                                     options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                     value={props.values.countryId}
-                                    onChange={option => props.handleChange('countryId')(option.value)}
+                                    onChange={option => {
+                                      if(option && option.value) {
+                                        props.handleChange('countryId')(option.value)
+                                      } else {
+                                        props.handleChange('countryId')('')
+                                      }
+                                    }}
                                     placeholder="Select Country"
                                     id="countryId"
                                     name="countryId"
@@ -612,7 +624,13 @@ class CreateContact extends React.Component {
                                     className="select-default-width"
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currencyCode}
-                                    onChange={option => props.handleChange('currencyCode')(option.value)}
+                                    onChange={option => {
+                                      if(option && option.value) {
+                                        props.handleChange('currencyCode')(option.value)
+                                      } else {
+                                        props.handleChange('currencyCode')('')
+                                      }
+                                    }}
                                     placeholder="Select Currency"
                                     id="currencyCode"
                                     name="currencyCode"
@@ -632,7 +650,11 @@ class CreateContact extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="button" color="primary" className="btn-square mr-3"  onClick={() => {
+                                      this.setState({ createMore: false },()=>{
+                                        props.handleSubmit();
+                                      })
+                                    }}>
                                     <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
                                   <Button type="button" color="primary" className="btn-square mr-3"

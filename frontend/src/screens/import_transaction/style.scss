@@ -1,0 +1,50 @@
+.import-transaction-screen {
+    .card-header {
+        color: #20a8d8;
+      }
+      .btn-group {
+        .btn {
+          color: #ffffff !important;
+        }
+      }
+      .badge {
+        padding: 0.4em 0.6em;
+        font-size: 90%;
+      }
+    fieldset {
+        border: 1px solid #c8ced3!important;
+        padding: 20px !important;
+    }
+    label {
+  
+      font-size: 1rem;
+    //   font-weight: 500;
+  }
+    legend{
+        width: inherit !important;
+        padding: 10px !important;
+        line-height: 0!important;
+        margin-bottom: 0 !important;
+    }
+    .control {
+        margin: 0 10px;
+        label {
+            margin: 10px;
+        }
+    }
+    .table_option {
+        .form-group {
+            display: flex!important;
+        }
+        label {
+            width: 20%;
+        }
+        Input{
+            width: 50%!important;
+          }
+      .Select {
+              width: 50% !important;
+      }
+      }
+          
+}

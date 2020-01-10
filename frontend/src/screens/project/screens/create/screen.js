@@ -98,8 +98,8 @@ class CreateProject extends React.Component {
   }
   // Cloase Confirm Modal
   closeContactModal(res) {
-    if(res) {
-    this.props.projectActions.getContactList();
+    if (res) {
+      this.props.projectActions.getContactList();
     }
     this.setState({ openContactModal: false })
   }
@@ -120,7 +120,7 @@ class CreateProject extends React.Component {
   }
 
   // Create or Edit Project
-  projectHandleSubmit(data) {
+  projectHandleSubmit(data,resetForm) {
     const {
       projectName,
       invoiceLanguageCode,
@@ -133,14 +133,14 @@ class CreateProject extends React.Component {
     } = data
 
     const postData = {
-      projectName: projectName ? projectName: '',
+      projectName: projectName ? projectName : '',
       invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
-      contactId : contactId && contactId !== null ? contactId : '',
+      contactId: contactId && contactId !== null ? contactId : '',
       contractPoNumber: contractPoNumber ? contractPoNumber : '',
       vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
       expenseBudget: expenseBudget ? expenseBudget : '',
       revenueBudget: revenueBudget ? revenueBudget : '',
-      currencyCode: currency && currency!== null ? currency : ''
+      currencyCode: currency && currency !== null ? currency : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
     this.props.createProjectActions.createAndSaveProject(postData).then(res => {
@@ -150,10 +150,11 @@ class CreateProject extends React.Component {
           this.setState({
             createMore: false
           })
+          resetForm()
         } else this.props.history.push('/admin/master/project')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -182,8 +183,8 @@ class CreateProject extends React.Component {
                       <Formik
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.projectHandleSubmit(values)
-                          resetForm(this.state.initValue)
+                          this.projectHandleSubmit(values,resetForm)
+                          // resetForm(this.state.initValue)
 
                           this.setState({
                             selectedContactCurrency: null,
@@ -230,12 +231,16 @@ class CreateProject extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="contactId"><span className="text-danger">*</span>Contact</Label>
                                   <Select
-                                    options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'id', contact_list,'Contact Name') : []}
+                                    options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'id', contact_list, 'Contact Name') : []}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedContact: option.value
                                       })
-                                      props.handleChange("contactId")(option.value);
+                                      if(option && option.value) {
+                                        props.handleChange("contactId")(option.value)
+                                      } else {
+                                        props.handleChange("contactId")('')
+                                      }
                                     }}
                                     id="contactId"
                                     name="contactId"
@@ -314,7 +319,11 @@ class CreateProject extends React.Component {
                                       this.setState({
                                         selectedCurrency: option.value
                                       })
-                                      props.handleChange("currency")(option.value);
+                                      if(option && option.value) {
+                                        props.handleChange('currencyCode')(option.value)
+                                      } else {
+                                        props.handleChange('currencyCode')('')
+                                      }
                                     }}
                                     placeholder="Select currency"
                                     value={props.values.currency}
@@ -378,7 +387,7 @@ class CreateProject extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="">
                                   <Label htmlFor="invoiceLanguageCode">
-                                    <span className="text-danger">*</span>Invoice Language(TBD)
+                                    <span className="text-danger"></span>Invoice Language(TBD)
                                       </Label>
                                   <Select
                                     className="select-default-width"
@@ -393,28 +402,32 @@ class CreateProject extends React.Component {
                                     placeholder="Select invoiceLanguageCode"
                                     value={this.state.selectedInvoiceLanguage}
                                     name="invoiceLanguageCode"
-                                  // className={
-                                  //   props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode
-                                  //     ? "is-invalid"
-                                  //     : ""
-                                  // }
+                                    className={
+                                      props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
-                                  {/* {props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode && (
+                                  {props.errors.invoiceLanguageCode && props.touched.invoiceLanguageCode && (
                                     <div className="invalid-feedback">{props.errors.invoiceLanguageCode}</div>
-                                  )} */}
+                                  )}
                                 </FormGroup>
                               </Col>
                             </Row>
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                    this.setState({ createMore: false }, () => {
+                                      props.handleSubmit()
+                                    })
+                                  }}>
                                     <i className="fa fa-dot-circle-o"></i> Create
                                       </Button>
                                   <Button name="button" color="primary" className="btn-square mr-3"
                                     onClick={() => {
-                                      this.setState({ createMore: true },() => {
-                                      props.handleSubmit()
+                                      this.setState({ createMore: true }, () => {
+                                        props.handleSubmit()
                                       })
                                     }}>
                                     <i className="fa fa-refresh"></i> Create and More
@@ -439,7 +452,7 @@ class CreateProject extends React.Component {
 
         <ContactModal
           openContactModal={this.state.openContactModal}
-          closeContactModal={(val)=>{this.closeContactModal(val)}}
+          closeContactModal={(val) => { this.closeContactModal(val) }}
           currencyList={currency_list}
           countryList={country_list}
           createContact={this.props.projectActions.createProjectContact}

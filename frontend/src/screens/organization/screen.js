@@ -259,7 +259,14 @@ class Organization extends React.Component {
                                   className="select-default-width"
                                   options={industry_type_list ? selectOptionsFactory.renderOptions('label', 'value', industry_type_list) : []}
                                   value={props.values.industryTypeCode}
-                                  onChange={option => props.handleChange('industryTypeCode')(option.value)}
+                                  onChange={option => {
+                                    if(option && option.value) {
+                                      props.handleChange('industryTypeCode')(option.value)
+                                    }else {
+                                      props.handleChange('industryTypeCode')('')
+                                    }
+                                  }
+                                    }
                                   placeholder="Select Role"
                                   id="industryTypeCode"
                                   name="industryTypeCode"
@@ -305,7 +312,13 @@ class Organization extends React.Component {
                                       className="select-default-width"
                                       options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                       value={props.values.countryCode}
-                                      onChange={option => props.handleChange('countryCode')(option.value)}
+                                      onChange={option => {
+                                        if(option.value) {
+                                          props.handleChange('countryCode')(option.value)
+                                        } else {
+                                          props.handleChange('countryCode')('')
+                                        }
+                                      }}
                                       placeholder="Select Role"
                                       id="countryCode"
                                       name="countryCode"

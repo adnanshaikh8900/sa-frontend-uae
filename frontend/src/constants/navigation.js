@@ -159,22 +159,22 @@ export default {
         },
       ]
     },
-    {
-      name: 'Settings',
-      url: '/admin/settings',
-      icon: 'icon-settings',
-      children: [
-        {
-          name: 'Users',
-          url: '/admin/settings/user',
-          icon: 'fas fa-users',
-        },
-        // {
-        //   name: 'Organization',
-        //   url: '/admin/settings/organization',
-        //   icon: 'fas fa-sitemap',
-        // }
-      ]
-    }
+    // {
+    //   name: 'Settings',
+    //   url: '/admin/settings',
+    //   icon: 'icon-settings',
+    //   children: [
+    //     {
+    //       name: 'Users',
+    //       url: '/admin/settings/user',
+    //       icon: 'fas fa-users',
+    //     },
+    //     // {
+    //     //   name: 'Organization',
+    //     //   url: '/admin/settings/organization',
+    //     //   icon: 'fas fa-sitemap',
+    //     // }
+    //   ]
+    // }
   ]
 }

@@ -88,7 +88,7 @@ class DetailChartAccount extends React.Component {
           })
         }
       }).catch(err => {
-        this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null);
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null);
         this.setState({ loading: false })
         this.props.history.push('/admin/master/chart-account')
       })
@@ -129,7 +129,7 @@ class DetailChartAccount extends React.Component {
         this.props.history.push('/admin/master/chart-account')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -151,7 +151,7 @@ class DetailChartAccount extends React.Component {
         this.props.history.push('/admin/master/chart-account')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -242,7 +242,13 @@ class DetailChartAccount extends React.Component {
                                     className="select-default-width"
                                     options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list,'Type') : []}
                                     value={props.values.transactionType}
-                                    onChange={option => props.handleChange('transactionType')(option.value)}
+                                    onChange={option => {
+                                      if(option && option.value) {
+                                        props.handleChange('transactionType')(option.value)
+                                      } else {
+                                        props.handleChange('transactionType')('')
+                                      }
+                                    }}
                                     placeholder="Select Type"
                                     id="transactionType"
                                     name="transactionType"

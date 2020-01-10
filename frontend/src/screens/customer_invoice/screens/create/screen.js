@@ -69,14 +69,15 @@ class CreateCustomerInvoice extends React.Component {
       ],
       discount_option: '',
 
-      data: [{
-        id: 0,
-        description: '',
-        quantity: 0,
-        unitPrice: 0,
-        vatCategoryId: '',
-        subTotal: 0
-      }],
+      // data: [{
+      //   id: 0,
+      //   description: '',
+      //   quantity: 0,
+      //   unitPrice: 0,
+      //   vatCategoryId: '',
+      //   subTotal: 0
+      // }],
+      data: [],
       idCount: 0,
       initValue: {
         receiptAttachmentDescription: '',
@@ -96,8 +97,12 @@ class CreateCustomerInvoice extends React.Component {
       currentData: {},
       contactType: 2,
       openCustomerModal: false,
-      selectedContact: ''
+      selectedContact: '',
+      createMore: false
     }
+
+
+    this.formRef = React.createRef()
 
     // this.options = {
     //   paginationPosition: 'top'
@@ -291,8 +296,8 @@ class CreateCustomerInvoice extends React.Component {
       let val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
       obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : 0;
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
-      total_vat = +((total_vat + val)).toFixed(2);
-      total = (total_vat + total_net).toFixed(2);
+      total_vat = +((total_vat + val));
+      total = (total_vat + total_net);
 
     })
     this.setState({
@@ -305,7 +310,7 @@ class CreateCustomerInvoice extends React.Component {
     })
   }
 
-  handleSubmit(data) {
+  handleSubmit(data, resetForm) {
     const {
       receiptAttachmentDescription,
       receiptNumber,
@@ -334,8 +339,8 @@ class CreateCustomerInvoice extends React.Component {
     formData.append('lineItemsString', JSON.stringify(this.state.data));
     formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
     formData.append('totalAmount', this.state.initValue.totalAmount);
-    if (contactId !== null && contactId.value) {
-      formData.append("contactId", contactId.value);
+    if (contactId) {
+      formData.append("contactId", contactId);
     }
     if (currency !== null && currency.value) {
       formData.append("currencyCode", currency.value);
@@ -353,16 +358,16 @@ class CreateCustomerInvoice extends React.Component {
           createMore: false,
           selectedContact: ''
         })
+        resetForm(this.state.initValue)
       } else {
         this.props.history.push('/admin/revenue/customer-invoice')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
-  openCustomerModal(e) {
-    e.preventDefault()
+  openCustomerModal(props) {
     this.setState({ openCustomerModal: true })
   }
 
@@ -376,9 +381,10 @@ class CreateCustomerInvoice extends React.Component {
         value: data.contactId,
       }
     }
-    this.setState({
-      selectedContact: option
-    })
+    // this.setState({
+    //   selectedContact: option
+    // })
+    this.formRef.current.setFieldValue('contactId', option.value, true)
   }
 
   closeCustomerModal(res) {
@@ -420,10 +426,12 @@ class CreateCustomerInvoice extends React.Component {
                     <Col lg={12}>
                       <Formik
                         initialValues={initValue}
+                        enableReinitialize={true}
+                        ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
 
-                          this.handleSubmit(values)
-                          resetForm(initValue)
+                          this.handleSubmit(values, resetForm)
+
 
                           // this.setState({
                           //   selectedCurrency: null,
@@ -441,6 +449,8 @@ class CreateCustomerInvoice extends React.Component {
                               .required("Customer is Required"),
                             invoiceDate: Yup.date()
                               .required('Invoice Date is Required'),
+                            invoiceDueDate: Yup.date()
+                              .required('Invoice Due Date is Required'),
                           })}
                       >
                         {props => (
@@ -454,6 +464,7 @@ class CreateCustomerInvoice extends React.Component {
                                     id="invoice_number"
                                     name="invoice_number"
                                     placeholder="Invoice Number"
+                                    value={props.values.invoice_number}
                                     onChange={(value) => { props.handleChange("invoice_number")(value) }}
                                     className={
                                       props.errors.invoice_number && props.touched.invoice_number
@@ -489,10 +500,15 @@ class CreateCustomerInvoice extends React.Component {
                                     id="contactId"
                                     name="contactId"
                                     options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
-                                    value={selectedContact}
+                                    value={props.values.contactId}
                                     onChange={option => {
-                                      props.handleChange('contactId')(option)
-                                      this.getCurrentUser(option)
+                                      // this.getCurrentUser(option)
+                                      if(option && option.value) {
+                                        props.handleChange('contactId')(option.value)
+                                      } else {
+                                        props.handleChange('contactId')('')
+
+                                      }
                                     }}
                                     className={
                                       props.errors.contactId && props.touched.contactId
@@ -505,7 +521,7 @@ class CreateCustomerInvoice extends React.Component {
                                   )}
                                 </FormGroup>
                                 <Button type="button" color="primary" className="btn-square mr-3 mb-3"
-                                  onClick={this.openCustomerModal}
+                                  onClick={(e, props) => { this.openCustomerModal(props) }}
                                 >
                                   <i className="fa fa-plus"></i> Add a Customer
                                   </Button>
@@ -551,6 +567,9 @@ class CreateCustomerInvoice extends React.Component {
                                     id="invoiceDate"
                                     name="invoiceDate"
                                     placeholderText="Invoice Date"
+                                    showMonthDropdown
+                                    showYearDropdown
+                                    dropdownMode="select"
                                     selected={props.values.invoiceDate}
                                     onChange={(value) => {
                                       props.handleChange("invoiceDate")(value)
@@ -572,10 +591,17 @@ class CreateCustomerInvoice extends React.Component {
                                       name="invoiceDueDate"
                                       placeholderText="Invoice Due Date"
                                       selected={props.values.invoiceDueDate}
+                                      showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                       onChange={(value) => {
                                         props.handleChange("invoiceDueDate")(value)
                                       }}
+                                      className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}
                                     />
+                                    {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
+                                      <div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
+                                    )}
                                   </div>
                                 </FormGroup>
                               </Col>
@@ -732,109 +758,120 @@ class CreateCustomerInvoice extends React.Component {
                                 </BootstrapTable>
                               </Col>
                             </Row>
-                            <Row>
-                              <Col lg={8}>
-                                <FormGroup className="py-2">
-                                  <Label htmlFor="notes">Notes</Label>
-                                  <Input
-                                    type="textarea"
-                                    name="notes"
-                                    id="notes"
-                                    rows="6"
-                                    placeholder="notes..."
-                                    onChange={option => props.handleChange('notes')(option)}
-                                    value={props.values.notes}
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg={4}>
-                                <div className="">
-                                  <div className="total-item p-2">
-                                    <Row>
-                                      <Col lg={6}>
-                                        <FormGroup>
-                                          <Label htmlFor="discount_type">Discount Type</Label>
-                                          <Select
-                                            className="select-default-width"
-                                            options={discountOptions}
-                                            id="discount_type"
-                                            name="discount_type"
-                                            value={{ value: discount_option, label: discount_option }}
-                                            onChange={(item) => this.setState({
-                                              discount_option: item.value
-                                            })}
-                                          />
-                                        </FormGroup>
-                                      </Col>
-                                      {
-                                        discount_option === 'Percentage' ?
+                            {this.state.data.length > 0 ?
+                              (
+                                <Row>
+                                  <Col lg={8}>
+                                    <FormGroup className="py-2">
+                                      <Label htmlFor="notes">Notes</Label>
+                                      <Input
+                                        type="textarea"
+                                        name="notes"
+                                        id="notes"
+                                        rows="6"
+                                        placeholder="notes..."
+                                        onChange={option => props.handleChange('notes')(option)}
+                                        value={props.values.notes}
+                                      />
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg={4}>
+                                    <div className="">
+                                      <div className="total-item p-2">
+                                        <Row>
                                           <Col lg={6}>
                                             <FormGroup>
-                                              <Label htmlFor="discount_percentage">Percentage</Label>
-                                              <Input
-                                                id="discount_percentage"
-                                                name="discount_percentage"
-                                                placeholder="Discount Percentage"
+                                              <Label htmlFor="discount_type">Discount Type</Label>
+                                              <Select
+                                                className="select-default-width"
+                                                options={discountOptions}
+                                                id="discount_type"
+                                                name="discount_type"
+                                                value={{ value: discount_option, label: discount_option }}
+                                                onChange={(item) => this.setState({
+                                                  discount_option: item.value
+                                                })}
                                               />
                                             </FormGroup>
                                           </Col>
-                                          :
-                                          null
-                                      }
-                                    </Row>
-                                    <Row>
-                                      <Col lg={6} className="mt-4">
-                                        <FormGroup>
-                                          <Label htmlFor="discount_amount">Discount Amount</Label>
-                                          <Input
-                                            id="discount_amount"
-                                            name="discount_amount"
-                                            placeholder="Discount Amounts"
-                                          />
-                                        </FormGroup>
-                                      </Col>
-                                    </Row>
-                                  </div>
-                                  <div className="total-item p-2">
-                                    <Row>
-                                      <Col lg={6}>
-                                        <h5 className="mb-0 text-right">Total Net</h5>
-                                      </Col>
-                                      <Col lg={6} className="text-right">
-                                        <label className="mb-0">{initValue.total_net}</label>
-                                      </Col>
-                                    </Row>
-                                  </div>
-                                  <div className="total-item p-2">
-                                    <Row>
-                                      <Col lg={6}>
-                                        <h5 className="mb-0 text-right">Total Vat</h5>
-                                      </Col>
-                                      <Col lg={6} className="text-right">
-                                        <label className="mb-0">{initValue.invoiceVATAmount}</label>
-                                      </Col>
-                                    </Row>
-                                  </div>
-                                  <div className="total-item p-2">
-                                    <Row>
-                                      <Col lg={6}>
-                                        <h5 className="mb-0 text-right">Total</h5>
-                                      </Col>
-                                      <Col lg={6} className="text-right">
-                                        <label className="mb-0">{initValue.totalAmount}</label>
-                                      </Col>
-                                    </Row>
-                                  </div>
-                                </div>
-                              </Col>
-                            </Row>
+                                          {
+                                            discount_option === 'Percentage' ?
+                                              <Col lg={6}>
+                                                <FormGroup>
+                                                  <Label htmlFor="discount_percentage">Percentage</Label>
+                                                  <Input
+                                                    id="discount_percentage"
+                                                    name="discount_percentage"
+                                                    placeholder="Discount Percentage"
+                                                  />
+                                                </FormGroup>
+                                              </Col>
+                                              :
+                                              null
+                                          }
+                                        </Row>
+                                        <Row>
+                                          <Col lg={6} className="mt-4">
+                                            <FormGroup>
+                                              <Label htmlFor="discount_amount">Discount Amount</Label>
+                                              <Input
+                                                id="discount_amount"
+                                                name="discount_amount"
+                                                placeholder="Discount Amounts"
+                                              />
+                                            </FormGroup>
+                                          </Col>
+                                        </Row>
+                                      </div>
+                                      <div className="total-item p-2">
+                                        <Row>
+                                          <Col lg={6}>
+                                            <h5 className="mb-0 text-right">Total Net</h5>
+                                          </Col>
+                                          <Col lg={6} className="text-right">
+                                            <label className="mb-0">{(initValue.total_net.toFixed(2))}</label>
+                                          </Col>
+                                        </Row>
+                                      </div>
+                                      <div className="total-item p-2">
+                                        <Row>
+                                          <Col lg={6}>
+                                            <h5 className="mb-0 text-right">Total Vat</h5>
+                                          </Col>
+                                          <Col lg={6} className="text-right">
+                                            <label className="mb-0">{(initValue.invoiceVATAmount).toFixed(2)}</label>
+                                          </Col>
+                                        </Row>
+                                      </div>
+                                      <div className="total-item p-2">
+                                        <Row>
+                                          <Col lg={6}>
+                                            <h5 className="mb-0 text-right">Total</h5>
+                                          </Col>
+                                          <Col lg={6} className="text-right">
+                                            <label className="mb-0">{(initValue.totalAmount.toFixed(2))}</label>
+                                          </Col>
+                                        </Row>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                </Row>
+                              ) :
+                              null
+                            }
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+
+                                    this.setState({ createMore: false }, () => {
+                                      props.handleSubmit()
+                                    })
+
+                                  }}>
                                     <i className="fa fa-dot-circle-o"></i> Create
                               </Button>
-                                  <Button type="submit" color="primary" className="btn-square mr-3"
+                                  <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={
                                       () => {
                                         this.setState({ createMore: true }, () => {

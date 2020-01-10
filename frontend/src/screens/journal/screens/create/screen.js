@@ -276,10 +276,21 @@ class CreateJournal extends React.Component {
       item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
       item.contactId = item.contactId ? item.contactId : ''
     })
-    const postData = {...values,...initValue,...{journalLineItems: this.state.data}}
+    const postData = {
+      journalDate: values.journalDate ? values.journalDate : '',
+      referenceCode: values.referenceCode ? values.referenceCode : '',
+      description: values.description ? values.description : '',
+      currencyCode: values.currencyCode ? values.currencyCode : '',
+      subTotalCreditAmount: initValue.subTotalCreditAmount,
+      subTotalDebitAmount: initValue.subTotalDebitAmount,
+      totalCreditAmount: initValue.totalCreditAmount,
+      totalDebitAmount: initValue.totalDebitAmount,
+      journalLineItems: data
+    }
+    // const postData = {...initValue,...values,...{journalLineItems: this.state.data}}
     this.props.journalCreateActions.createJournal(postData).then(res => {
       if (res.status === 200) {
-        // resetForm();
+        resetForm();
         this.props.commonActions.tostifyAlert('success', 'New Journal Created Successfully')
         if (this.state.createMore) {
           this.setState({ createMore: false });
@@ -288,7 +299,7 @@ class CreateJournal extends React.Component {
         }
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -322,17 +333,14 @@ class CreateJournal extends React.Component {
                       <Formik
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
-
-                          this.handleSubmit(values)
-                          // this.setState({
-                          //   selectedCurrency: null,
-                          //   selectedProject: null,
-                          //   selectedBankAccount: null,
-                          //   selectedCustomer: null
-
-                          // })
+                          this.handleSubmit(values,resetForm)
                         }}
-
+                        validationSchema={
+                          Yup.object().shape({
+                            journalDate: Yup.date()
+                              .required('Journal Date is Required')
+                          })
+                        }
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -346,10 +354,17 @@ class CreateJournal extends React.Component {
                                     name="journalDate"
                                     placeholderText="Journal Date"
                                     selected={props.values.journalDate}
+                                    showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                     onChange={(value) => {
                                       props.handleChange("journalDate")(value)
                                     }}
-                                  />
+                                    className={`form-control ${props.errors.journalDate && props.touched.journalDate ? "is-invalid" : ""}`}
+                                    />
+                                    {props.errors.journalDate && props.touched.journalDate && (
+                                      <div className="invalid-feedback">{props.errors.journalDate}</div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -392,7 +407,13 @@ class CreateJournal extends React.Component {
                                     id="currencyCode"
                                     name="currencyCode"
                                     value={props.values.currencyCode}
-                                    onChange={option => props.handleChange('currencyCode')(option.value)}
+                                    onChange={option => {
+                                      if(option && option.value) {
+                                        props.handleChange('currencyCode')(option.value)
+                                      } else {
+                                        props.handleChange('currencyCode')('')
+                                      }
+                                    }}
                                   />
                                 </FormGroup>
                               </Col>
@@ -504,7 +525,14 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={
+                                      () => {
+                                        this.setState({ createMore: false }, () => {
+                                          props.handleSubmit()
+                                        })
+                                      }
+                                    }
+                                  >
                                     <i className="fa fa-dot-circle-o"></i> Create
                               </Button>
                                   <Button type="button" color="primary" className="btn-square mr-3"

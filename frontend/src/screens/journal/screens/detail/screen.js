@@ -317,7 +317,7 @@ class DetailJournal extends React.Component {
         this.props.history.push('/admin/accountant/journal')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -360,7 +360,7 @@ class DetailJournal extends React.Component {
         }
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -423,6 +423,9 @@ class DetailJournal extends React.Component {
                                         id="journalDate"
                                         name="journalDate"
                                         placeholderText="Journal Date"
+                                        showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                         value={moment(props.values.journalDate).format('DD-MM-YYYY')}
                                         onChange={(value) => {
                                           console.log(value)
@@ -473,7 +476,13 @@ class DetailJournal extends React.Component {
                                         id="currencyCode"
                                         name="currencyCode"
                                         value={props.values.currencyCode}
-                                        onChange={option => props.handleChange('currencyCode')(option.value)}
+                                        onChange={option => {
+                                          if(option && option.value) {
+                                            props.handleChange('currencyCode')(option.value)
+                                          } else {
+                                            props.handleChange('currencyCode')('')
+                                          }
+                                        }}
                                       />
                                     </FormGroup>
                                   </Col>

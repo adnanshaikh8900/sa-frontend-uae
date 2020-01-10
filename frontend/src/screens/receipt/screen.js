@@ -122,7 +122,7 @@ class Receipt extends React.Component {
       this.setState({
         loading: false
       })
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -211,7 +211,7 @@ class Receipt extends React.Component {
         })
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -243,7 +243,7 @@ class Receipt extends React.Component {
     return (
       <div className="receipt-screen">
         <div className="animated fadeIn">
-          <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+          // <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
           {dialog}
           <Card>
             <CardHeader>
@@ -307,6 +307,9 @@ class Receipt extends React.Component {
                               name="receiptDate"
                               placeholderText="Receipt Date"
                               selected={filterData.receiptDate}
+                              showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                               onChange={(value) => {
                                 this.handleChange(value, "receiptDate")
                               }}
@@ -325,6 +328,9 @@ class Receipt extends React.Component {
                                 onChange={(option) => {
                                   if (option && option.value) {
                                     this.handleChange(option.value, 'invoiceId')
+                                  } else {
+                                    this.handleChange('', 'invoiceId')
+
                                   }
                                 }}
                               />
@@ -340,6 +346,9 @@ class Receipt extends React.Component {
                                 onChange={(option) => {
                                   if (option && option.value) {
                                     this.handleChange(option.value, 'contactId')
+                                  } else {
+                                    this.handleChange('', 'contactId')
+
                                   }
                                 }}
                               />

@@ -8,10 +8,16 @@ import {
 
 // Get Vat List
 export const getVatList = (obj) => {
+  let url;
+  if(obj) {
+    url = `/rest/vat/getList?name=${obj.name}&vatPercentage=${obj.vatPercentage}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+  } else {
+    url=`/rest/vat/getList`
+  }
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/vat/getList?name=${obj.name}&vatPercentage=${obj.vatPercentage}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+      url: url
     }
 
     return authApi(data).then(res => {
@@ -66,18 +72,18 @@ export const getVatByID = (id) => {
 // }
 
 // // Delete Vat Row
-// export const deleteVat = (ids) => {
-//   return (dispatch) => {
-//     let data = {
-//       method: 'DELETE',
-//       url: `rest/vat/deletevats?id=1`,
-//       data: {ids: ids}
-//     }
+export const deleteVat = (ids) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/vat/deletes`,
+      data: {ids: ids}
+    }
 
-//     return authApi(data).then(res => {
-//       return res
-//     }).catch(err => {
-//       throw err
-//     })
-//   }
-// }
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}

@@ -174,14 +174,14 @@ class ProductCategory extends React.Component {
 
   // Delete Vat By ID
   deleteProductCategory() {
-    this.setState({ loading: true })
+    // this.setState({ loading: true })
     this.setState({ openDeleteModal: false })
     const data = {
       ids: this.state.selectedRows
     }
     this.props.productCategoryActions.deleteProductCategory(data).then(res => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        // this.setState({ loading: false })
         this.initializeData()
       }
     }).catch(err => {
@@ -311,6 +311,7 @@ class ProductCategory extends React.Component {
                         version="4"
                         hover
                         pagination
+                        keyField="id"
                         totalSize={product_category_list ? product_category_list.length : 0}
                         className="product-table"
                         trClassName="cursor-pointer"
@@ -318,7 +319,6 @@ class ProductCategory extends React.Component {
                         ref={node => this.table = node}
                       >
                         <TableHeaderColumn
-                          isKey
                           dataField="productCategoryCode"
                           dataSort
                         >

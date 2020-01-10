@@ -20,11 +20,11 @@ export const getUserById = (_id) => {
   }
 }
 
-export const getCompanyById = (_id) => {
+export const getCompanyById = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/company/getById?id=${_id}`
+      url: `/rest/company/getCompanyDetails`
     }
 
     return authApi(data).then(res => {
@@ -119,6 +119,43 @@ export const updateUser = (obj) => {
       data: obj
     }
     return authFileUploadApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const updateCompany = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/company/update',
+      data: obj
+    }
+    return authFileUploadApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getRoleList = (obj) => {
+
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/user/getrole`
+      // ?projectName=${obj.projectName}&expenseBudget=${obj.expenseBudget}&revenueBudget=${obj.revenueBudget}&vatRegistrationNumber=${obj.vatRegistrationNumber}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+    }
+
+    return authApi(data).then(res => {
+
+      dispatch({
+        type: PROFILE.ROLE_LIST,
+        payload: res.data
+      })
       return res
     }).catch(err => {
       throw err

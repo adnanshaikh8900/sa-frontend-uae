@@ -348,6 +348,9 @@ class DetailEmployee extends React.Component {
                                         className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                         id="dob"
                                         name="dob"
+                                        showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                         placeholderText="Enter Birth Date"
                                         value={moment(props.values.dob).format('DD-MM-YYYY')}
                                         onChange={(value) => {
@@ -435,7 +438,13 @@ class DetailEmployee extends React.Component {
                                         className="select-default-width"
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currencyCode}
-                                        onChange={option => props.handleChange('currencyCode')(option.value)}
+                                        onChange={option => {
+                                          if(option && option.value) {
+                                            props.handleChange('currencyCode')(option.value)
+                                          } else {
+                                            props.handleChange('currencyCode')('')
+                                          }
+                                        }}
                                         placeholder="Select Currency"
                                         id="currencyCode"
                                         name="currencyCode"

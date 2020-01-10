@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.CompanyFilterEnum;
 import com.simplevat.entity.Company;
+import com.simplevat.entity.User;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.CompanyService;
+import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
@@ -33,118 +35,122 @@ import java.io.IOException;
 @RequestMapping("/rest/company")
 public class CompanyController {
 
-    @Autowired
-    private CompanyService companyService;
+	@Autowired
+	private CompanyService companyService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private CompanyRestHelper companyRestHelper;
-    
-    @Deprecated
-    @ApiOperation(value = "Get Company List")
-    @GetMapping(value = "/getList")
-    public ResponseEntity getCompanyList(HttpServletRequest request) {
-        try {
-            Map<CompanyFilterEnum, Object> filterMap = new HashMap<CompanyFilterEnum, Object>();
-            filterMap.put(CompanyFilterEnum.DELETE_FLAG, false);
-            List<Company> companyList = companyService.getCompanyList(filterMap);
-            if (companyList == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(companyRestHelper.getModelList(companyList), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	@Autowired
+	private CompanyRestHelper companyRestHelper;
 
-    @GetMapping(value = "/getCompaniesForDropdown")
-    public ResponseEntity getCompaniesForDropdown() throws IOException {
-        List<DropdownModel> dropdownModels = companyService.getCompaniesForDropdown();
-        return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
-    }
+	@Autowired
+	private UserService userService;
 
-    @Deprecated
-    @ApiOperation(value = "delete By Id")
-    @DeleteMapping(value = "/delete")
-    public ResponseEntity deleteCompany(@RequestParam(value = "id") Integer id) {
-        try {
-            Company company = companyService.findByPK(id);
-            if (company != null) {
-                company.setDeleteFlag(Boolean.TRUE);
-                companyService.update(company);
-            }
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	@Deprecated
+	@ApiOperation(value = "Get Company List")
+	@GetMapping(value = "/getList")
+	public ResponseEntity getCompanyList(HttpServletRequest request) {
+		try {
+			Map<CompanyFilterEnum, Object> filterMap = new HashMap<CompanyFilterEnum, Object>();
+			filterMap.put(CompanyFilterEnum.DELETE_FLAG, false);
+			List<Company> companyList = companyService.getCompanyList(filterMap);
+			if (companyList == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(companyRestHelper.getModelList(companyList), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    @Deprecated
-    @ApiOperation(value = "Delete Companies in Bulk")
-    @DeleteMapping(value = "/deletes")
-    public ResponseEntity deleteCompanies(@RequestBody DeleteModel ids) {
-        try {
-            companyService.deleteByIds(ids.getIds());
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	@GetMapping(value = "/getCompaniesForDropdown")
+	public ResponseEntity getCompaniesForDropdown() throws IOException {
+		List<DropdownModel> dropdownModels = companyService.getCompaniesForDropdown();
+		return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+	}
 
-    }
+	@Deprecated
+	@ApiOperation(value = "delete By Id")
+	@DeleteMapping(value = "/delete")
+	public ResponseEntity deleteCompany(@RequestParam(value = "id") Integer id) {
+		try {
+			Company company = companyService.findByPK(id);
+			if (company != null) {
+				company.setDeleteFlag(Boolean.TRUE);
+				companyService.update(company);
+			}
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    @ApiOperation(value = "Get Company By ID")
-    @GetMapping(value = "/getById")
-    public ResponseEntity getCompanyById(@RequestParam(value = "id") Integer id) {
-        try {
-            Company company = companyService.findByPK(id);
+	@Deprecated
+	@ApiOperation(value = "Delete Companies in Bulk")
+	@DeleteMapping(value = "/deletes")
+	public ResponseEntity deleteCompanies(@RequestBody DeleteModel ids) {
+		try {
+			companyService.deleteByIds(ids.getIds());
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
-            if (company == null) {
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            } else {
-                return new ResponseEntity<>(companyRestHelper.getModel(company), HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	}
 
-    @ApiOperation(value = "Add New Company")
-    @PostMapping(value = "/save")
-    public ResponseEntity save(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            Company company = companyRestHelper.getEntity(companyModel);
-            company.setCreatedBy(userId);
-            company.setCreatedDate(LocalDateTime.now());
-            company.setDeleteFlag(Boolean.FALSE);
-            companyService.persist(company);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	@ApiOperation(value = "Get Company Deatials for login user")
+	@GetMapping(value = "/getCompanyDetails")
+	public ResponseEntity getCompanyById(HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-    @ApiOperation(value = "Update Company")
-    @PostMapping(value = "/update")
-    public ResponseEntity update(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            Company company = companyRestHelper.getEntity(companyModel);
-            company.setLastUpdateDate(LocalDateTime.now());
-            company.setLastUpdatedBy(userId);
-            companyService.update(company);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+			User user = userService.findByPK(userId);
+			if (user == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			} else {
+				return new ResponseEntity<>(companyRestHelper.getModel(user.getCompany()), HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@ApiOperation(value = "Add New Company")
+	@PostMapping(value = "/save")
+	public ResponseEntity save(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			Company company = companyRestHelper.getEntity(companyModel, userId);
+			company.setCreatedBy(userId);
+			company.setCreatedDate(LocalDateTime.now());
+			company.setDeleteFlag(Boolean.FALSE);
+			companyService.persist(company);
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@ApiOperation(value = "Update Company")
+	@PostMapping(value = "/update")
+	public ResponseEntity update(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			Company company = companyRestHelper.getEntity(companyModel,userId);
+			company.setLastUpdateDate(LocalDateTime.now());
+			company.setLastUpdatedBy(userId);
+			companyService.update(company);
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 }

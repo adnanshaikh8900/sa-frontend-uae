@@ -126,7 +126,7 @@ class DetailProject extends React.Component {
           })
         }
       }).catch(err => {
-        this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
         this.setState({loading: false})
       })
     }
@@ -179,7 +179,7 @@ class DetailProject extends React.Component {
         } else this.props.history.push('/admin/master/project')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -201,7 +201,7 @@ class DetailProject extends React.Component {
         this.props.history.push('/admin/master/project')
       }
     }).catch(err=> {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -288,9 +288,12 @@ class DetailProject extends React.Component {
                                       this.setState({
                                         selectedContact: option.value
                                       })
-            
-                                      props.handleChange("contactId")(option.value);
-                                    }}
+                                        if (option && option.value) {
+                                          props.handleChange('contactId')(option.value)
+                                        } else {
+                                          props.handleChange('contactId')('')
+                                        }
+                                      }}
                                     id="contactId"
                                     name="contactId"
                                     placeholder="Select Contact"
@@ -367,9 +370,13 @@ class DetailProject extends React.Component {
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     onChange={(option) => {
                                       this.setState({
-                                        selectedCurrency: option.value
+                                        selectedCurrency: option.value ? option.value : ''
                                       })
-                                      props.handleChange("currencyCode")(option.value);
+                                      if(option && option.value) {
+                                        props.handleChange('currencyCode')(option.value)
+                                      } else {
+                                        props.handleChange('currencyCode')('')
+                                      }
                                     }}
                                     placeholder="Select currencyCode"
                                     value={props.values.currencyCode}
@@ -434,7 +441,7 @@ class DetailProject extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="">
                                   <Label htmlFor="invoiceLanguageCode">
-                                    <span className="text-danger">*</span>Invoice Language(TBD)
+                                    <span className="text-danger"></span>Invoice Language(TBD)
                                       </Label>
                                   <Select
                                     className="select-default-width"

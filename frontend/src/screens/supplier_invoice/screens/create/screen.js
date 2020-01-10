@@ -98,6 +98,7 @@ class CreateSupplierInvoice extends React.Component {
       openSupplierModal: false,
       selectedContact: ''
     }
+    this.formRef = React.createRef()
 
     // this.options = {
     //   paginationPosition: 'top'
@@ -305,7 +306,7 @@ class CreateSupplierInvoice extends React.Component {
     })
   }
 
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     const {
       receiptAttachmentDescription,
       receiptNumber,
@@ -334,8 +335,8 @@ class CreateSupplierInvoice extends React.Component {
     formData.append('lineItemsString', JSON.stringify(this.state.data));
     formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
     formData.append('totalAmount', this.state.initValue.totalAmount);
-    if (contactId !== null && contactId.value) {
-      formData.append("contactId", contactId.value);
+    if (contactId) {
+      formData.append("contactId", contactId);
     }
     if (currency !== null && currency.value) {
       formData.append("currencyCode", currency.value);
@@ -353,11 +354,12 @@ class CreateSupplierInvoice extends React.Component {
           createMore: false,
           selectedContact: ''
         })
+        resetForm()
       } else {
         this.props.history.push('/admin/expense/supplier-invoice')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -376,9 +378,11 @@ class CreateSupplierInvoice extends React.Component {
         value: data.contactId,
       }
     }
-    this.setState({
-      selectedContact: option
-    })
+    // this.setState({
+    //   selectedContact: option
+    // })
+    this.formRef.current.setFieldValue('contactId',option,true)
+
   }
 
   closeSupplierModal(res) {
@@ -420,10 +424,12 @@ class CreateSupplierInvoice extends React.Component {
                     <Col lg={12}>
                       <Formik
                         initialValues={initValue}
+                        ref={this.formRef}
+                       
                         onSubmit={(values, { resetForm }) => {
 
-                          this.handleSubmit(values)
-                          resetForm(initValue)
+                          this.handleSubmit(values,resetForm)
+                          // resetForm(initValue)
 
                           // this.setState({
                           //   selectedCurrency: null,
@@ -441,6 +447,8 @@ class CreateSupplierInvoice extends React.Component {
                               .required("Supplier is Required"),
                               invoiceDate: Yup.date()
                               .required('Invoice Date is Required'),
+                              invoiceDueDate: Yup.date()
+                              .required('Invoice Due Date is Required'),
                           })}
                       >
                         {props => (
@@ -489,10 +497,13 @@ class CreateSupplierInvoice extends React.Component {
                                     id="contactId"
                                     name="contactId"
                                     options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list,'Supplier Name') : []}
-                                    value={selectedContact}
-                                    onChange={option => {
-                                      props.handleChange('contactId')(option)
-                                      this.getCurrentUser(option)
+                                    value={props.values.contactId}
+                                    onChange={(option) => {
+                                      if (option && option.value) {
+                                        props.handleChange('contactId')(option.value)
+                                      } else {
+                                        props.handleChange('contactId')('')
+                                      }
                                     }}
                                     className={
                                       props.errors.contactId && props.touched.contactId
@@ -552,6 +563,9 @@ class CreateSupplierInvoice extends React.Component {
                                     name="invoiceDate"
                                     placeholderText="Invoice Date"
                                     selected={props.values.invoiceDate}
+                                    showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                     onChange={(value) => {
                                       props.handleChange("invoiceDate")(value)
                                     }}
@@ -572,10 +586,17 @@ class CreateSupplierInvoice extends React.Component {
                                       name="invoiceDueDate"
                                       placeholderText="Invoice Due Date"
                                       selected={props.values.invoiceDueDate}
+                                      showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                       onChange={(value) => {
                                         props.handleChange("invoiceDueDate")(value)
                                       }}
-                                    />
+                                      className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}
+                                      />
+                                      {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
+                                        <div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
+                                      )}
                                   </div>
                                 </FormGroup>
                               </Col>
@@ -832,7 +853,14 @@ class CreateSupplierInvoice extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={
+                                      () => {
+                                        this.setState({ createMore: false }, () => {
+                                          props.handleSubmit()
+                                        })
+                                      }
+                                    }
+                                  >
                                     <i className="fa fa-dot-circle-o"></i> Create
                               </Button>
                                   <Button type="submit" color="primary" className="btn-square mr-3"

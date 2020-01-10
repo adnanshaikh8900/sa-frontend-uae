@@ -34,10 +34,16 @@ class Header extends Component {
   constructor(props) {
     super(props)
     this.state = {
-
+      profilePic: []
     }
 
     this.signOut = this.signOut.bind(this)
+  }
+
+  componentDidMount(){
+    this.setState({
+      profilePic: localStorage.getItem('profilePic') ? localStorage.getItem('profilePic') : ''
+    })
   }
 
   signOut () {
@@ -47,7 +53,7 @@ class Header extends Component {
 
   render() {
     const { children, ...attributes } = this.props
-
+    const { profilePic } = this.state
     return (
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -78,6 +84,7 @@ class Header extends Component {
           </NavItem>
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav>
+            {/* {profilePic ?  'data:image/jpg;base64,'+avatar : ''} */}
               <img src={avatar} className="img-avatar" alt="admin@bootstrapmaster.com" />
             </DropdownToggle>
             <DropdownMenu right>
@@ -87,10 +94,10 @@ class Header extends Component {
               <DropdownItem onClick={() => this.props.history.push('/admin/settings/general')}>
                 <i className="icon-wrench"></i> General Settings
               </DropdownItem>
-              <DropdownItem onClick={() => this.props.history.push('/admin/settings/transaction-category')}>
+              {/* <DropdownItem onClick={() => this.props.history.push('/admin/settings/transaction-category')}>
                 <i className="icon-graph"></i> Transaction Category
-              </DropdownItem>
-              <DropdownItem onClick={() => this.props.history.push('/admin/settings/user-role')}>
+              </DropdownItem> */}
+              <DropdownItem onClick={() => this.props.history.push('/admin/settings/user')}>
                 <i className="fas fa-users"></i> Users & Roles
               </DropdownItem>
               <DropdownItem onClick={() => this.props.history.push('/admin/settings/notification')}>

@@ -191,7 +191,7 @@ class Expense extends React.Component {
       ids: selectedRows
     }
     this.props.expenseActions.removeBulkExpenses(obj).then(() => {
-      this.props.expenseActions.getExpenseList()
+      this.initializeData()
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (expense_list && expense_list.length > 0) {
         this.setState({
@@ -199,7 +199,7 @@ class Expense extends React.Component {
         })
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -212,7 +212,7 @@ class Expense extends React.Component {
   render() {
     const { loading,
       dialog,
-      filterData ,
+      filterData,
       selectedRows
     } = this.state
     const { expense_list, expense_categories_list } = this.props
@@ -280,7 +280,7 @@ class Expense extends React.Component {
                       <div className="py-3">
                         <h5>Filter : </h5>
                         <Row>
-                        <Col lg={2} className="mb-1">
+                          <Col lg={2} className="mb-1">
                             <Input
                               type="text"
                               placeholder="Payee"
@@ -298,6 +298,9 @@ class Expense extends React.Component {
                               name="expenseDate"
                               placeholderText="Expense Date"
                               selected={filterData.expenseDate}
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
                               value={filterData.expenseDate}
                               onChange={(value) => {
                                 this.handleChange(value, "expenseDate")
@@ -314,7 +317,13 @@ class Expense extends React.Component {
                                 name="expenseCategoryId"
                                 value={filterData.transactionCategoryId}
                                 options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
-                                onChange={(option) => { this.handleChange(option.value, 'transactionCategoryId') }}
+                                onChange={(option) => {
+                                  if (option && option.value) {
+                                    this.handleChange(option.value, 'transactionCategoryId')
+                                  } else {
+                                    this.handleChange('', 'transactionCategoryId')
+                                  }
+                                }}
                                 placeholder="Expense Category"
                               />
                             </FormGroup>

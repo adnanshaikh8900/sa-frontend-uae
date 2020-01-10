@@ -143,7 +143,7 @@ class CreateExpense extends React.Component {
     }
     this.props.expenseCreateActions.createExpense(formData).then(res => {
       if (res.status === 200) {
-        // resetForm()
+        resetForm()
         this.props.commonActions.tostifyAlert('success', 'New Expense Created Successfully.')
         if (this.state.createMore) {
           this.setState({
@@ -154,7 +154,7 @@ class CreateExpense extends React.Component {
         }
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -198,7 +198,7 @@ class CreateExpense extends React.Component {
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
 
-                          this.handleSubmit(values)
+                          this.handleSubmit(values,resetForm)
 
                           // this.setState({
                           //   selectedCurrency: null,
@@ -262,6 +262,9 @@ class CreateExpense extends React.Component {
                                     className={`form-control ${props.errors.expenseDate && props.touched.expenseDate ? "is-invalid" : ""}`}
                                     placeholderText="Expense Date"
                                     selected={props.values.expenseDate}
+                                    showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                     dateFormat="dd/MM/yyyy"
                                     maxDate={new Date()}
                                     onChange={(value) => {
@@ -409,7 +412,12 @@ class CreateExpense extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                  <Button type="button" color="primary" className="btn-square mr-3"   onClick={() => {
+                                      this.setState({ createMore: false }, () => {
+                                        props.handleSubmit()
+                                      })
+                                    }
+                                    }>
                                     <i className="fa fa-dot-circle-o"></i> Create
                         </Button>
                                   <Button type="button" color="primary" className="btn-square mr-3"

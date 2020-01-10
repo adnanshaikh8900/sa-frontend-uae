@@ -106,19 +106,20 @@ class DetailContact extends React.Component {
         })
       }).catch(err => {
         this.setState({ loading: false })
-        this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
       })
     } else {
       this.props.history.push('/admin/master/contact')
     }
   }
 
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     const { id } = this.state
     const postData = {...data, ...{ contactId: id } }
 
     this.props.detailContactActions.updateContact(postData).then(res => {
       if (res.status === 200) {
+        resetForm()
         this.props.commonActions.tostifyAlert('success', ' Contact Updated Successfully')
         this.props.history.push('/admin/master/contact');
       }
@@ -151,7 +152,7 @@ class DetailContact extends React.Component {
         this.props.history.push('/admin/master/contact')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -193,9 +194,7 @@ class DetailContact extends React.Component {
                             initialValues={initValue}
                             onSubmit={(values, { resetForm }) => {
 
-                              this.handleSubmit(values)
-                              resetForm(initValue)
-
+                              this.handleSubmit(values,resetForm)
                             }}
 
                           // validationSchema={
@@ -322,7 +321,13 @@ class DetailContact extends React.Component {
                                         className="select-default-width"
                                         options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list,'Contact Type') : []}
                                         value={props.values.contactType}
-                                        onChange={option => props.handleChange('contactType')(option.value)}
+                                        onChange={option => {
+                                          if(option && option.value) {
+                                            props.handleChange('contactType')(option.value)
+                                          } else {
+                                            props.handleChange('contactType')('')
+                                          }
+                                        }}
                                         placeholder="Select Contact Type"
                                         id="contactType"
                                         name="contactType"

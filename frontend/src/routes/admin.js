@@ -16,6 +16,7 @@ import {
   CreateBankTransaction,
   DetailBankTransaction,
   ImportBankStatement,
+  ImportTransaction,
 
 
 
@@ -69,11 +70,11 @@ import {
   VatCode,
   CreateVatCode,
   DetailVatCode,
-  
+
   ProductCategory,
   CreateProductCategory,
   DetailProductCategory,
-  
+
   Currency,
   CreateCurrency,
   DetailCurrency,
@@ -96,7 +97,7 @@ import {
   DataBackup,
   Help,
   Faq
-  
+
 } from 'screens'
 
 const adminRoutes = [
@@ -140,7 +141,7 @@ const adminRoutes = [
 
 
 
-  
+
 
   {
     path: '/admin/banking/bank-account/transaction/create',
@@ -171,6 +172,11 @@ const adminRoutes = [
     path: '/admin/banking/bank-account',
     name: 'Bank Account',
     component: BankAccount.screen
+  },
+  {
+    path: '/admin/banking/upload-statement/transaction',
+    name: 'Transaction',
+    component: ImportTransaction.screen
   },
   {
     path: '/admin/banking/upload-statement',
@@ -261,7 +267,7 @@ const adminRoutes = [
   },
   {
     path: '/admin/expense/expense',
-    name: 'Expense', 
+    name: 'Expense',
     component: Expense.screen
   },
   {
@@ -294,12 +300,12 @@ const adminRoutes = [
 
   {
     path: '/admin/taxes/vat-transactions',
-    name: 'VAT Transactions', 
+    name: 'VAT Transactions',
     component: VatTransactions.screen
   },
   {
     path: '/admin/taxes/reports-filing',
-    name: 'Reports Filing', 
+    name: 'Reports Filing',
     component: ReportsFiling.screen
   },
   {
@@ -311,18 +317,18 @@ const adminRoutes = [
 
 
 
-  
+
 
 
 
   {
     path: '/admin/report/transactions',
-    name: 'Transactions', 
+    name: 'Transactions',
     component: TransactionsReport.screen
   },
   {
     path: '/admin/report/financial',
-    name: 'Financial', 
+    name: 'Financial',
     component: FinancialReport.screen
   },
   {
@@ -497,21 +503,21 @@ const adminRoutes = [
     name: 'General Settings',
     component: GeneralSettings.screen
   },
-  {
-    path: '/admin/settings/transaction-category/create',
-    name: 'Create',
-    component: CreateTransactionCategory.screen
-  },
-  {
-    path: '/admin/settings/transaction-category/detail',
-    name: 'Detail',
-    component: DetailTransactionCategory.screen
-  },
-  {
-    path: '/admin/settings/transaction-category',
-    name: 'Transaction Category',
-    component: TransactionCategory.screen
-  },
+  // {
+  //   path: '/admin/settings/transaction-category/create',
+  //   name: 'Create',
+  //   component: CreateTransactionCategory.screen
+  // },
+  // {
+  //   path: '/admin/settings/transaction-category/detail',
+  //   name: 'Detail',
+  //   component: DetailTransactionCategory.screen
+  // },
+  // {
+  //   path: '/admin/settings/transaction-category',
+  //   name: 'Transaction Category',
+  //   component: TransactionCategory.screen
+  // },
   {
     path: '/admin/settings/user-role',
     name: 'Users & Roles',
@@ -548,7 +554,7 @@ const adminRoutes = [
 
 
 
-  
+
 
 
   {

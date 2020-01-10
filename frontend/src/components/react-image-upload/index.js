@@ -22,7 +22,6 @@ const ERROR = {
 class ImageUploader extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props)
     this.state = {
       pictures: [...props.defaultImages],
       files: [],
@@ -34,7 +33,6 @@ class ImageUploader extends React.Component {
     this.onUploadClick = this.onUploadClick.bind(this);
     this.triggerFileUpload = this.triggerFileUpload.bind(this);
     this.readFile = this.readFile.bind(this)
-    console.log(props)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot){
@@ -173,7 +171,6 @@ class ImageUploader extends React.Component {
    */
   renderIcon() {
     if (this.props.withIcon) {
-        console.log(this.props.withIcon)
       return <img src="" className="uploadIcon"	alt="Upload Icon" />;
     }
   }
@@ -201,12 +198,11 @@ class ImageUploader extends React.Component {
   }
 
   renderPreviewPictures() {
-    console.log(this.state.pictures)
     return this.state.pictures.map((picture, index) => {
       return (
         <div key={index} className="uploadPictureContainer">
           <div className="deleteImage" onClick={() => this.removeImage(picture)}>X</div>
-          <img src={this.props.defaultImages.length ? 'data:image/jpg;base64,'+picture : picture} className="uploadPicture" onClick={(e)=>{
+          <img src={this.props.imageState ? 'data:image/jpg;base64,'+picture : picture} className="uploadPicture" onClick={(e)=>{
             window.open(picture, '_blank')}} alt="preview"/>
         </div>
       );
@@ -289,7 +285,8 @@ ImageUploader.defaultProps = {
   singleImage: false,
   onChange: () => {},
   defaultImages: [],
-  filpHeight: {}
+  filpHeight: {},
+  imageState: false
 };
 
 // ReactImageUploadComponent.propTypes = {

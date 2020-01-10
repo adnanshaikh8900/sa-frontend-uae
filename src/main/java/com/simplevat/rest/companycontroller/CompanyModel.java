@@ -2,6 +2,8 @@ package com.simplevat.rest.companycontroller;
 
 import java.math.BigDecimal;
 
+import javax.annotation.Nullable;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
@@ -10,7 +12,6 @@ import lombok.Data;
 public class CompanyModel {
 
 	private MultipartFile companyLogo;
-	private Integer id;
 	private String companyName;
 	private String companyRegistrationNumber;
 	private String vatRegistrationNumber;
@@ -40,5 +41,4 @@ public class CompanyModel {
 	private BigDecimal companyRevenueBudget;
 	private String dateFormat;
 	private byte[] companyLogoByteArray;
-
 }

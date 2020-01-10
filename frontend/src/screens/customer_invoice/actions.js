@@ -218,9 +218,7 @@ export const removeBulk = (obj) => {
       data: obj
     }
     return authApi(data).then(res => {
-      if (res.status === 200) {
         return res
-      }
     }).catch(err => {
       throw err
     })

@@ -244,7 +244,7 @@ class Contact extends React.Component {
       <div className="contact-screen">
         <div className="animated fadeIn">
           {dialog}
-          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+          {/* // <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card>
             <CardHeader>
               <Row>
@@ -313,8 +313,13 @@ class Contact extends React.Component {
                                 <Select
                                   options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list,'Contact Type') : []}
                                   onChange={(val) => {
-                                    this.handleChange(val['value'], 'contactType')
+                                        if(val && val.value) {
+                                          this.handleChange(val['value'], 'contactType')
                                     this.setState({ 'selectedContactType': val['value'] })
+                                        } else {
+                                          this.handleChange('', 'contactType')
+                                    this.setState({ 'selectedContactType': '' })
+                                        }
                                   }}
                                   className="select-default-width"
                                   placeholder="Contact Type"

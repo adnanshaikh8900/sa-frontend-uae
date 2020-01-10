@@ -133,7 +133,7 @@ class DetailReceipt extends React.Component {
         this.props.history.push('/admin/revenue/receipt')
     }
   }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -155,7 +155,7 @@ class DetailReceipt extends React.Component {
         this.props.history.push('/admin/revenue/receipt')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -212,6 +212,8 @@ class DetailReceipt extends React.Component {
                             .required('Customer is required'),
                             amount: Yup.string()
                             .required('Amount is required')
+                            .matches(/^[0-9]+$/, {message: "Please enter valid Amount.", excludeEmptyString: false})
+
                           })}
                         >
                           {props => (
@@ -239,6 +241,9 @@ class DetailReceipt extends React.Component {
                                      className="form-control"
                                      id="date"
                                      name="receiptDate"
+                                     showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                     placeholderText="Receipt Date"
                                     value={props.values.receiptDate ? moment(props.values.receiptDate).format('DD-MM-YYYY') : ''}
                                     onChange={(value) => {
@@ -272,8 +277,9 @@ class DetailReceipt extends React.Component {
                                   value={props.values.contactId}
                                   onChange={(option) => {
                                     if (option && option.value) {
-                                      console.log(option.value)
                                       props.handleChange('contactId')(option.value)
+                                    } else {
+                                      props.handleChange('contactId')('')
                                     }
                                   }}
                                 />
@@ -290,9 +296,12 @@ class DetailReceipt extends React.Component {
                                     placeholder="Invoice Number"
                                    value={props.values.invoiceId}
                                     onChange={(option) => {
-                                    if (option && option.value) {
-                                      props.handleChange('invoiceId')(option.value)
-                                    }
+                                      if (option && option.value) {
+                                        props.handleChange('invoiceId')(option.value)
+                                      } else {
+                                        props.handleChange('invoiceId')('')
+    
+                                      }
                                   }}
                                 />
                                   </FormGroup>
@@ -323,8 +332,11 @@ class DetailReceipt extends React.Component {
                                       placeholder="Amount"
                                       value={props.values.amount}
                                       onChange={(value) => {props.handleChange('amount')(value)}}
-  
-                                    />
+                                      className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
+                                      />
+                                      {props.errors.amount && props.touched.amount && (
+                                        <div className="invalid-feedback">{props.errors.amount}</div>
+                                      )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={4}>

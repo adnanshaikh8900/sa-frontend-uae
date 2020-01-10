@@ -121,7 +121,7 @@ class Product extends React.Component {
       }
     }).catch(err => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -192,7 +192,7 @@ class Product extends React.Component {
         }
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -311,7 +311,11 @@ class Product extends React.Component {
                                   placeholder="Vat Percentage"
                                   value={filterData.vatPercentage}
                                   onChange={(option) => {
-                                    this.handleChange(option.value, 'vatPercentage')
+                                    if(option && option.value) {
+                                      this.handleChange(option.value, 'vatPercentage')
+                                    } else {
+                                      this.handleChange('', 'vatPercentage')
+                                    }
                                   }}
                                 />
                               </FormGroup>

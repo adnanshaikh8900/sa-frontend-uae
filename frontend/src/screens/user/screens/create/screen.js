@@ -41,6 +41,7 @@ import './style.scss'
 const mapStateToProps = (state) => {
   return ({
     role_list: state.user.role_list,
+    company_type_list: state.user.company_type_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -68,7 +69,8 @@ class CreateUser extends React.Component {
         confirmPassword: '',
         roleId: ''
       },
-      pictures: [],
+      userPhoto: [],
+      userPhotoFile: [],
       showIcon: false
     }
     this.uploadImage = this.uploadImage.bind(this);
@@ -81,16 +83,18 @@ class CreateUser extends React.Component {
 
   initializeData() {
     this.props.userActions.getRoleList()
+    this.props.userActions.getCompanyTypeList()
     this.setState({showIcon: false})
   }
 
-  uploadImage(picture) {
+  uploadImage(picture,file) {
     this.setState({
-      pictures: picture,
+      userPhoto: picture,
+      userPhotoFile: file
     });
   }
 
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     const {
       firstName,
       lastName,
@@ -101,7 +105,7 @@ class CreateUser extends React.Component {
       companyId,
       active,
     } = data;
-    const { pictures } = this.state;
+    const { userPhoto } = this.state;
     let formData = new FormData();
     formData.append("firstName", firstName ? firstName : '');
     formData.append("lastName", lastName ? lastName : '');
@@ -111,18 +115,19 @@ class CreateUser extends React.Component {
     formData.append("active", active ? active : '');
     formData.append("password", password ? password : '');
     formData.append("companyId", companyId ? companyId : '');
-    if (pictures.length > 0) {
-      formData.append("attachmentFile ", pictures[0]);
+    if (this.state.userPhotoFile.length > 0) {
+      formData.append("profilePic ", this.state.userPhotoFile[0]);
     }
 
 
     this.props.userCreateActions.createUser(formData).then(res => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'New Employee Created Successfully')
+        this.props.commonActions.tostifyAlert('success', 'New User Created Successfully')
         if (this.state.createMore) {
           this.setState({
             createMore: false
           })
+          resetForm()
         } else {
           this.props.history.push('/admin/settings/user')
         }
@@ -134,7 +139,7 @@ class CreateUser extends React.Component {
 
   render() {
 
-    const { role_list } = this.props;
+    const { role_list , company_type_list} = this.props;
 
     return (
       <div className="create-user-screen">
@@ -158,7 +163,7 @@ class CreateUser extends React.Component {
                       <Formik
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values)
+                          this.handleSubmit(values,resetForm)
                           // resetForm(this.state.initValue)
 
                           // this.setState({
@@ -214,10 +219,10 @@ class CreateUser extends React.Component {
                                     singleImage={true}
                                     withIcon={this.state.showIcon}
                                     // buttonText="Choose Profile Image"
-                                    flipHeight={this.state.pictures.length > 0 ? {height: "inherit"} : {}}
+                                    flipHeight={this.state.userPhoto.length > 0 ? {height: "inherit"} : {}}
                                     label="'Max file size: 1mb"
-                                    labelClass={this.state.pictures.length > 0 ? 'hideLabel' : 'showLabel'}
-                                    buttonClassName={this.state.pictures.length > 0 ? 'hideButton' : 'showButton'}
+                                    labelClass={this.state.userPhoto.length > 0 ? 'hideLabel' : 'showLabel'}
+                                    buttonClassName={this.state.userPhoto.length > 0 ? 'hideButton' : 'showButton'}
                                   />
                                 </FormGroup>
                               </Col>
@@ -276,6 +281,9 @@ class CreateUser extends React.Component {
                                         className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                         id="dob "
                                         name="dob "
+                                        showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                                         placeholderText="Enter Birth Date"
                                         selected={props.values.dob}
                                         onChange={(value) => {
@@ -296,7 +304,13 @@ class CreateUser extends React.Component {
                                         className="select-default-width"
                                         options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
                                         value={props.values.roleId}
-                                        onChange={option => props.handleChange('roleId')(option.value)}
+                                        onChange={option => {
+                                          if(option && option.value) {
+                                            props.handleChange('roleId')(option.value)
+                                          } else {
+                                            props.handleChange('roleId')('')
+                                          }
+                                        }}
                                         placeholder="Select Role"
                                         id="roleId"
                                         name="roleId"
@@ -312,31 +326,6 @@ class CreateUser extends React.Component {
 
                                     </FormGroup>
                                   </Col>
-                                  <Col lg={6}>
-                                    <FormGroup>
-                                      <Label htmlFor="companyId">Company</Label>
-                                      <Select
-                                        className="select-default-width"
-                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
-                                        value={props.values.companyId}
-                                        onChange={option => props.handleChange('companyId')(option.value)}
-                                        placeholder="Select Company"
-                                        id="companyId"
-                                        name="companyId"
-                                        className={
-                                          props.errors.companyId && props.touched.companyId
-                                            ? "is-invalid"
-                                            : ""
-                                        }
-                                      />
-                                      {props.errors.companyId && props.touched.companyId && (
-                                        <div className="invalid-feedback">{props.errors.companyId}</div>
-                                      )}
-
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
-                                <Row>
                                   <Col lg={6}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="active">Status</Label>
@@ -370,6 +359,32 @@ class CreateUser extends React.Component {
                                       </div>
                                     </FormGroup>
                                   </Col>
+                                  {/* <Col lg={6}>
+                                    <FormGroup>
+                                      <Label htmlFor="companyId">Company</Label>
+                                      <Select
+                                        className="select-default-width"
+                                        options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list , 'Company') : []}
+                                        value={props.values.companyId}
+                                        onChange={option => props.handleChange('companyId')(option.value)}
+                                        placeholder="Select Company"
+                                        id="companyId"
+                                        name="companyId"
+                                        className={
+                                          props.errors.companyId && props.touched.companyId
+                                            ? "is-invalid"
+                                            : ""
+                                        }
+                                      />
+                                      {props.errors.companyId && props.touched.companyId && (
+                                        <div className="invalid-feedback">{props.errors.companyId}</div>
+                                      )}
+
+                                    </FormGroup>
+                                  </Col> */}
+                                </Row>
+                                <Row>
+                                
                                 </Row>
                                 <Row>
                                   <Col lg={6}>
@@ -408,12 +423,21 @@ class CreateUser extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
+                                <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                    this.setState({ createMore: false }, () => {
+                                      props.handleSubmit()
+                                    })
+                                  }}>
                                     <i className="fa fa-dot-circle-o"></i> Create
-                              </Button>
-                                  <Button type="submit" color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-repeat"></i> Create and More
-                              </Button>
+                                      </Button>
+                                  <Button name="button" color="primary" className="btn-square mr-3"
+                                    onClick={() => {
+                                      this.setState({ createMore: true }, () => {
+                                        props.handleSubmit()
+                                      })
+                                    }}>
+                                    <i className="fa fa-refresh"></i> Create and More
+                                      </Button>
                                   <Button color="secondary" className="btn-square"
                                     onClick={() => { this.props.history.push('/admin/settings/user') }}>
                                     <i className="fa fa-ban"></i> Cancel

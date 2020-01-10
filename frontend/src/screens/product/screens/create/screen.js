@@ -21,6 +21,9 @@ import * as Yup from "yup";
 import './style.scss'
 
 import * as ProductActions from '../../actions'
+import {
+  CommonActions
+} from 'services/global'
 
 import {WareHouseModal} from '../../sections'
 import {selectOptionsFactory} from 'utils'
@@ -34,7 +37,9 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    productActions: bindActionCreators(ProductActions, dispatch)
+    productActions: bindActionCreators(ProductActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch),
+
   })
 }
 
@@ -88,7 +93,7 @@ class CreateProduct extends React.Component {
 
 
   // Create or Edit Product
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     const {
       productName, 
       productDescription,
@@ -119,11 +124,12 @@ class CreateProduct extends React.Component {
           this.setState({
             createMore: false
           })
+          resetForm()
           // this.props.history.push('/admin/master/product/create')
         } else this.props.history.push('/admin/master/product')
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -160,8 +166,8 @@ class CreateProduct extends React.Component {
                         initialValues={initValue}
                         onSubmit={(values, {resetForm}) => {
 
-                          this.handleSubmit(values)
-                          resetForm(initValue)
+                          this.handleSubmit(values,resetForm)
+                          // resetForm(initValue)
 
                           // this.setState({
                           //   selectedWareHouse: null,
@@ -233,7 +239,11 @@ class CreateProduct extends React.Component {
                                         // this.setState({
                                         //   selectedParentProduct: option.value
                                         // })
-                                        props.handleChange("productCategoryId")(option.value);
+                                       if(option && option.value) {
+                                        props.handleChange("productCategoryId")(option.value)
+                                       } else {
+                                        props.handleChange("productCategoryId")('')
+                                       }
                                       }}
                                     />
                                   </FormGroup>
@@ -268,7 +278,11 @@ class CreateProduct extends React.Component {
                                         // this.setState({
                                         //   selectedVatCategory: option.value
                                         // })
-                                        props.handleChange("vatCategoryId")(option.value);
+                                        if(option && option.value) {
+                                          props.handleChange("vatCategoryId")(option.value)
+                                        } else {
+                                          props.handleChange("vatCategoryId")('')
+                                        }
                                       }}
                                       className={
                                         props.errors.vatCategoryId && props.touched.vatCategoryId
@@ -313,7 +327,11 @@ class CreateProduct extends React.Component {
                                         // this.setState({
                                         //   selectedWareHouse: option.value
                                         // })
-                                        props.handleChange("productWarehouseId")(option.value);
+                                        if(option && option.value) {
+                                          props.handleChange("productWarehouseId")(option.value)
+                                        } else {
+                                          props.handleChange("productWarehouseId")('')
+                                        }
                                       }}
                                     />
                                   </FormGroup>
@@ -349,7 +367,13 @@ class CreateProduct extends React.Component {
                               <Row>
                                 <Col lg={12} className="mt-5">
                                   <FormGroup className="text-right">
-                                    <Button type="submit" color="primary" className="btn-square mr-3">
+                                    <Button type="button" color="primary" className="btn-square mr-3"  onClick={
+                                        () => {
+                                          this.setState({createMore: false})
+                                          props.handleSubmit()
+                                        }
+                                      }
+                                    >
                                       <i className="fa fa-dot-circle-o"></i> Create
                                     </Button>
                                     <Button type="button" color="primary" className="btn-square mr-3"

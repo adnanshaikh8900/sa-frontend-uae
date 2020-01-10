@@ -199,6 +199,9 @@ class ReportsFiling extends React.Component {
                       selected={this.state.birthday}
                       onChange={this.changeBirthday}
                       placeholderText="Date"
+                      showMonthDropdown
+                                      showYearDropdown
+                                      dropdownMode="select"
                     />
                   </Col>
                 </Row>

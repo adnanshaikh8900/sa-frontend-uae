@@ -236,7 +236,7 @@ class CreateProject extends React.Component {
                                       this.setState({
                                         selectedContact: option.value
                                       })
-                                      if(option.value) {
+                                      if(option && option.value) {
                                         props.handleChange("contactId")(option.value)
                                       } else {
                                         props.handleChange("contactId")('')

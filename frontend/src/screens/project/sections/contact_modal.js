@@ -322,7 +322,7 @@ class ContactModal extends React.Component {
                           this.setState({
                           selectedContactCountry: option.value
                           })
-                          if(option.value) {
+                          if(option && option.value) {
                             props.handleChange("country")(option.value);
                           } else {
                             props.handleChange("country")('');

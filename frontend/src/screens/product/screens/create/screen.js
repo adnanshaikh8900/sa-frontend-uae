@@ -239,7 +239,7 @@ class CreateProduct extends React.Component {
                                         // this.setState({
                                         //   selectedParentProduct: option.value
                                         // })
-                                       if(option.value) {
+                                       if(option && option.value) {
                                         props.handleChange("productCategoryId")(option.value)
                                        } else {
                                         props.handleChange("productCategoryId")('')
@@ -278,7 +278,7 @@ class CreateProduct extends React.Component {
                                         // this.setState({
                                         //   selectedVatCategory: option.value
                                         // })
-                                        if(option.value) {
+                                        if(option && option.value) {
                                           props.handleChange("vatCategoryId")(option.value)
                                         } else {
                                           props.handleChange("vatCategoryId")('')
@@ -327,7 +327,7 @@ class CreateProduct extends React.Component {
                                         // this.setState({
                                         //   selectedWareHouse: option.value
                                         // })
-                                        if(option.value) {
+                                        if(option && option.value) {
                                           props.handleChange("productWarehouseId")(option.value)
                                         } else {
                                           props.handleChange("productWarehouseId")('')

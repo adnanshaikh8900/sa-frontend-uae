@@ -260,7 +260,7 @@ class Organization extends React.Component {
                                   options={industry_type_list ? selectOptionsFactory.renderOptions('label', 'value', industry_type_list) : []}
                                   value={props.values.industryTypeCode}
                                   onChange={option => {
-                                    if(option.value) {
+                                    if(option && option.value) {
                                       props.handleChange('industryTypeCode')(option.value)
                                     }else {
                                       props.handleChange('industryTypeCode')('')

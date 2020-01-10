@@ -140,7 +140,7 @@ class ImportTransaction extends React.Component {
 
                                           </div>
                                         </Col>
-                                        <Col lg={8} className="table_option">
+                                        <Col lg={7} className="table_option">
                                           {/* <Row>
                                             <Col lg={8}> */}
                                           <FormGroup className="">
@@ -198,16 +198,11 @@ class ImportTransaction extends React.Component {
                                           {/* </Col>
                                           </Row> */}
                                         </Col>
-                                      </Row>
-                                      <Row>
-                                        <Col lg={12} className="mt-2">
+                                        <Col lg={2} className="mt-2">
                                           <FormGroup className="text-right">
-                                            <Button type="button" color="primary" className="btn-square mr-3">
+                                            <Button type="button" color="primary" className="btn-square">
                                               <i className="fa fa-dot-circle-o"></i> Apply
-                                    </Button>
-                                            <Button type="button" color="primary" className="btn-square mr-3">
-                                              <i className="fa fa-repeat"></i> Cancel
-                                    </Button>
+                                           </Button>
                                           </FormGroup>
                                         </Col>
                                       </Row>
@@ -221,43 +216,43 @@ class ImportTransaction extends React.Component {
                         </Formik>
                         <Row className="mt-5">
                           <Col lg={3}>
-                            <FormGroup className="">                             
+                            <FormGroup className="">
                               <Select
                                 type=""
                                 name=""
                                 id=""
                                 rows="6"
-                                placeholder="Transaction Date"
+                                placeholder="Transaction Name"
                               />
                             </FormGroup>
                           </Col>
                           <Col lg={3}>
                             <FormGroup className="">
-                              
+
                               <Select
                                 type=""
                                 name=""
                                 id=""
                                 rows="6"
-                                placeholder="Transaction Date"
+                                placeholder="Transaction Number"
                               />
                             </FormGroup>
                           </Col>
                           <Col lg={3}>
                             <FormGroup className="">
-                              
+
                               <Select
                                 type=""
                                 name=""
                                 id=""
                                 rows="6"
-                                placeholder="Transaction Date"
+                                placeholder="Transaction Code"
                               />
                             </FormGroup>
                           </Col>
                           <Col lg={3}>
                             <FormGroup className="">
-                              
+
                               <Select
                                 type=""
                                 name=""
@@ -293,20 +288,20 @@ class ImportTransaction extends React.Component {
                               dataField="productCode"
                               dataSort
                             >
-                              Product Code
+                              Transaction Number
                           </TableHeaderColumn>
                             <TableHeaderColumn
-                              dataField="description"
+                              dataField="Transaction Code"
                               dataSort
                             >
-                              Description
+                              Transaction Code
                           </TableHeaderColumn>
                             <TableHeaderColumn
                               dataField="vatPercentage"
                               dataSort
                             // dataFormat={this.vatCategoryFormatter}
                             >
-                              Vat Percentage
+                             Transaction Date
                           </TableHeaderColumn>
                             {/* <TableHeaderColumn
                               dataField="unitPrice"
@@ -317,6 +312,15 @@ class ImportTransaction extends React.Component {
                           </TableHeaderColumn> */}
                           </BootstrapTable>
                         </div>
+                        <Row>
+                          <Col lg={12} className="mt-2">
+                            <FormGroup className="text-right">
+                              <Button type="button" color="primary" className="btn-square mr-4">
+                                <i className="fa fa-dot-circle-o"></i> Save
+                                    </Button>
+                            </FormGroup>
+                          </Col>
+                        </Row>
                       </div>
                     </Col>
                   </Row>

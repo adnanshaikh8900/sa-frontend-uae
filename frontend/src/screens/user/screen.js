@@ -131,7 +131,6 @@ class User extends React.Component {
       if (res.status === 200) {
         this.props.userActions.getRoleList()
         this.props.userActions.getCompanyTypeList()
-
         this.setState({ loading: false })
       }
     }).catch((err) => {
@@ -369,12 +368,12 @@ class User extends React.Component {
                               // value={filterData.supplierId}
                               value={selectedStatus}
                               onChange={(option) => {
-                                if(option && option.value) {
+                                if(option) {
                                   this.handleChange(option.value, 'active')
                                 this.setState({ selectedStatus: option.value })
                                 } else {
-                                  this.handleChange('', 'active')
-                                this.setState({ selectedStatus: '' })
+                                this.handleChange(true, 'active')
+                                this.setState({ selectedStatus: true })
                                 }
                               }}
                             />

@@ -307,8 +307,8 @@ class DetailCustomerInvoice extends React.Component {
       // console.log(index)
 
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
-      total_vat = +((total_vat + val)).toFixed(2);
-      total = (total_vat + total_net).toFixed(2);
+      total_vat = +((total_vat + val));
+      total = (total_vat + total_net);
 
     })
     this.setState({
@@ -550,7 +550,7 @@ class DetailCustomerInvoice extends React.Component {
                                         options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
                                         value={props.values.contactId}
                                         onChange={option => {
-                                          if(option.value) {
+                                          if(option && option.value) {
                                             props.handleChange('contactId')(option.value)
                                           } else {
                                             props.handleChange('contactId')('')
@@ -868,7 +868,7 @@ class DetailCustomerInvoice extends React.Component {
                                                 <h5 className="mb-0 text-right">Total Net</h5>
                                               </Col>
                                               <Col lg={6} className="text-right">
-                                                <label className="mb-0">{initValue.total_net}</label>
+                                                <label className="mb-0">{(initValue.total_net.toFixed(2))}</label>
                                               </Col>
                                             </Row>
                                           </div>
@@ -878,7 +878,7 @@ class DetailCustomerInvoice extends React.Component {
                                                 <h5 className="mb-0 text-right">Total Vat</h5>
                                               </Col>
                                               <Col lg={6} className="text-right">
-                                                <label className="mb-0">{initValue.invoiceVATAmount}</label>
+                                                <label className="mb-0">{(initValue.invoiceVATAmount.toFixed(2))}</label>
                                               </Col>
                                             </Row>
                                           </div>
@@ -888,7 +888,7 @@ class DetailCustomerInvoice extends React.Component {
                                                 <h5 className="mb-0 text-right">Total</h5>
                                               </Col>
                                               <Col lg={6} className="text-right">
-                                                <label className="mb-0">{initValue.totalAmount}</label>
+                                                <label className="mb-0">{(initValue.totalAmount.toFixed(2))}</label>
                                               </Col>
                                             </Row>
                                           </div>

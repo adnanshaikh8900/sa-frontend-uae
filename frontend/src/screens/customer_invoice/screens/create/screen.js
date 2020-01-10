@@ -296,8 +296,8 @@ class CreateCustomerInvoice extends React.Component {
       let val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
       obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : 0;
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
-      total_vat = +((total_vat + val)).toFixed(2);
-      total = (total_vat + total_net).toFixed(2);
+      total_vat = +((total_vat + val));
+      total = (total_vat + total_net);
 
     })
     this.setState({
@@ -503,7 +503,7 @@ class CreateCustomerInvoice extends React.Component {
                                     value={props.values.contactId}
                                     onChange={option => {
                                       // this.getCurrentUser(option)
-                                      if(option.value) {
+                                      if(option && option.value) {
                                         props.handleChange('contactId')(option.value)
                                       } else {
                                         props.handleChange('contactId')('')
@@ -829,7 +829,7 @@ class CreateCustomerInvoice extends React.Component {
                                             <h5 className="mb-0 text-right">Total Net</h5>
                                           </Col>
                                           <Col lg={6} className="text-right">
-                                            <label className="mb-0">{initValue.total_net}</label>
+                                            <label className="mb-0">{(initValue.total_net.toFixed(2))}</label>
                                           </Col>
                                         </Row>
                                       </div>
@@ -839,7 +839,7 @@ class CreateCustomerInvoice extends React.Component {
                                             <h5 className="mb-0 text-right">Total Vat</h5>
                                           </Col>
                                           <Col lg={6} className="text-right">
-                                            <label className="mb-0">{initValue.invoiceVATAmount}</label>
+                                            <label className="mb-0">{(initValue.invoiceVATAmount).toFixed(2)}</label>
                                           </Col>
                                         </Row>
                                       </div>
@@ -849,7 +849,7 @@ class CreateCustomerInvoice extends React.Component {
                                             <h5 className="mb-0 text-right">Total</h5>
                                           </Col>
                                           <Col lg={6} className="text-right">
-                                            <label className="mb-0">{initValue.totalAmount}</label>
+                                            <label className="mb-0">{(initValue.totalAmount.toFixed(2))}</label>
                                           </Col>
                                         </Row>
                                       </div>

@@ -22,6 +22,8 @@ export const checkAuthStatus = () => {
           }
         })
         window.localStorage.setItem('profilePic', res.data.profileImageBinary);
+        window.localStorage.setItem('userId',res.data.userId)
+
       } else {
         throw new Error('Auth Failed')
       }
@@ -55,6 +57,9 @@ export const logIn = (obj) => {
 export const logOut = () => {
   return (dispatch) => {
     window.localStorage.removeItem('accessToken')
+    window.localStorage.removeItem('userId')
+    window.localStorage.removeItem('profilePic')
+
     dispatch({
       type: AUTH.SIGNED_OUT
     })

@@ -897,7 +897,7 @@ class Profile extends React.Component {
                                                 options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list, 'Company Type Code') : []}
                                                 value={props.values.companyTypeCode}
                                                 onChange={option => {
-                                                  if(option.value) {
+                                                  if(option && option.value) {
                                                     props.handleChange('companyTypeCode')(option.value)
                                                   } else {
                                                     props.handleChange('companyTypeCode')('')
@@ -926,7 +926,7 @@ class Profile extends React.Component {
                                                 options={industry_type_list ? selectOptionsFactory.renderOptions('label', 'value', industry_type_list, 'Industry Type') : []}
                                                 value={props.values.industryTypeCode}
                                                 onChange={option => {
-                                                  if(option.value) {
+                                                  if(option && option.value) {
                                                     props.handleChange('industryTypeCode')(option.value)
                                                   } else {
                                                     props.handleChange('industryTypeCode')('')
@@ -1188,14 +1188,25 @@ class Profile extends React.Component {
                                             options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                             value={props.values.invoicingCountryCode}
                                             onChange={option => {
-                                              props.handleChange('invoicingCountryCode')(option.value)
-                                              this.setState({
-                                                companyAddress: {
-                                                  ...this.state.companyAddress, ...{
-                                                    companyCountryCode: option.target.value
+                                              if(option && option.value) {
+                                                props.handleChange('invoicingCountryCode')(option.value)
+                                                this.setState({
+                                                  companyAddress: {
+                                                    ...this.state.companyAddress, ...{
+                                                      companyCountryCode: option.value
+                                                    }
                                                   }
-                                                }
-                                              })
+                                                })
+                                              } else {
+                                                props.handleChange('invoicingCountryCode')('')
+                                                this.setState({
+                                                  companyAddress: {
+                                                    ...this.state.companyAddress, ...{
+                                                      companyCountryCode: ''
+                                                    }
+                                                  }
+                                                })
+                                              }
                                             }}
                                             placeholder="Select Currency"
                                             id="invoicingCountryCode"
@@ -1395,7 +1406,7 @@ class Profile extends React.Component {
                                           <Select
                                             className="select-default-width"
                                             options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
-                                            value={props.values.companyCountryCode}
+                                            value={isSame ? this.state.companyAddress.companyCountryCode : props.values.companyCountryCode}
                                             onChange={option => {
                                               if(option.value) {
                                                 props.handleChange('companyCountryCode')(option.value)

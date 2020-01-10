@@ -1,12 +1,24 @@
 .import-transaction-screen {
+    .card-header {
+        color: #20a8d8;
+      }
+      .btn-group {
+        .btn {
+          color: #ffffff !important;
+        }
+      }
+      .badge {
+        padding: 0.4em 0.6em;
+        font-size: 90%;
+      }
     fieldset {
-        border: 1px solid black!important;
+        border: 1px solid #c8ced3!important;
         padding: 20px !important;
     }
     label {
   
       font-size: 1rem;
-      font-weight: 500;
+    //   font-weight: 500;
   }
     legend{
         width: inherit !important;
@@ -29,30 +41,10 @@
         }
         Input{
             width: 50%!important;
-            border: 1px solid black!important; 
           }
-          Input::placeholder{
-              color: black!important;
-              opacity: 1;
-             }
       .Select {
               width: 50% !important;
       }
       }
-           .Select {
-              border: 0.5px solid rgba(#0000, .8)!important;
-              input{
-                  border:none!important;
-              }
-              .Select-placeholder {
-                  color: black!important;
-              }
-          }
-          #name{
-              border: 1px solid black!important;
-            }
-            #name::placeholder{
-              color: black!important;
-              opacity: 1;
-             }
+          
 }

@@ -212,7 +212,7 @@ class Expense extends React.Component {
   render() {
     const { loading,
       dialog,
-      filterData ,
+      filterData,
       selectedRows
     } = this.state
     const { expense_list, expense_categories_list } = this.props
@@ -280,7 +280,7 @@ class Expense extends React.Component {
                       <div className="py-3">
                         <h5>Filter : </h5>
                         <Row>
-                        <Col lg={2} className="mb-1">
+                          <Col lg={2} className="mb-1">
                             <Input
                               type="text"
                               placeholder="Payee"
@@ -299,8 +299,8 @@ class Expense extends React.Component {
                               placeholderText="Expense Date"
                               selected={filterData.expenseDate}
                               showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                              showYearDropdown
+                              dropdownMode="select"
                               value={filterData.expenseDate}
                               onChange={(value) => {
                                 this.handleChange(value, "expenseDate")
@@ -317,13 +317,13 @@ class Expense extends React.Component {
                                 name="expenseCategoryId"
                                 value={filterData.transactionCategoryId}
                                 options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
-                                onChange={(option) => { 
-                                  if(option && option.value) {
+                                onChange={(option) => {
+                                  if (option && option.value) {
                                     this.handleChange(option.value, 'transactionCategoryId')
                                   } else {
                                     this.handleChange('', 'transactionCategoryId')
                                   }
-                                 }}
+                                }}
                                 placeholder="Expense Category"
                               />
                             </FormGroup>

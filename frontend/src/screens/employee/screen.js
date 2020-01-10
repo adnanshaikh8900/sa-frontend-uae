@@ -111,7 +111,7 @@ class Employee extends React.Component {
       pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
     }
     const postData = { ...filterData, ...paginationData }
-     this.props.employeeActions.getEmployeeList(postData).then(res => {
+    this.props.employeeActions.getEmployeeList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -221,7 +221,7 @@ class Employee extends React.Component {
 
   render() {
 
-    const { loading, dialog , filterData , selectedRows} = this.state
+    const { loading, dialog, filterData, selectedRows } = this.state
     const { employee_list, vat_list } = this.props
     const containerStyle = {
       zIndex: 1999
@@ -296,7 +296,7 @@ class Employee extends React.Component {
                               <Input type="text" placeholder="Email" onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square"  onClick={this.handleSearch}>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
                               </Button>
                             </Col>
@@ -320,7 +320,7 @@ class Employee extends React.Component {
                           ref={node => this.table = node}
                         >
                           <TableHeaderColumn
-            
+
                             dataField="firstName"
                             dataSort
                           >

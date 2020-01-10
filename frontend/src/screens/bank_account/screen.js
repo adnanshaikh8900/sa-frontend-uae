@@ -211,6 +211,7 @@ class BankAccount extends React.Component {
   }
 
   toggleActionButton (index) {
+    console.log(index)
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -250,6 +251,7 @@ class BankAccount extends React.Component {
   }
 
   renderActions (cell, row) {
+    console.log(row)
     return (
       <div>
         <ButtonDropdown

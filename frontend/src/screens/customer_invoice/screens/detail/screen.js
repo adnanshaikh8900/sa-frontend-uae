@@ -390,7 +390,7 @@ class DetailCustomerInvoice extends React.Component {
     // this.setState({
     //   selectedContact: option
     // })
-    this.formRef.current.setFieldValue('contactId', option, true)
+    this.formRef.current.setFieldValue('contactId', option.value, true)
 
   }
 

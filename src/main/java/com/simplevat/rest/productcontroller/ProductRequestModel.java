@@ -1,4 +1,4 @@
-package com.simplevat.rest.productcontroller;
+package com.simplevat.productservice.model;
 
 import com.simplevat.entity.Product;
 import com.simplevat.entity.VatCategory;
@@ -11,12 +11,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductRequestModel {
+public class ProductModel {
 
     private Integer productID;
     private String productName;
     private String productDescription;
-    private Integer vatCategoryId;
+    private Integer vatCategory;
     private String productCode;
     private Integer createdBy;
     private LocalDateTime createdDate;
@@ -25,8 +25,8 @@ public class ProductRequestModel {
     private Boolean deleteFlag = Boolean.FALSE;
     private Boolean active;
     private Integer versionNumber;
-    private Integer productCategoryId;
-    private Integer productWarehouseId;
+    private Integer parentProduct;
+    private Integer productWarehouse;
     private Boolean vatIncluded = Boolean.FALSE;
     private BigDecimal unitPrice;
 

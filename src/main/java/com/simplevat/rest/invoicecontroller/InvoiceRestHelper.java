@@ -204,6 +204,7 @@ public class InvoiceRestHelper {
         lineItemModel.setDescription(lineItem.getDescription());
         lineItemModel.setQuantity(lineItem.getQuantity());
         lineItemModel.setUnitPrice(lineItem.getUnitPrice());
+        lineItemModel.setSubTotal(lineItem.getSubTotal() );
         if (lineItem.getVatCategory() != null && lineItem.getVatCategory().getId() != null) {
             lineItemModel.setVatCategoryId(lineItem.getVatCategory().getId().toString());
         }
@@ -231,6 +232,7 @@ public class InvoiceRestHelper {
             }
             model.setTotalAmount(invoice.getTotalAmount());
             model.setTotalVatAmount(invoice.getTotalVatAmount());
+         
             if (invoice.getStatus() != null) {
                 model.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
             }

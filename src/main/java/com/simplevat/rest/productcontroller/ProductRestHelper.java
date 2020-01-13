@@ -103,6 +103,7 @@ public class ProductRestHelper {
         productModel.setDescription(product.getProductDescription());
         productModel.setProductCode(product.getProductCode());
         productModel.setUnitPrice(product.getUnitPrice());
+        productModel.setVatIncluded(product.getVatIncluded());
         return productModel;
     }
 }

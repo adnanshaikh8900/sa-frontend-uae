@@ -368,9 +368,13 @@ class SupplierInvoice extends React.Component {
                         <ButtonGroup size="sm">
                           <Button
                             color="success"
+                            type="button"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                            disabled={supplier_invoice_list.length === 0}
+                            onClick={() => {
+                              console.log('aa')
+                              this.table.handleExportCSV()
+                            }}
+                            // disabled={supplier_invoice_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -489,6 +493,8 @@ class SupplierInvoice extends React.Component {
                           pagination
                           totalSize={supplier_invoice_list ? supplier_invoice_list.length : 0}
                           className="supplier-invoice-table"
+                          ref={node => this.table = node}
+
                         >
 
                           <TableHeaderColumn

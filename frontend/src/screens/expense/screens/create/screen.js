@@ -212,6 +212,8 @@ class CreateExpense extends React.Component {
                           Yup.object().shape({
                             expenseCategory: Yup.string()
                               .required('Expense Category is required'),
+                              payee: Yup.string()
+                              .required('Payee is required'),
                             expenseDate: Yup.date()
                               .required('Expense Date is Required'),
                             expenseAmount: Yup.string()
@@ -249,7 +251,11 @@ class CreateExpense extends React.Component {
                                     rows="5"
                                     placeholder="Payee"
                                     onChange={(value) => { props.handleChange("payee")(value) }}
-                                  />
+                                    className={props.errors.payee && props.touched.payee ? "is-invalid" : ""}                                   
+                                    />
+                                    {props.errors.payee && props.touched.payee && (
+                                      <div className="invalid-feedback">{props.errors.payee}</div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>

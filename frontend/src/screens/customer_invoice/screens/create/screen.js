@@ -69,15 +69,15 @@ class CreateCustomerInvoice extends React.Component {
       ],
       discount_option: '',
 
-      // data: [{
-      //   id: 0,
-      //   description: '',
-      //   quantity: 0,
-      //   unitPrice: 0,
-      //   vatCategoryId: '',
-      //   subTotal: 0
-      // }],
-      data: [],
+      data: [{
+        id: 0,
+        description: '',
+        quantity: 0,
+        unitPrice: 0,
+        vatCategoryId: '',
+        subTotal: 0
+      }],
+      // data: [],
       idCount: 0,
       initValue: {
         receiptAttachmentDescription: '',
@@ -231,7 +231,7 @@ class CreateCustomerInvoice extends React.Component {
 
   selectItem(e, row, name) {
     e.preventDefault();
-    const data = this.state.data
+    let data = this.state.data
 
     data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -349,7 +349,7 @@ class CreateCustomerInvoice extends React.Component {
       formData.append("projectId", project.value);
     }
     if (this.uploadFile.files[0]) {
-      formData.append("attchmentFile", this.uploadFile.files[0]);
+      formData.append("attachmentFile", this.uploadFile.files[0]);
     }
     this.props.customerInvoiceCreateActions.createInvoice(formData).then(res => {
       this.props.commonActions.tostifyAlert('success', 'New Invoice Created Successfully.')
@@ -426,7 +426,7 @@ class CreateCustomerInvoice extends React.Component {
                     <Col lg={12}>
                       <Formik
                         initialValues={initValue}
-                        enableReinitialize={true}
+                        // enableReinitialize={true}
                         ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
 
@@ -570,6 +570,7 @@ class CreateCustomerInvoice extends React.Component {
                                     showMonthDropdown
                                     showYearDropdown
                                     dropdownMode="select"
+                                    value={props.values.invoiceDate}
                                     selected={props.values.invoiceDate}
                                     onChange={(value) => {
                                       props.handleChange("invoiceDate")(value)
@@ -594,6 +595,8 @@ class CreateCustomerInvoice extends React.Component {
                                       showMonthDropdown
                                       showYearDropdown
                                       dropdownMode="select"
+                                      value={props.values.invoiceDueDate}
+
                                       onChange={(value) => {
                                         props.handleChange("invoiceDueDate")(value)
                                       }}
@@ -627,6 +630,7 @@ class CreateCustomerInvoice extends React.Component {
                                     type="text"
                                     id="contact_po_number"
                                     name="contact_po_number"
+                                    value={props.values.contact_po_number}
                                     placeholder="Contact PO Number"
                                     onChange={(value) => { props.handleChange("contact_po_number")(value) }}
                                   />

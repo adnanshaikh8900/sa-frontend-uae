@@ -396,7 +396,7 @@ class DetailSupplierInvoice extends React.Component {
       formData.append("projectId", project.value);
     }
     if (this.uploadFile.files[0]) {
-      formData.append("attchmentFile", this.uploadFile.files[0]);
+      formData.append("attachmentFile", this.uploadFile.files[0]);
     }
     this.props.supplierInvoiceDetailActions.updateInvoice(formData).then(res => {
       this.props.commonActions.tostifyAlert('success', 'Invoice Updated Successfully.')

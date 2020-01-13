@@ -345,7 +345,7 @@ class CreateSupplierInvoice extends React.Component {
       formData.append("projectId", project.value);
     }
     if (this.uploadFile.files[0]) {
-      formData.append("attchmentFile", this.uploadFile.files[0]);
+      formData.append("attachmentFile", this.uploadFile.files[0]);
     }
     this.props.supplierInvoiceCreateActions.createInvoice(formData).then(res => {
       this.props.commonActions.tostifyAlert('success', 'New Invoice Created Successfully.')

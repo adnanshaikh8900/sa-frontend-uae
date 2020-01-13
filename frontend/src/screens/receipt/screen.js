@@ -243,7 +243,7 @@ class Receipt extends React.Component {
     return (
       <div className="receipt-screen">
         <div className="animated fadeIn">
-          // <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
+           {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           {dialog}
           <Card>
             <CardHeader>
@@ -375,6 +375,7 @@ class Receipt extends React.Component {
                           className="receipt-table"
                           trClassName="cursor-pointer"
                           csvFileName="Receipt.csv"
+                          ref={node => this.table = node}
                         >
                           <TableHeaderColumn
                             dataField="receiptDate"

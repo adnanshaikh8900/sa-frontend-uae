@@ -376,7 +376,7 @@ class CustomerInvoice extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-                            disabled={customer_invoice_list.length === 0}
+                            // disabled={customer_invoice_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -492,6 +492,10 @@ class CustomerInvoice extends React.Component {
                           keyField="id"
                           totalSize={customer_invoice_list ? customer_invoice_list.length : 0}
                           className="customer-invoice-table"
+                          csvFileName="Customer_Invoice.csv"
+                          ref={node => {
+                            this.table = node
+                          }}
                         >
 
                           <TableHeaderColumn

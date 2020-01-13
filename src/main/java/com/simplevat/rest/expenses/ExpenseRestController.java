@@ -86,6 +86,8 @@ public class ExpenseRestController {
                         transactionCategoryService.findByPK(expenseRequestFilterModel.getTransactionCategoryId()));
             }
             filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
+            filterDataMap.put(ExpenseFIlterEnum.DELETE_FLAG, false);
+           
             List<Expense> expenseList = expenseService.getExpensesList(filterDataMap);
             if (expenseList == null) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);

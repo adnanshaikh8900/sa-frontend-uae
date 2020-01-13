@@ -13,21 +13,23 @@ import lombok.Setter;
 @Setter
 public class ProductRequestModel {
 
-    private Integer productID;
-    private String productName;
-    private String productDescription;
-    private Integer vatCategoryId;
-    private String productCode;
-    private Integer createdBy;
-    private LocalDateTime createdDate;
-    private Integer lastUpdatedBy;
-    private LocalDateTime lastUpdateDate;
-    private Boolean deleteFlag = Boolean.FALSE;
-    private Boolean active;
-    private Integer versionNumber;
-    private Integer productCategoryId;
-    private Integer productWarehouseId;
-    private Boolean vatIncluded = Boolean.FALSE;
-    private BigDecimal unitPrice;
+	private Integer productID;
+	private String productName;
+	private String productDescription;
+	private Integer vatCategoryId;
+	private Integer productCategoryId;
+	private Integer productWarehouseId;
+	private String productCode;
+	private Integer createdBy;
+	private LocalDateTime createdDate;
+	private Integer lastUpdatedBy;
+	private LocalDateTime lastUpdateDate;
+	private Boolean deleteFlag = Boolean.FALSE;
+	private Boolean active;
+	private Integer versionNumber;
+	private Integer parentProduct;
+	private Integer productWarehouse;
+	private Boolean vatIncluded = Boolean.FALSE;
+	private BigDecimal unitPrice;
 
 }

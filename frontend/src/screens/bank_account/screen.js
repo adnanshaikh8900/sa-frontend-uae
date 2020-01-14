@@ -461,14 +461,14 @@ class BankAccount extends React.Component {
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
                           </Button>
-                          <Button
+                          {/* <Button
                             color="info"
                             className="btn-square"
                             onClick={() => this.props.history.push('/admin/banking/upload-statement')}
                           >
                             <i className="fa glyphicon glyphicon-export fa-upload mr-1" />
                             Upload Statement
-                          </Button>
+                          </Button> */}
                           <Button
                             color="primary"
                             className="btn-square"

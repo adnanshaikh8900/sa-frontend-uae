@@ -32,11 +32,11 @@ export default {
           url: '/admin/banking/bank-account',
           icon: 'fas fa-university',
         },
-        {
-          name: 'Upload Statement',
-          url: '/admin/banking/upload-statement',
-          icon: 'fa fa-upload',
-        }
+        // {
+        //   name: 'Upload Statement',
+        //   url: '/admin/banking/upload-statement',
+        //   icon: 'fa fa-upload',
+        // }
       ]
     },
     {

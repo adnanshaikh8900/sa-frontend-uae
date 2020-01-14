@@ -11,4 +11,11 @@
     padding: 0.4em 0.6em;
     font-size: 90%;
   }
+  .align-template {
+    flex-direction: row;
+    align-items: center;
+    label{
+      margin-bottom: 0 !important;
+    }
+  }
 }

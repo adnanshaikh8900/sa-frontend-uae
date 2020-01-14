@@ -32,19 +32,33 @@
             margin: 10px;
         }
     }
+    .other-field {
+      display: flex;
+      div{
+        width: 50%!important;
+      }
+      // input {
+      //   width: 50%!important;
+      // }
+    }
     .table_option {
+
         .form-group {
             display: flex!important;
         }
         label {
-            width: 20%;
+            // width: 20%;
         }
         Input{
-            width: 50%!important;
+            // width: 50%!important;
           }
       .Select {
-              width: 50% !important;
+              width: 100% !important;
       }
       }
-          
+      .align-apply {
+        // display: flex!important;
+        align-self: flex-end!important;
+        
+      }
 }

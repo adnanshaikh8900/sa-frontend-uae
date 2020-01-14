@@ -31,7 +31,8 @@ import {
   TransactionsReport,
   ChartAccount,
   ProductCategory,
-  Profile
+  Profile,
+  ImportTransaction
 } from 'screens'
 
 
@@ -65,7 +66,7 @@ const reducer = combineReducers({
   chart_account: ChartAccount.reducer,
   product_category: ProductCategory.reducer,
   profile: Profile.reducer,
-
+  import_transaction: ImportTransaction.reducer
 })
 
 export default reducer

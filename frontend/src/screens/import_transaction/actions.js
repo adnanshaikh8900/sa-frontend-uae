@@ -1,7 +1,9 @@
 import { IMPORT_TRANSACTION } from 'constants/types'
 import {
   api,
-  authApi
+  authApi,
+  authFileUploadApi
+
 } from 'utils'
 import moment from 'moment'
 
@@ -22,5 +24,35 @@ export const getDateFormatList = () => {
     }).catch(err => {
       throw err
     })
+  }
+}
+
+export const getTableHeaderList = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/transactionParsing/dbList',
+      data: obj
+    }
+    return authFileUploadApi(data).then(res => {
+        return res
+      }).catch(err => {
+        throw err
+      })
+  }
+}
+
+export const getTableDataList = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/transactionParsing/parse',
+      data: obj
+    }
+    return authFileUploadApi(data).then(res => {
+        return res
+      }).catch(err => {
+        throw err
+      })
   }
 }

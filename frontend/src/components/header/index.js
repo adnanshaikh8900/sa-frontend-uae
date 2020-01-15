@@ -98,7 +98,7 @@ class Header extends Component {
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav>
             {/* {profilePic ?  'data:image/jpg;base64,'+avatar : ''} */}
-              <img src={profile ? 'data:image/jpg;base64,'+profile.profileImageBinary : ''} className="img-avatar" alt="admin@bootstrapmaster.com" />
+              <img src={profile ? 'data:image/jpg;base64,'+profile.profileImageBinary : ''} className="img-avatar" alt="" />
             </DropdownToggle>
             <DropdownMenu right>
               <DropdownItem onClick={() => this.props.history.push('/admin/profile')}>

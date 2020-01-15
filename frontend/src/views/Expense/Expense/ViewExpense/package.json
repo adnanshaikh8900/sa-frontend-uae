@@ -1,6 +1,0 @@
-{
-    "name": "ViewExpense",
-    "version": "0.0.0",
-    "private": true,
-    "main": "./ViewExpense.js"
-}

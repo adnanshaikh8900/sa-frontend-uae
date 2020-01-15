@@ -29,6 +29,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import './style.scss'
 import { Formik } from 'formik';
 import * as Yup from "yup";
+import { Loader } from 'components'
 
 const mapStateToProps = (state) => {
   return ({
@@ -59,7 +60,13 @@ class ImportTransaction extends React.Component {
         text_qualifer: '',
         dateFormat: '',
       },
-      fileName: ''
+      fileName: '',
+      tableHeader: [],
+      loading: false,
+      selectedValue: [],
+      selectedValueDropdown: [],
+      tableDataKey: [],
+      tableData: []
     }
 
     this.options = {
@@ -68,6 +75,7 @@ class ImportTransaction extends React.Component {
 
     this.initializeData = this.initializeData.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChange = this.handleChange.bind(this)
 
   }
 
@@ -80,12 +88,46 @@ class ImportTransaction extends React.Component {
   }
 
   handleSubmit(value, resetForm) {
-    console.log(value)
+    this.setState({ tableHeader: [], loading: true })
+    let formData = new FormData();
+    if (this.uploadFile.files[0]) {
+      formData.append("file", this.uploadFile.files[0]);
+    }
+    this.props.importTransactionActions.getTableDataList(formData).then(res => {
+      this.setState({
+        tableData: [...res.data],
+        tableDataKey: res.data[0] ? Object.keys(res.data[0]) : []
+
+      }, () => {
+        this.setState({ loading: false })
+        this.state.tableDataKey.map((val,index)=> {
+           let obj={label: 'Select',value:''}
+            this.state.selectedValueDropdown.push(obj)
+        })
+      })
+    })
+
+
+    this.props.importTransactionActions.getTableHeaderList(formData).then(res => {
+      let temp = [...res.data];
+      temp.unshift({label: 'Select',value: ''})
+      this.setState({
+        tableHeader: this.state.tableHeader.concat(res.data),
+        selectedValue: this.state.tableHeader.concat(temp)
+      })
+    })
   }
 
+  handleChange(e,index) {
+    let tempDataSelectedValueDropdown = this.state.selectedValueDropdown;
+    tempDataSelectedValueDropdown[index] = e
+    this.setState({
+      selectedValueDropdown: tempDataSelectedValueDropdown
+    })
+  }
 
   render() {
-    const { initValue } = this.state;
+    const { initValue, loading, tableDataKey, tableData } = this.state;
     const { date_format_list } = this.props
 
     return (
@@ -151,7 +193,7 @@ class ImportTransaction extends React.Component {
                                     <fieldset>
                                       <legend>Parameters</legend>
                                       <Row>
-                                        <Col lg={4}>
+                                        <Col lg={3}>
                                           <div >
                                             <FormGroup check inline className="mb-3">
                                               <Input
@@ -215,13 +257,14 @@ class ImportTransaction extends React.Component {
                                                 value={props.values.other || false}
                                               />
                                               <Label className="form-check-label" check htmlFor="other">Others</Label>
-                                            </FormGroup>
                                             <Input
+                                            className="ml-3"
                                               type="text"
                                               placeholder="Other"
                                               // value={filter_account_number}
                                               onChange={(value) => { props.handleChange("otherInput")(value) }}
                                             />
+                                            </FormGroup>
                                           </div>
                                         </Col>
                                         <Col lg={6} className="table_option">
@@ -318,14 +361,14 @@ class ImportTransaction extends React.Component {
                                                   id=""
                                                   rows="6"
                                                   placeholder="Date Format"
-                                          
+
                                                 />
                                               </FormGroup>
                                             </Col>
                                           </Row>
                                         </Col>
 
-                                        <Col lg={2} className="mt-2 align-apply text-right">
+                                        <Col lg={3} className="mt-2 align-apply text-right">
                                           <FormGroup >
                                             <Button type="button" color="primary" className="btn-square"
                                               onClick={() => {
@@ -340,118 +383,63 @@ class ImportTransaction extends React.Component {
                                     </fieldset>
                                   </Col>
                                 </Row>
-                                <Row className="mt-5">
-                                  <Col lg={3}>
-                                    <FormGroup className="">
-                                      <Select
-                                        type=""
-                                        name=""
-                                        id=""
-                                        rows="6"
-                                        placeholder="Transaction Name"
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={3}>
-                                    <FormGroup className="">
+                                {/* <Row className="mt-5"> */}
 
-                                      <Select
-                                        type=""
-                                        name=""
-                                        id=""
-                                        rows="6"
-                                        placeholder="Transaction Number"
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={3}>
-                                    <FormGroup className="">
-
-                                      <Select
-                                        type=""
-                                        name=""
-                                        id=""
-                                        rows="6"
-                                        placeholder="Transaction Code"
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={3}>
-                                    <FormGroup className="">
-
-                                      <Select
-                                        type=""
-                                        name=""
-                                        id=""
-                                        rows="6"
-                                        placeholder="Transaction Date"
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                </Row>
+                                {/* </Row> */}
                               </Form>
                             )
                           }
                         </Formik>
-
-                        <div>
-                          <BootstrapTable
-                            selectRow={this.selectRowProp}
-                            search={false}
-                            options={this.options}
-                            data={[]}
-                            version="4"
-                            hover
-                            totalSize={0}
-                            className="product-table"
-                            trClassName="cursor-pointer"
-                            csvFileName="product_list.csv"
-                            ref={node => this.table = node}
-                          >
-                            <TableHeaderColumn
-                              isKey
-                              dataField="name"
-                              dataSort
-                            >
-                              Name
-                          </TableHeaderColumn>
-                            <TableHeaderColumn
-                              dataField="productCode"
-                              dataSort
-                            >
-                              Transaction Number
-                          </TableHeaderColumn>
-                            <TableHeaderColumn
-                              dataField="Transaction Code"
-                              dataSort
-                            >
-                              Transaction Code
-                          </TableHeaderColumn>
-                            <TableHeaderColumn
-                              dataField="vatPercentage"
-                              dataSort
-                            // dataFormat={this.vatCategoryFormatter}
-                            >
-                              Transaction Date
-                          </TableHeaderColumn>
-                            {/* <TableHeaderColumn
-                              dataField="unitPrice"
-                              dataSort
-                            // dataFormat={this.vatCategoryFormatter}
-                            >
-                              Unit Price
-                          </TableHeaderColumn> */}
-                          </BootstrapTable>
-                        </div>
                         <Row>
-                          <Col lg={12} className="mt-2">
-                            <FormGroup className="text-right">
-                              <Button type="button" color="primary" className="btn-square mr-4">
-                                <i className="fa fa-dot-circle-o"></i> Save
-                                    </Button>
-                            </FormGroup>
-                          </Col>
+                          {loading ?
+                            <Loader />
+                            :
+                            this.state.tableDataKey.length > 0 ? this.state.tableDataKey.map((header, index) => (
+                              <Col style={{width: `calc(100% / ${this.state.tableDataKey.length})`,margin:'20px 0'}}>
+                                <FormGroup className="">
+                                  <Select
+                                    type=""
+                                    options={this.state.tableHeader ? selectOptionsFactory.renderOptions('label', 'value', this.state.tableHeader,this.state.tableHeader[index].label) : []}
+                                    name={index}
+                                    id=""
+                                    rows="6"
+                                    value={this.state.selectedValueDropdown[index]}
+                                    onChange={(e) => {
+                                      this.handleChange(e,index)
+                                    }}
+
+                                  />
+                                </FormGroup>
+                              </Col>
+
+                            )
+                            ) : null
+                          }
+                          {/* <div> */}
+                          {
+                            this.state.tableDataKey.length > 0 ? (
+                              <BootstrapTable data={tableData} keyField={this.state.tableDataKey[0]}>
+                                {this.state.tableDataKey.map(name => <TableHeaderColumn dataField={name} dataAlign="center">{name}</TableHeaderColumn>)}
+                              </BootstrapTable>
+                            ) : null
+                          }
+                          {/* </div> */}
+                          <Row style={{width:'100%'}}>
+                            <Col lg={12} className="mt-2">
+                              <FormGroup className="text-right">
+                                {
+                                  this.state.tableDataKey.length > 0 ? (
+                                    <Button type="button" color="primary" className="btn-square mr-4">
+                                      <i className="fa fa-dot-circle-o"></i> Save
+                                  </Button>
+                                  ) : null
+                                }
+                              </FormGroup>
+                            </Col>
+                          </Row>
                         </Row>
+
+
                       </div>
                     </Col>
                   </Row>

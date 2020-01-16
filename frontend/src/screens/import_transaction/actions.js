@@ -27,12 +27,26 @@ export const getDateFormatList = () => {
   }
 }
 
+export const getDelimiterList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/transactionParsing/delimiter/list',
+    }
+    return authApi(data).then(res => {
+        return res
+      }).catch(err => {
+        throw err
+      })
+  }
+}
+
 export const getTableHeaderList = (obj) => {
   return (dispatch) => {
     let data = {
-      method: 'post',
-      url: '/rest/transactionParsing/dbList',
-      data: obj
+      method: 'get',
+      url: '/rest/transactionParsing/dbColEnum/list',
+      // data: obj
     }
     return authFileUploadApi(data).then(res => {
         return res
@@ -47,6 +61,49 @@ export const getTableDataList = (obj) => {
     let data = {
       method: 'post',
       url: '/rest/transactionParsing/parse',
+      data: obj
+    }
+    return authFileUploadApi(data).then(res => {
+        return res
+      }).catch(err => {
+        throw err
+      })
+  }
+}
+
+export const parseFile = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/transactionParsing/parse',
+      data: obj
+    }
+    return authFileUploadApi(data).then(res => {
+        return res
+      }).catch(err => {
+        throw err
+      })
+  }
+}
+
+export const getConfigurationList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/transactionParsing/list',
+    }
+    return authApi(data).then(res => {
+        return res
+      }).catch(err => {
+        throw err
+      })
+  }
+}
+export const createConfiguration = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/transactionParsing/save',
       data: obj
     }
     return authFileUploadApi(data).then(res => {

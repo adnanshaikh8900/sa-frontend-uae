@@ -140,5 +140,11 @@ public class FileHelper {
 		return null;
 	}
 
-	
+	public String getFileExtension(String fileName) {
+		if (fileName != null && !fileName.equals("")) {
+			return fileName.substring(fileName.lastIndexOf(".") + 1);
+		}
+		return null;
+	}
+
 }

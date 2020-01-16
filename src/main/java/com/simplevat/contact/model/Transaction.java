@@ -5,6 +5,9 @@
  */
 package com.simplevat.contact.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -24,4 +27,5 @@ public class Transaction {
     private String date;
     private String credit;
     private String debit;
+    
 }

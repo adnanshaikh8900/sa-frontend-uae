@@ -99,7 +99,6 @@ public class ProductController implements Serializable {
 	@GetMapping(value = "/getvatpercentage")
 	private ResponseEntity<List<VatCategory>> vatCategorys() {
 		List<VatCategory> vatCategorys = vatCategoryService.getVatCategoryList();
-		;
 		if (vatCategorys == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}

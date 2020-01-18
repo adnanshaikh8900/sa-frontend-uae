@@ -342,7 +342,7 @@ class CreateJournal extends React.Component {
     // const postData = {...initValue,...values,...{journalLineItems: this.state.data}}
     this.props.journalCreateActions.createJournal(postData).then(res => {
       if (res.status === 200) {
-        resetForm();
+        // resetForm({});
         this.props.commonActions.tostifyAlert('success', 'New Journal Created Successfully')
         if (this.state.createMore) {
           this.setState({
@@ -355,7 +355,22 @@ class CreateJournal extends React.Component {
               contactId: '',
               debitAmount: 0,
               creditAmount: 0,
-            }]
+            }],
+            initValue: {...this.state.initValue,...{
+              journalLineItems: [{
+                id: 0,
+                description: '',
+                transactionCategoryId: '',
+                vatCategoryId: '',
+                contactId: '',
+                debitAmount: 0,
+                creditAmount: 0,
+              }],
+              subTotalDebitAmount: 0,
+              totalDebitAmount: 0,
+              totalCreditAmount: 0,
+              subTotalCreditAmount: 0,
+            }}
             });
         } else {
           this.props.history.push('/admin/accountant/journal');
@@ -398,6 +413,7 @@ class CreateJournal extends React.Component {
                         ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
                           this.handleSubmit(values, resetForm)
+                          resetForm(initValue)
                         }}
                         validationSchema={
                           Yup.object().shape({
@@ -453,7 +469,7 @@ class CreateJournal extends React.Component {
                                     id="referenceCode"
                                     name="referenceCode"
                                     placeholder="Reference Number"
-                                    value={props.values.referenceCode}
+                                    value={props.values.referenceCode || ''}
                                     onChange={(value) => { props.handleChange("referenceCode")(value) }}
                                   />
                                 </FormGroup>
@@ -469,7 +485,7 @@ class CreateJournal extends React.Component {
                                     id="description"
                                     rows="5"
                                     placeholder="1024 characters..."
-                                    value={props.values.description}
+                                    value={props.values.description || '' }
                                     onChange={(value) => { props.handleChange("description")(value) }}
                                   />
                                 </FormGroup>

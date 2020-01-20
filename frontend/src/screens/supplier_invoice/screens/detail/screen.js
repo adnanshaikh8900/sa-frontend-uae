@@ -231,7 +231,6 @@ class DetailSupplierInvoice extends React.Component {
         subTotal: 0
       }), idCount: this.state.idCount + 1
     }, () => {
-      console.log(this.state.data)
     })
   }
 
@@ -302,7 +301,6 @@ class DetailSupplierInvoice extends React.Component {
   removeInvoice() {
     const id= this.props.location.state.id;
     this.props.supplierInvoiceDetailActions.deleteInvoice(id).then(res=>{
-      console.log(res.status)
       if(res.status == 200) {
         this.props.commonActions.tostifyAlert('success','Data Removed Successfully')
         this.props.history.push('/admin/expense/supplier-invoice')
@@ -321,7 +319,6 @@ class DetailSupplierInvoice extends React.Component {
 
   updateAmount(data) {
     const { vat_list } = this.props;
-    console.log(vat_list)
     let total_net = 0;
     let total = 0;
     let total_vat = 0;
@@ -334,12 +331,6 @@ class DetailSupplierInvoice extends React.Component {
         val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
         obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : '-';
       } 
-
-
-      console.log(data)
-
-      // console.log(index)
-
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
       total_vat = +((total_vat + val)).toFixed(2);
       total = (total_vat + total_net).toFixed(2);
@@ -569,7 +560,6 @@ class DetailSupplierInvoice extends React.Component {
                                             : ''
                                         }
                                       />
-                                      {console.log(props.errors)}
                                       {props.errors.contactId && props.touched.contactId && (
                                         <div className="invalid-feedback">{props.errors.contactId}</div>
                                       )}
@@ -828,7 +818,7 @@ class DetailSupplierInvoice extends React.Component {
                                             <Row>
                                               <Col lg={6}>
                                                 <FormGroup>
-                                                  <Label htmlFor="discount_type">Discount Type</Label>
+                                                  <Label htmlFor="discount_type">Discount Type(TBD)</Label>
                                                   <Select
                                                     className="select-default-width"
                                                     options={discountOptions}
@@ -860,7 +850,7 @@ class DetailSupplierInvoice extends React.Component {
                                             <Row>
                                               <Col lg={6} className="mt-4">
                                                 <FormGroup>
-                                                  <Label htmlFor="discount_amount">Discount Amount</Label>
+                                                  <Label htmlFor="discount_amount">Discount Amount(TBD)</Label>
                                                   <Input
                                                     id="discount_amount"
                                                     name="discount_amount"

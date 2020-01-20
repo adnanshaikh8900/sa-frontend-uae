@@ -39,7 +39,9 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    importBankStatementActions: bindActionCreators(ImportBankStatementActions, dispatch)
+    importBankStatementActions: bindActionCreators(ImportBankStatementActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch),
+
   })
 }
 
@@ -57,6 +59,7 @@ class ImportBankStatement extends React.Component {
       selectedTemplate: '',
       tableDataKey: [],
       tableData: [],
+      errorIndexList: []
     }
     this.formRef = React.createRef()
     this.options = {
@@ -66,6 +69,8 @@ class ImportBankStatement extends React.Component {
     this.initializeData = this.initializeData.bind(this)
     this.renderTransactionType = this.renderTransactionType.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSave = this.handleSave.bind(this)
+    this.columnClassNameFormat = this.columnClassNameFormat.bind(this)
   }
 
   componentDidMount() {
@@ -103,8 +108,17 @@ class ImportBankStatement extends React.Component {
     )
   }
 
+  columnClassNameFormat(fieldValue, row, rowIdx, colIdx) {
+    // fieldValue is column value
+    // row is whole row object
+    // rowIdx is index of row
+    // colIdx is index of column
+    const index = `${rowIdx.toString()},${colIdx.toString()}`
+    return this.state.errorIndexList.indexOf(index) > -1 ? 'invalid' : '';
+  }
+
   handleSubmit(data) {
-    this.setState({loading: true })
+    this.setState({ loading: true })
     const { initValue, selectedTemplate } = this.state
     let formData = new FormData()
     if (this.uploadFile && this.uploadFile.files[0]) {
@@ -116,15 +130,33 @@ class ImportBankStatement extends React.Component {
     //       tableDataKey: ['a','b','c','d']
     //     })
     this.props.importBankStatementActions.parseFile(formData).then(res => {
-      console.log(res.data)
+      console.log(res.data['data'])
       this.setState({
-        tableData: [...res.data],
-        tableDataKey: res.data[0] ? Object.keys(res.data[0]) : []
+        tableData: res.data['data'],
+        tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
+        errorIndexList: res.data.error ? res.data.error : []
+      }, () => {
+        console.log(this.state)
       })
       // })
     }).catch(err => {
+      // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      // this.setState({ loading: false })
+    })
+  }
+
+  handleSave() {
+    const { selectedTemplate, tableData } = this.state
+    const postData = {
+      bankId: this.props.location.state.bankAccountId ? this.props.location.state.bankAccountId : '',
+      templateId: selectedTemplate ? +selectedTemplate : '',
+      importDataMap: tableData
+    }
+    this.props.importBankStatementActions.importTransaction(postData).then(res => {
+      this.props.commonActions.tostifyAlert('success', 'Transaction  Imported Successfully')
+      this.props.history.push('/admin/banking/bank-account')
+    }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
-      this.setState({loading: false})
     })
   }
 
@@ -250,7 +282,7 @@ class ImportBankStatement extends React.Component {
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   <Col md="2">
-                                    <label for="Other">Select File to Upload</label>
+                                    <label htmlFor="Other">Select File to Upload</label>
                                   </Col>
                                   <Col md="3">
                                     <FormGroup className="">
@@ -277,7 +309,6 @@ class ImportBankStatement extends React.Component {
                                         options={templateList ? templateList : []}
                                         value={this.state.selectedTemplate}
                                         onChange={option => {
-                                          console.log(option)
                                           if (option && option.value) {
                                             props.handleChange('templateId')(option.value)
                                             this.setState({
@@ -301,7 +332,7 @@ class ImportBankStatement extends React.Component {
                                     <Button
                                       color="primary"
                                       className="btn-square"
-                                      onClick={() => this.props.history.push('/admin/banking/upload-statement/transaction')}
+                                      onClick={() => this.props.history.push('/admin/banking/upload-statement/transaction', { bankAccountId: this.props.location.state.bankAccountId })}
                                     >
                                       <i className="fas fa-plus mr-1" />
                                       Create New Template
@@ -315,9 +346,9 @@ class ImportBankStatement extends React.Component {
                                       type="button"
                                       className="btn-square"
                                       onClick={() => { props.handleSubmit() }}
-                                    // disabled={this.state.fileName.length=== 0 ? true : false}
+                                      disabled={this.state.fileName.length === 0 ? true : false}
                                     >
-                                      <i className="fa fa-dot-circle-o"></i>
+                                      <i className="fa fa-dot-circle-o mr-1"></i>
                                       Parse File
                           </Button>
                                   </Col>
@@ -438,14 +469,35 @@ class ImportBankStatement extends React.Component {
                     </Col>
                   </Row>
                   <div>
-                  {
-                    this.state.tableDataKey.length > 0 ? (
-                      <BootstrapTable data={this.state.tableData} keyField={this.state.tableDataKey[0]} pagination options={this.options}>
-                        {this.state.tableDataKey.map(name => <TableHeaderColumn dataField={name} dataAlign="center">{name}</TableHeaderColumn>)}
-                      </BootstrapTable>
-                    ) : null
-                  }
+                    {
+                      this.state.tableDataKey.length > 0 ? (
+                        <BootstrapTable data={this.state.tableData} keyField={this.state.tableDataKey[0]} pagination options={this.options}>
+                          {this.state.tableDataKey.map((name, index) => <TableHeaderColumn dataField={name} dataAlign="center" columnClassName={this.columnClassNameFormat}>{name}</TableHeaderColumn>)}
+                        </BootstrapTable>
+                      ) : null
+                    }
                   </div>
+                  <Row style={{ width: '100%' }}>
+                    <Col lg={12} className="mt-2">
+                      <FormGroup className="text-right">
+                        {
+                          this.state.tableDataKey.length > 0 ? (
+                            <>
+                              <Button type="button" color="primary" className="btn-square mr-4" onClick={this.handleSave}
+                                disabled={this.state.errorIndexList.length > 0 ? true :  false}
+                              >
+                                <i className="fa fa-dot-circle-o"></i> Import
+                                    </Button>
+                              <Button color="secondary" className="btn-square"
+                                onClick={() => { this.props.history.push('/admin/banking/upload-statement') }}>
+                                <i className="fa fa-ban"></i> Cancel
+                                    </Button>
+                            </>
+                          ) : null
+                        }
+                      </FormGroup>
+                    </Col>
+                  </Row>
                 </CardBody>
               </Card>
             </Col>

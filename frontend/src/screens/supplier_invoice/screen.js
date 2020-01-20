@@ -371,7 +371,6 @@ class SupplierInvoice extends React.Component {
                             type="button"
                             className="btn-square"
                             onClick={() => {
-                              console.log('aa')
                               this.table.handleExportCSV()
                             }}
                             // disabled={supplier_invoice_list.length === 0}

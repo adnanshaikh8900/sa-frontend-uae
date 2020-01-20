@@ -33,3 +33,18 @@ export const parseFile = (obj) => {
       })
   }
 }
+
+export const importTransaction = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/transactionimport/saveimporttransaction',
+      data: obj
+    }
+    return authApi(data).then(res => {
+        return res
+      }).catch(err => {
+        throw err
+      })
+  }
+}

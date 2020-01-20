@@ -202,12 +202,11 @@ class CreateUser extends React.Component {
                                     optimisticPreviews
                                     multiple={false}
                                     onLoadEnd={(err) => {
-                                      console.log(err)
                                       if (err) {
                                         console.error(err);
                                       }
                                     }}
-                                    onChange={(e)=>{console.log(e)}}
+                                    onChange={(e)=>{}}
                                   /> */}
                                   <ImageUploader
                                     // withIcon={true}
@@ -331,12 +330,13 @@ class CreateUser extends React.Component {
                                       <Label htmlFor="active">Status</Label>
                                       <div>
                                         <FormGroup check inline>
-                                          <div className="custom-radio custom-control">
-                                            <input
+                                          <div className="custom-radio">
+                                            <Input
                                               className="custom-control-input"
                                               type="radio"
                                               id="inline-radio1"
                                               name="active"
+                                              checked={this.state.initValue.active === true}
                                               value={true}
                                               onChange={option => props.handleChange('active')(option)}
                                             />
@@ -344,12 +344,13 @@ class CreateUser extends React.Component {
                                           </div>
                                         </FormGroup>
                                         <FormGroup check inline>
-                                          <div className="custom-radio custom-control">
-                                            <input
+                                          <div className="custom-radio">
+                                            <Input
                                               className="custom-control-input"
                                               type="radio"
                                               id="inline-radio2"
                                               name="active"
+                                              checked={this.state.initValue.active === false}
                                               value={false}
                                               onChange={option => props.handleChange('active')(option)}
                                             />

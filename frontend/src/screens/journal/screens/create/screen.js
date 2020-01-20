@@ -256,8 +256,8 @@ class CreateJournal extends React.Component {
               item.error = []
           }
           })
-          this.setState({ data: data })
-        }, 1000)
+          this.setState({ data: this.state.data })
+        }, 0)
       });
     }
 
@@ -296,26 +296,24 @@ class CreateJournal extends React.Component {
 
     this.setState({
       data: data,
-      initValue: {
+      initValue: {...this.state.initValue,...{
         subTotalDebitAmount: subTotalDebitAmount,
         totalDebitAmount: subTotalDebitAmount,
         totalCreditAmount: subTotalCreditAmount,
         subTotalCreditAmount: subTotalCreditAmount,
-      }
+      }}
     }, () => {
       this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
       setTimeout(() => {
-        console.log(this.formRef.current.state.errors.journalLineItems)
         this.state.data.map((item, index) => {
-          console.log(this.formRef.current.state.errors.journalLineItems)
           if (this.formRef.current.state.errors.journalLineItems && this.formRef.current.state.errors.journalLineItems[index]) {
             item.error = this.formRef.current.state.errors.journalLineItems[index]
           } else {
               item.error = []
           }
         })
-        this.setState({ data: data },()=>{console.log(this.state.data)})
-      }, 1000)
+        this.setState({ data: this.state.data })
+      }, 0)
     })
   }
 
@@ -640,14 +638,14 @@ class CreateJournal extends React.Component {
                                           this.state.data.map((item, index) => {
                                             item.error = err.journalLineItems[index]
                                           })
-                                          this.setState({ data: data })
+                                          this.setState({ data: this.state.data })
                                         } else {
                                           this.state.data.map((item, index) => {
                                             item.error = []
                                           })
                                         }
                                       })
-                                    }, 1000)
+                                    }, 0)
 
                                     // () => {
                                     this.setState({ createMore: false }, () => {
@@ -661,6 +659,20 @@ class CreateJournal extends React.Component {
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={
                                       () => {
+                                        setTimeout(() => {
+                                          props.validateForm().then(err => {
+                                            if (err.journalLineItems && err.journalLineItems.length > 0) {
+                                              this.state.data.map((item, index) => {
+                                                item.error = err.journalLineItems[index]
+                                              })
+                                              this.setState({ data: this.state.data })
+                                            } else {
+                                              this.state.data.map((item, index) => {
+                                                item.error = []
+                                              })
+                                            }
+                                          })
+                                        }, 0)
                                         this.setState({ createMore: true }, () => {
                                           props.handleSubmit()
                                         })

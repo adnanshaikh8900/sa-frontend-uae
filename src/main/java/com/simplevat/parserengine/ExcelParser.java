@@ -125,8 +125,7 @@ public class ExcelParser implements TransactionFileParser {
 								String displayName = headerIndexMap.get(cell.getColumnIndex()).getDisplayName();
 								// check for date format
 								if (model.getDateFormatId() != null
-										&& displayName.equals(TransactionEnum.TRANSACTION_DATE.getDisplayName())
-										|| displayName.equals(TransactionEnum.DATE.getDisplayName())) {
+										&& displayName.equals(TransactionEnum.TRANSACTION_DATE.getDisplayName())) {
 
 									try {
 										DateFormat format = dateformatDao.findByPK(model.getDateFormatId());

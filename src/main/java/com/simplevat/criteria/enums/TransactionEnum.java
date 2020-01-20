@@ -12,11 +12,10 @@ public enum TransactionEnum {
 
 	TRANSACTION_DATE("TRANSACTION_DATE", "Transaction Date"), 
 	DESCRIPTION("DESCRIPTION", "Description"),
+	AMOUNT("AMOUNT", "Amount"),
 	DR_AMOUNT("DR_AMOUNT", "Debit Amount"),
 	CR_AMOUNT("CR_AMOUNT", "Credit Amount"), 
-	DATE("DATE", "Date"),
-	CREDIT("CREDIT", "Credit"), 
-	DEBIT("DEBIT", "Debit");
+	CREDIT_DEBIT_FLAG("DEBIT", "Debit");
 
 	@Getter
 	String dbColumnName;

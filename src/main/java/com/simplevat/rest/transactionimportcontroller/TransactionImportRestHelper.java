@@ -283,21 +283,14 @@ public class TransactionImportRestHelper {
 
 					String data = (String) dataMap.get(dbColEnum);
 					switch (dbColEnum) {
-					case CREDIT:
-						trnx.setDebitCreditFlag('C');
-						break;
 
 					case CR_AMOUNT:
 					case DR_AMOUNT:
 						trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 						break;
 
-					case DATE:
-
-						break;
-
-					case DEBIT:
-						trnx.setDebitCreditFlag('D');
+					case CREDIT_DEBIT_FLAG:
+						trnx.setDebitCreditFlag(data.charAt(0));
 						break;
 
 					case DESCRIPTION:

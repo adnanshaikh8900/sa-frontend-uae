@@ -128,15 +128,15 @@ public class CsvParser implements TransactionFileParser {
 
 							// check for date format
 							if (model.getDateFormatId() != null
-									&& displayName.equals(TransactionEnum.TRANSACTION_DATE.getDisplayName())
-									|| displayName.equals(TransactionEnum.DATE.getDisplayName())) {
+									&& displayName.equals(TransactionEnum.TRANSACTION_DATE.getDisplayName())) {
 
 								try {
 									DateFormat format = dateformatDao.findByPK(model.getDateFormatId());
 									SimpleDateFormat formatter = new SimpleDateFormat(format.getFormat());
 									formatter.parse(data);
 								} catch (ParseException e) {
-									//errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount, cellCount);
+									// errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
+									// cellCount);
 									errorList.add(rowCount + "," + cellCount);
 								}
 							}
@@ -146,7 +146,8 @@ public class CsvParser implements TransactionFileParser {
 								try {
 									new BigDecimal(data);
 								} catch (Exception e) {
-									//errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount, cellCount);
+									// errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
+									// cellCount);
 									errorList.add(rowCount + "," + cellCount);
 								}
 							}
@@ -156,7 +157,8 @@ public class CsvParser implements TransactionFileParser {
 								try {
 									new BigDecimal(data);
 								} catch (Exception e) {
-									//errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount, cellCount);
+									// errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
+									// cellCount);
 									errorList.add(rowCount + "," + cellCount);
 								}
 							}

@@ -193,7 +193,7 @@ public class TransactionImportController implements Serializable {
 
 		case "xlsx":
 		case "xlx":
-		//	dataMap = excelParser.parseImportData(model, file);	
+			dataMap = excelParser.parseImportData(model, file);	
 			break;
 		}
 

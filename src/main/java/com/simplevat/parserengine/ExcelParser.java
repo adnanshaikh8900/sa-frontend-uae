@@ -1,15 +1,23 @@
 package com.simplevat.parserengine;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +25,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.simplevat.criteria.enums.TransactionEnum;
+import com.simplevat.dao.DateFormatDao;
+import com.simplevat.entity.DateFormat;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
@@ -29,6 +39,9 @@ public class ExcelParser implements TransactionFileParser {
 
 	@Autowired
 	private BankAccountService bankAccountService;
+
+	@Autowired
+	private DateFormatDao dateformatDao;
 
 	public Integer firstRowIndex = 0;
 
@@ -78,11 +91,12 @@ public class ExcelParser implements TransactionFileParser {
 	}
 
 	// consider for singel page in sheet
-	public List<Map<String, String>> parseImportData(TransactionParsingSettingDetailModel model, MultipartFile file) {
+	public Map parseImportData(TransactionParsingSettingDetailModel model, MultipartFile file) {
 
 		firstRowIndex = model.getHeaderRowNo() != null ? model.getHeaderRowNo() - 1 : 0;
 
 		if (file != null) {
+			Map<Integer, Set<Integer>> errorRowCellIndexMap = new HashMap<Integer, Set<Integer>>();
 
 			Map<Integer, TransactionEnum> headerIndexMap = new HashMap<Integer, TransactionEnum>();
 			for (TransactionEnum transactionEnum : model.getIndexMap().keySet()) {
@@ -97,32 +111,76 @@ public class ExcelParser implements TransactionFileParser {
 				// Create a DataFormatter to format and get each cell's value as String
 				DataFormatter dataFormatter = new DataFormatter();
 
-				workbook.forEach(sheet -> {
-					sheet.forEach(row -> {
-						Map<String, String> dataMap = new LinkedHashMap<String, String>();
-						row.forEach(cell -> {
-							String cellValue = dataFormatter.formatCellValue(cell);
-							if (cell.getRow().getRowNum() > firstRowIndex) {
-								if (headerIndexMap.containsKey(cell.getColumnIndex())) {
-									dataMap.put(headerIndexMap.get(cell.getColumnIndex()).getDisplayName(), cellValue);
-								}
-							}
-						});
-						if (!dataMap.isEmpty()) {
-							list.add(dataMap);
-						}
-					});
+				Sheet sheet = workbook.getSheetAt(0);
 
-				});
+				for (Row row : sheet) {
+					Map<String, String> dataMap = new LinkedHashMap<String, String>();
+
+					for (Cell cell : row) {
+						String cellValue = dataFormatter.formatCellValue(cell);
+						if (cell.getRow().getRowNum() > firstRowIndex) {
+							if (headerIndexMap.containsKey(cell.getColumnIndex())) {
+
+								//
+								String displayName = headerIndexMap.get(cell.getColumnIndex()).getDisplayName();
+								// check for date format
+								if (model.getDateFormatId() != null
+										&& displayName.equals(TransactionEnum.TRANSACTION_DATE.getDisplayName())
+										|| displayName.equals(TransactionEnum.DATE.getDisplayName())) {
+
+									try {
+										DateFormat format = dateformatDao.findByPK(model.getDateFormatId());
+										SimpleDateFormat formatter = new SimpleDateFormat(format.getFormat());
+										formatter.parse(cellValue);
+									} catch (ParseException e) {
+										errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap,
+												cell.getRow().getRowNum(), cell.getColumnIndex());
+									}
+								}
+
+								// chcek for credit amount
+								if (displayName.equals(TransactionEnum.CR_AMOUNT.getDisplayName())) {
+									try {
+										new BigDecimal(cellValue);
+									} catch (Exception e) {
+										errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap,
+												cell.getRow().getRowNum(), cell.getColumnIndex());
+									}
+								}
+
+								// chcek for Debit amount
+								if (displayName.equals(TransactionEnum.DR_AMOUNT.getDisplayName())) {
+									try {
+										new BigDecimal(cellValue);
+									} catch (Exception e) {
+										errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap,
+												cell.getRow().getRowNum(), cell.getColumnIndex());
+									}
+								}
+
+								//
+								dataMap.put(headerIndexMap.get(cell.getColumnIndex()).getDisplayName(), cellValue);
+							}
+						}
+					}
+					if (!dataMap.isEmpty()) {
+						list.add(dataMap);
+					}
+				}
 
 				workbook.close();
-				return list;
+
+				Map responseMap = new LinkedHashMap<>();
+				responseMap.put("data", list);
+				responseMap.put("error", errorRowCellIndexMap.isEmpty() ? null : errorRowCellIndexMap);
+
+				return responseMap;
 			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
 				e.printStackTrace();
 			}
 
 		}
-		return new ArrayList<Map<String, String>>();
+		return new HashMap<>();
 
 	}
 
@@ -178,6 +236,18 @@ public class ExcelParser implements TransactionFileParser {
 
 	}
 
-	// proper model
+	public Map<Integer, Set<Integer>> addErrorCellInRow(Map<Integer, Set<Integer>> map, Integer row, Integer cell) {
+
+		Set<Integer> cellSet = new HashSet<Integer>();
+
+		if (map.containsKey(row)) {
+			cellSet = map.get(row);
+		}
+
+		cellSet.add(cell);
+		map.put(row, cellSet);
+
+		return map;
+	}
 
 }

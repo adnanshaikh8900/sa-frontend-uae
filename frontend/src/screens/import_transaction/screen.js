@@ -157,6 +157,9 @@ class ImportTransaction extends React.Component {
               selectError: tempError
             })
           })
+        }).catch(err => {
+          this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+          this.setState({loading: false})
         })
 
 
@@ -171,27 +174,28 @@ class ImportTransaction extends React.Component {
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.setState({loading: false})
     })
 
 
   }
 
+
   handleChange(e, index) {
-    console.log("===1=======start", e, index);
     let tempDataSelectedValueDropdown = this.state.selectedValueDropdown;
     let tempStatus = [...this.state.columnStatus];
     let status = tempDataSelectedValueDropdown.filter(item => item.value === e.value && e.value !== "")
     if (status.length > 0) {
-      console.log("===1=======", status);
       tempStatus[index] = { label: `${e.value}`, status: true }
+      // tempDataSelectedValueDropdown[index] = { label: `Select`, value: '' }
       if (tempDataSelectedValueDropdown[index].value !== e.value) {
         this.setState({
-          columnStatus: tempStatus
+          columnStatus: tempStatus,
+          selectedValueDropdown: tempDataSelectedValueDropdown
         })
       }
     }
-    else if (!e.value && e.value === '') {
-      console.log("===2=======");
+    else if (e.value === '') {
       let val = tempDataSelectedValueDropdown[index].value;
       let multiSelected = []
       tempStatus.map(item => item.label).reduce(function (a, e, i) {
@@ -203,71 +207,33 @@ class ImportTransaction extends React.Component {
       if (multiSelected.length > 0) {
         multiSelected.map(item => {
           tempStatus[item] = { label: '', status: false }
-        })
-        this.setState({
-          columnStatus: tempStatus
-        }, () => {
-          tempDataSelectedValueDropdown[index] = e
-          console.log(tempDataSelectedValueDropdown[index] = e)
-          this.setState({
-            selectedValueDropdown: tempDataSelectedValueDropdown
-          })
-        })
-      } else {
-        tempDataSelectedValueDropdown[index] = e
-        this.setState({
-          selectedValueDropdown: tempDataSelectedValueDropdown
-        })
-      }
-    } else {
-      console.log("else -->", tempDataSelectedValueDropdown, tempStatus)
-      tempStatus.map((item, i) => {
-        if (item.label !== "") {
-          console.log("------------------")
-          let idx = tempDataSelectedValueDropdown.map(val => val.value).indexOf(item.label);
-          tempDataSelectedValueDropdown.map(val => {
-            if (val.value === item.label) {
-              tempStatus[i].label = '';
-              tempStatus[i].status = false;
-            }
-          })
-        }
-        // if (idx > -1) {
-        //   console.log("ind --> ", idx)
-        //   return { label: '', status: false }
-        // }
-      })
-      console.log("tempStatus[index]", tempStatus);
-      // tempStatus[index] = { label: '', status: false }
+        }) 
+      } 
+      tempDataSelectedValueDropdown[index] = e
+      tempStatus[index] = { label: '', status: false }
       this.setState({
-        columnStatus: tempStatus
-      }, () => {
-        tempDataSelectedValueDropdown[index] = e
-        this.state.selectError[index] = false
-        this.setState({
-          selectedValueDropdown: tempDataSelectedValueDropdown,
-          selectError: this.state.selectError
-        })
+        columnStatus: tempStatus,
+        selectedValueDropdown: tempDataSelectedValueDropdown
+      })
+    } else {
+      let a = tempStatus.map((item, i) => {
+          let idx = tempDataSelectedValueDropdown.map(val => val.value).indexOf(item.label);
+        if (idx === index || item.label == '') {
+          return { label: '', status: false }
+        } else {
+          return { label: `${item.label}`,status: `${item.status}`}
+        }
+      })
+      a[index] = { label: '', status: false }
+      tempDataSelectedValueDropdown[index] = e
+      this.state.selectError[index] = false
+      this.setState({
+        columnStatus: a,
+        selectedValueDropdown: tempDataSelectedValueDropdown,
+        selectError: this.state.selectError
       })
     }
   }
-  // else {
-  //   if (e.value === '' || e.value) {
-  //     let val = tempDataSelectedValueDropdown[index].value;
-  //     let indexs;
-  //     indexs = tempStatus.map(item => item.label).indexOf(val);
-  //     if (indexs) {
-  //       tempStatus[indexs] = { label: '', status: false }
-  //       this.setState({
-  //         columnStatus: tempStatus
-  //       })
-  //     }
-  //   }
-  //   tempDataSelectedValueDropdown[index] = e
-  //   this.setState({
-  //     selectedValueDropdown: tempDataSelectedValueDropdown
-  //   })
-  // }
 
 
   handleInputChange(name, value) {
@@ -287,8 +253,6 @@ class ImportTransaction extends React.Component {
       return item.value
     }).indexOf('');
 
-    console.log('-----' + optionErr)
-    console.log('======', item)
     if (item === -1) {
       let a = {}
       let val
@@ -304,7 +268,7 @@ class ImportTransaction extends React.Component {
       postData.indexMap = a
       this.props.importTransactionActions.createConfiguration(postData).then(res => {
         this.props.commonActions.tostifyAlert('success', 'New Template Created Successfully')
-        this.props.history.push('admin/banking/upload-statement', { id: res.data.id })
+        this.props.history.push('admin/banking/upload-statement', { id: res.data.id ,bankAccountId :this.props.location.state.bankAccountId})
       }).catch(err => {
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
       })
@@ -316,7 +280,6 @@ class ImportTransaction extends React.Component {
   }
 
   render() {
-    console.log('state ===> ', this.state.selectedValueDropdown, this.state.columnStatus);
     const { initValue, loading, tableDataKey, tableData, initialloading, configurationList } = this.state;
     const { date_format_list } = this.props
 
@@ -384,7 +347,6 @@ class ImportTransaction extends React.Component {
                                       options={configurationList ? selectOptionsFactory.renderOptions('name', 'id', configurationList, 'Configuration') : []}
                                       onChange={(e) => {
                                         let data = configurationList.filter(item => item.id == e.value);
-                                        // console.log(data)
                                         if (data.length > 0) {
                                           this.setState({
                                             initValue: {
@@ -418,7 +380,7 @@ class ImportTransaction extends React.Component {
                                       <Col lg={3}>
                                         {this.state.delimiterList && this.state.delimiterList.map((option, index, array) => {
                                           return (
-                                            <div>
+                                            <div key={index}>
                                               <FormGroup check inline className="mb-3">
                                                 <Input
                                                   className="form-check-input"
@@ -428,10 +390,10 @@ class ImportTransaction extends React.Component {
                                                   value={this.state.delimiterList[index].value}
                                                   checked={this.state.selectedDelimiter === option.value}
                                                   onChange={(e) => {
-                                                    console.log(e)
                                                     this.setState({
                                                       selectedDelimiter: e.target.value
                                                     })
+                                                    this.handleInputChange('otherDilimiterStr', '')
                                                   }}
                                                 />
                                                 <Label className="form-check-label" check htmlFor="vatIncluded">{option.label}</Label>
@@ -440,7 +402,7 @@ class ImportTransaction extends React.Component {
                                                     className="ml-3"
                                                     type="text"
                                                     placeholder="Other"
-                                                    value={this.state.initValue.otherDilimiterStr}
+                                                    value={this.state.initValue.otherDilimiterStr || ''}
                                                     disabled={this.state.selectedDelimiter !== 'OTHER'}
                                                     onChange={(e) => { this.handleInputChange('otherDilimiterStr', e.target.value) }}
                                                   />
@@ -455,7 +417,7 @@ class ImportTransaction extends React.Component {
 
                                         <Row>
                                           <Col md="5">
-                                            <label for="Other">Provide Sample</label>
+                                            <label htmlFor="Other">Provide Sample</label>
                                           </Col>
                                           <Col md="7">
                                             <FormGroup className="">
@@ -485,7 +447,7 @@ class ImportTransaction extends React.Component {
                                                 id=""
                                                 rows="6"
                                                 placeholder="Enter No of Rows"
-                                                value={this.state.initValue.skipRows}
+                                                value={this.state.initValue.skipRows || ''}
                                                 onChange={(e) => { this.handleInputChange("skipRows", e.target.value) }}
                                               />
                                             </FormGroup>
@@ -500,7 +462,7 @@ class ImportTransaction extends React.Component {
                                                 name=""
                                                 id=""
                                                 rows="6"
-                                                value={this.state.initValue.headerRowNo}
+                                                value={this.state.initValue.headerRowNo || ''}
                                                 placeholder="Enter Header Row Number"
                                                 onChange={(e) => { this.handleInputChange("headerRowNo", e.target.value) }}
 
@@ -520,7 +482,7 @@ class ImportTransaction extends React.Component {
                                                 id=""
                                                 rows="6"
                                                 placeholder="Text Qualifier"
-                                                value={this.state.initValue.textQualifier}
+                                                value={this.state.initValue.textQualifier || ''}
                                                 onChange={(e) => { this.handleInputChange("textQualifier", e.target.value) }}
 
                                               />
@@ -586,7 +548,6 @@ class ImportTransaction extends React.Component {
                                 <Loader />
                                 :
                                 this.state.tableDataKey.length > 0 ? this.state.tableDataKey.map((header, index) => {
-                                  console.log(this.state.columnStatus);
                                   return (
 
                                     <Col style={{ width: `calc(100% / ${this.state.tableDataKey.length})`, margin: '20px 0' }}>
@@ -605,7 +566,7 @@ class ImportTransaction extends React.Component {
                                         // className={}
                                         />
                                       </FormGroup>
-                                      <p className={this.state.columnStatus[index].status ? 'is-invalid' : 'valid'}>*{`${this.state.columnStatus[index].label}`} Already Selected</p>
+                                      <p className={this.state.columnStatus[index].status ? 'is-invalid' : 'valid'}>*Already Selected</p>
                                     </Col>
 
                                   )

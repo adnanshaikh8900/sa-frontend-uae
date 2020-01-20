@@ -248,7 +248,9 @@ class BankTransactions extends React.Component {
                           <Button
                             color="info"
                             className="btn-square"
-                            onClick={() => this.props.history.push('/admin/banking/upload-statement')}
+                            onClick={() => this.props.history.push('/admin/banking/upload-statement',{
+                              bankAccountId: this.props.location.state.bankAccountId
+                            })}
                           >
                             <i className="fa glyphicon glyphicon-export fa-upload mr-1" />
                             Upload Statement

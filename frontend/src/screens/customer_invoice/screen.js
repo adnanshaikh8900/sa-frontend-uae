@@ -168,14 +168,12 @@ class CustomerInvoice extends React.Component {
 
 
   renderActions(cell, row) {
-    console.log(row)
     return (
       <div>
         <ButtonDropdown
           isOpen={this.state.actionButtons[row.id]}
           toggle={() => this.toggleActionButton(row.id)}
         >
-          {console.log( this.state.actionButtons[row.id])}
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
               this.state.actionButtons[row.id] === true ?
@@ -268,7 +266,6 @@ class CustomerInvoice extends React.Component {
       ids: selectedRows
     }
     this.props.customerInvoiceActions.removeBulk(obj).then((res) => {
-      console.log(typeof res.status)
       if (res.status == 200) {
         this.initializeData()
         this.props.commonActions.tostifyAlert('success', 'Removed Successfully')

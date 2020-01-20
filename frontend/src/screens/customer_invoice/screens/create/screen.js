@@ -785,7 +785,7 @@ class CreateCustomerInvoice extends React.Component {
                                         <Row>
                                           <Col lg={6}>
                                             <FormGroup>
-                                              <Label htmlFor="discount_type">Discount Type</Label>
+                                              <Label htmlFor="discount_type">Discount Type(TBD)</Label>
                                               <Select
                                                 className="select-default-width"
                                                 options={discountOptions}
@@ -817,7 +817,7 @@ class CreateCustomerInvoice extends React.Component {
                                         <Row>
                                           <Col lg={6} className="mt-4">
                                             <FormGroup>
-                                              <Label htmlFor="discount_amount">Discount Amount</Label>
+                                              <Label htmlFor="discount_amount">Discount Amount(TBD)</Label>
                                               <Input
                                                 id="discount_amount"
                                                 name="discount_amount"

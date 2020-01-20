@@ -345,7 +345,6 @@ class CreatePayment extends React.Component {
                                           onChange={option => {
                                             // this.props.paymentActions.getInvoiceById(+option.value).then((res) => {
                                               // if (res.status === 200) {
-                                                // console.log(res.data)
                                               // }
                                               // let data;
                                               // data = invoice_list.filter(item => item.invoiceId === option.value);

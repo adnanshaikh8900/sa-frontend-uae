@@ -1,7 +1,6 @@
 package com.simplevat.criteria.enums;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -11,9 +10,13 @@ import lombok.Getter;
 
 public enum TransactionEnum {
 
-	TRANSACTION_DATE("TRANSACTION_DATE", "Transaction Date"), DESCRITION("DESCRITION", "Description"),
-	DR_AMOUNT("DR_AMOUNT", "Debit Amount"), CR_AMOUNT("DR_AMOUNT", "Credit Amount"), DATE("DATE", "Date"),
-	CREDIT("CREDIT", "Credit"), DEBIT("DEBIT", "Debit");
+	TRANSACTION_DATE("TRANSACTION_DATE", "Transaction Date"), 
+	DESCRIPTION("DESCRIPTION", "Description"),
+	DR_AMOUNT("DR_AMOUNT", "Debit Amount"),
+	CR_AMOUNT("CR_AMOUNT", "Credit Amount"), 
+	DATE("DATE", "Date"),
+	CREDIT("CREDIT", "Credit"), 
+	DEBIT("DEBIT", "Debit");
 
 	@Getter
 	String dbColumnName;

@@ -51,13 +51,11 @@ public class ExcelParser implements TransactionFileParser {
 				DataFormatter dataFormatter = new DataFormatter();
 
 				workbook.forEach(sheet -> {
-					System.out.println("=> " + sheet.getSheetName());
 					Map<String, String> dataeMap = new LinkedHashMap<String, String>();
 					sheet.forEach(row -> {
 						row.forEach(cell -> {
 							String cellValue = dataFormatter.formatCellValue(cell);
 							if (cell.getRow().getRowNum() == firstRowIndex) {
-								System.out.print(cellValue + "\t");
 								indexHeaderMap.put(cell.getColumnIndex(), cellValue);
 							} else if (cell.getRow().getRowNum() > firstRowIndex) {
 
@@ -79,6 +77,7 @@ public class ExcelParser implements TransactionFileParser {
 
 	}
 
+	// consider for singel page in sheet
 	public List<Map<String, String>> parseImportData(TransactionParsingSettingDetailModel model, MultipartFile file) {
 
 		firstRowIndex = model.getHeaderRowNo() != null ? model.getHeaderRowNo() - 1 : 0;
@@ -99,8 +98,6 @@ public class ExcelParser implements TransactionFileParser {
 				DataFormatter dataFormatter = new DataFormatter();
 
 				workbook.forEach(sheet -> {
-					System.out.println("=> " + sheet.getSheetName());
-
 					sheet.forEach(row -> {
 						Map<String, String> dataMap = new LinkedHashMap<String, String>();
 						row.forEach(cell -> {

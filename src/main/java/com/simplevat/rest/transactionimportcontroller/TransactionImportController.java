@@ -169,45 +169,34 @@ public class TransactionImportController implements Serializable {
 
 	@ApiOperation(value = "Import Trnsaction")
 	@PostMapping(value = "/save")
-	public ResponseEntity<Integer> importTransaction(@RequestBody MultipartFile file,
-			@RequestParam(value = "id") Long id, @RequestParam(value = "bankId") Integer bankId) {
+	public ResponseEntity<Integer> importTransaction(@RequestBody TransactionImportModel transactionImportModel) {
 
-		TransactionParsingSetting parsingSetting = transactionParsingSettingService.findByPK(id);
-		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel(parsingSetting);
 		List<com.simplevat.entity.bankaccount.Transaction> transactionList = null;
 
-		switch (fileHelper.getFileExtension(file.getOriginalFilename())) {
-		case "csv":
-			// transactionList = csvParser.getModelListFromFile(model, file);
-			break;
-
-		case "xlsx":
-		case "xlx":
-			// transactionList = excelParser.getModelListFromFile(model, file);
-			break;
-		}
-
-		return new ResponseEntity<>(bankId, HttpStatus.OK);
+		return new ResponseEntity<>(transactionImportModel.getBankId(), HttpStatus.OK);
 	}
 
+	@ApiOperation(value = "parse file and return data according template")
 	@PostMapping("/parse")
 	public ResponseEntity parseTransaction(@RequestBody MultipartFile file, @RequestParam(value = "id") Long id) {
 
 		TransactionParsingSetting parsingSetting = transactionParsingSettingService.findByPK(id);
 		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel(parsingSetting);
 
-		List<Map<String, String>> dataMap = null;
+		Map dataMap = null;
+
 		switch (fileHelper.getFileExtension(file.getOriginalFilename())) {
+
 		case "csv":
-			// dataMap = csvParser.parseSmaple(model);
+			dataMap = csvParser.parseImportData(model, file);
 			break;
 
 		case "xlsx":
 		case "xlx":
-			dataMap = excelParser.parseImportData(model, file);
+		//	dataMap = excelParser.parseImportData(model, file);	
 			break;
-
 		}
+
 		if (dataMap == null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

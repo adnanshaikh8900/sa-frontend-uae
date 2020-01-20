@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,12 +25,18 @@ import java.util.logging.Logger;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.contact.model.Transaction;
+import com.simplevat.criteria.enums.TransactionEnum;
+import com.simplevat.entity.TransactionParsingSetting;
+import com.simplevat.service.BankAccountService;
+
+import javassist.expr.NewArray;
 
 @Component
 public class TransactionImportRestHelper {
@@ -63,6 +70,9 @@ public class TransactionImportRestHelper {
 	private boolean headerIncluded = true;
 	private Integer headerCount;
 	private String dateFormat;
+
+	@Autowired
+	private BankAccountService bankAccountService;
 
 	public void handleFileUpload(@ModelAttribute("modelCircular") MultipartFile fileattached) {
 		List<CSVRecord> listParser = new ArrayList<>();
@@ -247,4 +257,58 @@ public class TransactionImportRestHelper {
 		headerTextData.add(debitAmount);
 		headerTextData.add(creditAmount);
 	}
+
+	public List<com.simplevat.entity.bankaccount.Transaction> getEntity(TransactionImportModel transactionImportModel) {
+
+		if (transactionImportModel != null && transactionImportModel.getImportDataMap() != null
+				&& transactionImportModel.getImportDataMap().isEmpty()) {
+
+			//TransactionParsingSetting
+			
+			List<com.simplevat.entity.bankaccount.Transaction> transactions = new ArrayList<>();
+
+			com.simplevat.entity.bankaccount.Transaction trnx = new com.simplevat.entity.bankaccount.Transaction();
+			trnx.setBankAccount(bankAccountService.findByPK(transactionImportModel.getBankId()));
+
+			for (Map<TransactionEnum, Object> dataMap : transactionImportModel.getImportDataMap()) {
+				for (TransactionEnum dbColEnum : dataMap.keySet()) {
+					switch (dbColEnum) {
+					case CREDIT:
+						// trnx.set
+						break;
+
+					case CR_AMOUNT:
+						trnx.setTransactionAmount(
+								new BigDecimal(Float.valueOf((String) dataMap.get(TransactionEnum.CR_AMOUNT))));
+						break;
+
+					case DATE:
+						break;
+
+					case DEBIT:
+						break;
+
+					case DESCRIPTION:
+						break;
+
+					case DR_AMOUNT:
+						break;
+
+					case TRANSACTION_DATE:
+						break;
+
+					default:
+						break;
+
+					}
+				}
+				// map.put(TransactionEnum.valueOf(mapping.getColName()),
+				// mapping.getFileColIndex());
+
+				return transactions;
+			}
+		}
+		return null;
+	}
+
 }

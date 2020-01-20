@@ -290,10 +290,10 @@ class CreateSupplierInvoice extends React.Component {
       const vat = index !== '' ? vat_list[index].vat : 0
       // let val = (((+obj.unitPrice) * vat) / 100)
       let val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
-      obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : 0;
+      obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val).toFixed(2) : (0).toFixed(2);
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
-      total_vat = +((total_vat + val)).toFixed(2);
-      total = (total_vat + total_net).toFixed(2);
+      total_vat = +((total_vat + val));
+      total = (total_vat + total_net);
 
     })
     this.setState({
@@ -345,7 +345,7 @@ class CreateSupplierInvoice extends React.Component {
       formData.append("projectId", project.value);
     }
     if (this.uploadFile.files[0]) {
-      formData.append("attchmentFile", this.uploadFile.files[0]);
+      formData.append("attachmentFile", this.uploadFile.files[0]);
     }
     this.props.supplierInvoiceCreateActions.createInvoice(formData).then(res => {
       this.props.commonActions.tostifyAlert('success', 'New Invoice Created Successfully.')
@@ -381,7 +381,7 @@ class CreateSupplierInvoice extends React.Component {
     // this.setState({
     //   selectedContact: option
     // })
-    this.formRef.current.setFieldValue('contactId',option,true)
+    this.formRef.current.setFieldValue('contactId',option.value,true)
 
   }
 
@@ -823,7 +823,7 @@ class CreateSupplierInvoice extends React.Component {
                                         <h5 className="mb-0 text-right">Total Net</h5>
                                       </Col>
                                       <Col lg={6} className="text-right">
-                                        <label className="mb-0">{initValue.total_net}</label>
+                                        <label className="mb-0">{(initValue.total_net).toFixed(2)}</label>
                                       </Col>
                                     </Row>
                                   </div>
@@ -833,7 +833,7 @@ class CreateSupplierInvoice extends React.Component {
                                         <h5 className="mb-0 text-right">Total Vat</h5>
                                       </Col>
                                       <Col lg={6} className="text-right">
-                                        <label className="mb-0">{initValue.invoiceVATAmount}</label>
+                                        <label className="mb-0">{(initValue.invoiceVATAmount.toFixed(2))}</label>
                                       </Col>
                                     </Row>
                                   </div>
@@ -843,7 +843,7 @@ class CreateSupplierInvoice extends React.Component {
                                         <h5 className="mb-0 text-right">Total</h5>
                                       </Col>
                                       <Col lg={6} className="text-right">
-                                        <label className="mb-0">{initValue.totalAmount}</label>
+                                        <label className="mb-0">{(initValue.totalAmount).toFixed(2)}</label>
                                       </Col>
                                     </Row>
                                   </div>

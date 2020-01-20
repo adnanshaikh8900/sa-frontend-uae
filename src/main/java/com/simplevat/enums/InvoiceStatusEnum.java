@@ -52,6 +52,6 @@ public enum InvoiceStatusEnum {
 	}
 
 	public static String getInvoiceTypeByValue(Integer value) {
-		return getInvoiceStatusList().get(value).getDesc();
+		return map().get(value).getDesc();
 	}
 }

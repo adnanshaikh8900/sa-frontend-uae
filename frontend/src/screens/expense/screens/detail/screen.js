@@ -282,7 +282,11 @@ class DetailExpense extends React.Component {
                                         placeholder="Payee"
                                         onChange={(value) => { props.handleChange("payee")(value) }}
                                         defaultValue={props.values.payee}
-                                      />
+                                        className={props.errors.payee && props.touched.payee ? "is-invalid" : ""}                                   
+                                        />
+                                        {props.errors.payee && props.touched.payee && (
+                                          <div className="invalid-feedback">{props.errors.payee}</div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                   <Col lg={4}>

@@ -138,7 +138,6 @@ class CreateProductCategory extends React.Component {
                           //     .required("Product Category Code is Required")
                           // })}
                           validate = {values => {
-                            let status: boolean;
                             let errors = {};
                             if(!values.productCategoryName) {
                               errors.productCategoryName = 'Product Category Name is  required';

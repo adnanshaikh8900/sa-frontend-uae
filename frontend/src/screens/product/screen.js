@@ -321,7 +321,7 @@ class Product extends React.Component {
                               </FormGroup>
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" disabled={product_list.length===0} onClick={this.handleSearch}>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
                               </Button>
                             </Col>

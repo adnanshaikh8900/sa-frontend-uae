@@ -17,5 +17,7 @@ public class ProductListModel {
     private Integer vatCategoryId;
     private Integer productCategoryId;
     private Integer productWarehouseId;
+	private Boolean vatIncluded = Boolean.FALSE;
+
     
 }

@@ -21,7 +21,7 @@ export const checkAuthStatus = () => {
             data: res.data
           }
         })
-        window.localStorage.setItem('profilePic', res.data.profileImageBinary);
+        // window.localStorage.setItem('profilePic', res.data.profileImageBinary);
         window.localStorage.setItem('userId',res.data.userId)
 
       } else {

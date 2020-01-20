@@ -6,7 +6,9 @@ import {
 import moment from 'moment'
 
 export const getUserList = (obj) => {
-  let url = `/rest/user/getList?name=${obj.name}&roleId=${obj.roleId}&active=${obj.active}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+  console.log(obj.active)
+  const value = (obj.active)  ? obj.active : true
+  let url = `/rest/user/getList?name=${obj.name}&roleId=${obj.roleId}&active=${value}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
   if(obj.dob !== '') {
     // let date = moment(obj.dob).format('DD-MM-YYYY')
     url = url +`&dob=${obj.dob}`

@@ -33,6 +33,7 @@ public class InvoiceRequestModel {
     private List<InvoiceLineItemModel> invoiceLineItems;
     private String status;
     private String fileName;
+    private String filePath;
     
     private DiscountType discountType;
     private BigDecimal discount;

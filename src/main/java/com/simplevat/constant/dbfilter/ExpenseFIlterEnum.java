@@ -6,6 +6,7 @@ public enum ExpenseFIlterEnum {
 
 	   EXPENSE_DATE("expenseDate", " = :expenseDate"),
 	    PAYEE("payee", " like CONCAT(:payee,'%')"),
+	    DELETE_FLAG("deleteFlag","= :deleteFlag"),
 	    TRANSACTION_CATEGORY("transactionCategory", " = :transactionCategory");
 
 	    @Getter

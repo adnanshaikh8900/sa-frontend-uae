@@ -117,7 +117,7 @@ class DetailJournal extends React.Component {
               subTotalCreditAmount: res.data.subTotalCreditAmount ? res.data.subTotalCreditAmount : 0,
               journalLineItems: res.data.journalLineItems ? res.data.journalLineItems : [],
             },
-            data: res.data.journalLineItems
+            data: res.data.journalLineItems ? res.data.journalLineItems : []
           }, () => {
             const { data } = this.state
             const idCount = data.length > 0 ? Math.max.apply(Math, data.map((item) => { return item.id; })) : 0
@@ -499,7 +499,7 @@ class DetailJournal extends React.Component {
                                   <Col lg={12}>
                                     <BootstrapTable
                                       options={this.options}
-                                      data={data ? data : []}
+                                      data={this.state.data ? this.state.data : []}
                                       version="4"
                                       hover
                                       keyField="id"

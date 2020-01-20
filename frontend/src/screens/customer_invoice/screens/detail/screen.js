@@ -142,8 +142,8 @@ class DetailCustomerInvoice extends React.Component {
               project: res.data.projectId ? res.data.projectId : '',
               invoice_number: res.data.referenceNumber ? res.data.referenceNumber : '',
               total_net: 0,
-              invoiceVATAmount: res.data.totalVatAmount ? res.data.totalVatAmount : '',
-              totalAmount: res.data.totalAmount ? res.data.totalAmount : '',
+              invoiceVATAmount: res.data.totalVatAmount ? res.data.totalVatAmount : 0,
+              totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
               notes: res.data.notes ? res.data.notes : '',
               invoiceLineItems: res.data.invoiceLineItems ? res.data.invoiceLineItems : []
             },
@@ -361,7 +361,7 @@ class DetailCustomerInvoice extends React.Component {
       formData.append("projectId", project.value);
     }
     if (this.uploadFile.files[0]) {
-      formData.append("attchmentFile", this.uploadFile.files[0]);
+      formData.append("attachmentFile", this.uploadFile.files[0]);
     }
     this.props.customerInvoiceDetailActions.updateInvoice(formData).then(res => {
       this.props.commonActions.tostifyAlert('success', 'Invoice Updated Successfully.')
@@ -390,7 +390,7 @@ class DetailCustomerInvoice extends React.Component {
     // this.setState({
     //   selectedContact: option
     // })
-    this.formRef.current.setFieldValue('contactId', option, true)
+    this.formRef.current.setFieldValue('contactId', option.value, true)
 
   }
 
@@ -868,7 +868,7 @@ class DetailCustomerInvoice extends React.Component {
                                                 <h5 className="mb-0 text-right">Total Net</h5>
                                               </Col>
                                               <Col lg={6} className="text-right">
-                                                <label className="mb-0">{(initValue.total_net.toFixed(2))}</label>
+                                                <label className="mb-0">{(initValue.total_net).toFixed(2)}</label>
                                               </Col>
                                             </Row>
                                           </div>
@@ -878,7 +878,7 @@ class DetailCustomerInvoice extends React.Component {
                                                 <h5 className="mb-0 text-right">Total Vat</h5>
                                               </Col>
                                               <Col lg={6} className="text-right">
-                                                <label className="mb-0">{(initValue.invoiceVATAmount.toFixed(2))}</label>
+                                                <label className="mb-0">{(initValue.invoiceVATAmount).toFixed(2)}</label>
                                               </Col>
                                             </Row>
                                           </div>
@@ -888,7 +888,7 @@ class DetailCustomerInvoice extends React.Component {
                                                 <h5 className="mb-0 text-right">Total</h5>
                                               </Col>
                                               <Col lg={6} className="text-right">
-                                                <label className="mb-0">{(initValue.totalAmount.toFixed(2))}</label>
+                                                <label className="mb-0">{(initValue.totalAmount).toFixed(2)}</label>
                                               </Col>
                                             </Row>
                                           </div>

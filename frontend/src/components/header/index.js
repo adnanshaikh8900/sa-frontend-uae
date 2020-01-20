@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import {
   DropdownItem,
   DropdownMenu,
@@ -23,11 +25,25 @@ import logo from 'assets/images/brand/logo.png'
 import sygnet from 'assets/images/brand/sygnet.png'
 import avatar from 'assets/images/avatars/6.jpg'
 
+import {
+  AuthActions
+} from 'services/global'
+
 const propTypes = {
   children: PropTypes.node
 }
 
 const defaultProps = {}
+
+const mapStateToProps = (state) => {
+  return ({
+    profile: state.auth.profile
+  })
+}
+
+// mapDispatchToProps = (dispatch) => {(
+//   authAction: BindActionCreators(AuthAction,dispatch)
+// )}
 
 class Header extends Component {
 
@@ -41,9 +57,6 @@ class Header extends Component {
   }
 
   componentDidMount(){
-    this.setState({
-      profilePic: localStorage.getItem('profilePic') ? localStorage.getItem('profilePic') : ''
-    })
   }
 
   signOut () {
@@ -52,7 +65,7 @@ class Header extends Component {
   }
 
   render() {
-    const { children, ...attributes } = this.props
+    const { children, profile,...attributes} = this.props
     const { profilePic } = this.state
     return (
       <React.Fragment>
@@ -85,7 +98,7 @@ class Header extends Component {
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav>
             {/* {profilePic ?  'data:image/jpg;base64,'+avatar : ''} */}
-              <img src={avatar} className="img-avatar" alt="admin@bootstrapmaster.com" />
+              <img src={profile ? 'data:image/jpg;base64,'+profile.profileImageBinary : ''} className="img-avatar" alt="" />
             </DropdownToggle>
             <DropdownMenu right>
               <DropdownItem onClick={() => this.props.history.push('/admin/profile')}>
@@ -125,4 +138,4 @@ class Header extends Component {
 Header.propTypes = propTypes
 Header.defaultProps = defaultProps
 
-export default Header
+export default connect(mapStateToProps, null)(Header)

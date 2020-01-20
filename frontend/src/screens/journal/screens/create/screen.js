@@ -75,13 +75,24 @@ class CreateJournal extends React.Component {
         totalDebitAmount: 0,
         totalCreditAmount: 0,
         subTotalCreditAmount: 0,
-        journalLineItems: [],
+        temp: false,
+        journalLineItems: [{
+          id: 0,
+          description: '',
+          transactionCategoryId: '',
+          vatCategoryId: '',
+          contactId: '',
+          debitAmount: 0,
+          creditAmount: 0,
+          error: []
+        }]
       }
     }
 
     // this.options = {
     //   paginationPosition: 'top'
     // }
+    this.formRef = React.createRef()
 
     this.initializeData = this.initializeData.bind(this)
     this.renderActions = this.renderActions.bind(this)
@@ -128,7 +139,10 @@ class CreateJournal extends React.Component {
     const { transaction_category_list } = this.props;
     let transactionCategoryList = transaction_category_list.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select Account' }, ...transaction_category_list] : transaction_category_list
     return (
-      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'transactionCategoryId') }} value={row.transactionCategoryId}>
+      <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'transactionCategoryId') }} value={row.transactionCategoryId}
+        className={row.error && row.error.transactionCategoryId ? "is-invalid" : ""}
+
+      >
         {transactionCategoryList ? transactionCategoryList.map(obj => {
           return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId}>{obj.transactionCategoryName}</option>
         }) : ''}
@@ -143,6 +157,8 @@ class CreateJournal extends React.Component {
         value={row['description'] !== '' ? row['description'] : ''}
         onChange={(e) => { this.selectItem(e, row, 'description') }}
         placeholder="Description"
+        name="description"
+        className={row.error && row.error.description ? "is-invalid" : ""}
       />
     )
   }
@@ -152,7 +168,9 @@ class CreateJournal extends React.Component {
     let contactList = contact_list.length ? [{ value: '', label: 'Select Contact' }, ...contact_list] : contact_list
 
     return (
-      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'contactId') }} value={row.value}>
+      <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'contactId') }} value={row.value}
+        className={row.error && row.error.contactId ? "is-invalid" : ""}
+      >
         {contactList ? contactList.map(obj => {
           // obj.name = obj.name === 'default' ? '0' : obj.name
           return <option value={obj.value} key={obj.value}>{obj.label}</option>
@@ -166,7 +184,9 @@ class CreateJournal extends React.Component {
     let vatList = vat_list.length ? [{ id: '', name: 'Select Vat' }, ...vat_list] : vat_list
 
     return (
-      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
+      <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}
+        className={row.error && row.error.vatCategoryId ? "is-invalid" : ""}
+      >
         {vatList ? vatList.map(obj => {
           // obj.name = obj.name === 'default' ? '0' : obj.name
           return <option value={obj.id} key={obj.id}>{obj.name}</option>
@@ -180,6 +200,7 @@ class CreateJournal extends React.Component {
       <Input
         type="number"
         value={row['debitAmount']}
+        required
         onChange={(e) => { this.selectItem(e, row, 'debitAmount') }}
       />
     )
@@ -191,6 +212,7 @@ class CreateJournal extends React.Component {
         type="number"
         value={row['creditAmount']}
         // defaultValue={row['quantity']}
+        required
         onChange={(e) => { this.selectItem(e, row, 'creditAmount') }}
       />
     )
@@ -202,11 +224,14 @@ class CreateJournal extends React.Component {
       data: data.concat({
         id: this.state.idCount + 1,
         description: '',
+        vatCategoryId: '',
         transactionCategoryId: '',
         contactId: '',
         debitAmount: 0,
         creditAmount: 0,
       }), idCount: this.state.idCount + 1
+    }, () => {
+      this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
     })
   }
 
@@ -221,7 +246,19 @@ class CreateJournal extends React.Component {
     if (name === 'debitAmount' || name === 'creditAmount' || name === 'vatCategoryId') {
       this.updateAmount(data);
     } else {
-      this.setState({ data: data });
+      this.setState({ data: data }, () => {
+        this.formRef.current.setFieldValue('journalLineItems', this.state.data, true);
+        setTimeout(() => {
+          this.state.data.map((item, index) => {
+            if (this.formRef.current.state.errors.journalLineItems && this.formRef.current.state.errors.journalLineItems[index]) {
+              item.error = this.formRef.current.state.errors.journalLineItems[index]
+            } else {
+              item.error = []
+          }
+          })
+          this.setState({ data: data })
+        }, 1000)
+      });
     }
 
   }
@@ -249,10 +286,10 @@ class CreateJournal extends React.Component {
       const index = obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
       const vat = index !== '' ? vat_list[index].vat : ''
 
-      if(vat !== '' && obj.debitAmount || vat !== '' && obj.creditAmount ) {
+      if (vat !== '' && obj.debitAmount || vat !== '' && obj.creditAmount) {
         // const val = (+obj.debitAmount) + (((+obj.debitAmount)*vat)/100)
-        subTotalDebitAmount = subTotalDebitAmount + (+obj.debitAmount) + (((+obj.debitAmount)*vat)/100);
-        subTotalCreditAmount = subTotalCreditAmount + (+obj.creditAmount) + (((+obj.creditAmount)*vat)/100);
+        subTotalDebitAmount = subTotalDebitAmount + (+obj.debitAmount) + (((+obj.debitAmount) * vat) / 100);
+        subTotalCreditAmount = subTotalCreditAmount + (+obj.creditAmount) + (((+obj.creditAmount) * vat) / 100);
       }
     })
 
@@ -265,14 +302,29 @@ class CreateJournal extends React.Component {
         totalCreditAmount: subTotalCreditAmount,
         subTotalCreditAmount: subTotalCreditAmount,
       }
+    }, () => {
+      this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
+      setTimeout(() => {
+        console.log(this.formRef.current.state.errors.journalLineItems)
+        this.state.data.map((item, index) => {
+          console.log(this.formRef.current.state.errors.journalLineItems)
+          if (this.formRef.current.state.errors.journalLineItems && this.formRef.current.state.errors.journalLineItems[index]) {
+            item.error = this.formRef.current.state.errors.journalLineItems[index]
+          } else {
+              item.error = []
+          }
+        })
+        this.setState({ data: data },()=>{console.log(this.state.data)})
+      }, 1000)
     })
   }
 
   handleSubmit(values, resetForm) {
-    const {data,initValue} = this.state
+
+    const { data, initValue } = this.state
     data.map(item => {
       delete item.id
-      item.transactionCategoryId = item.transactionCategoryId ? item.transactionCategoryId :  ''
+      item.transactionCategoryId = item.transactionCategoryId ? item.transactionCategoryId : ''
       item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
       item.contactId = item.contactId ? item.contactId : ''
     })
@@ -290,10 +342,36 @@ class CreateJournal extends React.Component {
     // const postData = {...initValue,...values,...{journalLineItems: this.state.data}}
     this.props.journalCreateActions.createJournal(postData).then(res => {
       if (res.status === 200) {
-        resetForm();
+        // resetForm({});
         this.props.commonActions.tostifyAlert('success', 'New Journal Created Successfully')
         if (this.state.createMore) {
-          this.setState({ createMore: false });
+          this.setState({
+             createMore: false,
+             data: [{
+              id: 0,
+              description: '',
+              transactionCategoryId: '',
+              vatCategoryId: '',
+              contactId: '',
+              debitAmount: 0,
+              creditAmount: 0,
+            }],
+            initValue: {...this.state.initValue,...{
+              journalLineItems: [{
+                id: 0,
+                description: '',
+                transactionCategoryId: '',
+                vatCategoryId: '',
+                contactId: '',
+                debitAmount: 0,
+                creditAmount: 0,
+              }],
+              subTotalDebitAmount: 0,
+              totalDebitAmount: 0,
+              totalCreditAmount: 0,
+              subTotalCreditAmount: 0,
+            }}
+            });
         } else {
           this.props.history.push('/admin/accountant/journal');
         }
@@ -332,13 +410,27 @@ class CreateJournal extends React.Component {
                     <Col lg={12}>
                       <Formik
                         initialValues={initValue}
+                        ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values,resetForm)
+                          this.handleSubmit(values, resetForm)
+                          resetForm(initValue)
                         }}
                         validationSchema={
                           Yup.object().shape({
                             journalDate: Yup.date()
-                              .required('Journal Date is Required')
+                              .required('Journal Date is Required'),
+                            journalLineItems: Yup.array()
+                              .of(
+                                Yup.object().shape({
+                                  description: Yup.string().required('Description is Required'),
+                                  vatCategoryId: Yup.string().required('Vat is required'),
+                                  transactionCategoryId: Yup.string().required('Account is required'),
+                                  contactId: Yup.string().required('Contact is required'),
+                                  debitAmount: Yup.number().required(),
+                                  creditAmount: Yup.number().required(),
+                                })
+                              )
+                              .required('*Atleast One Journal Debit and Credit Details is mandatory')
                           })
                         }
                       >
@@ -355,16 +447,16 @@ class CreateJournal extends React.Component {
                                     placeholderText="Journal Date"
                                     selected={props.values.journalDate}
                                     showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                    showYearDropdown
+                                    dropdownMode="select"
                                     onChange={(value) => {
                                       props.handleChange("journalDate")(value)
                                     }}
                                     className={`form-control ${props.errors.journalDate && props.touched.journalDate ? "is-invalid" : ""}`}
-                                    />
-                                    {props.errors.journalDate && props.touched.journalDate && (
-                                      <div className="invalid-feedback">{props.errors.journalDate}</div>
-                                    )}
+                                  />
+                                  {props.errors.journalDate && props.touched.journalDate && (
+                                    <div className="invalid-feedback">{props.errors.journalDate}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -377,6 +469,7 @@ class CreateJournal extends React.Component {
                                     id="referenceCode"
                                     name="referenceCode"
                                     placeholder="Reference Number"
+                                    value={props.values.referenceCode || ''}
                                     onChange={(value) => { props.handleChange("referenceCode")(value) }}
                                   />
                                 </FormGroup>
@@ -392,6 +485,7 @@ class CreateJournal extends React.Component {
                                     id="description"
                                     rows="5"
                                     placeholder="1024 characters..."
+                                    value={props.values.description || '' }
                                     onChange={(value) => { props.handleChange("description")(value) }}
                                   />
                                 </FormGroup>
@@ -408,7 +502,7 @@ class CreateJournal extends React.Component {
                                     name="currencyCode"
                                     value={props.values.currencyCode}
                                     onChange={option => {
-                                      if(option && option.value) {
+                                      if (option && option.value) {
                                         props.handleChange('currencyCode')(option.value)
                                       } else {
                                         props.handleChange('currencyCode')('')
@@ -421,11 +515,19 @@ class CreateJournal extends React.Component {
                             <hr />
                             <Row>
                               <Col lg={12} className="mb-3">
-                                <Button type="button" color="primary" className="btn-square mr-3" onClick={this.addRow}>
+                                <Button type="button" color="primary" className="btn-square mr-3" onClick={this.addRow}
+                                  disabled={this.formRef.current && this.formRef.current.state.errors.journalLineItems &&  typeof this.formRef.current.state.errors.journalLineItems !== 'string'}
+                                >
                                   <i className="fa fa-plus"></i> Add More
                             </Button>
                               </Col>
                             </Row>
+                            {props.errors.journalLineItems && typeof props.errors.journalLineItems === 'string' && (
+                              <div className={props.errors.journalLineItems ? "is-invalid" : ""}>
+                                <div className="invalid-feedback">{props.errors.journalLineItems}</div>
+                              </div>
+                            )}
+
                             <Row>
                               <Col lg={12}>
                                 <BootstrapTable
@@ -481,57 +583,78 @@ class CreateJournal extends React.Component {
                                 </BootstrapTable>
                               </Col>
                             </Row>
+
+                            {this.state.data.length > 0 ? (
+                              <Row>
+                                <Col lg={4} className="ml-auto">
+                                  <div className="total-item p-2">
+                                    <Row>
+                                      <Col xs={4}></Col>
+                                      <Col xs={4}>
+                                        <h5 className="mb-0 text-right">Debits</h5>
+                                      </Col>
+                                      <Col xs={4}>
+                                        <h5 className="mb-0 text-right">Credits</h5>
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                  <div className="total-item p-2">
+                                    <Row>
+                                      <Col xs={4}>
+                                        <h5 className="mb-0 text-right">Sub Total</h5>
+                                      </Col>
+                                      <Col xs={4} className="text-right">
+                                        <label className="mb-0"> {(this.state.initValue.subTotalDebitAmount).toFixed(2)}  </label>
+                                      </Col>
+                                      <Col xs={4} className="text-right">
+                                        <label className="mb-0">{(this.state.initValue.subTotalCreditAmount).toFixed(2)}</label>
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                  <div className="total-item p-2">
+                                    <Row>
+                                      <Col xs={4}>
+                                        <h5 className="mb-0 text-right">Total</h5>
+                                      </Col>
+                                      <Col xs={4} className="text-right">
+                                        <label className="mb-0">{(this.state.initValue.subTotalDebitAmount).toFixed(2)}</label>
+                                      </Col>
+                                      <Col xs={4} className="text-right">
+                                        <label className="mb-0">{(this.state.initValue.subTotalCreditAmount).toFixed(2)}</label>
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                </Col>
+                              </Row>
+                            ) :
+                              null
+                            }
                             <Row>
-                              <Col lg={4} className="ml-auto">
-                                <div className="total-item p-2">
-                                  <Row>
-                                    <Col xs={4}></Col>
-                                    <Col xs={4}>
-                                      <h5 className="mb-0 text-right">Debits</h5>
-                                    </Col>
-                                    <Col xs={4}>
-                                      <h5 className="mb-0 text-right">Credits</h5>
-                                    </Col>
-                                  </Row>
-                                </div>
-                                <div className="total-item p-2">
-                                  <Row>
-                                    <Col xs={4}>
-                                      <h5 className="mb-0 text-right">Sub Total</h5>
-                                    </Col>
-                                    <Col xs={4} className="text-right">
-                                      <label className="mb-0"> {this.state.initValue.subTotalDebitAmount }  </label>
-                                    </Col>
-                                    <Col xs={4} className="text-right">
-                                      <label className="mb-0">{this.state.initValue.subTotalCreditAmount }</label>
-                                    </Col>
-                                  </Row>
-                                </div>
-                                <div className="total-item p-2">
-                                  <Row>
-                                    <Col xs={4}>
-                                      <h5 className="mb-0 text-right">Total</h5>
-                                    </Col>
-                                    <Col xs={4} className="text-right">
-                                      <label className="mb-0">{this.state.initValue.subTotalDebitAmount }</label>
-                                    </Col>
-                                    <Col xs={4} className="text-right">
-                                      <label className="mb-0">{this.state.initValue.subTotalCreditAmount }</label>
-                                    </Col>
-                                  </Row>
-                                </div>
-                              </Col>
-                            </Row>
-                            <Row>
+
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={
-                                      () => {
-                                        this.setState({ createMore: false }, () => {
-                                          props.handleSubmit()
-                                        })
-                                      }
-                                    }
+                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                    setTimeout(() => {
+                                      props.validateForm().then(err => {
+                                        if (err.journalLineItems && err.journalLineItems.length > 0) {
+                                          this.state.data.map((item, index) => {
+                                            item.error = err.journalLineItems[index]
+                                          })
+                                          this.setState({ data: data })
+                                        } else {
+                                          this.state.data.map((item, index) => {
+                                            item.error = []
+                                          })
+                                        }
+                                      })
+                                    }, 1000)
+
+                                    // () => {
+                                    this.setState({ createMore: false }, () => {
+                                      props.handleSubmit()
+                                    })
+                                    // }
+                                  }}
                                   >
                                     <i className="fa fa-dot-circle-o"></i> Create
                               </Button>

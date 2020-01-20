@@ -124,7 +124,7 @@ class CreateProduct extends React.Component {
           this.setState({
             createMore: false
           })
-          resetForm()
+          resetForm({})
           // this.props.history.push('/admin/master/product/create')
         } else this.props.history.push('/admin/master/product')
       }
@@ -220,7 +220,7 @@ class CreateProduct extends React.Component {
                                       name="productCode"
                                       onChange={(value) => {props.handleChange("productCode")(value)}}
 
-                                      // value={props.values.productCode}
+                                      value={props.values.productCode}
                                       placeholder="Enter Product Code"
                                     />
                                   </FormGroup>
@@ -231,7 +231,7 @@ class CreateProduct extends React.Component {
                                     <Label htmlFor="productCategoryId">Product Category</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'productCategoryCode', product_category_list,'Product Category') : []}
+                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'id', product_category_list,'Product Category') : []}
                                       id="productCategoryId"
                                       name="productCategoryId"
                                       value={props.values.productCategoryId}
@@ -306,7 +306,7 @@ class CreateProduct extends React.Component {
                                       name="vatIncluded"
                                       onChange={(value) => {props.handleChange("vatIncluded")(value)}}
 
-                                      value={props.values.vatIncluded}
+                                      value={props.values.vatIncluded || false}
                                     />
                                     <Label className="form-check-label" check htmlFor="vatIncluded">Vat Include</Label>
                                   </FormGroup>

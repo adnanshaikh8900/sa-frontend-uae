@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -21,49 +21,71 @@ import {
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import Stepper from 'react-stepper-horizontal'
+import { Formik } from 'formik';
+import * as Yup from "yup";
 
-import BankTransactions from '../bank_account/screens/transactions'
+import * as ImportBankStatementActions from './actions'
+import {
+  CommonActions
+} from 'services/global'
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
-    bank_transaction_list: state.bank_account.bank_transaction_list
+    // bank_transaction_list: state.bank_account.bank_transaction_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    transactionActions: bindActionCreators(BankTransactions.actions, dispatch)
+    importBankStatementActions: bindActionCreators(ImportBankStatementActions, dispatch)
   })
 }
 
 class ImportBankStatement extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
-      
+      templateList: [],
+      loading: false,
+      initValue: {
+        templateId: '',
+      },
+      fileName: '',
+      selectedTemplate: '',
+      tableDataKey: [],
+      tableData: [],
     }
-
+    this.formRef = React.createRef()
     this.options = {
       paginationPosition: 'top'
     }
 
     this.initializeData = this.initializeData.bind(this)
     this.renderTransactionType = this.renderTransactionType.bind(this)
-
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.initializeData()
   }
 
-  initializeData () {
-    this.props.transactionActions.getTransactionList()
+  initializeData() {
+    this.props.importBankStatementActions.getTemplateList().then(res => {
+      let id;
+      if (res.status == 200) {
+        id = this.props.location.state && this.props.location.state.id ? id : ''
+        this.setState({
+          selectedTemplate: id,
+          templateList: res.data
+        })
+      }
+    })
   }
 
-  renderTransactionType (cell, row) {
+  renderTransactionType(cell, row) {
     let classname = ''
     let value = ''
     if (row.status === 'Explained') {
@@ -77,13 +99,39 @@ class ImportBankStatement extends React.Component {
       value = 'Tax Claim'
     }
     return (
-      <span className={ `badge ${classname} mb-0` }>{ value }</span>
+      <span className={`badge ${classname} mb-0`}>{value}</span>
     )
+  }
+
+  handleSubmit(data) {
+    this.setState({loading: true })
+    const { initValue, selectedTemplate } = this.state
+    let formData = new FormData()
+    if (this.uploadFile && this.uploadFile.files[0]) {
+      formData.append("file", this.uploadFile.files[0]);
+    }
+    formData.append("id", selectedTemplate ? +selectedTemplate : '');
+    // this.setState({
+    //       // tableData: [...res.data],
+    //       tableDataKey: ['a','b','c','d']
+    //     })
+    this.props.importBankStatementActions.parseFile(formData).then(res => {
+      console.log(res.data)
+      this.setState({
+        tableData: [...res.data],
+        tableDataKey: res.data[0] ? Object.keys(res.data[0]) : []
+      })
+      // })
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.setState({loading: false})
+    })
   }
 
   render() {
 
     const { bank_transaction_list } = this.props
+    const { templateList, initValue } = this.state
 
     return (
       <div className="import-bank-statement-screen">
@@ -102,7 +150,7 @@ class ImportBankStatement extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
-                  <Row>
+                  {/* <Row>
                     <Col lg={12}>
                       <Nav tabs>
                         <NavItem>
@@ -181,13 +229,229 @@ class ImportBankStatement extends React.Component {
                         </Button>
                       </FormGroup>
                     </Col>
+                  </Row> */}
+                  <Row>
+                    <Col lg={12}>
+                      <div>
+                        <Formik
+                          initialValues={initValue}
+                          ref={this.formRef}
+                          onSubmit={(values, { resetForm }) => {
+                            this.handleSubmit(values)
+                          }}
+                          validationSchema={
+                            Yup.object().shape({
+                              templateId: Yup.string()
+                                .required("Select Template"),
+                            })}
+                        >
+                          {
+                            props => (
+                              <Form onSubmit={props.handleSubmit}>
+                                <Row>
+                                  <Col md="2">
+                                    <label for="Other">Select File to Upload</label>
+                                  </Col>
+                                  <Col md="3">
+                                    <FormGroup className="">
+
+                                      <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                        <i className="fa fa-upload"></i> Upload
+                                                </Button>
+                                      <input id="fileInput" ref={ref => {
+                                        this.uploadFile = ref;
+                                      }}
+                                        type="file" style={{ display: 'none' }} onChange={(e) => {
+                                          this.setState({ fileName: (e.target.value).split('\\').pop() })
+                                        }} />
+                                      {this.state.fileName}
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
+                                <Row className="align-template">
+                                  <Col lg={2}>
+                                    <label>Parsing Template</label>
+                                    <FormGroup>
+                                      <Select
+                                        className="select-default-width"
+                                        options={templateList ? templateList : []}
+                                        value={this.state.selectedTemplate}
+                                        onChange={option => {
+                                          console.log(option)
+                                          if (option && option.value) {
+                                            props.handleChange('templateId')(option.value)
+                                            this.setState({
+                                              selectedTemplate: option.value
+                                            })
+                                          } else {
+                                            props.handleChange('templateId')('')
+                                            this.setState({
+                                              selectedTemplate: ''
+                                            })
+                                          }
+                                        }}
+                                        className={`${props.errors.templateId && props.touched.templateId ? "is-invalid" : ""}`}
+                                      />
+                                      {props.errors.templateId && props.touched.templateId && (
+                                        <div className="invalid-feedback">{props.errors.templateId}</div>
+                                      )}
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg={3}>
+                                    <Button
+                                      color="primary"
+                                      className="btn-square"
+                                      onClick={() => this.props.history.push('/admin/banking/upload-statement/transaction')}
+                                    >
+                                      <i className="fas fa-plus mr-1" />
+                                      Create New Template
+                              </Button>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Col>
+                                    <Button
+                                      color="primary"
+                                      type="button"
+                                      className="btn-square"
+                                      onClick={() => { props.handleSubmit() }}
+                                    // disabled={this.state.fileName.length=== 0 ? true : false}
+                                    >
+                                      <i className="fa fa-dot-circle-o"></i>
+                                      Parse File
+                          </Button>
+                                  </Col>
+                                </Row>
+
+                              </Form>
+                            )
+                          }
+                        </Formik>
+                        {/* <Row className="mt-5">
+                          <Col lg={3}>
+                            <FormGroup className="">
+                              <Select
+                                type=""
+                                name=""
+                                id=""
+                                rows="6"
+                                placeholder="Transaction Name"
+                              />
+                            </FormGroup>
+                          </Col>
+                          <Col lg={3}>
+                            <FormGroup className="">
+
+                              <Select
+                                type=""
+                                name=""
+                                id=""
+                                rows="6"
+                                placeholder="Transaction Number"
+                              />
+                            </FormGroup>
+                          </Col>
+                          <Col lg={3}>
+                            <FormGroup className="">
+
+                              <Select
+                                type=""
+                                name=""
+                                id=""
+                                rows="6"
+                                placeholder="Transaction Code"
+                              />
+                            </FormGroup>
+                          </Col>
+                          <Col lg={3}>
+                            <FormGroup className="">
+
+                              <Select
+                                type=""
+                                name=""
+                                id=""
+                                rows="6"
+                                placeholder="Transaction Date"
+                              />
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <div>
+                          <BootstrapTable
+                            selectRow={this.selectRowProp}
+                            search={false}
+                            options={this.options}
+                            data={[]}
+                            version="4"
+                            hover
+                            totalSize={0}
+                            className="product-table"
+                            trClassName="cursor-pointer"
+                            csvFileName="product_list.csv"
+                            ref={node => this.table = node}
+                          >
+                            <TableHeaderColumn
+                              isKey
+                              dataField="name"
+                              dataSort
+                            >
+                              Name
+                          </TableHeaderColumn>
+                            <TableHeaderColumn
+                              dataField="productCode"
+                              dataSort
+                            >
+                              Transaction Number
+                          </TableHeaderColumn>
+                            <TableHeaderColumn
+                              dataField="Transaction Code"
+                              dataSort
+                            >
+                              Transaction Code
+                          </TableHeaderColumn>
+                            <TableHeaderColumn
+                              dataField="vatPercentage"
+                              dataSort
+                            // dataFormat={this.vatCategoryFormatter}
+                            >
+                             Transaction Date
+                          </TableHeaderColumn> */}
+                        {/* <TableHeaderColumn
+                              dataField="unitPrice"
+                              dataSort
+                            // dataFormat={this.vatCategoryFormatter}
+                            >
+                              Unit Price
+                          </TableHeaderColumn> */}
+                        {/* </BootstrapTable>
+                        </div> */}
+                        {/* <Row>
+                          <Col lg={12} className="mt-2">
+                            <FormGroup className="text-right">
+                              <Button type="button" color="primary" className="btn-square mr-4">
+                                <i className="fa fa-dot-circle-o"></i> Save
+                                    </Button>
+                            </FormGroup>
+                          </Col>
+                        </Row> */}
+                      </div>
+                    </Col>
                   </Row>
+                  <div>
+                  {
+                    this.state.tableDataKey.length > 0 ? (
+                      <BootstrapTable data={this.state.tableData} keyField={this.state.tableDataKey[0]} pagination options={this.options}>
+                        {this.state.tableDataKey.map(name => <TableHeaderColumn dataField={name} dataAlign="center">{name}</TableHeaderColumn>)}
+                      </BootstrapTable>
+                    ) : null
+                  }
+                  </div>
                 </CardBody>
               </Card>
             </Col>
           </Row>
         </div>
-      </div>
+      </div >
     )
   }
 }

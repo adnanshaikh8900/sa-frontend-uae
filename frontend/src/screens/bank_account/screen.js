@@ -211,6 +211,7 @@ class BankAccount extends React.Component {
   }
 
   toggleActionButton (index) {
+    console.log(index)
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -250,6 +251,7 @@ class BankAccount extends React.Component {
   }
 
   renderActions (cell, row) {
+    console.log(row)
     return (
       <div>
         <ButtonDropdown
@@ -459,14 +461,14 @@ class BankAccount extends React.Component {
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
                           </Button>
-                          <Button
+                          {/* <Button
                             color="info"
                             className="btn-square"
                             onClick={() => this.props.history.push('/admin/banking/upload-statement')}
                           >
                             <i className="fa glyphicon glyphicon-export fa-upload mr-1" />
                             Upload Statement
-                          </Button>
+                          </Button> */}
                           <Button
                             color="primary"
                             className="btn-square"

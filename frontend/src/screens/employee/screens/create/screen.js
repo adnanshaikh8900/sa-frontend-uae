@@ -182,6 +182,7 @@ class CreateEmployee extends React.Component {
                                     type="text"
                                     id="referenceCode"
                                     name="referenceCode"
+                                    value={props.values.referenceCode}
                                     onChange={(value) => { props.handleChange('referenceCode')(value) }}
                                   />
                                 </FormGroup>
@@ -193,6 +194,7 @@ class CreateEmployee extends React.Component {
                                     type="text"
                                     id="title"
                                     name="title"
+                                    value={props.values.title}
                                     onChange={(value) => { props.handleChange('title')(value) }}
                                   />
                                 </FormGroup>
@@ -204,6 +206,7 @@ class CreateEmployee extends React.Component {
                                     type="text"
                                     id="email"
                                     name="email"
+                                    value={props.values.email}
                                     onChange={(value) => { props.handleChange('email')(value) }}
                                     className={props.errors.email && props.touched.email ? "is-invalid" : ""}
                                   />
@@ -221,6 +224,7 @@ class CreateEmployee extends React.Component {
                                     type="text"
                                     id="firstName"
                                     name="firstName"
+                                    value={props.values.firstName}
                                     onChange={(value) => { props.handleChange('firstName')(value) }}
                                     className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                   />
@@ -236,6 +240,7 @@ class CreateEmployee extends React.Component {
                                     type="text"
                                     id="middleName"
                                     name="middleName"
+                                    value={props.values.middleName}
                                     onChange={(value) => { props.handleChange('middleName')(value) }}
                                     className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
                                   />
@@ -251,6 +256,8 @@ class CreateEmployee extends React.Component {
                                     type="text"
                                     id="lastName"
                                     name="lastName"
+                                    value={props.values.lastName}
+
                                     onChange={(value) => { props.handleChange('lastName')(value) }}
                                     className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                   />
@@ -268,6 +275,7 @@ class CreateEmployee extends React.Component {
                                     type="password"
                                     id="password"
                                     name="password"
+                                    value={props.values.password}
                                     onChange={(value) => { props.handleChange('password')(value) }}
                                     className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                   />
@@ -283,6 +291,7 @@ class CreateEmployee extends React.Component {
                                     type="password"
                                     id="confirmPassword"
                                     name="confirmPassword"
+                                    value={props.values.confirmPassword}
                                     onChange={(value) => { props.handleChange('confirmPassword')(value) }}
                                     className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
                                   />
@@ -303,6 +312,7 @@ class CreateEmployee extends React.Component {
                                       showYearDropdown
                                       dropdownMode="select"
                                     selected={props.values.dob}
+                                    value={props.values.dob}
                                     onChange={(value) => {
                                       props.handleChange("dob")(value)
                                     }}
@@ -339,22 +349,22 @@ class CreateEmployee extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="contractPoNumber">Contract PO Number</Label>
+                                  <Label htmlFor="poBoxNumber">Contract PO Number</Label>
                                   <Input
                                     type="text"
-                                    id="contractPoNumber"
-                                    name="contractPoNumber"
+                                    id="poBoxNumber"
+                                    name="poBoxNumber"
 
-                                    onChange={(value) => { props.handleChange("contractPoNumber")(value) }}
-                                    value={props.values.contractPoNumber}
+                                    onChange={(value) => { props.handleChange("poBoxNumber")(value) }}
+                                    value={props.values.poBoxNumber}
                                     className={
-                                      props.errors.contractPoNumber && props.touched.contractPoNumber
+                                      props.errors.poBoxNumber && props.touched.poBoxNumber
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.contractPoNumber && props.touched.contractPoNumber && (
-                                    <div className="invalid-feedback">{props.errors.contractPoNumber}</div>
+                                  {props.errors.poBoxNumber && props.touched.poBoxNumber && (
+                                    <div className="invalid-feedback">{props.errors.poBoxNumber}</div>
                                   )}
 
                                 </FormGroup>
@@ -363,22 +373,22 @@ class CreateEmployee extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="vatRegistrationNumber">Vat Registration Number</Label>
+                                  <Label htmlFor="vatRegestationNo">Vat Registration Number</Label>
                                   <Input
                                     type="text"
-                                    id="vatRegistrationNumber"
-                                    name="vatRegistrationNumber"
+                                    id="vatRegestationNo"
+                                    name="vatRegestationNo"
 
-                                    onChange={(value) => { props.handleChange("vatRegistrationNumber")(value) }}
-                                    value={props.values.vatRegistrationNumber}
+                                    onChange={(value) => { props.handleChange("vatRegestationNo")(value) }}
+                                    value={props.values.vatRegestationNo}
                                     className={
-                                      props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber
+                                      props.errors.vatRegestationNo && props.touched.vatRegestationNo
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber && (
-                                    <div className="invalid-feedback">{props.errors.vatRegistrationNumber}</div>
+                                  {props.errors.vatRegestationNo && props.touched.vatRegestationNo && (
+                                    <div className="invalid-feedback">{props.errors.vatRegestationNo}</div>
                                   )}
 
                                 </FormGroup>

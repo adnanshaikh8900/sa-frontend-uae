@@ -89,8 +89,8 @@ class DetailProduct extends React.Component {
           this.setState({
             loading: false,
             initValue: {
-              productName: res.data.productName ? res.data.productName : '',
-              productDescription: res.data.productDescription,
+              productName: res.data.name ? res.data.name : '',
+              productDescription: res.data.description,
               productCode: res.data.productCode,
               vatCategoryId: res.data.vatCategoryId ? res.data.vatCategoryId : '',
               //   label: res.data.vatCategory.name,
@@ -288,7 +288,7 @@ class DetailProduct extends React.Component {
                                     <Label htmlFor="productCategoryId">Product Category</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'productCategoryCode', product_category_list,'Product Category') : []}
+                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'id', product_category_list,'Product Category') : []}
                                       id="productCategoryId"
                                       name="productCategoryId"
                                       value={props.values.productCategoryId}

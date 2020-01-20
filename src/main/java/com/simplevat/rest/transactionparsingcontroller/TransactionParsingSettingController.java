@@ -110,10 +110,12 @@ public class TransactionParsingSettingController {
 			transactionParsigSetting.setDeleteFlag(false);
 			for (TransactionDataColMapping mapping : transactionParsigSetting.getTransactionDtaColMapping()) {
 				mapping.setCreatedBy(userId);
-				mapping.setLastUpdateDate(LocalDateTime.now());
+				mapping.setCreatedDate(LocalDateTime.now());
 			}
-			 transactionParsingSettingService.persist(transactionParsigSetting);
-			return new ResponseEntity(HttpStatus.OK);
+			transactionParsingSettingService.persist(transactionParsigSetting);
+			Map<String, Object> responseMap = new HashMap<String, Object>();
+			responseMap.put("id", transactionParsigSetting.getId());
+			return new ResponseEntity(responseMap, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -130,6 +132,10 @@ public class TransactionParsingSettingController {
 			TransactionParsingSetting transactionParsigSetting = transactionParsingRestHelper.getEntity(persistModel);
 			transactionParsigSetting.setLastUpdatedBy(userId);
 			transactionParsigSetting.setLastUpdateDate(LocalDateTime.now());
+			for (TransactionDataColMapping mapping : transactionParsigSetting.getTransactionDtaColMapping()) {
+				mapping.setLastUpdatedBy(userId);
+				mapping.setLastUpdateDate(LocalDateTime.now());
+			}
 			transactionParsingSettingService.persist(transactionParsigSetting);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
@@ -150,7 +156,8 @@ public class TransactionParsingSettingController {
 			if (transactionParsingSettingList == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity<>(transactionParsingRestHelper.getModelList(transactionParsingSettingList), HttpStatus.OK);
+			return new ResponseEntity<>(transactionParsingRestHelper.getModelList(transactionParsingSettingList),
+					HttpStatus.OK);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -179,6 +186,27 @@ public class TransactionParsingSettingController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity(model, HttpStatus.OK);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@ApiOperation("Getlist")
+	@GetMapping(value = "/selectModelList")
+	private ResponseEntity getTransactionParserSettigSelectModelList(HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			Map<TransactionParsingSettingFilterEnum, Object> filterDataMap = new HashMap();
+			filterDataMap.put(TransactionParsingSettingFilterEnum.DELETE_FLAG, false);
+			List<TransactionParsingSetting> transactionParsingSettingList = transactionParsingSettingService
+					.geTransactionParsingList(filterDataMap);
+			if (transactionParsingSettingList == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(transactionParsingRestHelper.getSelectModelList(transactionParsingSettingList),
+					HttpStatus.OK);
 
 		} catch (Exception e) {
 			e.printStackTrace();

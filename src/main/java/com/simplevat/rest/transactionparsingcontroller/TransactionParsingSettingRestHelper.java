@@ -1,5 +1,6 @@
 package com.simplevat.rest.transactionparsingcontroller;
 
+import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.simplevat.criteria.enums.TransactionEnum;
 import com.simplevat.entity.TransactionDataColMapping;
 import com.simplevat.entity.TransactionParsingSetting;
 import com.simplevat.enums.ExcellDelimiterEnum;
+import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.service.DateFormatService;
 import com.simplevat.service.TransactionParsingSettingService;
 
@@ -120,6 +122,16 @@ public class TransactionParsingSettingRestHelper {
 			model.setIndexMap(map);
 		}
 		return model;
+	}
 
+	public List<EnumDropdownModel> getSelectModelList(List<TransactionParsingSetting> transactionParsingSettingList) {
+
+		List<EnumDropdownModel> modelList = new ArrayList<>();
+
+		for (TransactionParsingSetting setting : transactionParsingSettingList) {
+			modelList.add(new EnumDropdownModel(setting.getId().toString(), setting.getName()));
+		}
+
+		return modelList;
 	}
 }

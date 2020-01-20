@@ -17,6 +17,6 @@ public class TransactionParsingSettingDetailModel {
 	private Integer headerRowNo;
 	private Integer textQualifier;
 	private Integer dateFormatId;
-	private Map<TransactionEnum, Integer> IndexMap;
+	private Map<TransactionEnum, Integer> indexMap;
 	public String otherDilimiterStr;
 }

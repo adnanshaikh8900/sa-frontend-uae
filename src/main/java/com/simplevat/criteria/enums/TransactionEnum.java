@@ -11,7 +11,7 @@ import lombok.Getter;
 
 public enum TransactionEnum {
 
-	TRANSACTION_DATE("transactionDate", "Transaction Date"), DESCRITION("DESCRITION", "Description"),
+	TRANSACTION_DATE("TRANSACTION_DATE", "Transaction Date"), DESCRITION("DESCRITION", "Description"),
 	DR_AMOUNT("DR_AMOUNT", "Debit Amount"), CR_AMOUNT("DR_AMOUNT", "Credit Amount"), DATE("DATE", "Date"),
 	CREDIT("CREDIT", "Credit"), DEBIT("DEBIT", "Debit");
 

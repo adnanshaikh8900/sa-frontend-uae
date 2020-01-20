@@ -211,7 +211,6 @@ class BankAccount extends React.Component {
   }
 
   toggleActionButton (index) {
-    console.log(index)
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -251,7 +250,6 @@ class BankAccount extends React.Component {
   }
 
   renderActions (cell, row) {
-    console.log(row)
     return (
       <div>
         <ButtonDropdown
@@ -277,9 +275,9 @@ class BankAccount extends React.Component {
             })}>
               <i className="fas fa-eye" /> View Transactions
             </DropdownItem>
-            <DropdownItem onClick={() => this.props.history.push('/admin/banking/upload-statement')}>
+            {/* <DropdownItem onClick={() => this.props.history.push('/admin/banking/upload-statement')}>
               <i className="fas fa-upload" /> Upload Statement
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem>
               <i className="fa fa-connectdevelop" /> Reconcile
             </DropdownItem>
@@ -501,7 +499,7 @@ class BankAccount extends React.Component {
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
-                              options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list) : []}
+                              options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list,'Account Type') : []}
                               value={filter_account_type}
                               onChange={option => this.setState({
                                 filter_account_type: option

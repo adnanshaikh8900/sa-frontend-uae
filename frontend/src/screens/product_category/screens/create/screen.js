@@ -150,7 +150,6 @@ class CreateProductCategory extends React.Component {
                             if(!values.productCategoryCode) {
                                 errors.productCategoryCode = 'Product Category Code is Required';
                             }
-                            console.log(errors)
                             return errors;
                           }}
                           >
@@ -165,7 +164,6 @@ class CreateProductCategory extends React.Component {
                                     placeholder="Enter Product Category Code"
                                     onChange={props.handleChange}
                                     onBlur={(e)=>{
-                                      console.log(e)
                                     }}
                                     // value={props.values.productCategoryCode}
                                     className={

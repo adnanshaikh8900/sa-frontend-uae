@@ -1,7 +1,5 @@
 package com.simplevat.rest.transactionparsingcontroller;
 
-import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.simplevat.constant.dbfilter.DateFormatFilterEnum;
 import com.simplevat.constant.dbfilter.TransactionParsingSettingFilterEnum;
 import com.simplevat.criteria.enums.TransactionEnum;
 import com.simplevat.entity.TransactionDataColMapping;
@@ -33,7 +29,6 @@ import com.simplevat.parserengine.ExcelParser;
 import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.TransactionParsingSettingService;
-import com.simplevat.utils.ExcelUtil;
 import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;;
@@ -44,9 +39,6 @@ public class TransactionParsingSettingController {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-
-	@Autowired
-	private ExcelUtil excelUtil;
 
 	@Autowired
 	private TransactionParsingSettingRestHelper transactionParsingRestHelper;

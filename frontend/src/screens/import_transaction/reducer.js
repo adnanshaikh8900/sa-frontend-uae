@@ -9,7 +9,6 @@ const ImportTransactionReducer = (state = initState, action) => {
   switch (type) {
 
     case IMPORT_TRANSACTION.DATE_FORMAT_LIST:
-      console.log(payload)
       return {
         ...state,
         date_format_list: Object.assign([], payload)

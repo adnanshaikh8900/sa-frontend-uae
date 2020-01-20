@@ -322,7 +322,7 @@ class DetailBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="account_type"
                                       name="account_type"
-                                      options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list) : []}
+                                      options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list,'Account Type') : []}
                                       value={props.values.account_type}
                                       onChange={option => props.handleChange('account_type')(option)}
                                       className={

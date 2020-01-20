@@ -148,7 +148,6 @@ class CreateVatCode extends React.Component {
                           }
 
                           if (VatList.includes(values.name)) {
-                            console.log(VatList)
                             errors.name = 'Vat Code already Exists'
                           }
 

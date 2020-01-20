@@ -93,7 +93,6 @@ class DetailReceipt extends React.Component {
             loading: false,
 
           }, () => {
-            console.log(this.state.initValue)
           })
         }
       }).catch(err => {

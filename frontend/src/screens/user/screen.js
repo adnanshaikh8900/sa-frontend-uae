@@ -143,7 +143,6 @@ class User extends React.Component {
   }
 
   goToDetail(row) {
-    console.log(row)
     this.props.history.push('/admin/settings/user/detail', { id: row.id })
   }
 

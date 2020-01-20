@@ -245,7 +245,7 @@ class CreateReceipt extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="mode">Mode</Label>
+                                  <Label htmlFor="mode">Mode(TBD)</Label>
                                   <Select
                                     className="select-default-width"
                                     options={[]}

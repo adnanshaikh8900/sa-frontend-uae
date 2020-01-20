@@ -479,12 +479,10 @@ class Profile extends React.Component {
                                           optimisticPreviews
                                           multiple={false}
                                           onLoadEnd={(err) => {
-                                            console.log(err)
                                             if (err) {
                                               console.error(err);
                                             }
                                           }}
-                                          onChange={(e)=>{console.log(e)}}
                                         /> */}
                                           <ImageUploader
                                             // withIcon={true}

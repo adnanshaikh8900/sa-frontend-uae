@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,12 +26,17 @@ import java.util.logging.Logger;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.contact.model.Transaction;
+import com.simplevat.criteria.enums.TransactionEnum;
+import com.simplevat.dao.DateFormatDao;
+import com.simplevat.dao.TransactionParsingSettingDao;
+import com.simplevat.service.BankAccountService;
 
 @Component
 public class TransactionImportRestHelper {
@@ -63,6 +70,15 @@ public class TransactionImportRestHelper {
 	private boolean headerIncluded = true;
 	private Integer headerCount;
 	private String dateFormat;
+
+	@Autowired
+	private BankAccountService bankAccountService;
+
+	@Autowired
+	private DateFormatDao dateFormatDao;
+
+	@Autowired
+	private TransactionParsingSettingDao transactionParsingSettingDao;
 
 	public void handleFileUpload(@ModelAttribute("modelCircular") MultipartFile fileattached) {
 		List<CSVRecord> listParser = new ArrayList<>();
@@ -246,5 +262,60 @@ public class TransactionImportRestHelper {
 		headerTextData.add(description);
 		headerTextData.add(debitAmount);
 		headerTextData.add(creditAmount);
+	}
+
+	public List<com.simplevat.entity.bankaccount.Transaction> getEntity(TransactionImportModel transactionImportModel) {
+
+		if (transactionImportModel != null && transactionImportModel.getImportDataMap() != null
+				&& transactionImportModel.getImportDataMap().isEmpty()) {
+
+			// TransactionParsingSetting
+
+			List<com.simplevat.entity.bankaccount.Transaction> transactions = new ArrayList<>();
+
+			com.simplevat.entity.bankaccount.Transaction trnx = new com.simplevat.entity.bankaccount.Transaction();
+			trnx.setBankAccount(bankAccountService.findByPK(transactionImportModel.getBankId()));
+
+			dateFormat = transactionParsingSettingDao.getDateFormatByTemplateId(transactionImportModel.getTemplateId());
+			DateFormat formatter = new SimpleDateFormat(dateFormat);
+			for (Map<TransactionEnum, Object> dataMap : transactionImportModel.getImportDataMap()) {
+				for (TransactionEnum dbColEnum : dataMap.keySet()) {
+
+					String data = (String) dataMap.get(dbColEnum);
+					switch (dbColEnum) {
+
+					case CR_AMOUNT:
+					case DR_AMOUNT:
+						trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
+						break;
+
+					case CREDIT_DEBIT_FLAG:
+						trnx.setDebitCreditFlag(data.charAt(0));
+						break;
+
+					case DESCRIPTION:
+						trnx.setTransactionDescription(data);
+						break;
+
+					case TRANSACTION_DATE:
+
+						Date dateTranscation;
+						try {
+							dateTranscation = (Date) formatter.parse(data);
+							LocalDateTime transactionDate = Instant.ofEpochMilli(dateTranscation.getTime())
+									.atZone(ZoneId.systemDefault()).toLocalDateTime();
+							trnx.setTransactionDate(transactionDate);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						break;
+					}
+				}
+				transactions.add(trnx);
+			}
+
+			return transactions;
+		}
+		return null;
 	}
 }

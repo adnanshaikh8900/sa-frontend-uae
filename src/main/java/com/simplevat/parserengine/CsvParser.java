@@ -26,8 +26,6 @@ import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
 import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
 
-import io.swagger.models.auth.In;
-
 @Component
 public class CsvParser implements TransactionFileParser {
 
@@ -101,6 +99,7 @@ public class CsvParser implements TransactionFileParser {
 
 		List<Map<String, String>> list = new LinkedList<Map<String, String>>();
 		Map<Integer, Set<Integer>> errorRowCellIndexMap = new HashMap<Integer, Set<Integer>>();
+		List<String> errorList = new ArrayList<String>();
 
 		BufferedReader br = null;
 
@@ -137,7 +136,8 @@ public class CsvParser implements TransactionFileParser {
 									SimpleDateFormat formatter = new SimpleDateFormat(format.getFormat());
 									formatter.parse(data);
 								} catch (ParseException e) {
-									errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount, cellCount);
+									//errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount, cellCount);
+									errorList.add(rowCount + "," + cellCount);
 								}
 							}
 
@@ -146,7 +146,8 @@ public class CsvParser implements TransactionFileParser {
 								try {
 									new BigDecimal(data);
 								} catch (Exception e) {
-									errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount, cellCount);
+									//errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount, cellCount);
+									errorList.add(rowCount + "," + cellCount);
 								}
 							}
 
@@ -155,7 +156,8 @@ public class CsvParser implements TransactionFileParser {
 								try {
 									new BigDecimal(data);
 								} catch (Exception e) {
-									errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount, cellCount);
+									//errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount, cellCount);
+									errorList.add(rowCount + "," + cellCount);
 								}
 							}
 						}
@@ -165,8 +167,9 @@ public class CsvParser implements TransactionFileParser {
 						for (TransactionEnum transactionEnum : model.getIndexMap().keySet()) {
 							if (!dataMap.containsKey(transactionEnum.getDisplayName())) {
 								dataMap.put(transactionEnum.getDisplayName(), "-");
-								errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
-										model.getIndexMap().get(transactionEnum));
+//								//errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
+//										model.getIndexMap().get(transactionEnum));
+								errorList.add(rowCount + "," + cellCount);
 							}
 						}
 					}
@@ -179,7 +182,7 @@ public class CsvParser implements TransactionFileParser {
 
 			Map responseMap = new LinkedHashMap<>();
 			responseMap.put("data", list);
-			responseMap.put("error", errorRowCellIndexMap.isEmpty() ? null : errorRowCellIndexMap);
+			responseMap.put("error", errorList.isEmpty() ? null : errorList);
 
 			return responseMap;
 		} catch (IOException e) {

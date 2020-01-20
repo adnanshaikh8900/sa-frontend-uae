@@ -15,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -29,13 +31,11 @@ import lombok.Data;
 @Entity
 @Table(name = "TRANSACTION_PARSING_SETTING")
 @Data
+@NamedQueries({
+		@NamedQuery(name = "getDateFormatIdTemplateId", query = "from TransactionParsingSetting t inner join DateFormat df on df.id=t.dateFormat where t.id = :id") })
 public class TransactionParsingSetting implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")

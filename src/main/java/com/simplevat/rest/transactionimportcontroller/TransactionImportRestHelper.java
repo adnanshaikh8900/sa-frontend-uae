@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -33,10 +34,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.contact.model.Transaction;
 import com.simplevat.criteria.enums.TransactionEnum;
-import com.simplevat.entity.TransactionParsingSetting;
+import com.simplevat.dao.DateFormatDao;
+import com.simplevat.dao.TransactionParsingSettingDao;
 import com.simplevat.service.BankAccountService;
-
-import javassist.expr.NewArray;
 
 @Component
 public class TransactionImportRestHelper {
@@ -73,6 +73,12 @@ public class TransactionImportRestHelper {
 
 	@Autowired
 	private BankAccountService bankAccountService;
+
+	@Autowired
+	private DateFormatDao dateFormatDao;
+
+	@Autowired
+	private TransactionParsingSettingDao transactionParsingSettingDao;
 
 	public void handleFileUpload(@ModelAttribute("modelCircular") MultipartFile fileattached) {
 		List<CSVRecord> listParser = new ArrayList<>();
@@ -263,52 +269,60 @@ public class TransactionImportRestHelper {
 		if (transactionImportModel != null && transactionImportModel.getImportDataMap() != null
 				&& transactionImportModel.getImportDataMap().isEmpty()) {
 
-			//TransactionParsingSetting
-			
+			// TransactionParsingSetting
+
 			List<com.simplevat.entity.bankaccount.Transaction> transactions = new ArrayList<>();
 
 			com.simplevat.entity.bankaccount.Transaction trnx = new com.simplevat.entity.bankaccount.Transaction();
 			trnx.setBankAccount(bankAccountService.findByPK(transactionImportModel.getBankId()));
 
+			dateFormat = transactionParsingSettingDao.getDateFormatByTemplateId(transactionImportModel.getTemplateId());
+			DateFormat formatter = new SimpleDateFormat(dateFormat);
 			for (Map<TransactionEnum, Object> dataMap : transactionImportModel.getImportDataMap()) {
 				for (TransactionEnum dbColEnum : dataMap.keySet()) {
+
+					String data = (String) dataMap.get(dbColEnum);
 					switch (dbColEnum) {
 					case CREDIT:
-						// trnx.set
+						trnx.setDebitCreditFlag('C');
 						break;
 
 					case CR_AMOUNT:
-						trnx.setTransactionAmount(
-								new BigDecimal(Float.valueOf((String) dataMap.get(TransactionEnum.CR_AMOUNT))));
+					case DR_AMOUNT:
+						trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 						break;
 
 					case DATE:
+
 						break;
 
 					case DEBIT:
+						trnx.setDebitCreditFlag('D');
 						break;
 
 					case DESCRIPTION:
-						break;
-
-					case DR_AMOUNT:
+						trnx.setTransactionDescription(data);
 						break;
 
 					case TRANSACTION_DATE:
-						break;
 
-					default:
+						Date dateTranscation;
+						try {
+							dateTranscation = (Date) formatter.parse(data);
+							LocalDateTime transactionDate = Instant.ofEpochMilli(dateTranscation.getTime())
+									.atZone(ZoneId.systemDefault()).toLocalDateTime();
+							trnx.setTransactionDate(transactionDate);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
 						break;
-
 					}
 				}
-				// map.put(TransactionEnum.valueOf(mapping.getColName()),
-				// mapping.getFileColIndex());
-
-				return transactions;
+				transactions.add(trnx);
 			}
+
+			return transactions;
 		}
 		return null;
 	}
-
 }

@@ -97,7 +97,7 @@ public class ExcelParser implements TransactionFileParser {
 
 		if (file != null) {
 			Map<Integer, Set<Integer>> errorRowCellIndexMap = new HashMap<Integer, Set<Integer>>();
-
+			List<String> errorList = new ArrayList<String>();
 			Map<Integer, TransactionEnum> headerIndexMap = new HashMap<Integer, TransactionEnum>();
 			for (TransactionEnum transactionEnum : model.getIndexMap().keySet()) {
 				headerIndexMap.put(model.getIndexMap().get(transactionEnum), transactionEnum);
@@ -135,6 +135,7 @@ public class ExcelParser implements TransactionFileParser {
 									} catch (ParseException e) {
 										errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap,
 												cell.getRow().getRowNum(), cell.getColumnIndex());
+										errorList.add(cell.getRow().getRowNum() + "," + cell.getColumnIndex());
 									}
 								}
 
@@ -145,6 +146,7 @@ public class ExcelParser implements TransactionFileParser {
 									} catch (Exception e) {
 										errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap,
 												cell.getRow().getRowNum(), cell.getColumnIndex());
+										errorList.add(cell.getRow().getRowNum() + "," + cell.getColumnIndex());
 									}
 								}
 
@@ -155,6 +157,7 @@ public class ExcelParser implements TransactionFileParser {
 									} catch (Exception e) {
 										errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap,
 												cell.getRow().getRowNum(), cell.getColumnIndex());
+										errorList.add(cell.getRow().getRowNum() + "," + cell.getColumnIndex());
 									}
 								}
 
@@ -172,7 +175,7 @@ public class ExcelParser implements TransactionFileParser {
 
 				Map responseMap = new LinkedHashMap<>();
 				responseMap.put("data", list);
-				responseMap.put("error", errorRowCellIndexMap.isEmpty() ? null : errorRowCellIndexMap);
+				responseMap.put("error", errorList);// errorRowCellIndexMap.isEmpty() ? null : errorRowCellIndexMap);
 
 				return responseMap;
 			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {

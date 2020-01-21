@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,7 +37,9 @@ import com.simplevat.contact.model.Transaction;
 import com.simplevat.criteria.enums.TransactionEnum;
 import com.simplevat.dao.DateFormatDao;
 import com.simplevat.dao.TransactionParsingSettingDao;
+import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.service.BankAccountService;
+import com.simplevat.service.bankaccount.TransactionService;
 
 @Component
 public class TransactionImportRestHelper {
@@ -79,6 +82,9 @@ public class TransactionImportRestHelper {
 
 	@Autowired
 	private TransactionParsingSettingDao transactionParsingSettingDao;
+
+	@Autowired
+	private TransactionService transactionService;
 
 	public void handleFileUpload(@ModelAttribute("modelCircular") MultipartFile fileattached) {
 		List<CSVRecord> listParser = new ArrayList<>();
@@ -267,30 +273,59 @@ public class TransactionImportRestHelper {
 	public List<com.simplevat.entity.bankaccount.Transaction> getEntity(TransactionImportModel transactionImportModel) {
 
 		if (transactionImportModel != null && transactionImportModel.getImportDataMap() != null
-				&& transactionImportModel.getImportDataMap().isEmpty()) {
-
-			// TransactionParsingSetting
+				&& !transactionImportModel.getImportDataMap().isEmpty()) {
 
 			List<com.simplevat.entity.bankaccount.Transaction> transactions = new ArrayList<>();
 
-			com.simplevat.entity.bankaccount.Transaction trnx = new com.simplevat.entity.bankaccount.Transaction();
-			trnx.setBankAccount(bankAccountService.findByPK(transactionImportModel.getBankId()));
+			BankAccount bankAcc = bankAccountService.findByPK(transactionImportModel.getBankId());
 
 			dateFormat = transactionParsingSettingDao.getDateFormatByTemplateId(transactionImportModel.getTemplateId());
 			DateFormat formatter = new SimpleDateFormat(dateFormat);
-			for (Map<TransactionEnum, Object> dataMap : transactionImportModel.getImportDataMap()) {
-				for (TransactionEnum dbColEnum : dataMap.keySet()) {
 
-					String data = (String) dataMap.get(dbColEnum);
+			BigDecimal currentBalance = transactionService
+					.getCurrentBalanceByBankId(transactionImportModel.getBankId());
+
+			for (Map<String, Object> dataMap : transactionImportModel.getImportDataMap()) {
+				com.simplevat.entity.bankaccount.Transaction trnx = new com.simplevat.entity.bankaccount.Transaction();
+				trnx.setBankAccount(bankAcc);
+
+				for (String dbColName : dataMap.keySet()) {
+
+					TransactionEnum dbColEnum = TransactionEnum.getByDisplayName(dbColName);
+
+					String data = (String) dataMap.get(dbColEnum.getDisplayName());
 					switch (dbColEnum) {
+
+					case CREDIT_DEBIT_FLAG:
+						trnx.setDebitCreditFlag(data.charAt(0));
+						break;
 
 					case CR_AMOUNT:
 					case DR_AMOUNT:
 						trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
-						break;
+						MathContext mc = new MathContext(4); // 2 precision
 
-					case CREDIT_DEBIT_FLAG:
-						trnx.setDebitCreditFlag(data.charAt(0));
+						// need to create enum
+						if (dataMap.containsKey(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName())) {
+
+							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
+								currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
+							} else {
+								currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
+							}
+						} else {
+							if (dataMap.containsKey(TransactionEnum.DR_AMOUNT.getDisplayName())) {
+								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
+								trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
+								currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
+							} else {
+								data = (String) dataMap.get(TransactionEnum.CR_AMOUNT.getDisplayName());
+								trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
+								currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
+							}
+						}
+
+						trnx.setCurrentBalance(currentBalance);
 						break;
 
 					case DESCRIPTION:
@@ -311,7 +346,11 @@ public class TransactionImportRestHelper {
 						break;
 					}
 				}
+				trnx.setCreatedBy(transactionImportModel.getCreatedBy());
+				trnx.setCreatedDate(LocalDateTime.now());
+
 				transactions.add(trnx);
+				System.out.println(trnx.toString());
 			}
 
 			return transactions;

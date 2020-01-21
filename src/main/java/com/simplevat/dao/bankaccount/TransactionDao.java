@@ -58,4 +58,6 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
 
     public List<TransactionView> getTransactionViewListByDateRang(Integer bankAccountId, Date startDate, Date endDate);
 
+	public Transaction getCurrentBalanceByBankId(Integer bankId);
+
 }

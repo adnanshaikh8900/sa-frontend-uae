@@ -23,6 +23,7 @@ import com.simplevat.parserengine.ExcelParser;
 import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
 import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
 import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSettingRestHelper;
+import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.UserService;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.TransactionParsingSettingService;
@@ -38,6 +39,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -87,6 +90,12 @@ public class TransactionImportController implements Serializable {
 	@Autowired
 	private TransactionParsingSettingRestHelper transactionParsingSettingRestHelper;
 
+	@Autowired
+	TransactionImportRestHelper transactionImportRestHelper;
+
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+
 	@ApiOperation(value = "Get Bank Account List")
 	@GetMapping(value = "/getbankaccountlist")
 	public ResponseEntity<List<BankAccount>> getBankAccount() {
@@ -126,6 +135,7 @@ public class TransactionImportController implements Serializable {
 		}
 	}
 
+	@Deprecated
 	@ApiOperation(value = "Save Import Transaction")
 	@PostMapping(value = "/saveimporttransaction")
 	public ResponseEntity<Integer> saveTransactions(@RequestBody List<Transaction> transactionList,
@@ -169,9 +179,23 @@ public class TransactionImportController implements Serializable {
 
 	@ApiOperation(value = "Import Trnsaction")
 	@PostMapping(value = "/save")
-	public ResponseEntity<Integer> importTransaction(@RequestBody TransactionImportModel transactionImportModel) {
+	public ResponseEntity<Integer> importTransaction(@RequestBody TransactionImportModel transactionImportModel,
+			HttpServletRequest request) {
 
 		List<com.simplevat.entity.bankaccount.Transaction> transactionList = null;
+		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+		transactionImportModel.setCreatedBy(userId);
+		transactionList = transactionImportRestHelper.getEntity(transactionImportModel);
+
+		if (transactionList == null) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		boolean status = transactionService.saveTransactions(transactionList);
+
+		if (!status) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
 		return new ResponseEntity<>(transactionImportModel.getBankId(), HttpStatus.OK);
 	}
@@ -193,7 +217,7 @@ public class TransactionImportController implements Serializable {
 
 		case "xlsx":
 		case "xlx":
-			dataMap = excelParser.parseImportData(model, file);	
+			dataMap = excelParser.parseImportData(model, file);
 			break;
 		}
 

@@ -569,6 +569,7 @@ class CreateCustomerInvoice extends React.Component {
                                     placeholderText="Invoice Date"
                                     showMonthDropdown
                                     showYearDropdown
+                                    dateFormat="dd/MM/yyyy"
                                     dropdownMode="select"
                                     value={props.values.invoiceDate}
                                     selected={props.values.invoiceDate}
@@ -594,6 +595,7 @@ class CreateCustomerInvoice extends React.Component {
                                       selected={props.values.invoiceDueDate}
                                       showMonthDropdown
                                       showYearDropdown
+                                      dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                       value={props.values.invoiceDueDate}
 

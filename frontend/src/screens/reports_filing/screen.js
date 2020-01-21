@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -38,15 +38,15 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const vatOptions = [
-  { value: 'input', label: 'Input'},
-  { value: 'output', label: 'Output'},
-  { value: 'all', label: 'All'},
+  { value: 'input', label: 'Input' },
+  { value: 'output', label: 'Output' },
+  { value: 'all', label: 'All' },
 ]
 
 const statusOptions = [
-  { value: 'paid', label: 'Paid'},
-  { value: 'generated', label: 'Generated'},
-  { value: 'cancalled', label: 'Cancelled'},
+  { value: 'paid', label: 'Paid' },
+  { value: 'generated', label: 'Generated' },
+  { value: 'cancalled', label: 'Cancelled' },
 ]
 
 const tempdata = [{
@@ -89,7 +89,7 @@ const tempdata = [{
   transactionCategoryDescription: 'temp',
   parentTransactionCategory: 'Loream Ipsume',
   transactionType: 'TEMP'
-},{
+}, {
   transactionDate: '10/15/2019',
   transactionCategoryId: 1,
   transactionCategoryCode: 4,
@@ -97,7 +97,7 @@ const tempdata = [{
   transactionCategoryDescription: 'temp',
   parentTransactionCategory: 'Loream Ipsume',
   transactionType: 'TEMP'
-},{
+}, {
   transactionDate: '10/15/2019',
   transactionCategoryId: 1,
   transactionCategoryCode: 4,
@@ -107,7 +107,7 @@ const tempdata = [{
   transactionType: 'TEMP'
 }]
 
-const ranges =  {
+const ranges = {
   'Last 7 Days': [moment().subtract(6, 'days'), moment()],
   'Last 30 Days': [moment().subtract(29, 'days'), moment()],
   'This Week': [moment().startOf('week'), moment().endOf('week')],
@@ -137,7 +137,7 @@ class ReportsFiling extends React.Component {
   }
 
   getAction(cell, row) {
-    return(<a href="#">Detail</a>)
+    return (<a href="#">Detail</a>)
   }
 
   render() {
@@ -145,7 +145,7 @@ class ReportsFiling extends React.Component {
       <div className="report-filing-screen ">
         <div className="animated fadeIn">
           <Card>
-          <CardHeader>
+            <CardHeader>
               <Row>
                 <Col lg={12}>
                   <div className="h4 mb-0 d-flex align-items-center">
@@ -153,32 +153,32 @@ class ReportsFiling extends React.Component {
                     <span className="ml-2">VAT Report</span>
                   </div>
                 </Col>
-              </Row>  
+              </Row>
             </CardHeader>
             <CardBody>
               <Form onSubmit={this.handleSubmit} name="simpleForm">
-                  <div className="flex-wrap d-flex justify-content-end">
-                    <FormGroup>
-                      <ButtonGroup className="mr-3">
-                        <Button
-                          color="success"
-                          className="btn-square"
-                        >
-                          <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                          Export to CSV
+                <div className="flex-wrap d-flex justify-content-end">
+                  <FormGroup>
+                    <ButtonGroup className="mr-3">
+                      <Button
+                        color="success"
+                        className="btn-square"
+                      >
+                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                        Export to CSV
                         </Button>
-                      </ButtonGroup>
-                    </FormGroup>
-                    <FormGroup>
-                      <div className="date-range">
-                        <DateRangePicker2
-                          ranges={ranges}
-                          opens={'left'}
-                        />
-                      </div>
-                    </FormGroup>  
-                  </div>
-                </Form>
+                    </ButtonGroup>
+                  </FormGroup>
+                  <FormGroup>
+                    <div className="date-range">
+                      <DateRangePicker2
+                        ranges={ranges}
+                        opens={'left'}
+                      />
+                    </div>
+                  </FormGroup>
+                </div>
+              </Form>
               <div className="py-3">
                 <h5>Filter : </h5>
                 <Row>
@@ -200,15 +200,16 @@ class ReportsFiling extends React.Component {
                       onChange={this.changeBirthday}
                       placeholderText="Date"
                       showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                      showYearDropdown
+                      dateFormat="dd/MM/yyyy"
+                      dropdownMode="select"
                     />
                   </Col>
                 </Row>
               </div>
               <div className="table-wrapper">
-                <BootstrapTable 
-                  data={tempdata} 
+                <BootstrapTable
+                  data={tempdata}
                   hover
                   pagination>
                   <TableHeaderColumn isKey dataField="transactionDate">
@@ -228,7 +229,7 @@ class ReportsFiling extends React.Component {
                   </TableHeaderColumn>
                 </BootstrapTable>
               </div>
-              
+
             </CardBody>
           </Card>
         </div>

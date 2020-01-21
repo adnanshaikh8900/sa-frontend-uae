@@ -312,8 +312,8 @@ class CustomerInvoice extends React.Component {
         status: customer.status,
         customerName: customer.name,
         invoiceNumber: customer.referenceNumber,
-        invoiceDate: moment(customer.invoiceDate).format('L'),
-        invoiceDueDate: moment(customer.invoiceDueDate).format('L'),
+        invoiceDate: customer.invoiceDate ? moment(customer.invoiceDate).format('DD/MM/YYYY') : '',
+        invoiceDueDate: customer.invoiceDueDate ? moment(customer.invoiceDueDate).format('DD/MM/YYYY'): '',
         invoiceAmount: customer.totalAmount,
         vatAmount: customer.totalVatAmount,
       })
@@ -430,6 +430,7 @@ class CustomerInvoice extends React.Component {
                               selected={filterData.invoiceDate}
                               showMonthDropdown
                               showYearDropdown
+                              dateFormat="dd/MM/yyyy"
                               dropdownMode="select"
                               // value={filterData.invoiceDate}
                               onChange={(value) => {
@@ -446,6 +447,7 @@ class CustomerInvoice extends React.Component {
                               showMonthDropdown
                               showYearDropdown
                               dropdownMode="select"
+                              dateFormat="dd/MM/yyyy"
                               selected={filterData.invoiceDueDate}
                               onChange={(value) => {
                                 this.handleChange(value, "invoiceDueDate")

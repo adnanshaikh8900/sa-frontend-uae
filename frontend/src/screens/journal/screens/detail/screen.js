@@ -169,7 +169,6 @@ class DetailJournal extends React.Component {
   }
 
   renderContact(cell, row) {
-    console.log(row)
     const { contact_list } = this.props;
     let contactList = contact_list.length ? [{ value: '', label: 'Select..' }, ...contact_list] : contact_list
 
@@ -230,8 +229,6 @@ class DetailJournal extends React.Component {
         creditAmount: 0,
       }), idCount: this.state.idCount + 1
     }, () => {
-      console.log(this.state.data)
-
     })
   }
 
@@ -265,7 +262,6 @@ class DetailJournal extends React.Component {
 
   updateAmount(data) {
     const { vat_list } = this.props;
-    console.log(data)
     let subTotalDebitAmount = 0;
     let subTotalCreditAmount = 0;
     let totalDebitAmount = 0;
@@ -273,7 +269,6 @@ class DetailJournal extends React.Component {
 
     data.map(obj => {
       const index = obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
-      console.log(index)
       let vat;
       if (index !== '' && index !== -1) {
         vat = vat_list[index].vat
@@ -428,7 +423,6 @@ class DetailJournal extends React.Component {
                                       dropdownMode="select"
                                         value={moment(props.values.journalDate).format('DD-MM-YYYY')}
                                         onChange={(value) => {
-                                          console.log(value)
                                           props.handleChange("journalDate")(value)
                                         }}
                                       />

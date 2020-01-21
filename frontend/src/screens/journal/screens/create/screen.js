@@ -256,8 +256,8 @@ class CreateJournal extends React.Component {
               item.error = []
           }
           })
-          this.setState({ data: data })
-        }, 1000)
+          this.setState({ data: this.state.data })
+        }, 0)
       });
     }
 
@@ -296,26 +296,24 @@ class CreateJournal extends React.Component {
 
     this.setState({
       data: data,
-      initValue: {
+      initValue: {...this.state.initValue,...{
         subTotalDebitAmount: subTotalDebitAmount,
         totalDebitAmount: subTotalDebitAmount,
         totalCreditAmount: subTotalCreditAmount,
         subTotalCreditAmount: subTotalCreditAmount,
-      }
+      }}
     }, () => {
       this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
       setTimeout(() => {
-        console.log(this.formRef.current.state.errors.journalLineItems)
         this.state.data.map((item, index) => {
-          console.log(this.formRef.current.state.errors.journalLineItems)
           if (this.formRef.current.state.errors.journalLineItems && this.formRef.current.state.errors.journalLineItems[index]) {
             item.error = this.formRef.current.state.errors.journalLineItems[index]
           } else {
               item.error = []
           }
         })
-        this.setState({ data: data },()=>{console.log(this.state.data)})
-      }, 1000)
+        this.setState({ data: this.state.data })
+      }, 0)
     })
   }
 
@@ -342,7 +340,7 @@ class CreateJournal extends React.Component {
     // const postData = {...initValue,...values,...{journalLineItems: this.state.data}}
     this.props.journalCreateActions.createJournal(postData).then(res => {
       if (res.status === 200) {
-        resetForm();
+        // resetForm({});
         this.props.commonActions.tostifyAlert('success', 'New Journal Created Successfully')
         if (this.state.createMore) {
           this.setState({
@@ -355,7 +353,22 @@ class CreateJournal extends React.Component {
               contactId: '',
               debitAmount: 0,
               creditAmount: 0,
-            }]
+            }],
+            initValue: {...this.state.initValue,...{
+              journalLineItems: [{
+                id: 0,
+                description: '',
+                transactionCategoryId: '',
+                vatCategoryId: '',
+                contactId: '',
+                debitAmount: 0,
+                creditAmount: 0,
+              }],
+              subTotalDebitAmount: 0,
+              totalDebitAmount: 0,
+              totalCreditAmount: 0,
+              subTotalCreditAmount: 0,
+            }}
             });
         } else {
           this.props.history.push('/admin/accountant/journal');
@@ -398,6 +411,7 @@ class CreateJournal extends React.Component {
                         ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
                           this.handleSubmit(values, resetForm)
+                          resetForm(initValue)
                         }}
                         validationSchema={
                           Yup.object().shape({
@@ -453,7 +467,7 @@ class CreateJournal extends React.Component {
                                     id="referenceCode"
                                     name="referenceCode"
                                     placeholder="Reference Number"
-                                    value={props.values.referenceCode}
+                                    value={props.values.referenceCode || ''}
                                     onChange={(value) => { props.handleChange("referenceCode")(value) }}
                                   />
                                 </FormGroup>
@@ -469,7 +483,7 @@ class CreateJournal extends React.Component {
                                     id="description"
                                     rows="5"
                                     placeholder="1024 characters..."
-                                    value={props.values.description}
+                                    value={props.values.description || '' }
                                     onChange={(value) => { props.handleChange("description")(value) }}
                                   />
                                 </FormGroup>
@@ -624,14 +638,14 @@ class CreateJournal extends React.Component {
                                           this.state.data.map((item, index) => {
                                             item.error = err.journalLineItems[index]
                                           })
-                                          this.setState({ data: data })
+                                          this.setState({ data: this.state.data })
                                         } else {
                                           this.state.data.map((item, index) => {
                                             item.error = []
                                           })
                                         }
                                       })
-                                    }, 1000)
+                                    }, 0)
 
                                     // () => {
                                     this.setState({ createMore: false }, () => {
@@ -645,6 +659,20 @@ class CreateJournal extends React.Component {
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={
                                       () => {
+                                        setTimeout(() => {
+                                          props.validateForm().then(err => {
+                                            if (err.journalLineItems && err.journalLineItems.length > 0) {
+                                              this.state.data.map((item, index) => {
+                                                item.error = err.journalLineItems[index]
+                                              })
+                                              this.setState({ data: this.state.data })
+                                            } else {
+                                              this.state.data.map((item, index) => {
+                                                item.error = []
+                                              })
+                                            }
+                                          })
+                                        }, 0)
                                         this.setState({ createMore: true }, () => {
                                           props.handleSubmit()
                                         })

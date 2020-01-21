@@ -71,4 +71,7 @@
       .valid {
         display: none;
       }
+      .invalid-select {
+        border: 1px solid #f86c6b;
+      }
 }

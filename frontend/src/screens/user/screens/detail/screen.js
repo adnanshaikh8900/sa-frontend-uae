@@ -88,7 +88,6 @@ class DetailUser extends React.Component {
     //   loading: false,
     //   userPhoto: this.state.userPhoto.concat(`https://i.picsum.photos/id/1/5616/3744.jpg`),
     // });
-    // console.log(this.props.location.state.id)
     const { id } = this.props.location.state
     this.props.userDetailActions.getUserById(id).then(res => {
       this.props.userActions.getRoleList();
@@ -266,12 +265,11 @@ class DetailUser extends React.Component {
                                     optimisticPreviews
                                     multiple={false}
                                     onLoadEnd={(err) => {
-                                      console.log(err)
                                       if (err) {
                                         console.error(err);
                                       }
                                     }}
-                                    onChange={(e)=>{console.log(e)}}
+                                    onChange={(e)=>{}}
                                   /> */}
                                   <ImageUploader
                                     // withIcon={true}
@@ -435,10 +433,8 @@ class DetailUser extends React.Component {
                                             checked={this.state.selectedStatus}
                                             value={true}
                                             onChange={e => {
-                                              console.log(e.target.value)
                                               if(e.target.value) {
                                                 this.setState({selectedStatus: true},()=>{
-                                                  console.log(this.state)
                                                 })
                                               }
                                             }}
@@ -456,10 +452,7 @@ class DetailUser extends React.Component {
                                             value={false}
                                             checked={!this.state.selectedStatus}
                                             onChange={e => {
-                                              console.log(e.target.value);
-                                              console.log(typeof e.target.value)
                                               if(e.target.value === 'false') {
-                                                console.log(e.target.value)
                                                 this.setState({selectedStatus: false})
                                               }
                                             }}
@@ -520,7 +513,7 @@ class DetailUser extends React.Component {
                                   <i className="fa fa-dot-circle-o"></i> Update
                                 </Button>
                                 <Button color="secondary" className="btn-square"
-                                  onClick={() => { this.props.history.push('/admin/settings/users') }}>
+                                  onClick={() => { this.props.history.push('/admin/settings/user') }}>
                                   <i className="fa fa-ban"></i> Cancel
                                 </Button>
                               </FormGroup>

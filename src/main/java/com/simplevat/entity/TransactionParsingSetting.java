@@ -32,7 +32,7 @@ import lombok.Data;
 @Table(name = "TRANSACTION_PARSING_SETTING")
 @Data
 @NamedQueries({
-		@NamedQuery(name = "getDateFormatIdTemplateId", query = "from TransactionParsingSetting t inner join DateFormat df on df.id=t.dateFormat where t.id = :id") })
+		@NamedQuery(name = "getDateFormatIdTemplateId", query = "select df.format from TransactionParsingSetting t inner join DateFormat df on df.id=t.dateFormat where t.id = :id") })
 public class TransactionParsingSetting implements Serializable {
 
 	private static final long serialVersionUID = 1L;

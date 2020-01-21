@@ -306,7 +306,7 @@ class CreateSupplierInvoice extends React.Component {
     })
   }
 
-  handleSubmit(data,resetForm) {
+  handleSubmit(data, resetForm) {
     const {
       receiptAttachmentDescription,
       receiptNumber,
@@ -381,7 +381,7 @@ class CreateSupplierInvoice extends React.Component {
     // this.setState({
     //   selectedContact: option
     // })
-    this.formRef.current.setFieldValue('contactId',option.value,true)
+    this.formRef.current.setFieldValue('contactId', option.value, true)
 
   }
 
@@ -425,10 +425,10 @@ class CreateSupplierInvoice extends React.Component {
                       <Formik
                         initialValues={initValue}
                         ref={this.formRef}
-                       
+
                         onSubmit={(values, { resetForm }) => {
 
-                          this.handleSubmit(values,resetForm)
+                          this.handleSubmit(values, resetForm)
                           // resetForm(initValue)
 
                           // this.setState({
@@ -443,11 +443,11 @@ class CreateSupplierInvoice extends React.Component {
                           Yup.object().shape({
                             invoice_number: Yup.string()
                               .required("Invoice Number is Required"),
-                              contactId: Yup.string()
+                            contactId: Yup.string()
                               .required("Supplier is Required"),
-                              invoiceDate: Yup.date()
+                            invoiceDate: Yup.date()
                               .required('Invoice Date is Required'),
-                              invoiceDueDate: Yup.date()
+                            invoiceDueDate: Yup.date()
                               .required('Invoice Due Date is Required'),
                           })}
                       >
@@ -496,7 +496,7 @@ class CreateSupplierInvoice extends React.Component {
 
                                     id="contactId"
                                     name="contactId"
-                                    options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list,'Supplier Name') : []}
+                                    options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list, 'Supplier Name') : []}
                                     value={props.values.contactId}
                                     onChange={(option) => {
                                       if (option && option.value) {
@@ -564,16 +564,17 @@ class CreateSupplierInvoice extends React.Component {
                                     placeholderText="Invoice Date"
                                     selected={props.values.invoiceDate}
                                     showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                    showYearDropdown
+                                    dateFormat="dd/MM/yyyy"
+                                    dropdownMode="select"
                                     onChange={(value) => {
                                       props.handleChange("invoiceDate")(value)
                                     }}
                                     className={`form-control ${props.errors.invoiceDate && props.touched.invoiceDate ? "is-invalid" : ""}`}
-                                    />
-                                    {props.errors.invoiceDate && props.touched.invoiceDate && (
-                                      <div className="invalid-feedback">{props.errors.invoiceDate}</div>
-                                    )}
+                                  />
+                                  {props.errors.invoiceDate && props.touched.invoiceDate && (
+                                    <div className="invalid-feedback">{props.errors.invoiceDate}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
@@ -588,15 +589,16 @@ class CreateSupplierInvoice extends React.Component {
                                       selected={props.values.invoiceDueDate}
                                       showMonthDropdown
                                       showYearDropdown
+                                      dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                       onChange={(value) => {
                                         props.handleChange("invoiceDueDate")(value)
                                       }}
                                       className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}
-                                      />
-                                      {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
-                                        <div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
-                                      )}
+                                    />
+                                    {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
+                                      <div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
+                                    )}
                                   </div>
                                 </FormGroup>
                               </Col>
@@ -811,7 +813,7 @@ class CreateSupplierInvoice extends React.Component {
                                             id="discount_amount"
                                             name="discount_amount"
                                             placeholder="Discount Amount"
-                                            
+
                                           />
                                         </FormGroup>
                                       </Col>
@@ -854,12 +856,12 @@ class CreateSupplierInvoice extends React.Component {
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
                                   <Button type="button" color="primary" className="btn-square mr-3" onClick={
-                                      () => {
-                                        this.setState({ createMore: false }, () => {
-                                          props.handleSubmit()
-                                        })
-                                      }
+                                    () => {
+                                      this.setState({ createMore: false }, () => {
+                                        props.handleSubmit()
+                                      })
                                     }
+                                  }
                                   >
                                     <i className="fa fa-dot-circle-o"></i> Create
                               </Button>

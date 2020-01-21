@@ -309,8 +309,8 @@ class SupplierInvoice extends React.Component {
         status: supplier.status,
         customerName: supplier.name,
         invoiceNumber: supplier.referenceNumber,
-        invoiceDate: moment(supplier.invoiceDate).format('L'),
-        invoiceDueDate: moment(supplier.invoiceDueDate).format('L'),
+        invoiceDate: supplier.invoiceDate ? moment(supplier.invoiceDate).format('DD/MM/YYYY') : '',
+        invoiceDueDate: supplier.invoiceDueDate ? moment(supplier.invoiceDueDate).format('DD/MM/YYYY'): '',
         invoiceAmount: supplier.totalAmount,
         vatAmount: supplier.totalVatAmount,
       })
@@ -430,6 +430,7 @@ class SupplierInvoice extends React.Component {
                               showMonthDropdown
                               showYearDropdown
                               dropdownMode="select"
+                              dateFormat="dd/MM/yyyy"
                               selected={filterData.invoiceDate}
                               // value={filterData.invoiceDate}
                               onChange={(value) => {
@@ -446,6 +447,7 @@ class SupplierInvoice extends React.Component {
                               showMonthDropdown
                               showYearDropdown
                               dropdownMode="select"
+                              dateFormat="dd/MM/yyyy"
                               selected={filterData.invoiceDueDate}
                               onChange={(value) => {
                                 this.handleChange(value, "invoiceDueDate")

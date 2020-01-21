@@ -349,7 +349,8 @@ class DetailEmployee extends React.Component {
                                         id="dob"
                                         name="dob"
                                         showMonthDropdown
-                                      showYearDropdown
+                                        showYearDropdown
+                                        dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                         placeholderText="Enter Birth Date"
                                         value={moment(props.values.dob).format('DD-MM-YYYY')}

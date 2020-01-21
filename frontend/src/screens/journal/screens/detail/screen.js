@@ -419,7 +419,8 @@ class DetailJournal extends React.Component {
                                         name="journalDate"
                                         placeholderText="Journal Date"
                                         showMonthDropdown
-                                      showYearDropdown
+                                        showYearDropdown
+                                        dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                         value={moment(props.values.journalDate).format('DD-MM-YYYY')}
                                         onChange={(value) => {

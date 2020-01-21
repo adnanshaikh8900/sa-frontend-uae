@@ -64,7 +64,7 @@ class Payment extends React.Component {
       loading: true,
       selectedRows: [],
       dialog: null,
-      contactType:1,
+      contactType: 1,
       filterData: {
         supplierId: '',
         paymentDate: '',
@@ -229,7 +229,7 @@ class Payment extends React.Component {
   }
 
   render() {
-    const { loading, dialog, filterData,selectedRows} = this.state
+    const { loading, dialog, filterData, selectedRows } = this.state
     const { payment_list, supplier_list } = this.props
     const containerStyle = {
       zIndex: 1999
@@ -300,15 +300,15 @@ class Payment extends React.Component {
                               placeholder="Select Supplier"
                               id="supplier"
                               name="supplier"
-                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list , 'Supplier Name') : []}
+                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list, 'Supplier Name') : []}
                               value={filterData.supplierId}
-                              onChange={(option) => { 
-                                if(option && option.value) {
+                              onChange={(option) => {
+                                if (option && option.value) {
                                   this.handleChange(option.value, 'supplierId')
                                 } else {
                                   this.handleChange('', 'supplierId')
                                 }
-                               }}
+                              }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -319,8 +319,9 @@ class Payment extends React.Component {
                               placeholderText="Payment Date"
                               selected={filterData.paymentDate}
                               showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                              showYearDropdown
+                              dateFormat="dd/MM/yyyy"
+                              dropdownMode="select"
                               value={filterData.paymentDate}
                               onChange={(value) => {
                                 this.handleChange(value, "paymentDate")

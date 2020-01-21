@@ -23,7 +23,7 @@ import * as CustomerInvoiceDetailActions from './actions';
 import * as  CustomerInvoiceActions from "../../actions";
 
 import { CustomerModal } from '../../sections'
-import { Loader , ConfirmDeleteModal } from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -409,13 +409,13 @@ class DetailCustomerInvoice extends React.Component {
   }
 
   removeInvoice() {
-    const id= this.props.location.state.id;
-    this.props.customerInvoiceDetailActions.deleteInvoice(id).then(res=>{
-      if(res.status == 200) {
-        this.props.commonActions.tostifyAlert('success','Data Removed Successfully')
+    const id = this.props.location.state.id;
+    this.props.customerInvoiceDetailActions.deleteInvoice(id).then(res => {
+      if (res.status == 200) {
+        this.props.commonActions.tostifyAlert('success', 'Data Removed Successfully')
         this.props.history.push('/admin/revenue/customer-invoice')
       }
-    }).catch(err=> {
+    }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -546,7 +546,7 @@ class DetailCustomerInvoice extends React.Component {
                                         options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
                                         value={props.values.contactId}
                                         onChange={option => {
-                                          if(option && option.value) {
+                                          if (option && option.value) {
                                             props.handleChange('contactId')(option.value)
                                           } else {
                                             props.handleChange('contactId')('')
@@ -614,6 +614,7 @@ class DetailCustomerInvoice extends React.Component {
                                         value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
                                         showMonthDropdown
                                         showYearDropdown
+                                        dateFormat="dd/MM/yyyy"
                                         dropdownMode="select"
                                         onChange={(value) => {
                                           props.handleChange("invoiceDate")(value)
@@ -630,8 +631,9 @@ class DetailCustomerInvoice extends React.Component {
                                           name="invoiceDueDate"
                                           placeholderText=""
                                           showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                          showYearDropdown
+                                          dateFormat="dd/MM/yyyy"
+                                          dropdownMode="select"
                                           value={moment(props.values.invoiceDueDate).format('DD-MM-YYYY')}
                                           onChange={(value) => {
                                             props.handleChange("invoiceDueDate")(value)

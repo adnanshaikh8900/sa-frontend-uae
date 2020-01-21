@@ -38,7 +38,7 @@ export const importTransaction = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/transactionimport/saveimporttransaction',
+      url: '/rest/transactionimport/save',
       data: obj
     }
     return authApi(data).then(res => {

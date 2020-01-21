@@ -11,6 +11,6 @@ public interface TransactionParsingSettingDao extends Dao<Long, TransactionParsi
 	List<TransactionParsingSetting> getTransactionList(
 			Map<TransactionParsingSettingFilterEnum, Object> filterDataMap);
 
-	String getDateFormatByTemplateId(Integer templateId);
+	String getDateFormatByTemplateId(Long templateId);
 
 }

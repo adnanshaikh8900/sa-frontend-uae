@@ -300,6 +300,7 @@ class Expense extends React.Component {
                               selected={filterData.expenseDate}
                               showMonthDropdown
                               showYearDropdown
+                                          dateFormat="dd/MM/yyyy"
                               dropdownMode="select"
                               value={filterData.expenseDate}
                               onChange={(value) => {

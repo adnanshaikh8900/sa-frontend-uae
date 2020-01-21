@@ -23,7 +23,7 @@ import * as SupplierInvoiceDetailActions from './actions';
 import * as  SupplierInvoiceActions from "../../actions";
 
 import { SupplierModal } from '../../sections'
-import { Loader , ConfirmDeleteModal} from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -162,7 +162,7 @@ class DetailSupplierInvoice extends React.Component {
     }
   }
   calTotalNet(data) {
-    const {vat_list} = this.props;
+    const { vat_list } = this.props;
     let total_net = 0
     let vat = 0;
     let val = 0;
@@ -299,13 +299,13 @@ class DetailSupplierInvoice extends React.Component {
   }
 
   removeInvoice() {
-    const id= this.props.location.state.id;
-    this.props.supplierInvoiceDetailActions.deleteInvoice(id).then(res=>{
-      if(res.status == 200) {
-        this.props.commonActions.tostifyAlert('success','Data Removed Successfully')
+    const id = this.props.location.state.id;
+    this.props.supplierInvoiceDetailActions.deleteInvoice(id).then(res => {
+      if (res.status == 200) {
+        this.props.commonActions.tostifyAlert('success', 'Data Removed Successfully')
         this.props.history.push('/admin/expense/supplier-invoice')
       }
-    }).catch(err=> {
+    }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -330,7 +330,7 @@ class DetailSupplierInvoice extends React.Component {
         vat = vat_list[index].vat
         val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
         obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : '-';
-      } 
+      }
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
       total_vat = +((total_vat + val)).toFixed(2);
       total = (total_vat + total_net).toFixed(2);
@@ -416,7 +416,7 @@ class DetailSupplierInvoice extends React.Component {
     // this.setState({
     //   selectedContact: option
     // })
-    this.formRef.current.setFieldValue('contactId',option.value,true)
+    this.formRef.current.setFieldValue('contactId', option.value, true)
 
   }
 
@@ -469,7 +469,7 @@ class DetailSupplierInvoice extends React.Component {
                           <Formik
                             initialValues={this.state.initValue}
                             ref={this.formRef}
-                            
+
                             onSubmit={(values, { resetForm }) => {
 
                               this.handleSubmit(values)
@@ -486,14 +486,14 @@ class DetailSupplierInvoice extends React.Component {
                             validationSchema={
                               Yup.object().shape({
                                 invoice_number: Yup.string()
-                                .required("Invoice Number is Required"),
+                                  .required("Invoice Number is Required"),
 
                                 contactId: Yup.string()
                                   .required("Supplier is Required"),
 
                                 invoiceDate: Yup.date()
                                   .required('Invoice Date is Required'),
-                                  invoiceDueDate: Yup.date()
+                                invoiceDueDate: Yup.date()
                                   .required('Invoice Due Date is Required'),
                               })}
                           >
@@ -508,7 +508,7 @@ class DetailSupplierInvoice extends React.Component {
                                         id="invoice_number"
                                         name="invoice_number"
                                         placeholder=""
-                                        value={props.values.invoice_number }
+                                        value={props.values.invoice_number}
                                         onChange={(value) => {
                                           props.handleChange("invoice_number")(value)
                                         }}
@@ -545,7 +545,7 @@ class DetailSupplierInvoice extends React.Component {
                                         id="contactId"
                                         name="contactId"
                                         onBlur={props.handlerBlur}
-                                        options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list , 'Supplier Name') : []}
+                                        options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list, 'Supplier Name') : []}
                                         value={props.values.contactId}
                                         onChange={(option) => {
                                           if (option && option.value) {
@@ -612,8 +612,9 @@ class DetailSupplierInvoice extends React.Component {
                                         name="invoiceDate"
                                         placeholderText=""
                                         showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                        showYearDropdown
+                                        dateFormat="dd/MM/yyyy"
+                                        dropdownMode="select"
                                         value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
 
                                         onChange={(value) => {
@@ -631,21 +632,22 @@ class DetailSupplierInvoice extends React.Component {
                                       <Label htmlFor="due_date">Invoice Due Date</Label>
                                       <div>
                                         <DatePicker
-                                         className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}  
+                                          className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}
                                           id="invoiceDueDate"
                                           name="invoiceDueDate"
                                           placeholderText=""
                                           showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                          showYearDropdown
+                                          dateFormat="dd/MM/yyyy"
+                                          dropdownMode="select"
                                           value={moment(props.values.invoiceDueDate).format('DD-MM-YYYY')}
                                           onChange={(value) => {
                                             props.handleChange("invoiceDueDate")(value)
                                           }}
-                                          />
-                                          {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
-                                            <div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
-                                          )}
+                                        />
+                                        {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
+                                          <div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
+                                        )}
                                       </div>
                                     </FormGroup>
                                   </Col>

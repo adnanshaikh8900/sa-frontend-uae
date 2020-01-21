@@ -309,7 +309,8 @@ class CreateEmployee extends React.Component {
                                     name="dob"
                                     placeholderText="Enter Birth Date"
                                     showMonthDropdown
-                                      showYearDropdown
+                                    showYearDropdown
+                                    dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                     selected={props.values.dob}
                                     value={props.values.dob}

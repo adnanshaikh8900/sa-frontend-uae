@@ -289,7 +289,7 @@ class DetailPayment extends React.Component {
                                           className="select-default-width"
                                           id="supplier"
                                           name="supplier"
-                                          options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list , 'Supplier Name') : []}
+                                          options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list, 'Supplier Name') : []}
                                           value={selectedSupplier}
                                           onChange={option => {
                                             props.handleChange('supplier')(option)
@@ -315,7 +315,7 @@ class DetailPayment extends React.Component {
                                           className="select-default-width"
                                           id="invoiceId"
                                           name="invoiceId"
-                                          options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list,'Invoice Number') : []}
+                                          options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
                                           value={props.values.invoiceId}
                                           onChange={option => {
                                             let data;
@@ -396,8 +396,9 @@ class DetailPayment extends React.Component {
                                             name="payment_date"
                                             placeholderText=""
                                             showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                            showYearDropdown
+                                            dateFormat="dd/MM/yyyy"
+                                            dropdownMode="select"
                                             onChange={option => props.handleChange('payment_date')(option)}
                                             value={moment(props.values.payment_date).format('DD-MM-YYYY')}
                                           // selected={props.values.payment_date}
@@ -415,7 +416,7 @@ class DetailPayment extends React.Component {
                                           className="select-default-width"
                                           id="bank"
                                           name="bank"
-                                          options={bank_list ? selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_list,'Bank') : []}
+                                          options={bank_list ? selectOptionsFactory.renderOptions('bankAccountName', 'bankAccountId', bank_list, 'Bank') : []}
                                           value={props.values.bank}
                                           onChange={option => props.handleChange('bank')(option)}
                                           className={

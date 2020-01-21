@@ -236,28 +236,36 @@ class CreateJournal extends React.Component {
   }
 
   selectItem(e, row, name) {
+    console.log(e.target.value)
+    console.log(row)
+    console.log(name)
     e.preventDefault();
+    let idx;
     const data = this.state.data
     data.map((obj, index) => {
       if (obj.id === row.id) {
         obj[name] = e.target.value
+        idx = index
       }
     });
+    console.log(this.formRef.current.getFieldValue(`journalLineItems[${idx}]['${name}']`))
     if (name === 'debitAmount' || name === 'creditAmount' || name === 'vatCategoryId') {
       this.updateAmount(data);
     } else {
       this.setState({ data: data }, () => {
-        this.formRef.current.setFieldValue('journalLineItems', this.state.data, true);
-        setTimeout(() => {
-          this.state.data.map((item, index) => {
-            if (this.formRef.current.state.errors.journalLineItems && this.formRef.current.state.errors.journalLineItems[index]) {
-              item.error = this.formRef.current.state.errors.journalLineItems[index]
-            } else {
-              item.error = []
-          }
-          })
-          this.setState({ data: this.state.data })
-        }, 0)
+        this.formRef.current.setFieldValue(`journalLineItems[${idx}]['${name}']`, 'a', true);
+        console.log( this.formRef.current)
+        console.log(this.state.data)
+        // setTimeout(() => {
+        //   this.state.data.map((item, index) => {
+        //     if (this.formRef.current.state.errors.journalLineItems && this.formRef.current.state.errors.journalLineItems[index]) {
+        //       item.error = this.formRef.current.state.errors.journalLineItems[index]
+        //     } else {
+        //       item.error = []
+        //     }
+        //   })
+        //   this.setState({ data: this.state.data })
+        // }, 0)
       });
     }
 
@@ -296,12 +304,14 @@ class CreateJournal extends React.Component {
 
     this.setState({
       data: data,
-      initValue: {...this.state.initValue,...{
-        subTotalDebitAmount: subTotalDebitAmount,
-        totalDebitAmount: subTotalDebitAmount,
-        totalCreditAmount: subTotalCreditAmount,
-        subTotalCreditAmount: subTotalCreditAmount,
-      }}
+      initValue: {
+        ...this.state.initValue, ...{
+          subTotalDebitAmount: subTotalDebitAmount,
+          totalDebitAmount: subTotalDebitAmount,
+          totalCreditAmount: subTotalCreditAmount,
+          subTotalCreditAmount: subTotalCreditAmount,
+        }
+      }
     }, () => {
       this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
       setTimeout(() => {
@@ -309,7 +319,7 @@ class CreateJournal extends React.Component {
           if (this.formRef.current.state.errors.journalLineItems && this.formRef.current.state.errors.journalLineItems[index]) {
             item.error = this.formRef.current.state.errors.journalLineItems[index]
           } else {
-              item.error = []
+            item.error = []
           }
         })
         this.setState({ data: this.state.data })
@@ -344,8 +354,8 @@ class CreateJournal extends React.Component {
         this.props.commonActions.tostifyAlert('success', 'New Journal Created Successfully')
         if (this.state.createMore) {
           this.setState({
-             createMore: false,
-             data: [{
+            createMore: false,
+            data: [{
               id: 0,
               description: '',
               transactionCategoryId: '',
@@ -354,22 +364,24 @@ class CreateJournal extends React.Component {
               debitAmount: 0,
               creditAmount: 0,
             }],
-            initValue: {...this.state.initValue,...{
-              journalLineItems: [{
-                id: 0,
-                description: '',
-                transactionCategoryId: '',
-                vatCategoryId: '',
-                contactId: '',
-                debitAmount: 0,
-                creditAmount: 0,
-              }],
-              subTotalDebitAmount: 0,
-              totalDebitAmount: 0,
-              totalCreditAmount: 0,
-              subTotalCreditAmount: 0,
-            }}
-            });
+            initValue: {
+              ...this.state.initValue, ...{
+                journalLineItems: [{
+                  id: 0,
+                  description: '',
+                  transactionCategoryId: '',
+                  vatCategoryId: '',
+                  contactId: '',
+                  debitAmount: 0,
+                  creditAmount: 0,
+                }],
+                subTotalDebitAmount: 0,
+                totalDebitAmount: 0,
+                totalCreditAmount: 0,
+                subTotalCreditAmount: 0,
+              }
+            }
+          });
         } else {
           this.props.history.push('/admin/accountant/journal');
         }
@@ -446,6 +458,7 @@ class CreateJournal extends React.Component {
                                     selected={props.values.journalDate}
                                     showMonthDropdown
                                     showYearDropdown
+                                    dateFormat="dd/MM/yyyy"
                                     dropdownMode="select"
                                     onChange={(value) => {
                                       props.handleChange("journalDate")(value)
@@ -483,7 +496,7 @@ class CreateJournal extends React.Component {
                                     id="description"
                                     rows="5"
                                     placeholder="1024 characters..."
-                                    value={props.values.description || '' }
+                                    value={props.values.description || ''}
                                     onChange={(value) => { props.handleChange("description")(value) }}
                                   />
                                 </FormGroup>
@@ -514,7 +527,7 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={12} className="mb-3">
                                 <Button type="button" color="primary" className="btn-square mr-3" onClick={this.addRow}
-                                  disabled={this.formRef.current && this.formRef.current.state.errors.journalLineItems &&  typeof this.formRef.current.state.errors.journalLineItems !== 'string'}
+                                  disabled={this.formRef.current && this.formRef.current.state.errors.journalLineItems && typeof this.formRef.current.state.errors.journalLineItems !== 'string'}
                                 >
                                   <i className="fa fa-plus"></i> Add More
                             </Button>

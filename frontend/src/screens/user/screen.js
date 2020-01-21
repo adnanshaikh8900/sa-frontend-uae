@@ -73,7 +73,7 @@ class User extends React.Component {
     }
 
     this.statusOption = [
-      { label: 'Select Status', value: ''},
+      { label: 'Select Status', value: '' },
       { label: 'Active', value: 'true' },
       { label: 'InActive', value: 'false' },
     ]
@@ -333,6 +333,7 @@ class User extends React.Component {
                               placeholderText="Date of Birth"
                               showMonthDropdown
                               showYearDropdown
+                              dateFormat="dd/MM/yyyy"
                               dropdownMode="select"
                               selected={filterData.dob}
                               value={filterData.dob}
@@ -349,13 +350,13 @@ class User extends React.Component {
                               name="roleId"
                               options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                               value={filterData.roleId}
-                              onChange={(option) => { 
-                                if(option && option.value) {
+                              onChange={(option) => {
+                                if (option && option.value) {
                                   this.handleChange(option.value, 'roleId')
                                 } else {
                                   this.handleChange('', 'roleId')
                                 }
-                               }}
+                              }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -368,12 +369,12 @@ class User extends React.Component {
                               // value={filterData.supplierId}
                               value={selectedStatus}
                               onChange={(option) => {
-                                if(option) {
+                                if (option) {
                                   this.handleChange(option.value, 'active')
-                                this.setState({ selectedStatus: option.value })
+                                  this.setState({ selectedStatus: option.value })
                                 } else {
-                                this.handleChange('true', 'active')
-                                this.setState({ selectedStatus: 'true' })
+                                  this.handleChange('true', 'active')
+                                  this.setState({ selectedStatus: 'true' })
                                 }
                               }}
                             />

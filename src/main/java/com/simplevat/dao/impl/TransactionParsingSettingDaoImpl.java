@@ -30,9 +30,9 @@ public class TransactionParsingSettingDaoImpl extends AbstractDao<Long, Transact
 	}
 
 	@Override
-	public String getDateFormatByTemplateId(Integer templateId) {
+	public String getDateFormatByTemplateId(Long templateId) {
 		List<String> list = getEntityManager().createNamedQuery("getDateFormatIdTemplateId", String.class)
-				.getResultList();
+				.setParameter("id", templateId).getResultList();
 
 		return list != null && list.size() > 0 ? list.get(0) : null;
 	}

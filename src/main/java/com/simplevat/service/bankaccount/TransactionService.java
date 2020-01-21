@@ -9,6 +9,8 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
 import com.simplevat.service.SimpleVatService;
+
+import java.math.BigDecimal;
 import java.util.Date;
 
 public abstract class TransactionService extends SimpleVatService<Integer, Transaction> {
@@ -34,37 +36,46 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
 
     public abstract List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId, Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo, Integer pageSize);
 
-    public abstract List<Transaction> getChildTransactionListByParentId(int parentId);
+	public abstract List<Transaction> getChildTransactionListByParentId(int parentId);
 
-    public abstract void persistChildTransaction(Transaction transaction);
+	public abstract void persistChildTransaction(Transaction transaction);
 
-    public abstract List<Transaction> getAllTransactionsByRefId(int transactionRefType, int transactionRefId);
+	public abstract List<Transaction> getAllTransactionsByRefId(int transactionRefType, int transactionRefId);
 
-    public abstract List<Transaction> getAllParentTransactions(BankAccount bankAccount);
+	public abstract List<Transaction> getAllParentTransactions(BankAccount bankAccount);
 
-    public abstract List<TransactionView> getAllTransactionViewList(Integer bankAccountId);
+	public abstract List<TransactionView> getAllTransactionViewList(Integer bankAccountId);
 
-    public abstract List<Transaction> getAllTransactionListByBankAccountId(Integer bankAccountId);
+	public abstract List<Transaction> getAllTransactionListByBankAccountId(Integer bankAccountId);
 
-    public abstract List<Transaction> getAllTransactions();
+	public abstract List<Transaction> getAllTransactions();
 
-    public abstract List<TransactionView> getChildTransactionViewListByParentId(Integer parentTransaction);
+	public abstract List<TransactionView> getChildTransactionViewListByParentId(Integer parentTransaction);
 
-    public abstract Integer getTotalTransactionCountByBankAccountIdForLazyModel(Integer bankAccountId, Integer transactionStatus);
+	public abstract Integer getTotalTransactionCountByBankAccountIdForLazyModel(Integer bankAccountId,
+			Integer transactionStatus);
 
-    public abstract Integer getTotalExplainedTransactionCountByBankAccountId(Integer bankAccountId);
+	public abstract Integer getTotalExplainedTransactionCountByBankAccountId(Integer bankAccountId);
 
-    public abstract Integer getTotalUnexplainedTransactionCountByBankAccountId(Integer bankAccountId);
+	public abstract Integer getTotalUnexplainedTransactionCountByBankAccountId(Integer bankAccountId);
 
-    public abstract Integer getTotalPartiallyExplainedTransactionCountByBankAccountId(Integer bankAccountId);
+	public abstract Integer getTotalPartiallyExplainedTransactionCountByBankAccountId(Integer bankAccountId);
 
-    public abstract Integer getTotalAllTransactionCountByBankAccountId(Integer bankAccountId);
+	public abstract Integer getTotalAllTransactionCountByBankAccountId(Integer bankAccountId);
 
-    public abstract List<TransactionView> getTransactionViewListByDateRang(Integer bankAccountId, Date startDate, Date endDate);
+	public abstract List<TransactionView> getTransactionViewListByDateRang(Integer bankAccountId, Date startDate,
+			Date endDate);
 
-    public abstract Integer getTransactionCountByRangeAndBankAccountId(int pageSize, Integer bankAccountId, int rowCount);
+	public abstract Integer getTransactionCountByRangeAndBankAccountId(int pageSize, Integer bankAccountId,
+			int rowCount);
 
-    public abstract List<TransactionView> getTransactionViewList(int pageSize, Integer bankAccountId, int rowCount, Integer transactionStatus, Map<String, Object> filters,String sortField, String sortOrder);
+	public abstract List<TransactionView> getTransactionViewList(int pageSize, Integer bankAccountId, int rowCount,
+			Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder);
 
-    public abstract List<Transaction> getParentTransactionListByRangeAndBankAccountId(int pageSize, Integer bankAccountId, int rowCount, Integer transactionStatus,Map<String, Object> filters,String sortField, String sortOrder);
+	public abstract List<Transaction> getParentTransactionListByRangeAndBankAccountId(int pageSize, Integer bankAccountId, int rowCount, Integer transactionStatus,Map<String, Object> filters,String sortField, String sortOrder);
+
+	public abstract boolean saveTransactions(List<Transaction> transactions);
+
+	public abstract BigDecimal getCurrentBalanceByBankId(Integer bankId);
+	
 }

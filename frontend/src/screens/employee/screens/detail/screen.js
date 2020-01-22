@@ -351,7 +351,7 @@ class DetailEmployee extends React.Component {
                                         showMonthDropdown
                                         showYearDropdown
                                         dateFormat="dd/MM/yyyy"
-                                      dropdownMode="select"
+                                        dropdownMode="select"
                                         placeholderText="Enter Birth Date"
                                         value={moment(props.values.dob).format('DD-MM-YYYY')}
                                         onChange={(value) => {
@@ -440,7 +440,7 @@ class DetailEmployee extends React.Component {
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currencyCode}
                                         onChange={option => {
-                                          if(option && option.value) {
+                                          if (option && option.value) {
                                             props.handleChange('currencyCode')(option.value)
                                           } else {
                                             props.handleChange('currencyCode')('')

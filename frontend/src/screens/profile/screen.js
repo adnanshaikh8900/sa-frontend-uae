@@ -22,7 +22,7 @@ import {
 import Select from 'react-select'
 // import ImagesUploader from 'react-images-uploader'
 import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
-import { selectOptionsFactory } from 'utils'
+import { selectOptionsFactory ,cryptoService} from 'utils'
 
 
 import DatePicker from 'react-datepicker'
@@ -169,7 +169,7 @@ class Profile extends React.Component {
   }
 
   getUserData() {
-    const userId = localStorage.getItem('userId')
+    const userId = cryptoService.decryptService('userId')
     this.setState({
       loading: true
     })
@@ -217,7 +217,8 @@ class Profile extends React.Component {
       // companyId,
       active,
     } = data;
-    const userId = localStorage.getItem('userId')
+    const userId = cryptoService.decryptService('userId')
+
     const { userPhotoFile } = this.state;
     let formData = new FormData();
     formData.append("id", userId);

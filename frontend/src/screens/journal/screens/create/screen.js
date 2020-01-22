@@ -236,9 +236,6 @@ class CreateJournal extends React.Component {
   }
 
   selectItem(e, row, name) {
-    console.log(e.target.value)
-    console.log(row)
-    console.log(name)
     e.preventDefault();
     let idx;
     const data = this.state.data
@@ -248,14 +245,12 @@ class CreateJournal extends React.Component {
         idx = index
       }
     });
-    console.log(this.formRef.current.getFieldValue(`journalLineItems[${idx}]['${name}']`))
     if (name === 'debitAmount' || name === 'creditAmount' || name === 'vatCategoryId') {
       this.updateAmount(data);
     } else {
       this.setState({ data: data }, () => {
         this.formRef.current.setFieldValue(`journalLineItems[${idx}]['${name}']`, 'a', true);
-        console.log( this.formRef.current)
-        console.log(this.state.data)
+
         // setTimeout(() => {
         //   this.state.data.map((item, index) => {
         //     if (this.formRef.current.state.errors.journalLineItems && this.formRef.current.state.errors.journalLineItems[index]) {

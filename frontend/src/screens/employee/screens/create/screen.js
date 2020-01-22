@@ -96,7 +96,7 @@ class CreateEmployee extends React.Component {
     this.props.employeeActions.getCurrencyList()
   }
 
-  handleSubmit(data,resetForm) {
+  handleSubmit(data, resetForm) {
     this.props.employeeCreateActions.createEmployee(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Employee Created Successfully')
@@ -138,7 +138,7 @@ class CreateEmployee extends React.Component {
                       <Formik
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values,resetForm)
+                          this.handleSubmit(values, resetForm)
                           // resetForm(this.state.initValue)
 
                           // this.setState({
@@ -311,7 +311,7 @@ class CreateEmployee extends React.Component {
                                     showMonthDropdown
                                     showYearDropdown
                                     dateFormat="dd/MM/yyyy"
-                                      dropdownMode="select"
+                                    dropdownMode="select"
                                     selected={props.values.dob}
                                     value={props.values.dob}
                                     onChange={(value) => {
@@ -402,7 +402,7 @@ class CreateEmployee extends React.Component {
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currencyCode}
                                     onChange={option => {
-                                      if(option && option.value) {
+                                      if (option && option.value) {
                                         props.handleChange('currencyCode')(option.value)
                                       } else {
                                         props.handleChange('currencyCode')('')
@@ -427,11 +427,11 @@ class CreateEmployee extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="button" color="primary" className="btn-square mr-3"  onClick={() => {
-                                      this.setState({ createMore: false }, () => {
-                                        props.handleSubmit()
-                                      })
-                                    }}>
+                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                    this.setState({ createMore: false }, () => {
+                                      props.handleSubmit()
+                                    })
+                                  }}>
                                     <i className="fa fa-dot-circle-o"></i> Create
                                       </Button>
                                   <Button name="button" color="primary" className="btn-square mr-3"

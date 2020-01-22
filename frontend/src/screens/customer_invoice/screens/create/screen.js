@@ -16,7 +16,7 @@ import {
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import * as Yup from 'yup'
 import _ from 'lodash'
 import * as CustomerInvoiceCreateActions from './actions';
@@ -88,6 +88,14 @@ class CreateCustomerInvoice extends React.Component {
         invoiceDate: '',
         contactId: '',
         project: '',
+        lineItemsString: [{
+          id: 0,
+          description: '',
+          quantity: 0,
+          unitPrice: 0,
+          vatCategoryId: '',
+          subTotal: 0
+        }],
         invoice_number: '',
         total_net: 0,
         invoiceVATAmount: 0,
@@ -148,37 +156,89 @@ class CreateCustomerInvoice extends React.Component {
     )
   }
 
-  renderDescription(cell, row) {
-    return (
-      <Input
-        type="text"
-        value={row['description'] !== '' ? row['description'] : ''}
-        // defaultValue={row['description']}
-        onChange={(e) => { this.selectItem(e, row, 'description') }}
-        placeholder="Description"
+  renderDescription(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
 
+    return (
+      <Field name={`lineItemsString.${idx}.description`}
+        render={({ field, form }) => (
+          <Input
+
+            type="text"
+            value={row['description'] !== '' ? row['description'] : ''}
+            onChange={(e) => {
+              this.selectItem(e, row, 'description', form, field)
+            }}
+            placeholder="Description"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] && 
+              props.errors.lineItemsString[idx].description && 
+              Object.keys(props.touched).length > 0 && props.touched.lineItemsString && 
+              props.touched.lineItemsString[idx] &&
+              props.touched.lineItemsString[idx].description ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
 
-  renderQuantity(cell, row) {
+  renderQuantity(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
     return (
-      <Input
-        type="number"
-        value={row['quantity'] !== 0 ? row['quantity'] : 0}
-        // defaultValue={row['quantity']}
-        onChange={(e) => { this.selectItem(e, row, 'quantity') }}
+      <Field name={`lineItemsString.${idx}.quantity`}
+        render={({ field, form }) => (
+          <Input
+            type="number"
+            value={row['quantity'] !== 0 ? row['quantity'] : 0}
+            onChange={(e) => { this.selectItem(e, row, 'quantity', form, field) }}
+            placeholder="Quantity"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] && 
+              props.errors.lineItemsString[idx].quantity && 
+              Object.keys(props.touched).length > 0 && props.touched.lineItemsString && 
+              props.touched.lineItemsString[idx] &&
+              props.touched.lineItemsString[idx].quantity ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
 
-  renderUnitPrice(cell, row) {
+  renderUnitPrice(cell, row, props){
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
     return (
-      <Input
-        type="number"
-        value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-        // defaultValue={row['unitPrice']}
-        onChange={(e) => { this.selectItem(e, row, 'unitPrice') }}
+      <Field name={`lineItemsString.${idx}.unitPrice`}
+        render={({ field, form }) => (
+          <Input
+            type="number"
+            value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
+            onChange={(e) => { this.selectItem(e, row, 'unitPrice', form, field) }}
+            placeholder="Unit Price"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] && 
+              props.errors.lineItemsString[idx].unitPrice && 
+              Object.keys(props.touched).length > 0 && props.touched.lineItemsString && 
+              props.touched.lineItemsString[idx] &&
+              props.touched.lineItemsString[idx].unitPrice ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
@@ -203,18 +263,6 @@ class CreateCustomerInvoice extends React.Component {
 
   }
 
-
-  // handleChange = (e, name) => {
-  //   this.setState({
-  //     currentData: _.set(
-  //       { ...this.state.currentData },
-  //       e.target.name && e.target.name !== '' ? e.target.name : name,
-  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //     )
-  //   })
-  // }
-
-
   addRow() {
     const data = [...this.state.data]
     this.setState({
@@ -226,57 +274,92 @@ class CreateCustomerInvoice extends React.Component {
         vatCategoryId: '',
         subTotal: 0
       }), idCount: this.state.idCount + 1
+    }, () => {
+      this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
     })
   }
 
-  selectItem(e, row, name) {
+  selectItem(e, row, name, form, field) {
     e.preventDefault();
     let data = this.state.data
-
+    let idx
     data.map((obj, index) => {
       if (obj.id === row.id) {
         obj[name] = e.target.value
+        idx = index
       }
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
+      form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
     } else {
-      this.setState({ data: data });
+      this.setState({ data: data }, () => {
+        form.setFieldValue(field.name, this.state.data[idx][name], true)
+      });
     }
 
   }
 
-  renderVat(cell, row) {
+  renderVat(cell, row, props) {
     const { vat_list } = this.props;
     let vatList = vat_list.length ? [{ id: '', name: 'Select Vat' }, ...vat_list] : vat_list
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+        if(Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
+          console.log(props.touched.lineItemsString[idx].vatCategoryId)
+        }
+      }
+    });
 
     return (
-      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
-        {vatList ? vatList.map(obj => {
-          // obj.name = obj.name === 'default' ? '0' : obj.name
-          return <option value={obj.id} key={obj.id}>{obj.name}</option>
-        }) : ''}
-      </Input>
+
+      <Field name={`lineItemsString.${idx}.vatCategoryId`}
+        render={({ field, form }) => (
+
+          <Input type="select" onChange={(e) => {
+            this.selectItem(e, row, 'vatCategoryId', form, field)
+            // this.formRef.current.props.handleChange(field.name)(e.value)
+          }} value={row.vatCategoryId}
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].vatCategoryId &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].vatCategoryId ? "is-invalid" : ""}`}
+          >
+            {vatList ? vatList.map(obj => {
+              // obj.name = obj.name === 'default' ? '0' : obj.name
+              return <option value={obj.id} key={obj.id}>{obj.name}</option>
+            }) : ''}
+          </Input>
+
+        )}
+      />
     )
   }
 
 
-  deleteRow(e, row) {
-
+  deleteRow(e, row,props) {
+    console.log(row)
     const id = row['id'];
     let newData = []
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
+    // console.log(newData)
+    props.setFieldValue('lineItemsString', newData, true)
     this.updateAmount(newData)
   }
 
-  renderActions(cell, row) {
+  renderActions(cell, rows, props) {
     return (
       <Button
         size="sm"
         className="btn-twitter btn-brand icon"
-        onClick={(e) => { this.deleteRow(e, row) }}
+        disabled={this.state.data.length=== 1 ? true : false}
+        onClick={(e) => { this.deleteRow(e, rows,props) }}
       >
         <i className="fas fa-trash"></i>
       </Button>
@@ -307,6 +390,9 @@ class CreateCustomerInvoice extends React.Component {
         invoiceVATAmount: total_vat,
         totalAmount: total
       }
+    },()=>{
+   
+      
     })
   }
 
@@ -348,7 +434,7 @@ class CreateCustomerInvoice extends React.Component {
     if (project !== null && project.value) {
       formData.append("projectId", project.value);
     }
-    if (this.uploadFile.files[0]) {
+    if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
     this.props.customerInvoiceCreateActions.createInvoice(formData).then(res => {
@@ -451,6 +537,13 @@ class CreateCustomerInvoice extends React.Component {
                               .required('Invoice Date is Required'),
                             invoiceDueDate: Yup.date()
                               .required('Invoice Due Date is Required'),
+                            lineItemsString: Yup.array()
+                              .of(Yup.object().shape({
+                                description: Yup.string().required("Value is Required"),
+                                quantity: Yup.number().required("Value is Required"),
+                                unitPrice: Yup.number().required("Value is Required"),
+                                vatCategoryId: Yup.string().required("Value is Required"),
+                              }))
                           })}
                       >
                         {props => (
@@ -503,7 +596,7 @@ class CreateCustomerInvoice extends React.Component {
                                     value={props.values.contactId}
                                     onChange={option => {
                                       // this.getCurrentUser(option)
-                                      if(option && option.value) {
+                                      if (option && option.value) {
                                         props.handleChange('contactId')(option.value)
                                       } else {
                                         props.handleChange('contactId')('')
@@ -716,7 +809,7 @@ class CreateCustomerInvoice extends React.Component {
                                   <TableHeaderColumn
                                     width="55"
                                     dataAlign="center"
-                                    dataFormat={this.renderActions}
+                                    dataFormat={(cell, rows) => this.renderActions(cell, rows, props)}
                                   >
                                   </TableHeaderColumn>
                                   <TableHeaderColumn
@@ -730,26 +823,27 @@ class CreateCustomerInvoice extends React.Component {
                                   <TableHeaderColumn
 
                                     dataField="description"
-                                    dataFormat={this.renderDescription}
+                                    dataFormat={(cell, rows) => this.renderDescription(cell, rows, props)}
                                   >
                                     Description
                               </TableHeaderColumn>
                                   <TableHeaderColumn
-
                                     dataField="quantity"
-                                    dataFormat={this.renderQuantity}
+                                    dataFormat={(cell, rows) => this.renderQuantity(cell, rows, props)}
+
                                   >
                                     Quantity
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="unitPrice"
-                                    dataFormat={this.renderUnitPrice}
+                                    dataFormat={(cell, rows) => this.renderUnitPrice(cell, rows, props)}
+
                                   >
                                     Unit Price (All)
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="vat"
-                                    dataFormat={this.renderVat}
+                                    dataFormat={(cell, rows) => this.renderVat(cell, rows, props)}
                                   >
                                     Vat (%)
                               </TableHeaderColumn>

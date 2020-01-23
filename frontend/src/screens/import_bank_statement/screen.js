@@ -486,7 +486,7 @@ class ImportBankStatement extends React.Component {
                                 <i className="fa fa-dot-circle-o"></i> Import
                                     </Button>
                               <Button color="secondary" className="btn-square"
-                                onClick={() => { this.props.history.push('/admin/banking/upload-statement') }}>
+                                onClick={() => { this.props.history.push('/admin/banking/bank-account/transaction') }}>
                                 <i className="fa fa-ban"></i> Cancel
                                     </Button>
                             </>

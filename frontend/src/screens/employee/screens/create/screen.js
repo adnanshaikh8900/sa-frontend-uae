@@ -11,7 +11,8 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
+  Label,
+  FormText
 } from 'reactstrap'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
@@ -279,6 +280,10 @@ class CreateEmployee extends React.Component {
                                     onChange={(value) => { props.handleChange('password')(value) }}
                                     className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                   />
+                                  {!props.errors.password ?
+                                    (
+                                      <FormText style={{ color: '#20a8d8', fontSize: '14px' }}>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
+                                    ) : null}
                                   {props.errors.password && props.touched.password && (
                                     <div className="invalid-feedback">{props.errors.password}</div>
                                   )}

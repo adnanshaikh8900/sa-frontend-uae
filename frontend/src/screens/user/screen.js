@@ -227,7 +227,7 @@ class User extends React.Component {
   }
 
   renderDate(cell, row) {
-    return row['dob'] !== null ? moment(row['dob']).format('DD-MM-YYYY') : ''
+    return row['dob'] !== null ? moment(row['dob']).format('DD/MM/YYYY') : ''
   }
 
   renderRole(cell, row) {

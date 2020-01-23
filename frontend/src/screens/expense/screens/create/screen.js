@@ -75,8 +75,8 @@ class CreateExpense extends React.Component {
         attachmentFile: '',
         receiptAttachmentDescription: '',
       },
-      currentData: {}
-
+      currentData: {},
+      fileName: ''
     }
 
 
@@ -409,7 +409,10 @@ class CreateExpense extends React.Component {
                                       <input id="fileInput" ref={ref => {
                                         this.uploadFile = ref;
                                       }}
-                                        type="file" type="file" style={{ display: 'none' }} />
+                                      type="file" style={{ display: 'none' }} onChange={(e) => {
+                                        this.setState({ fileName: (e.target.value).split('\\').pop() })
+                                      }} />
+                                    {this.state.fileName}
                                     </FormGroup>
                                   </Col>
                                 </Row>

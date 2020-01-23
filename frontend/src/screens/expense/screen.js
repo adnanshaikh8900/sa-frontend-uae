@@ -151,7 +151,7 @@ class Expense extends React.Component {
   }
 
   renderDate(cell, rows) {
-    return moment(rows.expenseDate).format('DD-MM-YYYY')
+    return moment(rows.expenseDate).format('DD/MM/YYYY')
   }
 
   handleChange(val, name) {

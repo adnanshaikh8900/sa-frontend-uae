@@ -495,7 +495,6 @@ class SupplierInvoice extends React.Component {
                           totalSize={supplier_invoice_list ? supplier_invoice_list.length : 0}
                           className="supplier-invoice-table"
                           ref={node => this.table = node}
-
                         >
 
                           <TableHeaderColumn

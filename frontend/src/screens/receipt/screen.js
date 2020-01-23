@@ -137,7 +137,7 @@ class Receipt extends React.Component {
   }
 
   renderDate(cell, rows) {
-    return rows['receiptDate'] !== null ? moment(rows['receiptDate']).format('DD-MM-YYYY') : ''
+    return rows['receiptDate'] !== null ? moment(rows['receiptDate']).format('DD/MM/YYYY') : ''
   }
 
   onPageChange = (page, sizePerPage) => {

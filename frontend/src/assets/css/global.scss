@@ -211,6 +211,11 @@ th {
 // react-select styles
 .Select-control {
   border-radius: 0px !important;
+  .Select-value{
+    span{
+      color:#5c6873!important;
+    }
+  }
   .Select-clear-zone {
     display: none !important;
   }

@@ -83,11 +83,11 @@ class Header extends Component {
             <NavLink to="/admin/dashboard" className="nav-link" >Dashboard</NavLink>
           </NavItem>
           <NavItem className="px-3">
-            <Link to="/admin/master/user" className="nav-link">Users</Link>
+            <Link to="/admin/settings/user" className="nav-link">Users</Link>
           </NavItem>
-          <NavItem className="px-3">
+          {/* <NavItem className="px-3">
             <NavLink to="/admin/settings" className="nav-link">Settings</NavLink>
-          </NavItem>
+          </NavItem> */}
         </Nav>
         <Nav className="ml-auto" navbar>
           <NavItem>

@@ -77,7 +77,6 @@ class CreateCustomerInvoice extends React.Component {
         vatCategoryId: '',
         subTotal: 0
       }],
-      // data: [],
       idCount: 0,
       initValue: {
         receiptAttachmentDescription: '',
@@ -106,7 +105,8 @@ class CreateCustomerInvoice extends React.Component {
       contactType: 2,
       openCustomerModal: false,
       selectedContact: '',
-      createMore: false
+      createMore: false,
+      fileName: ''
     }
 
 
@@ -131,6 +131,7 @@ class CreateCustomerInvoice extends React.Component {
     this.closeCustomerModal = this.closeCustomerModal.bind(this)
     this.openCustomerModal = this.openCustomerModal.bind(this)
     this.getCurrentUser = this.getCurrentUser.bind(this)
+    this.checkedRow = this.checkedRow.bind(this)
   }
 
   // renderActions (cell, row) {
@@ -176,11 +177,11 @@ class CreateCustomerInvoice extends React.Component {
             }}
             placeholder="Description"
             className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] && 
-              props.errors.lineItemsString[idx].description && 
-              Object.keys(props.touched).length > 0 && props.touched.lineItemsString && 
-              props.touched.lineItemsString[idx] &&
-              props.touched.lineItemsString[idx].description ? "is-invalid" : ""}`}
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].description &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].description ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -204,18 +205,18 @@ class CreateCustomerInvoice extends React.Component {
             onChange={(e) => { this.selectItem(e, row, 'quantity', form, field) }}
             placeholder="Quantity"
             className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] && 
-              props.errors.lineItemsString[idx].quantity && 
-              Object.keys(props.touched).length > 0 && props.touched.lineItemsString && 
-              props.touched.lineItemsString[idx] &&
-              props.touched.lineItemsString[idx].quantity ? "is-invalid" : ""}`}
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].quantity &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].quantity ? "is-invalid" : ""}`}
           />
         )}
       />
     )
   }
 
-  renderUnitPrice(cell, row, props){
+  renderUnitPrice(cell, row, props) {
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -232,11 +233,11 @@ class CreateCustomerInvoice extends React.Component {
             onChange={(e) => { this.selectItem(e, row, 'unitPrice', form, field) }}
             placeholder="Unit Price"
             className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] && 
-              props.errors.lineItemsString[idx].unitPrice && 
-              Object.keys(props.touched).length > 0 && props.touched.lineItemsString && 
-              props.touched.lineItemsString[idx] &&
-              props.touched.lineItemsString[idx].unitPrice ? "is-invalid" : ""}`}
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].unitPrice &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].unitPrice ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -307,7 +308,7 @@ class CreateCustomerInvoice extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        if(Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
+        if (Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
           console.log(props.touched.lineItemsString[idx].vatCategoryId)
         }
       }
@@ -341,7 +342,7 @@ class CreateCustomerInvoice extends React.Component {
   }
 
 
-  deleteRow(e, row,props) {
+  deleteRow(e, row, props) {
     console.log(row)
     const id = row['id'];
     let newData = []
@@ -358,12 +359,22 @@ class CreateCustomerInvoice extends React.Component {
       <Button
         size="sm"
         className="btn-twitter btn-brand icon"
-        disabled={this.state.data.length=== 1 ? true : false}
-        onClick={(e) => { this.deleteRow(e, rows,props) }}
+        disabled={this.state.data.length === 1 ? true : false}
+        onClick={(e) => { this.deleteRow(e, rows, props) }}
       >
         <i className="fas fa-trash"></i>
       </Button>
     )
+  }
+
+  checkedRow() {
+    let length = this.state.data.length - 1
+    let temp = Object.values(this.state.data[length]).indexOf('');
+    if (temp > -1) {
+      return true
+    } else {
+      return false
+    }
   }
 
 
@@ -386,13 +397,15 @@ class CreateCustomerInvoice extends React.Component {
     this.setState({
       data: data,
       initValue: {
-        total_net: total_net,
-        invoiceVATAmount: total_vat,
-        totalAmount: total
+        ...this.state.initValue, ...{
+          total_net: total_net,
+          invoiceVATAmount: total_vat,
+          totalAmount: total
+        }
       }
-    },()=>{
-   
-      
+    }, () => {
+
+
     })
   }
 
@@ -440,11 +453,28 @@ class CreateCustomerInvoice extends React.Component {
     this.props.customerInvoiceCreateActions.createInvoice(formData).then(res => {
       this.props.commonActions.tostifyAlert('success', 'New Invoice Created Successfully.')
       if (this.state.createMore) {
+        resetForm(this.state.initValue)
         this.setState({
           createMore: false,
-          selectedContact: ''
+          selectedContact: '',
+          data:  [{
+            id: 0,
+            description: '',
+            quantity: 0,
+            unitPrice: 0,
+            vatCategoryId: '',
+            subTotal: 0
+          }],
+          initValue: {
+            ...this.state.initValue, ...{
+              total_net: 0,
+              invoiceVATAmount: 0,
+              totalAmount: 0,
+            }
+          }
+        }, () => {
+          this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
         })
-        resetForm(this.state.initValue)
       } else {
         this.props.history.push('/admin/revenue/customer-invoice')
       }
@@ -512,7 +542,6 @@ class CreateCustomerInvoice extends React.Component {
                     <Col lg={12}>
                       <Formik
                         initialValues={initValue}
-                        // enableReinitialize={true}
                         ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
 
@@ -781,7 +810,10 @@ class CreateCustomerInvoice extends React.Component {
                                       <input id="fileInput" ref={ref => {
                                         this.uploadFile = ref;
                                       }}
-                                        type="file" type="file" style={{ display: 'none' }} />
+                                      type="file" style={{ display: 'none' }} onChange={(e) => {
+                                        this.setState({ fileName: (e.target.value).split('\\').pop() })
+                                      }} />
+                                    {this.state.fileName}
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -791,7 +823,9 @@ class CreateCustomerInvoice extends React.Component {
                             <hr />
                             <Row>
                               <Col lg={12} className="mb-3">
-                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}>
+                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
+                                  disabled={this.checkedRow() ? true : false}
+                                >
                                   <i className="fa fa-plus"></i> Add More
                             </Button>
                               </Col>
@@ -974,7 +1008,9 @@ class CreateCustomerInvoice extends React.Component {
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={
                                       () => {
-                                        this.setState({ createMore: true }, () => {
+                                        this.setState({
+                                          createMore: true
+                                        }, () => {
                                           props.handleSubmit()
                                         })
                                       }

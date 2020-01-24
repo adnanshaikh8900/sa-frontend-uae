@@ -130,13 +130,10 @@ class ImportBankStatement extends React.Component {
     //       tableDataKey: ['a','b','c','d']
     //     })
     this.props.importBankStatementActions.parseFile(formData).then(res => {
-      console.log(res.data['data'])
       this.setState({
         tableData: res.data['data'],
         tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
         errorIndexList: res.data.error ? res.data.error : []
-      }, () => {
-        console.log(this.state)
       })
       // })
     }).catch(err => {
@@ -489,7 +486,7 @@ class ImportBankStatement extends React.Component {
                                 <i className="fa fa-dot-circle-o"></i> Import
                                     </Button>
                               <Button color="secondary" className="btn-square"
-                                onClick={() => { this.props.history.push('/admin/banking/upload-statement') }}>
+                                onClick={() => { this.props.history.push('/admin/banking/bank-account/transaction') }}>
                                 <i className="fa fa-ban"></i> Cancel
                                     </Button>
                             </>

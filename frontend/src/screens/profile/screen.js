@@ -22,7 +22,7 @@ import {
 import Select from 'react-select'
 // import ImagesUploader from 'react-images-uploader'
 import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
-import { selectOptionsFactory } from 'utils'
+import { selectOptionsFactory ,cryptoService} from 'utils'
 
 
 import DatePicker from 'react-datepicker'
@@ -31,7 +31,8 @@ import { Formik } from 'formik';
 import * as Yup from "yup";
 import * as ProfileActions from './actions'
 import {
-  CommonActions
+  CommonActions,
+  AuthActions
 } from 'services/global'
 import './style.scss'
 
@@ -55,6 +56,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return ({
     profileActions: bindActionCreators(ProfileActions, dispatch),
+    authActions: bindActionCreators(AuthActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
@@ -169,7 +171,7 @@ class Profile extends React.Component {
   }
 
   getUserData() {
-    const userId = localStorage.getItem('userId')
+    const userId = cryptoService.decryptService('userId')
     this.setState({
       loading: true
     })
@@ -217,7 +219,8 @@ class Profile extends React.Component {
       // companyId,
       active,
     } = data;
-    const userId = localStorage.getItem('userId')
+    const userId = cryptoService.decryptService('userId')
+
     const { userPhotoFile } = this.state;
     let formData = new FormData();
     formData.append("id", userId);
@@ -241,6 +244,10 @@ class Profile extends React.Component {
     this.props.profileActions.updateUser(formData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'User Updated Successfully')
+        this.props.authActions.checkAuthStatus().catch(err => {
+          this.props.authActions.logOut()
+          this.props.history.push('/login')
+        })
         this.props.history.push('/admin/dashboard')
       }
     }).catch(err => {
@@ -736,7 +743,7 @@ class Profile extends React.Component {
                                               />
                                               {!props.errors.password ?
                                                 (
-                                                  <FormText>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
+                                                  <FormText style={{color:'#20a8d8',fontSize:'14px'}}>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
                                                 ) : null}
                                               {props.errors.password && props.touched.password && (
                                                 <div className="invalid-feedback">{props.errors.password}</div>

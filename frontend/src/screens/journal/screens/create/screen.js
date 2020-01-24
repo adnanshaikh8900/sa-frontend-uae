@@ -17,7 +17,7 @@ import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 
-import { Formik } from 'formik';
+import { Formik,Field} from 'formik';
 import * as Yup from "yup";
 import _ from 'lodash'
 
@@ -84,7 +84,7 @@ class CreateJournal extends React.Component {
           contactId: '',
           debitAmount: 0,
           creditAmount: 0,
-          error: []
+          // error: []
         }]
       }
     }
@@ -108,6 +108,8 @@ class CreateJournal extends React.Component {
     this.addRow = this.addRow.bind(this)
     this.deleteRow = this.deleteRow.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.checkedRow = this.checkedRow.bind(this)
+
   }
 
   componentDidMount() {
@@ -121,101 +123,267 @@ class CreateJournal extends React.Component {
     this.props.journalActions.getVatList()
   }
 
-  renderActions(cell, row) {
+  renderActions(cell, rows, props) {
     return (
       <Button
-        type="button"
         size="sm"
         className="btn-twitter btn-brand icon"
-        onClick={(e) => { this.deleteRow(e, row) }}
+        disabled={this.state.data.length === 1 ? true : false}
+        onClick={(e) => { this.deleteRow(e, rows, props) }}
       >
         <i className="fas fa-trash"></i>
       </Button>
     )
   }
 
+  checkedRow() {
+    let length = this.state.data.length - 1
+    let temp = Object.values(this.state.data[length]).indexOf('');
+    if (temp > -1) {
+      return true
+    } else {
+      return false
+    }
+  }
 
-  renderAccount(cell, row) {
+
+  renderAccount(cell, row, props) {
     const { transaction_category_list } = this.props;
     let transactionCategoryList = transaction_category_list.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select Account' }, ...transaction_category_list] : transaction_category_list
-    return (
-      <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'transactionCategoryId') }} value={row.transactionCategoryId}
-        className={row.error && row.error.transactionCategoryId ? "is-invalid" : ""}
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+        if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
+          console.log(props.touched.journalLineItems[idx].transactionCategoryId)
+        }
+      }
+    });
 
-      >
-        {transactionCategoryList ? transactionCategoryList.map(obj => {
+    return (
+
+      <Field name={`journalLineItems.${idx}.transactionCategoryId`}
+        render={({ field, form }) => (
+
+          <Input type="select" onChange={(e) => {
+            this.selectItem(e, row, 'transactionCategoryId', form, field)
+          }} value={row.transactionCategoryId}
+            className={`form-control 
+            ${props.errors.journalLineItems && props.errors.journalLineItems[idx] &&
+                props.errors.journalLineItems[idx].transactionCategoryId &&
+                Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
+                props.touched.journalLineItems[idx] &&
+                props.touched.journalLineItems[idx].transactionCategoryId ? "is-invalid" : ""}`}
+          >
+           {transactionCategoryList ? transactionCategoryList.map(obj => {
           return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId}>{obj.transactionCategoryName}</option>
-        }) : ''}
-      </Input>
+         }) : ''}
+          </Input>
+
+        )}
+      />
     )
+    // const { transaction_category_list } = this.props;
+    // let transactionCategoryList = transaction_category_list.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select Account' }, ...transaction_category_list] : transaction_category_list
+    // return (
+    //   <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'transactionCategoryId') }} value={row.transactionCategoryId}
+    //     className={row.error && row.error.transactionCategoryId ? "is-invalid" : ""}
+
+    //   >
+    //     {transactionCategoryList ? transactionCategoryList.map(obj => {
+    //       return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId}>{obj.transactionCategoryName}</option>
+    //     }) : ''}
+    //   </Input>
+    // )
   }
 
-  renderDescription(cell, row) {
+  renderDescription(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
     return (
-      <Input
-        type="text"
-        value={row['description'] !== '' ? row['description'] : ''}
-        onChange={(e) => { this.selectItem(e, row, 'description') }}
-        placeholder="Description"
-        name="description"
-        className={row.error && row.error.description ? "is-invalid" : ""}
+      <Field name={`journalLineItems.${idx}.description`}
+        render={({ field, form }) => (
+          <Input
+
+            type="text"
+            value={row['description'] !== '' ? row['description'] : ''}
+            onChange={(e) => {
+              this.selectItem(e, row, 'description', form, field)
+            }}
+            placeholder="Description"
+            className={`form-control 
+            ${props.errors.journalLineItems && props.errors.journalLineItems[idx] &&
+                props.errors.journalLineItems[idx].description &&
+                Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
+                props.touched.journalLineItems[idx] &&
+                props.touched.journalLineItems[idx].description ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
 
-  renderContact(cell, row) {
+  renderContact(cell, row, props) {
     const { contact_list } = this.props;
     let contactList = contact_list.length ? [{ value: '', label: 'Select Contact' }, ...contact_list] : contact_list
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+        if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
+          console.log(props.touched.journalLineItems[idx].contactId)
+        }
+      }
+    });
 
     return (
-      <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'contactId') }} value={row.value}
-        className={row.error && row.error.contactId ? "is-invalid" : ""}
-      >
-        {contactList ? contactList.map(obj => {
-          // obj.name = obj.name === 'default' ? '0' : obj.name
-          return <option value={obj.value} key={obj.value}>{obj.label}</option>
-        }) : ''}
-      </Input>
+
+      <Field name={`journalLineItems.${idx}.contactId`}
+        render={({ field, form }) => (
+
+          <Input type="select" onChange={(e) => {
+            this.selectItem(e, row, 'contactId', form, field)
+            // this.formRef.current.props.handleChange(field.name)(e.value)
+          }} value={row.contactId}
+            className={`form-control 
+            ${props.errors.journalLineItems && props.errors.journalLineItems[idx] &&
+                props.errors.journalLineItems[idx].contactId &&
+                Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
+                props.touched.journalLineItems[idx] &&
+                props.touched.journalLineItems[idx].contactId ? "is-invalid" : ""}`}
+          >
+            {contactList ? contactList.map(obj => {
+              // obj.name = obj.name === 'default' ? '0' : obj.name
+              return <option value={obj.value} key={obj.value}>{obj.label}</option>
+            }) : ''}
+          </Input>
+
+        )}
+      />
     )
+    // const { contact_list } = this.props;
+    // let contactList = contact_list.length ? [{ value: '', label: 'Select Contact' }, ...contact_list] : contact_list
+
+    // return (
+    //   <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'contactId') }} value={row.value}
+    //     className={row.error && row.error.contactId ? "is-invalid" : ""}
+    //   >
+    //     {contactList ? contactList.map(obj => {
+    //       return <option value={obj.value} key={obj.value}>{obj.label}</option>
+    //     }) : ''}
+    //   </Input>
+    // )
   }
 
-  renderVatCode(cell, row) {
+  renderVatCode(cell, row, props) {
     const { vat_list } = this.props;
     let vatList = vat_list.length ? [{ id: '', name: 'Select Vat' }, ...vat_list] : vat_list
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+        if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
+          console.log(props.touched.journalLineItems[idx].vatCategoryId)
+        }
+      }
+    });
 
     return (
-      <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}
-        className={row.error && row.error.vatCategoryId ? "is-invalid" : ""}
-      >
-        {vatList ? vatList.map(obj => {
-          // obj.name = obj.name === 'default' ? '0' : obj.name
-          return <option value={obj.id} key={obj.id}>{obj.name}</option>
-        }) : ''}
-      </Input>
-    )
-  }
 
-  renderDebits(cell, row) {
-    return (
-      <Input
-        type="number"
-        value={row['debitAmount']}
-        required
-        onChange={(e) => { this.selectItem(e, row, 'debitAmount') }}
+      <Field name={`journalLineItems.${idx}.vatCategoryId`}
+        render={({ field, form }) => (
+
+          <Input type="select" onChange={(e) => {
+            this.selectItem(e, row, 'vatCategoryId', form, field)
+            // this.formRef.current.props.handleChange(field.name)(e.value)
+          }} value={row.vatCategoryId}
+            className={`form-control 
+            ${props.errors.journalLineItems && props.errors.journalLineItems[idx] &&
+                props.errors.journalLineItems[idx].vatCategoryId &&
+                Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
+                props.touched.journalLineItems[idx] &&
+                props.touched.journalLineItems[idx].vatCategoryId ? "is-invalid" : ""}`}
+          >
+            {vatList ? vatList.map(obj => {
+              // obj.name = obj.name === 'default' ? '0' : obj.name
+              return <option value={obj.id} key={obj.id}>{obj.name}</option>
+            }) : ''}
+          </Input>
+
+        )}
       />
     )
   }
 
-  renderCredits(cell, row) {
+  renderDebits(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
     return (
-      <Input
-        type="number"
-        value={row['creditAmount']}
-        // defaultValue={row['quantity']}
-        required
-        onChange={(e) => { this.selectItem(e, row, 'creditAmount') }}
+      <Field name={`journalLineItems.${idx}.debitAmount`}
+        render={({ field, form }) => (
+          <Input
+            type="number"
+            value={row['debitAmount'] !== 0 ? row['debitAmount'] : 0}
+            onChange={(e) => { this.selectItem(e, row, 'debitAmount', form, field) }}
+            placeholder="Debit Amount"
+            className={`form-control 
+            ${props.errors.journalLineItems && props.errors.journalLineItems[idx] &&
+                props.errors.journalLineItems[idx].debitAmount &&
+                Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
+                props.touched.journalLineItems[idx] &&
+                props.touched.journalLineItems[idx].debitAmount ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
+  }
+
+  renderCredits(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
+    return (
+      <Field name={`journalLineItems.${idx}.creditAmount`}
+        render={({ field, form }) => (
+          <Input
+            type="number"
+            value={row['creditAmount'] !== 0 ? row['creditAmount'] : 0}
+            onChange={(e) => { this.selectItem(e, row, 'creditAmount', form, field) }}
+            placeholder="Credit Amount"
+            className={`form-control 
+            ${props.errors.journalLineItems && props.errors.journalLineItems[idx] &&
+                props.errors.journalLineItems[idx].creditAmount &&
+                Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
+                props.touched.journalLineItems[idx] &&
+                props.touched.journalLineItems[idx].creditAmount ? "is-invalid" : ""}`}
+          />
+        )}
+      />
+    )
+  }
+
+  checkedRow() {
+    let length = this.state.data.length - 1
+    let temp = Object.values(this.state.data[length]).indexOf('');
+    if (temp > -1) {
+      return true
+    } else {
+      return false
+    }
   }
 
   addRow() {
@@ -231,14 +399,11 @@ class CreateJournal extends React.Component {
         creditAmount: 0,
       }), idCount: this.state.idCount + 1
     }, () => {
-      this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
+      this.formRef.current.setFieldValue('journalLineItems', this.state.data, false)
     })
   }
 
-  selectItem(e, row, name) {
-    console.log(e.target.value)
-    console.log(row)
-    console.log(name)
+  selectItem(e, row, name, form, field) {
     e.preventDefault();
     let idx;
     const data = this.state.data
@@ -248,37 +413,27 @@ class CreateJournal extends React.Component {
         idx = index
       }
     });
-    console.log(this.formRef.current.getFieldValue(`journalLineItems[${idx}]['${name}']`))
     if (name === 'debitAmount' || name === 'creditAmount' || name === 'vatCategoryId') {
+      form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
     } else {
       this.setState({ data: data }, () => {
-        this.formRef.current.setFieldValue(`journalLineItems[${idx}]['${name}']`, 'a', true);
-        console.log( this.formRef.current)
-        console.log(this.state.data)
-        // setTimeout(() => {
-        //   this.state.data.map((item, index) => {
-        //     if (this.formRef.current.state.errors.journalLineItems && this.formRef.current.state.errors.journalLineItems[index]) {
-        //       item.error = this.formRef.current.state.errors.journalLineItems[index]
-        //     } else {
-        //       item.error = []
-        //     }
-        //   })
-        //   this.setState({ data: this.state.data })
-        // }, 0)
+        this.formRef.current.setFieldValue(field.name, this.state.data[idx][name], true)
       });
     }
 
   }
 
 
-  deleteRow(e, row) {
-
+  deleteRow(e, row, props) {
+    console.log(row)
     const id = row['id'];
     let newData = []
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
+    // console.log(newData)
+    props.setFieldValue('lineItemsString', newData, true)
     this.updateAmount(newData)
   }
 
@@ -313,17 +468,7 @@ class CreateJournal extends React.Component {
         }
       }
     }, () => {
-      this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
-      setTimeout(() => {
-        this.state.data.map((item, index) => {
-          if (this.formRef.current.state.errors.journalLineItems && this.formRef.current.state.errors.journalLineItems[index]) {
-            item.error = this.formRef.current.state.errors.journalLineItems[index]
-          } else {
-            item.error = []
-          }
-        })
-        this.setState({ data: this.state.data })
-      }, 0)
+      // this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
     })
   }
 
@@ -440,7 +585,7 @@ class CreateJournal extends React.Component {
                                   creditAmount: Yup.number().required(),
                                 })
                               )
-                              .required('*Atleast One Journal Debit and Credit Details is mandatory')
+                              // .required('*Atleast One Journal Debit and Credit Details is mandatory')
                           })
                         }
                       >
@@ -526,18 +671,18 @@ class CreateJournal extends React.Component {
                             <hr />
                             <Row>
                               <Col lg={12} className="mb-3">
-                                <Button type="button" color="primary" className="btn-square mr-3" onClick={this.addRow}
-                                  disabled={this.formRef.current && this.formRef.current.state.errors.journalLineItems && typeof this.formRef.current.state.errors.journalLineItems !== 'string'}
+                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
+                                  disabled={this.checkedRow() ? true : false}
                                 >
                                   <i className="fa fa-plus"></i> Add More
                             </Button>
                               </Col>
                             </Row>
-                            {props.errors.journalLineItems && typeof props.errors.journalLineItems === 'string' && (
+                            {/* {props.errors.journalLineItems && typeof props.errors.journalLineItems === 'string' && (
                               <div className={props.errors.journalLineItems ? "is-invalid" : ""}>
                                 <div className="invalid-feedback">{props.errors.journalLineItems}</div>
                               </div>
-                            )}
+                            )} */}
 
                             <Row>
                               <Col lg={12}>
@@ -552,42 +697,46 @@ class CreateJournal extends React.Component {
                                   <TableHeaderColumn
                                     width="55"
                                     dataAlign="center"
-                                    dataFormat={this.renderActions}
+                                    dataFormat={(cell, rows) => this.renderActions(cell, rows, props)}
+
                                   >
                                   </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="transactionCategoryId"
-                                    dataFormat={this.renderAccount}
+                                    dataFormat={(cell, rows) => this.renderAccount(cell, rows, props)}
+
                                   >
                                     Account
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="description"
-                                    dataFormat={this.renderDescription}
+                                    dataFormat={(cell, rows) => this.renderDescription(cell, rows, props)}
+
                                   >
                                     Description
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="contactId"
-                                    dataFormat={this.renderContact}
+                                    dataFormat={(cell, rows) => this.renderContact(cell, rows, props)}
                                   >
                                     Contact
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="vatCategoryId"
-                                    dataFormat={this.renderVatCode}
+                                    dataFormat={(cell, rows) => this.renderVatCode(cell, rows, props)}
+
                                   >
                                     Tax Code
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="debitAmount"
-                                    dataFormat={this.renderDebits}
+                                    dataFormat={(cell, rows) => this.renderDebits(cell, rows, props)}
                                   >
                                     Debits
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="creditAmount"
-                                    dataFormat={this.renderCredits}
+                                    dataFormat={(cell, rows) => this.renderCredits(cell, rows, props)}
                                   >
                                     Credits
                               </TableHeaderColumn>
@@ -645,21 +794,6 @@ class CreateJournal extends React.Component {
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
                                   <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
-                                    setTimeout(() => {
-                                      props.validateForm().then(err => {
-                                        if (err.journalLineItems && err.journalLineItems.length > 0) {
-                                          this.state.data.map((item, index) => {
-                                            item.error = err.journalLineItems[index]
-                                          })
-                                          this.setState({ data: this.state.data })
-                                        } else {
-                                          this.state.data.map((item, index) => {
-                                            item.error = []
-                                          })
-                                        }
-                                      })
-                                    }, 0)
-
                                     // () => {
                                     this.setState({ createMore: false }, () => {
                                       props.handleSubmit()
@@ -672,20 +806,6 @@ class CreateJournal extends React.Component {
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={
                                       () => {
-                                        setTimeout(() => {
-                                          props.validateForm().then(err => {
-                                            if (err.journalLineItems && err.journalLineItems.length > 0) {
-                                              this.state.data.map((item, index) => {
-                                                item.error = err.journalLineItems[index]
-                                              })
-                                              this.setState({ data: this.state.data })
-                                            } else {
-                                              this.state.data.map((item, index) => {
-                                                item.error = []
-                                              })
-                                            }
-                                          })
-                                        }, 0)
                                         this.setState({ createMore: true }, () => {
                                           props.handleSubmit()
                                         })

@@ -222,7 +222,7 @@ class CreateBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="currency"
                                       name="currency"
-                                      options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list) : []}
+                                      options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list,'Currency') : []}
                                       value={props.values.currency}
                                       onChange={option => props.handleChange('currency')(option)}
                                       className={

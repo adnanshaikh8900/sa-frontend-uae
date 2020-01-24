@@ -205,7 +205,7 @@ class Payment extends React.Component {
   }
 
   renderDate(cell, rows) {
-    return rows['paymentDate'] !== null ? moment(rows['paymentDate']).format('DD-MM-YYYY') : ''
+    return rows['paymentDate'] !== null ? moment(rows['paymentDate']).format('DD/MM/YYYY') : ''
   }
 
   handleChange(val, name) {

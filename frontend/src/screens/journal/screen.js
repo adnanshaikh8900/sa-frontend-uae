@@ -407,6 +407,7 @@ class Journal extends React.Component {
                           pagination
                           totalSize={journal_list ? journal_list.length : 0}
                           className="journal-table"
+                          trClassName="cursor-pointer"
                           ref={node => this.table = node}
                         >
                           <TableHeaderColumn

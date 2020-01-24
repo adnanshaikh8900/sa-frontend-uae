@@ -202,8 +202,7 @@ class ImageUploader extends React.Component {
       return (
         <div key={index} className="uploadPictureContainer">
           <div className="deleteImage" onClick={() => this.removeImage(picture)}>X</div>
-          <img src={this.props.imageState ? 'data:image/jpg;base64,'+picture : picture} className="uploadPicture" onClick={(e)=>{
-            window.open(picture, '_blank')}} alt="preview"/>
+          <img src={this.props.imageState ? 'data:image/jpg;base64,'+picture : picture} className="uploadPicture" alt="preview"/>
         </div>
       );
     });

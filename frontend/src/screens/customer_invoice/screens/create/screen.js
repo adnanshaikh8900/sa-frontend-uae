@@ -303,7 +303,7 @@ class CreateCustomerInvoice extends React.Component {
 
   renderVat(cell, row, props) {
     const { vat_list } = this.props;
-    let vatList = vat_list.length ? [{ id: '', name: 'Select Vat' }, ...vat_list] : vat_list
+    let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -332,7 +332,7 @@ class CreateCustomerInvoice extends React.Component {
           >
             {vatList ? vatList.map(obj => {
               // obj.name = obj.name === 'default' ? '0' : obj.name
-              return <option value={obj.id} key={obj.id}>{obj.name}</option>
+              return <option value={obj.id} key={obj.id}>{obj.vat}</option>
             }) : ''}
           </Input>
 

@@ -5,7 +5,7 @@ import lombok.Getter;
 public enum UserFilterEnum {
 
     FIRST_NAME("firstName", " like CONCAT(:firstName,'%')"),
-    DOB("dob", " = :dob"),
+    DOB("dateOfBirth", " = :dateOfBirth"),
     ROLE("role", " like CONCAT(:role,'%')"),
     ACTIVE("isActive", " = :isActive"),
     COMPANY("company", " = :company"),

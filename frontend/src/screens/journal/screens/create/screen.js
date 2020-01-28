@@ -282,7 +282,7 @@ class CreateJournal extends React.Component {
 
   renderVatCode(cell, row, props) {
     const { vat_list } = this.props;
-    let vatList = vat_list.length ? [{ id: '', name: 'Select Vat' }, ...vat_list] : vat_list
+    let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -311,7 +311,7 @@ class CreateJournal extends React.Component {
           >
             {vatList ? vatList.map(obj => {
               // obj.name = obj.name === 'default' ? '0' : obj.name
-              return <option value={obj.id} key={obj.id}>{obj.name}</option>
+              return <option value={obj.id} key={obj.id}>{obj.vat}</option>
             }) : ''}
           </Input>
 
@@ -433,7 +433,7 @@ class CreateJournal extends React.Component {
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
     // console.log(newData)
-    props.setFieldValue('lineItemsString', newData, true)
+    props.setFieldValue('journalLineItems', newData, true)
     this.updateAmount(newData)
   }
 

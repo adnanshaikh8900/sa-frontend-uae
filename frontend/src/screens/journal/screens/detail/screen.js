@@ -87,8 +87,6 @@ class DetailJournal extends React.Component {
     this.removeDialog = this.removeDialog.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.checkedRow = this.checkedRow.bind(this)
-
-
   }
 
 
@@ -140,7 +138,7 @@ class DetailJournal extends React.Component {
       <Button
         size="sm"
         className="btn-twitter btn-brand icon"
-        disabled={this.state.data.length === 1 ? true : false}
+        // disabled={this.state.data.length === 1 ? true : false}
         onClick={(e) => { this.deleteRow(e, rows, props) }}
       >
         <i className="fas fa-trash"></i>
@@ -149,13 +147,15 @@ class DetailJournal extends React.Component {
   }
 
   checkedRow() {
-    let length = this.state.data.length - 1
-    let temp = Object.values(this.state.data[length]).indexOf('');
-    if (temp > -1) {
-      return true
-    } else {
-      return false
-    }
+    // if(this.state.data.length > 0) {
+      let length = this.state.data.length - 1
+      let temp = Object.values(this.state.data[length]).indexOf('');
+      if (temp > -1) {
+        return true
+      } else {
+        return false
+      }
+    
   }
 
 
@@ -294,13 +294,14 @@ class DetailJournal extends React.Component {
 
   renderVatCode(cell, row, props) {
     const { vat_list } = this.props;
-    let vatList = vat_list.length ? [{ id: '', name: 'Select Vat' }, ...vat_list] : vat_list
+    let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
         if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
           console.log(props.touched.journalLineItems[idx].vatCategoryId)
+          console.log(props.errors)
         }
       }
     });
@@ -323,7 +324,7 @@ class DetailJournal extends React.Component {
           >
             {vatList ? vatList.map(obj => {
               // obj.name = obj.name === 'default' ? '0' : obj.name
-              return <option value={obj.id} key={obj.id}>{obj.name}</option>
+              return <option value={obj.id} key={obj.id}>{obj.vat}</option>
             }) : ''}
           </Input>
 
@@ -388,15 +389,15 @@ class DetailJournal extends React.Component {
     )
   }
 
-  checkedRow() {
-    let length = this.state.data.length - 1
-    let temp = Object.values(this.state.data[length]).indexOf('');
-    if (temp > -1) {
-      return true
-    } else {
-      return false
-    }
-  }
+  // checkedRow() {
+  //   let length = this.state.data.length - 1
+  //   let temp = Object.values(this.state.data[length]).indexOf('');
+  //   if (temp > -1) {
+  //     return true
+  //   } else {
+  //     return false
+  //   }
+  // }
 
   addRow() {
     const data = [...this.state.data]
@@ -445,7 +446,7 @@ class DetailJournal extends React.Component {
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
     // console.log(newData)
-    props.setFieldValue('lineItemsString', newData, true)
+    props.setFieldValue('journalLineItems', newData, true)
     this.updateAmount(newData)
   }
 
@@ -540,11 +541,7 @@ class DetailJournal extends React.Component {
       if (res.status === 200) {
         // resetForm();
         this.props.commonActions.tostifyAlert('success', 'Journal Updated Successfully')
-        if (this.state.createMore) {
-          this.setState({ createMore: false });
-        } else {
           this.props.history.push('/admin/accountant/journal');
-        }
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
@@ -820,7 +817,10 @@ class DetailJournal extends React.Component {
                                 </Button>
                                     </FormGroup>
                                     <FormGroup className="text-right">
-                                      <Button type="submit" color="primary" className="btn-square mr-3">
+                                      <Button type="button" color="primary" className="btn-square mr-3"
+                                      onClick={() => {
+                                          props.handleSubmit()
+                                      }}>
                                         <i className="fa fa-dot-circle-o"></i> Update
                                 </Button>
                                       <Button color="secondary" className="btn-square"

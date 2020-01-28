@@ -29,6 +29,7 @@ body, span, label, h1, h2, h3, h4, p, em {
 
 .was-validated .form-control:invalid, .form-control.is-invalid {
   border-color: #f86c6b !important;
+  background: none!important;
 }
 
 .input-group-text {

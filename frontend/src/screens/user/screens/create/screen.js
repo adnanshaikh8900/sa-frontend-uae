@@ -65,13 +65,13 @@ class CreateUser extends React.Component {
         email: '',
         password: '',
         dob: '',
-        active: false,
+        active: 'false',
         confirmPassword: '',
         roleId: ''
       },
       userPhoto: [],
       userPhotoFile: [],
-      showIcon: false
+      showIcon: false,
     }
     this.uploadImage = this.uploadImage.bind(this);
     this.initializeData = this.initializeData.bind(this)
@@ -337,9 +337,12 @@ class CreateUser extends React.Component {
                                               type="radio"
                                               id="inline-radio1"
                                               name="active"
-                                              checked={this.state.initValue.active === true}
-                                              value={true}
-                                              onChange={option => props.handleChange('active')(option)}
+                                              checked={props.values.active == 'true'}
+                                              value='true'
+                                              onChange={e => {
+                                                console.log(e.target.value)
+                                                props.handleChange('active')(e.target.value)
+                                              }}
                                             />
                                             <label className="custom-control-label" htmlFor="inline-radio1">Active</label>
                                           </div>
@@ -351,9 +354,12 @@ class CreateUser extends React.Component {
                                               type="radio"
                                               id="inline-radio2"
                                               name="active"
-                                              checked={this.state.initValue.active === false}
-                                              value={false}
-                                              onChange={option => props.handleChange('active')(option)}
+                                              checked={props.values.active == 'false'}
+                                              value='false'
+                                              onChange={e => {
+                                                console.log(e.target.value)
+                                                props.handleChange('active')(e.target.value)
+                                              }}
                                             />
                                             <label className="custom-control-label" htmlFor="inline-radio2">Inactive</label>
                                           </div>

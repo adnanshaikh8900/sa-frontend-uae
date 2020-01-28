@@ -320,9 +320,9 @@ class CreateProject extends React.Component {
                                         selectedCurrency: option.value
                                       })
                                       if(option && option.value) {
-                                        props.handleChange('currencyCode')(option.value)
+                                        props.handleChange('currency')(option.value)
                                       } else {
-                                        props.handleChange('currencyCode')('')
+                                        props.handleChange('currency')('')
                                       }
                                     }}
                                     placeholder="Select currency"

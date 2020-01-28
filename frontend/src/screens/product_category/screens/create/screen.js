@@ -86,12 +86,14 @@ class CreateProductCategory extends React.Component {
   // }
 
   // Create or Edit Vat
-  handleSubmit(data) {
+  handleSubmit(data,resetForm) {
     this.props.createProductCategoryActions.createProductCategory(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Product Category is Created Successfully!')
 
         if(this.state.createMore){
+          resetForm(this.state.initValue);
+          console.log('------aaa')
           this.setState({
             createMore: false
           })
@@ -128,8 +130,8 @@ class CreateProductCategory extends React.Component {
                     <Col lg={6}>
                     <Formik
                           initialValues={initValue}
-                          onSubmit={values => {
-                            this.handleSubmit(values)
+                          onSubmit={(values, { resetForm }) => {
+                            this.handleSubmit(values,resetForm)
                           }}
                           // validationSchema={Yup.object().shape({
                           //   productCategoryName: Yup.string()
@@ -165,7 +167,7 @@ class CreateProductCategory extends React.Component {
                                     onChange={props.handleChange}
                                     onBlur={(e)=>{
                                     }}
-                                    // value={props.values.productCategoryCode}
+                                    value={props.values.productCategoryCode}
                                     className={
                                       props.errors.productCategoryCode  && props.touched.productCategoryCode 
                                         ? "is-invalid"
@@ -184,7 +186,7 @@ class CreateProductCategory extends React.Component {
                                     name="productCategoryName"
                                     placeholder="Enter Product Category Name"
                                     onChange={props.handleChange}
-                                    // value={props.values.productCategoryName }
+                                    value={props.values.productCategoryName }
                                     className={
                                       props.errors.productCategoryName  && props.touched.productCategoryName 
                                         ? "is-invalid"

@@ -17,7 +17,7 @@ import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
-import { Formik } from 'formik';
+import { Formik,Field } from 'formik';
 import * as Yup from "yup";
 import _ from 'lodash'
 
@@ -75,18 +75,28 @@ class CreateExpense extends React.Component {
         attachmentFile: '',
         receiptAttachmentDescription: '',
       },
-      currentData: {}
-
+      currentData: {},
+      fileName: ''
     }
 
 
     this.initializeData = this.initializeData.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleChange = this.handleChange.bind(this)
+    this.handleFileChange = this.handleFileChange.bind(this)
+
 
     this.options = {
       paginationPosition: 'top'
     }
+    this.file_size = 1024000;
+    this.supported_format = [
+      "",
+      "text/plain",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
   }
 
 
@@ -168,6 +178,19 @@ class CreateExpense extends React.Component {
   //   })
   // }
 
+  handleFileChange(e, props) {
+    e.preventDefault();
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    if (file) {
+      reader.onloadend = () => {
+      };
+      reader.readAsDataURL(file);
+      console.log(file)
+      props.setFieldValue('attachmentFile', file);
+    }
+  }
+
   render() {
 
     const { data } = this.state
@@ -218,7 +241,16 @@ class CreateExpense extends React.Component {
                               .required('Expense Date is Required'),
                             expenseAmount: Yup.string()
                               .required('Amount is Required')
-                              .matches(/^[0-9]*$/, "Enter a Valid Amount")
+                              .matches(/^[0-9]*$/, "Enter a Valid Amount"),
+                              attachmentFile: Yup.mixed()
+                              .test('fileSize', "*File Size is too large", value => value.size <= this.file_size)
+                              .test('fileType', "*Unsupported File Format", value => {
+                                console.log(value)
+                                this.setState({
+                                  fileName: value.name
+                                })
+                                return this.supported_format.includes(value.type)
+                              })
                           })
                         }
                       >
@@ -401,15 +433,28 @@ class CreateExpense extends React.Component {
                               <Col lg={4}>
                                 <Row>
                                   <Col lg={12}>
-                                    <FormGroup className="mb-3">
-                                      <Label>Reciept Attachment</Label><br />
-                                      <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                        <i className="fa fa-upload"></i> Upload
+                                  <FormGroup className="mb-3">
+                                      <Field name="attachmentFile"
+                                        render={({ field, form }) => (
+                                          <div>
+                                            <Label>Reciept Attachment</Label> <br />
+                                            <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                              <i className="fa fa-upload"></i> Upload
                                   </Button>
-                                      <input id="fileInput" ref={ref => {
-                                        this.uploadFile = ref;
-                                      }}
-                                        type="file" type="file" style={{ display: 'none' }} />
+                                            <input id="fileInput" ref={ref => {
+                                              this.uploadFile = ref;
+                                            }} type="file" style={{ display: 'none' }} onChange={(e) => {
+                                              this.handleFileChange(e, props)
+                                            }} />
+                                            {this.state.fileName}
+
+                                          </div>
+                                        )}
+                                      />
+                                      {console.log(props.errors)}
+                                      {props.errors.attachmentFile && (
+                                        <div className="invalid-file">{props.errors.attachmentFile}</div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                 </Row>

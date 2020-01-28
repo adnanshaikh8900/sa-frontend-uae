@@ -10,7 +10,7 @@ import {
 export const getProductCategoryList = (obj) => {
   let url;
   if(obj) {
-    url = `/rest/productcategory/getList?name=${obj.name}&vatPercentage=${obj.vatPercentage}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+    url = `/rest/productcategory/getList?productCategoryCode=${obj.productCategoryCode}&productCategoryName=${obj.productCategoryName}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
   } else {
     url=`/rest/productcategory/getList`
   }

@@ -127,7 +127,7 @@ class Receipt extends React.Component {
   }
 
   goToDetail(row) {
-    this.props.history.push('/admin/revenue/receipt/detail',{id:row.receiptId})
+    this.props.history.push('/admin/revenue/receipt/detail', { id: row.receiptId })
   }
 
   renderMode(cell, row) {
@@ -137,7 +137,7 @@ class Receipt extends React.Component {
   }
 
   renderDate(cell, rows) {
-    return rows['receiptDate'] !== null ? moment(rows['receiptDate']).format('DD-MM-YYYY') : ''
+    return rows['receiptDate'] !== null ? moment(rows['receiptDate']).format('DD/MM/YYYY') : ''
   }
 
   onPageChange = (page, sizePerPage) => {
@@ -242,7 +242,7 @@ class Receipt extends React.Component {
     return (
       <div className="receipt-screen">
         <div className="animated fadeIn">
-           {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
+          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           {dialog}
           <Card>
             <CardHeader>
@@ -307,8 +307,9 @@ class Receipt extends React.Component {
                               placeholderText="Receipt Date"
                               selected={filterData.receiptDate}
                               showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                              showYearDropdown
+                              dateFormat="dd/MM/yyyy"
+                              dropdownMode="select"
                               onChange={(value) => {
                                 this.handleChange(value, "receiptDate")
                               }}
@@ -320,7 +321,7 @@ class Receipt extends React.Component {
                           <Col lg={3} className="mb-1">
                             <FormGroup className="mb-3">
                               <Select
-                                options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list,'Invoice Number') : []}
+                                options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
                                 className="select-default-width"
                                 placeholder="Invoice Number"
                                 value={filterData.invoiceId}
@@ -338,7 +339,7 @@ class Receipt extends React.Component {
                           <Col lg={3} className="mb-1">
                             <FormGroup className="mb-3">
                               <Select
-                                options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list,'Customer') : []}
+                                options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer') : []}
                                 className="select-default-width"
                                 placeholder="Customer Name"
                                 value={filterData.contactId}

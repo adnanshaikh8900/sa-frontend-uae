@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch) => {
   return ({
     journalActions: bindActionCreators(JournalActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
- 
+
   })
 }
 
@@ -232,7 +232,7 @@ class Journal extends React.Component {
   }
 
   renderDate(cell, rows) {
-    return moment(rows.journalDate).format('DD-MM-YYYY')
+    return rows.journalDate ? moment(rows.journalDate).format('DD/MM/YYYY') : ''
   }
 
   handleChange(val, name) {
@@ -272,7 +272,7 @@ class Journal extends React.Component {
       ids: selectedRows
     }
     this.props.journalActions.removeBulkJournal(obj).then((res) => {
-      if(res.status == 200) {
+      if (res.status == 200) {
         this.initializeData()
         this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
         if (journal_list && journal_list.length > 0) {
@@ -296,7 +296,7 @@ class Journal extends React.Component {
 
     const { loading,
       dialog,
-      filterData ,
+      filterData,
       selectedRows
     } = this.state
     const { journal_list } = this.props
@@ -334,11 +334,11 @@ class Journal extends React.Component {
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
                           <Button
-                          type="button"
+                            type="button"
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-                            // disabled={journal_list.length === 0}
+                          // disabled={journal_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -372,8 +372,10 @@ class Journal extends React.Component {
                               name="journalDate"
                               placeholderText="Post Date"
                               showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                              showYearDropdown
+                              dropdownMode="select"
+                              dateFormat="dd/MM/yyyy"
+
                               selected={filterData.journalDate}
                               onChange={(value) => {
                                 this.handleChange(value, "journalDate")
@@ -405,6 +407,7 @@ class Journal extends React.Component {
                           pagination
                           totalSize={journal_list ? journal_list.length : 0}
                           className="journal-table"
+                          trClassName="cursor-pointer"
                           ref={node => this.table = node}
                         >
                           <TableHeaderColumn

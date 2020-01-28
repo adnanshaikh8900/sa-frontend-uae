@@ -16,7 +16,7 @@ import {
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import * as Yup from 'yup'
 import _ from 'lodash'
 import * as CustomerInvoiceCreateActions from './actions';
@@ -77,7 +77,6 @@ class CreateCustomerInvoice extends React.Component {
         vatCategoryId: '',
         subTotal: 0
       }],
-      // data: [],
       idCount: 0,
       initValue: {
         receiptAttachmentDescription: '',
@@ -88,6 +87,14 @@ class CreateCustomerInvoice extends React.Component {
         invoiceDate: '',
         contactId: '',
         project: '',
+        lineItemsString: [{
+          id: 0,
+          description: '',
+          quantity: 0,
+          unitPrice: 0,
+          vatCategoryId: '',
+          subTotal: 0
+        }],
         invoice_number: '',
         total_net: 0,
         invoiceVATAmount: 0,
@@ -98,7 +105,8 @@ class CreateCustomerInvoice extends React.Component {
       contactType: 2,
       openCustomerModal: false,
       selectedContact: '',
-      createMore: false
+      createMore: false,
+      fileName: ''
     }
 
 
@@ -107,6 +115,15 @@ class CreateCustomerInvoice extends React.Component {
     // this.options = {
     //   paginationPosition: 'top'
     // }
+    this.file_size = 1024000;
+    this.supported_format = [
+      "",
+      "text/plain",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
 
     this.renderActions = this.renderActions.bind(this)
     this.renderProductName = this.renderProductName.bind(this)
@@ -123,6 +140,8 @@ class CreateCustomerInvoice extends React.Component {
     this.closeCustomerModal = this.closeCustomerModal.bind(this)
     this.openCustomerModal = this.openCustomerModal.bind(this)
     this.getCurrentUser = this.getCurrentUser.bind(this)
+    this.checkedRow = this.checkedRow.bind(this)
+    this.handleFileChange = this.handleFileChange.bind(this)
   }
 
   // renderActions (cell, row) {
@@ -148,37 +167,89 @@ class CreateCustomerInvoice extends React.Component {
     )
   }
 
-  renderDescription(cell, row) {
-    return (
-      <Input
-        type="text"
-        value={row['description'] !== '' ? row['description'] : ''}
-        // defaultValue={row['description']}
-        onChange={(e) => { this.selectItem(e, row, 'description') }}
-        placeholder="Description"
+  renderDescription(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
 
+    return (
+      <Field name={`lineItemsString.${idx}.description`}
+        render={({ field, form }) => (
+          <Input
+
+            type="text"
+            value={row['description'] !== '' ? row['description'] : ''}
+            onChange={(e) => {
+              this.selectItem(e, row, 'description', form, field)
+            }}
+            placeholder="Description"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].description &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].description ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
 
-  renderQuantity(cell, row) {
+  renderQuantity(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
     return (
-      <Input
-        type="number"
-        value={row['quantity'] !== 0 ? row['quantity'] : 0}
-        // defaultValue={row['quantity']}
-        onChange={(e) => { this.selectItem(e, row, 'quantity') }}
+      <Field name={`lineItemsString.${idx}.quantity`}
+        render={({ field, form }) => (
+          <Input
+            type="number"
+            value={row['quantity'] !== 0 ? row['quantity'] : 0}
+            onChange={(e) => { this.selectItem(e, row, 'quantity', form, field) }}
+            placeholder="Quantity"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].quantity &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].quantity ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
 
-  renderUnitPrice(cell, row) {
+  renderUnitPrice(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
     return (
-      <Input
-        type="number"
-        value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-        // defaultValue={row['unitPrice']}
-        onChange={(e) => { this.selectItem(e, row, 'unitPrice') }}
+      <Field name={`lineItemsString.${idx}.unitPrice`}
+        render={({ field, form }) => (
+          <Input
+            type="number"
+            value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
+            onChange={(e) => { this.selectItem(e, row, 'unitPrice', form, field) }}
+            placeholder="Unit Price"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].unitPrice &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].unitPrice ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
@@ -203,18 +274,6 @@ class CreateCustomerInvoice extends React.Component {
 
   }
 
-
-  // handleChange = (e, name) => {
-  //   this.setState({
-  //     currentData: _.set(
-  //       { ...this.state.currentData },
-  //       e.target.name && e.target.name !== '' ? e.target.name : name,
-  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //     )
-  //   })
-  // }
-
-
   addRow() {
     const data = [...this.state.data]
     this.setState({
@@ -226,61 +285,106 @@ class CreateCustomerInvoice extends React.Component {
         vatCategoryId: '',
         subTotal: 0
       }), idCount: this.state.idCount + 1
+    }, () => {
+      this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
     })
   }
 
-  selectItem(e, row, name) {
+  selectItem(e, row, name, form, field) {
     e.preventDefault();
     let data = this.state.data
-
+    let idx
     data.map((obj, index) => {
       if (obj.id === row.id) {
         obj[name] = e.target.value
+        idx = index
       }
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
+      form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
     } else {
-      this.setState({ data: data });
+      this.setState({ data: data }, () => {
+        form.setFieldValue(field.name, this.state.data[idx][name], true)
+      });
     }
 
   }
 
-  renderVat(cell, row) {
+  renderVat(cell, row, props) {
     const { vat_list } = this.props;
-    let vatList = vat_list.length ? [{ id: '', name: 'Select Vat' }, ...vat_list] : vat_list
+    let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+        if (Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
+          console.log(props.touched.lineItemsString[idx].vatCategoryId)
+        }
+      }
+    });
 
     return (
-      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
-        {vatList ? vatList.map(obj => {
-          // obj.name = obj.name === 'default' ? '0' : obj.name
-          return <option value={obj.id} key={obj.id}>{obj.name}</option>
-        }) : ''}
-      </Input>
+
+      <Field name={`lineItemsString.${idx}.vatCategoryId`}
+        render={({ field, form }) => (
+
+          <Input type="select" onChange={(e) => {
+            this.selectItem(e, row, 'vatCategoryId', form, field)
+            // this.formRef.current.props.handleChange(field.name)(e.value)
+          }} value={row.vatCategoryId}
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].vatCategoryId &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].vatCategoryId ? "is-invalid" : ""}`}
+          >
+            {vatList ? vatList.map(obj => {
+              // obj.name = obj.name === 'default' ? '0' : obj.name
+              return <option value={obj.id} key={obj.id}>{obj.vat}</option>
+            }) : ''}
+          </Input>
+
+        )}
+      />
     )
   }
 
 
-  deleteRow(e, row) {
-
+  deleteRow(e, row, props) {
+    console.log(row)
     const id = row['id'];
     let newData = []
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
+    // console.log(newData)
+    props.setFieldValue('lineItemsString', newData, true)
     this.updateAmount(newData)
   }
 
-  renderActions(cell, row) {
+  renderActions(cell, rows, props) {
     return (
       <Button
         size="sm"
         className="btn-twitter btn-brand icon"
-        onClick={(e) => { this.deleteRow(e, row) }}
+        disabled={this.state.data.length === 1 ? true : false}
+        onClick={(e) => { this.deleteRow(e, rows, props) }}
       >
         <i className="fas fa-trash"></i>
       </Button>
     )
+  }
+
+  checkedRow() {
+    let length = this.state.data.length - 1
+    let temp = Object.values(this.state.data[length]).indexOf('');
+    if (temp > -1) {
+      return true
+    } else {
+      return false
+    }
   }
 
 
@@ -303,11 +407,29 @@ class CreateCustomerInvoice extends React.Component {
     this.setState({
       data: data,
       initValue: {
-        total_net: total_net,
-        invoiceVATAmount: total_vat,
-        totalAmount: total
+        ...this.state.initValue, ...{
+          total_net: total_net,
+          invoiceVATAmount: total_vat,
+          totalAmount: total
+        }
       }
+    }, () => {
+
+
     })
+  }
+
+  handleFileChange(e, props) {
+    e.preventDefault();
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    if (file) {
+      reader.onloadend = () => {
+      };
+      reader.readAsDataURL(file);
+      console.log(file)
+      props.setFieldValue('attachmentFile', file);
+    }
   }
 
   handleSubmit(data, resetForm) {
@@ -348,17 +470,34 @@ class CreateCustomerInvoice extends React.Component {
     if (project !== null && project.value) {
       formData.append("projectId", project.value);
     }
-    if (this.uploadFile.files[0]) {
+    if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
     this.props.customerInvoiceCreateActions.createInvoice(formData).then(res => {
       this.props.commonActions.tostifyAlert('success', 'New Invoice Created Successfully.')
       if (this.state.createMore) {
+        resetForm(this.state.initValue)
         this.setState({
           createMore: false,
-          selectedContact: ''
+          selectedContact: '',
+          data: [{
+            id: 0,
+            description: '',
+            quantity: 0,
+            unitPrice: 0,
+            vatCategoryId: '',
+            subTotal: 0
+          }],
+          initValue: {
+            ...this.state.initValue, ...{
+              total_net: 0,
+              invoiceVATAmount: 0,
+              totalAmount: 0,
+            }
+          }
+        }, () => {
+          this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
         })
-        resetForm(this.state.initValue)
       } else {
         this.props.history.push('/admin/revenue/customer-invoice')
       }
@@ -426,7 +565,6 @@ class CreateCustomerInvoice extends React.Component {
                     <Col lg={12}>
                       <Formik
                         initialValues={initValue}
-                        // enableReinitialize={true}
                         ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
 
@@ -451,6 +589,22 @@ class CreateCustomerInvoice extends React.Component {
                               .required('Invoice Date is Required'),
                             invoiceDueDate: Yup.date()
                               .required('Invoice Due Date is Required'),
+                            lineItemsString: Yup.array()
+                              .of(Yup.object().shape({
+                                description: Yup.string().required("Value is Required"),
+                                quantity: Yup.number().required("Value is Required"),
+                                unitPrice: Yup.number().required("Value is Required"),
+                                vatCategoryId: Yup.string().required("Value is Required"),
+                              })),
+                            attachmentFile: Yup.mixed()
+                              .test('fileSize', "*File Size is too large", value => value.size <= this.file_size)
+                              .test('fileType', "*Unsupported File Format", value => {
+                                console.log(value)
+                                this.setState({
+                                  fileName: value.name
+                                })
+                                return this.supported_format.includes(value.type)
+                              })
                           })}
                       >
                         {props => (
@@ -503,7 +657,7 @@ class CreateCustomerInvoice extends React.Component {
                                     value={props.values.contactId}
                                     onChange={option => {
                                       // this.getCurrentUser(option)
-                                      if(option && option.value) {
+                                      if (option && option.value) {
                                         props.handleChange('contactId')(option.value)
                                       } else {
                                         props.handleChange('contactId')('')
@@ -569,6 +723,7 @@ class CreateCustomerInvoice extends React.Component {
                                     placeholderText="Invoice Date"
                                     showMonthDropdown
                                     showYearDropdown
+                                    dateFormat="dd/MM/yyyy"
                                     dropdownMode="select"
                                     value={props.values.invoiceDate}
                                     selected={props.values.invoiceDate}
@@ -594,6 +749,7 @@ class CreateCustomerInvoice extends React.Component {
                                       selected={props.values.invoiceDueDate}
                                       showMonthDropdown
                                       showYearDropdown
+                                      dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                       value={props.values.invoiceDueDate}
 
@@ -679,14 +835,27 @@ class CreateCustomerInvoice extends React.Component {
                                 <Row>
                                   <Col lg={12}>
                                     <FormGroup className="mb-3">
-                                      <Label>Reciept Attachment</Label><br />
-                                      <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                        <i className="fa fa-upload"></i> Upload
+                                      <Field name="attachmentFile"
+                                        render={({ field, form }) => (
+                                          <div>
+                                            <Label>Reciept Attachment</Label> <br />
+                                            <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                              <i className="fa fa-upload"></i> Upload
                                   </Button>
-                                      <input id="fileInput" ref={ref => {
-                                        this.uploadFile = ref;
-                                      }}
-                                        type="file" type="file" style={{ display: 'none' }} />
+                                            <input id="fileInput" ref={ref => {
+                                              this.uploadFile = ref;
+                                            }} type="file" style={{ display: 'none' }} onChange={(e) => {
+                                              this.handleFileChange(e, props)
+                                            }} />
+                                            {this.state.fileName}
+
+                                          </div>
+                                        )}
+                                      />
+                                      {console.log(props.errors)}
+                                      {props.errors.attachmentFile && (
+                                        <div className="invalid-file">{props.errors.attachmentFile}</div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -696,7 +865,9 @@ class CreateCustomerInvoice extends React.Component {
                             <hr />
                             <Row>
                               <Col lg={12} className="mb-3">
-                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}>
+                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
+                                  disabled={this.checkedRow() ? true : false}
+                                >
                                   <i className="fa fa-plus"></i> Add More
                             </Button>
                               </Col>
@@ -714,7 +885,7 @@ class CreateCustomerInvoice extends React.Component {
                                   <TableHeaderColumn
                                     width="55"
                                     dataAlign="center"
-                                    dataFormat={this.renderActions}
+                                    dataFormat={(cell, rows) => this.renderActions(cell, rows, props)}
                                   >
                                   </TableHeaderColumn>
                                   <TableHeaderColumn
@@ -728,26 +899,27 @@ class CreateCustomerInvoice extends React.Component {
                                   <TableHeaderColumn
 
                                     dataField="description"
-                                    dataFormat={this.renderDescription}
+                                    dataFormat={(cell, rows) => this.renderDescription(cell, rows, props)}
                                   >
                                     Description
                               </TableHeaderColumn>
                                   <TableHeaderColumn
-
                                     dataField="quantity"
-                                    dataFormat={this.renderQuantity}
+                                    dataFormat={(cell, rows) => this.renderQuantity(cell, rows, props)}
+
                                   >
                                     Quantity
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="unitPrice"
-                                    dataFormat={this.renderUnitPrice}
+                                    dataFormat={(cell, rows) => this.renderUnitPrice(cell, rows, props)}
+
                                   >
                                     Unit Price (All)
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="vat"
-                                    dataFormat={this.renderVat}
+                                    dataFormat={(cell, rows) => this.renderVat(cell, rows, props)}
                                   >
                                     Vat (%)
                               </TableHeaderColumn>
@@ -878,7 +1050,9 @@ class CreateCustomerInvoice extends React.Component {
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={
                                       () => {
-                                        this.setState({ createMore: true }, () => {
+                                        this.setState({
+                                          createMore: true
+                                        }, () => {
                                           props.handleSubmit()
                                         })
                                       }

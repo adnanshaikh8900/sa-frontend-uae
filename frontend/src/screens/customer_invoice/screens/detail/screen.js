@@ -16,14 +16,14 @@ import {
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
-import { Formik } from 'formik';
+import { Formik  ,Field} from 'formik';
 import * as Yup from 'yup'
 import _ from 'lodash'
 import * as CustomerInvoiceDetailActions from './actions';
 import * as  CustomerInvoiceActions from "../../actions";
 
 import { CustomerModal } from '../../sections'
-import { Loader , ConfirmDeleteModal } from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -102,6 +102,8 @@ class DetailCustomerInvoice extends React.Component {
     this.deleteInvoice = this.deleteInvoice.bind(this)
     this.removeInvoice = this.removeInvoice.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
+    this.checkedRow = this.checkedRow.bind(this)
+
   }
 
   // renderActions (cell, row) {
@@ -174,46 +176,99 @@ class DetailCustomerInvoice extends React.Component {
   }
 
 
-  renderDescription(cell, row) {
-    return (
-      <Input
-        type="text"
-        value={row['description'] !== '' ? row['description'] : ''}
-        // defaultValue={row['description']}
-        onChange={(e) => { this.selectItem(e, row, 'description') }}
+  renderDescription(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
 
+    return (
+      <Field name={`lineItemsString.${idx}.description`}
+        render={({ field, form }) => (
+          <Input
+
+            type="text"
+            value={row['description'] !== '' ? row['description'] : ''}
+            onChange={(e) => {
+              this.selectItem(e, row, 'description', form, field)
+            }}
+            placeholder="Description"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].description &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].description ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
 
-  renderQuantity(cell, row) {
+  renderQuantity(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
     return (
-      <Input
-        type="number"
-        value={row['quantity']}
-        min="0"
-        // defaultValue={row['quantity']}
-        onChange={(e) => { this.selectItem(e, row, 'quantity') }}
+      <Field name={`lineItemsString.${idx}.quantity`}
+        render={({ field, form }) => (
+          <Input
+            type="number"
+            value={row['quantity'] !== 0 ? row['quantity'] : 0}
+            onChange={(e) => { this.selectItem(e, row, 'quantity', form, field) }}
+            placeholder="Quantity"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].quantity &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].quantity ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
 
-  renderUnitPrice(cell, row) {
+  renderUnitPrice(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
     return (
-      <Input
-        type="number"
-        value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-        // defaultValue={row['unitPrice']}
-        onChange={(e) => { this.selectItem(e, row, 'unitPrice') }}
+      <Field name={`lineItemsString.${idx}.unitPrice`}
+        render={({ field, form }) => (
+          <Input
+            type="number"
+            value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
+            onChange={(e) => { this.selectItem(e, row, 'unitPrice', form, field) }}
+            placeholder="Unit Price"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].unitPrice &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].unitPrice ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
+
 
 
 
   renderSubTotal(cell, row) {
     return (
-      <label className="mb-0">{row.subTotal}</label>
+      <label className="mb-0">{row.subTotal.toFixed(2)}</label>
     )
   }
 
@@ -230,59 +285,105 @@ class DetailCustomerInvoice extends React.Component {
         subTotal: 0
       }), idCount: this.state.idCount + 1
     }, () => {
+      this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
     })
   }
 
-  selectItem(e, row, name) {
+  selectItem(e, row, name, form, field) {
     e.preventDefault();
-    const data = this.state.data
-
+    let data = this.state.data
+    let idx
     data.map((obj, index) => {
       if (obj.id === row.id) {
         obj[name] = e.target.value
+        idx = index
       }
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
+      form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
     } else {
-      this.setState({ data: data });
+      this.setState({ data: data }, () => {
+        form.setFieldValue(field.name, this.state.data[idx][name], true)
+      });
     }
 
   }
 
-  renderVat(cell, row) {
+  renderVat(cell, row, props) {
     const { vat_list } = this.props;
+    let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+        if (Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
+          console.log(props.touched.lineItemsString[idx].vatCategoryId)
+        }
+      }
+    });
+
     return (
-      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
-        {vat_list ? vat_list.map((obj, index) => {
-          // obj.name = obj.name === 'default' ? '0' : obj.name
-          return <option value={obj.id} key={obj.id}>{obj.name}</option>
-        }) : []}
-      </Input>
+
+      <Field name={`lineItemsString.${idx}.vatCategoryId`}
+        render={({ field, form }) => (
+
+          <Input type="select" onChange={(e) => {
+            this.selectItem(e, row, 'vatCategoryId', form, field)
+            // this.formRef.current.props.handleChange(field.name)(e.value)
+          }} value={row.vatCategoryId}
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].vatCategoryId &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].vatCategoryId ? "is-invalid" : ""}`}
+          >
+            {vatList ? vatList.map(obj => {
+              // obj.name = obj.name === 'default' ? '0' : obj.name
+              return <option value={obj.id} key={obj.id}>{obj.vat}</option>
+            }) : ''}
+          </Input>
+
+        )}
+      />
     )
   }
 
 
-  deleteRow(e, row) {
-
+  deleteRow(e, row, props) {
+    console.log(row)
     const id = row['id'];
     let newData = []
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
+    // console.log(newData)
+    props.setFieldValue('lineItemsString', newData, true)
     this.updateAmount(newData)
   }
 
-  renderActions(cell, row) {
+  renderActions(cell, rows, props) {
     return (
       <Button
         size="sm"
         className="btn-twitter btn-brand icon"
-        onClick={(e) => { this.deleteRow(e, row) }}
+        disabled={this.state.data.length === 1 ? true : false}
+        onClick={(e) => { this.deleteRow(e, rows, props) }}
       >
         <i className="fas fa-trash"></i>
       </Button>
     )
+  }
+
+  checkedRow() {
+    let length = this.state.data.length - 1
+    let temp = Object.values(this.state.data[length]).indexOf('');
+    if (temp > -1) {
+      return true
+    } else {
+      return false
+    }
   }
 
 
@@ -292,17 +393,11 @@ class DetailCustomerInvoice extends React.Component {
     let total = 0;
     let total_vat = 0;
     data.map(obj => {
-      const index = obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : -1;
-      let vat = 0;
-      let val = 0;
-      if (index !== '' && index !== -1) {
-        vat = vat_list[index].vat
-        val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
-        obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : '-';
-      } else {
-      }
-
-
+      const index = obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
+      const vat = index !== '' ? vat_list[index].vat : 0
+      // let val = (((+obj.unitPrice) * vat) / 100)
+      let val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
+      obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : 0;
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
       total_vat = +((total_vat + val));
       total = (total_vat + total_net);
@@ -311,12 +406,18 @@ class DetailCustomerInvoice extends React.Component {
     this.setState({
       data: data,
       initValue: {
-        total_net: total_net,
-        invoiceVATAmount: total_vat,
-        totalAmount: total
+        ...this.state.initValue, ...{
+          total_net: total_net,
+          invoiceVATAmount: total_vat,
+          totalAmount: total
+        }
       }
+    }, () => {
+
+
     })
   }
+
 
   handleSubmit(data) {
     const { id } = this.state;
@@ -409,13 +510,13 @@ class DetailCustomerInvoice extends React.Component {
   }
 
   removeInvoice() {
-    const id= this.props.location.state.id;
-    this.props.customerInvoiceDetailActions.deleteInvoice(id).then(res=>{
-      if(res.status == 200) {
-        this.props.commonActions.tostifyAlert('success','Data Removed Successfully')
+    const id = this.props.location.state.id;
+    this.props.customerInvoiceDetailActions.deleteInvoice(id).then(res => {
+      if (res.status == 200) {
+        this.props.commonActions.tostifyAlert('success', 'Data Removed Successfully')
         this.props.history.push('/admin/revenue/customer-invoice')
       }
-    }).catch(err=> {
+    }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -493,7 +594,14 @@ class DetailCustomerInvoice extends React.Component {
                                   .required('Invoice Date is Required'),
                                 invoiceDueDate: Yup.date()
                                   .required('Invoice Due Date is Required'),
-                              })}
+                                  lineItemsString: Yup.array()
+                                  .of(Yup.object().shape({
+                                    description: Yup.string().required("Value is Required"),
+                                    quantity: Yup.number().required("Value is Required"),
+                                    unitPrice: Yup.number().required("Value is Required"),
+                                    vatCategoryId: Yup.string().required("Value is Required"),
+                                  }))
+                                })}
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit}>
@@ -546,7 +654,7 @@ class DetailCustomerInvoice extends React.Component {
                                         options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
                                         value={props.values.contactId}
                                         onChange={option => {
-                                          if(option && option.value) {
+                                          if (option && option.value) {
                                             props.handleChange('contactId')(option.value)
                                           } else {
                                             props.handleChange('contactId')('')
@@ -614,6 +722,7 @@ class DetailCustomerInvoice extends React.Component {
                                         value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
                                         showMonthDropdown
                                         showYearDropdown
+                                        dateFormat="dd/MM/yyyy"
                                         dropdownMode="select"
                                         onChange={(value) => {
                                           props.handleChange("invoiceDate")(value)
@@ -630,8 +739,9 @@ class DetailCustomerInvoice extends React.Component {
                                           name="invoiceDueDate"
                                           placeholderText=""
                                           showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                          showYearDropdown
+                                          dateFormat="dd/MM/yyyy"
+                                          dropdownMode="select"
                                           value={moment(props.values.invoiceDueDate).format('DD-MM-YYYY')}
                                           onChange={(value) => {
                                             props.handleChange("invoiceDueDate")(value)
@@ -731,63 +841,74 @@ class DetailCustomerInvoice extends React.Component {
 
                                 <hr />
                                 <Row>
-                                  <Col lg={12} className="mb-3">
-                                    <Button color="primary" className="btn-square mr-3" onClick={this.addRow}>
-                                      <i className="fa fa-plus"></i> Add More
-                              </Button>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col lg={12}>
-                                    <BootstrapTable
-                                      options={this.options}
-                                      data={data}
-                                      version="4"
-                                      hover
-                                      keyField="id"
-                                      className="invoice-detail-table"
-                                    >
-                                      <TableHeaderColumn
-                                        width="55"
-                                        dataAlign="center"
-                                        dataFormat={this.renderActions}
-                                      >
-                                      </TableHeaderColumn>
-                                      <TableHeaderColumn
+                              <Col lg={12} className="mb-3">
+                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
+                                  disabled={this.checkedRow() ? true : false}
+                                >
+                                  <i className="fa fa-plus"></i> Add More
+                            </Button>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col lg={12}>
+                              <BootstrapTable
+                                  options={this.options}
+                                  data={data}
+                                  version="4"
+                                  hover
+                                  keyField="id"
+                                  className="invoice-create-table"
+                                >
+                                  <TableHeaderColumn
+                                    width="55"
+                                    dataAlign="center"
+                                    dataFormat={(cell, rows) => this.renderActions(cell, rows, props)}
+                                  >
+                                  </TableHeaderColumn>
+                                  <TableHeaderColumn
 
-                                        dataField="description"
-                                        dataFormat={this.renderDescription}
-                                      >
-                                        Description
-                                </TableHeaderColumn>
-                                      <TableHeaderColumn
+                                    width="0"
+                                    dataField="product_name"
+                                    dataFormat={this.renderProductName}
+                                  >
+                                    Product
+                              </TableHeaderColumn>
+                                  <TableHeaderColumn
 
-                                        dataField="quantity"
-                                        dataFormat={this.renderQuantity}
-                                      >
-                                        Quantity
-                                </TableHeaderColumn>
-                                      <TableHeaderColumn
-                                        dataField="unitPrice"
-                                        dataFormat={this.renderUnitPrice}
-                                      >
-                                        Unit Price (All)
-                                </TableHeaderColumn>
-                                      <TableHeaderColumn
-                                        dataField="vat"
-                                        dataFormat={this.renderVat}
-                                      >
-                                        Vat (%)
-                                </TableHeaderColumn>
-                                      <TableHeaderColumn
-                                        dataField="sub_total"
-                                        dataFormat={this.renderSubTotal}
-                                        className="text-right"
-                                        columnClassName="text-right"
-                                      >
-                                        Sub Total (All)
-                                </TableHeaderColumn>
-                                    </BootstrapTable>
+                                    dataField="description"
+                                    dataFormat={(cell, rows) => this.renderDescription(cell, rows, props)}
+                                  >
+                                    Description
+                              </TableHeaderColumn>
+                                  <TableHeaderColumn
+                                    dataField="quantity"
+                                    dataFormat={(cell, rows) => this.renderQuantity(cell, rows, props)}
+
+                                  >
+                                    Quantity
+                              </TableHeaderColumn>
+                                  <TableHeaderColumn
+                                    dataField="unitPrice"
+                                    dataFormat={(cell, rows) => this.renderUnitPrice(cell, rows, props)}
+
+                                  >
+                                    Unit Price (All)
+                              </TableHeaderColumn>
+                                  <TableHeaderColumn
+                                    dataField="vat"
+                                    dataFormat={(cell, rows) => this.renderVat(cell, rows, props)}
+                                  >
+                                    Vat (%)
+                              </TableHeaderColumn>
+                                  <TableHeaderColumn
+                                    dataField="sub_total"
+                                    dataFormat={this.renderSubTotal}
+                                    className="text-right"
+                                    columnClassName="text-right"
+                                  >
+                                    Sub Total (All)
+                              </TableHeaderColumn>
+                                </BootstrapTable>
                                   </Col>
                                 </Row>
                                 {data.length > 0 ?

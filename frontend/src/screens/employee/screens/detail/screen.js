@@ -10,6 +10,7 @@ import {
   Col,
   Form,
   FormGroup,
+  FormText,
   Input,
   Label
 } from 'reactstrap'
@@ -320,6 +321,10 @@ class DetailEmployee extends React.Component {
                                         onChange={(value) => { props.handleChange('password')(value) }}
                                         className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                       />
+                                      {!props.errors.password ?
+                                        (
+                                          <FormText style={{ color: '#20a8d8', fontSize: '14px' }}>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
+                                        ) : null}
                                       {props.errors.password && props.touched.password && (
                                         <div className="invalid-feedback">{props.errors.password}</div>
                                       )}
@@ -349,8 +354,9 @@ class DetailEmployee extends React.Component {
                                         id="dob"
                                         name="dob"
                                         showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                        showYearDropdown
+                                        dateFormat="dd/MM/yyyy"
+                                        dropdownMode="select"
                                         placeholderText="Enter Birth Date"
                                         value={moment(props.values.dob).format('DD-MM-YYYY')}
                                         onChange={(value) => {
@@ -439,7 +445,7 @@ class DetailEmployee extends React.Component {
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currencyCode}
                                         onChange={option => {
-                                          if(option && option.value) {
+                                          if (option && option.value) {
                                             props.handleChange('currencyCode')(option.value)
                                           } else {
                                             props.handleChange('currencyCode')('')

@@ -22,7 +22,7 @@ import DatePicker from 'react-datepicker'
 // import 'react-images-upload/font.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
-import { Loader, ConfirmDeleteModal , ImageUploader } from 'components'
+import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
 
 import * as UserActions from '../../actions'
 import * as UserCreateActions from './actions'
@@ -65,13 +65,13 @@ class CreateUser extends React.Component {
         email: '',
         password: '',
         dob: '',
-        active: false,
+        active: 'false',
         confirmPassword: '',
         roleId: ''
       },
       userPhoto: [],
       userPhotoFile: [],
-      showIcon: false
+      showIcon: false,
     }
     this.uploadImage = this.uploadImage.bind(this);
     this.initializeData = this.initializeData.bind(this)
@@ -84,17 +84,17 @@ class CreateUser extends React.Component {
   initializeData() {
     this.props.userActions.getRoleList()
     this.props.userActions.getCompanyTypeList()
-    this.setState({showIcon: false})
+    this.setState({ showIcon: false })
   }
 
-  uploadImage(picture,file) {
+  uploadImage(picture, file) {
     this.setState({
       userPhoto: picture,
       userPhotoFile: file
     });
   }
 
-  handleSubmit(data,resetForm) {
+  handleSubmit(data, resetForm) {
     const {
       firstName,
       lastName,
@@ -139,7 +139,7 @@ class CreateUser extends React.Component {
 
   render() {
 
-    const { role_list , company_type_list} = this.props;
+    const { role_list, company_type_list } = this.props;
 
     return (
       <div className="create-user-screen">
@@ -163,7 +163,7 @@ class CreateUser extends React.Component {
                       <Formik
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values,resetForm)
+                          this.handleSubmit(values, resetForm)
                           // resetForm(this.state.initValue)
 
                           // this.setState({
@@ -218,7 +218,7 @@ class CreateUser extends React.Component {
                                     singleImage={true}
                                     withIcon={this.state.showIcon}
                                     // buttonText="Choose Profile Image"
-                                    flipHeight={this.state.userPhoto.length > 0 ? {height: "inherit"} : {}}
+                                    flipHeight={this.state.userPhoto.length > 0 ? { height: "inherit" } : {}}
                                     label="'Max file size: 1mb"
                                     labelClass={this.state.userPhoto.length > 0 ? 'hideLabel' : 'showLabel'}
                                     buttonClassName={this.state.userPhoto.length > 0 ? 'hideButton' : 'showButton'}
@@ -281,8 +281,9 @@ class CreateUser extends React.Component {
                                         id="dob "
                                         name="dob "
                                         showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                        showYearDropdown
+                                        dateFormat="dd/MM/yyyy"
+                                        dropdownMode="select"
                                         placeholderText="Enter Birth Date"
                                         selected={props.values.dob}
                                         onChange={(value) => {
@@ -301,10 +302,10 @@ class CreateUser extends React.Component {
                                       <Label htmlFor="roleId">Role</Label>
                                       <Select
                                         className="select-default-width"
-                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
+                                        options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                                         value={props.values.roleId}
                                         onChange={option => {
-                                          if(option && option.value) {
+                                          if (option && option.value) {
                                             props.handleChange('roleId')(option.value)
                                           } else {
                                             props.handleChange('roleId')('')
@@ -336,9 +337,12 @@ class CreateUser extends React.Component {
                                               type="radio"
                                               id="inline-radio1"
                                               name="active"
-                                              checked={this.state.initValue.active === true}
-                                              value={true}
-                                              onChange={option => props.handleChange('active')(option)}
+                                              checked={props.values.active == 'true'}
+                                              value='true'
+                                              onChange={e => {
+                                                console.log(e.target.value)
+                                                props.handleChange('active')(e.target.value)
+                                              }}
                                             />
                                             <label className="custom-control-label" htmlFor="inline-radio1">Active</label>
                                           </div>
@@ -350,9 +354,12 @@ class CreateUser extends React.Component {
                                               type="radio"
                                               id="inline-radio2"
                                               name="active"
-                                              checked={this.state.initValue.active === false}
-                                              value={false}
-                                              onChange={option => props.handleChange('active')(option)}
+                                              checked={props.values.active == 'false'}
+                                              value='false'
+                                              onChange={e => {
+                                                console.log(e.target.value)
+                                                props.handleChange('active')(e.target.value)
+                                              }}
                                             />
                                             <label className="custom-control-label" htmlFor="inline-radio2">Inactive</label>
                                           </div>
@@ -385,7 +392,7 @@ class CreateUser extends React.Component {
                                   </Col> */}
                                 </Row>
                                 <Row>
-                                
+
                                 </Row>
                                 <Row>
                                   <Col lg={6}>
@@ -424,7 +431,7 @@ class CreateUser extends React.Component {
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
                                     this.setState({ createMore: false }, () => {
                                       props.handleSubmit()
                                     })

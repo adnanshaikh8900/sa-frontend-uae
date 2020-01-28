@@ -22,7 +22,7 @@ import {
 import Select from 'react-select'
 // import ImagesUploader from 'react-images-uploader'
 import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
-import { selectOptionsFactory } from 'utils'
+import { selectOptionsFactory ,cryptoService} from 'utils'
 
 
 import DatePicker from 'react-datepicker'
@@ -31,7 +31,8 @@ import { Formik } from 'formik';
 import * as Yup from "yup";
 import * as ProfileActions from './actions'
 import {
-  CommonActions
+  CommonActions,
+  AuthActions
 } from 'services/global'
 import './style.scss'
 
@@ -55,6 +56,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return ({
     profileActions: bindActionCreators(ProfileActions, dispatch),
+    authActions: bindActionCreators(AuthActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
@@ -169,7 +171,7 @@ class Profile extends React.Component {
   }
 
   getUserData() {
-    const userId = localStorage.getItem('userId')
+    const userId = cryptoService.decryptService('userId')
     this.setState({
       loading: true
     })
@@ -217,7 +219,8 @@ class Profile extends React.Component {
       // companyId,
       active,
     } = data;
-    const userId = localStorage.getItem('userId')
+    const userId = cryptoService.decryptService('userId')
+
     const { userPhotoFile } = this.state;
     let formData = new FormData();
     formData.append("id", userId);
@@ -241,6 +244,10 @@ class Profile extends React.Component {
     this.props.profileActions.updateUser(formData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'User Updated Successfully')
+        this.props.authActions.checkAuthStatus().catch(err => {
+          this.props.authActions.logOut()
+          this.props.history.push('/login')
+        })
         this.props.history.push('/admin/dashboard')
       }
     }).catch(err => {
@@ -565,6 +572,7 @@ class Profile extends React.Component {
                                                 name="dob "
                                                 showMonthDropdown
                                                 showYearDropdown
+                                                dateFormat="dd/MM/yyyy"
                                                 dropdownMode="select"
                                                 placeholderText="Enter Birth Date"
                                                 // selected={props.values.dob}
@@ -589,7 +597,7 @@ class Profile extends React.Component {
                                                 options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                                                 value={props.values.roleId}
                                                 onChange={option => {
-                                                  if(option.value) {
+                                                  if (option.value) {
                                                     props.handleChange('roleId')(option.value)
                                                   } else {
                                                     props.handleChange('roleId')('')
@@ -735,7 +743,7 @@ class Profile extends React.Component {
                                               />
                                               {!props.errors.password ?
                                                 (
-                                                  <FormText>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
+                                                  <FormText style={{color:'#20a8d8',fontSize:'14px'}}>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
                                                 ) : null}
                                               {props.errors.password && props.touched.password && (
                                                 <div className="invalid-feedback">{props.errors.password}</div>
@@ -895,7 +903,7 @@ class Profile extends React.Component {
                                                 options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list, 'Company Type Code') : []}
                                                 value={props.values.companyTypeCode}
                                                 onChange={option => {
-                                                  if(option && option.value) {
+                                                  if (option && option.value) {
                                                     props.handleChange('companyTypeCode')(option.value)
                                                   } else {
                                                     props.handleChange('companyTypeCode')('')
@@ -924,7 +932,7 @@ class Profile extends React.Component {
                                                 options={industry_type_list ? selectOptionsFactory.renderOptions('label', 'value', industry_type_list, 'Industry Type') : []}
                                                 value={props.values.industryTypeCode}
                                                 onChange={option => {
-                                                  if(option && option.value) {
+                                                  if (option && option.value) {
                                                     props.handleChange('industryTypeCode')(option.value)
                                                   } else {
                                                     props.handleChange('industryTypeCode')('')
@@ -952,14 +960,14 @@ class Profile extends React.Component {
                                                 className="select-default-width"
                                                 options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                                 value={props.values.currencyCode}
-                                          
-                                                  onChange={option => {
-                                                    if(option && option.value) {
-                                                      props.handleChange('currencyCode')(option.value)
-                                                    } else {
-                                                      props.handleChange('currencyCode')('')
-                                                    }
-                                             
+
+                                                onChange={option => {
+                                                  if (option && option.value) {
+                                                    props.handleChange('currencyCode')(option.value)
+                                                  } else {
+                                                    props.handleChange('currencyCode')('')
+                                                  }
+
                                                 }}
                                                 placeholder="Select Currency"
                                                 id="currencyCode"
@@ -1186,7 +1194,7 @@ class Profile extends React.Component {
                                             options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                             value={props.values.invoicingCountryCode}
                                             onChange={option => {
-                                              if(option && option.value) {
+                                              if (option && option.value) {
                                                 props.handleChange('invoicingCountryCode')(option.value)
                                                 this.setState({
                                                   companyAddress: {
@@ -1277,8 +1285,9 @@ class Profile extends React.Component {
                                             placeholder="Enter Date Format"
                                             value={props.values.dateFormat}
                                             showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                            showYearDropdown
+                                            dateFormat="dd/MM/yyyy"
+                                            dropdownMode="select"
                                             onChange={option => {
                                               props.handleChange('dateFormat')(option)
                                             }}
@@ -1406,7 +1415,7 @@ class Profile extends React.Component {
                                             options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                             value={isSame ? this.state.companyAddress.companyCountryCode : props.values.companyCountryCode}
                                             onChange={option => {
-                                              if(option.value) {
+                                              if (option.value) {
                                                 props.handleChange('companyCountryCode')(option.value)
                                               } else {
                                                 props.handleChange('companyCountryCode')('')

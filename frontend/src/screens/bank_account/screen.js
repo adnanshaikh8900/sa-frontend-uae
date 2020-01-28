@@ -547,6 +547,7 @@ class BankAccount extends React.Component {
                           pagination
                           totalSize={displayData ? displayData.length : 0}
                           className="bank-account-table"
+                          trClassName="cursor-pointer"
                         >
                           <TableHeaderColumn
                             isKey

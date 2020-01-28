@@ -149,7 +149,7 @@ class LogIn extends React.Component {
                               </Button>
                             </Col>
                             <Col xs="6" className="text-right">
-                              <Button color="link" className="px-0">Forgot password?</Button>
+                              <Button type="button" color="link" className="px-0">Forgot password?</Button>
                             </Col>
                           </Row>
                         </Form>

@@ -16,7 +16,7 @@ import {
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
-import { Formik } from 'formik';
+import { Formik ,Field} from 'formik';
 import * as Yup from 'yup'
 import _ from 'lodash'
 import * as SupplierInvoiceCreateActions from './actions';
@@ -87,6 +87,14 @@ class CreateSupplierInvoice extends React.Component {
         invoiceDate: '',
         contactId: '',
         project: '',
+        lineItemsString: [{
+          id: 0,
+          description: '',
+          quantity: 0,
+          unitPrice: 0,
+          vatCategoryId: '',
+          subTotal: 0
+        }],
         invoice_number: '',
         total_net: 0,
         invoiceVATAmount: 0,
@@ -96,10 +104,22 @@ class CreateSupplierInvoice extends React.Component {
       currentData: {},
       contactType: 1,
       openSupplierModal: false,
-      selectedContact: ''
+      selectedContact: '',
+      createMore: false,
+      fileName: ''
     }
-    this.formRef = React.createRef()
 
+
+    this.formRef = React.createRef()
+    this.file_size = 1024000;
+    this.supported_format = [
+      "",
+      "text/plain",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
     // this.options = {
     //   paginationPosition: 'top'
     // }
@@ -119,6 +139,9 @@ class CreateSupplierInvoice extends React.Component {
     this.closeSupplierModal = this.closeSupplierModal.bind(this)
     this.openSupplierModal = this.openSupplierModal.bind(this)
     this.getCurrentUser = this.getCurrentUser.bind(this)
+    this.checkedRow = this.checkedRow.bind(this)
+    this.handleFileChange = this.handleFileChange.bind(this)
+
   }
 
   // renderActions (cell, row) {
@@ -144,37 +167,89 @@ class CreateSupplierInvoice extends React.Component {
     )
   }
 
-  renderDescription(cell, row) {
-    return (
-      <Input
-        type="text"
-        value={row['description'] !== '' ? row['description'] : ''}
-        // defaultValue={row['description']}
-        placeholder="Description"
-        onChange={(e) => { this.selectItem(e, row, 'description') }}
+  renderDescription(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
 
+    return (
+      <Field name={`lineItemsString.${idx}.description`}
+        render={({ field, form }) => (
+          <Input
+
+            type="text"
+            value={row['description'] !== '' ? row['description'] : ''}
+            onChange={(e) => {
+              this.selectItem(e, row, 'description', form, field)
+            }}
+            placeholder="Description"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].description &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].description ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
 
-  renderQuantity(cell, row) {
+  renderQuantity(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
     return (
-      <Input
-        type="number"
-        value={row['quantity'] !== 0 ? row['quantity'] : 0}
-        // defaultValue={row['quantity']}
-        onChange={(e) => { this.selectItem(e, row, 'quantity') }}
+      <Field name={`lineItemsString.${idx}.quantity`}
+        render={({ field, form }) => (
+          <Input
+            type="number"
+            value={row['quantity'] !== 0 ? row['quantity'] : 0}
+            onChange={(e) => { this.selectItem(e, row, 'quantity', form, field) }}
+            placeholder="Quantity"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].quantity &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].quantity ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
 
-  renderUnitPrice(cell, row) {
+  renderUnitPrice(cell, row, props) {
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+      }
+    });
+
     return (
-      <Input
-        type="number"
-        value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-        // defaultValue={row['unitPrice']}
-        onChange={(e) => { this.selectItem(e, row, 'unitPrice') }}
+      <Field name={`lineItemsString.${idx}.unitPrice`}
+        render={({ field, form }) => (
+          <Input
+            type="number"
+            value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
+            onChange={(e) => { this.selectItem(e, row, 'unitPrice', form, field) }}
+            placeholder="Unit Price"
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].unitPrice &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].unitPrice ? "is-invalid" : ""}`}
+          />
+        )}
       />
     )
   }
@@ -183,7 +258,7 @@ class CreateSupplierInvoice extends React.Component {
 
   renderSubTotal(cell, row) {
     return (
-      <label className="mb-0">{row.subTotal}</label>
+      <label className="mb-0">{row.subTotal.toFixed(2)}</label>
     )
   }
 
@@ -199,18 +274,6 @@ class CreateSupplierInvoice extends React.Component {
 
   }
 
-
-  // handleChange = (e, name) => {
-  //   this.setState({
-  //     currentData: _.set(
-  //       { ...this.state.currentData },
-  //       e.target.name && e.target.name !== '' ? e.target.name : name,
-  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //     )
-  //   })
-  // }
-
-
   addRow() {
     const data = [...this.state.data]
     this.setState({
@@ -222,61 +285,106 @@ class CreateSupplierInvoice extends React.Component {
         vatCategoryId: '',
         subTotal: 0
       }), idCount: this.state.idCount + 1
+    }, () => {
+      this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
     })
   }
 
-  selectItem(e, row, name) {
+  selectItem(e, row, name, form, field) {
     e.preventDefault();
-    const data = this.state.data
-
+    let data = this.state.data
+    let idx
     data.map((obj, index) => {
       if (obj.id === row.id) {
         obj[name] = e.target.value
+        idx = index
       }
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
+      form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
     } else {
-      this.setState({ data: data });
+      this.setState({ data: data }, () => {
+        form.setFieldValue(field.name, this.state.data[idx][name], true)
+      });
     }
 
   }
 
-  renderVat(cell, row) {
+  renderVat(cell, row, props) {
     const { vat_list } = this.props;
-    let vatList = vat_list.length ? [{ id: '', name: 'Select Vat' }, ...vat_list] : vat_list
+    let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
+    let idx
+    this.state.data.map((obj, index) => {
+      if (obj.id === row.id) {
+        idx = index
+        if (Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
+          console.log(props.touched.lineItemsString[idx].vatCategoryId)
+        }
+      }
+    });
 
     return (
-      <Input type="select" onChange={(e) => { this.selectItem(e, row, 'vatCategoryId') }} value={row.vatCategoryId}>
-        {vatList ? vatList.map(obj => {
-          // obj.name = obj.name === 'default' ? '0' : obj.name
-          return <option value={obj.id} key={obj.id}>{obj.name}</option>
-        }) : ''}
-      </Input>
+
+      <Field name={`lineItemsString.${idx}.vatCategoryId`}
+        render={({ field, form }) => (
+
+          <Input type="select" onChange={(e) => {
+            this.selectItem(e, row, 'vatCategoryId', form, field)
+            // this.formRef.current.props.handleChange(field.name)(e.value)
+          }} value={row.vatCategoryId}
+            className={`form-control 
+            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                props.errors.lineItemsString[idx].vatCategoryId &&
+                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+                props.touched.lineItemsString[idx] &&
+                props.touched.lineItemsString[idx].vatCategoryId ? "is-invalid" : ""}`}
+          >
+            {vatList ? vatList.map(obj => {
+              // obj.name = obj.name === 'default' ? '0' : obj.name
+              return <option value={obj.id} key={obj.id}>{obj.vat}</option>
+            }) : ''}
+          </Input>
+
+        )}
+      />
     )
   }
 
 
-  deleteRow(e, row) {
-
+  deleteRow(e, row, props) {
+    console.log(row)
     const id = row['id'];
     let newData = []
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
+    // console.log(newData)
+    props.setFieldValue('lineItemsString', newData, true)
     this.updateAmount(newData)
   }
 
-  renderActions(cell, row) {
+  renderActions(cell, rows, props) {
     return (
       <Button
         size="sm"
         className="btn-twitter btn-brand icon"
-        onClick={(e) => { this.deleteRow(e, row) }}
+        disabled={this.state.data.length === 1 ? true : false}
+        onClick={(e) => { this.deleteRow(e, rows, props) }}
       >
         <i className="fas fa-trash"></i>
       </Button>
     )
+  }
+
+  checkedRow() {
+    let length = this.state.data.length - 1
+    let temp = Object.values(this.state.data[length]).indexOf('');
+    if (temp > -1) {
+      return true
+    } else {
+      return false
+    }
   }
 
 
@@ -290,7 +398,7 @@ class CreateSupplierInvoice extends React.Component {
       const vat = index !== '' ? vat_list[index].vat : 0
       // let val = (((+obj.unitPrice) * vat) / 100)
       let val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
-      obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val).toFixed(2) : (0).toFixed(2);
+      obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : 0;
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
       total_vat = +((total_vat + val));
       total = (total_vat + total_net);
@@ -299,14 +407,19 @@ class CreateSupplierInvoice extends React.Component {
     this.setState({
       data: data,
       initValue: {
-        total_net: total_net,
-        invoiceVATAmount: total_vat,
-        totalAmount: total
+        ...this.state.initValue, ...{
+          total_net: total_net,
+          invoiceVATAmount: total_vat,
+          totalAmount: total
+        }
       }
+    }, () => {
+
+
     })
   }
 
-  handleSubmit(data,resetForm) {
+  handleSubmit(data, resetForm) {
     const {
       receiptAttachmentDescription,
       receiptNumber,
@@ -350,11 +463,28 @@ class CreateSupplierInvoice extends React.Component {
     this.props.supplierInvoiceCreateActions.createInvoice(formData).then(res => {
       this.props.commonActions.tostifyAlert('success', 'New Invoice Created Successfully.')
       if (this.state.createMore) {
+        resetForm(this.state.initValue)
         this.setState({
           createMore: false,
-          selectedContact: ''
+          selectedContact: '',
+          data:  [{
+            id: 0,
+            description: '',
+            quantity: 0,
+            unitPrice: 0,
+            vatCategoryId: '',
+            subTotal: 0
+          }],
+          initValue: {
+            ...this.state.initValue, ...{
+              total_net: 0,
+              invoiceVATAmount: 0,
+              totalAmount: 0,
+            }
+          }
+        }, () => {
+          this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
         })
-        resetForm()
       } else {
         this.props.history.push('/admin/expense/supplier-invoice')
       }
@@ -364,8 +494,20 @@ class CreateSupplierInvoice extends React.Component {
   }
 
   openSupplierModal(e) {
-    e.preventDefault()
     this.setState({ openSupplierModal: true })
+  }
+
+  handleFileChange(e, props) {
+    e.preventDefault();
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    if (file) {
+      reader.onloadend = () => {
+      };
+      reader.readAsDataURL(file);
+      console.log(file)
+      props.setFieldValue('attachmentFile', file);
+    }
   }
 
   getCurrentUser(data) {
@@ -381,8 +523,7 @@ class CreateSupplierInvoice extends React.Component {
     // this.setState({
     //   selectedContact: option
     // })
-    this.formRef.current.setFieldValue('contactId',option.value,true)
-
+    this.formRef.current.setFieldValue('contactId', option.value, true)
   }
 
   closeSupplierModal(res) {
@@ -425,10 +566,9 @@ class CreateSupplierInvoice extends React.Component {
                       <Formik
                         initialValues={initValue}
                         ref={this.formRef}
-                       
                         onSubmit={(values, { resetForm }) => {
 
-                          this.handleSubmit(values,resetForm)
+                          this.handleSubmit(values, resetForm)
                           // resetForm(initValue)
 
                           // this.setState({
@@ -443,12 +583,28 @@ class CreateSupplierInvoice extends React.Component {
                           Yup.object().shape({
                             invoice_number: Yup.string()
                               .required("Invoice Number is Required"),
-                              contactId: Yup.string()
+                            contactId: Yup.string()
                               .required("Supplier is Required"),
-                              invoiceDate: Yup.date()
+                            invoiceDate: Yup.date()
                               .required('Invoice Date is Required'),
-                              invoiceDueDate: Yup.date()
+                            invoiceDueDate: Yup.date()
                               .required('Invoice Due Date is Required'),
+                              lineItemsString: Yup.array()
+                              .of(Yup.object().shape({
+                                description: Yup.string().required("Value is Required"),
+                                quantity: Yup.number().required("Value is Required"),
+                                unitPrice: Yup.number().required("Value is Required"),
+                                vatCategoryId: Yup.string().required("Value is Required"),
+                              })),
+                              attachmentFile: Yup.mixed()
+                              .test('fileSize', "*File Size is too large", value => value.size <= this.file_size)
+                              .test('fileType', "*Unsupported File Format", value => {
+                                console.log(value)
+                                this.setState({
+                                  fileName: value.name
+                                })
+                                return this.supported_format.includes(value.type)
+                              })
                           })}
                       >
                         {props => (
@@ -496,7 +652,7 @@ class CreateSupplierInvoice extends React.Component {
 
                                     id="contactId"
                                     name="contactId"
-                                    options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list,'Supplier Name') : []}
+                                    options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list, 'Supplier Name') : []}
                                     value={props.values.contactId}
                                     onChange={(option) => {
                                       if (option && option.value) {
@@ -564,16 +720,17 @@ class CreateSupplierInvoice extends React.Component {
                                     placeholderText="Invoice Date"
                                     selected={props.values.invoiceDate}
                                     showMonthDropdown
-                                      showYearDropdown
-                                      dropdownMode="select"
+                                    showYearDropdown
+                                    dateFormat="dd/MM/yyyy"
+                                    dropdownMode="select"
                                     onChange={(value) => {
                                       props.handleChange("invoiceDate")(value)
                                     }}
                                     className={`form-control ${props.errors.invoiceDate && props.touched.invoiceDate ? "is-invalid" : ""}`}
-                                    />
-                                    {props.errors.invoiceDate && props.touched.invoiceDate && (
-                                      <div className="invalid-feedback">{props.errors.invoiceDate}</div>
-                                    )}
+                                  />
+                                  {props.errors.invoiceDate && props.touched.invoiceDate && (
+                                    <div className="invalid-feedback">{props.errors.invoiceDate}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
@@ -588,15 +745,16 @@ class CreateSupplierInvoice extends React.Component {
                                       selected={props.values.invoiceDueDate}
                                       showMonthDropdown
                                       showYearDropdown
+                                      dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                       onChange={(value) => {
                                         props.handleChange("invoiceDueDate")(value)
                                       }}
                                       className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}
-                                      />
-                                      {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
-                                        <div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
-                                      )}
+                                    />
+                                    {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
+                                      <div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
+                                    )}
                                   </div>
                                 </FormGroup>
                               </Col>
@@ -669,15 +827,28 @@ class CreateSupplierInvoice extends React.Component {
                               <Col lg={4}>
                                 <Row>
                                   <Col lg={12}>
-                                    <FormGroup className="mb-3">
-                                      <Label>Reciept Attachment</Label><br />
-                                      <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                        <i className="fa fa-upload"></i> Upload
+                                  <FormGroup className="mb-3">
+                                      <Field name="attachmentFile"
+                                        render={({ field, form }) => (
+                                          <div>
+                                            <Label>Reciept Attachment</Label> <br />
+                                            <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                              <i className="fa fa-upload"></i> Upload
                                   </Button>
-                                      <input id="fileInput" ref={ref => {
-                                        this.uploadFile = ref;
-                                      }}
-                                        type="file" type="file" style={{ display: 'none' }} />
+                                            <input id="fileInput" ref={ref => {
+                                              this.uploadFile = ref;
+                                            }} type="file" style={{ display: 'none' }} onChange={(e) => {
+                                              this.handleFileChange(e, props)
+                                            }} />
+                                            {this.state.fileName}
+
+                                          </div>
+                                        )}
+                                      />
+                                      {console.log(props.errors)}
+                                      {props.errors.attachmentFile && (
+                                        <div className="invalid-file">{props.errors.attachmentFile}</div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -687,14 +858,16 @@ class CreateSupplierInvoice extends React.Component {
                             <hr />
                             <Row>
                               <Col lg={12} className="mb-3">
-                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}>
+                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
+                                  disabled={this.checkedRow() ? true : false}
+                                >
                                   <i className="fa fa-plus"></i> Add More
                             </Button>
                               </Col>
                             </Row>
                             <Row>
                               <Col lg={12}>
-                                <BootstrapTable
+                              <BootstrapTable
                                   options={this.options}
                                   data={data}
                                   version="4"
@@ -705,7 +878,7 @@ class CreateSupplierInvoice extends React.Component {
                                   <TableHeaderColumn
                                     width="55"
                                     dataAlign="center"
-                                    dataFormat={this.renderActions}
+                                    dataFormat={(cell, rows) => this.renderActions(cell, rows, props)}
                                   >
                                   </TableHeaderColumn>
                                   <TableHeaderColumn
@@ -719,26 +892,27 @@ class CreateSupplierInvoice extends React.Component {
                                   <TableHeaderColumn
 
                                     dataField="description"
-                                    dataFormat={this.renderDescription}
+                                    dataFormat={(cell, rows) => this.renderDescription(cell, rows, props)}
                                   >
                                     Description
                               </TableHeaderColumn>
                                   <TableHeaderColumn
-
                                     dataField="quantity"
-                                    dataFormat={this.renderQuantity}
+                                    dataFormat={(cell, rows) => this.renderQuantity(cell, rows, props)}
+
                                   >
                                     Quantity
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="unitPrice"
-                                    dataFormat={this.renderUnitPrice}
+                                    dataFormat={(cell, rows) => this.renderUnitPrice(cell, rows, props)}
+
                                   >
                                     Unit Price (All)
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="vat"
-                                    dataFormat={this.renderVat}
+                                    dataFormat={(cell, rows) => this.renderVat(cell, rows, props)}
                                   >
                                     Vat (%)
                               </TableHeaderColumn>
@@ -811,7 +985,7 @@ class CreateSupplierInvoice extends React.Component {
                                             id="discount_amount"
                                             name="discount_amount"
                                             placeholder="Discount Amount"
-                                            
+
                                           />
                                         </FormGroup>
                                       </Col>
@@ -854,12 +1028,12 @@ class CreateSupplierInvoice extends React.Component {
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
                                   <Button type="button" color="primary" className="btn-square mr-3" onClick={
-                                      () => {
-                                        this.setState({ createMore: false }, () => {
-                                          props.handleSubmit()
-                                        })
-                                      }
+                                    () => {
+                                      this.setState({ createMore: false }, () => {
+                                        props.handleSubmit()
+                                      })
                                     }
+                                  }
                                   >
                                     <i className="fa fa-dot-circle-o"></i> Create
                               </Button>

@@ -151,7 +151,7 @@ class Expense extends React.Component {
   }
 
   renderDate(cell, rows) {
-    return moment(rows.expenseDate).format('DD-MM-YYYY')
+    return moment(rows.expenseDate).format('DD/MM/YYYY')
   }
 
   handleChange(val, name) {
@@ -300,6 +300,7 @@ class Expense extends React.Component {
                               selected={filterData.expenseDate}
                               showMonthDropdown
                               showYearDropdown
+                                          dateFormat="dd/MM/yyyy"
                               dropdownMode="select"
                               value={filterData.expenseDate}
                               onChange={(value) => {

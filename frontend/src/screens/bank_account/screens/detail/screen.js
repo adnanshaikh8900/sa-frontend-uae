@@ -148,8 +148,13 @@ class DetailBankAccount extends React.Component {
       bankCountry: data.country.value,
       bankAccountType: data.account_type.value
     }
-    this.props.detailBankAccountActions.updateBankAccount(obj).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    this.props.detailBankAccountActions.updateBankAccount(obj).then(res => {
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'Bank Account Details Updated Successfully')
+        this.props.history.push('/admin/banking/bank-account')
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
     })
   }
 

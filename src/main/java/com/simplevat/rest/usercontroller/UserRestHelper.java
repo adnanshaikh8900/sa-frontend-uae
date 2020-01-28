@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.simplevat.entity.User;
 import com.simplevat.service.RoleService;
 import com.simplevat.service.UserService;
+import com.simplevat.utils.DateFormatUtil;
 
 @Component
 public class UserRestHelper {
@@ -25,6 +26,9 @@ public class UserRestHelper {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private DateFormatUtil dateUtil;
 
 	public List<UserModel> getModelList(List<User> userList) {
 
@@ -40,8 +44,9 @@ public class UserRestHelper {
 				userModel.setLastName(user.getLastName());
 				userModel.setActive(user.getIsActive());
 				if (user.getDateOfBirth() != null) {
-					Date date = Date.from(user.getDateOfBirth().atZone(ZoneId.systemDefault()).toInstant());
-					userModel.setDob(date);
+					// Date date =
+					// Date.from(user.getDateOfBirth().atZone(ZoneId.systemDefault()).toInstant());
+					userModel.setDob(dateUtil.getDateAsString(user.getDateOfBirth(), "dd-MM-yyyy"));
 				}
 				if (user.getRole() != null) {
 					userModel.setRoleId(user.getRole().getRoleCode());
@@ -70,9 +75,7 @@ public class UserRestHelper {
 			user.setLastName(userModel.getLastName());
 			user.setUserEmail(userModel.getEmail());
 			if (userModel.getDob() != null) {
-				LocalDateTime dob = Instant.ofEpochMilli(userModel.getDob().getTime()).atZone(ZoneId.systemDefault())
-						.toLocalDateTime();
-				user.setDateOfBirth(dob);
+				user.setDateOfBirth(dateUtil.getDateStrAsLocalDateTime(userModel.getDob(), "dd-MM-yyyy"));
 			}
 			if (userModel.getRoleId() != null) {
 				user.setRole(roleService.findByPK(userModel.getRoleId()));
@@ -90,7 +93,7 @@ public class UserRestHelper {
 				}
 			}
 			user.setIsActive(userModel.getActive());
-			
+
 			return user;
 		}
 
@@ -108,8 +111,8 @@ public class UserRestHelper {
 			userModel.setEmail(user.getUserEmail());
 			userModel.setActive(user.getIsActive());
 			if (user.getDateOfBirth() != null) {
-				Date date = Date.from(user.getDateOfBirth().atZone(ZoneId.systemDefault()).toInstant());
-				userModel.setDob(date);
+
+				userModel.setDob(dateUtil.getDateAsString(user.getDateOfBirth(), "dd-MM-yyyy"));
 			}
 			if (user.getRole() != null) {
 				userModel.setRoleId(user.getRole().getRoleCode());

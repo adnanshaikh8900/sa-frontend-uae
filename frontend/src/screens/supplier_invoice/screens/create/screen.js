@@ -111,7 +111,15 @@ class CreateSupplierInvoice extends React.Component {
 
 
     this.formRef = React.createRef()
-
+    this.file_size = 1024000;
+    this.supported_format = [
+      "",
+      "text/plain",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
     // this.options = {
     //   paginationPosition: 'top'
     // }
@@ -132,6 +140,8 @@ class CreateSupplierInvoice extends React.Component {
     this.openSupplierModal = this.openSupplierModal.bind(this)
     this.getCurrentUser = this.getCurrentUser.bind(this)
     this.checkedRow = this.checkedRow.bind(this)
+    this.handleFileChange = this.handleFileChange.bind(this)
+
   }
 
   // renderActions (cell, row) {
@@ -487,6 +497,19 @@ class CreateSupplierInvoice extends React.Component {
     this.setState({ openSupplierModal: true })
   }
 
+  handleFileChange(e, props) {
+    e.preventDefault();
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    if (file) {
+      reader.onloadend = () => {
+      };
+      reader.readAsDataURL(file);
+      console.log(file)
+      props.setFieldValue('attachmentFile', file);
+    }
+  }
+
   getCurrentUser(data) {
     let option
     if (data.label || data.value) {
@@ -572,7 +595,16 @@ class CreateSupplierInvoice extends React.Component {
                                 quantity: Yup.number().required("Value is Required"),
                                 unitPrice: Yup.number().required("Value is Required"),
                                 vatCategoryId: Yup.string().required("Value is Required"),
-                              }))
+                              })),
+                              attachmentFile: Yup.mixed()
+                              .test('fileSize', "*File Size is too large", value => value.size <= this.file_size)
+                              .test('fileType', "*Unsupported File Format", value => {
+                                console.log(value)
+                                this.setState({
+                                  fileName: value.name
+                                })
+                                return this.supported_format.includes(value.type)
+                              })
                           })}
                       >
                         {props => (
@@ -795,18 +827,28 @@ class CreateSupplierInvoice extends React.Component {
                               <Col lg={4}>
                                 <Row>
                                   <Col lg={12}>
-                                    <FormGroup className="mb-3">
-                                      <Label>Reciept Attachment</Label><br />
-                                      <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                        <i className="fa fa-upload"></i> Upload
+                                  <FormGroup className="mb-3">
+                                      <Field name="attachmentFile"
+                                        render={({ field, form }) => (
+                                          <div>
+                                            <Label>Reciept Attachment</Label> <br />
+                                            <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                              <i className="fa fa-upload"></i> Upload
                                   </Button>
-                                      <input id="fileInput" ref={ref => {
-                                        this.uploadFile = ref;
-                                      }}
-                                      type="file" style={{ display: 'none' }} onChange={(e) => {
-                                        this.setState({ fileName: (e.target.value).split('\\').pop() })
-                                      }} />
-                                    {this.state.fileName}
+                                            <input id="fileInput" ref={ref => {
+                                              this.uploadFile = ref;
+                                            }} type="file" style={{ display: 'none' }} onChange={(e) => {
+                                              this.handleFileChange(e, props)
+                                            }} />
+                                            {this.state.fileName}
+
+                                          </div>
+                                        )}
+                                      />
+                                      {console.log(props.errors)}
+                                      {props.errors.attachmentFile && (
+                                        <div className="invalid-file">{props.errors.attachmentFile}</div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                 </Row>

@@ -596,15 +596,15 @@ class CreateSupplierInvoice extends React.Component {
                                 unitPrice: Yup.number().required("Value is Required"),
                                 vatCategoryId: Yup.string().required("Value is Required"),
                               })),
-                              attachmentFile: Yup.mixed()
-                              .test('fileSize', "*File Size is too large", value => value.size <= this.file_size)
-                              .test('fileType', "*Unsupported File Format", value => {
-                                console.log(value)
-                                this.setState({
-                                  fileName: value.name
-                                })
-                                return this.supported_format.includes(value.type)
-                              })
+                              // attachmentFile: Yup.mixed()
+                              // .test('fileSize', "*File Size is too large", value => value.size <= this.file_size)
+                              // .test('fileType', "*Unsupported File Format", value => {
+                              //   console.log(value)
+                              //   this.setState({
+                              //     fileName: value.name
+                              //   })
+                              //   return this.supported_format.includes(value.type)
+                              // })
                           })}
                       >
                         {props => (

@@ -171,8 +171,8 @@ class BankTransactions extends React.Component {
     return (
       <div>
         <ButtonDropdown
-          isOpen={this.state.actionButtons[row.reference_number]}
-          toggle={() => this.toggleActionButton(row.reference_number)}
+          isOpen={this.state.actionButtons[row.id]}
+          toggle={() => this.toggleActionButton(row.id)}
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
@@ -301,53 +301,53 @@ class BankTransactions extends React.Component {
                         <BootstrapTable
                           search={false}
                           options={ this.options }
-                          data={bank_transaction_list}
+                          data={bank_transaction_list ? bank_transaction_list : []}
                           version="4"
                           hover
+                          keyField="id"
                           pagination
                           totalSize={bank_transaction_list ? bank_transaction_list.length : 0}
                           className="bank-transaction-table"
                         >
-                          <TableHeaderColumn
+                          {/* <TableHeaderColumn
                             width="120"
                             dataFormat={this.renderTransactionStatus}
                           >
-                          </TableHeaderColumn>
+                          </TableHeaderColumn> */}
                           <TableHeaderColumn
-                            dataField="amount"
+                            dataField="transactionDate"
                             dataSort
                           >
                             Date
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            isKey
-                            dataField="reference_number"
-                            dataFormat={this.renderAccountNumber}
+                            dataField="referenceNo"
+                            // dataFormat={this.renderAccountNumber}
                             dataSort
                           >
                             Reference No.
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="description"
-                            dataFormat={this.renderTransactionType}
+                            dataField="transactionTypeName"
+                            // dataFormat={this.renderTransactionType}
                             dataSort
                           >
                             Transaction Type
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="amount"
+                            dataField="depositeAmount"
                             dataSort
                           >
                             Deposit
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="amount"
+                            dataField="withdrawalAmount"
                             dataSort
                           >
                             Withdrawal
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="amount"
+                            dataField="runningAmount"
                             dataSort
                           >
                             Running Balance

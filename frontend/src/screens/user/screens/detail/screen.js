@@ -92,14 +92,14 @@ class DetailUser extends React.Component {
     const { id } = this.props.location.state
     this.props.userDetailActions.getUserById(id).then(res => {
       this.props.userActions.getRoleList();
-      if (res.status === 200) {
+      if (res.status == 200) {
         this.setState({
           initValue: {
             firstName: res.data.firstName ? res.data.firstName : '',
             lastName: res.data.lastName ? res.data.lastName : '',
             email: res.data.email ? res.data.email : '',
             password: '',
-            dob: res.data.dob ? res.data.dob : '',
+            dob: res.data.dob ? moment(res.data.dob,'DD-MM-YYYY').toDate() : '',
             active: res.data.active ? res.data.active : '',
             confirmPassword: '',
             roleId: res.data.roleId ? res.data.roleId : '',
@@ -175,7 +175,7 @@ class DetailUser extends React.Component {
     formData.append("firstName", firstName ? firstName : '');
     formData.append("lastName", lastName ? lastName : '');
     formData.append("email", email ? email : '');
-    formData.append("dob", dob ? (typeof dob === "string" ? moment(dob).toDate() : dob) : (''));
+    formData.append("dob", dob ?  moment(dob).format('DD-MM-YYYY') : (''));
     formData.append("roleId", roleId ? roleId : '');
     formData.append("active", this.state.selectedStatus);
     formData.append("password", password ? password : '');
@@ -252,7 +252,7 @@ class DetailUser extends React.Component {
                               confirmPassword: Yup.string()
                                 // .required('Confirm Password is Required')
                                 .oneOf([Yup.ref("password"), null], "Passwords must match"),
-                              dob: Yup.date()
+                              dob: Yup.string()
                                 .required('DOB is Required')
                             })}
                           >

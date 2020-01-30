@@ -51,7 +51,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 
     @Override
     public List<ENTITY> executeQuery(List<DbFilter> dbFilters) {
-        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM ").append(entityClass.getName()).append(" o ");
+        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM ").append(entityClass.getName().toUpperCase()).append(" o ");
         int i = 0;
         for (DbFilter dbFilter : dbFilters) {
             if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {

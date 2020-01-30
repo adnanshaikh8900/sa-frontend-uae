@@ -26,6 +26,8 @@ import {
   filterFactory
 } from 'utils'
 
+import moment from 'moment'
+
 import * as transactionCreateActions from './actions';
 import * as  transactionActions from "../../actions";
 
@@ -35,7 +37,7 @@ import './style.scss'
 const mapStateToProps = (state) => {
   return ({
     transaction_category_list: state.bank_account.transaction_category_list,
-    // transaction_type_list: state.bank.transaction_type_list,
+    transaction_type_list: state.bank_account.transaction_type_list,
     project_list: state.bank_account.project_list
   })
 }
@@ -90,7 +92,7 @@ class CreateBankTransaction extends React.Component {
 
   initializeData() {
     this.props.transactionActions.getTransactionCategoryList()
-    // this.props.transactionActions.getTransactionTypeList()
+    this.props.transactionActions.getTransactionTypeList()
     this.props.transactionActions.getProjectList()
   }
 
@@ -109,7 +111,7 @@ class CreateBankTransaction extends React.Component {
 
 
   handleSubmit(data, resetForm) {
-    let bankAccountId = this.props.location.state.bankAccountId
+    let bankAccountId = this.props.location.state && this.props.location.state.bankAccountId ? this.props.location.state.bankAccountId : ''
     const {
       transactionDate,
       transactionDescription,
@@ -121,9 +123,10 @@ class CreateBankTransaction extends React.Component {
       attachementDescription,
     } = data
 
+    console.log(typeof transactionDate)
     let formData = new FormData();
-    formData.append("bankAccountId ", bankAccountId  ? bankAccountId  : '');
-    formData.append("transactionDate", transactionDate ? transactionDate : '');
+    formData.append("bankAccountId ", bankAccountId ? bankAccountId : '');
+    formData.append("transactionDate", transactionDate ? moment(transactionDate).toString() : '');
     formData.append("transactionDescription", transactionDescription ? transactionDescription : '');
     formData.append("transactionAmount", transactionAmount ? transactionAmount : '');
     formData.append("transactionTypeCode", transactionTypeCode ? transactionTypeCode : '');
@@ -153,7 +156,7 @@ class CreateBankTransaction extends React.Component {
 
 
   render() {
-    const { project_list, transaction_category_list } = this.props
+    const { project_list, transaction_category_list, transaction_type_list } = this.props
     const { initValue } = this.state
     return (
       <div className="create-bank-transaction-screen">
@@ -184,15 +187,28 @@ class CreateBankTransaction extends React.Component {
                           Yup.object().shape({
                             transactionDate: Yup.date()
                               .required('Transaction Date is Required'),
-                            // attachment: Yup.mixed()
-                              // .test('fileSize', "*File Size is too large", value => value.size <= this.file_size)
-                              // .test('fileType', "*Unsupported File Format", value => {
-                              //   console.log(value)
-                              //   this.setState({
-                              //     fileName: value.name
-                              //   })
-                              //   return this.supported_format.includes(value.type)
-                              // })
+                            transactionAmount: Yup.date()
+                              .required('Transaction Amount is Required'),
+                            transactionTypeCode: Yup.string()
+                              .required('Transaction Type is Required'),
+                            attachment: Yup.mixed()
+                              .test('fileType', "*Unsupported File Format", value => {
+                                if (value && !this.supported_format.includes(value.type)) {
+                                  this.setState({
+                                    fileName: value.name
+                                  })
+                                  return false
+                                } else {
+                                  return true
+                                }
+                              })
+                              .test('fileSize', "*File Size is too large", value => {
+                                if (value && value.size >= this.file_size) {
+                                  return false
+                                } else {
+                                  return true
+                                }
+                              })
                           })}
                       >
                         {props => (
@@ -200,13 +216,30 @@ class CreateBankTransaction extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="statement_type">Transaction Type</Label>
+                                  <Label htmlFor="transactionTypeCode">Transaction Type</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={[]}
-                                    id="statement_type"
-                                    name="statement_type"
+                                    options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list, 'Type') : ''}
+                                    value={props.values.transactionTypeCode}
+                                    onChange={option => {
+                                      if (option && option.value) {
+                                        props.handleChange('transactionTypeCode')(option.value)
+                                      } else {
+                                        props.handleChange('transactionTypeCode')('')
+                                      }
+                                    }}
+                                    placeholder="Select Type"
+                                    id="transactionTypeCode"
+                                    name="transactionTypeCode"
+                                    className={
+                                      props.errors.transactionTypeCode && props.touched.transactionTypeCode
+                                        ? "is-invalid"
+                                        : ""
+                                    }
                                   />
+                                  {props.errors.transactionTypeCode && props.touched.transactionTypeCode && (
+                                    <div className="invalid-feedback">{props.errors.transactionTypeCode}</div>
+                                  )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>
@@ -376,7 +409,7 @@ class CreateBankTransaction extends React.Component {
                                     <i className="fa fa-repeat"></i> Create and More
                         </Button>
                                   <Button color="secondary" className="btn-square"
-                                    onClick={() => { this.props.history.push('/admin/banking/bank-account/transaction') }}>
+                                    onClick={() => { this.props.history.push('/admin/banking/bank-account') }}>
                                     <i className="fa fa-ban"></i> Cancel
                         </Button>
                                 </FormGroup>

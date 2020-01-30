@@ -286,7 +286,7 @@ class CreateSupplierInvoice extends React.Component {
         subTotal: 0
       }), idCount: this.state.idCount + 1
     }, () => {
-      this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
+      this.formRef.current.setFieldValue('lineItemsString', this.state.data, true)
     })
   }
 
@@ -378,10 +378,14 @@ class CreateSupplierInvoice extends React.Component {
   }
 
   checkedRow() {
-    let length = this.state.data.length - 1
-    let temp = Object.values(this.state.data[length]).indexOf('');
-    if (temp > -1) {
-      return true
+    if (this.state.data.length > 0) {
+      let length = this.state.data.length - 1
+      let temp = Object.values(this.state.data[length]).indexOf('');
+      if (temp > -1) {
+        return true
+      } else {
+        return false
+      }
     } else {
       return false
     }
@@ -590,21 +594,31 @@ class CreateSupplierInvoice extends React.Component {
                             invoiceDueDate: Yup.date()
                               .required('Invoice Due Date is Required'),
                               lineItemsString: Yup.array()
+                              .required('Atleast one invoice sub detail is mandatory')
                               .of(Yup.object().shape({
                                 description: Yup.string().required("Value is Required"),
                                 quantity: Yup.number().required("Value is Required"),
                                 unitPrice: Yup.number().required("Value is Required"),
                                 vatCategoryId: Yup.string().required("Value is Required"),
                               })),
-                              // attachmentFile: Yup.mixed()
-                              // .test('fileSize', "*File Size is too large", value => value.size <= this.file_size)
-                              // .test('fileType', "*Unsupported File Format", value => {
-                              //   console.log(value)
-                              //   this.setState({
-                              //     fileName: value.name
-                              //   })
-                              //   return this.supported_format.includes(value.type)
-                              // })
+                              attachmentFile: Yup.mixed()
+                              .test('fileType', "*Unsupported File Format", value => { 
+                                if (value && !this.supported_format.includes(value.type)) {
+                                  this.setState({
+                                    fileName: value.name
+                                  })
+                                  return false
+                                } else {
+                                  return true
+                                }
+                              })
+                              .test('fileSize', "*File Size is too large", value => {
+                                if (value && value.size >= this.file_size) {
+                                  return false
+                                } else {
+                                  return true
+                                }
+                              })
                           })}
                       >
                         {props => (
@@ -867,6 +881,11 @@ class CreateSupplierInvoice extends React.Component {
                             </Row>
                             <Row>
                               <Col lg={12}>
+                              {props.errors.lineItemsString && typeof props.errors.lineItemsString === 'string' && (
+                                <div className={props.errors.lineItemsString ? "is-invalid" : ""}>
+                                  <div className="invalid-feedback">{props.errors.lineItemsString}</div>
+                                </div>
+                              )}
                               <BootstrapTable
                                   options={this.options}
                                   data={data}

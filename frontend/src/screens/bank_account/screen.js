@@ -112,6 +112,7 @@ class BankAccount extends React.Component {
   }
 
   initializeData () {
+    console.log(this.props.location)
     this.props.bankAccountActions.getAccountTypeList()
     this.props.bankAccountActions.getCurrencyList()
     this.setState({
@@ -270,9 +271,12 @@ class BankAccount extends React.Component {
             })}>
               <i className="fas fa-edit" /> Edit
             </DropdownItem>
-            <DropdownItem onClick={() => this.props.history.push('/admin/banking/bank-account/transaction', {
-              bankAccountId: row.bankAccountId
-            })}>
+            <DropdownItem onClick={() => {
+              console.log(row.bankAccountId)
+              this.props.history.push('/admin/banking/bank-account/transaction', {
+                bankAccountId: row.bankAccountId
+              })
+            }}>
               <i className="fas fa-eye" /> View Transactions
             </DropdownItem>
             {/* <DropdownItem onClick={() => this.props.history.push('/admin/banking/upload-statement')}>

@@ -8,7 +8,12 @@ package com.simplevat.rest.transactioncontroller;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 /**
@@ -18,7 +23,7 @@ import lombok.Data;
 @Data
 public class TransactionPresistModel implements Serializable {
 
-    private LocalDateTime transactionDate;
+    private Date transactionDate;
     private String transactionDescription;
     private BigDecimal transactionAmount;
     @NotNull
@@ -29,6 +34,6 @@ public class TransactionPresistModel implements Serializable {
     private Integer projectId;
     private String receiptNumber;
     private String attachementDescription;
-    private byte[] attachment;
+    private MultipartFile attachment;
 
 }

@@ -25,8 +25,8 @@ public class UserModel {
 
     private Boolean active;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date dob;
+   // @JsonFormat(pattern = "yyyy-MM-dd")
+    private String dob;
 
     private Integer roleId;
 

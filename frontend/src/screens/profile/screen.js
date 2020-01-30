@@ -190,7 +190,7 @@ class Profile extends React.Component {
             lastName: res.data.lastName ? res.data.lastName : '',
             email: res.data.email ? res.data.email : '',
             password: '',
-            dob: res.data.dob ? res.data.dob : '',
+            dob: res.data.dob ? moment(res.data.dob,'DD-MM-YYYY').toDate() : '',
             active: res.data.active ? res.data.active : '',
             // confirmPassword: '',
             roleId: res.data.roleId ? res.data.roleId : '',
@@ -227,7 +227,7 @@ class Profile extends React.Component {
     formData.append("firstName", firstName ? firstName : '');
     formData.append("lastName", lastName ? lastName : '');
     formData.append("email", email ? email : '');
-    formData.append("dob", dob ? (typeof dob === "string" ? moment(dob).toDate() : dob) : (''));
+    formData.append("dob", dob ?  moment(dob).format('DD-MM-YYYY') : (''));
     formData.append("active", this.state.selectedStatus);
     // formData.append("companyId", companyId ? companyId : '');
     formData.append("roleId", roleId ? roleId : '');
@@ -472,7 +472,7 @@ class Profile extends React.Component {
                                   confirmPassword: Yup.string()
                                     // .required('Confirm Password is Required')
                                     .oneOf([Yup.ref("password"), null], "Passwords must match"),
-                                  dob: Yup.date()
+                                  dob: Yup.string()
                                     .required('DOB is Required')
                                 })}
                               >

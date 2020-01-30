@@ -17,7 +17,7 @@ import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
-import { Formik,Field} from 'formik';
+import { Formik, Field } from 'formik';
 import * as Yup from "yup";
 import _ from 'lodash'
 import moment from 'moment'
@@ -148,6 +148,7 @@ class DetailJournal extends React.Component {
 
   checkedRow() {
     // if(this.state.data.length > 0) {
+    if (this.state.data.length > 0) {
       let length = this.state.data.length - 1
       let temp = Object.values(this.state.data[length]).indexOf('');
       if (temp > -1) {
@@ -155,7 +156,10 @@ class DetailJournal extends React.Component {
       } else {
         return false
       }
-    
+    } else {
+      return false
+    }
+
   }
 
 
@@ -187,26 +191,14 @@ class DetailJournal extends React.Component {
                 props.touched.journalLineItems[idx] &&
                 props.touched.journalLineItems[idx].transactionCategoryId ? "is-invalid" : ""}`}
           >
-           {transactionCategoryList ? transactionCategoryList.map(obj => {
-          return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId}>{obj.transactionCategoryName}</option>
-         }) : ''}
+            {transactionCategoryList ? transactionCategoryList.map(obj => {
+              return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId}>{obj.transactionCategoryName}</option>
+            }) : ''}
           </Input>
 
         )}
       />
     )
-    // const { transaction_category_list } = this.props;
-    // let transactionCategoryList = transaction_category_list.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select Account' }, ...transaction_category_list] : transaction_category_list
-    // return (
-    //   <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'transactionCategoryId') }} value={row.transactionCategoryId}
-    //     className={row.error && row.error.transactionCategoryId ? "is-invalid" : ""}
-
-    //   >
-    //     {transactionCategoryList ? transactionCategoryList.map(obj => {
-    //       return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId}>{obj.transactionCategoryName}</option>
-    //     }) : ''}
-    //   </Input>
-    // )
   }
 
   renderDescription(cell, row, props) {
@@ -412,7 +404,7 @@ class DetailJournal extends React.Component {
         creditAmount: 0,
       }), idCount: this.state.idCount + 1
     }, () => {
-      this.formRef.current.setFieldValue('journalLineItems', this.state.data, false)
+      this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
     })
   }
 
@@ -541,7 +533,7 @@ class DetailJournal extends React.Component {
       if (res.status === 200) {
         // resetForm();
         this.props.commonActions.tostifyAlert('success', 'Journal Updated Successfully')
-          this.props.history.push('/admin/accountant/journal');
+        this.props.history.push('/admin/accountant/journal');
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
@@ -610,7 +602,7 @@ class DetailJournal extends React.Component {
                                       creditAmount: Yup.number().required(),
                                     })
                                   )
-                                  // .required('*Atleast One Journal Debit and Credit Details is mandatory')
+                                  .required('*Atleast One Journal Debit and Credit Details is mandatory')
                               })
                             }
 
@@ -629,8 +621,8 @@ class DetailJournal extends React.Component {
                                         showMonthDropdown
                                         showYearDropdown
                                         dateFormat="dd/MM/yyyy"
-                                      dropdownMode="select"
-                                        value={moment(props.values.journalDate).format('DD-MM-YYYY')}
+                                        dropdownMode="select"
+                                        value={props.values.journalDate ? moment(props.values.journalDate).format('DD-MM-YYYY') : ''}
                                         onChange={(value) => {
                                           props.handleChange("journalDate")(value)
                                         }}
@@ -680,7 +672,7 @@ class DetailJournal extends React.Component {
                                         name="currencyCode"
                                         value={props.values.currencyCode}
                                         onChange={option => {
-                                          if(option && option.value) {
+                                          if (option && option.value) {
                                             props.handleChange('currencyCode')(option.value)
                                           } else {
                                             props.handleChange('currencyCode')('')
@@ -692,77 +684,77 @@ class DetailJournal extends React.Component {
                                 </Row>
                                 <hr />
                                 <Row>
-                              <Col lg={12} className="mb-3">
-                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
-                                  disabled={this.checkedRow() ? true : false}
-                                >
-                                  <i className="fa fa-plus"></i> Add More
+                                  <Col lg={12} className="mb-3">
+                                    <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
+                                      disabled={this.checkedRow() ? true : false}
+                                    >
+                                      <i className="fa fa-plus"></i> Add More
                             </Button>
-                              </Col>
-                            </Row>
-                            {/* {props.errors.journalLineItems && typeof props.errors.journalLineItems === 'string' && (
-                              <div className={props.errors.journalLineItems ? "is-invalid" : ""}>
-                                <div className="invalid-feedback">{props.errors.journalLineItems}</div>
-                              </div>
-                            )} */}
+                                  </Col>
+                                </Row>
+                                {props.errors.journalLineItems && props.touched.journalLineItems && typeof props.errors.journalLineItems === 'string' && (
+                                  <div className={props.errors.journalLineItems ? "is-invalid" : ""}>
+                                    <div className="invalid-feedback">{props.errors.journalLineItems}</div>
+                                  </div>
+                                )}
 
-                            <Row>
-                              <Col lg={12}>
-                                <BootstrapTable
-                                  options={this.options}
-                                  data={data}
-                                  version="4"
-                                  hover
-                                  keyField="id"
-                                  className="journal-create-table"
-                                >
-                                  <TableHeaderColumn
-                                    width="55"
-                                    dataAlign="center"
-                                    dataFormat={(cell, rows) => this.renderActions(cell, rows, props)}
+                                <Row>
+                                  <Col lg={12}>
+                                    <BootstrapTable
+                                      options={this.options}
+                                      data={data}
+                                      version="4"
+                                      hover
+                                      keyField="id"
+                                      className="journal-create-table"
+                                    >
+                                      <TableHeaderColumn
+                                        width="55"
+                                        dataAlign="center"
+                                        dataFormat={(cell, rows) => this.renderActions(cell, rows, props)}
 
-                                  >
-                                  </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="transactionCategoryId"
-                                    dataFormat={(cell, rows) => this.renderAccount(cell, rows, props)}
+                                      >
+                                      </TableHeaderColumn>
+                                      <TableHeaderColumn
+                                        dataField="transactionCategoryId"
+                                        dataFormat={(cell, rows) => this.renderAccount(cell, rows, props)}
 
-                                  >
-                                    Account
+                                      >
+                                        Account
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="description"
-                                    dataFormat={(cell, rows) => this.renderDescription(cell, rows, props)}
+                                      <TableHeaderColumn
+                                        dataField="description"
+                                        dataFormat={(cell, rows) => this.renderDescription(cell, rows, props)}
 
-                                  >
-                                    Description
+                                      >
+                                        Description
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="contactId"
-                                    dataFormat={(cell, rows) => this.renderContact(cell, rows, props)}
-                                  >
-                                    Contact
+                                      <TableHeaderColumn
+                                        dataField="contactId"
+                                        dataFormat={(cell, rows) => this.renderContact(cell, rows, props)}
+                                      >
+                                        Contact
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="vatCategoryId"
-                                    dataFormat={(cell, rows) => this.renderVatCode(cell, rows, props)}
+                                      <TableHeaderColumn
+                                        dataField="vatCategoryId"
+                                        dataFormat={(cell, rows) => this.renderVatCode(cell, rows, props)}
 
-                                  >
-                                    Tax Code
+                                      >
+                                        Tax Code
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="debitAmount"
-                                    dataFormat={(cell, rows) => this.renderDebits(cell, rows, props)}
-                                  >
-                                    Debits
+                                      <TableHeaderColumn
+                                        dataField="debitAmount"
+                                        dataFormat={(cell, rows) => this.renderDebits(cell, rows, props)}
+                                      >
+                                        Debits
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="creditAmount"
-                                    dataFormat={(cell, rows) => this.renderCredits(cell, rows, props)}
-                                  >
-                                    Credits
+                                      <TableHeaderColumn
+                                        dataField="creditAmount"
+                                        dataFormat={(cell, rows) => this.renderCredits(cell, rows, props)}
+                                      >
+                                        Credits
                               </TableHeaderColumn>
-                                </BootstrapTable>
+                                    </BootstrapTable>
                                   </Col>
                                 </Row>
                                 {data.length > 0 ? (
@@ -818,9 +810,9 @@ class DetailJournal extends React.Component {
                                     </FormGroup>
                                     <FormGroup className="text-right">
                                       <Button type="button" color="primary" className="btn-square mr-3"
-                                      onClick={() => {
+                                        onClick={() => {
                                           props.handleSubmit()
-                                      }}>
+                                        }}>
                                         <i className="fa fa-dot-circle-o"></i> Update
                                 </Button>
                                       <Button color="secondary" className="btn-square"

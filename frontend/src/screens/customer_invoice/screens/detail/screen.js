@@ -146,18 +146,23 @@ class DetailCustomerInvoice extends React.Component {
               invoiceVATAmount: res.data.totalVatAmount ? res.data.totalVatAmount : 0,
               totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
               notes: res.data.notes ? res.data.notes : '',
-              invoiceLineItems: res.data.invoiceLineItems ? res.data.invoiceLineItems : []
+              lineItemsString: res.data.invoiceLineItems ? res.data.invoiceLineItems : []
             },
             data: res.data.invoiceLineItems ? res.data.invoiceLineItems : [],
             selectedContact: res.data.contactId ? res.data.contactId : '',
             loading: false
           }, () => {
-            this.calTotalNet(this.state.data);
-            const { data } = this.state
-            const idCount = data.length > 0 ? Math.max.apply(Math, data.map((item) => { return item.id; })) : 0
-            this.setState({
-              idCount: idCount
-            })
+            if (this.state.data.length > 0) {
+              this.calTotalNet(this.state.data);
+              const { data } = this.state
+              const idCount = data.length > 0 ? Math.max.apply(Math, data.map((item) => { return item.id; })) : 0
+              this.setState({
+                idCount: idCount
+              })} else {
+              this.setState({
+                idCount: 0
+              })
+            }
           }
           )
         }
@@ -285,7 +290,7 @@ class DetailCustomerInvoice extends React.Component {
         subTotal: 0
       }), idCount: this.state.idCount + 1
     }, () => {
-      this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
+      this.formRef.current.setFieldValue('lineItemsString', this.state.data, true)
     })
   }
 
@@ -377,10 +382,14 @@ class DetailCustomerInvoice extends React.Component {
   }
 
   checkedRow() {
-    let length = this.state.data.length - 1
-    let temp = Object.values(this.state.data[length]).indexOf('');
-    if (temp > -1) {
-      return true
+    if (this.state.data.length > 0) {
+      let length = this.state.data.length - 1
+      let temp = Object.values(this.state.data[length]).indexOf('');
+      if (temp > -1) {
+        return true
+      } else {
+        return false
+      }
     } else {
       return false
     }
@@ -437,7 +446,7 @@ class DetailCustomerInvoice extends React.Component {
     } = data
 
     let formData = new FormData();
-    formData.append("type", 1);
+    formData.append("type", 2);
     formData.append("invoiceId", id);
     formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
     formData.append("invoiceDate", typeof invoiceDate === "date" ? invoiceDate : moment(invoiceDate).toDate());
@@ -595,6 +604,7 @@ class DetailCustomerInvoice extends React.Component {
                                 invoiceDueDate: Yup.date()
                                   .required('Invoice Due Date is Required'),
                                   lineItemsString: Yup.array()
+                                  .required('Atleast one invoice sub detail is mandatory')
                                   .of(Yup.object().shape({
                                     description: Yup.string().required("Value is Required"),
                                     quantity: Yup.number().required("Value is Required"),
@@ -719,7 +729,7 @@ class DetailCustomerInvoice extends React.Component {
                                         id="invoiceDate"
                                         name="invoiceDate"
                                         placeholderText=""
-                                        value={moment(props.values.invoiceDate).format('DD-MM-YYYY')}
+                                        value={props.values.invoiceDate ? moment(props.values.invoiceDate).format('DD-MM-YYYY') : ''}
                                         showMonthDropdown
                                         showYearDropdown
                                         dateFormat="dd/MM/yyyy"
@@ -742,7 +752,7 @@ class DetailCustomerInvoice extends React.Component {
                                           showYearDropdown
                                           dateFormat="dd/MM/yyyy"
                                           dropdownMode="select"
-                                          value={moment(props.values.invoiceDueDate).format('DD-MM-YYYY')}
+                                          value={props.values.invoiceDate ? moment(props.values.invoiceDate).format('DD-MM-YYYY') : ''}
                                           onChange={(value) => {
                                             props.handleChange("invoiceDueDate")(value)
                                           }}
@@ -850,6 +860,11 @@ class DetailCustomerInvoice extends React.Component {
                               </Col>
                             </Row>
                             <Row>
+                            {props.errors.lineItemsString && typeof props.errors.lineItemsString === 'string' && (
+                                <div className={props.errors.lineItemsString ? "is-invalid" : ""}>
+                                  <div className="invalid-feedback">{props.errors.lineItemsString}</div>
+                                </div>
+                              )}
                               <Col lg={12}>
                               <BootstrapTable
                                   options={this.options}

@@ -147,8 +147,8 @@ class DetailProduct extends React.Component {
       vatIncluded: vatIncluded,
     }
     this.props.detailProductActions.updateProduct(postData).then(res => {
-      if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('sucess','Product Updated Successfully');
+      if (res.status == 200) {
+        this.props.commonActions.tostifyAlert('success','Product Updated Successfully');
         this.props.history.push('/admin/master/product')
       }
     }).catch(err => {
@@ -179,7 +179,6 @@ class DetailProduct extends React.Component {
     const id= this.props.location.state.id;
     this.props.detailProductActions.deleteProduct(id).then(res=>{
       if(res.status === 200) {
-        // this.success('Product Deleted Successfully');
         this.props.history.push('/admin/master/product')
       }
     }).catch(err=> {

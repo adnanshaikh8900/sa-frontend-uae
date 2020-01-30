@@ -21,14 +21,26 @@ import lombok.Data;
 @Data
 public class TransactionViewModel implements Serializable {
 
-    private LocalDateTime transactionDate;
-    private String transactionDescription;
-    private BigDecimal transactionAmount;
-    private TransactionType transactionType;
-    private TransactionCategory explainedTransactionCategory;
-    private BankAccount bankAccount;
-    private Project project;
-    private String receiptNumber;
-    private String attachementDescription;
+//    private LocalDateTime transactionDate;
+//    private String transactionDescription;
+//    private BigDecimal transactionAmount;
+//    private TransactionType transactionType;
+//    private TransactionCategory explainedTransactionCategory;
+//    private BankAccount bankAccount;
+//    private Project project;
+//    private String receiptNumber;
+//    private String attachementDescription;
+
+	/**
+	 * @author Saurabh
+	 * 
+	 */
+	private Integer id;
+	private String transactionDate;
+	private String referenceNo;
+	private String transactionTypeName;
+	private Double depositeAmount;
+	private Double withdrawalAmount;
+	private Double runningAmount;
 
 }

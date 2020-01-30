@@ -286,7 +286,7 @@ class CreateCustomerInvoice extends React.Component {
         subTotal: 0
       }), idCount: this.state.idCount + 1
     }, () => {
-      this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
+      this.formRef.current.setFieldValue('lineItemsString', this.state.data, true)
     })
   }
 
@@ -378,10 +378,14 @@ class CreateCustomerInvoice extends React.Component {
   }
 
   checkedRow() {
-    let length = this.state.data.length - 1
-    let temp = Object.values(this.state.data[length]).indexOf('');
-    if (temp > -1) {
-      return true
+    if (this.state.data.length > 0) {
+      let length = this.state.data.length - 1
+      let temp = Object.values(this.state.data[length]).indexOf('');
+      if (temp > -1) {
+        return true
+      } else {
+        return false
+      }
     } else {
       return false
     }
@@ -590,6 +594,7 @@ class CreateCustomerInvoice extends React.Component {
                             invoiceDueDate: Yup.date()
                               .required('Invoice Due Date is Required'),
                             lineItemsString: Yup.array()
+                              .required('Atleast one invoice sub detail is mandatory')
                               .of(Yup.object().shape({
                                 description: Yup.string().required("Value is Required"),
                                 quantity: Yup.number().required("Value is Required"),
@@ -597,13 +602,22 @@ class CreateCustomerInvoice extends React.Component {
                                 vatCategoryId: Yup.string().required("Value is Required"),
                               })),
                             attachmentFile: Yup.mixed()
-                              .test('fileSize', "*File Size is too large", value => value.size <= this.file_size)
                               .test('fileType', "*Unsupported File Format", value => {
-                                console.log(value)
-                                this.setState({
-                                  fileName: value.name
-                                })
-                                return this.supported_format.includes(value.type)
+                                if (value && !this.supported_format.includes(value.type)) {
+                                  this.setState({
+                                    fileName: value.name
+                                  })
+                                  return false
+                                } else {
+                                  return true
+                                }
+                              })
+                              .test('fileSize', "*File Size is too large", value => {
+                                if (value && value.size >= this.file_size) {
+                                  return false
+                                } else {
+                                  return true
+                                }
                               })
                           })}
                       >
@@ -752,7 +766,6 @@ class CreateCustomerInvoice extends React.Component {
                                       dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                       value={props.values.invoiceDueDate}
-
                                       onChange={(value) => {
                                         props.handleChange("invoiceDueDate")(value)
                                       }}
@@ -873,6 +886,11 @@ class CreateCustomerInvoice extends React.Component {
                               </Col>
                             </Row>
                             <Row>
+                              {props.errors.lineItemsString && typeof props.errors.lineItemsString === 'string' && (
+                                <div className={props.errors.lineItemsString ? "is-invalid" : ""}>
+                                  <div className="invalid-feedback">{props.errors.lineItemsString}</div>
+                                </div>
+                              )}
                               <Col lg={12}>
                                 <BootstrapTable
                                   options={this.options}

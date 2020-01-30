@@ -137,10 +137,14 @@ class CreateJournal extends React.Component {
   }
 
   checkedRow() {
-    let length = this.state.data.length - 1
-    let temp = Object.values(this.state.data[length]).indexOf('');
-    if (temp > -1) {
-      return true
+    if (this.state.data.length > 0) {
+      let length = this.state.data.length - 1
+      let temp = Object.values(this.state.data[length]).indexOf('');
+      if (temp > -1) {
+        return true
+      } else {
+        return false
+      }
     } else {
       return false
     }
@@ -376,15 +380,15 @@ class CreateJournal extends React.Component {
     )
   }
 
-  checkedRow() {
-    let length = this.state.data.length - 1
-    let temp = Object.values(this.state.data[length]).indexOf('');
-    if (temp > -1) {
-      return true
-    } else {
-      return false
-    }
-  }
+  // checkedRow() {
+  //   let length = this.state.data.length - 1
+  //   let temp = Object.values(this.state.data[length]).indexOf('');
+  //   if (temp > -1) {
+  //     return true
+  //   } else {
+  //     return false
+  //   }
+  // }
 
   addRow() {
     const data = [...this.state.data]
@@ -399,7 +403,7 @@ class CreateJournal extends React.Component {
         creditAmount: 0,
       }), idCount: this.state.idCount + 1
     }, () => {
-      this.formRef.current.setFieldValue('journalLineItems', this.state.data, false)
+      this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
     })
   }
 
@@ -585,7 +589,7 @@ class CreateJournal extends React.Component {
                                   creditAmount: Yup.number().required(),
                                 })
                               )
-                              // .required('*Atleast One Journal Debit and Credit Details is mandatory')
+                              .required('*Atleast One Journal Debit and Credit Details is mandatory')
                           })
                         }
                       >
@@ -678,11 +682,11 @@ class CreateJournal extends React.Component {
                             </Button>
                               </Col>
                             </Row>
-                            {/* {props.errors.journalLineItems && typeof props.errors.journalLineItems === 'string' && (
+                            {props.errors.journalLineItems && typeof props.errors.journalLineItems === 'string' && (
                               <div className={props.errors.journalLineItems ? "is-invalid" : ""}>
                                 <div className="invalid-feedback">{props.errors.journalLineItems}</div>
                               </div>
-                            )} */}
+                            )}
 
                             <Row>
                               <Col lg={12}>

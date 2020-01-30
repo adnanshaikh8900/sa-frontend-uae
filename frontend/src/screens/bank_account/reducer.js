@@ -13,16 +13,16 @@ const initState = {
 }
 
 const BankAccountReducer = (state = initState, action) => {
-  const { type, payload} = action
-  
-  switch(type) {
+  const { type, payload } = action
+
+  switch (type) {
 
     case BANK_ACCOUNT.BANK_ACCOUNT_LIST:
       return {
         ...state,
         bank_account_list: Object.assign([], payload.data)
       }
-    
+
     case BANK_ACCOUNT.BANK_TRANSACTION_LIST:
       return {
         ...state,
@@ -40,25 +40,31 @@ const BankAccountReducer = (state = initState, action) => {
         ...state,
         currency_list: Object.assign([], payload.data)
       }
-    
+
     case BANK_ACCOUNT.COUNTRY_LIST:
       return {
         ...state,
         country_list: Object.assign([], payload.data)
       }
 
-      case BANK_ACCOUNT.TRANSACTION_CATEGORY_LIST:
-        return {
-          ...state,
-          transaction_category_list : Object.assign([], payload)
-        }
+    case BANK_ACCOUNT.TRANSACTION_CATEGORY_LIST:
+      return {
+        ...state,
+        transaction_category_list: Object.assign([], payload)
+      }
 
-        case BANK_ACCOUNT.PROJECT_LIST:
-          return {
-            ...state,
-            project_list : Object.assign([], payload)
-          }
-    
+    case BANK_ACCOUNT.PROJECT_LIST:
+      return {
+        ...state,
+        project_list: Object.assign([], payload)
+      }
+
+    case BANK_ACCOUNT.TRANSACTION_TYPE_LIST:
+      return {
+        ...state,
+        transaction_type_list: Object.assign([], payload)
+      }
+
     default:
       return state
   }

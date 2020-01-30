@@ -44,26 +44,24 @@ export const getTransactionCategoryList = () => {
   }
 }
 
-// export const getTransactionTypeList = () => {
-//   return (dispatch) => {
-//     let data ={
-//       method: 'get',
-//       url: '/rest/transaction/gettransactions'
-//     }
-//     return authApi(data).then(res => {
-//       if (res.status === 200) {
-//         dispatch({
-//           type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
-//           payload: {
-//             data: res.data
-//           }
-//         })
-//       }
-//     }).catch(err => {
-//       throw err
-//     })
-//   }
-// }
+export const getTransactionTypeList = () => {
+  return (dispatch) => {
+    let data ={
+      method: 'get',
+      url: '/rest/datalist/getTransactionTypes'
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: BANK_ACCOUNT.TRANSACTION_TYPE_LIST,
+          payload: res.data
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
 
 export const getProjectList = () => {
   return (dispatch) => {

@@ -249,7 +249,8 @@ class BankTransactions extends React.Component {
                             color="info"
                             className="btn-square"
                             onClick={() => this.props.history.push('/admin/banking/upload-statement',{
-                              bankAccountId: this.props.location.state.bankAccountId
+                              bankAccountId: this.props.location.state && this.props.location.state.bankAccountId ? 
+                              this.props.location.state.bankAccountId : ''
                             })}
                           >
                             <i className="fa glyphicon glyphicon-export fa-upload mr-1" />
@@ -258,7 +259,10 @@ class BankTransactions extends React.Component {
                           <Button
                             color="primary"
                             className="btn-square"
-                            onClick={() => this.props.history.push('/admin/banking/bank-account/transaction/create')}
+                            onClick={() => this.props.history.push('/admin/banking/bank-account/transaction/create',{
+                              bankAccountId: this.props.location.state && this.props.location.state.bankAccountId ? 
+                              this.props.location.state.bankAccountId : ''
+                            })}
                           >
                             <i className="fas fa-plus mr-1" />
                             New Transaction
@@ -266,7 +270,10 @@ class BankTransactions extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.props.history.push('/admin/banking/bank-account/detail')}
+                            onClick={() => this.props.history.push('/admin/banking/bank-account/detail',{
+                              bankAccountId: this.props.location.state && this.props.location.state.bankAccountId ? 
+                              this.props.location.state.bankAccountId : ''
+                            })}
                           >
                             <i className="fas fa-edit mr-1" />
                             Edit Account

@@ -1,6 +1,9 @@
 package com.simplevat.dao.bankaccount;
 
+import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.contact.model.TransactionReportRestModel;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +11,8 @@ import com.simplevat.dao.Dao;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
+import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
+
 import java.util.Map;
 
 public interface TransactionDao extends Dao<Integer, Transaction> {
@@ -59,5 +64,9 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
     public List<TransactionView> getTransactionViewListByDateRang(Integer bankAccountId, Date startDate, Date endDate);
 
 	public Transaction getCurrentBalanceByBankId(Integer bankId);
+
+	public void deleteByIds(ArrayList<Integer> ids);
+
+	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel);
 
 }

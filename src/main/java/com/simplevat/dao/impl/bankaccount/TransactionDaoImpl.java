@@ -1,6 +1,8 @@
 package com.simplevat.dao.impl.bankaccount;
 
 import com.simplevat.constant.TransactionStatusConstant;
+import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.contact.model.TransactionReportRestModel;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,23 +11,36 @@ import java.util.List;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.simplevat.dao.AbstractDao;
+import com.simplevat.dao.bankaccount.BankAccountDao;
 import com.simplevat.dao.bankaccount.TransactionDao;
+import com.simplevat.dao.bankaccount.TransactionTypeDao;
+import com.simplevat.entity.Invoice;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
+import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.entity.bankaccount.TransactionView;
+import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.utils.CommonUtil;
 import com.simplevat.utils.DateUtils;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
 import javax.persistence.TypedQuery;
 
 @Repository
 public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implements TransactionDao {
+
+	@Autowired
+	private TransactionTypeDao transactionTypeDao;
+
+	@Autowired
+	private BankAccountDao bankAccountDao;
 
 	@Override
 	public Transaction updateOrCreateTransaction(Transaction transaction) {
@@ -456,6 +471,26 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				.setMaxResults(1).getResultList();
 		return transactions != null ? transactions.get(0) : null;
 
+	}
+
+	@Override
+	public void deleteByIds(ArrayList<Integer> ids) {
+		if (ids != null && !ids.isEmpty()) {
+			for (Integer id : ids) {
+				Transaction trnx = findByPK(id);
+				trnx.setDeleteFlag(Boolean.TRUE);
+				update(trnx);
+			}
+		}
+	}
+
+	@Override
+	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap) {
+		List<DbFilter> dbFilters = new ArrayList();
+		filterMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
+				.condition(filter.getCondition()).value(value).build()));
+		List<Transaction> list = this.executeQuery(dbFilters);
+		return list;
 	}
 
 }

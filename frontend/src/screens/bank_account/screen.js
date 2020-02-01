@@ -62,19 +62,20 @@ class BankAccount extends React.Component {
       loading: false,
       dialog: null,
       actionButtons: {},
-
       selected_id_list: [],
-
-      filter_bank: '',
-      filter_account_type: null,
-      filter_account_name: '',
-      filter_account_number: '',
-      filter_currency: null
+      filterData: {
+        bankName:'',			 	
+        bankAccountTypeId:'',			 	
+        bankAccountName:'', 			 	
+        transactionDate:'',
+        accountNumber:'', 			 	
+        currencyCode:'',
+      }
     }
 
     this.initializeData = this.initializeData.bind(this)
     this.inputHandler = this.inputHandler.bind(this)
-    this.filterBankAccountList = this.filterBankAccountList.bind(this)
+    // this.filterBankAccountList = this.filterBankAccountList.bind(this)
 
     this.closeBankAccount = this.closeBankAccount.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
@@ -91,6 +92,7 @@ class BankAccount extends React.Component {
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
     this.toggleActionButton = this.toggleActionButton.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
 
     this.options = {
       paginationPosition: 'top'
@@ -112,13 +114,12 @@ class BankAccount extends React.Component {
   }
 
   initializeData () {
-    console.log(this.props.location)
     this.props.bankAccountActions.getAccountTypeList()
     this.props.bankAccountActions.getCurrencyList()
     this.setState({
       loading: true
     })
-    this.props.bankAccountActions.getBankAccountList().then(() => {
+    this.props.bankAccountActions.getBankAccountList(this.state.filterData).then(() => {
       this.setState({
         loading: false
       })
@@ -129,75 +130,81 @@ class BankAccount extends React.Component {
     })
   }
 
-  inputHandler (key, value) {
+  inputHandler (name, val) {
     this.setState({
-      [key]: value
+      filterData: Object.assign(this.state.filterData, {
+        [name]: val
+      })
     })
   }
 
-  filterBankAccountList (bank_account_list) {
-    let data = []
-    const {
-      filter_bank,
-      filter_account_type,
-      filter_account_name,
-      filter_account_number,
-      filter_currency
-    } = this.state
-    
-    data = filterFactory.filterDataList(filter_bank, 'bankName', 'contain', bank_account_list)
-    let data_temp = []
-    data.map(item => {
-      let flag = true
-      flag = filterFactory.compareString(
-        filter_account_type ? filter_account_type.value : '',
-        item.bankAccountType && item.bankAccountType.id ? item.bankAccountType.id : '',
-        'match'
-      )
-      if (flag) {
-        let temp = Object.assign({}, item)
-        data_temp.push(temp)
-      }
-    })
-    data = filterFactory.filterDataList(filter_account_name, 'bankAccountName', 'contain', data_temp)
-    data_temp = filterFactory.filterDataList(filter_account_number, 'accountNumber', 'contain', data)
-    data = []
-    data_temp.map(item => {
-      let flag = true
-      flag = filterFactory.compareString(
-        filter_currency ? filter_currency.value : '',
-        item.bankAccountCurrency && item.bankAccountCurrency.currencyCode ? item.bankAccountCurrency.currencyCode : '',
-        'match'
-      )
-      if (flag) {
-        let temp = Object.assign({}, item)
-        data.push(temp)
-      }
-    })
-    return data
+  handleSearch() {
+    this.initializeData()
   }
+
+  // filterBankAccountList (bank_account_list) {
+  //   let data = []
+  //   const {
+  //     filter_bank,
+  //     filter_account_type,
+  //     filter_account_name,
+  //     filter_account_number,
+  //     filter_currency
+  //   } = this.state
+    
+  //   data = filterFactory.filterDataList(filter_bank, 'bankName', 'contain', bank_account_list)
+  //   let data_temp = []
+  //   data.map(item => {
+  //     let flag = true
+  //     flag = filterFactory.compareString(
+  //       filter_account_type ? filter_account_type.value : '',
+  //       item.bankAccountTypeName && item.bankAccountTypeName.id ? item.bankAccountTypeName.id : '',
+  //       'match'
+  //     )
+  //     if (flag) {
+  //       let temp = Object.assign({}, item)
+  //       data_temp.push(temp)
+  //     }
+  //   })
+  //   data = filterFactory.filterDataList(filter_account_name, 'bankAccountName', 'contain', data_temp)
+  //   data_temp = filterFactory.filterDataList(filter_account_number, 'accountNumber', 'contain', data)
+  //   data = []
+  //   data_temp.map(item => {
+  //     let flag = true
+  //     flag = filterFactory.compareString(
+  //       filter_currency ? filter_currency.value : '',
+  //       item.bankAccountCurrency && item.bankAccountCurrency.currencyCode ? item.bankAccountCurrency.currencyCode : '',
+  //       'match'
+  //     )
+  //     if (flag) {
+  //       let temp = Object.assign({}, item)
+  //       data.push(temp)
+  //     }
+  //   })
+  //   return data
+  // }
 
   renderAccountType (cell, row) {
-    if (row.bankAccountType) {
+    if (row.bankAccountTypeName) {
       let data = null
-      switch(row.bankAccountType.name) {
+      switch(row.bankAccountTypeName) {
         case 'Saving':
-          data = <label className="badge badge-primary text-white mb-0">{ row.bankAccountType.name }</label>
+          data = <label className="badge badge-primary text-white mb-0">{ row.bankAccountTypeName }</label>
           break
         case 'Current':
-          data = <label className="badge badge-info text-white mb-0">{ row.bankAccountType.name }</label>
+          data = <label className="badge badge-info text-white mb-0">{ row.bankAccountTypeName }</label>
           break
         case 'Checking':
-          data = <label className="badge badge-warning text-white mb-0">{ row.bankAccountType.name }</label>
+          data = <label className="badge badge-warning text-white mb-0">{ row.bankAccountTypeName }</label>
           break
         case 'Credit Card':
-          data = <label className="badge badge-success text-white mb-0">{ row.bankAccountType.name }</label>
+          data = <label className="badge badge-success text-white mb-0">{ row.bankAccountTypeName }</label>
           break
         case 'Others':
-          data = <label className="badge badge-info text-white mb-0">{ row.bankAccountType.name }</label>
+          data = <label className="badge badge-info text-white mb-0">{ row.bankAccountTypeName }</label>
           break
         case 'Paypal':
-          data = <label className="badge badge-danger text-white mb-0">{ row.bankAccountType.name }</label>
+          data = <label className="badge badge-danger text-white mb-0">{ row.bankAccountTypeName }</label>
           break
         default:
           data = <label className="badge badge-default mb-0">No Specified</label>
@@ -228,20 +235,19 @@ class BankAccount extends React.Component {
       <label
         className="mb-0 my-link"
         onClick={() => this.props.history.push('/admin/banking/bank-account/transaction',
-          {bankAccountId: row.bankAccountId })}
+          {bankAccountId: row.bankAccountNo })}
       >
-        { row.accountNumber }
+        { row.bankAccountNo }
       </label>
     )
   }
 
   renderCurrency (cell, row) {
     if (
-      row.bankAccountCurrency &&
-      row.bankAccountCurrency.currencyIsoCode
+      row.currancyName 
     ) {
       return (
-        <label className="badge badge-primary mb-0">{ row.bankAccountCurrency.currencyIsoCode }</label>
+        <label className="badge badge-primary mb-0">{ row.currancyName }</label>
       )  
     } else {
       return (
@@ -413,11 +419,7 @@ class BankAccount extends React.Component {
 
     const {
       loading,
-      filter_bank,
-      filter_account_type,
-      filter_account_name,
-      filter_account_number,
-      filter_currency,
+      filterData,
       dialog
     } = this.state
     const {
@@ -426,7 +428,7 @@ class BankAccount extends React.Component {
       bank_account_list
     } = this.props
 
-    let displayData = this.filterBankAccountList(bank_account_list)
+    // let displayData = this.filterBankAccountList(bank_account_list)
 
     return (
       <div className="bank-account-screen">
@@ -496,18 +498,16 @@ class BankAccount extends React.Component {
                             <Input
                               type="text"
                               placeholder="Bank"
-                              value={filter_bank}
-                              onChange={e => this.inputHandler('filter_bank', e.target.value)}
+                              value={filterData.bankName}
+                              onChange={e => this.inputHandler('bankName', e.target.value)}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
                               options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list,'Account Type') : []}
-                              value={filter_account_type}
-                              onChange={option => this.setState({
-                                filter_account_type: option
-                              })}
+                              value={filterData.bankAccountTypeId}
+                              onChange={option => this.inputHandler('bankAccountTypeId',option.value)}
                               placeholder="Account Type"
                             />
                           </Col>
@@ -515,28 +515,31 @@ class BankAccount extends React.Component {
                             <Input
                               type="text"
                               placeholder="Account Name"
-                              value={filter_account_name}
-                              onChange={e => this.inputHandler('filter_account_name', e.target.value)}
+                              value={filterData.bankAccountName}
+                              onChange={e => this.inputHandler('bankAccountName', e.target.value)}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Input
                               type="text"
                               placeholder="Account Number"
-                              value={filter_account_number}
-                              onChange={e => this.inputHandler('filter_account_number', e.target.value)}
+                              value={filterData.accountNumber}
+                              onChange={e => this.inputHandler('accountNumber', e.target.value)}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
                               options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                              value={filter_currency}
-                              onChange={option => this.setState({
-                                filter_currency: option
-                              })}
+                              value={filterData.currencyCode}
+                              onChange={option => this.inputHandler('currencyCode',option.value)}
                               placeholder="Currency"
                             />
+                          </Col>
+                          <Col lg={1} className="mb-1">
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                              <i className="fa fa-search"></i>
+                            </Button>
                           </Col>
                         </Row>
                       </div>
@@ -545,11 +548,11 @@ class BankAccount extends React.Component {
                           selectRow={ this.selectRowProp }
                           search={false}
                           options={ this.options }
-                          data={displayData}
+                          data={bank_account_list ? bank_account_list: []}
                           version="4"
                           hover
                           pagination
-                          totalSize={displayData ? displayData.length : 0}
+                          totalSize={bank_account_list ? bank_account_list.length : 0}
                           className="bank-account-table"
                           trClassName="cursor-pointer"
                         >
@@ -560,7 +563,7 @@ class BankAccount extends React.Component {
                           >
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="bankName"
+                            dataField="name"
                             dataSort
                           >
                             Bank
@@ -579,7 +582,7 @@ class BankAccount extends React.Component {
                             Account Number
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="bankAccountName"
+                            dataField="accounName"
                             dataSort
                           >
                             Account Name

@@ -6,7 +6,7 @@ import {
 
 export const getAccountTypeList = () => {
   return (dispatch) => {
-    let data ={
+    let data = {
       method: 'get',
       url: 'rest/bank/getaccounttype'
     }
@@ -46,11 +46,19 @@ export const getCurrencyList = () => {
   }
 }
 
-export const getBankAccountList = () => {
+export const getBankAccountList = (obj) => {
+  const { bankName,
+    bankAccountTypeId,
+    bankAccountName,
+    transactionDate,
+    accountNumber,
+    currencyCode } = obj
+  let param = `/rest/bank/list?bankName=${bankName}&bankAccountTypeId=${bankAccountTypeId}&bankAccountName=${bankAccountName}&accountNumber=${accountNumber}&currencyCode=${currencyCode}`
+
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/bank/getbanklist'
+      url: param
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
@@ -58,7 +66,7 @@ export const getBankAccountList = () => {
           type: BANK_ACCOUNT.BANK_ACCOUNT_LIST,
           payload: {
             data: Object.assign([], res.data)
-          } 
+          }
         })
       }
     }).catch(err => {

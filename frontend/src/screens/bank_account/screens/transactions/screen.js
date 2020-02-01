@@ -103,7 +103,9 @@ class BankTransactions extends React.Component {
   }
 
   initializeData () {
-    this.props.transactionsActions.getTransactionList()
+    if(this.props.location.state && this.props.location.state.bankAccountId) {
+    this.props.transactionsActions.getTransactionList(this.props.location.state.bankAccountId)
+    }
   }
 
   toggleDangerModal () {
@@ -183,7 +185,7 @@ class BankTransactions extends React.Component {
             }
           </DropdownToggle>
           <DropdownMenu right>
-            <DropdownItem onClick={() => this.props.history.push('/admin/banking/bank-account/transaction/detail')}>
+            <DropdownItem onClick={() => this.props.history.push('/admin/banking/bank-account/transaction/detail',{id: row.id})}>
               <i className="fas fa-edit" /> Edit
             </DropdownItem>
             <DropdownItem>
@@ -354,7 +356,7 @@ class BankTransactions extends React.Component {
                             Withdrawal
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="runningAmount"
+                            dataField="openingBalance"
                             dataSort
                           >
                             Running Balance

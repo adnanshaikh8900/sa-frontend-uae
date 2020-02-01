@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -15,33 +15,160 @@ import {
 } from 'reactstrap'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
+import { Formik, Field } from 'formik';
+import * as Yup from 'yup'
+
+import {
+  CommonActions
+} from 'services/global'
+import {
+  selectOptionsFactory,
+  filterFactory
+} from 'utils'
+
+import moment from 'moment'
+import { Loader } from 'components'
+
+import * as transactionDetailActions from './actions';
+import * as  transactionActions from "../../actions";
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
+    transaction_category_list: state.bank_account.transaction_category_list,
+    transaction_type_list: state.bank_account.transaction_type_list,
+    project_list: state.bank_account.project_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
+    transactionActions: bindActionCreators(transactionActions, dispatch),
+    transactionDetailActions: bindActionCreators(transactionDetailActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch),
   })
 }
 
 class DetailBankTransaction extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
-      
+      createMore: false,
+      loading: true,
+      fileName: '',
+      initValue: {}
     }
+
+    this.file_size = 1024000;
+    this.supported_format = [
+      "",
+      "text/plain",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
+    this.formRef = React.createRef()
+
+    this.initializeData = this.initializeData.bind(this)
+    this.handleFileChange = this.handleFileChange.bind(this)
 
   }
 
-  render() {
+  componentDidMount() {
+    this.initializeData()
+  }
 
+  initializeData() {
+    let id;
+    id = this.props.location.state && this.props.location.state.id
+    this.props.transactionActions.getTransactionCategoryList()
+    this.props.transactionActions.getTransactionTypeList()
+    this.props.transactionActions.getProjectList()
+    if (id) {
+      this.props.transactionDetailActions.getTransactionDetail(id).then(res => {
+        console.log(res.data)
+        this.setState({
+          initValue: {
+            bankAccountId: res.data.bankAccountId ? res.data.bankAccountId : '',
+            transactionDate: res.data.transactionDate ? res.data.transactionDate : '',
+            transactionDescription: res.data.transactionDescription ? res.data.transactionDescription : '',
+            transactionAmount: res.data.transactionAmount ? res.data.transactionAmount : '',
+            // transactionTypeCode: res.data.transactionTypeCode !== null ? res.data.transactionTypeCode : '',
+            // transactionCategoryId: res.data.transactionCategoryId !== null ? res.data.transactionCategoryId : '',
+            projectId: res.data.projectId ? res.data.projectId : '',
+            receiptNumber: res.data.receiptNumber ? res.data.receiptNumber : '',
+            attachementDescription: res.data.attachementDescription ? res.data.attachementDescription : '',
+            // attachment: res.data.attachment ? res.data.attachment : '',
+          },
+           loading: false
+        })
+      })
+    } else {
+      this.props.history.push('/admin/banking/bank-account')
+    }
+  }
+
+  handleFileChange(e, props) {
+    e.preventDefault();
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    if (file) {
+      reader.onloadend = () => {
+      };
+      reader.readAsDataURL(file);
+      console.log(file)
+      props.setFieldValue('attachment', file);
+    }
+  }
+
+
+  handleSubmit(data, resetForm) {
+    const {
+      bankAccountId,
+      transactionDate,
+      transactionDescription,
+      transactionAmount,
+      transactionTypeCode,
+      transactionCategoryId,
+      projectId,
+      receiptNumber,
+      attachementDescription,
+    } = data
+
+    console.log(typeof transactionDate)
+    let formData = new FormData();
+    formData.append("bankAccountId ", bankAccountId ? bankAccountId : '');
+    formData.append("transactionDate", transactionDate ? moment(transactionDate).toString() : '');
+    formData.append("transactionDescription", transactionDescription ? transactionDescription : '');
+    formData.append("transactionAmount", transactionAmount ? transactionAmount : '');
+    formData.append("transactionTypeCode", transactionTypeCode ? transactionTypeCode : '');
+    formData.append("transactionCategoryId", transactionCategoryId ? transactionCategoryId : '');
+    formData.append("projectId", projectId ? projectId : '');
+    formData.append("receiptNumber", receiptNumber ? receiptNumber : '');
+    formData.append("attachementDescription", attachementDescription ? attachementDescription : '');
+    if (this.uploadFile.files[0]) {
+      formData.append("attachment", this.uploadFile.files[0]);
+    }
+    this.props.transactionDetailActions.updateTransaction(formData).then(res => {
+      if (res.status === 200) {
+        resetForm()
+        this.props.commonActions.tostifyAlert('success', 'Update Transaction Detail Successfully.')
+        this.props.history.push('/admin/banking/bank-account')
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    })
+  }
+
+
+  render() {
+    const { project_list, transaction_category_list, transaction_type_list } = this.props
+    const { initValue, loading } = this.state
     return (
-      <div className="detail-bank-transaction-screen">
+      <div className="update-bank-transaction-screen">
         <div className="animated fadeIn">
           <Row>
             <Col lg={12} className="mx-auto">
@@ -51,154 +178,258 @@ class DetailBankTransaction extends React.Component {
                     <Col lg={12}>
                       <div className="h4 mb-0 d-flex align-items-center">
                         <i className="icon-doc" />
-                        <span className="ml-2">Update Bank Transaction</span>
+                        <span className="ml-2">Detail Bank Transaction</span>
                       </div>
                     </Col>
                   </Row>
                 </CardHeader>
                 <CardBody>
-                  <Row>
-                    <Col lg={12}>
-                      <Form>
-                        <Row>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="statement_type">Transaction Type</Label>
-                              <Select
-                                className="select-default-width"
-                                options={[]}
-                                id="statement_type"
-                                name="statement_type"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="date">Date</Label>
-                              <div>
-                                <DatePicker
-                                  className="form-control"
-                                  id="date"
-                                  name="date"
-                                  placeholderText=""
-                                />
-                              </div>
-                            </FormGroup>
-                          </Col>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="total_amount">Total Amount</Label>
-                              <Input
-                                type="text"
-                                id="total_amount"
-                                name="total_amount"
-                                placeholder=""
-                                required
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="category">Category</Label>
-                              <Select
-                                className="select-default-width"
-                                options={[]}
-                                id="category"
-                                name="category"
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={8}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="description">Description</Label>
-                              <Input
-                                type="textarea"
-                                name="description"
-                                id="description"
-                                rows="6"
-                                placeholder="Description..."
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="project">Project</Label>
-                              <Select
-                                className="select-default-width"
-                                options={[]}
-                                id="project"
-                                name="project"
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <hr/>
-                        <Row>
-                          <Col lg={8}>
-                            <Row>
-                              <Col lg={6}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="reciept_number">Reciept Number</Label>
-                                  <Input
-                                    type="text"
-                                    id="reciept_number"
-                                    name="reciept_number"
-                                    placeholder="Enter Reciept Number"
-                                    required
-                                  />
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col lg={12}>
-                                <FormGroup className="">
-                                  <Label htmlFor="attachment_description">Attachment Description</Label>
-                                  <Input
-                                    type="textarea"
-                                    name="attachment_description"
-                                    id="attachment_description"
-                                    rows="5"
-                                    placeholder="Description..."
-                                  />
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                          </Col>
-                          <Col lg={4}>
-                            <Row>
-                              <Col lg={12}>
-                                <FormGroup className="">
-                                  <Label>Reciept Attachment</Label><br/>
-                                  <Button color="primary" className="btn-square mr-3">
-                                    <i className="fa fa-upload"></i> Upload
-                                  </Button>
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={12} className="mt-5">
-                            <FormGroup className="text-right">
-                              <Button type="submit" color="primary" className="btn-square mr-3">
-                                <i className="fa fa-dot-circle-o"></i> Update
-                              </Button>
-                              <Button color="secondary" className="btn-square" 
-                                onClick={() => this.props.history.push('/admin/banking/bank-account')}>
-                                <i className="fa fa-ban"></i> Cancel
-                              </Button>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                      </Form>
-                    </Col>
-                  </Row>
+                  {loading ? (<Loader />) : (
+                    <Row>
+                      <Col lg={12}>
+                        <Formik
+                          initialValues={initValue}
+                          ref={this.formRef}
+                          onSubmit={(values, { resetForm }) => {
+                            this.handleSubmit(values, resetForm)
+                          }}
+                          validationSchema={
+                            Yup.object().shape({
+                              transactionDate: Yup.date()
+                                .required('Transaction Date is Required'),
+                              transactionAmount: Yup.date()
+                                .required('Transaction Amount is Required'),
+                              transactionTypeCode: Yup.string()
+                                .required('Transaction Type is Required'),
+                              attachment: Yup.mixed()
+                                .test('fileType', "*Unsupported File Format", value => {
+                                  if (value && !this.supported_format.includes(value.type)) {
+                                    this.setState({
+                                      fileName: value.name
+                                    })
+                                    return false
+                                  } else {
+                                    return true
+                                  }
+                                })
+                                .test('fileSize', "*File Size is too large", value => {
+                                  if (value && value.size >= this.file_size) {
+                                    return false
+                                  } else {
+                                    return true
+                                  }
+                                })
+                            })}
+                        >
+                          {props => (
+                            <Form onSubmit={props.handleSubmit}>
+                              <Row>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="transactionTypeCode">Transaction Type</Label>
+                                    <Select
+                                      className="select-default-width"
+                                      options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list, 'Type') : ''}
+                                      value={props.values.transactionTypeCode}
+                                      onChange={option => {
+                                        // if (option && option.value) {
+                                        //   props.handleChange('transactionTypeCode')(option.value)
+                                        // } else {
+                                        //   props.handleChange('transactionTypeCode')('')
+                                        // }
+                                      }}
+                                      placeholder="Select Type"
+                                      id="transactionTypeCode"
+                                      name="transactionTypeCode"
+                                      className={
+                                        props.errors.transactionTypeCode && props.touched.transactionTypeCode
+                                          ? "is-invalid"
+                                          : ""
+                                      }
+                                    />
+                                    {props.errors.transactionTypeCode && props.touched.transactionTypeCode && (
+                                      <div className="invalid-feedback">{props.errors.transactionTypeCode}</div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="date">Transaction Date</Label>
+                                    <DatePicker
+                                      id="transactionDate"
+                                      name="transactionDate"
+                                      placeholderText="Transaction Date"
+                                      showMonthDropdown
+                                      showYearDropdown
+                                      dateFormat="dd/MM/yyyy"
+                                      dropdownMode="select"
+                                      value={props.values.transactionDate ? moment(props.values.transactionDate).format('DD-MM-YYYY') : ''}
+                                      selected={props.values.transactionDate}
+                                      onChange={(value) => {
+                                        props.handleChange("transactionDate")(value)
+                                      }}
+                                      className={`form-control ${props.errors.transactionDate && props.touched.transactionDate ? "is-invalid" : ""}`}
+                                    />
+                                    {props.errors.transactionDate && props.touched.transactionDate && (
+                                      <div className="invalid-feedback">{props.errors.transactionDate}</div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="transactionAmount">Total Amount</Label>
+                                    <Input
+                                      type="number"
+                                      id="transactionAmount"
+                                      name="transactionAmount"
+                                      placeholder="Amount"
+                                      onChange={option => props.handleChange('transactionAmount')(option)}
+                                      value={props.values.transactionAmount}
+                                    />
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="transactionCategoryId">Category</Label>
+                                    <Select
+                                      className="select-default-width"
+                                      options={transaction_category_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list, 'Category') : []}
+                                      id="transactionCategoryId"
+                                      value={props.values.transactionCategoryId}
+                                      onChange={option => {
+                                        // if (option && option.value) {
+                                        //   props.handleChange('transactionCategoryId')(option.value)
+                                        // } else {
+                                        //   props.handleChange('transactionCategoryId')('')
+                                        // }
+                                      }}
+                                    />
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={8}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="transactionDescription">Description</Label>
+                                    <Input
+                                      type="textarea"
+                                      name="description"
+                                      id="description"
+                                      rows="6"
+                                      placeholder="Description..."
+                                      onChange={option => props.handleChange('transactionDescription')(option)}
+                                      value={props.values.transactionDescription}
+                                    />
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={4}>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="projectId">Project</Label>
+                                    <Select
+                                      className="select-default-width"
+                                      options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list, 'Project') : []}
+                                      id="projectId"
+                                      name="projectId"
+                                      value={props.values.projectId}
+                                      onChange={option => {
+                                        console.log(option)
+                                        // if (option && option.value) {
+                                        //   props.handleChange('projectId')(option.value)
+                                        // } else {
+                                        //   props.handleChange('projectId')('')
+                                        // }
+                                      }}
+                                    />
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={8}>
+                                  <Row>
+                                    <Col lg={6}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="receiptNumber">Reciept Number</Label>
+                                        <Input
+                                          type="text"
+                                          id="receiptNumber"
+                                          name="receiptNumber"
+                                          placeholder="Reciept Number"
+                                          onChange={option => props.handleChange('receiptNumber')(option)}
+                                          value={props.values.receiptNumber}
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                  </Row>
+                                  <Row>
+                                    <Col lg={12}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="receiptAttachmentDescription">Attachment Description</Label>
+                                        <Input
+                                          type="textarea"
+                                          name="receiptAttachmentDescription"
+                                          id="receiptAttachmentDescription"
+                                          rows="5"
+                                          placeholder="1024 characters..."
+                                          onChange={option => props.handleChange('receiptAttachmentDescription')(option)}
+                                          value={props.values.receiptAttachmentDescription}
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                  </Row>
+                                </Col>
+                                <Col lg={4}>
+                                  <Row>
+                                    <Col lg={12}>
+                                      <FormGroup className="mb-3">
+                                        <Field name="attachment"
+                                          render={({ field, form }) => (
+                                            <div>
+                                              <Label>Reciept Attachment</Label> <br />
+                                              <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                                <i className="fa fa-upload"></i> Upload
+                                                    </Button>
+                                              <input id="fileInput" ref={ref => {
+                                                this.uploadFile = ref;
+                                              }} type="file" style={{ display: 'none' }} onChange={(e) => {
+                                                this.handleFileChange(e, props)
+                                              }} />
+                                              {this.state.fileName}
+
+                                            </div>
+                                          )}
+                                        />
+                                        {console.log(props.errors)}
+                                        {props.errors.attachment && (
+                                          <div className="invalid-file">{props.errors.attachment}</div>
+                                        )}
+                                      </FormGroup>
+                                    </Col>
+                                  </Row>
+                                </Col>
+                              </Row>
+                              <Row>
+                                <Col lg={12} className="mt-5">
+                                  <FormGroup className="text-right">
+                                    <Button type="button" color="primary" className="btn-square mr-3">
+                                      <i className="fa fa-dot-circle-o"></i> Update
+                                                   </Button>
+                                    <Button color="secondary" className="btn-square"
+                                      onClick={() => this.props.history.push('/admin/banking/bank-account')}>
+                                      <i className="fa fa-ban"></i> Cancel
+                                                   </Button>
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                            </Form>
+                          )}
+                        </Formik>
+                      </Col>
+                    </Row>
+                  )}
                 </CardBody>
               </Card>
             </Col>
@@ -210,3 +441,4 @@ class DetailBankTransaction extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailBankTransaction)
+

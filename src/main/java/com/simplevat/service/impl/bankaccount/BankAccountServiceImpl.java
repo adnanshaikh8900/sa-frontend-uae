@@ -2,12 +2,14 @@ package com.simplevat.service.impl.bankaccount;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.dao.bankaccount.BankAccountDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.BankAccount;
@@ -67,4 +69,9 @@ public class BankAccountServiceImpl extends BankAccountService {
     public void deleteByIds(List<Integer> ids) {
         bankAccountDao.deleteByIds(ids);
     }
+
+	@Override
+	public List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap) {
+		return  bankAccountDao.getBankAccounts(filterDataMap);
+	}
 }

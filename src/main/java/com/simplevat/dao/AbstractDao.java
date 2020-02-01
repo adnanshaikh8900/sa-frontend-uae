@@ -50,31 +50,31 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
     }
 
     @Override
-    public List<ENTITY> executeQuery(List<DbFilter> dbFilters) {
-        StringBuilder queryBuilder = new StringBuilder("SELECT o FROM ").append(entityClass.getName().toUpperCase()).append(" o ");
-        int i = 0;
-        for (DbFilter dbFilter : dbFilters) {
-            if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
-                if (i > 0) {
-                    queryBuilder.append(" and ");
-                } else {
-                    queryBuilder.append(" where ");
-                }
-                queryBuilder.append("o.").append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
-                i++;
-            }
-        }
-
-        TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
-        for (DbFilter dbFilter : dbFilters) {
-            if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
-                typedQuery.setParameter(dbFilter.getDbCoulmnName(), dbFilter.getValue());
-            }
-        }
-
-        List<ENTITY> result = typedQuery.getResultList();
-        return result;
-    }
+	public List<ENTITY> executeQuery(List<DbFilter> dbFilters) {
+	    StringBuilder queryBuilder = new StringBuilder("SELECT o FROM ").append(entityClass.getName()).append(" o ");
+	    int i = 0;
+	    for (DbFilter dbFilter : dbFilters) {
+	        if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
+	            if (i > 0) {
+	                queryBuilder.append(" and ");
+	            } else {
+	                queryBuilder.append(" where ");
+	            }
+	            queryBuilder.append("o.").append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
+	            i++;
+	        }
+	    }
+	
+	    TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
+	    for (DbFilter dbFilter : dbFilters) {
+	        if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
+	            typedQuery.setParameter(dbFilter.getDbCoulmnName(), dbFilter.getValue());
+	        }
+	    }
+	
+	    List<ENTITY> result = typedQuery.getResultList();
+	    return result;
+	}
 
     @Override
     @Transactional

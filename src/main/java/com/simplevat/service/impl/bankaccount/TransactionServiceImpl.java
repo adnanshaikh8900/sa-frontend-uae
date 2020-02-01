@@ -1,6 +1,9 @@
 package com.simplevat.service.impl.bankaccount;
 
+import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.contact.model.TransactionReportRestModel;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +23,7 @@ import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
+import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.util.ChartUtil;
 import java.math.BigDecimal;
@@ -338,5 +342,15 @@ public class TransactionServiceImpl extends TransactionService {
 	public BigDecimal getCurrentBalanceByBankId(Integer bankId) {
 		Transaction trnx = transactionDao.getCurrentBalanceByBankId(bankId);
 		return trnx.getCurrentBalance();
+	}
+
+	@Override
+	public void deleteByIds(ArrayList<Integer> ids) {
+		transactionDao.deleteByIds(ids);
+	}
+
+	@Override
+	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel) {
+		return transactionDao. getAllTransactionList(filterModel);
 	}
 }

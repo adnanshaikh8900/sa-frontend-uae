@@ -1,14 +1,19 @@
 package com.simplevat.dao.impl.bankaccount;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
+import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.bankaccount.BankAccountDao;
+import com.simplevat.entity.Product;
 import com.simplevat.entity.bankaccount.BankAccount;
 import javax.persistence.TypedQuery;
 
@@ -57,6 +62,17 @@ public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implem
                 update(bankAccount);
             }
         }
+    }
+
+	@Override
+	public List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap) {
+        List<DbFilter> dbFilters = new ArrayList();
+        filterDataMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder()
+                .dbCoulmnName(filter.getDbColumnName())
+                .condition(filter.getCondition())
+                .value(value).build()));
+        List<BankAccount> list = this.executeQuery(dbFilters);
+        return list;
     }
 
 }

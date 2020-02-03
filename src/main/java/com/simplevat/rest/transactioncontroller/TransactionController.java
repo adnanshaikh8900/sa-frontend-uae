@@ -11,6 +11,7 @@ import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.helper.TransactionHelper;
+import com.simplevat.rest.PaginationModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
@@ -90,8 +91,8 @@ public class TransactionController implements Serializable {
 			dataMap.put(TransactionFilterEnum.TRANSACTION_TYPE,
 					transactionTypeService.findByPK(filterModel.getTransactionTypeCode()));
 		}
-		
-		List<Transaction> trasactionList = transactionService.getAllTransactionList(dataMap);
+
+		List<Transaction> trasactionList = transactionService.getAllTransactionList(dataMap, filterModel);
 		if (trasactionList == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}

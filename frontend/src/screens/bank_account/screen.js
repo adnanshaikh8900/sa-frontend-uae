@@ -59,7 +59,7 @@ class BankAccount extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       dialog: null,
       actionButtons: {},
       selected_id_list: [],
@@ -116,17 +116,13 @@ class BankAccount extends React.Component {
   initializeData () {
     this.props.bankAccountActions.getAccountTypeList()
     this.props.bankAccountActions.getCurrencyList()
-    this.setState({
-      loading: true
-    })
-    this.props.bankAccountActions.getBankAccountList(this.state.filterData).then(() => {
-      this.setState({
-        loading: false
-      })
-    }).catch(() => {
-      this.setState({
-        loading: false
-      })
+    this.props.bankAccountActions.getBankAccountList(this.state.filterData).then((res) => {
+      if (res.status === 200) {
+        this.setState({ loading: false })
+      }
+    }).catch(err => {
+      this.setState({ loading: false })
+      // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 

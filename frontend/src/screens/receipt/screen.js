@@ -6,20 +6,13 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
   FormGroup,
   Input
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-import DateRangePicker from 'react-bootstrap-daterangepicker'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { selectOptionsFactory } from 'utils'
@@ -85,7 +78,7 @@ class Receipt extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 1,
+      page: 0,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -111,17 +104,15 @@ class Receipt extends React.Component {
       pageNo: this.options.page,
       pageSize: this.options.sizePerPage
     }
-    filterData = { ...filterData, ...data };
+    const postData = { ...filterData, ...data };
     this.props.receiptActions.getContactList();
     this.props.receiptActions.getInvoiceList();
-    this.props.receiptActions.getReceiptList(filterData).then(res => {
+    this.props.receiptActions.getReceiptList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
     }).catch((err) => {
-      this.setState({
-        loading: false
-      })
+      this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -140,12 +131,18 @@ class Receipt extends React.Component {
     return rows['receiptDate'] !== null ? moment(rows['receiptDate']).format('DD/MM/YYYY') : ''
   }
 
-  onPageChange = (page, sizePerPage) => {
-    this.options.page = page
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
   }
 
-  onSizePerPageList = (sizePerPage) => {
-    this.options.sizePerPage = sizePerPage
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
   }
 
   onRowSelect(row, isSelected, e) {
@@ -158,6 +155,7 @@ class Receipt extends React.Component {
         if (item !== row.receiptId) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -167,9 +165,7 @@ class Receipt extends React.Component {
   onSelectAll(isSelected, rows) {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.receiptId)
-      })
+      rows.map(item => temp_list.push(item.receiptId))
     }
     this.setState({
       selectedRows: temp_list
@@ -194,7 +190,6 @@ class Receipt extends React.Component {
   }
 
   removeBulk() {
-    const { filterData } = this.state;
     let { selectedRows } = this.state;
     const { receipt_list } = this.props
     let obj = {
@@ -235,9 +230,6 @@ class Receipt extends React.Component {
   render() {
     const { loading, dialog, selectedRows, filterData } = this.state
     const { receipt_list, invoice_list, contact_list } = this.props;
-    const containerStyle = {
-      zIndex: 1999
-    }
 
     return (
       <div className="receipt-screen">
@@ -366,12 +358,13 @@ class Receipt extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={receipt_list}
+                          data={receipt_list ? receipt_list : []}
                           version="4"
                           keyField="receiptId"
                           hover
                           pagination
-                          totalSize={receipt_list ? receipt_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: receipt_list.totalCount ? receipt_list.totalCount : 0 }}
                           className="receipt-table"
                           trClassName="cursor-pointer"
                           csvFileName="Receipt.csv"

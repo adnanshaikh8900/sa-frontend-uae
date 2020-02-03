@@ -6,10 +6,6 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
@@ -18,21 +14,15 @@ import {
   Input
 } from 'reactstrap'
 import Select from 'react-select'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import { Loader, ConfirmDeleteModal } from 'components'
-
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
 import * as ContactActions from './actions'
-import {
-  CommonActions
-} from 'services/global'
-import {selectOptionsFactory} from 'utils'
-
+import { CommonActions } from 'services/global'
+import { selectOptionsFactory } from 'utils'
 
 import './style.scss'
 
@@ -40,14 +30,12 @@ const mapStateToProps = (state) => {
   return ({
     contact_list: state.contact.contact_list,
     contact_type_list: state.contact.contact_type_list
-
   })
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
     contactActions: bindActionCreators(ContactActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
-
   })
 }
 
@@ -57,7 +45,6 @@ class Contact extends React.Component {
     super(props)
     this.state = {
       loading: false,
-      clickedRow: {},
       selectedRows: [],
       dialog: null,
       filterData: {
@@ -69,22 +56,23 @@ class Contact extends React.Component {
     }
 
     this.initializeData = this.initializeData.bind(this)
+
     this.onRowSelect = this.onRowSelect.bind(this)
     this.onSelectAll = this.onSelectAll.bind(this)
     this.goToDetail = this.goToDetail.bind(this)
-
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
     this.onPageChange = this.onPageChange.bind(this);
     this.onSizePerPageList = this.onSizePerPageList.bind(this)
+
     this.handleChange = this.handleChange.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 1,
+      page: 0,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -111,11 +99,11 @@ class Contact extends React.Component {
 
   initializeData() {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page,
       pageSize: this.options.sizePerPage
     }
-    filterData = {...filterData,...data}
+    filterData = { ...filterData, ...paginationData }
     this.props.contactActions.getContactList(filterData).then(res => {
       if (res.status === 200) {
         this.props.contactActions.getContactTypeList();
@@ -128,17 +116,19 @@ class Contact extends React.Component {
   }
 
 
-  onPageChange = (page, sizePerPage) => {
-      this.options.page = page
-  }
-
   onSizePerPageList = (sizePerPage) => {
-    this.options.sizePerPage = sizePerPage
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
   }
 
-  // typeFormatter(cell, row) {
-  //   return row['contactType'] ? row['contactType'].name : '';
-  // }
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
+  }
 
   onRowSelect(row, isSelected, e) {
     let temp_list = []
@@ -150,6 +140,7 @@ class Contact extends React.Component {
         if (item !== row.id) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -160,9 +151,7 @@ class Contact extends React.Component {
   onSelectAll(isSelected, rows) {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.id)
-      })
+      rows.map(item =>  temp_list.push(item.id))
     }
     this.setState({
       selectedRows: temp_list
@@ -191,7 +180,6 @@ class Contact extends React.Component {
   }
 
   removeBulk() {
-    const {filterData} = this.state
     this.removeDialog()
     let { selectedRows } = this.state;
     const { contact_list } = this.props
@@ -234,12 +222,9 @@ class Contact extends React.Component {
 
   render() {
 
-    const { loading, dialog, filterData,selectedRows} = this.state
+    const { loading, dialog , selectedRows } = this.state
     const { contact_list, contact_type_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
-
+    
     return (
       <div className="contact-screen">
         <div className="animated fadeIn">
@@ -301,38 +286,41 @@ class Contact extends React.Component {
                         <h5>Filter : </h5>
                         <form>
                           <Row>
+
                             <Col lg={3} className="mb-1">
                               <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                             </Col>
+
                             <Col lg={3} className="mb-2">
                               <Input type="text" placeholder="Email" onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
                             </Col>
+
                             <Col lg={3} className="mb-1">
                               <FormGroup className="mb-3">
-
                                 <Select
-                                  options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list,'Contact Type') : []}
+                                  options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                   onChange={(val) => {
-                                        if(val && val.value) {
-                                          this.handleChange(val['value'], 'contactType')
-                                    this.setState({ 'selectedContactType': val['value'] })
-                                        } else {
-                                          this.handleChange('', 'contactType')
-                                    this.setState({ 'selectedContactType': '' })
-                                        }
+                                    if (val && val.value) {
+                                      this.handleChange(val['value'], 'contactType')
+                                      this.setState({ 'selectedContactType': val['value'] })
+                                    } else {
+                                      this.handleChange('', 'contactType')
+                                      this.setState({ 'selectedContactType': '' })
+                                    }
                                   }}
                                   className="select-default-width"
                                   placeholder="Contact Type"
                                   value={this.state.selectedContactType}
                                 />
                               </FormGroup>
-
                             </Col>
+
                             <Col lg={2} className="mb-1">
                               <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} >
                                 <i className="fa fa-search"></i>
-                            </Button>
+                              </Button>
                             </Col>
+
                           </Row>
                         </form>
                       </div>
@@ -347,7 +335,8 @@ class Contact extends React.Component {
                               version="4"
                               hover
                               pagination
-                              totalSize={contact_list ? contact_list.length : 0}
+                              remote
+                              fetchInfo={{ dataTotalSize: contact_list.totalCount ? contact_list.totalCount : 0 }}
                               className="product-table"
                               trClassName="cursor-pointer"
                               csvFileName="Contact.csv"
@@ -371,7 +360,7 @@ class Contact extends React.Component {
                               <TableHeaderColumn
                                 dataField="contactTypeString"
                                 dataSort
-                                // dataFormat={this.typeFormatter}
+                              // dataFormat={this.typeFormatter}
                               >
                                 Type
                               </TableHeaderColumn>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import {connect} from 'react-redux'
-import { bindActionCreators } from 'redux'
+// import { bindActionCreators } from 'redux'
 import {
   Card,
   CardBody,
@@ -41,7 +41,7 @@ class Help extends React.Component {
                 <Col md="6">
                   <Card>
                     <CardBody>
-                      <div><img src={faqIcon} width="40%"></img></div>
+                      <div><img src={faqIcon} width="40%" alt=""></img></div>
                       <h3>Have a question?</h3>
                       <p>
                         Find detailed answers to the most common questions you might have while using our site
@@ -53,7 +53,7 @@ class Help extends React.Component {
                 <Col md="6">
                   <Card>
                     <CardBody>
-                      <div><img src={userIcon} width="40%"></img></div>
+                      <div><img src={userIcon} width="40%" alt=""></img></div>
                       <h3>Customer Support</h3>
                       <p>
                         Find detailed answers to the most common questions you might have while using our site

@@ -7,25 +7,19 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
-  FormGroup,
+
   Input,
-  Label,
   ButtonDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem
 } from 'reactstrap'
 import Select from 'react-select'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+// import { ToastContainer, toast } from 'react-toastify'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 
@@ -43,11 +37,10 @@ import {
 } from 'services/global'
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils'
 
 import './style.scss'
-import { setNestedObjectValues } from 'formik';
+// import { setNestedObjectValues } from 'formik';
 
 const mapStateToProps = (state) => {
   return ({
@@ -116,9 +109,22 @@ class SupplierInvoice extends React.Component {
   }
 
   initializeData() {
-    this.props.supplierInvoiceActions.getSupplierInoviceList(this.state.filterData)
-    this.props.supplierInvoiceActions.getStatusList(this.state.filterData)
-    this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
+    let { filterData } = this.state
+    const paginationData = {
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
+    }
+    const postData = {...filterData,...paginationData }
+    this.props.supplierInvoiceActions.getSupplierInvoiceList(postData).then(res => {
+    if (res.status === 200) {
+        this.props.supplierInvoiceActions.getStatusList()
+        this.props.supplierInvoiceActions.getSupplierList(filterData.contactType);
+        this.setState({ loading: false });
+     }
+    }).catch(err => {
+       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+       this.setState({ loading: false })
+    })
 
   }
   componentWillUnmount() {
@@ -211,6 +217,20 @@ class SupplierInvoice extends React.Component {
     )
   }
 
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
+  }
+
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
@@ -221,6 +241,7 @@ class SupplierInvoice extends React.Component {
         if (item !== row.id) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -232,6 +253,7 @@ class SupplierInvoice extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.id)
+        return item
       })
     }
     this.setState({
@@ -297,10 +319,10 @@ class SupplierInvoice extends React.Component {
 
   render() {
     const { loading, filterData, dialog, selectedRows } = this.state
-    const { supplier_invoice_list, status_list, supplier_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+    const {  status_list, supplier_list } = this.props
+    // const containerStyle = {
+    //   zIndex: 1999
+    // }
 
     const supplier_invoice_data = this.props.supplier_invoice_list ? this.props.supplier_invoice_list.map(supplier =>
 
@@ -492,7 +514,8 @@ class SupplierInvoice extends React.Component {
                           hover
                           keyField="id"
                           pagination
-                          totalSize={supplier_invoice_list ? supplier_invoice_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: supplier_invoice_data.totalCount ? supplier_invoice_data.totalCount : 0 }}
                           className="supplier-invoice-table"
                           ref={node => this.table = node}
                         >

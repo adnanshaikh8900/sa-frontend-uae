@@ -82,7 +82,7 @@ class CreateChartAccount extends React.Component {
   // Create or Edit Vat
   handleSubmit(data,resetForm) {
     this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
-      if (res.status === 200) {
+      if (res.status == 200) {
         this.props.commonActions.tostifyAlert('success', 'New Account Created Successfully')
         if (this.state.createMore) {
           this.setState({

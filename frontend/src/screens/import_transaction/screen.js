@@ -96,23 +96,27 @@ class ImportTransaction extends React.Component {
   }
 
   initializeData() {
-    this.props.importTransactionActions.getDateFormatList()
-    this.props.importTransactionActions.getConfigurationList().then(res => {
-      this.setState({
-        configurationList: res.data
-      })
-    })
-
-    this.props.importTransactionActions.getDelimiterList().then(res => {
-      this.setState({
-        delimiterList: res.data,
-        selectedDelimiter: res.data[0].value
-      }, () => {
+    if(this.props.location.state && this.props.location.state.bankAccountId) {
+      this.props.importTransactionActions.getDateFormatList()
+      this.props.importTransactionActions.getConfigurationList().then(res => {
         this.setState({
-          initialloading: false
+          configurationList: res.data
         })
       })
-    })
+  
+      this.props.importTransactionActions.getDelimiterList().then(res => {
+        this.setState({
+          delimiterList: res.data,
+          selectedDelimiter: res.data[0].value
+        }, () => {
+          this.setState({
+            initialloading: false
+          })
+        })
+      })
+    } else {
+      this.props.history('/admin/banking/bank-account')
+    }
   }
 
 

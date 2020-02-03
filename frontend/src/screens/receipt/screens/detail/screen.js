@@ -56,7 +56,8 @@ class DetailReceipt extends React.Component {
     this.state = {
       loading: true,
       dialog: null,
-      initValue: {}
+      initValue: {},
+      current_receipt_id: null
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.initializeData = this.initializeData.bind(this)
@@ -72,15 +73,14 @@ class DetailReceipt extends React.Component {
   }
 
   initializeData() {
-    const id = this.props.location.state.id ? this.props.location.state.id : ''
-    if (this.props.location.state && id) {
+    if (this.props.location.state && this.props.location.state.id) {
       this.props.receiptActions.getContactList();
       this.props.receiptActions.getInvoiceList();
-      this.props.receiptDetailActions.getReceiptById(id).then(res => {
+      this.props.receiptDetailActions.getReceiptById(this.props.location.state.id).then(res => {
         // this.props.receiptActions.getTitleList()
-        const { receiptDate } = res.data
         if (res.status === 200) {
           this.setState({
+            current_receipt_id: this.props.location.state.id,
             initValue: {
               receiptNo: res.data.receiptNo,
               contactId: res.data.contactId ? res.data.contactId : '',
@@ -91,20 +91,19 @@ class DetailReceipt extends React.Component {
               invoiceId: res.data.invoiceId ? res.data.invoiceId : ''
             },
             loading: false,
-
-          }, () => {
           })
         }
       }).catch(err => {
         this.props.commonActions.tostifyAlert('error', err ? err.data.message : null)
         this.setState({ loading: false })
       })
+    } else {
+      this.props.history.push('admin/revenue/receipt')
     }
   }
 
   handleSubmit(data) {
-
-    const id = this.props.location.state.id;
+    const { current_receipt_id } = this.state
     const {
       receiptDate,
       receiptNo,
@@ -116,7 +115,7 @@ class DetailReceipt extends React.Component {
     } = data
 
     const postData = {
-      receiptId: id,
+      receiptId: current_receipt_id,
       receiptNo: receiptNo ? receiptNo : '',
       referenceCode: referenceCode ? referenceCode : '',
       receiptDate: receiptDate ? receiptDate : '',
@@ -147,8 +146,8 @@ class DetailReceipt extends React.Component {
   }
 
   removeReceipt() {
-    const id = this.props.location.state.id;
-    this.props.receiptDetailActions.deleteReceipt(id).then(res => {
+    const {current_receipt_id} = this.state;
+    this.props.receiptDetailActions.deleteReceipt(current_receipt_id).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Receipt Deleted Successfully');
         this.props.history.push('/admin/revenue/receipt')

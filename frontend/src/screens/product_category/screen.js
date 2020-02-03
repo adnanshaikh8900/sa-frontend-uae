@@ -6,27 +6,18 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   Input,
-  FormGroup,
-  Form,
   ButtonGroup
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-import moment from 'moment'
-import _ from 'lodash'
+import { toast } from 'react-toastify'
+import { BootstrapTable, TableHeaderColumn,  } from 'react-bootstrap-table'
 import {
-  selectOptionsFactory,
-  filterFactory
-} from 'utils'
+  CommonActions
+} from 'services/global'
 
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal} from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -42,7 +33,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    productCategoryActions: bindActionCreators(ProductCategoryActions, dispatch)
+    productCategoryActions: bindActionCreators(ProductCategoryActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
 
@@ -51,23 +43,23 @@ class ProductCategory extends React.Component {
     super(props)
 
     this.state = {
-      openDeleteModal: false,
+      // openDeleteModal: true,
       loading: true,
       selectedRows: [],
       filterData: {
         productCategoryCode: '',
         productCategoryName: '',
-        // pageNo: 0,
-        // pageSize: 10
       }
     }
 
     this.initializeData = this.initializeData.bind(this)
-    this.deleteProductCategory = this.deleteProductCategory.bind(this)
+    // this.deleteProductCategory = this.deleteProductCategory.bind(this)
     this.success = this.success.bind(this)
-
-    this.showConfirmModal = this.showConfirmModal.bind(this)
-    this.closeConfirmModal = this.closeConfirmModal.bind(this)
+    this.bulkDelete = this.bulkDelete.bind(this)
+    this.removeBulk = this.removeBulk.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
+    // this.showConfirmModal = this.showConfirmModal.bind(this)
+    // this.closeConfirmModal = this.closeConfirmModal.bind(this)
     this.goToDetail = this.goToDetail.bind(this)
 
     this.onSelectAll = this.onSelectAll.bind(this)
@@ -81,6 +73,8 @@ class ProductCategory extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
     }
@@ -105,7 +99,7 @@ class ProductCategory extends React.Component {
     }
     else
       this.setState({
-        selectedRows: this.state.selectedRows.filter(el => el != row.id)
+        selectedRows: this.state.selectedRows.filter(el => el !== row.id)
       })
   }
 
@@ -139,8 +133,8 @@ class ProductCategory extends React.Component {
   initializeData() {
     const { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page ? this.options.page : 1,
-      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
     this.props.productCategoryActions.getProductCategoryList(postData).then(res => {
@@ -149,23 +143,22 @@ class ProductCategory extends React.Component {
       }
     }).catch(err => {
       this.setState({ loading: false })
-    })
-  }
-
-  onPageChange = (page, sizePerPage) => {
-    this.setState({
-      filterData: {
-        pageNo: page
-      }
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : '')
     })
   }
 
   onSizePerPageList = (sizePerPage) => {
-    this.setState({
-      filterData: {
-        pageSize: sizePerPage
-      }
-    })
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
   }
 
   // -------------------------
@@ -173,30 +166,72 @@ class ProductCategory extends React.Component {
   //--------------------------
 
   // Delete Vat By ID
-  deleteProductCategory() {
-    // this.setState({ loading: true })
-    this.setState({ openDeleteModal: false })
-    const data = {
-      ids: this.state.selectedRows
+  bulkDelete() {
+    const {
+      selectedRows
+    } = this.state
+    if (selectedRows.length > 0) {
+      this.setState({
+        dialog: <ConfirmDeleteModal
+          isOpen={true}
+          okHandler={this.removeBulk}
+          cancelHandler={this.removeDialog}
+        />
+      })
+    } else {
+      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
     }
-    this.props.productCategoryActions.deleteProductCategory(data).then(res => {
-      if (res.status === 200) {
-        // this.setState({ loading: false })
-        this.initializeData()
+  }
+
+  removeBulk() {
+    let { selectedRows } = this.state;
+    const { product_category_list } = this.props
+    let obj = {
+      ids: selectedRows
+    }
+    this.removeDialog()
+    this.props.productCategoryActions.deleteProductCategory(obj).then((res) => {
+      this.initializeData();
+      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+      if (product_category_list && product_category_list.length > 0) {
+        this.setState({
+          selectedRows: []
+        })
       }
     }).catch(err => {
-      this.setState({ openDeleteModal: false })
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+  // deleteProductCategory() {
+  //   // this.setState({ loading: true })
+  //   this.setState({ openDeleteModal: false })
+  //   const data = {
+  //     ids: this.state.selectedRows
+  //   }
+  //   this.props.productCategoryActions.deleteProductCategory(data).then(res => {
+  //     if (res.status === 200) {
+  //       // this.setState({ loading: false })
+  //       this.initializeData()
+  //     }
+  //   }).catch(err => {
+  //     this.setState({ openDeleteModal: false })
+  //   })
+  // }
+
   // Open Confirm Modal
-  showConfirmModal() {
-    this.setState({ openDeleteModal: true })
-  }
-  // Close Confirm Modal
-  closeConfirmModal() {
-    this.setState({ openDeleteModal: false })
-  }
+  // showConfirmModal() {
+  //   this.setState({ openDeleteModal: true })
+  // }
+  // // Close Confirm Modal
+  // closeConfirmModal() {
+  //   this.setState({ openDeleteModal: false })
+  // }
 
 
   handleFilterChange(e, name) {
@@ -225,7 +260,7 @@ class ProductCategory extends React.Component {
   // }
 
   render() {
-    const { loading, selectedRows, filterData } = this.state
+    const { loading, selectedRows ,dialog} = this.state
     const { product_category_list } = this.props
 
     // let display_data = this.filterVatList(vatList)
@@ -241,6 +276,7 @@ class ProductCategory extends React.Component {
               </div>
             </CardHeader>
             <CardBody>
+              {dialog}
               {
                 loading ?
                   <Loader></Loader> :
@@ -268,7 +304,7 @@ class ProductCategory extends React.Component {
                           <Button
                             color="warning"
                             className="btn-square"
-                            onClick={this.showConfirmModal}
+                            onClick={this.bulkDelete}
                             disabled={selectedRows.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
@@ -312,7 +348,8 @@ class ProductCategory extends React.Component {
                         hover
                         pagination
                         keyField="id"
-                        totalSize={product_category_list ? product_category_list.length : 0}
+                        remote
+                        fetchInfo={{ dataTotalSize: product_category_list.totalCount ? product_category_list.totalCount : 0 }}
                         className="product-table"
                         trClassName="cursor-pointer"
                         csvFileName="product_category.csv"
@@ -336,7 +373,7 @@ class ProductCategory extends React.Component {
               }
             </CardBody>
           </Card>
-          <Modal isOpen={this.state.openDeleteModal}
+          {/* <Modal isOpen={this.state.openDeleteModal}
             className={'modal-danger ' + this.props.className}>
             <ModalHeader toggle={this.toggleDanger}>Delete</ModalHeader>
             <ModalBody>
@@ -346,7 +383,7 @@ class ProductCategory extends React.Component {
               <Button color="danger" onClick={this.deleteProductCategory}>Yes</Button>&nbsp;
                   <Button color="secondary" onClick={this.closeConfirmModal}>No</Button>
             </ModalFooter>
-          </Modal>
+          </Modal> */}
         </div>
       </div>
     )

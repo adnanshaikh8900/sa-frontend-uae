@@ -69,12 +69,12 @@ class DetailSupplierInvoice extends React.Component {
         { value: 'Percentage', label: 'Percentage' }
       ],
       discount_option: '',
-      id: props.location.state.id,
       data: [],
       initValue: {},
       contactType: 1,
       openSupplierModal: false,
-      selectedContact: ''
+      selectedContact: '',
+      current_supplier_id: null
     }
 
     // this.options = {
@@ -121,15 +121,15 @@ class DetailSupplierInvoice extends React.Component {
   }
 
   initializeData() {
-    const { id } = this.state;
-    if (id) {
-      this.props.supplierInvoiceDetailActions.getInvoiceById(id).then(res => {
+    if (this.props.location.state && this.props.location.state.id) {
+      this.props.supplierInvoiceDetailActions.getInvoiceById(this.props.location.state.id).then(res => {
         if (res.status === 200) {
           this.props.supplierInvoiceActions.getVatList()
           this.props.supplierInvoiceActions.getProjectList();
           this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
           this.props.supplierInvoiceActions.getCurrencyList();
           this.setState({
+            current_supplier_id: this.props.location.state.id,
             initValue: {
               receiptAttachmentDescription: res.data.receiptAttachmentDescription ? res.data.receiptAttachmentDescription : '',
               receiptNumber: res.data.receiptNumber ? res.data.receiptNumber : '',
@@ -164,10 +164,14 @@ class DetailSupplierInvoice extends React.Component {
           }
           )
         }
+      }).catch(err => {
+        this.props.history.push('/admin/expense/supplier-invoice')
       })
-
+    } else {
+      this.props.history.push('/admin/expense/supplier-invoice')
     }
   }
+
   calTotalNet(data) {
     const { vat_list } = this.props;
     let total_net = 0
@@ -428,7 +432,7 @@ class DetailSupplierInvoice extends React.Component {
   }
 
   handleSubmit(data) {
-    const { id } = this.state;
+    const { current_supplier_id } = this.state;
     const {
       receiptAttachmentDescription,
       receiptNumber,
@@ -447,7 +451,7 @@ class DetailSupplierInvoice extends React.Component {
 
     let formData = new FormData();
     formData.append("type", 1);
-    formData.append("invoiceId", id);
+    formData.append("invoiceId", current_supplier_id);
     formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
     formData.append("invoiceDate", typeof invoiceDate === "date" ? invoiceDate : moment(invoiceDate).toDate());
     formData.append("invoiceDueDate", typeof invoiceDueDate === "date" ? invoiceDueDate : moment(invoiceDueDate).toDate())
@@ -490,8 +494,8 @@ class DetailSupplierInvoice extends React.Component {
   }
 
   removeInvoice() {
-    const id = this.props.location.state.id;
-    this.props.supplierInvoiceDetailActions.deleteInvoice(id).then(res => {
+    const {current_supplier_id} = this.state;
+    this.props.supplierInvoiceDetailActions.deleteInvoice(current_supplier_id).then(res => {
       if (res.status == 200) {
         this.props.commonActions.tostifyAlert('success', 'Data Removed Successfully')
         this.props.history.push('/admin/expense/supplier-invoice')

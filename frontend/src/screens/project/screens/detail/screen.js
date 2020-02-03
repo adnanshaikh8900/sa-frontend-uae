@@ -74,7 +74,7 @@ class DetailProject extends React.Component {
       selectedcontactIdCountry: null,
       selectedcontactIdCurrency: null,
       selectedcontactIdTitle: null,
-
+      current_project_id: null,
       initValue: {},
     }
 
@@ -98,16 +98,14 @@ class DetailProject extends React.Component {
   }
 
   componentDidMount() {
-    const id = this.props.location.state.id ? this.props.location.state.id : '';
-    if (this.props.location.state && id) {
-      this.props.detailProjectActions.getProjectById(id).then(res => {
+    if (this.props.location.state && this.props.location.state.id) {
+      this.props.detailProjectActions.getProjectById(this.props.location.state.id).then(res => {
         this.props.projectActions.getContactList()
         this.props.projectActions.getCountryList()
         this.props.projectActions.getCurrencyList()
-
-        // this.props.projectActions.getTitleList()
         if (res.status === 200) {
           this.setState({
+            current_project_id: this.props.location.state.id,
             initValue: {
               projectName: res.data.projectName,
               // invoiceLanguageCode: res.data.invoiceLanguageCode !== null ? {
@@ -122,15 +120,15 @@ class DetailProject extends React.Component {
               currencyCode: res.data.currencyCode ? res.data.currencyCode : ''
             },
             loading: false,
-
           })
         }
       }).catch(err => {
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
         this.setState({loading: false})
       })
+    } else {
+      this.props.history.push('/admin/master/project')
     }
-
   }
 
 
@@ -145,7 +143,7 @@ class DetailProject extends React.Component {
   // Create or Edit Vat
   projectHandleSubmit(data) {
 
-    const id = this.props.location.state.id;
+    const {current_project_id} = this.state;
     const {
       projectName,
       invoiceLanguageCode,
@@ -158,7 +156,7 @@ class DetailProject extends React.Component {
     } = data
 
     const postData = {
-      projectId: id,
+      projectId: current_project_id,
       projectName: projectName ? projectName: '',
       invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
       contactId: contactId && contactId !== null ? contactId : '',
@@ -172,12 +170,7 @@ class DetailProject extends React.Component {
     this.props.detailProjectActions.updateProject(postData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Updated successfully!')
-        if (this.state.createMore) {
-          this.setState({
-            createMore: false
-          })
         } else this.props.history.push('/admin/master/project')
-      }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
@@ -194,8 +187,8 @@ class DetailProject extends React.Component {
   }
 
   removeProject() {
-    const id= this.props.location.state.id;
-    this.props.detailProjectActions.deleteProject(id).then(res=>{
+    const { current_project_id }= this.state;
+    this.props.detailProjectActions.deleteProject(current_project_id).then(res=>{
       if(res.status === 200) {
         this.success('Project Deleted Successfully');
         this.props.history.push('/admin/master/project')
@@ -239,7 +232,7 @@ class DetailProject extends React.Component {
                   <Row>
                     <Col lg={12}>
                       <Formik
-                      enableReinitialize={true}
+                        enableReinitialize={true}
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
                           this.projectHandleSubmit(values)

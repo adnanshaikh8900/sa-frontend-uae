@@ -23,7 +23,6 @@ import {
 } from 'services/global'
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils'
 
 import moment from 'moment'

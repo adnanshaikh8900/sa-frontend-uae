@@ -23,7 +23,6 @@ import {
 } from 'services/global'
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils'
 
 import moment from 'moment'
@@ -58,7 +57,8 @@ class DetailBankTransaction extends React.Component {
       createMore: false,
       loading: true,
       fileName: '',
-      initValue: {}
+      initValue: {},
+      transaction_id: null
     }
 
     this.file_size = 1024000;
@@ -82,29 +82,30 @@ class DetailBankTransaction extends React.Component {
   }
 
   initializeData() {
-    let id;
-    id = this.props.location.state && this.props.location.state.id
     this.props.transactionActions.getTransactionCategoryList()
     this.props.transactionActions.getTransactionTypeList()
     this.props.transactionActions.getProjectList()
-    if (id) {
-      this.props.transactionDetailActions.getTransactionDetail(id).then(res => {
-        console.log(res.data)
+    if (this.props.location.state && this.props.location.state.id) {
+      this.props.transactionDetailActions.getTransactionDetail(this.props.location.state.id).then(res => {
         this.setState({
+          transaction_id: this.props.location.state.id,
           initValue: {
             bankAccountId: res.data.bankAccountId ? res.data.bankAccountId : '',
             transactionDate: res.data.transactionDate ? res.data.transactionDate : '',
             transactionDescription: res.data.transactionDescription ? res.data.transactionDescription : '',
             transactionAmount: res.data.transactionAmount ? res.data.transactionAmount : '',
-            // transactionTypeCode: res.data.transactionTypeCode !== null ? res.data.transactionTypeCode : '',
-            // transactionCategoryId: res.data.transactionCategoryId !== null ? res.data.transactionCategoryId : '',
+            transactionTypeCode: res.data.transactionTypeCode !== null ? res.data.transactionTypeCode : '',
+            transactionCategoryId: res.data.transactionCategoryId !== null ? res.data.transactionCategoryId : '',
             projectId: res.data.projectId ? res.data.projectId : '',
             receiptNumber: res.data.receiptNumber ? res.data.receiptNumber : '',
             attachementDescription: res.data.attachementDescription ? res.data.attachementDescription : '',
-            // attachment: res.data.attachment ? res.data.attachment : '',
+            attachment: res.data.attachment ? res.data.attachment : '',
           },
-           loading: false
+          loading: false,
         })
+      }).catch(err => {
+        // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+        this.props.history.push('/admin/banking/bank-account')
       })
     } else {
       this.props.history.push('/admin/banking/bank-account')
@@ -137,11 +138,12 @@ class DetailBankTransaction extends React.Component {
       receiptNumber,
       attachementDescription,
     } = data
+    const { transaction_id } = this.state;
 
-    console.log(typeof transactionDate)
     let formData = new FormData();
     formData.append("bankAccountId ", bankAccountId ? bankAccountId : '');
-    formData.append("transactionDate", transactionDate ? moment(transactionDate).toString() : '');
+    formData.append("id", transaction_id ? transaction_id : '');
+    formData.append("transactionDate", transactionDate ? transactionDate : '');
     formData.append("transactionDescription", transactionDescription ? transactionDescription : '');
     formData.append("transactionAmount", transactionAmount ? transactionAmount : '');
     formData.append("transactionTypeCode", transactionTypeCode ? transactionTypeCode : '');
@@ -168,7 +170,7 @@ class DetailBankTransaction extends React.Component {
     const { project_list, transaction_category_list, transaction_type_list } = this.props
     const { initValue, loading } = this.state
     return (
-      <div className="update-bank-transaction-screen">
+      <div className="detail-bank-transaction-screen">
         <div className="animated fadeIn">
           <Row>
             <Col lg={12} className="mx-auto">
@@ -197,28 +199,28 @@ class DetailBankTransaction extends React.Component {
                             Yup.object().shape({
                               transactionDate: Yup.date()
                                 .required('Transaction Date is Required'),
-                              transactionAmount: Yup.date()
+                              transactionAmount: Yup.string()
                                 .required('Transaction Amount is Required'),
                               transactionTypeCode: Yup.string()
                                 .required('Transaction Type is Required'),
-                              attachment: Yup.mixed()
-                                .test('fileType', "*Unsupported File Format", value => {
-                                  if (value && !this.supported_format.includes(value.type)) {
-                                    this.setState({
-                                      fileName: value.name
-                                    })
-                                    return false
-                                  } else {
-                                    return true
-                                  }
-                                })
-                                .test('fileSize', "*File Size is too large", value => {
-                                  if (value && value.size >= this.file_size) {
-                                    return false
-                                  } else {
-                                    return true
-                                  }
-                                })
+                              // attachment: Yup.mixed()
+                              //   .test('fileType', "*Unsupported File Format", value => {
+                              //     if (value && !this.supported_format.includes(value.type)) {
+                              //       this.setState({
+                              //         fileName: value.name
+                              //       })
+                              //       return false
+                              //     } else {
+                              //       return true
+                              //     }
+                              //   })
+                              //   .test('fileSize', "*File Size is too large", value => {
+                              //     if (value && value.size >= this.file_size) {
+                              //       return false
+                              //     } else {
+                              //       return true
+                              //     }
+                              //   })
                             })}
                         >
                           {props => (
@@ -232,11 +234,11 @@ class DetailBankTransaction extends React.Component {
                                       options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list, 'Type') : ''}
                                       value={props.values.transactionTypeCode}
                                       onChange={option => {
-                                        // if (option && option.value) {
-                                        //   props.handleChange('transactionTypeCode')(option.value)
-                                        // } else {
-                                        //   props.handleChange('transactionTypeCode')('')
-                                        // }
+                                        if (option && option.value) {
+                                          props.handleChange('transactionTypeCode')(option.value)
+                                        } else {
+                                          props.handleChange('transactionTypeCode')('')
+                                        }
                                       }}
                                       placeholder="Select Type"
                                       id="transactionTypeCode"
@@ -264,10 +266,10 @@ class DetailBankTransaction extends React.Component {
                                       dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                       value={props.values.transactionDate ? moment(props.values.transactionDate).format('DD-MM-YYYY') : ''}
-                                      selected={props.values.transactionDate}
-                                      onChange={(value) => {
+                                      // selected={props.values.transactionDate}
+                                      onChange={(value) => 
                                         props.handleChange("transactionDate")(value)
-                                      }}
+                                      }
                                       className={`form-control ${props.errors.transactionDate && props.touched.transactionDate ? "is-invalid" : ""}`}
                                     />
                                     {props.errors.transactionDate && props.touched.transactionDate && (
@@ -299,11 +301,11 @@ class DetailBankTransaction extends React.Component {
                                       id="transactionCategoryId"
                                       value={props.values.transactionCategoryId}
                                       onChange={option => {
-                                        // if (option && option.value) {
-                                        //   props.handleChange('transactionCategoryId')(option.value)
-                                        // } else {
-                                        //   props.handleChange('transactionCategoryId')('')
-                                        // }
+                                        if (option && option.value) {
+                                          props.handleChange('transactionCategoryId')(option.value)
+                                        } else {
+                                          props.handleChange('transactionCategoryId')('')
+                                        }
                                       }}
                                     />
                                   </FormGroup>
@@ -337,11 +339,11 @@ class DetailBankTransaction extends React.Component {
                                       value={props.values.projectId}
                                       onChange={option => {
                                         console.log(option)
-                                        // if (option && option.value) {
-                                        //   props.handleChange('projectId')(option.value)
-                                        // } else {
-                                        //   props.handleChange('projectId')('')
-                                        // }
+                                        if (option && option.value) {
+                                          props.handleChange('projectId')(option.value)
+                                        } else {
+                                          props.handleChange('projectId')('')
+                                        }
                                       }}
                                     />
                                   </FormGroup>
@@ -414,9 +416,9 @@ class DetailBankTransaction extends React.Component {
                               <Row>
                                 <Col lg={12} className="mt-5">
                                   <FormGroup className="text-right">
-                                    <Button type="button" color="primary" className="btn-square mr-3">
+                                    <Button type="button" color="primary" className="btn-square mr-3" onClick={props.handleSubmit}>
                                       <i className="fa fa-dot-circle-o"></i> Update
-                                                   </Button>
+                                    </Button>
                                     <Button color="secondary" className="btn-square"
                                       onClick={() => this.props.history.push('/admin/banking/bank-account')}>
                                       <i className="fa fa-ban"></i> Cancel

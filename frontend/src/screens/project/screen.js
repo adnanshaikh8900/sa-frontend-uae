@@ -6,19 +6,12 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
-  FormGroup,
   Input
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
 import { Loader, ConfirmDeleteModal } from 'components'
 
@@ -78,7 +71,7 @@ class Project extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 1,
+      page: 0,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -97,14 +90,15 @@ class Project extends React.Component {
   componentDidMount() {
     this.initializeData();
   }
+
   initializeData() {
     let { filterData } = this.state
     const data = {
       pageNo: this.options.page,
       pageSize: this.options.sizePerPage
     }
-    filterData = { ...filterData, ...data }
-    this.props.projectActions.getProjectList(filterData).then(res => {
+    const postData = { ...filterData, ...data }
+    this.props.projectActions.getProjectList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -120,12 +114,18 @@ class Project extends React.Component {
     this.props.history.push(`/admin/master/project/detail`, { id: row.projectId })
   }
 
-  onPageChange = (page, sizePerPage) => {
-    this.options.page = page
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
   }
 
-  onSizePerPageList = (sizePerPage) => {
-    this.options.sizePerPage = sizePerPage
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
   }
 
   onRowSelect(row, isSelected, e) {
@@ -138,6 +138,7 @@ class Project extends React.Component {
         if (item !== row.projectId) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -149,6 +150,7 @@ class Project extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.projectId)
+        return item
       })
     }
     this.setState({
@@ -174,7 +176,6 @@ class Project extends React.Component {
   }
 
   removeBulk() {
-    const { filterData } = this.state;
     let { selectedRows } = this.state;
     const { project_list } = this.props
     let obj = {
@@ -224,9 +225,7 @@ class Project extends React.Component {
   render() {
     const { loading, dialog,selectedRows} = this.state
     const { project_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+
 
     return (
       <div className="product-screen">
@@ -317,7 +316,8 @@ class Project extends React.Component {
                           hover
                           keyField="projectId"
                           pagination
-                          totalSize={project_list ? project_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: project_list.totalCount ? project_list.totalCount : 0 }}
                           className="product-table"
                           trClassName="cursor-pointer"
                           csvFileName="project.csv"

@@ -6,24 +6,12 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
-  FormGroup,
   Input,
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
 } from 'reactstrap'
-import Select from 'react-select'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -89,7 +77,11 @@ class Journal extends React.Component {
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
@@ -115,8 +107,8 @@ class Journal extends React.Component {
   initializeData() {
     const { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page ? this.options.page : 1,
-      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
     this.props.journalActions.getJournalList(postData).then(res => {
@@ -213,6 +205,7 @@ class Journal extends React.Component {
         if (item !== row.journalId) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -224,6 +217,7 @@ class Journal extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.journalId)
+        return item
       })
     }
     this.setState({
@@ -272,7 +266,7 @@ class Journal extends React.Component {
       ids: selectedRows
     }
     this.props.journalActions.removeBulkJournal(obj).then((res) => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.initializeData()
         this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
         if (journal_list && journal_list.length > 0) {
@@ -292,6 +286,20 @@ class Journal extends React.Component {
     })
   }
 
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
+  }
+
   render() {
 
     const { loading,
@@ -300,9 +308,6 @@ class Journal extends React.Component {
       selectedRows
     } = this.state
     const { journal_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
 
     return (
       <div className="journal-screen">
@@ -405,7 +410,8 @@ class Journal extends React.Component {
                           hover
                           keyField="journalId"
                           pagination
-                          totalSize={journal_list ? journal_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: journal_list.totalCount ? journal_list.totalCount : 0 }}
                           className="journal-table"
                           trClassName="cursor-pointer"
                           ref={node => this.table = node}

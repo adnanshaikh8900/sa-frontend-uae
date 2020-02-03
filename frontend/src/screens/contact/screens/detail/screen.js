@@ -57,7 +57,7 @@ class DetailContact extends React.Component {
       initValue: {},
       currentData: {},
       dialog: null,
-      id: props.location.state.id
+      current_contact_id: null
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
@@ -72,13 +72,13 @@ class DetailContact extends React.Component {
   }
 
   initializeData() {
-    const { id } = this.state
-    if (this.props.location.state && id) {
+    if (this.props.location.state && this.props.location.state.id) {
       this.props.contactActions.getContactTypeList();
       this.props.contactActions.getCountryList();
       this.props.contactActions.getCurrencyList();
-      this.props.detailContactActions.getContactById(id).then(res => {
+      this.props.detailContactActions.getContactById(this.props.location.state.id).then(res => {
         this.setState({
+          current_contact_id: this.props.location.state.id,
           loading: false,
           initValue: {
             billingEmail: res.data.billingEmail && res.data.billingEmail !== null ? res.data.billingEmail : '',
@@ -114,11 +114,11 @@ class DetailContact extends React.Component {
   }
 
   handleSubmit(data,resetForm) {
-    const { id } = this.state
-    const postData = {...data, ...{ contactId: id } }
+    const { current_contact_id } = this.state
+    const postData = {...data, ...{ contactId: current_contact_id } }
 
     this.props.detailContactActions.updateContact(postData).then(res => {
-      if (res.status === 200) {
+      if (res.status == 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', ' Contact Updated Successfully')
         this.props.history.push('/admin/master/contact');
@@ -145,9 +145,9 @@ class DetailContact extends React.Component {
   }
 
   removeContact() {
-    const id = this.props.location.state.id;
-    this.props.detailContactActions.deleteContact(id).then(res => {
-      if (res.status === 200) {
+    const {current_contact_id} = this.state
+    this.props.detailContactActions.deleteContact(current_contact_id).then(res => {
+      if (res.status == 200) {
         this.props.commonActions.tostifyAlert('success', 'Contact Deleted Successfully')
         this.props.history.push('/admin/master/contact')
       }
@@ -193,7 +193,6 @@ class DetailContact extends React.Component {
                           <Formik
                             initialValues={initValue}
                             onSubmit={(values, { resetForm }) => {
-
                               this.handleSubmit(values,resetForm)
                             }}
 
@@ -241,7 +240,6 @@ class DetailContact extends React.Component {
                           //       .nullable(),
                           //   })
                           // }
-
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit}>

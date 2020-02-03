@@ -58,7 +58,8 @@ class DetailProduct extends React.Component {
       initValue: {},
       currentData: {},
       openWarehouseModal:false,
-      dialog: null
+      dialog: null,
+      current_product_id: null
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -76,38 +77,31 @@ class DetailProduct extends React.Component {
   }
 
   initializeData() {
-    const id = this.props.location.state.id
-    if (this.props.location.state && id) {
-      // this.props.productActions.getVatList();
+    if (this.props.location.state && this.props.location.state.id) {
       this.props.productActions.getProductCategoryList();
       this.props.productActions.getProductVatCategoryList();
       this.props.productActions.getProductWareHouseList()
-      // this.setState({
-      // }, () => {
-      this.props.detailProductActions.getProductById(id).then(res => {
+      this.props.detailProductActions.getProductById(this.props.location.state.id).then(res => {
         if (res.status === 200) {
           this.setState({
             loading: false,
+            current_product_id: this.props.location.state.id,
             initValue: {
               productName: res.data.name ? res.data.name : '',
               productDescription: res.data.description,
               productCode: res.data.productCode,
               vatCategoryId: res.data.vatCategoryId ? res.data.vatCategoryId : '',
-              //   label: res.data.vatCategory.name,
-              //   value: res.data.vatCategory.id
-              // } : '',
               unitPrice: res.data.unitPrice,
               productCategoryId: res.data.productCategoryId ? res.data.productCategoryId : '',
               productWarehouseId: res.data.productWarehouseId ? res.data.productWarehouseId : '',
-              //   label: res.data.productWarehouse.warehouseName,
-              //   value: res.data.productWarehouse.warehouseId
-              // } : '',
               vatIncluded: res.data.vatIncluded
             }
           })
-        } else { this.props.history.push('/admin/master/product') }
+        } else { 
+          this.setState({ loading: false })
+          this.props.history.push('/admin/master/product')
+        }
       })
-      // })
     } else {
       this.props.history.push('/admin/master/product')
     }
@@ -124,7 +118,7 @@ class DetailProduct extends React.Component {
   }
 
   handleSubmit(data) {
-    const id = this.props.location.state.id
+    const { current_product_id } = this.state
     const { 
       productName , 
       productDescription , 
@@ -136,7 +130,7 @@ class DetailProduct extends React.Component {
       vatIncluded,
     } = data
     const postData = {
-      productID : id,
+      productID : current_product_id,
       productName : productName,
       productDescription: productDescription, 
       productCode: productCode,
@@ -176,8 +170,8 @@ class DetailProduct extends React.Component {
   }
 
   removeProduct() {
-    const id= this.props.location.state.id;
-    this.props.detailProductActions.deleteProduct(id).then(res=>{
+    const {current_product_id} = this.state
+    this.props.detailProductActions.deleteProduct(current_product_id).then(res=>{
       if(res.status === 200) {
         this.props.history.push('/admin/master/product')
       }

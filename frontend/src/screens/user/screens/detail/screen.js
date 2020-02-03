@@ -65,7 +65,7 @@ class DetailUser extends React.Component {
       showIcon: false,
       userPhotoFile: {},
       imageState: true,
-
+      current_user_id: null
     }
 
 
@@ -89,30 +89,34 @@ class DetailUser extends React.Component {
     //   loading: false,
     //   userPhoto: this.state.userPhoto.concat(`https://i.picsum.photos/id/1/5616/3744.jpg`),
     // });
-    const { id } = this.props.location.state
-    this.props.userDetailActions.getUserById(id).then(res => {
-      this.props.userActions.getRoleList();
-      if (res.status == 200) {
-        this.setState({
-          initValue: {
-            firstName: res.data.firstName ? res.data.firstName : '',
-            lastName: res.data.lastName ? res.data.lastName : '',
-            email: res.data.email ? res.data.email : '',
-            password: '',
-            dob: res.data.dob ? moment(res.data.dob,'DD-MM-YYYY').toDate() : '',
-            active: res.data.active ? res.data.active : '',
-            confirmPassword: '',
-            roleId: res.data.roleId ? res.data.roleId : '',
-            companyId: res.data.companyId ? res.data.companyId : '',
-          },
-          loading: false,
-          selectedStatus: res.data.active ? true : false,
-          userPhoto: res.data.profilePicByteArray ? this.state.userPhoto.concat(res.data.profilePicByteArray) : [],
-        })
-      }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
-    })
+    if (this.props.location.state && this.props.location.state.id) {
+      this.props.userDetailActions.getUserById(this.props.location.state.id).then(res => {
+        this.props.userActions.getRoleList();
+        if (res.status === 200) {
+          this.setState({
+            initValue: {
+              firstName: res.data.firstName ? res.data.firstName : '',
+              lastName: res.data.lastName ? res.data.lastName : '',
+              email: res.data.email ? res.data.email : '',
+              password: '',
+              dob: res.data.dob ? moment(res.data.dob, 'DD-MM-YYYY').toDate() : '',
+              active: res.data.active ? res.data.active : '',
+              confirmPassword: '',
+              roleId: res.data.roleId ? res.data.roleId : '',
+              companyId: res.data.companyId ? res.data.companyId : '',
+            },
+            loading: false,
+            selectedStatus: res.data.active ? true : false,
+            userPhoto: res.data.profilePicByteArray ? this.state.userPhoto.concat(res.data.profilePicByteArray) : [],
+          })
+        }
+      }).catch(err => {
+        this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+        this.props.history.push('/admin/settings/user')
+      })
+    } else {
+      this.props.history.push('/admin/settings/user')
+    }
   }
 
   uploadImage(picture, file) {
@@ -138,8 +142,8 @@ class DetailUser extends React.Component {
   }
 
   removeUser() {
-    const { id } = this.state;
-    this.props.userDetailActions.deleteUser(id).then(res => {
+    const { current_user_id } = this.state;
+    this.props.userDetailActions.deleteUser(current_user_id).then(res => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
         this.props.commonActions.tostifyAlert('success', 'User Deleted Successfully')
@@ -165,17 +169,16 @@ class DetailUser extends React.Component {
       password,
       roleId,
       companyId,
-      active,
     } = data;
-    const { id } = this.props.location.state;
+    const { current_user_id } = this.state;
     const { userPhotoFile } = this.state;
     let formData = new FormData();
-    formData.append("id", id);
+    formData.append("id", current_user_id);
 
     formData.append("firstName", firstName ? firstName : '');
     formData.append("lastName", lastName ? lastName : '');
     formData.append("email", email ? email : '');
-    formData.append("dob", dob ?  moment(dob).format('DD-MM-YYYY') : (''));
+    formData.append("dob", dob ? moment(dob).format('DD-MM-YYYY') : (''));
     formData.append("roleId", roleId ? roleId : '');
     formData.append("active", this.state.selectedStatus);
     formData.append("password", password ? password : '');

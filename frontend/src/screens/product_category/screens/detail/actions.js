@@ -35,3 +35,18 @@ export const updateProductCategory = (obj) => {
     })
   }
 }
+
+export const deleteProductCategory = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/productcategory/delete?id=${id}`
+    }
+
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}

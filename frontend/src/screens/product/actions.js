@@ -8,12 +8,9 @@ export const getProductList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/product/getList?name=${obj.name}&productCode=${obj.productCode}&vatPercentage=${obj.vatPercentage}`,
-      // data: obj
+      url: `/rest/product/getList?name=${obj.name}&productCode=${obj.productCode}&vatPercentage=${obj.vatPercentage}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
     }
-
     return authApi(data).then(res => {
-
       dispatch({
         type: PRODUCT.PRODUCT_LIST,
         payload: res.data

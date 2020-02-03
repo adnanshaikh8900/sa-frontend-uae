@@ -6,6 +6,7 @@ import {
 import moment from 'moment'
 
 export const getCustomerInvoiceList = (postObj) => {
+  console.log(postObj)
   let customerName = postObj ? postObj.customerId : ''
   let referenceNumber =  postObj ? postObj.referenceNumber : ''
   let invoiceDate =  postObj.invoiceDate
@@ -13,8 +14,9 @@ export const getCustomerInvoiceList = (postObj) => {
   let amount =  postObj ? postObj.amount : ''
   let status =  postObj ? postObj.status : ''
   let contactType = postObj ? postObj.contactType : ''
+  const { pageNo, pageSize} = postObj
   return (dispatch) => {
-    let param = `rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}`
+    let param = `rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}`
     if(invoiceDate) {
       let date = moment(invoiceDate).format('DD-MM-YYYY')
       param = param +`&invoiceDate=${date}`

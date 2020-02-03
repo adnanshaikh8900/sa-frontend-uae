@@ -6,34 +6,25 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody, 
-  ModalFooter,
   Row,
   Col,
   Input,
-  FormGroup,
-  Form,
   ButtonGroup
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import {  toast } from 'react-toastify'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import moment from 'moment'
-import _ from 'lodash'
-import {
-  selectOptionsFactory,
-  filterFactory
-} from 'utils'
 
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal} from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import './style.scss'
 
 import * as VatActions from './actions'
-
+import {
+  CommonActions
+} from 'services/global'
 
 const mapStateToProps = (state) => {
   return ({
@@ -42,7 +33,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return ({
-    vatActions: bindActionCreators(VatActions, dispatch)
+    vatActions: bindActionCreators(VatActions, dispatch),
+    commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
 
@@ -60,20 +52,21 @@ class VatCode extends React.Component {
       }
     }
 
-    this.deleteVat = this.deleteVat.bind(this)
+    // this.deleteVat = this.deleteVat.bind(this)
     this.success = this.success.bind(this)
     this.vatPercentageFormat = this.vatPercentageFormat.bind(this)
 
-    this.showConfirmModal = this.showConfirmModal.bind(this)
-    this.closeConfirmModal = this.closeConfirmModal.bind(this)
+    // this.showConfirmModal = this.showConfirmModal.bind(this)
+    // this.closeConfirmModal = this.closeConfirmModal.bind(this)
     this.goToDetail = this.goToDetail.bind(this)
 
     this.onSelectAll = this.onSelectAll.bind(this)
     this.onRowSelect = this.onRowSelect.bind(this)
 
-    // this.filterVatList = this.filterVatList.bind(this)
+    this.bulkDelete = this.bulkDelete.bind(this)
+    this.removeBulk = this.removeBulk.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
     this.initializeData = this.initializeData.bind(this)
-    // this.handleFilterChange = this.handleFilterChange.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
     this.onPageChange = this.onPageChange.bind(this);
@@ -82,6 +75,8 @@ class VatCode extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
     }
@@ -109,6 +104,11 @@ class VatCode extends React.Component {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
+    }).catch((err) => {
+      this.setState({
+        loading: false
+      })
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
@@ -141,10 +141,7 @@ class VatCode extends React.Component {
   }
 
   goToDetail (row) {
-    this.props.history.push({
-      pathname: '/admin/master/vat-code/detail',
-      search: `?id=${row.id}`
-    })
+    this.props.history.push('/admin/master/vat-code/detail',{id: row.id})
   }
 
   // Show Success Toast
@@ -154,42 +151,87 @@ class VatCode extends React.Component {
     })
   }
 
-  onPageChange = (page, sizePerPage) => {
-    this.options.page = page
-  }
-
   onSizePerPageList = (sizePerPage) => {
-    this.options.sizePerPage = sizePerPage
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
   }
 
-  
-
-
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
+  }
 
   // -------------------------
   // Actions
   //--------------------------
 
   // Delete Vat By ID
-  deleteVat() {
-    // this.setState({ loading: true })
-    this.setState({ openDeleteModal: false })
-    this.props.vatActions.deleteVat(this.state.selectedRows).then(res => {
-      if (res.status === 200) {
-        // this.setState({ loading: false })
-        this.initializeData()
+  bulkDelete() {
+    const {
+      selectedRows
+    } = this.state
+    if (selectedRows.length > 0) {
+      this.setState({
+        dialog: <ConfirmDeleteModal
+          isOpen={true}
+          okHandler={this.removeBulk}
+          cancelHandler={this.removeDialog}
+        />
+      })
+    } else {
+      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
+    }
+  }
+
+  removeBulk() {
+    const { filterData } = this.state;
+    let { selectedRows } = this.state;
+    const { vat_list } = this.props
+    let obj = {
+      ids: selectedRows
+    }
+    this.removeDialog()
+    this.props.vatActions.deleteVat(obj).then((res) => {
+      this.initializeData();
+      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+      if (vat_list && vat_list.length > 0) {
+        this.setState({
+          selectedRows: []
+        })
       }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+  // deleteVat() {
+  //   // this.setState({ loading: true })
+  //   this.setState({ openDeleteModal: false })
+  //   this.props.vatActions.deleteVat(this.state.selectedRows).then(res => {
+  //     if (res.status === 200) {
+  //       // this.setState({ loading: false })
+  //       this.initializeData()
+  //     }
+  //   })
+  // }
+
   // Open Confirm Modal
-  showConfirmModal() {
-    this.setState({ openDeleteModal: true })
-  }
-  // Close Confirm Modal
-  closeConfirmModal() {
-    this.setState({ openDeleteModal: false })
-  }
+  // showConfirmModal() {
+  //   this.setState({ openDeleteModal: true })
+  // }
+  // // Close Confirm Modal
+  // closeConfirmModal() {
+  //   this.setState({ openDeleteModal: false })
+  // }
 
 
   // handleFilterChange(e, name) {
@@ -228,7 +270,7 @@ class VatCode extends React.Component {
   }
 
   render() {
-    const { loading, selectedRows, filters } = this.state
+    const { loading, selectedRows ,dialog} = this.state
     const {vat_list} = this.props
    
     // let display_data = this.filterVatList(vatList)
@@ -244,6 +286,7 @@ class VatCode extends React.Component {
               </div>
             </CardHeader>
             <CardBody>
+            {dialog}
             {
               loading ?
                 <Loader></Loader>: 
@@ -269,7 +312,7 @@ class VatCode extends React.Component {
                         <Button
                           color="warning"
                           className="btn-square"
-                          onClick={this.showConfirmModal}
+                          onClick={this.bulkDelete}
                           disabled={selectedRows.length === 0}
                         >
                           <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
@@ -318,6 +361,8 @@ class VatCode extends React.Component {
                       search={false}
                       selectRow={ this.selectRowProp }
                       options={ this.options }
+                      remote
+                      fetchInfo={{ dataTotalSize: vat_list.totalCount ? vat_list.totalCount : 0 }}
                       trClassName="cursor-pointer"
                       csvFileName="vat_code.csv"
                       ref={node => {
@@ -344,7 +389,7 @@ class VatCode extends React.Component {
             }
             </CardBody>
           </Card>
-          <Modal isOpen={this.state.openDeleteModal}
+          {/* <Modal isOpen={this.state.openDeleteModal}
               className={'modal-danger ' + this.props.className}>
               <ModalHeader toggle={this.toggleDanger}>Delete</ModalHeader>
               <ModalBody>
@@ -354,7 +399,7 @@ class VatCode extends React.Component {
                   <Button color="danger" onClick={this.deleteVat}>Yes</Button>&nbsp;
                   <Button color="secondary" onClick={this.closeConfirmModal}>No</Button>
               </ModalFooter>
-          </Modal>
+          </Modal> */}
         </div>
       </div>
     )

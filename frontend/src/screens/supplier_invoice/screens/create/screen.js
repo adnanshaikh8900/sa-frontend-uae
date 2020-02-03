@@ -14,16 +14,14 @@ import {
   Label
 } from 'reactstrap'
 import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import { Formik ,Field} from 'formik';
 import * as Yup from 'yup'
-import _ from 'lodash'
 import * as SupplierInvoiceCreateActions from './actions';
 import * as  SupplierInvoiceActions from "../../actions";
 
 import { SupplierModal } from '../../sections'
-import { Loader } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -32,7 +30,6 @@ import {
 } from 'services/global'
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils'
 
 import './style.scss'
@@ -173,6 +170,7 @@ class CreateSupplierInvoice extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (

@@ -69,8 +69,8 @@ class DetailCustomerInvoice extends React.Component {
         { value: 'Percentage', label: 'Percentage' }
       ],
       discount_option: '',
-      id: props.location.state.id,
       data: [],
+      current_customer_id: null,
       initValue: {},
       contactType: 2,
       openCustomerModal: false,
@@ -123,15 +123,15 @@ class DetailCustomerInvoice extends React.Component {
   }
 
   initializeData() {
-    const { id } = this.state;
-    if (id) {
-      this.props.customerInvoiceDetailActions.getInvoiceById(id).then(res => {
+    if (this.props.location.state && this.props.location.state.id) {
+      this.props.customerInvoiceDetailActions.getInvoiceById(this.props.location.state.id).then(res => {
         if (res.status === 200) {
           this.props.customerInvoiceActions.getVatList()
           this.props.customerInvoiceActions.getProjectList();
           this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
           this.props.customerInvoiceActions.getCurrencyList();
           this.setState({
+            current_customer_id: this.props.location.state.id,
             initValue: {
               receiptAttachmentDescription: res.data.receiptAttachmentDescription ? res.data.receiptAttachmentDescription : '',
               receiptNumber: res.data.receiptNumber ? res.data.receiptNumber : '',
@@ -167,9 +167,11 @@ class DetailCustomerInvoice extends React.Component {
           )
         }
       })
-
+    } else {
+      this.props.history.push('/admin/revenue/customer-invoice')
     }
   }
+
   calTotalNet(data) {
     let total_net = 0
     data.map(obj => {
@@ -429,7 +431,7 @@ class DetailCustomerInvoice extends React.Component {
 
 
   handleSubmit(data) {
-    const { id } = this.state;
+    const { current_customer_id } = this.state;
     const {
       receiptAttachmentDescription,
       receiptNumber,
@@ -447,7 +449,7 @@ class DetailCustomerInvoice extends React.Component {
 
     let formData = new FormData();
     formData.append("type", 2);
-    formData.append("invoiceId", id);
+    formData.append("invoiceId", current_customer_id);
     formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
     formData.append("invoiceDate", typeof invoiceDate === "date" ? invoiceDate : moment(invoiceDate).toDate());
     formData.append("invoiceDueDate", typeof invoiceDueDate === "date" ? invoiceDueDate : moment(invoiceDueDate).toDate())
@@ -519,8 +521,8 @@ class DetailCustomerInvoice extends React.Component {
   }
 
   removeInvoice() {
-    const id = this.props.location.state.id;
-    this.props.customerInvoiceDetailActions.deleteInvoice(id).then(res => {
+    const {current_customer_id} = this.state;
+    this.props.customerInvoiceDetailActions.deleteInvoice(current_customer_id).then(res => {
       if (res.status == 200) {
         this.props.commonActions.tostifyAlert('success', 'Data Removed Successfully')
         this.props.history.push('/admin/revenue/customer-invoice')

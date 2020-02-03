@@ -7,15 +7,9 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
-  FormGroup,
   Input,
   Label,
   ButtonDropdown,
@@ -24,8 +18,7 @@ import {
   DropdownItem
 } from 'reactstrap'
 import Select from 'react-select'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 
@@ -43,11 +36,10 @@ import {
 } from 'services/global'
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils'
 
 import './style.scss'
-import { setNestedObjectValues } from 'formik';
+// import { setNestedObjectValues } from 'formik';
 
 const mapStateToProps = (state) => {
   return ({
@@ -99,8 +91,13 @@ class CustomerInvoice extends React.Component {
 
 
     this.options = {
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
+
     this.selectRowProp = {
       mode: 'checkbox',
       bgColor: 'rgba(0,0,0, 0.05)',
@@ -115,16 +112,44 @@ class CustomerInvoice extends React.Component {
   }
 
   initializeData() {
-    this.props.customerInvoiceActions.getCustomerInvoiceList(this.state.filterData)
-    this.props.customerInvoiceActions.getStatusList(this.state.filterData)
-    this.props.customerInvoiceActions.getCustomerList(this.state.filterData.contactType);
-
+    let { filterData } = this.state
+    const paginationData = {
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
+    }
+    filterData = {...filterData,...paginationData }
+    this.props.customerInvoiceActions.getCustomerInvoiceList(filterData).then(res => {
+    if (res.status === 200) {
+        this.props.customerInvoiceActions.getStatusList()
+        this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
+        this.setState({ loading: false });
+     }
+    }).catch(err => {
+       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+       this.setState({ loading: false })
+    })
   }
+
   componentWillUnmount() {
     this.setState({
       selectedRows: []
     })
   }
+
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
+  }
+
 
   renderInvoiceNumber(cell, row) {
     return (
@@ -222,6 +247,7 @@ class CustomerInvoice extends React.Component {
         if (item !== row.id) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -233,6 +259,7 @@ class CustomerInvoice extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.id)
+        return item
       })
     }
     this.setState({
@@ -260,7 +287,7 @@ class CustomerInvoice extends React.Component {
 
   removeBulk() {
     this.removeDialog()
-    let { selectedRows, filterData } = this.state;
+    let { selectedRows,  } = this.state;
     const { customer_invoice_list } = this.props
     let obj = {
       ids: selectedRows
@@ -300,10 +327,10 @@ class CustomerInvoice extends React.Component {
 
   render() {
     const { loading, filterData, dialog, selectedRows } = this.state
-    const { customer_invoice_list, status_list, customer_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+    const {  status_list, customer_list } = this.props
+    // const containerStyle = {
+    //   zIndex: 1999
+    // }
 
     const customer_invoice_data = this.props.customer_invoice_list ? this.props.customer_invoice_list.map(customer =>
 
@@ -489,7 +516,8 @@ class CustomerInvoice extends React.Component {
                           hover
                           pagination
                           keyField="id"
-                          totalSize={customer_invoice_list ? customer_invoice_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: customer_invoice_data.totalCount ? customer_invoice_data.totalCount : 0 }}
                           className="customer-invoice-table"
                           csvFileName="Customer_Invoice.csv"
                           ref={node => {

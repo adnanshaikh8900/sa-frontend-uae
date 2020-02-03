@@ -7,23 +7,15 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
-  FormGroup,
   Input,
-  Label,
 } from 'reactstrap'
 import { selectOptionsFactory } from 'utils'
 import Select from 'react-select'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-import DateRangePicker from 'react-bootstrap-daterangepicker'
+// import { ToastContainer, toast } from 'react-toastify'
+import { BootstrapTable, TableHeaderColumn,  } from 'react-bootstrap-table'
 import {
   Loader,
   ConfirmDeleteModal
@@ -86,6 +78,8 @@ class Payment extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
     }
@@ -108,8 +102,8 @@ class Payment extends React.Component {
   initializeData() {
     const { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page ? this.options.page : 1,
-      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
     this.props.paymentActions.getPaymentList(postData).then(res => {
@@ -120,7 +114,6 @@ class Payment extends React.Component {
     }).catch(err => {
       this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
-
     })
   }
 
@@ -183,9 +176,10 @@ class Payment extends React.Component {
       temp_list.push(row.paymentId)
     } else {
       this.state.selectedRows.map(item => {
-        if (item != row.paymentId) {
+        if (item !== row.paymentId) {
           temp_list.push(item)
         }
+        return item
       })
     }
     this.setState({
@@ -197,6 +191,7 @@ class Payment extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.paymentId)
+        return item
       })
     }
     this.setState({
@@ -220,20 +215,26 @@ class Payment extends React.Component {
     this.initializeData()
   }
 
-  onPageChange = (page, sizePerPage) => {
-    this.options.page = page
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
   }
 
-  onSizePerPageList = (sizePerPage) => {
-    this.options.sizePerPage = sizePerPage
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
   }
 
   render() {
     const { loading, dialog, filterData, selectedRows } = this.state
     const { payment_list, supplier_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+    // const containerStyle = {
+    //   zIndex: 1999
+    // }
     return (
       <div className="payment-screen">
         <div className="animated fadeIn">
@@ -353,7 +354,8 @@ class Payment extends React.Component {
                           hover
                           keyField="paymentId"
                           pagination
-                          totalSize={payment_list ? payment_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: payment_list.totalCount ? payment_list.totalCount : 0 }}
                           className="payment-table"
                           trClassName="cursor-pointer"
                           csvFileName="payment.csv"

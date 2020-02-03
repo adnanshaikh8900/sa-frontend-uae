@@ -6,7 +6,7 @@ import {
 import moment from 'moment'
 
 
-export const getSupplierInoviceList = (postObj) => {
+export const getSupplierInvoiceList = (postObj) => {
   let supplierName = postObj ? postObj.supplierId : ''
   let referenceNumber =  postObj ? postObj.referenceNumber : ''
   let invoiceDate =  postObj.invoiceDate

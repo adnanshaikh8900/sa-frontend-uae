@@ -78,16 +78,20 @@ class ImportBankStatement extends React.Component {
   }
 
   initializeData() {
-    this.props.importBankStatementActions.getTemplateList().then(res => {
-      let id;
-      if (res.status == 200) {
-        id = this.props.location.state && this.props.location.state.id ? id : ''
-        this.setState({
-          selectedTemplate: id,
-          templateList: res.data
-        })
-      }
-    })
+    if(this.props.location.state && this.props.location.state.bankAccountId) {
+      this.props.importBankStatementActions.getTemplateList().then(res => {
+        if (res.status == 200) {
+          let id;
+          id = this.props.location.state && this.props.location.state.id ? id : ''
+          this.setState({
+            selectedTemplate: id,
+            templateList: res.data
+          })
+        }
+      })
+    } else {
+      this.props.history.push('/admin/banking/bank-account')
+    }
   }
 
   renderTransactionType(cell, row) {

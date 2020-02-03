@@ -1,14 +1,22 @@
 import { BANK_ACCOUNT } from 'constants/types'
 import {
-  api,
+  // api,
   authApi
 } from 'utils'
+// import moment from 'moment'
 
-export const getTransactionList = (id) => {
+export const getTransactionList = (obj) => {
+  console.log(obj)
+  const { transactionTypeCode, transactionDate , id , pageNo , pageSize} = obj
+  let param = `/rest/transaction/list?bankId=${id}&transactionTypeCode=${transactionTypeCode}&pageNo=${pageNo}&pageSize=${pageSize}`
+  if(transactionDate !== '') {
+    // let date = moment(transactionDate).format('DD-MM-YYYY')
+    param = param +`&transactionDate=${transactionDate}`
+  }
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: `/rest/transaction/list?bankId=${id}`
+      url: param
     }
     return authApi(data).then(res => {
       if (res.status === 200) {

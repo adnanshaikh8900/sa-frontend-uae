@@ -175,37 +175,39 @@ class Profile extends React.Component {
     this.setState({
       loading: true
     })
-    this.props.profileActions.getUserById(userId).then(res => {
-      // this.props.userActions.getRoleList();
-      this.props.profileActions.getCurrencyList();
-      this.props.profileActions.getCountryList();
-      this.props.profileActions.getIndustryTypeList();
-      this.props.profileActions.getCompanyTypeList();
-      this.props.profileActions.getRoleList();
-
-      if (res.status === 200) {
-        this.setState({
-          initUserData: {
-            firstName: res.data.firstName ? res.data.firstName : '',
-            lastName: res.data.lastName ? res.data.lastName : '',
-            email: res.data.email ? res.data.email : '',
-            password: '',
-            dob: res.data.dob ? moment(res.data.dob,'DD-MM-YYYY').toDate() : '',
-            active: res.data.active ? res.data.active : '',
-            // confirmPassword: '',
-            roleId: res.data.roleId ? res.data.roleId : '',
-            // companyId: res.data.companyId ? res.data.companyId : '',
-          },
-          loading: false,
-          selectedStatus: res.data.active ? true : false,
-          userPhoto: res.data.profilePicByteArray ? this.state.userPhoto.concat(res.data.profilePicByteArray) : [],
-          // companyId: res.data.companyId ? res.data.companyId : ''
-        })
-      }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
-      this.setState({ loading: false })
-    })
+    if(userId) {
+      this.props.profileActions.getUserById(userId).then(res => {
+        // this.props.userActions.getRoleList();
+        this.props.profileActions.getCurrencyList();
+        this.props.profileActions.getCountryList();
+        this.props.profileActions.getIndustryTypeList();
+        this.props.profileActions.getCompanyTypeList();
+        this.props.profileActions.getRoleList();
+  
+        if (res.status === 200) {
+          this.setState({
+            initUserData: {
+              firstName: res.data.firstName ? res.data.firstName : '',
+              lastName: res.data.lastName ? res.data.lastName : '',
+              email: res.data.email ? res.data.email : '',
+              password: '',
+              dob: res.data.dob ? moment(res.data.dob,'DD-MM-YYYY').toDate() : '',
+              active: res.data.active ? res.data.active : '',
+              // confirmPassword: '',
+              roleId: res.data.roleId ? res.data.roleId : '',
+              // companyId: res.data.companyId ? res.data.companyId : '',
+            },
+            loading: false,
+            selectedStatus: res.data.active ? true : false,
+            userPhoto: res.data.profilePicByteArray ? this.state.userPhoto.concat(res.data.profilePicByteArray) : [],
+            // companyId: res.data.companyId ? res.data.companyId : ''
+          })
+        }
+      }).catch(err => {
+        this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+        this.setState({ loading: false })
+      })
+    }
   }
 
   handleUserSubmit(data) {

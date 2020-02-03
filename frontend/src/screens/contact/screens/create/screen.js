@@ -95,7 +95,7 @@ class CreateContact extends React.Component {
 
   handleSubmit(data,resetForm) {
     this.props.createContactActions.createContact(data).then(res => {
-      if (res.status === 200) {
+      if (res.status == 200) {
         this.props.commonActions.tostifyAlert('success', 'New Contact Created Successfully')
         resetForm();
         if (this.state.createMore) {

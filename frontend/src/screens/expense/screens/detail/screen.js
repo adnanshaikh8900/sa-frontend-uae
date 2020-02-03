@@ -62,17 +62,11 @@ class DetailExpense extends React.Component {
     this.state = {
       loading: true,
       initValue: null,
+      current_expense_id: null,
     }
-
-
-    this.options = {
-      paginationPosition: 'top'
-    }
-
 
     this.initializeData = this.initializeData.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    // this.handleChange = this.handleChange.bind(this)
     this.deleteExpense = this.deleteExpense.bind(this)
     this.removeExpense = this.removeExpense.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
@@ -83,10 +77,9 @@ class DetailExpense extends React.Component {
   }
 
   initializeData() {
-    const { expenseId } = this.props.location.state;
-    if (this.props.location.state && expenseId) {
+    if (this.props.location.state && this.props.location.state.expenseId) {
       this.props.expenseActions.getVatList();
-      this.props.expenseDetailActions.getExpenseDetail(expenseId).then(res => {
+      this.props.expenseDetailActions.getExpenseDetail(this.props.location.state.expenseId).then(res => {
         if (res.status === 200) {
           this.props.expenseActions.getCurrencyList();
           this.props.expenseActions.getProjectList();
@@ -94,6 +87,7 @@ class DetailExpense extends React.Component {
           this.props.expenseActions.getExpenseCategoriesList();
           this.setState({
             loading: false,
+            current_expense_id: this.props.location.state,
             initValue: {
               payee: res.data.payee,
               expenseDate: res.data.expenseDate ? moment(res.data.expenseDate).utc().format('YYYY-MM-DD') : '',
@@ -112,11 +106,13 @@ class DetailExpense extends React.Component {
       }).catch(err => {
         this.setState({ loading: false })
       })
+    } else {
+      this.props.history.push('/admin/expense/expense')
     }
   }
 
   handleSubmit(data, resetValue) {
-    const id = this.props.location.state.expenseId;
+    const {current_expense_id} = this.state
     const {
       payee,
       expenseDate,
@@ -132,7 +128,7 @@ class DetailExpense extends React.Component {
     } = data
 
     let formData = new FormData();
-    formData.append("expenseId", id);
+    formData.append("expenseId", current_expense_id);
     formData.append("payee", payee);
     formData.append("expenseDate", expenseDate !== null ? moment(expenseDate).utc().toDate() : "");
     formData.append("expenseDescription", expenseDescription);
@@ -177,8 +173,8 @@ class DetailExpense extends React.Component {
   }
 
   removeExpense() {
-    const id = this.props.location.state.expenseId;
-    this.props.expenseDetailActions.deleteExpense(id).then(res => {
+    const {current_expense_id} = this.state
+    this.props.expenseDetailActions.deleteExpense(current_expense_id).then(res => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
         this.props.commonActions.tostifyAlert('success', 'Expense Deleted Successfully')

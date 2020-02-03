@@ -89,9 +89,9 @@ import {
 
   Profile,
   GeneralSettings,
-  TransactionCategory,
-  CreateTransactionCategory,
-  DetailTransactionCategory,
+  // TransactionCategory,
+  // CreateTransactionCategory,
+  // DetailTransactionCategory,
   UsersRoles,
   Notification,
   DataBackup,

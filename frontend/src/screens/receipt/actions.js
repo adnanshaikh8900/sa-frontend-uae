@@ -1,6 +1,6 @@
 import { RECEIPT } from 'constants/types'
 import {
-  api,
+  // api,
   authApi
 } from 'utils'
 

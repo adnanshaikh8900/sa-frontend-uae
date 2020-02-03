@@ -58,7 +58,7 @@ class DetailJournal extends React.Component {
     super(props)
     this.state = {
       loading: true,
-      id: props.location.state.id,
+      current_journal_id: null,
       initValue: {},
       data: []
     }
@@ -96,9 +96,8 @@ class DetailJournal extends React.Component {
   }
 
   initializeData() {
-    const { id } = this.state
-    if (this.props.location.state && id) {
-      this.props.journalDetailActions.getJournalById(id).then(res => {
+    if (this.props.location.state && this.props.location.state.id) {
+      this.props.journalDetailActions.getJournalById(this.props.location.state.id).then(res => {
         if (res.status === 200) {
           this.props.journalActions.getCurrencyList()
           this.props.journalActions.getTransactionCategoryList()
@@ -106,6 +105,7 @@ class DetailJournal extends React.Component {
           this.props.journalActions.getContactList()
           this.setState({
             loading: false,
+            current_journal_id: this.props.location.state.id,
             initValue: {
               journalId: res.data.journalId,
               journalDate: res.data.journalDate ? res.data.journalDate : '',
@@ -130,6 +130,8 @@ class DetailJournal extends React.Component {
       }).catch(err => {
         this.setState({ loading: false })
       })
+    } else {
+      this.props.history.push('/admin/accountant/journal')
     }
   }
 
@@ -489,8 +491,8 @@ class DetailJournal extends React.Component {
   }
 
   removeJournal() {
-    const { id } = this.state;
-    this.props.journalDetailActions.deleteJournal(id).then(res => {
+    const { current_journal_id } = this.state;
+    this.props.journalDetailActions.deleteJournal(current_journal_id).then(res => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
         this.props.commonActions.tostifyAlert('success', 'Journal Deleted Successfully')

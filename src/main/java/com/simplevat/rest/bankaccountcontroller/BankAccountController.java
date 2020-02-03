@@ -8,6 +8,7 @@ package com.simplevat.rest.bankaccountcontroller;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.helper.BankHelper;
+import com.simplevat.rest.PaginationModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.contact.model.BankModel;
 import com.simplevat.entity.Country;
@@ -116,7 +117,7 @@ public class BankAccountController implements Serializable {
 					currencyService.findByPK(filterModel.getCurrencyCode()));
 		}
 
-		List<BankAccount> bankAccounts = bankAccountService.getBankAccounts(filterDataMap);
+		List<BankAccount> bankAccounts = bankAccountService.getBankAccounts(filterDataMap, filterModel);
 		if (bankAccounts != null) {
 			return new ResponseEntity<>(bankAccountRestHelper.getListModel(bankAccounts), HttpStatus.OK);
 		} else {

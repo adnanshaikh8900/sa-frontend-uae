@@ -13,6 +13,7 @@ import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.dao.bankaccount.BankAccountDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.rest.PaginationModel;
 import com.simplevat.service.BankAccountService;
 import org.apache.commons.lang3.StringUtils;
 
@@ -71,7 +72,7 @@ public class BankAccountServiceImpl extends BankAccountService {
     }
 
 	@Override
-	public List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap) {
-		return  bankAccountDao.getBankAccounts(filterDataMap);
+	public List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,PaginationModel paginationModel) {
+		return  bankAccountDao.getBankAccounts(filterDataMap,paginationModel);
 	}
 }

@@ -15,6 +15,8 @@ import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.bankaccount.BankAccountDao;
 import com.simplevat.entity.Product;
 import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.rest.PaginationModel;
+
 import javax.persistence.TypedQuery;
 
 @Repository
@@ -65,13 +67,13 @@ public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implem
     }
 
 	@Override
-	public List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap) {
+	public List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,PaginationModel paginationModel) {
         List<DbFilter> dbFilters = new ArrayList();
         filterDataMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder()
                 .dbCoulmnName(filter.getDbColumnName())
                 .condition(filter.getCondition())
                 .value(value).build()));
-        List<BankAccount> list = this.executeQuery(dbFilters);
+        List<BankAccount> list = this.executeQuery(dbFilters,paginationModel);
         return list;
     }
 

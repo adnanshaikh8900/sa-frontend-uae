@@ -23,6 +23,7 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.entity.bankaccount.TransactionView;
+import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.utils.CommonUtil;
 import com.simplevat.utils.DateUtils;
@@ -485,11 +486,11 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	}
 
 	@Override
-	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap) {
+	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,PaginationModel paginationModel) {
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));
-		List<Transaction> list = this.executeQuery(dbFilters);
+		List<Transaction> list = this.executeQuery(dbFilters,paginationModel);
 		return list;
 	}
 

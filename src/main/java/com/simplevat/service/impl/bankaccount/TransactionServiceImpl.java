@@ -23,6 +23,7 @@ import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
+import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.util.ChartUtil;
@@ -350,7 +351,7 @@ public class TransactionServiceImpl extends TransactionService {
 	}
 
 	@Override
-	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel) {
-		return transactionDao. getAllTransactionList(filterModel);
+	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,PaginationModel paginationModel) {
+		return transactionDao. getAllTransactionList(filterModel,paginationModel);
 	}
 }

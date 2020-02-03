@@ -313,15 +313,19 @@ public class TransactionImportRestHelper {
 							} else {
 								currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
 							}
+							trnx.setDebitCreditFlag(
+									(Character) dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()));
 						} else {
 							if (dataMap.containsKey(TransactionEnum.DR_AMOUNT.getDisplayName())) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
 								trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 								currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
+								trnx.setDebitCreditFlag('D');
 							} else {
 								data = (String) dataMap.get(TransactionEnum.CR_AMOUNT.getDisplayName());
 								trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 								currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
+								trnx.setDebitCreditFlag('C');
 							}
 						}
 

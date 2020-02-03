@@ -6,6 +6,7 @@ import java.util.Map;
 import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.rest.PaginationModel;
 
 public interface BankAccountDao extends Dao<Integer, BankAccount> {
 
@@ -17,5 +18,6 @@ public interface BankAccountDao extends Dao<Integer, BankAccount> {
 
     void deleteByIds(List<Integer> ids);
 
-	public List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap);
+	List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,
+			PaginationModel paginationModel);
 }

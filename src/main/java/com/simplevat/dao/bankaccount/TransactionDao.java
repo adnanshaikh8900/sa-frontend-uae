@@ -11,6 +11,7 @@ import com.simplevat.dao.Dao;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
+import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 
 import java.util.Map;
@@ -67,6 +68,7 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
 
 	public void deleteByIds(ArrayList<Integer> ids);
 
-	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel);
+	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,
+			PaginationModel paginationModel);
 
 }

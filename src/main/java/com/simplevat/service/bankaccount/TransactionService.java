@@ -1,5 +1,6 @@
 package com.simplevat.service.bankaccount;
 
+import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.contact.model.TransactionReportRestModel;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +9,11 @@ import com.simplevat.criteria.bankaccount.TransactionCriteria;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
+import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.service.SimpleVatService;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 
 public abstract class TransactionService extends SimpleVatService<Integer, Transaction> {
@@ -77,5 +80,9 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
 	public abstract boolean saveTransactions(List<Transaction> transactions);
 
 	public abstract BigDecimal getCurrentBalanceByBankId(Integer bankId);
+
+	public abstract void deleteByIds(ArrayList<Integer> ids);
+
+	public abstract List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> dataMap); 
 	
 }

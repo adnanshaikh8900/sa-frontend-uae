@@ -4,11 +4,11 @@ import {
   authApi
 } from 'utils'
 
-export const getTransactionList = () => {
+export const getTransactionList = (id) => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: '/rest/transaction/gettransactions'
+      url: `/rest/transaction/list?bankId=${id}`
     }
     return authApi(data).then(res => {
       if (res.status === 200) {

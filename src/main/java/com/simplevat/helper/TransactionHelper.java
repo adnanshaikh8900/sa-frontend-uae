@@ -127,4 +127,43 @@ public class TransactionHelper {
 		return transactionModelList;
 	}
 
+	public TransactionPresistModel getModel(Transaction transaction) {
+		TransactionPresistModel transactionModel = new TransactionPresistModel();
+		if (transaction.getBankAccount() != null) {
+			transactionModel.setBankAccountId(transaction.getBankAccount().getBankAccountId());
+		}
+		if (transaction.getTransactionType() != null) {
+			transactionModel.setTransactionTypeCode(transaction.getTransactionType().getTransactionTypeCode());
+			//transactionModel.set(transaction.getTransactionType().getDebitCreditFlag());
+		}
+
+		if (transaction.getTransactionDate() != null) {
+			Date trnxDate = Date.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
+			transactionModel.setTransactionDate(trnxDate);
+		}
+
+		if (transaction.getExplainedTransactionCategory() != null) {
+			transactionModel
+					.setTransactionCategoryId(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
+		}
+
+		transactionModel.setTransactionDescription(transaction.getTransactionDescription());
+
+		if (transaction.getProject() != null) {
+			transactionModel.setProjectId(transaction.getProject().getProjectId());
+		}
+		transactionModel.setTransactionAmount(transaction.getTransactionAmount());
+		transactionModel.setReceiptNumber(transaction.getReceiptNumber());
+		transactionModel.setAttachementDescription(transaction.getExplainedTransactionAttachementDescription());
+		if (transaction.getExplainedTransactionAttachement() != null) {
+//need to send file link
+			// try {
+//				transactionModel.setExplainedTransactionAttachement(transaction.getExplainedTransactionAttachement());
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+		}
+
+		return transactionModel;
+	}
 }

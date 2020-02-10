@@ -38,6 +38,7 @@ export const getCustomerInvoiceList = (postObj) => {
             data: res.data
           }
         })
+        return res
       }
     }).catch(err => {
       throw err
@@ -83,6 +84,7 @@ export const getCustomerList = (nameCode) => {
           }
         })
       }
+      return res
     }).catch(err => {
       throw err
     })
@@ -221,6 +223,25 @@ export const removeBulk = (obj) => {
     }
     return authApi(data).then(res => {
         return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getCountryList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: 'rest/datalist/getcountry'
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: CUSTOMER_INVOICE.COUNTRY_LIST,
+          payload: res.data
+        })
+      }
     }).catch(err => {
       throw err
     })

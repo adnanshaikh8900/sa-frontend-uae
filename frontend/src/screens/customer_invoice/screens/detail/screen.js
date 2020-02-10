@@ -16,7 +16,7 @@ import {
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
-import { Formik  ,Field} from 'formik';
+import { Formik, Field } from 'formik';
 import * as Yup from 'yup'
 import _ from 'lodash'
 import * as CustomerInvoiceDetailActions from './actions';
@@ -45,7 +45,7 @@ const mapStateToProps = (state) => {
     currency_list: state.customer_invoice.currency_list,
     vat_list: state.customer_invoice.vat_list,
     customer_list: state.customer_invoice.customer_list,
-
+    country_list: state.customer_invoice.country_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -130,6 +130,8 @@ class DetailCustomerInvoice extends React.Component {
           this.props.customerInvoiceActions.getProjectList();
           this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
           this.props.customerInvoiceActions.getCurrencyList();
+          this.props.customerInvoiceActions.getCountryList();
+
           this.setState({
             current_customer_id: this.props.location.state.id,
             initValue: {
@@ -158,7 +160,8 @@ class DetailCustomerInvoice extends React.Component {
               const idCount = data.length > 0 ? Math.max.apply(Math, data.map((item) => { return item.id; })) : 0
               this.setState({
                 idCount: idCount
-              })} else {
+              })
+            } else {
               this.setState({
                 idCount: 0
               })
@@ -521,7 +524,7 @@ class DetailCustomerInvoice extends React.Component {
   }
 
   removeInvoice() {
-    const {current_customer_id} = this.state;
+    const { current_customer_id } = this.state;
     this.props.customerInvoiceDetailActions.deleteInvoice(current_customer_id).then(res => {
       if (res.status == 200) {
         this.props.commonActions.tostifyAlert('success', 'Data Removed Successfully')
@@ -605,7 +608,7 @@ class DetailCustomerInvoice extends React.Component {
                                   .required('Invoice Date is Required'),
                                 invoiceDueDate: Yup.date()
                                   .required('Invoice Due Date is Required'),
-                                  lineItemsString: Yup.array()
+                                lineItemsString: Yup.array()
                                   .required('Atleast one invoice sub detail is mandatory')
                                   .of(Yup.object().shape({
                                     description: Yup.string().required("Value is Required"),
@@ -613,7 +616,7 @@ class DetailCustomerInvoice extends React.Component {
                                     unitPrice: Yup.number().required("Value is Required"),
                                     vatCategoryId: Yup.string().required("Value is Required"),
                                   }))
-                                })}
+                              })}
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit}>
@@ -853,79 +856,79 @@ class DetailCustomerInvoice extends React.Component {
 
                                 <hr />
                                 <Row>
-                              <Col lg={12} className="mb-3">
-                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
-                                  disabled={this.checkedRow() ? true : false}
-                                >
-                                  <i className="fa fa-plus"></i> Add More
+                                  <Col lg={12} className="mb-3">
+                                    <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
+                                      disabled={this.checkedRow() ? true : false}
+                                    >
+                                      <i className="fa fa-plus"></i> Add More
                             </Button>
-                              </Col>
-                            </Row>
-                            <Row>
-                            {props.errors.lineItemsString && typeof props.errors.lineItemsString === 'string' && (
-                                <div className={props.errors.lineItemsString ? "is-invalid" : ""}>
-                                  <div className="invalid-feedback">{props.errors.lineItemsString}</div>
-                                </div>
-                              )}
-                              <Col lg={12}>
-                              <BootstrapTable
-                                  options={this.options}
-                                  data={data}
-                                  version="4"
-                                  hover
-                                  keyField="id"
-                                  className="invoice-create-table"
-                                >
-                                  <TableHeaderColumn
-                                    width="55"
-                                    dataAlign="center"
-                                    dataFormat={(cell, rows) => this.renderActions(cell, rows, props)}
-                                  >
-                                  </TableHeaderColumn>
-                                  <TableHeaderColumn
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  {props.errors.lineItemsString && typeof props.errors.lineItemsString === 'string' && (
+                                    <div className={props.errors.lineItemsString ? "is-invalid" : ""}>
+                                      <div className="invalid-feedback">{props.errors.lineItemsString}</div>
+                                    </div>
+                                  )}
+                                  <Col lg={12}>
+                                    <BootstrapTable
+                                      options={this.options}
+                                      data={data}
+                                      version="4"
+                                      hover
+                                      keyField="id"
+                                      className="invoice-create-table"
+                                    >
+                                      <TableHeaderColumn
+                                        width="55"
+                                        dataAlign="center"
+                                        dataFormat={(cell, rows) => this.renderActions(cell, rows, props)}
+                                      >
+                                      </TableHeaderColumn>
+                                      <TableHeaderColumn
 
-                                    width="0"
-                                    dataField="product_name"
-                                    dataFormat={this.renderProductName}
-                                  >
-                                    Product
+                                        width="0"
+                                        dataField="product_name"
+                                        dataFormat={this.renderProductName}
+                                      >
+                                        Product
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
+                                      <TableHeaderColumn
 
-                                    dataField="description"
-                                    dataFormat={(cell, rows) => this.renderDescription(cell, rows, props)}
-                                  >
-                                    Description
+                                        dataField="description"
+                                        dataFormat={(cell, rows) => this.renderDescription(cell, rows, props)}
+                                      >
+                                        Description
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="quantity"
-                                    dataFormat={(cell, rows) => this.renderQuantity(cell, rows, props)}
+                                      <TableHeaderColumn
+                                        dataField="quantity"
+                                        dataFormat={(cell, rows) => this.renderQuantity(cell, rows, props)}
 
-                                  >
-                                    Quantity
+                                      >
+                                        Quantity
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="unitPrice"
-                                    dataFormat={(cell, rows) => this.renderUnitPrice(cell, rows, props)}
+                                      <TableHeaderColumn
+                                        dataField="unitPrice"
+                                        dataFormat={(cell, rows) => this.renderUnitPrice(cell, rows, props)}
 
-                                  >
-                                    Unit Price (All)
+                                      >
+                                        Unit Price (All)
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="vat"
-                                    dataFormat={(cell, rows) => this.renderVat(cell, rows, props)}
-                                  >
-                                    Vat (%)
+                                      <TableHeaderColumn
+                                        dataField="vat"
+                                        dataFormat={(cell, rows) => this.renderVat(cell, rows, props)}
+                                      >
+                                        Vat (%)
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="sub_total"
-                                    dataFormat={this.renderSubTotal}
-                                    className="text-right"
-                                    columnClassName="text-right"
-                                  >
-                                    Sub Total (All)
+                                      <TableHeaderColumn
+                                        dataField="sub_total"
+                                        dataFormat={this.renderSubTotal}
+                                        className="text-right"
+                                        columnClassName="text-right"
+                                      >
+                                        Sub Total (All)
                               </TableHeaderColumn>
-                                </BootstrapTable>
+                                    </BootstrapTable>
                                   </Col>
                                 </Row>
                                 {data.length > 0 ?
@@ -1067,6 +1070,8 @@ class DetailCustomerInvoice extends React.Component {
           closeCustomerModal={(e) => { this.closeCustomerModal(e) }}
           getCurrentUser={e => this.getCurrentUser(e)}
           createCustomer={this.props.customerInvoiceActions.createCustomer}
+          currency_list={this.props.currency_list}
+          country_list={this.props.country_list}
         />
       </div>
     )

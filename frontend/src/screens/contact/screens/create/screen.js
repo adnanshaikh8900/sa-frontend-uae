@@ -143,8 +143,8 @@ class CreateContact extends React.Component {
                               .required("FirstName is Required"),
                             lastName: Yup.string()
                               .required("LastName is Required"),
-                            middleName: Yup.string()
-                              .required("MiddleName is Required"),
+                            // middleName: Yup.string()
+                            //   .required("MiddleName is Required"),
                               // contactType: Yup.string()
                               // .required("Please Select Contact Type"),
                         //       organization: Yup.string()

@@ -119,12 +119,14 @@ class CustomerInvoice extends React.Component {
     }
     filterData = {...filterData,...paginationData }
     this.props.customerInvoiceActions.getCustomerInvoiceList(filterData).then(res => {
+      console.log(res)
     if (res.status === 200) {
         this.props.customerInvoiceActions.getStatusList()
         this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
         this.setState({ loading: false });
      }
     }).catch(err => {
+      console.log(err)
        this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
        this.setState({ loading: false })
     })

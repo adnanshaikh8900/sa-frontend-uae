@@ -23,6 +23,8 @@ import * as CustomerInvoiceCreateActions from './actions';
 import * as  CustomerInvoiceActions from "../../actions";
 
 import { CustomerModal } from '../../sections'
+import { PreviewInvoiceModal } from '../../sections'
+
 import { Loader } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
@@ -64,8 +66,8 @@ class CreateCustomerInvoice extends React.Component {
     this.state = {
       loading: false,
       discountOptions: [
-        { value: 'Fixed', label: 'Fixed' },
-        { value: 'Percentage', label: 'Percentage' }
+        { value: 'FIXED', label: 'Fixed' },
+        { value: 'PERCENTAGE', label: 'Percentage' }
       ],
       disabledDate: true,
       data: [{
@@ -106,6 +108,7 @@ class CreateCustomerInvoice extends React.Component {
       currentData: {},
       contactType: 2,
       openCustomerModal: false,
+      openInvoicePreviewModal: false,
       selectedContact: '',
       createMore: false,
       fileName: '',
@@ -151,6 +154,10 @@ class CreateCustomerInvoice extends React.Component {
 
     this.closeCustomerModal = this.closeCustomerModal.bind(this)
     this.openCustomerModal = this.openCustomerModal.bind(this)
+
+    this.closeInvoicePreviewModal = this.closeInvoicePreviewModal.bind(this)
+    this.openInvoicePreviewModal = this.openInvoicePreviewModal.bind(this)
+
     this.getCurrentUser = this.getCurrentUser.bind(this)
     this.checkedRow = this.checkedRow.bind(this)
     this.handleFileChange = this.handleFileChange.bind(this)
@@ -273,6 +280,8 @@ class CreateCustomerInvoice extends React.Component {
       <label className="mb-0">{row.subTotal}</label>
     )
   }
+
+  
 
   setDate = (props,value) => {
     const { term } = this.state
@@ -428,7 +437,7 @@ class CreateCustomerInvoice extends React.Component {
       total = (total_vat + total_net);
     })
 
-    const discount = props.values.discountType === 'Percentage' ? (total*discountPercentage)/100 : discountAmount
+    const discount = props.values.discountType === 'PERCENTAGE' ? (total*discountPercentage)/100 : discountAmount
     this.setState({
       data: data,
       initValue: {
@@ -440,7 +449,7 @@ class CreateCustomerInvoice extends React.Component {
         }
       }
     },() => {
-      if(props.values.discountType === 'Percentage') {
+      if(props.values.discountType === 'PERCENTAGE') {
         this.formRef.current.setFieldValue('discount',discount)
       }
     })
@@ -477,8 +486,6 @@ class CreateCustomerInvoice extends React.Component {
       notes
     } = data
 
-    
-    console.log(moment(invoiceDueDate).toDate())
     let formData = new FormData();
     formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
     formData.append("invoiceDate", invoiceDate ? invoiceDate : null);
@@ -493,7 +500,7 @@ class CreateCustomerInvoice extends React.Component {
     formData.append('totalAmount', this.state.initValue.totalAmount);
     formData.append('discount', discount);
     formData.append('discountType', discountType);
-    if(discountType === 'Percentage') {
+    if(discountType === 'PERCENTAGE') {
     formData.append('discountPercentage', discountPercentage);
     }
     if (contactId) {
@@ -548,6 +555,10 @@ class CreateCustomerInvoice extends React.Component {
     this.setState({ openCustomerModal: true })
   }
 
+  openInvoicePreviewModal(props) {
+    this.setState({ openInvoicePreviewModal: true })
+  }
+
   getCurrentUser(data) {
     let option
     if (data.label || data.value) {
@@ -569,6 +580,10 @@ class CreateCustomerInvoice extends React.Component {
       this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
     }
     this.setState({ openCustomerModal: false })
+  }
+
+  closeInvoicePreviewModal(res) {
+    this.setState({ openInvoicePreviewModal: false })
   }
 
   render() {
@@ -917,7 +932,7 @@ class CreateCustomerInvoice extends React.Component {
                                             <Label>Reciept Attachment</Label> <br />
                                             <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                               <i className="fa fa-upload"></i> Upload
-                                  </Button>
+                                            </Button>
                                             <input id="fileInput" ref={ref => {
                                               this.uploadFile = ref;
                                             }} type="file" style={{ display: 'none' }} onChange={(e) => {
@@ -1058,7 +1073,7 @@ class CreateCustomerInvoice extends React.Component {
                                             </FormGroup>
                                           </Col>
                                           {
-                                            props.values.discountType === 'Percentage' ?
+                                            props.values.discountType === 'PERCENTAGE' ?
                                               <Col lg={6}>
                                                 <FormGroup>
                                                   <Label htmlFor="discountPercentage">Percentage</Label>
@@ -1150,7 +1165,12 @@ class CreateCustomerInvoice extends React.Component {
                               null
                             }
                             <Row>
-                              <Col lg={12} className="mt-5">
+                              <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
+                              <FormGroup className="text-right">
+                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={this.openInvoicePreviewModal}>
+                                    <i className="fa fa-Preview"></i> Preview
+                              </Button>
+                              </FormGroup>
                                 <FormGroup className="text-right">
                                   <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
 
@@ -1198,6 +1218,10 @@ class CreateCustomerInvoice extends React.Component {
           createCustomer={this.props.customerInvoiceActions.createCustomer}
           currency_list={this.props.currency_list}
           country_list={this.props.country_list}
+        />
+        <PreviewInvoiceModal
+          openInvoicePreviewModal={this.state.openInvoicePreviewModal}
+          closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
         />
       </div>
     )

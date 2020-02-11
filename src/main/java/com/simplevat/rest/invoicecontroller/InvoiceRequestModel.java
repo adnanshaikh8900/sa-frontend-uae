@@ -37,7 +37,7 @@ public class InvoiceRequestModel {
     
     private DiscountType discountType;
     private BigDecimal discount;
-    private Integer discountPercentage;
+    private double discountPercentage;
     private Integer createdBy;
     private LocalDateTime createdDate;
     private Integer lastUpdatedBy;

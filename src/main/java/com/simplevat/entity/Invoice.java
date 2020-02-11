@@ -61,6 +61,11 @@ public class Invoice implements Serializable {
     @ColumnDefault(value = "0.00")
     private BigDecimal discount;
 
+    @Column(name = "DISCOUNT_PERCENTAGE")
+    @ColumnDefault(value = "0.00")
+    private double discountPercentage;
+
+    
     @Column(name = "CONTACT_PO_NUMBER")
     private String contactPoNumber;
 

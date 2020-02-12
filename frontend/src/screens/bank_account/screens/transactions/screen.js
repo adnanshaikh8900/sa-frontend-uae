@@ -373,7 +373,7 @@ class BankTransactions extends React.Component {
                               showMonthDropdown
                               showYearDropdown
                               dropdownMode="select"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MM-yyyy"
                               selected={filterData.transactionDate}
                               onChange={(value) => {
                                 this.handleChange(value, "transactionDate")
@@ -439,7 +439,7 @@ class BankTransactions extends React.Component {
                             Withdrawal
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="openingBalance"
+                            dataField="runningAmount"
                             dataSort
                           >
                             Running Balance

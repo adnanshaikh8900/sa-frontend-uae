@@ -33,9 +33,27 @@ class PreviewInvoiceModal extends React.Component {
     jsPdfGenerator = () => {
         const input = document.getElementById('toPdf');
         const doc = new jsPDF()
-        doc.fromHTML(input,15,15)
-        doc.save('output.pdf') 
-      }
+        doc.fromHTML(input, 15, 15)
+        doc.save('output.pdf')
+        // // html2canvas(document.body, {
+        // //     onrendered: function(canvas) {
+        // //       var pdf = new jsPDF();
+        // //       var marginLeft=20;
+        // //       var marginRight=20
+        // //       pdf.addImage(canvas.toDataURL("image/jpeg"),"jpeg",marginLeft,marginRight)
+        // //       window.location=pdf.output("datauristring")
+        // //     }
+        // //   });
+        // var doc = new jsPDF('p', 'pt', 'a4', true);
+        // html2canvas(input, {
+        //     useCORS: true,
+        //     onrendered: function (canvas) {
+        //         var imgData = canvas.toDataURL('image/jpeg');
+        //         doc.addImage(imgData, 'JPEG', 15, 0, 34, 37);
+        //         doc.save('Spec_Sheet.pdf');
+        //     }
+        // })
+    }
 
     render() {
         const { openInvoicePreviewModal, closeInvoicePreviewModal } = this.props
@@ -52,32 +70,32 @@ class PreviewInvoiceModal extends React.Component {
                                 Invoice <strong>#90-98792</strong>
                             </CardHeader>
                             <CardBody>
-                                <Row className="mb-4">
-                                    <Col sm="4">
+                                <div style={{ width: '100%', display: 'flex' }}>
+                                    <div style={{ width: '33.3%' }}>
                                         <h6 className="mb-3">From:</h6>
                                         <div><strong>BootstrapMaster.com</strong></div>
                                         <div>Konopnickiej 42</div>
                                         <div>43-190 Mikolow, Poland</div>
                                         <div>Email: lukasz@bootstrapmaster.com</div>
                                         <div>Phone: +48 123 456 789</div>
-                                    </Col>
-                                    <Col sm="4">
+                                    </div>
+                                    <div style={{ width: '33.3%' }}>
                                         <h6 className="mb-3">To:</h6>
                                         <div><strong>BootstrapMaster.com</strong></div>
                                         <div>Konopnickiej 42</div>
                                         <div>43-190 Mikolow, Poland</div>
                                         <div>Email: lukasz@bootstrapmaster.com</div>
                                         <div>Phone: +48 123 456 789</div>
-                                    </Col>
-                                    <Col sm="4">
+                                    </div>
+                                    <div style={{ width: '33.3%' }}>
                                         <h6 className="mb-3">Details:</h6>
                                         <div>Invoice <strong>#90-98792</strong></div>
                                         <div>March 30, 2013</div>
                                         <div>VAT: PL9877281777</div>
                                         <div>Account Name: BootstrapMaster.com</div>
                                         <div><strong>SWIFT code: 99 8888 7777 6666 5555</strong></div>
-                                    </Col>
-                                </Row>
+                                    </div>
+                                </div>
                                 <Table striped responsive>
                                     <thead>
                                         <tr>
@@ -126,7 +144,7 @@ class PreviewInvoiceModal extends React.Component {
                                 </Table>
                                 <Row>
                                     <Col lg="4" sm="5">
-                                   </Col>
+                                    </Col>
                                     <Col lg="4" sm="5" className="ml-auto">
                                         <Table className="table-clear">
                                             <tbody>
@@ -155,7 +173,7 @@ class PreviewInvoiceModal extends React.Component {
                         </Card>
                     </ModalBody>
                     <ModalFooter>
-                        <Button href="#" className="btn btn-sm btn-info mr-1 float-right"   onClick={() => { this.jsPdfGenerator() }}><i className="fa fa-save"></i> Save</Button>
+                        <Button href="#" className="btn btn-sm btn-info mr-1 float-right" onClick={() => { this.jsPdfGenerator() }}><i className="fa fa-save"></i> Save</Button>
                         <Button href="#" className="btn btn-sm btn-secondary mr-1 float-right"><i className="fa fa-print"></i> Print</Button>
                         <Button color="secondary" className=" btn-sm btn-secondary" onClick={() => { closeInvoicePreviewModal(false) }}>Cancel</Button>
                     </ModalFooter>

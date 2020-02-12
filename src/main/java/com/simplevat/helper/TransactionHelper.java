@@ -15,6 +15,7 @@ import com.simplevat.rest.transactioncontroller.TransactionViewModel;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 import com.simplevat.utils.DateFormatUtil;
 
@@ -51,8 +52,16 @@ public class TransactionHelper {
 	@Autowired
 	private DateFormatUtil dateUtil;
 
+	@Autowired
+	private TransactionService transactionService;
+
 	public Transaction getEntity(TransactionPresistModel transactionModel) {
 		Transaction transaction = new Transaction();
+
+		if (transactionModel.getId() != null) {
+			transaction = transactionService.findByPK(transactionModel.getId());
+		}
+		
 		if (transactionModel.getBankAccountId() != null) {
 			BankAccount bankAccount = bankAccountService.getBankAccountById(transactionModel.getBankAccountId());
 			bankAccount.setBankAccountId(transactionModel.getBankAccountId());
@@ -134,7 +143,7 @@ public class TransactionHelper {
 		}
 		if (transaction.getTransactionType() != null) {
 			transactionModel.setTransactionTypeCode(transaction.getTransactionType().getTransactionTypeCode());
-			//transactionModel.set(transaction.getTransactionType().getDebitCreditFlag());
+			// transactionModel.set(transaction.getTransactionType().getDebitCreditFlag());
 		}
 
 		if (transaction.getTransactionDate() != null) {

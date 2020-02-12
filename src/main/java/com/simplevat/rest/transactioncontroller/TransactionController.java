@@ -21,6 +21,8 @@ import com.simplevat.utils.DateFormatUtil;
 
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -79,9 +81,15 @@ public class TransactionController implements Serializable {
 			dataMap.put(TransactionFilterEnum.BANK_ID, bankAccountService.findByPK(filterModel.getBankId()));
 		}
 		if (filterModel.getTransactionDate() != null) {
-			LocalDateTime date = Instant.ofEpochMilli(filterModel.getTransactionDate().getTime())
-					.atZone(ZoneId.systemDefault()).toLocalDateTime();
-			dataMap.put(TransactionFilterEnum.TRANSACTION_DATE, date);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			LocalDateTime dateTime = null;
+			try {
+				dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getTransactionDate()).getTime())
+						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			dataMap.put(TransactionFilterEnum.TRANSACTION_DATE, dateTime);
 		}
 		if (filterModel.getTransactionStatusCode() != null) {
 			dataMap.put(TransactionFilterEnum.TRANSACTION_STATUS,

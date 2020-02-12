@@ -9,7 +9,8 @@ import lombok.Data;
 @Data
 public class TransactionRequestFilterModel extends PaginationModel{
 	private Integer bankId;
-	private Date transactionDate;
+	//formate
+	private String transactionDate;
 	private Integer transactionTypeCode;
 	private Integer transactionStatusCode;
 }

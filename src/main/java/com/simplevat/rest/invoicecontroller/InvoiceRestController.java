@@ -114,7 +114,7 @@ public class InvoiceRestController implements Serializable {
 
 	@ApiOperation(value = "Delete Invoice By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity delete(@RequestParam(value = "id") Integer id) {
 		Invoice invoice = invoiceService.findByPK(id);
 		if (invoice != null) {
 			invoice.setDeleteFlag(Boolean.TRUE);
@@ -126,7 +126,7 @@ public class InvoiceRestController implements Serializable {
 
 	@ApiOperation(value = "Delete Invoices in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
+	public ResponseEntity delete(@RequestBody DeleteModel ids) {
 		try {
 			invoiceService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);

@@ -1,8 +1,8 @@
 package com.simplevat.helper;
 
-import com.simplevat.contact.model.TransactionViewRestModel;
-import com.simplevat.contact.model.TransactionRestModel;
-import com.simplevat.contact.model.BankAccountRestModel;
+import com.simplevat.model.TransactionViewRestModel;
+import com.simplevat.model.TransactionRestModel;
+import com.simplevat.model.BankAccountRestModel;
 import com.simplevat.constant.TransactionRefrenceTypeConstant;
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.entity.Invoice;

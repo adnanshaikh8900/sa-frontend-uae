@@ -3,7 +3,7 @@ package com.simplevat.rest.transactionparsingcontroller;
 import java.util.Map;
 
 import com.simplevat.criteria.enums.TransactionEnum;
-import com.simplevat.enums.ExcellDelimiterEnum;
+import com.simplevat.constant.ExcellDelimiterEnum;
 
 import lombok.Data;
 

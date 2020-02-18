@@ -10,7 +10,7 @@ import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.helper.BankHelper;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.contact.model.BankModel;
+import com.simplevat.model.BankModel;
 import com.simplevat.entity.Country;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.User;

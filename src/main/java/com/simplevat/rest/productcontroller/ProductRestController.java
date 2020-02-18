@@ -7,7 +7,7 @@ package com.simplevat.rest.productcontroller;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
-import com.simplevat.contact.model.TransactionRestModel;
+import com.simplevat.model.TransactionRestModel;
 import com.simplevat.entity.Product;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.service.ProductService;

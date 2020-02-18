@@ -5,7 +5,7 @@
  */
 package com.simplevat.rest.reports;
 
-import com.simplevat.contact.model.FinancialPeriodRestModel;
+import com.simplevat.model.FinancialPeriodRestModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;

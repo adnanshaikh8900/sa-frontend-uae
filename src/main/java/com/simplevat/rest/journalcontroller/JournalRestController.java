@@ -125,10 +125,10 @@ public class JournalRestController {
 
     @ApiOperation(value = "Add New Journal Invoice")
     @PostMapping(value = "/save")
-    public ResponseEntity save(@RequestBody JournalRequestModel JournalRequestModel, HttpServletRequest request) {
+    public ResponseEntity save(@RequestBody JournalRequestModel journalRequestModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            Journal journal = journalRestHelper.getEntity(JournalRequestModel, userId);
+            Journal journal = journalRestHelper.getEntity(journalRequestModel, userId);
             journal.setCreatedBy(userId);
             journal.setCreatedDate(LocalDateTime.now());
             journal.setDeleteFlag(Boolean.FALSE);
@@ -142,10 +142,10 @@ public class JournalRestController {
 
     @ApiOperation(value = "Update Journal")
     @PostMapping(value = "/update")
-    public ResponseEntity update(@RequestBody JournalRequestModel JouralRequestModel, HttpServletRequest request) {
+    public ResponseEntity update(@RequestBody JournalRequestModel jouralRequestModel, HttpServletRequest request) {
         try {
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            Journal journal = journalRestHelper.getEntity(JouralRequestModel, userId);
+            Journal journal = journalRestHelper.getEntity(jouralRequestModel, userId);
             journal.setLastUpdateDate(LocalDateTime.now());
             journal.setLastUpdateBy(userId);
             journalService.update(journal);

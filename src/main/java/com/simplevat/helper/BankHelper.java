@@ -5,7 +5,7 @@
  */
 package com.simplevat.helper;
 
-import com.simplevat.contact.model.BankModel;
+import com.simplevat.model.BankModel;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;

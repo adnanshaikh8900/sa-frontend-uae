@@ -1,7 +1,7 @@
 package com.simplevat.dao.bankaccount;
 
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
-import com.simplevat.contact.model.TransactionReportRestModel;
+import com.simplevat.model.TransactionReportRestModel;
 
 import java.util.ArrayList;
 import java.util.Date;

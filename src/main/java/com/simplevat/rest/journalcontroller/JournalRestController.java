@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
@@ -132,6 +133,7 @@ public class JournalRestController {
             journal.setCreatedBy(userId);
             journal.setCreatedDate(LocalDateTime.now());
             journal.setDeleteFlag(Boolean.FALSE);
+            journal.setPostingReferenceType(PostingReferenceTypeEnum.MUNUAL);
             journalService.persist(journal);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {

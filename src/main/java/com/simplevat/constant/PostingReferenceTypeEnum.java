@@ -10,7 +10,7 @@ package com.simplevat.constant;
  * @author uday
  */
 public enum PostingReferenceTypeEnum {
-    MUNNUAL,
+    MUNUAL,
     INVOICE,
     PURCHASE;
 }

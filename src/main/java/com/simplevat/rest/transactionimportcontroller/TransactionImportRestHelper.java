@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.simplevat.constant.TransactionStatusConstant;
-import com.simplevat.contact.model.Transaction;
+import com.simplevat.model.TransactionModel;
 import com.simplevat.criteria.enums.TransactionEnum;
 import com.simplevat.dao.DateFormatDao;
 import com.simplevat.dao.TransactionParsingSettingDao;
@@ -51,12 +51,12 @@ public class TransactionImportRestHelper {
 	private String debitAmount = "Debit Amount";
 
 	private String creditAmount = "Credit Amount";
-	private List<Transaction> selectedTransaction;
-	private List<Transaction> creditTransaction = new ArrayList<>();
+	private List<TransactionModel> selectedTransaction;
+	private List<TransactionModel> creditTransaction = new ArrayList<>();
 	private boolean transactionDateBoolean = false;
 	private boolean descriptionBoolean = false;
-	private List<Transaction> transactionList = new ArrayList<>();
-	private List<Transaction> invalidTransactionList = new ArrayList<>();
+	private List<TransactionModel> transactionList = new ArrayList<>();
+	private List<TransactionModel> invalidTransactionList = new ArrayList<>();
 	private boolean debitAmountBoolean = false;
 	private boolean creditAmountBoolean = false;
 	List<String> headerText = new ArrayList<String>();
@@ -186,7 +186,7 @@ public class TransactionImportRestHelper {
 					if (headerIndex < header) {
 						headerIndex++;
 					} else {
-						Transaction transaction = new Transaction();
+						TransactionModel transaction = new TransactionModel();
 						transaction.setId(++recordNo);
 						int i = 0;
 						String date = cSVRecord.get(transcationDatePosition);
@@ -216,8 +216,8 @@ public class TransactionImportRestHelper {
 							}
 							transaction.setTransactionDate(date);
 							transaction.setDescription(description);
-							transaction.setDrAmount(drAmount);
-							transaction.setCrAmount(crAmount);
+							transaction.setDebit(drAmount);
+							transaction.setCredit(crAmount);
 							transaction.setValidData(Boolean.TRUE);
 							transaction.setFormat(TransactionStatusConstant.VALID);
 							transactionList.add(transaction);
@@ -225,15 +225,15 @@ public class TransactionImportRestHelper {
 							totalErrorRows = totalErrorRows + 1;
 							transaction.setTransactionDate(date);
 							transaction.setDescription(description);
-							transaction.setDrAmount(drAmount);
-							transaction.setCrAmount(crAmount);
+							transaction.setDebit(drAmount);
+							transaction.setCredit(crAmount);
 							transaction.setValidData(Boolean.FALSE);
 							transaction.setFormat(TransactionStatusConstant.INVALID);
 							transactionList.add(transaction);
 							renderButtonOnValidData = false;
 						}
 
-						if (transaction.getCrAmount() != null && !transaction.getCrAmount().trim().isEmpty()) {
+						if (transaction.getCredit() != null && !transaction.getCredit().trim().isEmpty()) {
 							creditTransaction.add(transaction);
 						}
 					}

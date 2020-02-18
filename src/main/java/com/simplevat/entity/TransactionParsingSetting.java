@@ -24,7 +24,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.simplevat.entity.converter.DateConverter;
-import com.simplevat.enums.ExcellDelimiterEnum;
+import com.simplevat.constant.ExcellDelimiterEnum;
 
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 package com.simplevat.security;
 
-import com.simplevat.contact.model.JwtResponse;
-import com.simplevat.contact.model.JwtRequest;
+import com.simplevat.model.JwtResponse;
+import com.simplevat.model.JwtRequest;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;

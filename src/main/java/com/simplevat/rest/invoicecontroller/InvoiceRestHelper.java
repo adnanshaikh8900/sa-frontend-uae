@@ -7,7 +7,7 @@ import com.simplevat.entity.Currency;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.InvoiceLineItem;
-import com.simplevat.enums.InvoiceStatusEnum;
+import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.invoice.model.InvoiceItemModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;

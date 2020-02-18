@@ -5,7 +5,7 @@
  */
 package com.simplevat.rest.expenses;
 
-import com.simplevat.contact.model.ExpenseItemModel;
+import com.simplevat.model.ExpenseItemModel;
 import com.simplevat.entity.Contact;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

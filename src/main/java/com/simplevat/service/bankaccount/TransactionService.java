@@ -1,7 +1,7 @@
 package com.simplevat.service.bankaccount;
 
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
-import com.simplevat.contact.model.TransactionReportRestModel;
+import com.simplevat.model.TransactionReportRestModel;
 import java.util.List;
 import java.util.Map;
 

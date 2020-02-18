@@ -7,8 +7,8 @@ package com.simplevat.rest.purchase;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.helper.PurchaseRestControllerHelper;
-import com.simplevat.contact.model.PurchaseRestModel;
-import com.simplevat.contact.model.PurchaseItemRestModel;
+import com.simplevat.model.PurchaseRestModel;
+import com.simplevat.model.PurchaseItemRestModel;
 import com.simplevat.constant.InvoicePurchaseStatusConstant;
 import com.simplevat.constant.TransactionCategoryConsatant;
 import com.simplevat.criteria.ProjectCriteria;

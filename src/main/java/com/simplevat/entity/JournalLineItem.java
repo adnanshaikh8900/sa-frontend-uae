@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import com.simplevat.constant.PostingReferenceTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +24,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.converter.DateConverter;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import lombok.Data;
 
@@ -33,81 +36,91 @@ import lombok.Data;
 @Table(name = "JOURNAL_LINE_ITEM")
 @Data
 public class JournalLineItem implements Serializable {
-	/**
-	* 
-	*/
-	private static final long serialVersionUID = 7790907788120167278L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
-	private int id;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 7790907788120167278L;
 
-	@Basic
-	@Column(name = "DESCRIPTION")
-	private String description;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private int id;
 
-	@OneToOne
-	@JoinColumn(name = "TRANSACTION_CATEGORY")
-	private TransactionCategory transactionCategory;
+    @Basic
+    @Column(name = "DESCRIPTION")
+    private String description;
 
-	@OneToOne
-	@JoinColumn(name = "CONTACT")
-	private Contact contact;
-        
-	@OneToOne
-	@JoinColumn(name = "VAT_CATEGORY")
-	private VatCategory vatCategory;
+    @OneToOne
+    @JoinColumn(name = "TRANSACTION_CATEGORY")
+    private TransactionCategory transactionCategory;
 
-	@Basic
-	@Column(name = "DEBIT_AMOUNT")
-	private BigDecimal debitAmount;
+    @OneToOne
+    @JoinColumn(name = "CONTACT")
+    private Contact contact;
 
-	@Basic
-	@Column(name = "CREDIT_AMOUNT")
-	private BigDecimal creditAmount;
+    @OneToOne
+    @JoinColumn(name = "VAT_CATEGORY")
+    private VatCategory vatCategory;
 
-	@Column(name = "CREATED_BY")
-	@Basic(optional = false)
-	private Integer createdBy;
+    @Basic
+    @Column(name = "DEBIT_AMOUNT")
+    private BigDecimal debitAmount;
 
-	@Column(name = "CREATED_DATE")
-	@ColumnDefault(value = "CURRENT_TIMESTAMP")
-	@Basic(optional = false)
-	@Convert(converter = DateConverter.class)
-	private LocalDateTime createdDate;
+    @Basic
+    @Column(name = "CREDIT_AMOUNT")
+    private BigDecimal creditAmount;
 
-	@Column(name = "LAST_UPDATED_BY")
-	private Integer lastUpdateBy;
+    @Column(name = "CREATED_BY")
+    @Basic(optional = false)
+    private Integer createdBy;
 
-	@Column(name = "LAST_UPDATE_DATE")
-	@Convert(converter = DateConverter.class)
-	private LocalDateTime lastUpdateDate;
+    @Column(name = "CREATED_DATE")
+    @ColumnDefault(value = "CURRENT_TIMESTAMP")
+    @Basic(optional = false)
+    @Convert(converter = DateConverter.class)
+    private LocalDateTime createdDate;
 
-	@Column(name = "DELETE_FLAG")
-	@ColumnDefault(value = "0")
-	@Basic(optional = false)
-	private Boolean deleteFlag = Boolean.FALSE;
+    @Column(name = "LAST_UPDATED_BY")
+    private Integer lastUpdateBy;
 
-	@Column(name = "VERSION_NUMBER")
-	@ColumnDefault(value = "1")
-	@Basic(optional = false)
-	@Version
-	private Integer versionNumber;
+    @Column(name = "LAST_UPDATE_DATE")
+    @Convert(converter = DateConverter.class)
+    private LocalDateTime lastUpdateDate;
 
-	@ManyToOne
-	@JoinColumn(name = "JOURNAL_ID")
-	private Journal journal;
+    @Column(name = "DELETE_FLAG")
+    @ColumnDefault(value = "0")
+    @Basic(optional = false)
+    private Boolean deleteFlag = Boolean.FALSE;
 
-	@PrePersist
-	public void updateDates() {
-		createdDate = LocalDateTime.now();
-		lastUpdateDate = LocalDateTime.now();
-	}
+    @Column(name = "VERSION_NUMBER")
+    @ColumnDefault(value = "1")
+    @Basic(optional = false)
+    @Version
+    private Integer versionNumber;
 
-	@PreUpdate
-	public void updateLastUpdatedDate() {
-		lastUpdateDate = LocalDateTime.now();
-	}
+    @ManyToOne
+    @JoinColumn(name = "JOURNAL_ID")
+    private Journal journal;
+
+    @Column(name = "REFERENCE_ID")
+    @Basic(optional = false)
+    private Integer referenceId;
+
+    @Column(name = "REFERENCE_TYPE")
+    @Basic(optional = false)
+    @Enumerated(value = EnumType.STRING)
+    private PostingReferenceTypeEnum referenceType;
+
+    @PrePersist
+    public void updateDates() {
+        createdDate = LocalDateTime.now();
+        lastUpdateDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void updateLastUpdatedDate() {
+        lastUpdateDate = LocalDateTime.now();
+    }
 
 }

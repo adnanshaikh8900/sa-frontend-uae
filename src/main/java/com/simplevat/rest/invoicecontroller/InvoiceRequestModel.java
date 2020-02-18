@@ -1,6 +1,6 @@
 package com.simplevat.rest.invoicecontroller;
 
-import com.simplevat.enums.DiscountType;
+import com.simplevat.constant.DiscountType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;

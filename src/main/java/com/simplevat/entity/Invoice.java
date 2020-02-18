@@ -2,8 +2,8 @@ package com.simplevat.entity;
 
 import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
-import com.simplevat.enums.DiscountType;
-import com.simplevat.enums.InvoiceStatusEnum;
+import com.simplevat.constant.DiscountType;
+import com.simplevat.constant.InvoiceStatusEnum;
 import java.io.Serializable;
 import lombok.Data;
 

@@ -10,8 +10,8 @@ import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 
-import com.simplevat.contact.model.Transaction;
-import com.simplevat.contact.model.FileModel;
+import com.simplevat.model.TransactionModel;
+import com.simplevat.model.FileModel;
 import com.simplevat.constant.TransactionCreditDebitConstant;
 import com.simplevat.constant.TransactionEntryTypeConstant;
 import com.simplevat.constant.TransactionStatusConstant;
@@ -138,15 +138,15 @@ public class TransactionImportController implements Serializable {
 	@Deprecated
 	@ApiOperation(value = "Save Import Transaction")
 	@PostMapping(value = "/saveimporttransaction")
-	public ResponseEntity<Integer> saveTransactions(@RequestBody List<Transaction> transactionList,
+	public ResponseEntity<Integer> saveTransactions(@RequestBody List<TransactionModel> transactionList,
 			@RequestParam(value = "id") Integer id, @RequestParam(value = "bankId") Integer bankId) {
-		for (Transaction transaction : transactionList) {
+		for (TransactionModel transaction : transactionList) {
 			save(transaction, id, bankId);
 		}
 		return new ResponseEntity<>(bankId, HttpStatus.OK);
 	}
 
-	void save(Transaction transaction, Integer id, Integer bankId) {
+	void save(TransactionModel transaction, Integer id, Integer bankId) {
 		System.out.println("transaction===" + transaction);
 		try {
 			User loggedInUser = userServiceNew.findByPK(id);
@@ -160,14 +160,14 @@ public class TransactionImportController implements Serializable {
 			LocalDate date = LocalDate.parse(transaction.getTransactionDate(), DateTimeFormatter.ofPattern("M/d/yyyy"));
 			LocalTime time = LocalTime.now();
 			transaction1.setTransactionDate(LocalDateTime.of(date, time));
-			if (transaction.getDrAmount() != null && !transaction.getDrAmount().trim().isEmpty()) {
+			if (transaction.getDebit() != null && !transaction.getDebit().trim().isEmpty()) {
 				transaction1.setTransactionAmount(
-						BigDecimal.valueOf(Double.parseDouble(transaction.getDrAmount().replaceAll(",", ""))));
+						BigDecimal.valueOf(Double.parseDouble(transaction.getDebit().replaceAll(",", ""))));
 				transaction1.setDebitCreditFlag(TransactionCreditDebitConstant.DEBIT);
 			}
-			if (transaction.getCrAmount() != null && !transaction.getCrAmount().trim().isEmpty()) {
+			if (transaction.getCredit() != null && !transaction.getCredit().trim().isEmpty()) {
 				transaction1.setTransactionAmount(
-						BigDecimal.valueOf(Double.parseDouble(transaction.getCrAmount().replaceAll(",", ""))));
+						BigDecimal.valueOf(Double.parseDouble(transaction.getCredit().replaceAll(",", ""))));
 				transaction1.setDebitCreditFlag(TransactionCreditDebitConstant.CREDIT);
 			}
 			transaction1.setTransactionStatus(transactionStatusService.findByPK(TransactionStatusConstant.UNEXPLAINED));

@@ -13,7 +13,7 @@ import com.simplevat.constant.dbfilter.TransactionParsingSettingFilterEnum;
 import com.simplevat.criteria.enums.TransactionEnum;
 import com.simplevat.entity.TransactionDataColMapping;
 import com.simplevat.entity.TransactionParsingSetting;
-import com.simplevat.enums.ExcellDelimiterEnum;
+import com.simplevat.constant.ExcellDelimiterEnum;
 import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.service.DateFormatService;
 import com.simplevat.service.TransactionParsingSettingService;

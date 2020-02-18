@@ -5,7 +5,7 @@
  */
 package com.simplevat.rest.transactioncategorycontroller;
 
-import com.simplevat.constant.DefualtTypeConstant;
+import com.simplevat.constant.DefaultTypeConstant;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
@@ -76,7 +76,7 @@ public class TranscationCategoryHelper {
         if (transactionCategoryBean.getDefaltFlag() != null && !transactionCategoryBean.getDefaltFlag().isEmpty()) {
             transactionCategory.setDefaltFlag(transactionCategoryBean.getDefaltFlag().charAt(0));
         } else {
-            transactionCategory.setDefaltFlag(DefualtTypeConstant.NO);
+            transactionCategory.setDefaltFlag(DefaultTypeConstant.NO);
         }
         if (transactionCategoryBean.getParentTransactionCategory() != null) {
             transactionCategory.setParentTransactionCategory(

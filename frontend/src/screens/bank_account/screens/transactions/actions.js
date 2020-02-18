@@ -3,15 +3,15 @@ import {
   // api,
   authApi
 } from 'utils'
-// import moment from 'moment'
+import moment from 'moment'
 
 export const getTransactionList = (obj) => {
   console.log(obj)
   const { transactionTypeCode, transactionDate , id , pageNo , pageSize} = obj
   let param = `/rest/transaction/list?bankId=${id}&transactionTypeCode=${transactionTypeCode}&pageNo=${pageNo}&pageSize=${pageSize}`
   if(transactionDate !== '') {
-    // let date = moment(transactionDate).format('DD-MM-YYYY')
-    param = param +`&transactionDate=${transactionDate}`
+    let date = moment(transactionDate).format('DD-MM-YYYY')
+    param = param +`&transactionDate=${date}`
   }
   return (dispatch) => {
     let data ={

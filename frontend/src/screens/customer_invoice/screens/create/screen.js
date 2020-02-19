@@ -23,7 +23,6 @@ import * as CustomerInvoiceCreateActions from './actions';
 import * as  CustomerInvoiceActions from "../../actions";
 
 import { CustomerModal } from '../../sections'
-import { PreviewInvoiceModal } from '../../sections'
 
 import { Loader } from 'components'
 
@@ -108,7 +107,6 @@ class CreateCustomerInvoice extends React.Component {
       currentData: {},
       contactType: 2,
       openCustomerModal: false,
-      openInvoicePreviewModal: false,
       selectedContact: '',
       createMore: false,
       fileName: '',
@@ -155,8 +153,7 @@ class CreateCustomerInvoice extends React.Component {
     this.closeCustomerModal = this.closeCustomerModal.bind(this)
     this.openCustomerModal = this.openCustomerModal.bind(this)
 
-    this.closeInvoicePreviewModal = this.closeInvoicePreviewModal.bind(this)
-    this.openInvoicePreviewModal = this.openInvoicePreviewModal.bind(this)
+
 
     this.getCurrentUser = this.getCurrentUser.bind(this)
     this.checkedRow = this.checkedRow.bind(this)
@@ -1166,11 +1163,6 @@ class CreateCustomerInvoice extends React.Component {
                             }
                             <Row>
                               <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
-                              <FormGroup className="text-right">
-                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={this.openInvoicePreviewModal}>
-                                    <i className="fa fa-Preview"></i> Preview
-                              </Button>
-                              </FormGroup>
                                 <FormGroup className="text-right">
                                   <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
 
@@ -1219,10 +1211,7 @@ class CreateCustomerInvoice extends React.Component {
           currency_list={this.props.currency_list}
           country_list={this.props.country_list}
         />
-        <PreviewInvoiceModal
-          openInvoicePreviewModal={this.state.openInvoicePreviewModal}
-          closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
-        />
+
       </div>
     )
   }

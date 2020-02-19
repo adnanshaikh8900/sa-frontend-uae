@@ -21,6 +21,7 @@ import _ from 'lodash'
 import * as jsPDF from 'jspdf'
 import * as html2canvas from 'html2canvas'
 import { PDFExport, savePDF } from '@progress/kendo-react-pdf';
+import './style.scss'
 
 class PreviewInvoiceModal extends React.Component {
 
@@ -46,11 +47,9 @@ class PreviewInvoiceModal extends React.Component {
                     {/* <ModalHeader toggle={this.toggleDanger}>Preview Invoice</ModalHeader> */}
                     <ModalBody>
                         <PDFExport ref={(component) => this.pdfExportComponent = component}>
-                            <Card id="singlePage">
-                                <CardHeader>
-                                    Invoice <strong>#000002</strong>
-                                </CardHeader>
-                                <CardBody>
+                            <Card id="singlePage" className="box">
+                            <div class="ribbon ribbon-top-left"><span>Paid</span></div>
+                                <CardBody style={{marginTop: '7rem'}}>
                                     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
                                         <div style={{ width: '60%' }}>
                                             <h6 className="mb-3">VAT Department:</h6>

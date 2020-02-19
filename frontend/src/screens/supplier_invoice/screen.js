@@ -41,6 +41,8 @@ import {
 
 import './style.scss'
 // import { setNestedObjectValues } from 'formik';
+import { PreviewInvoiceModal } from './sections'
+
 
 const mapStateToProps = (state) => {
   return ({
@@ -75,6 +77,7 @@ class SupplierInvoice extends React.Component {
       },
       selectedRows: [],
       contactType: 1,
+      openInvoicePreviewModal: false,
 
     }
 
@@ -90,7 +93,8 @@ class SupplierInvoice extends React.Component {
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
-
+    this.closeInvoicePreviewModal = this.closeInvoicePreviewModal.bind(this)
+    this.openInvoicePreviewModal = this.openInvoicePreviewModal.bind(this)
 
     this.options = {
       paginationPosition: 'top'
@@ -193,11 +197,11 @@ class SupplierInvoice extends React.Component {
             <DropdownItem onClick={() => this.props.history.push('/admin/expense/supplier-invoice/detail', { id: row.id })}>
               <i className="fas fa-edit" /> Edit
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem onClick={()=>{this.postInvoice(row)}}>
               <i className="fas fa-heart" /> Post
             </DropdownItem>
-            <DropdownItem>
-              <i className="fas fa-adjust" /> Adjust
+            <DropdownItem  onClick={()=>{this.openInvoicePreviewModal()}}>
+              <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-upload" /> Send
@@ -315,6 +319,31 @@ class SupplierInvoice extends React.Component {
 
   handleSearch() {
     this.initializeData()
+  }
+
+  postInvoice(row){
+    const postingRequestModel = {
+      amount : row.invoiceAmount,
+      postingRefId: row.id,
+      postingRefType: 'INVOICE'
+    }
+    console.log(postingRequestModel)
+
+    this.props.supplierInvoiceActions.postInvoice(postingRequestModel).then(res => {
+    if (res.status === 200) {
+      this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
+     }
+    }).catch(err => {
+       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    })
+  }
+
+  openInvoicePreviewModal() {
+    this.setState({ openInvoicePreviewModal: true })
+  }
+
+  closeInvoicePreviewModal(res) {
+    this.setState({ openInvoicePreviewModal: false })
   }
 
   render() {
@@ -580,7 +609,10 @@ class SupplierInvoice extends React.Component {
             </CardBody>
           </Card>
         </div>
-
+        <PreviewInvoiceModal
+          openInvoicePreviewModal={this.state.openInvoicePreviewModal}
+          closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
+        />
       </div>
 
 

@@ -158,9 +158,9 @@ class CreateJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
-          console.log(props.touched.journalLineItems[idx].transactionCategoryId)
-        }
+        // if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
+        //   console.log(props.touched.journalLineItems[idx].transactionCategoryId)
+        // }
       }
     });
 
@@ -239,9 +239,9 @@ class CreateJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
-          console.log(props.touched.journalLineItems[idx].contactId)
-        }
+        // if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
+        //   console.log(props.touched.journalLineItems[idx].contactId)
+        // }
       }
     });
 
@@ -291,9 +291,9 @@ class CreateJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
-          console.log(props.touched.journalLineItems[idx].vatCategoryId)
-        }
+        // if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
+        //   console.log(props.touched.journalLineItems[idx].vatCategoryId)
+        // }
       }
     });
 
@@ -430,7 +430,6 @@ class CreateJournal extends React.Component {
 
 
   deleteRow(e, row, props) {
-    console.log(row)
     const id = row['id'];
     let newData = []
     e.preventDefault();
@@ -589,7 +588,7 @@ class CreateJournal extends React.Component {
                                   creditAmount: Yup.number().required(),
                                 })
                               )
-                              .required('*Atleast One Journal Debit and Credit Details is mandatory')
+                              .min(2,'*Atleast Two Journal Debit and Credit Details is mandatory')
                           })
                         }
                       >
@@ -687,6 +686,8 @@ class CreateJournal extends React.Component {
                                 <div className="invalid-feedback">{props.errors.journalLineItems}</div>
                               </div>
                             )}
+                            {console.log(typeof props.errors.journalLineItems)}
+                             <p>{JSON.stringify(props.errors)}</p>
 
                             <Row>
                               <Col lg={12}>
@@ -793,6 +794,8 @@ class CreateJournal extends React.Component {
                             ) :
                               null
                             }
+
+                           
                             <Row>
 
                               <Col lg={12} className="mt-5">

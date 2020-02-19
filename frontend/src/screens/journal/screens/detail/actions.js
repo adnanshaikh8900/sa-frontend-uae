@@ -8,7 +8,7 @@ export const getJournalById = (id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/journal/getInvoiceById?id=${id}`
+      url: `/rest/journal/getById?id=${id}`
     }
 
     return authApi(data).then(res => {

@@ -9,6 +9,7 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
+import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
@@ -48,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/rest/invoice")
-public class InvoiceRestController implements Serializable {
+public class InvoiceRestController extends AbstractDoubleEntryRestController implements Serializable {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;

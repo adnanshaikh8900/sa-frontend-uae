@@ -8,6 +8,7 @@ public enum JournalFilterEnum {
     DELETE_FLAG("deleteFlag", "= :deleteFlag"),
     JOURNAL_DATE("journalDate", "= :journalDate"),
     REFERENCE_CODE("referenceCode", " like CONCAT(:referenceCode,'%')"),
+    POSTING_REFERENCE_TYPE("postingReferenceType", "= :postingReferenceType"),
     DESCRIPTION("description", " like CONCAT(:description,'%')");
 
     @Getter

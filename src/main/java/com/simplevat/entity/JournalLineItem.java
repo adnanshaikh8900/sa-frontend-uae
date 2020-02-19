@@ -37,90 +37,91 @@ import lombok.Data;
 @Data
 public class JournalLineItem implements Serializable {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 7790907788120167278L;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 7790907788120167278L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID")
+	private int id;
 
-    @Basic
-    @Column(name = "DESCRIPTION")
-    private String description;
+	@Basic
+	@Column(name = "DESCRIPTION")
+	private String description;
 
-    @OneToOne
-    @JoinColumn(name = "TRANSACTION_CATEGORY")
-    private TransactionCategory transactionCategory;
+	@OneToOne
+	@JoinColumn(name = "TRANSACTION_CATEGORY")
+	private TransactionCategory transactionCategory;
 
-    @OneToOne
-    @JoinColumn(name = "CONTACT")
-    private Contact contact;
+	@OneToOne
+	@JoinColumn(name = "CONTACT")
+	private Contact contact;
 
-    @OneToOne
-    @JoinColumn(name = "VAT_CATEGORY")
-    private VatCategory vatCategory;
+	@OneToOne
+	@JoinColumn(name = "VAT_CATEGORY")
+	private VatCategory vatCategory;
 
-    @Basic
-    @Column(name = "DEBIT_AMOUNT")
-    private BigDecimal debitAmount;
+	@Basic
+	@Column(name = "DEBIT_AMOUNT")
+	private BigDecimal debitAmount;
 
-    @Basic
-    @Column(name = "CREDIT_AMOUNT")
-    private BigDecimal creditAmount;
+	@Basic
+	@Column(name = "CREDIT_AMOUNT")
+	private BigDecimal creditAmount;
 
-    @Column(name = "CREATED_BY")
-    @Basic(optional = false)
-    private Integer createdBy;
+	@Column(name = "CREATED_BY")
+	@Basic(optional = false)
+	private Integer createdBy;
 
-    @Column(name = "CREATED_DATE")
-    @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    @Basic(optional = false)
-    @Convert(converter = DateConverter.class)
-    private LocalDateTime createdDate;
+	@Column(name = "CREATED_DATE")
+	@ColumnDefault(value = "CURRENT_TIMESTAMP")
+	@Basic(optional = false)
+	@Convert(converter = DateConverter.class)
+	private LocalDateTime createdDate;
 
-    @Column(name = "LAST_UPDATED_BY")
-    private Integer lastUpdateBy;
+	@Column(name = "LAST_UPDATED_BY")
+	private Integer lastUpdateBy;
 
-    @Column(name = "LAST_UPDATE_DATE")
-    @Convert(converter = DateConverter.class)
-    private LocalDateTime lastUpdateDate;
+	@Column(name = "LAST_UPDATE_DATE")
+	@Convert(converter = DateConverter.class)
+	private LocalDateTime lastUpdateDate;
 
-    @Column(name = "DELETE_FLAG")
-    @ColumnDefault(value = "0")
-    @Basic(optional = false)
-    private Boolean deleteFlag = Boolean.FALSE;
+	@Column(name = "DELETE_FLAG")
+	@ColumnDefault(value = "0")
+	@Basic(optional = false)
+	private Boolean deleteFlag = Boolean.FALSE;
 
-    @Column(name = "VERSION_NUMBER")
-    @ColumnDefault(value = "1")
-    @Basic(optional = false)
-    @Version
-    private Integer versionNumber;
+	@Column(name = "VERSION_NUMBER")
+	@ColumnDefault(value = "1")
+	@Basic(optional = false)
+	@Version
+	private Integer versionNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "JOURNAL_ID")
-    private Journal journal;
+	@ManyToOne
+	@JoinColumn(name = "JOURNAL_ID")
+	private Journal journal;
 
-    @Column(name = "REFERENCE_ID")
-    @Basic(optional = false)
-    private Integer referenceId;
+	@Column(name = "REFERENCE_ID")
+	// commented to avoid error in journal save
+	@Basic(optional = false)
+	private Integer referenceId;
 
-    @Column(name = "REFERENCE_TYPE")
-    @Basic(optional = false)
-    @Enumerated(value = EnumType.STRING)
-    private PostingReferenceTypeEnum referenceType;
+	@Column(name = "REFERENCE_TYPE")
+	@Basic(optional = false)
+	@Enumerated(value = EnumType.STRING)
+	private PostingReferenceTypeEnum referenceType;
 
-    @PrePersist
-    public void updateDates() {
-        createdDate = LocalDateTime.now();
-        lastUpdateDate = LocalDateTime.now();
-    }
+	@PrePersist
+	public void updateDates() {
+		createdDate = LocalDateTime.now();
+		lastUpdateDate = LocalDateTime.now();
+	}
 
-    @PreUpdate
-    public void updateLastUpdatedDate() {
-        lastUpdateDate = LocalDateTime.now();
-    }
+	@PreUpdate
+	public void updateLastUpdatedDate() {
+		lastUpdateDate = LocalDateTime.now();
+	}
 
 }

@@ -90,6 +90,7 @@ public class Journal implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "journal")
     private Collection<JournalLineItem> journalLineItems;
+    
     @Column(name = "CREATED_BY")
     @Basic(optional = false)
     private Integer createdBy;

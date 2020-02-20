@@ -23,6 +23,7 @@ import lombok.Data;
 @Data
 public class TransactionPresistModel implements Serializable {
 
+	private Integer id;
     private Date transactionDate;
     private String transactionDescription;
     private BigDecimal transactionAmount;

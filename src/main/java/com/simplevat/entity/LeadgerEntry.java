@@ -1,7 +1,5 @@
 package com.simplevat.entity;
 
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.dummy.LeadgerAccount;
 import java.io.Serializable;
 
 import lombok.Data;
@@ -11,14 +9,17 @@ import javax.persistence.*;
 import java.util.Date;
 import org.springframework.lang.Nullable;
 
+import com.simplevat.entity.bankaccount.TransactionCategory;
+
+
 /**
  * Created by Uday
  */
+@Data
 @Entity
 @Table(name = "LEADGER_ENTRY")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Data
-@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1)
+//@TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1)
 public class LeadgerEntry implements Serializable {
 
     private static final long serialVersionUID = 848122185643690684L;

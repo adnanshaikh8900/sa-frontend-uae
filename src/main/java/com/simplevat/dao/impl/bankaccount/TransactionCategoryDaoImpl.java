@@ -62,7 +62,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
     @Override
     public TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode) {
         TypedQuery<TransactionCategory> query = getEntityManager().createQuery("SELECT t FROM TransactionCategory t where t.transactionCategoryCode =:transactionCategoryCode", TransactionCategory.class);
-        query.setParameter("transactionCategoryCode", transactionCategoryCode);
+        query.setParameter("transactionCategoryCode", transactionCategoryCode.toString());
         if (query.getResultList() != null && !query.getResultList().isEmpty()) {
              return query.getResultList().get(0);
         }

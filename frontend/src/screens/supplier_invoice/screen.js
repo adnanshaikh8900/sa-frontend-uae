@@ -290,8 +290,8 @@ class SupplierInvoice extends React.Component {
     let obj = {
       ids: selectedRows
     }
-    this.props.supplierInvoiceActions.removeBulk(obj).then(() => {
-      this.props.supplierInvoiceActions.getSupplierInoviceList(filterData)
+    this.props.supplierInvoiceActions.removeBulk(obj).then((res) => {
+      this.initializeData(filterData)
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (supplier_invoice_list && supplier_invoice_list.length > 0) {
         this.setState({

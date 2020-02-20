@@ -6,19 +6,12 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
-  FormGroup,
   Input
 } from 'reactstrap'
 import Select from 'react-select'
-import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
@@ -101,7 +94,7 @@ class User extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 1,
+      page: 0,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -123,12 +116,12 @@ class User extends React.Component {
 
   initializeData() {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page,
       pageSize: this.options.sizePerPage
     }
-    filterData = { ...filterData, ...data }
-    this.props.userActions.getUserList(filterData).then(res => {
+    const postData = { ...filterData, ...paginationData }
+    this.props.userActions.getUserList(postData).then(res => {
       if (res.status === 200) {
         this.props.userActions.getRoleList()
         this.props.userActions.getCompanyTypeList()
@@ -146,12 +139,18 @@ class User extends React.Component {
     this.props.history.push('/admin/settings/user/detail', { id: row.id })
   }
 
-  onPageChange = (page, sizePerPage) => {
-    this.options.page = page
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
   }
 
-  onSizePerPageList = (sizePerPage) => {
-    this.options.sizePerPage = sizePerPage
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
   }
 
   onRowSelect(row, isSelected, e) {
@@ -164,6 +163,7 @@ class User extends React.Component {
         if (item !== row.id) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -200,7 +200,6 @@ class User extends React.Component {
   }
 
   removeBulk() {
-    const { filterData } = this.state;
     let { selectedRows } = this.state;
     const { user_list } = this.props
     let obj = {
@@ -257,10 +256,8 @@ class User extends React.Component {
   render() {
 
     const { loading, dialog, selectedRows, selectedStatus, filterData } = this.state
-    const { user_list, role_list, company_type_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+    const { user_list, role_list,  } = this.props
+
 
     return (
       <div className="user-screen">
@@ -407,7 +404,8 @@ class User extends React.Component {
                           hover
                           keyField="id"
                           pagination
-                          totalSize={user_list ? user_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: user_list.totalCount ? user_list.totalCount : 0 }}
                           className="product-table"
                           trClassName="cursor-pointer"
                           ref={node => {

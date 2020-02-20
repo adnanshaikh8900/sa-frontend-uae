@@ -7,6 +7,7 @@ const initState = {
   currenct_list: [],
   vat_list: [],
   // vendor_list: [],
+  country_list: [],
   status_list: []
 }
 
@@ -52,6 +53,11 @@ const CustomerInvoiceReducer = (state = initState, action) => {
         vat_list: Object.assign([], payload.data)
       }
 
+    case CUSTOMER_INVOICE.COUNTRY_LIST:
+      return {
+        ...state,
+        country_list: Object.assign([], payload)
+      }
 
 
     default:

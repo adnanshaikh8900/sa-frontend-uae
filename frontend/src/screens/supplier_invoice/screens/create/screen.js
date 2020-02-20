@@ -14,16 +14,14 @@ import {
   Label
 } from 'reactstrap'
 import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
-import { Formik ,Field} from 'formik';
+import { Formik, Field } from 'formik';
 import * as Yup from 'yup'
-import _ from 'lodash'
 import * as SupplierInvoiceCreateActions from './actions';
 import * as  SupplierInvoiceActions from "../../actions";
 
 import { SupplierModal } from '../../sections'
-import { Loader } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -32,10 +30,10 @@ import {
 } from 'services/global'
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils'
 
 import './style.scss'
+import moment from 'moment'
 
 
 const mapStateToProps = (state) => {
@@ -45,6 +43,7 @@ const mapStateToProps = (state) => {
     currency_list: state.supplier_invoice.currency_list,
     vat_list: state.supplier_invoice.vat_list,
     supplier_list: state.supplier_invoice.supplier_list,
+    country_list: state.supplier_invoice.country_list
 
   })
 }
@@ -106,7 +105,8 @@ class CreateSupplierInvoice extends React.Component {
       openSupplierModal: false,
       selectedContact: '',
       createMore: false,
-      fileName: ''
+      fileName: '',
+      term: ''
     }
 
 
@@ -123,6 +123,11 @@ class CreateSupplierInvoice extends React.Component {
     // this.options = {
     //   paginationPosition: 'top'
     // }
+    this.termList = [
+      {label: "Net 7",value:"7"},
+      {label: "Net 10",value:"10"},
+      {label: "Net 30",value:"30"},
+    ]
 
     this.renderActions = this.renderActions.bind(this)
     this.renderProductName = this.renderProductName.bind(this)
@@ -173,6 +178,7 @@ class CreateSupplierInvoice extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (
@@ -271,6 +277,7 @@ class CreateSupplierInvoice extends React.Component {
     this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
     this.props.supplierInvoiceActions.getCurrencyList();
     this.props.supplierInvoiceActions.getVatList();
+    this.props.supplierInvoiceActions.getCountryList();
 
   }
 
@@ -319,7 +326,6 @@ class CreateSupplierInvoice extends React.Component {
       if (obj.id === row.id) {
         idx = index
         if (Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
-          console.log(props.touched.lineItemsString[idx].vatCategoryId)
         }
       }
     });
@@ -353,7 +359,6 @@ class CreateSupplierInvoice extends React.Component {
 
 
   deleteRow(e, row, props) {
-    console.log(row)
     const id = row['id'];
     let newData = []
     e.preventDefault();
@@ -388,6 +393,15 @@ class CreateSupplierInvoice extends React.Component {
       }
     } else {
       return false
+    }
+  }
+
+  setDate = (props,value) => {
+    const { term } = this.state
+    const values = value ? value : props.values.invoiceDate
+    if(term && values) {  
+      const date = moment(values).add(term-1,'days').format('DD/MM/YYYY')
+      props.setFieldValue('invoiceDueDate', date,true)
     }
   }
 
@@ -471,7 +485,7 @@ class CreateSupplierInvoice extends React.Component {
         this.setState({
           createMore: false,
           selectedContact: '',
-          data:  [{
+          data: [{
             id: 0,
             description: '',
             quantity: 0,
@@ -509,7 +523,6 @@ class CreateSupplierInvoice extends React.Component {
       reader.onloadend = () => {
       };
       reader.readAsDataURL(file);
-      console.log(file)
       props.setFieldValue('attachmentFile', file);
     }
   }
@@ -591,9 +604,9 @@ class CreateSupplierInvoice extends React.Component {
                               .required("Supplier is Required"),
                             invoiceDate: Yup.date()
                               .required('Invoice Date is Required'),
-                            invoiceDueDate: Yup.date()
+                            invoiceDueDate: Yup.string()
                               .required('Invoice Due Date is Required'),
-                              lineItemsString: Yup.array()
+                            lineItemsString: Yup.array()
                               .required('Atleast one invoice sub detail is mandatory')
                               .of(Yup.object().shape({
                                 description: Yup.string().required("Value is Required"),
@@ -601,8 +614,8 @@ class CreateSupplierInvoice extends React.Component {
                                 unitPrice: Yup.number().required("Value is Required"),
                                 vatCategoryId: Yup.string().required("Value is Required"),
                               })),
-                              attachmentFile: Yup.mixed()
-                              .test('fileType', "*Unsupported File Format", value => { 
+                            attachmentFile: Yup.mixed()
+                              .test('fileType', "*Unsupported File Format", value => {
                                 if (value && !this.supported_format.includes(value.type)) {
                                   this.setState({
                                     fileName: value.name
@@ -727,18 +740,47 @@ class CreateSupplierInvoice extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
+                                  <Label htmlFor="term">Terms <i className="fa fa-question-circle"></i></Label>
+                                  <Select
+                                    className="select-default-width"
+                                    options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
+                                    id="term"
+                                    name="term"
+                                    value={this.state.term}
+                                    onChange={option => {
+                                      props.handleChange('term')(option)
+                                      if (option.value === '') {
+                                        this.setState({
+                                          term: option.value
+                                        })
+                                        props.setFieldValue('invoiceDueDate', '');
+                                      } else {
+                                        this.setState({
+                                          term: option.value
+                                        }, () => {
+                                          this.setDate(props, '')
+                                        })
+                                      }
+                                    }}
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col lg={4}>
+                                <FormGroup className="mb-3">
                                   <Label htmlFor="date">Invoice Date</Label>
                                   <DatePicker
                                     id="invoiceDate"
                                     name="invoiceDate"
                                     placeholderText="Invoice Date"
-                                    selected={props.values.invoiceDate}
                                     showMonthDropdown
                                     showYearDropdown
                                     dateFormat="dd/MM/yyyy"
                                     dropdownMode="select"
+                                    value={props.values.invoiceDate}
+                                    selected={props.values.invoiceDate}
                                     onChange={(value) => {
                                       props.handleChange("invoiceDate")(value)
+                                      this.setDate(props, value)
                                     }}
                                     className={`form-control ${props.errors.invoiceDate && props.touched.invoiceDate ? "is-invalid" : ""}`}
                                   />
@@ -756,9 +798,10 @@ class CreateSupplierInvoice extends React.Component {
                                       id="invoiceDueDate"
                                       name="invoiceDueDate"
                                       placeholderText="Invoice Due Date"
-                                      selected={props.values.invoiceDueDate}
+                                      value={props.values.invoiceDueDate}
                                       showMonthDropdown
                                       showYearDropdown
+                                      disabled
                                       dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                       onChange={(value) => {
@@ -841,7 +884,7 @@ class CreateSupplierInvoice extends React.Component {
                               <Col lg={4}>
                                 <Row>
                                   <Col lg={12}>
-                                  <FormGroup className="mb-3">
+                                    <FormGroup className="mb-3">
                                       <Field name="attachmentFile"
                                         render={({ field, form }) => (
                                           <div>
@@ -859,7 +902,6 @@ class CreateSupplierInvoice extends React.Component {
                                           </div>
                                         )}
                                       />
-                                      {console.log(props.errors)}
                                       {props.errors.attachmentFile && (
                                         <div className="invalid-file">{props.errors.attachmentFile}</div>
                                       )}
@@ -881,12 +923,12 @@ class CreateSupplierInvoice extends React.Component {
                             </Row>
                             <Row>
                               <Col lg={12}>
-                              {props.errors.lineItemsString && typeof props.errors.lineItemsString === 'string' && (
-                                <div className={props.errors.lineItemsString ? "is-invalid" : ""}>
-                                  <div className="invalid-feedback">{props.errors.lineItemsString}</div>
-                                </div>
-                              )}
-                              <BootstrapTable
+                                {props.errors.lineItemsString && typeof props.errors.lineItemsString === 'string' && (
+                                  <div className={props.errors.lineItemsString ? "is-invalid" : ""}>
+                                    <div className="invalid-feedback">{props.errors.lineItemsString}</div>
+                                  </div>
+                                )}
+                                <BootstrapTable
                                   options={this.options}
                                   data={data}
                                   version="4"
@@ -1089,6 +1131,8 @@ class CreateSupplierInvoice extends React.Component {
           closeSupplierModal={(e) => { this.closeSupplierModal(e) }}
           getCurrentUser={e => this.getCurrentUser(e)}
           createSupplier={this.props.supplierInvoiceActions.createSupplier}
+          currency_list={this.props.currency_list}
+          country_list={this.props.country_list}
         />
       </div>
     )

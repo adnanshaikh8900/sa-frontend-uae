@@ -1,6 +1,6 @@
 package com.simplevat.exceptions;
 
-import com.simplevat.enums.WebLayerErrorCodeEnum;
+import com.simplevat.constant.WebLayerErrorCodeEnum;
 
 public class WebLayerException extends BaseException {
 

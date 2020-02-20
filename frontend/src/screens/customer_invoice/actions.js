@@ -6,6 +6,7 @@ import {
 import moment from 'moment'
 
 export const getCustomerInvoiceList = (postObj) => {
+  console.log(postObj)
   let customerName = postObj ? postObj.customerId : ''
   let referenceNumber =  postObj ? postObj.referenceNumber : ''
   let invoiceDate =  postObj.invoiceDate
@@ -13,8 +14,9 @@ export const getCustomerInvoiceList = (postObj) => {
   let amount =  postObj ? postObj.amount : ''
   let status =  postObj ? postObj.status : ''
   let contactType = postObj ? postObj.contactType : ''
+  const { pageNo, pageSize} = postObj
   return (dispatch) => {
-    let param = `rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}`
+    let param = `rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}`
     if(invoiceDate) {
       let date = moment(invoiceDate).format('DD-MM-YYYY')
       param = param +`&invoiceDate=${date}`
@@ -36,6 +38,7 @@ export const getCustomerInvoiceList = (postObj) => {
             data: res.data
           }
         })
+        return res
       }
     }).catch(err => {
       throw err
@@ -81,6 +84,7 @@ export const getCustomerList = (nameCode) => {
           }
         })
       }
+      return res
     }).catch(err => {
       throw err
     })
@@ -219,6 +223,42 @@ export const removeBulk = (obj) => {
     }
     return authApi(data).then(res => {
         return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getCountryList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: 'rest/datalist/getcountry'
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: CUSTOMER_INVOICE.COUNTRY_LIST,
+          payload: res.data
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const postInvoice = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/invoice/posting',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        return res
+      }
     }).catch(err => {
       throw err
     })

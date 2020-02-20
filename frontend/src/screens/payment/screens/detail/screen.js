@@ -65,7 +65,8 @@ class DetailPayment extends React.Component {
       initValue: {},
       openSupplierModal: false,
       selectedSupplier: '',
-      contactType: 1
+      contactType: 1,
+      current_payment_id: null
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -84,9 +85,8 @@ class DetailPayment extends React.Component {
   }
 
   initializeData() {
-    const id = this.props.location.state.id
-    if (this.props.location.state && id) {
-      this.props.detailPaymentActions.getPaymentById(id).then(res => {
+    if (this.props.location.state && this.props.location.state.id) {
+      this.props.detailPaymentActions.getPaymentById(this.props.location.state.id).then(res => {
         if (res.status === 200) {
           this.getCurrentUser({ value: res.data.supplierId })
           this.props.paymentActions.getCurrencyList()
@@ -95,23 +95,27 @@ class DetailPayment extends React.Component {
           this.props.paymentActions.getProjectList()
           this.props.paymentActions.getSupplierInvoiceList()
           this.setState({
+            current_payment_id: this.props.location.state.id,
             initValue: {
               paymentId: res.data.paymentId,
-              supplier: res.data.contactId,
-              invoice: res.data.invoiceId,
-              invoiceAmount: res.data.invoiceAmount,
-              currency: res.data.currencyCode,
-              project: res.data.projectId,
-              payment_date: res.data.paymentDate,
-              description: res.data.description,
-              bank: res.data.bankAccountId
+              supplier: res.data.contactId ? res.data.contactId: '',
+              invoice: res.data.invoiceId ? res.data.invoiceId : '',
+              invoiceAmount: res.data.invoiceAmount ? res.data.invoiceAmount : '',
+              currency: res.data.currencyCode ? res.data.currencyCode : '',
+              project: res.data.projectId ? res.data.projectId : '',
+              payment_date: res.data.paymentDate ? res.data.paymentDate : '',
+              description: res.data.description ? res.data.description : '',
+              bank: res.data.bankAccountId ? res.data.bankAccountId : ''
             },
             selectedSupplier: res.data.contactId,
             loading: false
-
           })
         }
+      }).catch(err => {
+        this.props.history.push('/admin/expense/payment')
       })
+    } else {
+      this.props.history.push('/admin/expense/payment')
     }
   }
 
@@ -184,8 +188,8 @@ class DetailPayment extends React.Component {
   }
 
   removePayment() {
-    const id = this.props.location.state.id;
-    this.props.detailPaymentActions.deletePayment(id).then(res => {
+    const {current_payment_id} = this.state
+    this.props.detailPaymentActions.deletePayment(current_payment_id).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Payment Deleted Successfully')
         this.props.history.push('/admin/expense/payment')

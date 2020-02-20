@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import com.simplevat.constant.PostingReferenceTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +24,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.converter.DateConverter;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import lombok.Data;
 
@@ -33,9 +36,10 @@ import lombok.Data;
 @Table(name = "JOURNAL_LINE_ITEM")
 @Data
 public class JournalLineItem implements Serializable {
+
 	/**
-	* 
-	*/
+	 *
+	 */
 	private static final long serialVersionUID = 7790907788120167278L;
 
 	@Id
@@ -54,7 +58,7 @@ public class JournalLineItem implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "CONTACT")
 	private Contact contact;
-        
+
 	@OneToOne
 	@JoinColumn(name = "VAT_CATEGORY")
 	private VatCategory vatCategory;
@@ -98,6 +102,16 @@ public class JournalLineItem implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "JOURNAL_ID")
 	private Journal journal;
+
+	@Column(name = "REFERENCE_ID")
+	// commented to avoid error in journal save
+	@Basic(optional = false)
+	private Integer referenceId;
+
+	@Column(name = "REFERENCE_TYPE")
+	@Basic(optional = false)
+	@Enumerated(value = EnumType.STRING)
+	private PostingReferenceTypeEnum referenceType;
 
 	@PrePersist
 	public void updateDates() {

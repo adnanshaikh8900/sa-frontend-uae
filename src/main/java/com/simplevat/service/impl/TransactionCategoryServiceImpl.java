@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.simplevat.criteria.TransactionCategoryFilterNew;
 import com.simplevat.criteria.bankaccount.TransactionCategoryCriteria;
-import com.simplevat.dao.bankaccount.TransactionCategoryDaoNew;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.Product;
 import com.simplevat.entity.bankaccount.TransactionCategory;
@@ -22,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import com.simplevat.dao.bankaccount.TransactionCategoryDao;
 
 @Service("transactionCategoryService")
 @Transactional
@@ -31,16 +31,21 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 
     @Autowired
     @Qualifier(value = "transactionCategoryDao")
-    private TransactionCategoryDaoNew dao;
+    private TransactionCategoryDao dao;
 
     @Override
-    public TransactionCategoryDaoNew getDao() {
+    public TransactionCategoryDao getDao() {
         return dao;
     }
 
     @Override
     public List<TransactionCategory> findAllTransactionCategory() {
-        return getDao().executeNamedQuery("findAllTransactionCategory");
+        return getDao().findAllTransactionCategory();
+    }
+
+    @Override
+    public TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode) {
+        return getDao().findTransactionCategoryByTransactionCategoryCode(transactionCategoryCode);
     }
 
     @Override
@@ -115,9 +120,9 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
     public void deleteByIds(List<Integer> ids) {
         dao.deleteByIds(ids);
     }
-    
+
     @Override
     public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap) {
-        return dao.getTransactionCategoryList(filterMap); 
+        return dao.getTransactionCategoryList(filterMap);
     }
 }

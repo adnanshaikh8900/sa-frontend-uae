@@ -5,7 +5,7 @@
  */
 package com.simplevat.helper;
 
-import com.simplevat.contact.model.ExpenseItemModel;
+import com.simplevat.model.ExpenseItemModel;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.User;
 import com.simplevat.entity.VatCategory;

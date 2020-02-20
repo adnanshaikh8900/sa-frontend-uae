@@ -6,6 +6,7 @@ export const renderOptions = (label_key, value_ley, data,placeholder) => {
       label: item[label_key],
       value: item[value_ley]
     })
+    return item
   })
   return result
 }

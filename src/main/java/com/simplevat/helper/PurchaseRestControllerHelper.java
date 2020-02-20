@@ -1,7 +1,7 @@
 package com.simplevat.helper;
 
-import com.simplevat.contact.model.PurchaseRestModel;
-import com.simplevat.contact.model.PurchaseItemRestModel;
+import com.simplevat.model.PurchaseRestModel;
+import com.simplevat.model.PurchaseItemRestModel;
 import com.simplevat.constant.InvoicePurchaseStatusConstant;
 import java.time.Instant;
 import java.time.LocalDateTime;

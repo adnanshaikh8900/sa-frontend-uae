@@ -23,6 +23,7 @@ import * as CustomerInvoiceCreateActions from './actions';
 import * as  CustomerInvoiceActions from "../../actions";
 
 import { CustomerModal } from '../../sections'
+
 import { Loader } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
@@ -36,6 +37,7 @@ import {
 } from 'utils'
 
 import './style.scss'
+import moment from 'moment'
 
 
 const mapStateToProps = (state) => {
@@ -45,7 +47,7 @@ const mapStateToProps = (state) => {
     currency_list: state.customer_invoice.currency_list,
     vat_list: state.customer_invoice.vat_list,
     customer_list: state.customer_invoice.customer_list,
-
+    country_list: state.customer_invoice.country_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -53,7 +55,6 @@ const mapDispatchToProps = (dispatch) => {
     customerInvoiceActions: bindActionCreators(CustomerInvoiceActions, dispatch),
     customerInvoiceCreateActions: bindActionCreators(CustomerInvoiceCreateActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
-
   })
 }
 
@@ -64,11 +65,10 @@ class CreateCustomerInvoice extends React.Component {
     this.state = {
       loading: false,
       discountOptions: [
-        { value: 'Fixed', label: 'Fixed' },
-        { value: 'Percentage', label: 'Percentage' }
+        { value: 'FIXED', label: 'Fixed' },
+        { value: 'PERCENTAGE', label: 'Percentage' }
       ],
-      discount_option: '',
-
+      disabledDate: true,
       data: [{
         id: 0,
         description: '',
@@ -99,14 +99,21 @@ class CreateCustomerInvoice extends React.Component {
         total_net: 0,
         invoiceVATAmount: 0,
         totalAmount: 0,
-        notes: ''
+        notes: '',
+        discount: 0,
+        discountPercentage: 0,
+        discountType: ''
       },
       currentData: {},
       contactType: 2,
       openCustomerModal: false,
       selectedContact: '',
       createMore: false,
-      fileName: ''
+      fileName: '',
+      term:'',
+      selectedType: '',
+      discountPercentage: '',
+      discountAmount: 0
     }
 
 
@@ -125,6 +132,12 @@ class CreateCustomerInvoice extends React.Component {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
 
+    this.termList = [
+      {label: "Net 7",value:"7"},
+      {label: "Net 10",value:"10"},
+      {label: "Net 30",value:"30"},
+    ]
+
     this.renderActions = this.renderActions.bind(this)
     this.renderProductName = this.renderProductName.bind(this)
     this.renderDescription = this.renderDescription.bind(this)
@@ -139,6 +152,9 @@ class CreateCustomerInvoice extends React.Component {
 
     this.closeCustomerModal = this.closeCustomerModal.bind(this)
     this.openCustomerModal = this.openCustomerModal.bind(this)
+
+
+
     this.getCurrentUser = this.getCurrentUser.bind(this)
     this.checkedRow = this.checkedRow.bind(this)
     this.handleFileChange = this.handleFileChange.bind(this)
@@ -212,7 +228,7 @@ class CreateCustomerInvoice extends React.Component {
           <Input
             type="number"
             value={row['quantity'] !== 0 ? row['quantity'] : 0}
-            onChange={(e) => { this.selectItem(e, row, 'quantity', form, field) }}
+            onChange={(e) => { this.selectItem(e, row, 'quantity', form, field,props) }}
             placeholder="Quantity"
             className={`form-control 
             ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
@@ -240,7 +256,7 @@ class CreateCustomerInvoice extends React.Component {
           <Input
             type="number"
             value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-            onChange={(e) => { this.selectItem(e, row, 'unitPrice', form, field) }}
+            onChange={(e) => { this.selectItem(e, row, 'unitPrice', form, field,props) }}
             placeholder="Unit Price"
             className={`form-control 
             ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
@@ -262,6 +278,17 @@ class CreateCustomerInvoice extends React.Component {
     )
   }
 
+  
+
+  setDate = (props,value) => {
+    const { term } = this.state
+    const values = value ? value : props.values.invoiceDate
+    if(term && values) {  
+      const date = (moment(values).add(term-1,'days').format('DD/MM/YYYY'))
+      props.setFieldValue('invoiceDueDate', date,true)
+    }
+  }
+
   componentDidMount() {
     this.getInitialData();
   }
@@ -270,6 +297,7 @@ class CreateCustomerInvoice extends React.Component {
     this.props.customerInvoiceActions.getProjectList();
     this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
     this.props.customerInvoiceActions.getCurrencyList();
+    this.props.customerInvoiceActions.getCountryList();
     this.props.customerInvoiceActions.getVatList();
 
   }
@@ -290,7 +318,7 @@ class CreateCustomerInvoice extends React.Component {
     })
   }
 
-  selectItem(e, row, name, form, field) {
+  selectItem(e, row, name, form, field,props) {
     e.preventDefault();
     let data = this.state.data
     let idx
@@ -302,7 +330,7 @@ class CreateCustomerInvoice extends React.Component {
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
       form.setFieldValue(field.name, this.state.data[idx][name], true)
-      this.updateAmount(data);
+      this.updateAmount(data,props);
     } else {
       this.setState({ data: data }, () => {
         form.setFieldValue(field.name, this.state.data[idx][name], true)
@@ -330,7 +358,7 @@ class CreateCustomerInvoice extends React.Component {
         render={({ field, form }) => (
 
           <Input type="select" onChange={(e) => {
-            this.selectItem(e, row, 'vatCategoryId', form, field)
+            this.selectItem(e, row, 'vatCategoryId', form, field,props)
             // this.formRef.current.props.handleChange(field.name)(e.value)
           }} value={row.vatCategoryId}
             className={`form-control 
@@ -353,15 +381,13 @@ class CreateCustomerInvoice extends React.Component {
 
 
   deleteRow(e, row, props) {
-    console.log(row)
     const id = row['id'];
     let newData = []
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
-    // console.log(newData)
     props.setFieldValue('lineItemsString', newData, true)
-    this.updateAmount(newData)
+    this.updateAmount(newData,props)
   }
 
   renderActions(cell, rows, props) {
@@ -391,9 +417,9 @@ class CreateCustomerInvoice extends React.Component {
     }
   }
 
-
-  updateAmount(data) {
+  updateAmount(data,props) {
     const { vat_list } = this.props;
+    const  {discountPercentage,discountAmount}  =  this.state
     let total_net = 0;
     let total = 0;
     let total_vat = 0;
@@ -406,20 +432,23 @@ class CreateCustomerInvoice extends React.Component {
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
       total_vat = +((total_vat + val));
       total = (total_vat + total_net);
-
     })
+
+    const discount = props.values.discountType === 'PERCENTAGE' ? (total*discountPercentage)/100 : discountAmount
     this.setState({
       data: data,
       initValue: {
         ...this.state.initValue, ...{
           total_net: total_net,
           invoiceVATAmount: total_vat,
-          totalAmount: total
+          discount: total > discount ? discount : 0,
+          totalAmount: total > discount ? total - discount : total
         }
       }
-    }, () => {
-
-
+    },() => {
+      if(props.values.discountType === 'PERCENTAGE') {
+        this.formRef.current.setFieldValue('discount',discount)
+      }
     })
   }
 
@@ -431,7 +460,6 @@ class CreateCustomerInvoice extends React.Component {
       reader.onloadend = () => {
       };
       reader.readAsDataURL(file);
-      console.log(file)
       props.setFieldValue('attachmentFile', file);
     }
   }
@@ -449,14 +477,17 @@ class CreateCustomerInvoice extends React.Component {
       invoice_number,
       invoiceVATAmount,
       totalAmount,
+      discount,
+      discountType,
+      discountPercentage,
       notes
     } = data
 
+    const formData = new FormData()
 
-    let formData = new FormData();
     formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
-    formData.append("invoiceDate", invoiceDate !== null ? invoiceDate : "");
-    formData.append("invoiceDueDate", invoiceDueDate !== null ? invoiceDueDate : "");
+    formData.append("invoiceDate", invoiceDate ? invoiceDate : null);
+    formData.append("invoiceDueDate",invoiceDueDate ? moment(invoiceDueDate,'DD/MM/YYYY').toDate() : null);
     formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
     formData.append("contactPoNumber", contact_po_number !== null ? contact_po_number : "");
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription !== null ? receiptAttachmentDescription : "");
@@ -465,6 +496,11 @@ class CreateCustomerInvoice extends React.Component {
     formData.append('lineItemsString', JSON.stringify(this.state.data));
     formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
     formData.append('totalAmount', this.state.initValue.totalAmount);
+    formData.append('discount', discount);
+    formData.append('discountType', discountType);
+    if(discountType === 'PERCENTAGE') {
+    formData.append('discountPercentage', discountPercentage);
+    }
     if (contactId) {
       formData.append("contactId", contactId);
     }
@@ -497,6 +533,9 @@ class CreateCustomerInvoice extends React.Component {
               total_net: 0,
               invoiceVATAmount: 0,
               totalAmount: 0,
+              discountType: '',
+              discount: 0,
+              discountPercentage: 0
             }
           }
         }, () => {
@@ -512,6 +551,10 @@ class CreateCustomerInvoice extends React.Component {
 
   openCustomerModal(props) {
     this.setState({ openCustomerModal: true })
+  }
+
+  openInvoicePreviewModal(props) {
+    this.setState({ openInvoicePreviewModal: true })
   }
 
   getCurrentUser(data) {
@@ -537,6 +580,10 @@ class CreateCustomerInvoice extends React.Component {
     this.setState({ openCustomerModal: false })
   }
 
+  closeInvoicePreviewModal(res) {
+    this.setState({ openInvoicePreviewModal: false })
+  }
+
   render() {
 
     const {
@@ -544,7 +591,8 @@ class CreateCustomerInvoice extends React.Component {
       discountOptions,
       discount_option,
       initValue,
-      selectedContact
+      selectedContact,
+      disabledDate
     } = this.state
 
     const { project_list, contact_list, currency_list, customer_list } = this.props
@@ -583,43 +631,43 @@ class CreateCustomerInvoice extends React.Component {
 
                           // })
                         }}
-                        validationSchema={
-                          Yup.object().shape({
-                            invoice_number: Yup.string()
-                              .required("Invoice Number is Required"),
-                            contactId: Yup.string()
-                              .required("Customer is Required"),
-                            invoiceDate: Yup.date()
-                              .required('Invoice Date is Required'),
-                            invoiceDueDate: Yup.date()
-                              .required('Invoice Due Date is Required'),
-                            lineItemsString: Yup.array()
-                              .required('Atleast one invoice sub detail is mandatory')
-                              .of(Yup.object().shape({
-                                description: Yup.string().required("Value is Required"),
-                                quantity: Yup.number().required("Value is Required"),
-                                unitPrice: Yup.number().required("Value is Required"),
-                                vatCategoryId: Yup.string().required("Value is Required"),
-                              })),
-                            attachmentFile: Yup.mixed()
-                              .test('fileType', "*Unsupported File Format", value => {
-                                if (value && !this.supported_format.includes(value.type)) {
-                                  this.setState({
-                                    fileName: value.name
-                                  })
-                                  return false
-                                } else {
-                                  return true
-                                }
-                              })
-                              .test('fileSize', "*File Size is too large", value => {
-                                if (value && value.size >= this.file_size) {
-                                  return false
-                                } else {
-                                  return true
-                                }
-                              })
-                          })}
+                        // validationSchema={
+                        //   Yup.object().shape({
+                        //     invoice_number: Yup.string()
+                        //       .required("Invoice Number is Required"),
+                        //     contactId: Yup.string()
+                        //       .required("Customer is Required"),
+                        //     invoiceDate: Yup.date()
+                        //       .required('Invoice Date is Required'),
+                        //     invoiceDueDate: Yup.string()
+                        //       .required('Invoice Due Date is Required'),
+                        //     lineItemsString: Yup.array()
+                        //       .required('Atleast one invoice sub detail is mandatory')
+                        //       .of(Yup.object().shape({
+                        //         description: Yup.string().required("Value is Required"),
+                        //         quantity: Yup.number().required("Value is Required"),
+                        //         unitPrice: Yup.number().required("Value is Required"),
+                        //         vatCategoryId: Yup.string().required("Value is Required"),
+                        //       })),
+                        //     attachmentFile: Yup.mixed()
+                        //       .test('fileType', "*Unsupported File Format", value => {
+                        //         if (value && !this.supported_format.includes(value.type)) {
+                        //           this.setState({
+                        //             fileName: value.name
+                        //           })
+                        //           return false
+                        //         } else {
+                        //           return true
+                        //         }
+                        //       })
+                        //       .test('fileSize', "*File Size is too large", value => {
+                        //         if (value && value.size >= this.file_size) {
+                        //           return false
+                        //         } else {
+                        //           return true
+                        //         }
+                        //       })
+                        //   })}
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -675,7 +723,6 @@ class CreateCustomerInvoice extends React.Component {
                                         props.handleChange('contactId')(option.value)
                                       } else {
                                         props.handleChange('contactId')('')
-
                                       }
                                     }}
                                     className={
@@ -728,6 +775,33 @@ class CreateCustomerInvoice extends React.Component {
                         </Row>
                         <hr/> */}
                             <Row>
+                            <Col lg={4}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="term">Terms <i className="fa fa-question-circle"></i></Label>
+                                  <Select
+                                    className="select-default-width"
+                                    options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
+                                    id="term"
+                                    name="term"
+                                    value={this.state.term}
+                                    onChange={option => {
+                                      props.handleChange('term')(option)
+                                      if(option.value === '') {
+                                        this.setState({
+                                          term: option.value
+                                        })
+                                        props.setFieldValue('invoiceDueDate','');
+                                      } else {
+                                        this.setState({
+                                          term: option.value
+                                        },()=>{
+                                          this.setDate(props,'')
+                                        })                                      
+                                      }
+                                    }}
+                                  />
+                                </FormGroup>
+                              </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="date">Invoice Date</Label>
@@ -743,6 +817,7 @@ class CreateCustomerInvoice extends React.Component {
                                     selected={props.values.invoiceDate}
                                     onChange={(value) => {
                                       props.handleChange("invoiceDate")(value)
+                                      this.setDate(props,value)
                                     }}
                                     className={`form-control ${props.errors.invoiceDate && props.touched.invoiceDate ? "is-invalid" : ""}`}
                                   />
@@ -760,9 +835,10 @@ class CreateCustomerInvoice extends React.Component {
                                       id="invoiceDueDate"
                                       name="invoiceDueDate"
                                       placeholderText="Invoice Due Date"
-                                      selected={props.values.invoiceDueDate}
+                                      // selected={props.values.invoiceDueDate}
                                       showMonthDropdown
                                       showYearDropdown
+                                      disabled
                                       dateFormat="dd/MM/yyyy"
                                       dropdownMode="select"
                                       value={props.values.invoiceDueDate}
@@ -854,7 +930,7 @@ class CreateCustomerInvoice extends React.Component {
                                             <Label>Reciept Attachment</Label> <br />
                                             <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                               <i className="fa fa-upload"></i> Upload
-                                  </Button>
+                                            </Button>
                                             <input id="fileInput" ref={ref => {
                                               this.uploadFile = ref;
                                             }} type="file" style={{ display: 'none' }} onChange={(e) => {
@@ -865,7 +941,6 @@ class CreateCustomerInvoice extends React.Component {
                                           </div>
                                         )}
                                       />
-                                      {console.log(props.errors)}
                                       {props.errors.attachmentFile && (
                                         <div className="invalid-file">{props.errors.attachmentFile}</div>
                                       )}
@@ -975,28 +1050,41 @@ class CreateCustomerInvoice extends React.Component {
                                         <Row>
                                           <Col lg={6}>
                                             <FormGroup>
-                                              <Label htmlFor="discount_type">Discount Type(TBD)</Label>
+                                              <Label htmlFor="discountType">Discount Type(TBD)</Label>
                                               <Select
                                                 className="select-default-width"
                                                 options={discountOptions}
-                                                id="discount_type"
-                                                name="discount_type"
-                                                value={{ value: discount_option, label: discount_option }}
-                                                onChange={(item) => this.setState({
-                                                  discount_option: item.value
-                                                })}
+                                                id="discountType"
+                                                name="discountType"
+                                                value={props.values.discountType}
+                                                onChange={(item) => {
+                                                  props.handleChange('discountType')(item.value)
+                                                  props.setFieldValue('discount',0)
+                                                  this.setState({
+                                                    discountPercentage: 0,
+                                                    discountAmount: 0
+                                                  },() => {
+                                                    this.updateAmount(this.state.data,props)
+                                                  })
+                                                } }
                                               />
                                             </FormGroup>
                                           </Col>
                                           {
-                                            discount_option === 'Percentage' ?
+                                            props.values.discountType === 'PERCENTAGE' ?
                                               <Col lg={6}>
                                                 <FormGroup>
-                                                  <Label htmlFor="discount_percentage">Percentage</Label>
+                                                  <Label htmlFor="discountPercentage">Percentage</Label>
                                                   <Input
-                                                    id="discount_percentage"
-                                                    name="discount_percentage"
+                                                    id="discountPercentage"
+                                                    name="discountPercentage"
                                                     placeholder="Discount Percentage"
+                                                    onChange={(e)=>{
+                                                      props.handleChange('discountPercentage')(e)
+                                                      this.setState({
+                                                        discountPercentage: e.target.value,
+                                                      },()=>{this.updateAmount(this.state.data,props)})
+                                                    }}
                                                   />
                                                 </FormGroup>
                                               </Col>
@@ -1007,11 +1095,22 @@ class CreateCustomerInvoice extends React.Component {
                                         <Row>
                                           <Col lg={6} className="mt-4">
                                             <FormGroup>
-                                              <Label htmlFor="discount_amount">Discount Amount(TBD)</Label>
+                                              <Label htmlFor="discount">Discount Amount(TBD)</Label>
                                               <Input
-                                                id="discount_amount"
-                                                name="discount_amount"
+                                                id="discount"
+                                                name="discount"
+                                                type="number"
+                                                disabled={props.values.discountType && props.values.discountType === 'Percentage' ? true : false }
                                                 placeholder="Discount Amounts"
+                                                onChange={option => {
+                                                  props.handleChange('discount')(option)
+                                                  this.setState({
+                                                    discountAmount: +option.target.value
+                                                  },()=>{
+                                                  this.updateAmount(this.state.data,props)
+                                                  })
+                                                }}
+                                                value={props.values.discount}
                                               />
                                             </FormGroup>
                                           </Col>
@@ -1040,6 +1139,16 @@ class CreateCustomerInvoice extends React.Component {
                                       <div className="total-item p-2">
                                         <Row>
                                           <Col lg={6}>
+                                            <h5 className="mb-0 text-right">Discount</h5>
+                                          </Col>
+                                          <Col lg={6} className="text-right">
+                                            <label className="mb-0">{(this.state.initValue.discount).toFixed(2)}</label>
+                                          </Col>
+                                        </Row>
+                                      </div>
+                                      <div className="total-item p-2">
+                                        <Row>
+                                          <Col lg={6}>
                                             <h5 className="mb-0 text-right">Total</h5>
                                           </Col>
                                           <Col lg={6} className="text-right">
@@ -1054,7 +1163,7 @@ class CreateCustomerInvoice extends React.Component {
                               null
                             }
                             <Row>
-                              <Col lg={12} className="mt-5">
+                              <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                 <FormGroup className="text-right">
                                   <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
 
@@ -1100,7 +1209,10 @@ class CreateCustomerInvoice extends React.Component {
           closeCustomerModal={(e) => { this.closeCustomerModal(e) }}
           getCurrentUser={e => this.getCurrentUser(e)}
           createCustomer={this.props.customerInvoiceActions.createCustomer}
+          currency_list={this.props.currency_list}
+          country_list={this.props.country_list}
         />
+
       </div>
     )
   }

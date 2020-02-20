@@ -6,7 +6,7 @@ import {
 import moment from 'moment'
 
 
-export const getSupplierInoviceList = (postObj) => {
+export const getSupplierInvoiceList = (postObj) => {
   let supplierName = postObj ? postObj.supplierId : ''
   let referenceNumber =  postObj ? postObj.referenceNumber : ''
   let invoiceDate =  postObj.invoiceDate
@@ -37,6 +37,7 @@ export const getSupplierInoviceList = (postObj) => {
             data: res.data
           }
         })
+        return res
       }
     }).catch(err => {
       throw err
@@ -191,6 +192,42 @@ export const removeBulk = (obj) => {
     let data = {
       method: 'delete',
       url: '/rest/invoice/deletes',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      if (res.status == 200) {
+        return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getCountryList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: 'rest/datalist/getcountry'
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: SUPPLIER_INVOICE.COUNTRY_LIST,
+          payload: res.data
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const postInvoice = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/invoice/posting',
       data: obj
     }
     return authApi(data).then(res => {

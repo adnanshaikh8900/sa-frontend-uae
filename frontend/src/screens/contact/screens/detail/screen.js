@@ -57,7 +57,7 @@ class DetailContact extends React.Component {
       initValue: {},
       currentData: {},
       dialog: null,
-      id: props.location.state.id
+      current_contact_id: null
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
@@ -72,13 +72,13 @@ class DetailContact extends React.Component {
   }
 
   initializeData() {
-    const { id } = this.state
-    if (this.props.location.state && id) {
+    if (this.props.location.state && this.props.location.state.id) {
       this.props.contactActions.getContactTypeList();
       this.props.contactActions.getCountryList();
       this.props.contactActions.getCurrencyList();
-      this.props.detailContactActions.getContactById(id).then(res => {
+      this.props.detailContactActions.getContactById(this.props.location.state.id).then(res => {
         this.setState({
+          current_contact_id: this.props.location.state.id,
           loading: false,
           initValue: {
             billingEmail: res.data.billingEmail && res.data.billingEmail !== null ? res.data.billingEmail : '',
@@ -114,11 +114,11 @@ class DetailContact extends React.Component {
   }
 
   handleSubmit(data,resetForm) {
-    const { id } = this.state
-    const postData = {...data, ...{ contactId: id } }
+    const { current_contact_id } = this.state
+    const postData = {...data, ...{ contactId: current_contact_id } }
 
     this.props.detailContactActions.updateContact(postData).then(res => {
-      if (res.status === 200) {
+      if (res.status == 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', ' Contact Updated Successfully')
         this.props.history.push('/admin/master/contact');
@@ -145,9 +145,9 @@ class DetailContact extends React.Component {
   }
 
   removeContact() {
-    const id = this.props.location.state.id;
-    this.props.detailContactActions.deleteContact(id).then(res => {
-      if (res.status === 200) {
+    const {current_contact_id} = this.state
+    this.props.detailContactActions.deleteContact(current_contact_id).then(res => {
+      if (res.status == 200) {
         this.props.commonActions.tostifyAlert('success', 'Contact Deleted Successfully')
         this.props.history.push('/admin/master/contact')
       }
@@ -193,55 +193,53 @@ class DetailContact extends React.Component {
                           <Formik
                             initialValues={initValue}
                             onSubmit={(values, { resetForm }) => {
-
                               this.handleSubmit(values,resetForm)
                             }}
 
-                          // validationSchema={
-                          //   Yup.object().shape({
-                          //     firstName: Yup.string()
-                          //       .required("FirstName is Required"),
-                          //     lastName: Yup.string()
-                          //       .required("LastName is Required"),
-                          //     middleName: Yup.string()
-                          //       .required("MiddleName is Required"),
-                          //     contactType: Yup.string()
-                          //       .required("Please Select Contact Type"),
-                          //     organization: Yup.string()
-                          //       .required("Organization Name is Required"),
-                          //     poBoxNumber: Yup.number()
-                          //       .required("PO Box Number is Required"),
-                          //     email: Yup.string()
-                          //       .required("Email is Required")
-                          //       .email('Invalid Email'),
-                          //     telephone: Yup.number()
-                          //       .required("Telephone Number is Required"),
-                          //     mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, { message: "Please enter valid number.", excludeEmptyString: false })
-                          //         .required('Mobile Number is required'),
-                          //     addressLine1: Yup.string()
-                          //       .required("Address is required"),
-                          //     countryId: Yup.string()
-                          //       .required("Please Select Country")
-                          //       .nullable(),
-                          //     state: Yup.string()
-                          //       .required("State is Required"),
-                          //     city: Yup.string()
-                          //       .required("City is Required"),
-                          //     postZipCode: Yup.number()
-                          //       .required("Postal Code is Required"),
-                          //     billingEmail: Yup.string()
-                          //     .email('Invalid Email')
-                          //       .required("Billing Email is Required"),
-                          //     contractPoNumber: Yup.number()
-                          //       .required("Contract PoNumber is Required"),
-                          //     vatRegistrationNumber: Yup.number()
-                          //       .required("Vat Registration Number is Required"),
-                          //     currencyCode: Yup.string()
-                          //       .required("Please Select Currency")
-                          //       .nullable(),
-                          //   })
-                          // }
-
+                            validationSchema={
+                              Yup.object().shape({
+                                firstName: Yup.string()
+                                  .required("FirstName is Required"),
+                                lastName: Yup.string()
+                                  .required("LastName is Required"),
+                                // middleName: Yup.string()
+                                //   .required("MiddleName is Required"),
+                                  // contactType: Yup.string()
+                                  // .required("Please Select Contact Type"),
+                            //       organization: Yup.string()
+                            //       .required("Organization Name is Required"),
+                            //     poBoxNumber: Yup.number()
+                            //       .required("PO Box Number is Required"),
+                                email: Yup.string()
+                                  .required("Email is Required")
+                                  .email('Invalid Email'),
+                            //     telephone: Yup.number()
+                            //       .required("Telephone Number is Required"),
+                            //     mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, {message: "Please enter valid number.", excludeEmptyString: false})
+                            //       .required("Mobile Number is required"),
+                            //     addressLine1: Yup.string()
+                            //       .required("Address is required"),
+                                countryId: Yup.string()
+                                  .required("Please Select Country")
+                                  // .nullable(),
+                            //     stateRegion: Yup.string()
+                            //       .required("State is Required"),
+                            //     city: Yup.string()
+                            //       .required("City is Required"),
+                            //     postZipCode: Yup.number()
+                            //       .required("Postal Code is Required"),
+                            //     billingEmail: Yup.string()
+                            //       .required("Billing Email is Required")
+                            //       .email('Invalid Email'),
+                            //     contractPoNumber: Yup.number()
+                            //       .required("Contract PoNumber is Required"),
+                            //       vatRegistrationNumber: Yup.number()
+                            //       .required("Vat Registration Number is Required"),
+                            //       currencyCode: Yup.string()
+                            //       .required("Please Select Currency")
+                            //       .nullable(),
+                              })
+                            }
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit}>

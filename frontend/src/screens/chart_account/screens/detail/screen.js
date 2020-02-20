@@ -76,7 +76,7 @@ class DetailChartAccount extends React.Component {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
       this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then(res => {
-        if (res.status === 200) {
+        if (res.status == 200) {
           this.props.chartOfAccontActions.getTransactionTypes();
           this.setState({
             loading: false,
@@ -92,6 +92,8 @@ class DetailChartAccount extends React.Component {
         this.setState({ loading: false })
         this.props.history.push('/admin/master/chart-account')
       })
+    } else {
+      this.props.history.push('/admin/master/chart-account')
     }
   }
 
@@ -124,7 +126,7 @@ class DetailChartAccount extends React.Component {
   removeChartAccount() {
     const id = this.props.location.state.id;
     this.props.detailChartOfAccontActions.deleteChartAccount(id).then(res => {
-      if (res.status === 200) {
+      if (res.status == 200) {
         this.props.commonActions.tostifyAlert('success', 'Account Deleted Successfully')
         this.props.history.push('/admin/master/chart-account')
       }
@@ -145,7 +147,7 @@ class DetailChartAccount extends React.Component {
     const { transactionCategoryCode, transactionCategoryName, transactionType } = data
     const postData = Object.assign(data, { transactionCategoryId: id })
     this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then(res => {
-      if (res.status === 200) {
+      if (res.status == 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', 'Chart Account Updated Successfully')
         this.props.history.push('/admin/master/chart-account')

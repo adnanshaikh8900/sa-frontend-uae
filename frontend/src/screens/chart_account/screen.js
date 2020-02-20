@@ -6,10 +6,6 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
@@ -17,8 +13,7 @@ import {
   FormGroup,
   Input
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import Select from 'react-select'
 
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -83,7 +78,7 @@ class ChartAccount extends React.Component {
     this.options = {
       onRowClick: this.goToDetailPage,
       paginationPosition: 'top',
-      page: 1,
+      page: 0,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -113,7 +108,7 @@ class ChartAccount extends React.Component {
     let { filterData } = this.state
     const data = {
       pageNo: this.options.page,
-      pageSize: this.options.sizePerPage 
+      pageSize: this.options.sizePerPage
     }
     filterData = { ...filterData, ...data }
     this.props.chartOfAccountActions.getTransactionCategoryList(filterData).then(res => {
@@ -136,13 +131,20 @@ class ChartAccount extends React.Component {
     this.props.history.push('/admin/master/chart-account/create')
   }
 
-  onPageChange = (page, sizePerPage) => {
-    this.options.page = page
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
   }
 
-  onSizePerPageList = (sizePerPage) => {
-    this.options.sizePerPage = sizePerPage
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
   }
+
 
   onRowSelect(row, isSelected, e) {
     let temp_list = []
@@ -154,6 +156,7 @@ class ChartAccount extends React.Component {
         if (item !== row.transactionCategoryId) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -165,6 +168,7 @@ class ChartAccount extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.transactionCategoryId)
+        return item
       })
     }
     this.setState({
@@ -235,11 +239,8 @@ class ChartAccount extends React.Component {
 
   render() {
 
-    const { loading, dialog ,selectedRows} = this.state
+    const { loading, dialog, selectedRows } = this.state
     const { transaction_category_list, transaction_type_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
 
     return (
       <div className="chart-account-screen">
@@ -312,11 +313,11 @@ class ChartAccount extends React.Component {
                               <FormGroup className="mb-3">
 
                                 <Select
-                                  options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list,'Type') : []}
+                                  options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list, 'Type') : []}
                                   onChange={(val) => {
-                                    if(val && val['value']) {
+                                    if (val && val['value']) {
                                       this.handleChange(val['value'], 'transactionType')
-                                    this.setState({ 'selectedTransactionType': val['value'] })
+                                      this.setState({ 'selectedTransactionType': val['value'] })
                                     } else {
                                       this.handleChange('', 'transactionType')
                                       this.setState({ 'selectedTransactionType': '' })
@@ -346,7 +347,8 @@ class ChartAccount extends React.Component {
                           version="4"
                           hover
                           pagination
-                          totalSize={transaction_category_list ? transaction_category_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: transaction_category_list.totalCount ? transaction_category_list.totalCount : 0 }}
                           className="product-table"
                           trClassName="cursor-pointer"
                           csvFileName="Chart_Of_Account.csv"

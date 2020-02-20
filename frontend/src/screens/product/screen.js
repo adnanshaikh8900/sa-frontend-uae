@@ -6,21 +6,15 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
   FormGroup,
   Input,
 } from 'reactstrap'
 import Select from 'react-select'
 
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
 import { Loader, ConfirmDeleteModal } from 'components'
 
@@ -83,6 +77,8 @@ class Product extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
     }
@@ -110,12 +106,12 @@ class Product extends React.Component {
   initializeData() {
     const { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page ? this.options.page : 1,
-      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
-    this.props.productActions.getProductVatCategoryList();
-    this.props.productActions.getProductList(filterData).then(res => {
+    this.props.productActions.getProductList(postData).then(res => {
+      this.props.productActions.getProductVatCategoryList();
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -139,6 +135,7 @@ class Product extends React.Component {
         if (item !== row.id) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -148,9 +145,7 @@ class Product extends React.Component {
   onSelectAll(isSelected, rows) {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.id)
-      })
+      rows.map(item => temp_list.push(item.id))
     }
     this.setState({
       selectedRows: temp_list
@@ -219,21 +214,25 @@ class Product extends React.Component {
     // this.setState({})
   }
 
-  onPageChange = (page, sizePerPage) => {
-    this.options.page = page
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
   }
 
-  onSizePerPageList = (sizePerPage) => {
-    this.options.sizePerPage = sizePerPage
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
   }
 
   render() {
 
     const { loading, dialog , filterData , selectedRows} = this.state
     const { product_list, vat_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+
 
     return (
       <div className="product-screen">
@@ -337,7 +336,8 @@ class Product extends React.Component {
                           version="4"
                           hover
                           pagination
-                          totalSize={product_list ? product_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: product_list.totalCount ? product_list.totalCount : 0 }}
                           className="product-table"
                           trClassName="cursor-pointer"
                           csvFileName="product_list.csv"

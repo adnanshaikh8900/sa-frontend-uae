@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+// import { bindActionCreators } from 'redux'
 import {
   DropdownItem,
   DropdownMenu,
@@ -9,7 +9,7 @@ import {
   Nav,
   NavItem,
   UncontrolledDropdown,
-  Badge
+  // Badge
 } from 'reactstrap'
 import PropTypes from 'prop-types'
 
@@ -23,7 +23,7 @@ import './style.scss'
 
 import logo from 'assets/images/brand/logo.png'
 import sygnet from 'assets/images/brand/sygnet.png'
-import avatar from 'assets/images/avatars/6.jpg'
+// import avatar from 'assets/images/avatars/6.jpg'
 
 import {
   AuthActions
@@ -65,8 +65,9 @@ class Header extends Component {
   }
 
   render() {
-    const { children, profile,...attributes} = this.props
-    const { profilePic } = this.state
+    const { children, profile} = this.props
+    // ...attributes
+    // const { profilePic } = this.state
     return (
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />

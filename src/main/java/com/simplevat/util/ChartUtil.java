@@ -14,7 +14,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.simplevat.contact.model.ChartData;
+import com.simplevat.model.ChartData;
 import com.simplevat.service.report.model.BankAccountTransactionReportModel;
 
 @Component

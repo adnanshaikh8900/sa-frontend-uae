@@ -9,6 +9,7 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
+import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
@@ -48,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/rest/invoice")
-public class InvoiceRestController implements Serializable {
+public class InvoiceRestController extends AbstractDoubleEntryRestController implements Serializable {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -114,7 +115,7 @@ public class InvoiceRestController implements Serializable {
 
 	@ApiOperation(value = "Delete Invoice By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity delete(@RequestParam(value = "id") Integer id) {
 		Invoice invoice = invoiceService.findByPK(id);
 		if (invoice != null) {
 			invoice.setDeleteFlag(Boolean.TRUE);
@@ -126,7 +127,7 @@ public class InvoiceRestController implements Serializable {
 
 	@ApiOperation(value = "Delete Invoices in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
+	public ResponseEntity delete(@RequestBody DeleteModel ids) {
 		try {
 			invoiceService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);

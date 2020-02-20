@@ -6,28 +6,19 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
-  FormGroup,
   Input,
 } from 'reactstrap'
-import Select from 'react-select'
 
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
 import { Loader, ConfirmDeleteModal } from 'components'
 
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
-import { selectOptionsFactory } from 'utils'
 
 import * as EmployeeActions from './actions'
 import {
@@ -80,6 +71,8 @@ class Employee extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
     }
@@ -107,8 +100,8 @@ class Employee extends React.Component {
   initializeData() {
     const { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page ? this.options.page : 1,
-      pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
     this.props.employeeActions.getEmployeeList(postData).then(res => {
@@ -135,6 +128,7 @@ class Employee extends React.Component {
         if (item !== row.id) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -146,6 +140,7 @@ class Employee extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.id)
+        return item
       })
     }
     this.setState({
@@ -211,21 +206,25 @@ class Employee extends React.Component {
     // this.setState({})
   }
 
-  onPageChange = (page, sizePerPage) => {
-    this.options.page = page
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
   }
 
-  onSizePerPageList = (sizePerPage) => {
-    this.options.sizePerPage = sizePerPage
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
   }
 
   render() {
 
-    const { loading, dialog, filterData, selectedRows } = this.state
-    const { employee_list, vat_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+    const { loading, dialog , selectedRows } = this.state
+    const { employee_list } = this.props
+
 
     return (
       <div className="employee-screen">
@@ -313,7 +312,8 @@ class Employee extends React.Component {
                           hover
                           pagination
                           keyField="id"
-                          totalSize={employee_list ? employee_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: employee_list.totalCount ? employee_list.totalCount : 0 }}
                           className="employee-table"
                           trClassName="cursor-pointer"
                           csvFileName="employee_list.csv"

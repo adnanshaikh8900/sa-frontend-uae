@@ -1,6 +1,6 @@
 package com.simplevat.rest.invoicecontroller;
 
-import com.simplevat.enums.DiscountType;
+import com.simplevat.constant.DiscountType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -37,7 +37,7 @@ public class InvoiceRequestModel {
     
     private DiscountType discountType;
     private BigDecimal discount;
-    private Integer discountPercentage;
+    private double discountPercentage;
     private Integer createdBy;
     private LocalDateTime createdDate;
     private Integer lastUpdatedBy;

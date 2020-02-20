@@ -11,13 +11,14 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
+  Label,
+  Badge
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 
-import { Formik,Field} from 'formik';
+import { Formik, Field } from 'formik';
 import * as Yup from "yup";
 import _ from 'lodash'
 
@@ -86,7 +87,8 @@ class CreateJournal extends React.Component {
           creditAmount: 0,
           // error: []
         }]
-      }
+      },
+      submitJournal: false
     }
 
     // this.options = {
@@ -158,9 +160,9 @@ class CreateJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
-          console.log(props.touched.journalLineItems[idx].transactionCategoryId)
-        }
+        // if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
+        //   console.log(props.touched.journalLineItems[idx].transactionCategoryId)
+        // }
       }
     });
 
@@ -179,9 +181,9 @@ class CreateJournal extends React.Component {
                 props.touched.journalLineItems[idx] &&
                 props.touched.journalLineItems[idx].transactionCategoryId ? "is-invalid" : ""}`}
           >
-           {transactionCategoryList ? transactionCategoryList.map(obj => {
-          return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId}>{obj.transactionCategoryName}</option>
-         }) : ''}
+            {transactionCategoryList ? transactionCategoryList.map(obj => {
+              return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId}>{obj.transactionCategoryName}</option>
+            }) : ''}
           </Input>
 
         )}
@@ -239,9 +241,9 @@ class CreateJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
-          console.log(props.touched.journalLineItems[idx].contactId)
-        }
+        // if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
+        //   console.log(props.touched.journalLineItems[idx].contactId)
+        // }
       }
     });
 
@@ -291,9 +293,9 @@ class CreateJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
-          console.log(props.touched.journalLineItems[idx].vatCategoryId)
-        }
+        // if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
+        //   console.log(props.touched.journalLineItems[idx].vatCategoryId)
+        // }
       }
     });
 
@@ -430,7 +432,6 @@ class CreateJournal extends React.Component {
 
 
   deleteRow(e, row, props) {
-    console.log(row)
     const id = row['id'];
     let newData = []
     e.preventDefault();
@@ -479,65 +480,68 @@ class CreateJournal extends React.Component {
   handleSubmit(values, resetForm) {
 
     const { data, initValue } = this.state
-    data.map(item => {
-      delete item.id
-      item.transactionCategoryId = item.transactionCategoryId ? item.transactionCategoryId : ''
-      item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
-      item.contactId = item.contactId ? item.contactId : ''
-    })
-    const postData = {
-      journalDate: values.journalDate ? values.journalDate : '',
-      referenceCode: values.referenceCode ? values.referenceCode : '',
-      description: values.description ? values.description : '',
-      currencyCode: values.currencyCode ? values.currencyCode : '',
-      subTotalCreditAmount: initValue.subTotalCreditAmount,
-      subTotalDebitAmount: initValue.subTotalDebitAmount,
-      totalCreditAmount: initValue.totalCreditAmount,
-      totalDebitAmount: initValue.totalDebitAmount,
-      journalLineItems: data
-    }
     // const postData = {...initValue,...values,...{journalLineItems: this.state.data}}
-    this.props.journalCreateActions.createJournal(postData).then(res => {
-      if (res.status === 200) {
-        // resetForm({});
-        this.props.commonActions.tostifyAlert('success', 'New Journal Created Successfully')
-        if (this.state.createMore) {
-          this.setState({
-            createMore: false,
-            data: [{
-              id: 0,
-              description: '',
-              transactionCategoryId: '',
-              vatCategoryId: '',
-              contactId: '',
-              debitAmount: 0,
-              creditAmount: 0,
-            }],
-            initValue: {
-              ...this.state.initValue, ...{
-                journalLineItems: [{
-                  id: 0,
-                  description: '',
-                  transactionCategoryId: '',
-                  vatCategoryId: '',
-                  contactId: '',
-                  debitAmount: 0,
-                  creditAmount: 0,
-                }],
-                subTotalDebitAmount: 0,
-                totalDebitAmount: 0,
-                totalCreditAmount: 0,
-                subTotalCreditAmount: 0,
-              }
-            }
-          });
-        } else {
-          this.props.history.push('/admin/accountant/journal');
+    if(initValue.totalCreditAmount == initValue.totalDebitAmount) {
+        data.map(item => {
+          delete item.id
+          item.transactionCategoryId = item.transactionCategoryId ? item.transactionCategoryId : ''
+          item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
+          item.contactId = item.contactId ? item.contactId : ''
+        })
+        const postData = {
+          journalDate: values.journalDate ? values.journalDate : '',
+          referenceCode: values.referenceCode ? values.referenceCode : '',
+          description: values.description ? values.description : '',
+          currencyCode: values.currencyCode ? values.currencyCode : '',
+          subTotalCreditAmount: initValue.subTotalCreditAmount,
+          subTotalDebitAmount: initValue.subTotalDebitAmount,
+          totalCreditAmount: initValue.totalCreditAmount,
+          totalDebitAmount: initValue.totalDebitAmount,
+          journalLineItems: data
         }
-      }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
-    })
+      this.props.journalCreateActions.createJournal(postData).then(res => {
+        if (res.status === 200) {
+          resetForm({});
+          this.props.commonActions.tostifyAlert('success', 'New Journal Created Successfully')
+          if (this.state.createMore) {
+            this.setState({
+              createMore: false,
+              submitJournal: false,
+              data: [{
+                id: 0,
+                description: '',
+                transactionCategoryId: '',
+                vatCategoryId: '',
+                contactId: '',
+                debitAmount: 0,
+                creditAmount: 0,
+              }],
+              initValue: {
+                ...this.state.initValue, ...{
+                  journalLineItems: [{
+                    id: 0,
+                    description: '',
+                    transactionCategoryId: '',
+                    vatCategoryId: '',
+                    contactId: '',
+                    debitAmount: 0,
+                    creditAmount: 0,
+                  }],
+                  subTotalDebitAmount: 0,
+                  totalDebitAmount: 0,
+                  totalCreditAmount: 0,
+                  subTotalCreditAmount: 0,
+                }
+              }
+            });
+          } else {
+            this.props.history.push('/admin/accountant/journal');
+          }
+        }
+      }).catch(err => {
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      })
+    }
   }
 
 
@@ -572,7 +576,6 @@ class CreateJournal extends React.Component {
                         ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
                           this.handleSubmit(values, resetForm)
-                          resetForm(initValue)
                         }}
                         validationSchema={
                           Yup.object().shape({
@@ -589,7 +592,7 @@ class CreateJournal extends React.Component {
                                   creditAmount: Yup.number().required(),
                                 })
                               )
-                              .required('*Atleast One Journal Debit and Credit Details is mandatory')
+                              .min(2, '*Atleast Two Journal Debit and Credit Details is mandatory')
                           })
                         }
                       >
@@ -687,7 +690,9 @@ class CreateJournal extends React.Component {
                                 <div className="invalid-feedback">{props.errors.journalLineItems}</div>
                               </div>
                             )}
-
+                            {this.state.submitJournal && this.state.initValue.totalCreditAmount !== this.state.initValue.totalDebitAmount && <div className={this.state.initValue.totalDebitAmount !== this.state.initValue.totalCreditAmount  ? "is-invalid" : ""}>
+                              <div className="invalid-feedback">*Total Credit Amount and Total Debit Amount Should be Equal</div>
+                            </div>}
                             <Row>
                               <Col lg={12}>
                                 <BootstrapTable
@@ -793,13 +798,15 @@ class CreateJournal extends React.Component {
                             ) :
                               null
                             }
+
+
                             <Row>
 
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
                                   <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
                                     // () => {
-                                    this.setState({ createMore: false }, () => {
+                                    this.setState({ createMore: false,submitJournal: true }, () => {
                                       props.handleSubmit()
                                     })
                                     // }
@@ -810,7 +817,7 @@ class CreateJournal extends React.Component {
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={
                                       () => {
-                                        this.setState({ createMore: true }, () => {
+                                        this.setState({ createMore: true ,submitJournal: true}, () => {
                                           props.handleSubmit()
                                         })
                                       }

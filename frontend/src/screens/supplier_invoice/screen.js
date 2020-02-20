@@ -7,25 +7,19 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
-  FormGroup,
+
   Input,
-  Label,
   ButtonDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem
 } from 'reactstrap'
 import Select from 'react-select'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+// import { ToastContainer, toast } from 'react-toastify'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 
@@ -43,11 +37,12 @@ import {
 } from 'services/global'
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils'
 
 import './style.scss'
-import { setNestedObjectValues } from 'formik';
+// import { setNestedObjectValues } from 'formik';
+import { PreviewInvoiceModal } from './sections'
+
 
 const mapStateToProps = (state) => {
   return ({
@@ -82,6 +77,7 @@ class SupplierInvoice extends React.Component {
       },
       selectedRows: [],
       contactType: 1,
+      openInvoicePreviewModal: false,
 
     }
 
@@ -97,7 +93,8 @@ class SupplierInvoice extends React.Component {
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
-
+    this.closeInvoicePreviewModal = this.closeInvoicePreviewModal.bind(this)
+    this.openInvoicePreviewModal = this.openInvoicePreviewModal.bind(this)
 
     this.options = {
       paginationPosition: 'top'
@@ -116,9 +113,22 @@ class SupplierInvoice extends React.Component {
   }
 
   initializeData() {
-    this.props.supplierInvoiceActions.getSupplierInoviceList(this.state.filterData)
-    this.props.supplierInvoiceActions.getStatusList(this.state.filterData)
-    this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
+    let { filterData } = this.state
+    const paginationData = {
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
+    }
+    const postData = {...filterData,...paginationData }
+    this.props.supplierInvoiceActions.getSupplierInvoiceList(postData).then(res => {
+    if (res.status === 200) {
+        this.props.supplierInvoiceActions.getStatusList()
+        this.props.supplierInvoiceActions.getSupplierList(filterData.contactType);
+        this.setState({ loading: false });
+     }
+    }).catch(err => {
+       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+       this.setState({ loading: false })
+    })
 
   }
   componentWillUnmount() {
@@ -187,11 +197,11 @@ class SupplierInvoice extends React.Component {
             <DropdownItem onClick={() => this.props.history.push('/admin/expense/supplier-invoice/detail', { id: row.id })}>
               <i className="fas fa-edit" /> Edit
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem onClick={()=>{this.postInvoice(row)}}>
               <i className="fas fa-heart" /> Post
             </DropdownItem>
-            <DropdownItem>
-              <i className="fas fa-adjust" /> Adjust
+            <DropdownItem  onClick={()=>{this.openInvoicePreviewModal()}}>
+              <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-upload" /> Send
@@ -211,6 +221,20 @@ class SupplierInvoice extends React.Component {
     )
   }
 
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
+  }
+
   onRowSelect(row, isSelected, e) {
     let temp_list = []
     if (isSelected) {
@@ -221,6 +245,7 @@ class SupplierInvoice extends React.Component {
         if (item !== row.id) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -232,6 +257,7 @@ class SupplierInvoice extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.id)
+        return item
       })
     }
     this.setState({
@@ -264,8 +290,8 @@ class SupplierInvoice extends React.Component {
     let obj = {
       ids: selectedRows
     }
-    this.props.supplierInvoiceActions.removeBulk(obj).then(() => {
-      this.props.supplierInvoiceActions.getSupplierInoviceList(filterData)
+    this.props.supplierInvoiceActions.removeBulk(obj).then((res) => {
+      this.initializeData(filterData)
       this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
       if (supplier_invoice_list && supplier_invoice_list.length > 0) {
         this.setState({
@@ -295,12 +321,37 @@ class SupplierInvoice extends React.Component {
     this.initializeData()
   }
 
+  postInvoice(row){
+    const postingRequestModel = {
+      amount : row.invoiceAmount,
+      postingRefId: row.id,
+      postingRefType: 'INVOICE'
+    }
+    console.log(postingRequestModel)
+
+    this.props.supplierInvoiceActions.postInvoice(postingRequestModel).then(res => {
+    if (res.status === 200) {
+      this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
+     }
+    }).catch(err => {
+       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    })
+  }
+
+  openInvoicePreviewModal() {
+    this.setState({ openInvoicePreviewModal: true })
+  }
+
+  closeInvoicePreviewModal(res) {
+    this.setState({ openInvoicePreviewModal: false })
+  }
+
   render() {
     const { loading, filterData, dialog, selectedRows } = this.state
-    const { supplier_invoice_list, status_list, supplier_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+    const {  status_list, supplier_list } = this.props
+    // const containerStyle = {
+    //   zIndex: 1999
+    // }
 
     const supplier_invoice_data = this.props.supplier_invoice_list ? this.props.supplier_invoice_list.map(supplier =>
 
@@ -492,7 +543,8 @@ class SupplierInvoice extends React.Component {
                           hover
                           keyField="id"
                           pagination
-                          totalSize={supplier_invoice_list ? supplier_invoice_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: supplier_invoice_data.totalCount ? supplier_invoice_data.totalCount : 0 }}
                           className="supplier-invoice-table"
                           ref={node => this.table = node}
                         >
@@ -557,7 +609,10 @@ class SupplierInvoice extends React.Component {
             </CardBody>
           </Card>
         </div>
-
+        <PreviewInvoiceModal
+          openInvoicePreviewModal={this.state.openInvoicePreviewModal}
+          closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
+        />
       </div>
 
 

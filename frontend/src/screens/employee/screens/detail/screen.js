@@ -53,7 +53,7 @@ class DetailEmployee extends React.Component {
     this.state = {
       loading: true,
       initValue: {},
-      id: props.location.state.id,
+      current_employee_id: null,
       dialog: false,
     }
 
@@ -91,12 +91,12 @@ class DetailEmployee extends React.Component {
   }
 
   initializeData() {
-    const { id } = this.state;
-    if (id) {
+    if (this.props.location.state && this.props.location.state.id) {
       this.props.employeeActions.getCurrencyList()
-      this.props.employeeDetailActions.getEmployeeDetail(id).then(res => {
+      this.props.employeeDetailActions.getEmployeeDetail(this.props.location.state.id).then(res => {
         if (res.status === 200) {
           this.setState({
+            current_employee_id: this.props.location.state.id,
             initValue: {
               id: res.data.id !== '' ? res.data.id : '',
               firstName: res.data.firstName !== '' ? res.data.firstName : '',
@@ -119,11 +119,12 @@ class DetailEmployee extends React.Component {
       }).catch(err => {
         this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
       })
+    } else {
+      this.props.history.push('/admin/master/employee')
     }
   }
 
   handleSubmit(data) {
-
     this.props.employeeDetailActions.updateEmployee(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully')
@@ -145,8 +146,8 @@ class DetailEmployee extends React.Component {
   }
 
   removeEmployee() {
-    const { id } = this.state;
-    this.props.employeeDetailActions.deleteEmployee(id).then(res => {
+    const { current_employee_id } = this.state;
+    this.props.employeeDetailActions.deleteEmployee(current_employee_id).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Employee Deleted Successfully !!')
         this.props.history.push('/admin/master/employee')

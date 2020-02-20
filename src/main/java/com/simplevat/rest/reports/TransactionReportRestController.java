@@ -5,10 +5,10 @@
  */
 package com.simplevat.rest.reports;
 
-import com.simplevat.contact.model.TransactionRestModel;
-import com.simplevat.contact.model.FinancialPeriodRestModel;
-import com.simplevat.contact.model.InvoiceReportRestModel;
-import com.simplevat.contact.model.TransactionReportRestModel;
+import com.simplevat.model.TransactionRestModel;
+import com.simplevat.model.FinancialPeriodRestModel;
+import com.simplevat.model.InvoiceReportRestModel;
+import com.simplevat.model.TransactionReportRestModel;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.bankaccount.TransactionType;
 import com.simplevat.service.InvoiceService;

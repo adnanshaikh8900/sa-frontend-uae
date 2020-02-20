@@ -50,7 +50,8 @@ class DetailVatCode extends React.Component {
     this.state = {
       vatData: {},
       loading: false,
-      dialog: false
+      dialog: false,
+      current_vat_id: null
     }
 
     this.saveAndContinue = false;
@@ -59,20 +60,23 @@ class DetailVatCode extends React.Component {
     this.deleteVat = this.deleteVat.bind(this)
     this.removeVat = this.removeVat.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
-
-    this.id = new URLSearchParams(props.location.search).get('id')
   }
 
   componentDidMount() {
-    if (this.id) {
+    if (this.props.location.state && this.props.location.state.id) {
       this.setState({ loading: true });
-      this.props.vatDetailActions.getVatByID(this.id).then(res => {
+      this.props.vatDetailActions.getVatByID(this.props.location.state.id).then(res => {
         if (res.status === 200)
           this.setState({ 
+            current_vat_id: this.props.location.state.id,
             loading: false,
             vatData: res.data
           })
+      }).catch(err => {
+        this.props.history.push('/admin/master/vat-code')
       })
+    } else {
+      this.props.history.push('/admin/master/vat-code')
     }
   }
 
@@ -99,7 +103,8 @@ class DetailVatCode extends React.Component {
   }
 
   removeVat() {
-    this.props.vatDetailActions.deleteVat(this.id).then(res => {
+    const {current_vat_id} = this.state
+    this.props.vatDetailActions.deleteVat(current_vat_id).then(res => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
         this.props.commonActions.tostifyAlert('success', 'Vat Deleted Successfully')

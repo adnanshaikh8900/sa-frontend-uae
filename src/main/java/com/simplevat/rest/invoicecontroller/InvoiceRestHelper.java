@@ -7,7 +7,7 @@ import com.simplevat.entity.Currency;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.InvoiceLineItem;
-import com.simplevat.enums.InvoiceStatusEnum;
+import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.invoice.model.InvoiceItemModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
@@ -117,6 +117,8 @@ public class InvoiceRestHelper {
 		invoice.setDiscountType(invoiceModel.getDiscountType());
 		invoice.setDiscount(invoiceModel.getDiscount());
 		invoice.setStatus(InvoiceStatusEnum.PENDING.getValue()); // default set, will change in transaction
+		invoice.setDiscountPercentage(invoiceModel.getDiscountPercentage());
+		
 
 		return invoice;
 	}
@@ -198,6 +200,12 @@ public class InvoiceRestHelper {
 		if (invoice.getReceiptAttachmentPath() != null) {
 			requestModel.setFilePath("/files/" + invoice.getReceiptAttachmentPath());
 		}
+		if(invoice.getDiscountType() != null) {
+			requestModel.setDiscountType(invoice.getDiscountType());
+		}
+		requestModel.setDiscount(invoice.getDiscount());
+		requestModel.setDiscountPercentage(invoice.getDiscountPercentage());
+		
 		return requestModel;
 	}
 

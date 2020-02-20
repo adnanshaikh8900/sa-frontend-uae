@@ -9,7 +9,7 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.helper.BankHelper;
 import com.simplevat.security.JwtAuthenticationController;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.contact.model.BankModel;
+import com.simplevat.model.BankModel;
 import com.simplevat.entity.Country;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.User;

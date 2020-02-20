@@ -15,7 +15,7 @@ import {
 } from 'reactstrap'
 import { ToastContainer, toast } from 'react-toastify'
 import _ from "lodash"
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal} from 'components'
 import {
   selectOptionsFactory
 } from 'utils'
@@ -32,11 +32,11 @@ import { Formik } from 'formik';
 import * as Yup from "yup";
 
 
-const mapStateToProps = (state) => {
-  return ({
+// const mapStateToProps = (state) => {
+//   return ({
 
-  })
-}
+//   })
+// }
 const mapDispatchToProps = (dispatch) => {
   return ({
     commonActions: bindActionCreators(CommonActions, dispatch),
@@ -49,28 +49,36 @@ class DetailProductCategory extends React.Component {
     super(props);
     this.state = {
       initValue: {},
-      loading: false
+      loading: false,
+      dialog: null,
+      current_product_category_id: null
     }
     this.handleSubmit = this.handleSubmit.bind(this)
-
-    this.id = props.location.state.id;
+    this.deleteProductCategory = this.deleteProductCategory.bind(this)
+    this.removeProductCategory = this.removeProductCategory.bind(this)
+    this.removeDialog = this.removeDialog.bind(this)
   }
 
   componentDidMount() {
-    if (this.id) {
-      this.setState({ loading: true });
-      this.props.detailProductCategoryAction.getProductCategoryById(this.id).then(res => {
-        if (res.status === 200)
-          this.setState({
-            loading: false,
-            initValue: {
-              id:res.data.id ? res.data.id : '',
-              productCategoryCode: res.data.productCategoryCode ? res.data.productCategoryCode : '',
-              productCategoryName: res.data.productCategoryName ? res.data.productCategoryName : ''
-            }
-          })
-      })
-    }
+    // if (this.props.location.state && this.props.location.state.id) {
+    //   this.props.detailProductCategoryAction.getProductCategoryById(this.props.location.state.id).then(res => {
+    //     if (res.status === 200)
+    //       this.setState({
+    //         loading: false,
+                //  current_product_category_id: this.props.location.state.id
+    //         initValue: {
+    //           id:res.data.id ? res.data.id : '',
+    //           productCategoryCode: res.data.productCategoryCode ? res.data.productCategoryCode : '',
+    //           productCategoryName: res.data.productCategoryName ? res.data.productCategoryName : ''
+    //         }
+    //       })
+    //   }).catch(err => {
+    //     this.setState({loading: false})
+    //     this.props.history.push('/admin/master/product-category')
+    //   })
+    // } else {
+    //   this.props.history.push('/admin/master/product-category')
+    // }
   }
 
   // Create or Edit Vat
@@ -91,12 +99,42 @@ class DetailProductCategory extends React.Component {
     })
   }
 
+  deleteProductCategory() {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={this.removeProductCategory}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeProductCategory() {
+    const {current_product_category_id} = this.state
+    this.props.detailProductCategoryAction.deleteProductCategory(current_product_category_id).then(res => {
+      if (res.status === 200) {
+        // this.success('Chart Account Deleted Successfully');
+        this.props.commonActions.tostifyAlert('success', 'ProductCategory Deleted Successfully')
+        this.props.history.push('/admin/master/product-category')
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog() {
+    this.setState({
+      dialog: null
+    })
+  }
+
   render() {
-    const { loading, initValue } = this.state
+    const { loading, initValue,dialog} = this.state
 
     return (
       <div className="detail-vat-code-screen">
         <div className="animated fadeIn">
+          {dialog}
           <Row>
             <Col lg={12}>
               <Card>
@@ -167,7 +205,7 @@ class DetailProductCategory extends React.Component {
                                 <Row>
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                     <FormGroup>
-                                      <Button type="button" color="danger" className="btn-square">
+                                      <Button type="button" color="danger" className="btn-square" onClick={this.deleteProductCategory}>
                                         <i className="fa fa-trash"></i> Delete
                                       </Button>
                                     </FormGroup>
@@ -198,4 +236,4 @@ class DetailProductCategory extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailProductCategory)
+export default connect(null, mapDispatchToProps)(DetailProductCategory)

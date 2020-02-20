@@ -6,22 +6,14 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
   FormGroup,
   Input,
-  Label
 } from 'reactstrap'
 import Select from 'react-select'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-// import DateRangePicker from 'react-bootstrap-daterangepicker'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 import 'react-datepicker/dist/react-datepicker.css'
@@ -30,7 +22,6 @@ import { Loader, ConfirmDeleteModal } from 'components'
 
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils'
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -90,7 +81,11 @@ class Expense extends React.Component {
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
@@ -111,11 +106,24 @@ class Expense extends React.Component {
 
   componentDidMount() {
     this.initializeData()
-    this.props.expenseActions.getExpenseCategoriesList();
   }
 
   initializeData() {
-    this.props.expenseActions.getExpenseList(this.state.filterData);
+    const { filterData } = this.state
+    const paginationData = {
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
+    }
+    const postData = { ...filterData, ...paginationData }
+    this.props.expenseActions.getExpenseList(postData).then(res => {
+      if (res.status === 200) {
+        this.props.expenseActions.getExpenseCategoriesList();
+        this.setState({ loading: false })
+      }
+    }).catch(err => {
+      this.setState({ loading: false })
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    })
   }
 
   goToDetail(row) {
@@ -132,6 +140,7 @@ class Expense extends React.Component {
         if (item !== row.expenseId) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -143,6 +152,7 @@ class Expense extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.expenseId)
+        return item
       })
     }
     this.setState({
@@ -164,6 +174,20 @@ class Expense extends React.Component {
 
   handleSearch() {
     this.initializeData()
+  }
+
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
   }
 
   bulkDeleteExpenses() {
@@ -216,9 +240,9 @@ class Expense extends React.Component {
       selectedRows
     } = this.state
     const { expense_list, expense_categories_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+    // const containerStyle = {
+    //   zIndex: 1999
+    // }
 
     return (
       <div className="expense-screen">
@@ -346,7 +370,8 @@ class Expense extends React.Component {
                           hover
                           keyField="expenseId"
                           pagination
-                          totalSize={expense_list ? expense_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: expense_list.totalCount ? expense_list.totalCount : 0 }}
                           className="expense-table"
                           trClassName="cursor-pointer"
                           ref={node => this.table = node}

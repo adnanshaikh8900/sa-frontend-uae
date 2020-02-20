@@ -72,12 +72,12 @@ export const getVatByID = (id) => {
 // }
 
 // // Delete Vat Row
-export const deleteVat = (ids) => {
+export const deleteVat = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'DELETE',
       url: `/rest/vat/deletes`,
-      data: {ids: ids}
+      data: obj
     }
 
     return authApi(data).then(res => {

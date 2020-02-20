@@ -7,15 +7,9 @@ import {
   CardHeader,
   CardBody,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
   ButtonGroup,
-  Form,
-  FormGroup,
   Input,
   Label,
   ButtonDropdown,
@@ -24,8 +18,7 @@ import {
   DropdownItem
 } from 'reactstrap'
 import Select from 'react-select'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 
@@ -43,11 +36,11 @@ import {
 } from 'services/global'
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils'
 
 import './style.scss'
-import { setNestedObjectValues } from 'formik';
+// import { setNestedObjectValues } from 'formik';
+import { PreviewInvoiceModal } from './sections'
 
 const mapStateToProps = (state) => {
   return ({
@@ -81,6 +74,7 @@ class CustomerInvoice extends React.Component {
         contactType: 2,
       },
       selectedRows: [],
+      openInvoicePreviewModal: false,
 
     }
 
@@ -96,11 +90,18 @@ class CustomerInvoice extends React.Component {
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
-
+    this.postInvoice = this.postInvoice.bind(this)
+    this.closeInvoicePreviewModal = this.closeInvoicePreviewModal.bind(this)
+    this.openInvoicePreviewModal = this.openInvoicePreviewModal.bind(this)
 
     this.options = {
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      page: 0,
+      sizePerPage: 10,
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
+
     this.selectRowProp = {
       mode: 'checkbox',
       bgColor: 'rgba(0,0,0, 0.05)',
@@ -115,16 +116,62 @@ class CustomerInvoice extends React.Component {
   }
 
   initializeData() {
-    this.props.customerInvoiceActions.getCustomerInvoiceList(this.state.filterData)
-    this.props.customerInvoiceActions.getStatusList(this.state.filterData)
-    this.props.customerInvoiceActions.getCustomerList(this.state.filterData.contactType);
-
+    let { filterData } = this.state
+    const paginationData = {
+      pageNo: this.options.page,
+      pageSize: this.options.sizePerPage
+    }
+    filterData = {...filterData,...paginationData }
+    this.props.customerInvoiceActions.getCustomerInvoiceList(filterData).then(res => {
+      console.log(res)
+    if (res.status === 200) {
+        this.props.customerInvoiceActions.getStatusList()
+        this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
+        this.setState({ loading: false });
+     }
+    }).catch(err => {
+      console.log(err)
+       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+       this.setState({ loading: false })
+    })
   }
+
   componentWillUnmount() {
     this.setState({
       selectedRows: []
     })
   }
+
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
+  }
+
+  postInvoice(row){
+    console.log(row)
+    const postingRequestModel = {
+      amount : row.invoiceAmount,
+      postingRefId: row.id,
+      postingRefType: 'INVOICE'
+    }
+    this.props.customerInvoiceActions.postInvoice(postingRequestModel).then(res => {
+    if (res.status === 200) {
+      this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
+     }
+    }).catch(err => {
+       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    })
+  }
+
 
   renderInvoiceNumber(cell, row) {
     return (
@@ -166,6 +213,8 @@ class CustomerInvoice extends React.Component {
   }
 
 
+  
+
 
   renderActions(cell, row) {
     return (
@@ -188,17 +237,17 @@ class CustomerInvoice extends React.Component {
               <i className="fas fa-edit" /> Edit
               </div>
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem onClick={()=>{this.postInvoice(row)}}>
               <i className="fas fa-heart" /> Post
+            </DropdownItem>
+            <DropdownItem  onClick={()=>{this.openInvoicePreviewModal()}}>
+              <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-adjust" /> Adjust
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-upload" /> Send
-            </DropdownItem>
-            <DropdownItem>
-              <i className="fas fa-print" /> Print
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-times" /> Cancel
@@ -222,6 +271,7 @@ class CustomerInvoice extends React.Component {
         if (item !== row.id) {
           temp_list.push(item)
         }
+        return item
       });
     }
     this.setState({
@@ -233,6 +283,7 @@ class CustomerInvoice extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.id)
+        return item
       })
     }
     this.setState({
@@ -260,7 +311,7 @@ class CustomerInvoice extends React.Component {
 
   removeBulk() {
     this.removeDialog()
-    let { selectedRows, filterData } = this.state;
+    let { selectedRows,  } = this.state;
     const { customer_invoice_list } = this.props
     let obj = {
       ids: selectedRows
@@ -298,12 +349,20 @@ class CustomerInvoice extends React.Component {
     this.initializeData()
   }
 
+  openInvoicePreviewModal() {
+    this.setState({ openInvoicePreviewModal: true })
+  }
+
+  closeInvoicePreviewModal(res) {
+    this.setState({ openInvoicePreviewModal: false })
+  }
+
   render() {
     const { loading, filterData, dialog, selectedRows } = this.state
-    const { customer_invoice_list, status_list, customer_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+    const {  status_list, customer_list } = this.props
+    // const containerStyle = {
+    //   zIndex: 1999
+    // }
 
     const customer_invoice_data = this.props.customer_invoice_list ? this.props.customer_invoice_list.map(customer =>
 
@@ -489,7 +548,8 @@ class CustomerInvoice extends React.Component {
                           hover
                           pagination
                           keyField="id"
-                          totalSize={customer_invoice_list ? customer_invoice_list.length : 0}
+                          remote
+                          fetchInfo={{ dataTotalSize: customer_invoice_data.totalCount ? customer_invoice_data.totalCount : 0 }}
                           className="customer-invoice-table"
                           csvFileName="Customer_Invoice.csv"
                           ref={node => {
@@ -558,7 +618,10 @@ class CustomerInvoice extends React.Component {
             </CardBody>
           </Card>
         </div>
-
+        <PreviewInvoiceModal
+          openInvoicePreviewModal={this.state.openInvoicePreviewModal}
+          closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
+        />
       </div>
 
 

@@ -1,5 +1,7 @@
 package com.simplevat.service.impl;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +22,17 @@ public class JournalServiceImpl extends JournalService {
 
 	@Override
 	public List<Journal> getJornalList(Map<JournalFilterEnum, Object> filterMap) {
-		return journalDao.getJornalList(filterMap);
+		List<Journal> journalList = journalDao.getJornalList(filterMap);
+		// need to replace in abstract dao impl with order by
+		if (journalList != null && !journalList.isEmpty())
+			journalList.sort(new Comparator<Journal>() {
+
+				@Override
+				public int compare(Journal o1, Journal o2) {
+					return o2.getJournalDate().compareTo(o1.getJournalDate());
+				}
+			});
+		return journalList;
 	}
 
 	@Override

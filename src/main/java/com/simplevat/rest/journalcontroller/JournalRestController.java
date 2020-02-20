@@ -70,7 +70,7 @@ public class JournalRestController {
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 				filterDataMap.put(JournalFilterEnum.JOURNAL_DATE, dateTime);
 			}
-			filterDataMap.put(JournalFilterEnum.POSTING_REFERENCE_TYPE, PostingReferenceTypeEnum.MUNUAL);
+		//	filterDataMap.put(JournalFilterEnum.POSTING_REFERENCE_TYPE, PostingReferenceTypeEnum.MUNUAL);
 			filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
 			List<Journal> journals = journalService.getJornalList(filterDataMap);
 			if (journals == null) {
@@ -123,7 +123,7 @@ public class JournalRestController {
 		if (journal == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		} else {
-			return new ResponseEntity<>(journalRestHelper.getModel(journal), HttpStatus.OK);
+			return new ResponseEntity<>(journalRestHelper.getModel(journal,false), HttpStatus.OK);
 		}
 	}
 
@@ -136,7 +136,7 @@ public class JournalRestController {
 			journal.setCreatedBy(userId);
 			journal.setCreatedDate(LocalDateTime.now());
 			journal.setDeleteFlag(Boolean.FALSE);
-			journal.setPostingReferenceType(PostingReferenceTypeEnum.MUNUAL);
+			journal.setPostingReferenceType(PostingReferenceTypeEnum.MANUAL);
 			journalService.persist(journal);
 
 			// add reference by in line item

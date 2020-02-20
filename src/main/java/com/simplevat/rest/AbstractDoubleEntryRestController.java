@@ -14,7 +14,10 @@ import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
 import io.swagger.annotations.ApiOperation;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +70,7 @@ public abstract class AbstractDoubleEntryRestController {
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem1.setCreatedBy(userId);
+		journalLineItem1.setJournal(journal);
 		journalLineItemList.add(journalLineItem1);
 
 		JournalLineItem journalLineItem2 = new JournalLineItem();
@@ -77,11 +81,13 @@ public abstract class AbstractDoubleEntryRestController {
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 		journalLineItem2.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem2.setCreatedBy(userId);
+		journalLineItem2.setJournal(journal);
 		journalLineItemList.add(journalLineItem2);
 		
 		journal.setJournalLineItems(journalLineItemList);
 		journal.setCreatedBy(userId);
 		journal.setPostingReferenceType(PostingReferenceTypeEnum.INVOICE);
+		journal.setJournalDate(LocalDateTime.now()); 
 		return journal;
 	}
 }

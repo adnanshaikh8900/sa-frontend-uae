@@ -222,3 +222,20 @@ export const getCountryList = () => {
     })
   }
 }
+
+export const postInvoice = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/invoice/posting',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}

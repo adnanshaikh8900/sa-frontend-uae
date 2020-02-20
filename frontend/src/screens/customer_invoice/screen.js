@@ -40,6 +40,7 @@ import {
 
 import './style.scss'
 // import { setNestedObjectValues } from 'formik';
+import { PreviewInvoiceModal } from './sections'
 
 const mapStateToProps = (state) => {
   return ({
@@ -73,6 +74,7 @@ class CustomerInvoice extends React.Component {
         contactType: 2,
       },
       selectedRows: [],
+      openInvoicePreviewModal: false,
 
     }
 
@@ -88,7 +90,9 @@ class CustomerInvoice extends React.Component {
     this.bulkDelete = this.bulkDelete.bind(this);
     this.removeBulk = this.removeBulk.bind(this);
     this.removeDialog = this.removeDialog.bind(this);
-
+    this.postInvoice = this.postInvoice.bind(this)
+    this.closeInvoicePreviewModal = this.closeInvoicePreviewModal.bind(this)
+    this.openInvoicePreviewModal = this.openInvoicePreviewModal.bind(this)
 
     this.options = {
       paginationPosition: 'top',
@@ -152,6 +156,22 @@ class CustomerInvoice extends React.Component {
     }
   }
 
+  postInvoice(row){
+    console.log(row)
+    const postingRequestModel = {
+      amount : row.invoiceAmount,
+      postingRefId: row.id,
+      postingRefType: 'INVOICE'
+    }
+    this.props.customerInvoiceActions.postInvoice(postingRequestModel).then(res => {
+    if (res.status === 200) {
+      this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
+     }
+    }).catch(err => {
+       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    })
+  }
+
 
   renderInvoiceNumber(cell, row) {
     return (
@@ -193,6 +213,8 @@ class CustomerInvoice extends React.Component {
   }
 
 
+  
+
 
   renderActions(cell, row) {
     return (
@@ -215,17 +237,17 @@ class CustomerInvoice extends React.Component {
               <i className="fas fa-edit" /> Edit
               </div>
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem onClick={()=>{this.postInvoice(row)}}>
               <i className="fas fa-heart" /> Post
+            </DropdownItem>
+            <DropdownItem  onClick={()=>{this.openInvoicePreviewModal()}}>
+              <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-adjust" /> Adjust
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-upload" /> Send
-            </DropdownItem>
-            <DropdownItem>
-              <i className="fas fa-print" /> Print
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-times" /> Cancel
@@ -325,6 +347,14 @@ class CustomerInvoice extends React.Component {
 
   handleSearch() {
     this.initializeData()
+  }
+
+  openInvoicePreviewModal() {
+    this.setState({ openInvoicePreviewModal: true })
+  }
+
+  closeInvoicePreviewModal(res) {
+    this.setState({ openInvoicePreviewModal: false })
   }
 
   render() {
@@ -588,7 +618,10 @@ class CustomerInvoice extends React.Component {
             </CardBody>
           </Card>
         </div>
-
+        <PreviewInvoiceModal
+          openInvoicePreviewModal={this.state.openInvoicePreviewModal}
+          closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
+        />
       </div>
 
 

@@ -400,7 +400,7 @@ class CreateSupplierInvoice extends React.Component {
     const { term } = this.state
     const values = value ? value : props.values.invoiceDate
     if(term && values) {  
-      const date = moment(values).add(term-1,'days').format('DD-MM-YYYY')
+      const date = moment(values).add(term-1,'days').format('DD/MM/YYYY')
       props.setFieldValue('invoiceDueDate', date,true)
     }
   }

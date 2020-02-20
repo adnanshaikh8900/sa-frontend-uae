@@ -483,10 +483,11 @@ class CreateCustomerInvoice extends React.Component {
       notes
     } = data
 
-    let formData = new FormData();
+    const formData = new FormData()
+
     formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
     formData.append("invoiceDate", invoiceDate ? invoiceDate : null);
-    formData.append("invoiceDueDate",invoiceDueDate ? moment(invoiceDueDate).toDate() : null);
+    formData.append("invoiceDueDate",invoiceDueDate ? moment(invoiceDueDate,'DD/MM/YYYY').toDate() : null);
     formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
     formData.append("contactPoNumber", contact_po_number !== null ? contact_po_number : "");
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription !== null ? receiptAttachmentDescription : "");
@@ -630,43 +631,43 @@ class CreateCustomerInvoice extends React.Component {
 
                           // })
                         }}
-                        validationSchema={
-                          Yup.object().shape({
-                            invoice_number: Yup.string()
-                              .required("Invoice Number is Required"),
-                            contactId: Yup.string()
-                              .required("Customer is Required"),
-                            invoiceDate: Yup.date()
-                              .required('Invoice Date is Required'),
-                            invoiceDueDate: Yup.string()
-                              .required('Invoice Due Date is Required'),
-                            lineItemsString: Yup.array()
-                              .required('Atleast one invoice sub detail is mandatory')
-                              .of(Yup.object().shape({
-                                description: Yup.string().required("Value is Required"),
-                                quantity: Yup.number().required("Value is Required"),
-                                unitPrice: Yup.number().required("Value is Required"),
-                                vatCategoryId: Yup.string().required("Value is Required"),
-                              })),
-                            attachmentFile: Yup.mixed()
-                              .test('fileType', "*Unsupported File Format", value => {
-                                if (value && !this.supported_format.includes(value.type)) {
-                                  this.setState({
-                                    fileName: value.name
-                                  })
-                                  return false
-                                } else {
-                                  return true
-                                }
-                              })
-                              .test('fileSize', "*File Size is too large", value => {
-                                if (value && value.size >= this.file_size) {
-                                  return false
-                                } else {
-                                  return true
-                                }
-                              })
-                          })}
+                        // validationSchema={
+                        //   Yup.object().shape({
+                        //     invoice_number: Yup.string()
+                        //       .required("Invoice Number is Required"),
+                        //     contactId: Yup.string()
+                        //       .required("Customer is Required"),
+                        //     invoiceDate: Yup.date()
+                        //       .required('Invoice Date is Required'),
+                        //     invoiceDueDate: Yup.string()
+                        //       .required('Invoice Due Date is Required'),
+                        //     lineItemsString: Yup.array()
+                        //       .required('Atleast one invoice sub detail is mandatory')
+                        //       .of(Yup.object().shape({
+                        //         description: Yup.string().required("Value is Required"),
+                        //         quantity: Yup.number().required("Value is Required"),
+                        //         unitPrice: Yup.number().required("Value is Required"),
+                        //         vatCategoryId: Yup.string().required("Value is Required"),
+                        //       })),
+                        //     attachmentFile: Yup.mixed()
+                        //       .test('fileType', "*Unsupported File Format", value => {
+                        //         if (value && !this.supported_format.includes(value.type)) {
+                        //           this.setState({
+                        //             fileName: value.name
+                        //           })
+                        //           return false
+                        //         } else {
+                        //           return true
+                        //         }
+                        //       })
+                        //       .test('fileSize', "*File Size is too large", value => {
+                        //         if (value && value.size >= this.file_size) {
+                        //           return false
+                        //         } else {
+                        //           return true
+                        //         }
+                        //       })
+                        //   })}
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>

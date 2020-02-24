@@ -589,10 +589,7 @@ class CreateCustomerInvoice extends React.Component {
     const {
       data,
       discountOptions,
-      discount_option,
       initValue,
-      selectedContact,
-      disabledDate
     } = this.state
 
     const { project_list, contact_list, currency_list, customer_list } = this.props
@@ -1050,7 +1047,7 @@ class CreateCustomerInvoice extends React.Component {
                                         <Row>
                                           <Col lg={6}>
                                             <FormGroup>
-                                              <Label htmlFor="discountType">Discount Type(TBD)</Label>
+                                              <Label htmlFor="discountType">Discount Type</Label>
                                               <Select
                                                 className="select-default-width"
                                                 options={discountOptions}
@@ -1095,7 +1092,7 @@ class CreateCustomerInvoice extends React.Component {
                                         <Row>
                                           <Col lg={6} className="mt-4">
                                             <FormGroup>
-                                              <Label htmlFor="discount">Discount Amount(TBD)</Label>
+                                              <Label htmlFor="discount">Discount Amount</Label>
                                               <Input
                                                 id="discount"
                                                 name="discount"

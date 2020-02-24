@@ -23,12 +23,15 @@ import * as html2canvas from 'html2canvas'
 import { PDFExport, savePDF } from '@progress/kendo-react-pdf';
 import './style.scss'
 
+import moment from 'moment'
+
 class PreviewInvoiceModal extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
             loading: false,
+            invoiceData: {}
         }
     }
 
@@ -36,9 +39,21 @@ class PreviewInvoiceModal extends React.Component {
         this.pdfExportComponent.save();
     }
 
+    componentWillUpdate(nextProps, nextState) {
+        if (nextProps.id !== this.props.id && nextProps.id) {
+            nextProps.getInvoiceById(nextProps.id).then(res => {
+                if (res.status === 200) {
+                    this.setState({
+                        invoiceData: res.data
+                    })
+                }
+            })
+        }
+    }
+
     render() {
         const { openInvoicePreviewModal, closeInvoicePreviewModal } = this.props
-        const { initValue } = this.state
+        const { invoiceData } = this.state
         return (
             <div className="contact-modal-screen">
                 <Modal isOpen={openInvoicePreviewModal}
@@ -48,8 +63,8 @@ class PreviewInvoiceModal extends React.Component {
                     <ModalBody>
                         <PDFExport ref={(component) => this.pdfExportComponent = component}>
                             <Card id="singlePage" className="box">
-                            <div class="ribbon ribbon-top-left"><span>Draft</span></div>
-                                <CardBody style={{marginTop: '7rem'}}>
+                                <div className="ribbon ribbon-top-left"><span>{invoiceData.status}</span></div>
+                                <CardBody style={{ marginTop: '7rem' }}>
                                     <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
                                         <div style={{ width: '60%' }}>
                                             <h6 className="mb-3">VAT Department:</h6>
@@ -58,9 +73,9 @@ class PreviewInvoiceModal extends React.Component {
                                             <div>Peshawar KPK 25000</div>
                                             <div>UNITED ARAB EMIRATES</div>
                                         </div>
-                                        <div style={{ width: '40%', textAlign: 'right' }}>
-                                            <h1 style={{ fontSize: '2.5rem' }}>Invoice</h1>
-                                            <p># invoice-000002 </p>
+                                        <div style={{ width: '40%',textAlign: 'right' }}>
+                                            <h1>Invoice</h1>
+                                            <p># {invoiceData.referenceNumber}</p>
                                             <p>Balance Due<br />
                                                 <b style={{ fontWeight: '600' }}>AED 20000</b>
                                             </p>
@@ -75,66 +90,45 @@ class PreviewInvoiceModal extends React.Component {
                                         </div>
                                         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
                                             <div style={{ width: '100%' }}>
-                                                <div style={{ display: 'flex',justifyContent: 'flex-end' }}>
-                                                    <label style={{  marginBottom: '1rem', textAlign: 'right' }}>Invoice Date : </label>
-                                                    <p style={{  textAlign: 'right',width: '20%' }}>24 Jan 2020</p>
+                                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                                    <label style={{ marginBottom: '1rem', textAlign: 'right' }}>Invoice Date : </label>
+                                                    <p style={{ textAlign: 'right', width: '20%' }}>{moment(invoiceData.invoiceDate).format("DD MMM YYYY")}</p>
                                                 </div>
-                                                <div style={{ display: 'flex',justifyContent: 'flex-end' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                                                     <label style={{ marginBottom: '1rem', textAlign: 'right' }}>Term : </label>
-                                                    <p style={{  textAlign: 'right',width: '20%' }}>Due on Receipt</p>
+                                                    <p style={{ textAlign: 'right', width: '20%' }}>Due on Receipt</p>
                                                 </div>
-                                                <div style={{ display: 'flex',justifyContent: 'flex-end' }}>
-                                                    <label style={{  marginBottom: '1rem', textAlign: 'right' }}>Due Date : </label>
-                                                    <p style={{  textAlign: 'right',width: '20%' }}>24 Jan 2020</p>
+                                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                                    <label style={{ marginBottom: '1rem', textAlign: 'right' }}>Due Date : </label>
+                                                    <p style={{ textAlign: 'right', width: '20%' }}>{moment(invoiceData.invoiceDueDate).format("DD MMM YYYY")}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
+                                    {console.log(invoiceData.inv)}
                                     <Table striped responsive>
                                         <thead style={{ background: 'black' }}>
                                             <tr style={{ color: 'white' }}>
                                                 <th className="center" style={{ padding: '0.5rem' }}>#</th>
-                                                <th style={{ padding: '0.5rem' }}>Item</th>
+                                                {/* <th style={{ padding: '0.5rem' }}>Item</th> */}
                                                 <th style={{ padding: '0.5rem' }}>Description</th>
                                                 <th className="center" style={{ padding: '0.5rem' }}>Quantity</th>
-                                                <th className="right" style={{ padding: '0.5rem' }}>Unit Cost</th>
-                                                <th className="right" style={{ padding: '0.5rem' }}>Total</th>
+                                                <th style={{ padding: '0.5rem', textAlign: 'right' }}>Unit Cost</th>
+                                                <th style={{ padding: '0.5rem', textAlign: 'right' }}>Sub Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td className="center">1</td>
-                                                <td className="left">Origin License</td>
-                                                <td className="left">Extended License</td>
-                                                <td className="center">1</td>
-                                                <td className="right">$999,00</td>
-                                                <td className="right">$999,00</td>
-                                            </tr>
-                                            <tr>
-                                                <td className="center">2</td>
-                                                <td className="left">Custom Services</td>
-                                                <td className="left">Instalation and Customization (cost per hour)</td>
-                                                <td className="center">20</td>
-                                                <td className="right">$150,00</td>
-                                                <td className="right">$3.000,00</td>
-                                            </tr>
-                                            <tr>
-                                                <td className="center">3</td>
-                                                <td className="left">Hosting</td>
-                                                <td className="left">1 year subcription</td>
-                                                <td className="center">1</td>
-                                                <td className="right">$499,00</td>
-                                                <td className="right">$499,00</td>
-                                            </tr>
-                                            <tr>
-                                                <td className="center">4</td>
-                                                <td className="left">Platinum Support</td>
-                                                <td className="left">1 year subcription 24/7</td>
-                                                <td className="center">1</td>
-                                                <td className="right">$3.999,00</td>
-                                                <td className="right">$3.999,00</td>
-                                            </tr>
+                                            {invoiceData.invoiceLineItems && invoiceData.invoiceLineItems.length && invoiceData.invoiceLineItems.map((item, index) => {
+                                                return (
+                                                    <tr key={index}>
+                                                        <td className="center">{index}</td>
+                                                        <td className="left">{item.description}</td>
+                                                        <td className="left">{item.quantity}</td>
+                                                        <td style={{ textAlign: 'right' }}>{item.unitPrice}</td>
+                                                        <td style={{ textAlign: 'right' }}>{item.subTotal}</td>
+                                                    </tr>
+                                                )
+                                            })}
                                         </tbody>
                                     </Table>
                                     <Row>
@@ -148,16 +142,16 @@ class PreviewInvoiceModal extends React.Component {
                                                         <td className="right">$8.497,00</td>
                                                     </tr>
                                                     <tr style={{ textAlign: 'right' }}>
-                                                        <td className="left"><strong>Discount (20%)</strong></td>
-                                                        <td className="right">$1,699,40</td>
+                                                        <td className="left"><strong>Discount ({invoiceData.discountPercentage ? `${invoiceData.discountPercentage}%` : ''})</strong></td>
+                                                        <td className="right">${invoiceData.discount} </td>
                                                     </tr>
                                                     <tr style={{ textAlign: 'right' }}>
-                                                        <td className="left"><strong>VAT (10%)</strong></td>
-                                                        <td className="right">$679,76</td>
+                                                        <td className="left"><strong>VAT</strong></td>
+                                                        <td className="right">${invoiceData.totalVatAmount}</td>
                                                     </tr>
                                                     <tr style={{ textAlign: 'right' }}>
                                                         <td className="left"><strong>Total</strong></td>
-                                                        <td className="right"><strong>$7.477,36</strong></td>
+                                                        <td className="right"><strong>${invoiceData.totalAmount}</strong></td>
                                                     </tr>
                                                     <tr style={{ textAlign: 'right' }}>
                                                         <td className="left"><strong>Balance Due</strong></td>

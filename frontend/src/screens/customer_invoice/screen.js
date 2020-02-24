@@ -74,6 +74,7 @@ class CustomerInvoice extends React.Component {
         contactType: 2,
       },
       selectedRows: [],
+      selectedId: '',
       openInvoicePreviewModal: false,
 
     }
@@ -240,7 +241,7 @@ class CustomerInvoice extends React.Component {
             <DropdownItem onClick={()=>{this.postInvoice(row)}}>
               <i className="fas fa-heart" /> Post
             </DropdownItem>
-            <DropdownItem  onClick={()=>{this.openInvoicePreviewModal()}}>
+            <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
@@ -349,8 +350,14 @@ class CustomerInvoice extends React.Component {
     this.initializeData()
   }
 
-  openInvoicePreviewModal() {
-    this.setState({ openInvoicePreviewModal: true })
+  openInvoicePreviewModal(id) {
+    this.setState({ 
+      selectedId: id
+    },()=>{
+      this.setState({
+        openInvoicePreviewModal: true
+      }) 
+    })
   }
 
   closeInvoicePreviewModal(res) {
@@ -621,6 +628,8 @@ class CustomerInvoice extends React.Component {
         <PreviewInvoiceModal
           openInvoicePreviewModal={this.state.openInvoicePreviewModal}
           closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
+          getInvoiceById = {this.props.customerInvoiceActions.getInvoiceById}
+          id = {this.state.selectedId}
         />
       </div>
 

@@ -72,7 +72,7 @@ export const createBankAccount = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: 'rest/bank',
+      url: '/rest/bank/save',
       data: obj
     }
     return authApi(data).then(res => {

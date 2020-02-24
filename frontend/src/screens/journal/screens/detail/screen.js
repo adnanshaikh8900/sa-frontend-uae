@@ -152,9 +152,8 @@ class DetailJournal extends React.Component {
     return (
       <Button
         size="sm"
-        disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
+        disabled={props.values.postingReferenceType === 'MANUAL' || this.state.data.length > 2 ? false : true}
         className="btn-twitter btn-brand icon"
-        // disabled={this.state.data.length === 1 ? false : true}
         onClick={e => {
           this.deleteRow(e, rows, props);
         }}
@@ -372,8 +371,6 @@ class DetailJournal extends React.Component {
           props.touched.journalLineItems &&
           props.touched.journalLineItems[idx]
         ) {
-          console.log(props.touched.journalLineItems[idx].vatCategoryId);
-          console.log(props.errors);
         }
       }
     });
@@ -519,19 +516,25 @@ class DetailJournal extends React.Component {
   selectItem(e, row, name, form, field) {
     e.preventDefault();
     let idx;
-    const data = this.state.data;
+    const data = this.state.data
     data.map((obj, index) => {
       if (obj.id === row.id) {
-        obj[name] = e.target.value;
-        idx = index;
+        if(name === 'debitAmount') { obj[name] = e.target.value;obj['creditAmount'] = 0}
+        else if(name === 'creditAmount') {obj[name] = e.target.value;obj['debitAmount'] = 0}
+        else obj[name] = e.target.value
+        idx = index
       }
     });
-    if (
-      name === "debitAmount" ||
-      name === "creditAmount" ||
-      name === "vatCategoryId"
-    ) {
-      form.setFieldValue(field.name, this.state.data[idx][name], true);
+    if (name === 'debitAmount') {
+      form.setFieldValue(`journalLineItems.[${idx}].creditAmount`, 0, true)
+      form.setFieldValue(field.name, this.state.data[idx][name], true)
+      this.updateAmount(data);
+    } else if(name === 'creditAmount') {
+      form.setFieldValue(field.name, this.state.data[idx][name], true)
+      form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
+      this.updateAmount(data);
+    } else if(name === 'vatCategoryId') {
+      form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
     } else {
       this.setState({ data: data }, () => {
@@ -541,7 +544,6 @@ class DetailJournal extends React.Component {
   }
 
   deleteRow(e, row, props) {
-    console.log(row);
     const id = row["id"];
     let newData = [];
     e.preventDefault();

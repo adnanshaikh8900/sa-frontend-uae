@@ -583,9 +583,7 @@ class DetailCustomerInvoice extends React.Component {
     const {
       data,
       discountOptions,
-      discount_option,
       initValue,
-      selectedContact,
       loading,
       dialog
     } = this.state
@@ -802,7 +800,7 @@ class DetailCustomerInvoice extends React.Component {
                                     dropdownMode="select"
                                     value={props.values.invoiceDate}
                                     onChange={(value) => {
-                                      props.handleChange("invoiceDate")(value)
+                                      props.handleChange("invoiceDate")(moment(value).format('DD/MM/YYYY'))
                                       this.setDate(props,value)
                                     }}
                                     className={`form-control ${props.errors.invoiceDate && props.touched.invoiceDate ? "is-invalid" : ""}`}
@@ -1001,7 +999,7 @@ class DetailCustomerInvoice extends React.Component {
                                     </BootstrapTable>
                                   </Col>
                                 </Row>
-                                {data.length > 0 ?
+                                {data.length > 0 &&
                                   (
                                     <Row>
                                       <Col lg={8}>
@@ -1024,7 +1022,7 @@ class DetailCustomerInvoice extends React.Component {
                                         <Row>
                                           <Col lg={6}>
                                             <FormGroup>
-                                              <Label htmlFor="discountType">Discount Type(TBD)</Label>
+                                              <Label htmlFor="discountType">Discount Type</Label>
                                               <Select
                                                 className="select-default-width"
                                                 options={discountOptions}
@@ -1069,7 +1067,7 @@ class DetailCustomerInvoice extends React.Component {
                                         <Row>
                                           <Col lg={6} className="mt-4">
                                             <FormGroup>
-                                              <Label htmlFor="discount">Discount Amount(TBD)</Label>
+                                              <Label htmlFor="discount">Discount Amount</Label>
                                               <Input
                                                 id="discount"
                                                 name="discount"
@@ -1134,8 +1132,6 @@ class DetailCustomerInvoice extends React.Component {
                                       </Col>
                                     </Row>
                                   )
-                                  :
-                                  null
                                 }
                                 <Row>
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">

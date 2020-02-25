@@ -65,8 +65,16 @@ class CreateJournal extends React.Component {
         contactId: '',
         debitAmount: 0,
         creditAmount: 0,
+      },{
+        id: 1,
+        description: '',
+        transactionCategoryId: '',
+        vatCategoryId: '',
+        contactId: '',
+        debitAmount: 0,
+        creditAmount: 0,
       }],
-      idCount: 0,
+      idCount: 1,
       initValue: {
         journalDate: '',
         referenceCode: '',
@@ -86,6 +94,14 @@ class CreateJournal extends React.Component {
           debitAmount: 0,
           creditAmount: 0,
           // error: []
+        },{
+          id: 1,
+          description: '',
+          transactionCategoryId: '',
+          vatCategoryId: '',
+          contactId: '',
+          debitAmount: 0,
+          creditAmount: 0,
         }]
       },
       submitJournal: false
@@ -130,7 +146,7 @@ class CreateJournal extends React.Component {
       <Button
         size="sm"
         className="btn-twitter btn-brand icon"
-        disabled={this.state.data.length === 1 ? true : false}
+        disabled={this.state.data.length <=2  ? true : false}
         onClick={(e) => { this.deleteRow(e, rows, props) }}
       >
         <i className="fas fa-trash"></i>
@@ -406,6 +422,7 @@ class CreateJournal extends React.Component {
       }), idCount: this.state.idCount + 1
     }, () => {
       this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
+      this.formRef.current.setFieldTouched(`journalLineItems[${this.state.data.length - 1}]`, false, true)
     })
   }
 
@@ -415,11 +432,21 @@ class CreateJournal extends React.Component {
     const data = this.state.data
     data.map((obj, index) => {
       if (obj.id === row.id) {
-        obj[name] = e.target.value
+        if(name === 'debitAmount') { obj[name] = e.target.value;obj['creditAmount'] = 0}
+        else if(name === 'creditAmount') {obj[name] = e.target.value;obj['debitAmount'] = 0}
+        else obj[name] = e.target.value
         idx = index
       }
     });
-    if (name === 'debitAmount' || name === 'creditAmount' || name === 'vatCategoryId') {
+    if (name === 'debitAmount') {
+      form.setFieldValue(`journalLineItems.[${idx}].creditAmount`, 0, true)
+      form.setFieldValue(field.name, this.state.data[idx][name], true)
+      this.updateAmount(data);
+    } else if(name === 'creditAmount') {
+      form.setFieldValue(field.name, this.state.data[idx][name], true)
+      form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
+      this.updateAmount(data)
+    } else if(name === 'vatCategoryId') {
       form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
     } else {
@@ -440,6 +467,8 @@ class CreateJournal extends React.Component {
     // console.log(newData)
     props.setFieldValue('journalLineItems', newData, true)
     this.updateAmount(newData)
+    // const index = data.findIndex(item => item.id === id)
+    // if(index <= newData.length) props.setFieldTouched(`journalLineItems[${index}]`, false,true)
   }
 
 
@@ -480,7 +509,7 @@ class CreateJournal extends React.Component {
   handleSubmit(values, resetForm) {
 
     const { data, initValue } = this.state
-    // const postData = {...initValue,...values,...{journalLineItems: this.state.data}}
+    const postData = {...initValue,...values,...{journalLineItems: this.state.data}}
     if(initValue.totalCreditAmount == initValue.totalDebitAmount) {
         data.map(item => {
           delete item.id
@@ -592,7 +621,7 @@ class CreateJournal extends React.Component {
                                   creditAmount: Yup.number().required(),
                                 })
                               )
-                              .min(2, '*Atleast Two Journal Debit and Credit Details is mandatory')
+                              .min(2,'Atleast Two Journal Debit and Credit Details is mandatory')
                           })
                         }
                       >
@@ -679,7 +708,7 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={12} className="mb-3">
                                 <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
-                                  disabled={this.checkedRow() ? true : false}
+                                  // disabled={this.checkedRow() ? true : false}
                                 >
                                   <i className="fa fa-plus"></i> Add More
                             </Button>
@@ -687,11 +716,11 @@ class CreateJournal extends React.Component {
                             </Row>
                             {props.errors.journalLineItems && typeof props.errors.journalLineItems === 'string' && (
                               <div className={props.errors.journalLineItems ? "is-invalid" : ""}>
-                                <div className="invalid-feedback">{props.errors.journalLineItems}</div>
+                                <div className="invalid-feedback"><Badge color="danger" style={{padding: '10px',marginBottom: '5px'}}>{props.errors.journalLineItems}</Badge></div>
                               </div>
                             )}
-                            {this.state.submitJournal && this.state.initValue.totalCreditAmount !== this.state.initValue.totalDebitAmount && <div className={this.state.initValue.totalDebitAmount !== this.state.initValue.totalCreditAmount  ? "is-invalid" : ""}>
-                              <div className="invalid-feedback">*Total Credit Amount and Total Debit Amount Should be Equal</div>
+                            {this.state.submitJournal && this.state.initValue.totalCreditAmount.toFixed(2) !== this.state.initValue.totalDebitAmount.toFixed(2) && <div className={this.state.initValue.totalDebitAmount !== this.state.initValue.totalCreditAmount  ? "is-invalid" : ""}>
+                              <div className="invalid-feedback"><Badge color="danger" style={{padding: '10px',marginBottom: '5px'}}>*Total Credit Amount and Total Debit Amount Should be Equal</Badge></div>
                             </div>}
                             <Row>
                               <Col lg={12}>
@@ -847,5 +876,4 @@ class CreateJournal extends React.Component {
     )
   }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(CreateJournal)

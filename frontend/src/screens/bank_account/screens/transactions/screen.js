@@ -122,7 +122,7 @@ class BankTransactions extends React.Component {
       pageSize: this.options.sizePerPage
     }
     if (this.props.location.state && this.props.location.state.bankAccountId) {
-      const postData = { ...filterData, ...data ,id: this.props.location.state.bankAccountId}
+      const postData = { ...filterData, ...data, id: this.props.location.state.bankAccountId }
       this.props.transactionsActions.getTransactionList(postData).then(res => {
         this.props.transactionsActions.getTransactionTypeList();
         if (res.status === 200) {
@@ -269,7 +269,7 @@ class BankTransactions extends React.Component {
       statusOptions,
       filterData
     } = this.state
-    const { bank_transaction_list,transaction_type_list} = this.props
+    const { bank_transaction_list, transaction_type_list } = this.props
 
     return (
       <div className="bank-transaction-screen">
@@ -365,7 +365,7 @@ class BankTransactions extends React.Component {
                             </FormGroup>
                           </Col>
                           <Col lg={2} className="mb-1">
-                          <DatePicker
+                            <DatePicker
                               className="form-control"
                               id="date"
                               name="transactionDate"
@@ -381,10 +381,10 @@ class BankTransactions extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
-                                <i className="fa fa-search"></i>
-                              </Button>
-                            </Col>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                              <i className="fa fa-search"></i>
+                            </Button>
+                          </Col>
                         </Row>
                       </div>
                       <div>

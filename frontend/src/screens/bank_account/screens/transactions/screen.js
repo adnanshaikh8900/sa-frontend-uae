@@ -55,7 +55,7 @@ class BankTransactions extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       openDeleteModal: false,
       typeOptions: [
         { value: 'Withdrawal', label: 'Withdrawal' },
@@ -220,9 +220,9 @@ class BankTransactions extends React.Component {
             <DropdownItem>
               <i className="fas fa-wrench" /> Archive
             </DropdownItem>
-            <DropdownItem>
+            {/* <DropdownItem>
               <i className="fa fa-trash" /> Delete
-            </DropdownItem>
+            </DropdownItem> */}
           </DropdownMenu>
         </ButtonDropdown>
       </div>

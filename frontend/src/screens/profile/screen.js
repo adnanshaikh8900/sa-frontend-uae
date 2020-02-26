@@ -497,7 +497,7 @@ class Profile extends React.Component {
                                             // withIcon={true}
                                             buttonText='Choose images'
                                             onChange={this.uploadUserImage}
-                                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                            imgExtension={['.jpg', '.gif', '.png', '.gif','.jpeg']}
                                             maxFileSize={1048576}
                                             withPreview={true}
                                             singleImage={true}

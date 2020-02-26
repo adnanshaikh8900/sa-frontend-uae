@@ -11,7 +11,8 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
+  Label,
+  Badge
 } from "reactstrap";
 import Select from "react-select";
 import {
@@ -519,8 +520,8 @@ class DetailJournal extends React.Component {
     const data = this.state.data
     data.map((obj, index) => {
       if (obj.id === row.id) {
-        if(name === 'debitAmount') { obj[name] = e.target.value;obj['creditAmount'] = 0}
-        else if(name === 'creditAmount') {obj[name] = e.target.value;obj['debitAmount'] = 0}
+        if (name === 'debitAmount') { obj[name] = e.target.value; obj['creditAmount'] = 0 }
+        else if (name === 'creditAmount') { obj[name] = e.target.value; obj['debitAmount'] = 0 }
         else obj[name] = e.target.value
         idx = index
       }
@@ -529,11 +530,11 @@ class DetailJournal extends React.Component {
       form.setFieldValue(`journalLineItems.[${idx}].creditAmount`, 0, true)
       form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
-    } else if(name === 'creditAmount') {
+    } else if (name === 'creditAmount') {
       form.setFieldValue(field.name, this.state.data[idx][name], true)
       form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
       this.updateAmount(data);
-    } else if(name === 'vatCategoryId') {
+    } else if (name === 'vatCategoryId') {
       form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
     } else {
@@ -637,29 +638,29 @@ class DetailJournal extends React.Component {
 
   handleSubmit(values) {
     const { data, initValue } = this.state;
-    
+
     // const postData = { ...values, ...calData, ...{ journalLineItems: this.state.data } }
     if (initValue.totalCreditAmount == initValue.totalDebitAmount) {
-        data.map(item => {
-          delete item.id;
-          item.transactionCategoryId = item.transactionCategoryId
-            ? item.transactionCategoryId
-            : "";
-          item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : "";
-          item.contactId = item.contactId ? item.contactId : "";
-        });
-        const postData = {
-          journalId: values.journalId,
-          journalDate: values.journalDate ? values.journalDate : "",
-          referenceCode: values.referenceCode ? values.referenceCode : "",
-          description: values.description ? values.description : "",
-          currencyCode: values.currencyCode ? values.currencyCode : "",
-          subTotalCreditAmount: initValue.subTotalCreditAmount,
-          subTotalDebitAmount: initValue.subTotalDebitAmount,
-          totalCreditAmount: initValue.totalCreditAmount,
-          totalDebitAmount: initValue.totalDebitAmount,
-          journalLineItems: data
-        };
+      data.map(item => {
+        delete item.id;
+        item.transactionCategoryId = item.transactionCategoryId
+          ? item.transactionCategoryId
+          : "";
+        item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : "";
+        item.contactId = item.contactId ? item.contactId : "";
+      });
+      const postData = {
+        journalId: values.journalId,
+        journalDate: values.journalDate ? values.journalDate : "",
+        referenceCode: values.referenceCode ? values.referenceCode : "",
+        description: values.description ? values.description : "",
+        currencyCode: values.currencyCode ? values.currencyCode : "",
+        subTotalCreditAmount: initValue.subTotalCreditAmount,
+        subTotalDebitAmount: initValue.subTotalDebitAmount,
+        totalCreditAmount: initValue.totalCreditAmount,
+        totalDebitAmount: initValue.totalDebitAmount,
+        journalLineItems: data
+      };
       this.props.journalDetailActions
         .updateJournal(postData)
         .then(res => {
@@ -741,9 +742,7 @@ class DetailJournal extends React.Component {
                                     creditAmount: Yup.number().required()
                                   })
                                 )
-                                .required(
-                                  "*Atleast One Journal Debit and Credit Details is mandatory"
-                                )
+                                .min(2, 'Atleast Two Journal Debit and Credit Details is mandatory')
                             })}
                           >
                             {props => (
@@ -867,32 +866,21 @@ class DetailJournal extends React.Component {
                                       color="primary"
                                       className="btn-square mr-3"
                                       onClick={this.addRow}
-                                      disabled={this.checkedRow() ? false : true}
+                                      // disabled={this.checkedRow() ? false : true}
                                     >
                                       <i className="fa fa-plus"></i> Add More
                                   </Button>
                                     }
                                   </Col>
                                 </Row>
-                                {props.errors.journalLineItems &&
-                                  props.touched.journalLineItems &&
-                                  typeof props.errors.journalLineItems ===
-                                  "string" && (
-                                    <div
-                                      className={
-                                        props.errors.journalLineItems
-                                          ? "is-invalid"
-                                          : ""
-                                      }
-                                    >
-                                      <div className="invalid-feedback">
-                                        {props.errors.journalLineItems}
-                                      </div>
-                                    </div>
-                                  )}
 
-                                {this.state.submitJournal && this.state.initValue.totalCreditAmount !== this.state.initValue.totalDebitAmount && <div className={this.state.initValue.totalDebitAmount !== this.state.initValue.totalCreditAmount ? "is-invalid" : ""}>
-                                  <div className="invalid-feedback">*Total Credit Amount and Total Debit Amount Should be Equal</div>
+                                {props.errors.journalLineItems && typeof props.errors.journalLineItems === 'string' && (
+                                  <div className={props.errors.journalLineItems ? "is-invalid" : ""}>
+                                    <div className="invalid-feedback"><Badge color="danger" style={{ padding: '10px', marginBottom: '5px' }}>{props.errors.journalLineItems}</Badge></div>
+                                  </div>
+                                )}
+                                {this.state.submitJournal && this.state.initValue.totalCreditAmount.toFixed(2) !== this.state.initValue.totalDebitAmount.toFixed(2) && <div className={this.state.initValue.totalDebitAmount !== this.state.initValue.totalCreditAmount ? "is-invalid" : ""}>
+                                  <div className="invalid-feedback"><Badge color="danger" style={{ padding: '10px', marginBottom: '5px' }}>*Total Credit Amount and Total Debit Amount Should be Equal</Badge></div>
                                 </div>}
 
                                 <Row>
@@ -1046,7 +1034,7 @@ class DetailJournal extends React.Component {
                                     className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
                                   >
                                     <FormGroup>
-                                     <Button
+                                      <Button
                                         type="button"
                                         color="danger"
                                         className="btn-square"
@@ -1054,7 +1042,7 @@ class DetailJournal extends React.Component {
                                       >
                                         <i className="fa fa-trash"></i> Delete
                                     </Button>
-                                      
+
                                     </FormGroup>
                                     <FormGroup className="text-right">
                                       {props.values.postingReferenceType === 'MANUAL' && <Button
@@ -1065,8 +1053,8 @@ class DetailJournal extends React.Component {
                                         onClick={() => {
                                           this.setState({
                                             submitJournal: true
-                                          },()=>{
-                                          props.handleSubmit();
+                                          }, () => {
+                                            props.handleSubmit();
                                           })
                                         }}
                                       >

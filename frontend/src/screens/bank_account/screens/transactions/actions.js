@@ -90,6 +90,20 @@ export const getProjectList = () => {
   }
 }
 
+export const deleteTransaction = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'delete',
+      url: `/rest/transaction/delete?id=${id}`
+    }
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
 // data: [{
 //   transaction_type: 'Debit',
 //   amount: 3453246,

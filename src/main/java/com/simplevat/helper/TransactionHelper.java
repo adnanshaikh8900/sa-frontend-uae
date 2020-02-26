@@ -61,7 +61,7 @@ public class TransactionHelper {
 		if (transactionModel.getId() != null) {
 			transaction = transactionService.findByPK(transactionModel.getId());
 		}
-		
+
 		if (transactionModel.getBankAccountId() != null) {
 			BankAccount bankAccount = bankAccountService.getBankAccountById(transactionModel.getBankAccountId());
 			bankAccount.setBankAccountId(transactionModel.getBankAccountId());
@@ -130,6 +130,9 @@ public class TransactionHelper {
 							: 0.0);
 					transactionModel.setWithdrawalAmount(0.0);
 				}
+				transactionModel.setTransactionTypeName(transaction.getTransactionType() != null
+						? transaction.getTransactionType().getTransactionTypeName()
+						: "-");
 				transactionModelList.add(transactionModel);
 			}
 		}

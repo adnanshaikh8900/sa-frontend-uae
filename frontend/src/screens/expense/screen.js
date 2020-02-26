@@ -11,6 +11,10 @@ import {
   ButtonGroup,
   FormGroup,
   Input,
+  ButtonDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from 'reactstrap'
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
@@ -57,9 +61,10 @@ class Expense extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       dialog: null,
       selectedRows: [],
+      actionButtons: {},
       filterData: {
         expenseDate: '',
         transactionCategoryId: '',
@@ -78,9 +83,16 @@ class Expense extends React.Component {
     this.onSelectAll = this.onSelectAll.bind(this)
     this.goToDetail = this.goToDetail.bind(this);
     this.renderDate = this.renderDate.bind(this);
+    this.renderActions = this.renderActions.bind(this)
+    this.renderInvoiceStatus = this.renderInvoiceStatus.bind(this)
+
+    this.toggleActionButton = this.toggleActionButton.bind(this)
+    this.postExpense = this.postExpense.bind(this)
+
+
 
     this.options = {
-      onRowClick: this.goToDetail,
+      // onRowClick: this.goToDetail,
       paginationPosition: 'top',
       page: 0,
       sizePerPage: 10,
@@ -164,12 +176,87 @@ class Expense extends React.Component {
     return moment(rows.expenseDate).format('DD/MM/YYYY')
   }
 
+  renderActions(cell, row) {
+    return (
+      <div>
+        <ButtonDropdown
+          isOpen={this.state.actionButtons[row.expenseId]}
+          toggle={() => this.toggleActionButton(row.expenseId)}
+        >
+          <DropdownToggle size="sm" color="primary" className="btn-brand icon">
+            {
+              this.state.actionButtons[row.expenseId] === true ?
+                <i className="fas fa-chevron-up" />
+                :
+                <i className="fas fa-chevron-down" />
+            }
+          </DropdownToggle>
+          <DropdownMenu right>
+            <DropdownItem >
+              <div onClick={() => { this.props.history.push('/admin/expense/expense/detail', { expenseId: row['expenseId'] })}}>
+              <i className="fas fa-edit" /> Edit
+              </div>
+            </DropdownItem>
+            {row.expenseStatus !== 'Post' && (
+              <DropdownItem onClick={() => { this.postExpense(row) }}>
+                <i className="fas fa-heart" /> Post
+                        </DropdownItem>
+            )}
+            {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.expenseId)}}>
+              <i className="fas fa-eye" /> View
+            </DropdownItem>
+            <DropdownItem>
+              <i className="fas fa-adjust" /> Adjust
+            </DropdownItem>
+            <DropdownItem>
+              <i className="fas fa-upload" /> Send
+            </DropdownItem>
+            <DropdownItem>
+              <i className="fas fa-times" /> Cancel
+            </DropdownItem>
+            <DropdownItem>
+              <i className="fa fa-trash-o" /> Delete
+            </DropdownItem> */}
+          </DropdownMenu>
+        </ButtonDropdown>
+      </div>
+    )
+  }
+
+  toggleActionButton(index) {
+    let temp = Object.assign({}, this.state.actionButtons)
+    if (temp[index]) {
+      temp[index] = false
+    } else {
+      temp[index] = true
+    }
+    this.setState({
+      actionButtons: temp
+    })
+  }
+
   handleChange(val, name) {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
       })
     })
+  }
+
+  renderInvoiceStatus(cell, row) {
+    let classname = ''
+    if (row.status === 'Paid') {
+      classname = 'badge-success'
+    } else if (row.status === 'Unpaid') {
+      classname = 'badge-danger'
+    } else if (row.status === 'PARTIALLY PAID') {
+      classname = "badget-info"
+    } else {
+      classname = 'badge-primary'
+    }
+    return (
+      <span className={`badge ${classname} mb-0`}>{row.expenseStatus}</span>
+    )
   }
 
   handleSearch() {
@@ -188,6 +275,24 @@ class Expense extends React.Component {
       this.options.page = page
       this.initializeData()
     }
+  }
+
+  postExpense(row){
+    const postingRequestModel = {
+      amount : row.expenseAmount,
+      postingRefId: row.expenseId,
+      postingRefType: 'EXPENSE',
+      postingChartOfAccountId: row.chartOfAccountId
+    }
+    this.props.expenseActions.postExpense(postingRequestModel).then(res => {
+    if (res.status === 200) {
+      this.props.commonActions.tostifyAlert('success', 'Expense Posted Successfully');
+      this.initializeData()
+
+     }
+    }).catch(err => {
+       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    })
   }
 
   bulkDeleteExpenses() {
@@ -384,6 +489,14 @@ class Expense extends React.Component {
                             Payee
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                            width="130"
+                            dataField="expenseStatus"
+                            dataFormat={this.renderInvoiceStatus}
+                            dataSort
+                          >
+                            Status
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
                             dataField="expenseDescription"
                             dataSort
                           >
@@ -402,11 +515,25 @@ class Expense extends React.Component {
                             Expense Amount
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                            dataField="transactionCategoryName"
+                            dataSort
+                            width="20%"
+                          >
+                            Transaction Category
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
                             dataField="expenseDate"
                             dataSort
                             dataFormat={this.renderDate}
                           >
                             Expense Date
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
+                            className="text-right"
+                            columnClassName="text-right"
+                            width="55"
+                            dataFormat={this.renderActions}
+                          >
                           </TableHeaderColumn>
                         </BootstrapTable>
                       </div>

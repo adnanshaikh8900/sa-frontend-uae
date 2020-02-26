@@ -128,7 +128,7 @@ class DetailExpense extends React.Component {
     } = data
 
     let formData = new FormData();
-    formData.append("expenseId", current_expense_id);
+    formData.append("expenseId", current_expense_id.expenseId);
     formData.append("payee", payee);
     formData.append("expenseDate", expenseDate !== null ? moment(expenseDate).utc().toDate() : "");
     formData.append("expenseDescription", expenseDescription);

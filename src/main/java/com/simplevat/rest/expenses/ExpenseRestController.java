@@ -10,6 +10,7 @@ import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.helper.ExpenseRestHelper;
+import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Product;
 import com.simplevat.entity.User;
@@ -20,6 +21,7 @@ import com.simplevat.service.UserService;
 import com.simplevat.utils.FileHelper;
 import io.swagger.annotations.ApiOperation;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -46,141 +48,146 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rest/expense")
-public class ExpenseRestController {
+public class ExpenseRestController extends AbstractDoubleEntryRestController implements Serializable {
 
-    @Autowired
-    private ExpenseService expenseService;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7383668014992304509L;
 
-    @Autowired
-    private UserService userServiceNew;
+	@Autowired
+	private ExpenseService expenseService;
 
-    @Autowired
-    private ExpenseRestHelper expenseRestHelper;
+	@Autowired
+	private UserService userServiceNew;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+	@Autowired
+	private ExpenseRestHelper expenseRestHelper;
 
-    @Autowired
-    private FileHelper fileHelper;
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private TransactionCategoryService transactionCategoryService;
+	@Autowired
+	private FileHelper fileHelper;
 
-    @ApiOperation(value = "Get Expense List")
-    @RequestMapping(method = RequestMethod.GET, value = "/getList")
-    public ResponseEntity getExpenseList(ExpenseRequestFilterModel expenseRequestFilterModel) {
-        try {
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
 
-            Map<ExpenseFIlterEnum, Object> filterDataMap = new HashMap<ExpenseFIlterEnum, Object>();
-            filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
-            if (expenseRequestFilterModel.getExpenseDate() != null
-                    && !expenseRequestFilterModel.getExpenseDate().isEmpty()) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                LocalDateTime dateTime = Instant
-                        .ofEpochMilli(dateFormat.parse(expenseRequestFilterModel.getExpenseDate()).getTime())
-                        .atZone(ZoneId.systemDefault()).toLocalDateTime();
-                filterDataMap.put(ExpenseFIlterEnum.EXPENSE_DATE, dateTime);
-            }
-            if (expenseRequestFilterModel.getTransactionCategoryId() != null) {
-                filterDataMap.put(ExpenseFIlterEnum.TRANSACTION_CATEGORY,
-                        transactionCategoryService.findByPK(expenseRequestFilterModel.getTransactionCategoryId()));
-            }
-            filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
-            filterDataMap.put(ExpenseFIlterEnum.DELETE_FLAG, false);
-           
-            List<Expense> expenseList = expenseService.getExpensesList(filterDataMap);
-            if (expenseList == null) {
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity(expenseRestHelper.getExpenseList(expenseList), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+	@ApiOperation(value = "Get Expense List")
+	@RequestMapping(method = RequestMethod.GET, value = "/getList")
+	public ResponseEntity getExpenseList(ExpenseRequestFilterModel expenseRequestFilterModel) {
+		try {
 
-    @ApiOperation(value = "Add New Expense")
-    @RequestMapping(method = RequestMethod.POST, value = "/save")
-    public ResponseEntity save(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User loggedInUser = userServiceNew.findByPK(userId);
-            Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
-            expense.setCreatedBy(userId);
-            expense.setCreatedDate(LocalDateTime.now());
-            if (expenseModel.getAttachmentFile() != null && !expenseModel.getAttachmentFile().isEmpty()) {
-                String fileName = fileHelper.saveFile(expenseModel.getAttachmentFile(), FileTypeEnum.EXPENSE);
-                expense.setReceiptAttachmentFileName(expenseModel.getAttachmentFile().getOriginalFilename());
-                expense.setReceiptAttachmentPath(fileName);
-            }
-            expenseService.persist(expense);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+			Map<ExpenseFIlterEnum, Object> filterDataMap = new HashMap<ExpenseFIlterEnum, Object>();
+			filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
+			if (expenseRequestFilterModel.getExpenseDate() != null
+					&& !expenseRequestFilterModel.getExpenseDate().isEmpty()) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				LocalDateTime dateTime = Instant
+						.ofEpochMilli(dateFormat.parse(expenseRequestFilterModel.getExpenseDate()).getTime())
+						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+				filterDataMap.put(ExpenseFIlterEnum.EXPENSE_DATE, dateTime);
+			}
+			if (expenseRequestFilterModel.getTransactionCategoryId() != null) {
+				filterDataMap.put(ExpenseFIlterEnum.TRANSACTION_CATEGORY,
+						transactionCategoryService.findByPK(expenseRequestFilterModel.getTransactionCategoryId()));
+			}
+			filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
+			filterDataMap.put(ExpenseFIlterEnum.DELETE_FLAG, false);
 
-    @ApiOperation(value = "Update Expense")
-    @RequestMapping(method = RequestMethod.POST, value = "/update")
-    public ResponseEntity update(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            User loggedInUser = userServiceNew.findByPK(userId);
-            if (expenseModel.getExpenseId() != null) {
-                Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
-                if (expenseModel.getAttachmentFile() != null && !expenseModel.getAttachmentFile().isEmpty()) {
-                    String fileName = fileHelper.saveFile(expenseModel.getAttachmentFile(), FileTypeEnum.EXPENSE);
-                    expense.setReceiptAttachmentFileName(expenseModel.getAttachmentFile().getOriginalFilename());
-                    expense.setReceiptAttachmentPath(fileName);
-                }
-                expense.setLastUpdateBy(userId);
-                expense.setLastUpdateDate(LocalDateTime.now());
-                expenseService.update(expense);
-            }
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+			List<Expense> expenseList = expenseService.getExpensesList(filterDataMap);
+			if (expenseList == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity(expenseRestHelper.getExpenseList(expenseList), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 
-    @ApiOperation(value = "Get Expense Detail by Expanse Id")
-    @RequestMapping(method = RequestMethod.GET, value = "/getExpenseById")
-    public ResponseEntity getExpenseById(@RequestParam("expenseId") Integer expenseId) {
-        try {
-            Expense expense = expenseService.findByPK(expenseId);
-            ExpenseModel expenseModel = expenseRestHelper.getExpenseModel(expense);
-            return new ResponseEntity(expenseModel, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+	@ApiOperation(value = "Add New Expense")
+	@RequestMapping(method = RequestMethod.POST, value = "/save")
+	public ResponseEntity save(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			User loggedInUser = userServiceNew.findByPK(userId);
+			Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
+			expense.setCreatedBy(userId);
+			expense.setCreatedDate(LocalDateTime.now());
+			if (expenseModel.getAttachmentFile() != null && !expenseModel.getAttachmentFile().isEmpty()) {
+				String fileName = fileHelper.saveFile(expenseModel.getAttachmentFile(), FileTypeEnum.EXPENSE);
+				expense.setReceiptAttachmentFileName(expenseModel.getAttachmentFile().getOriginalFilename());
+				expense.setReceiptAttachmentPath(fileName);
+			}
+			expenseService.persist(expense);
+			return ResponseEntity.status(HttpStatus.OK).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
-    public ResponseEntity delete(@RequestParam("expenseId") Integer expenseId) {
-        try {
-            Expense expense = expenseService.findByPK(expenseId);
-            expense.setDeleteFlag(true);
-            expenseService.update(expense);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+	@ApiOperation(value = "Update Expense")
+	@RequestMapping(method = RequestMethod.POST, value = "/update")
+	public ResponseEntity update(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			User loggedInUser = userServiceNew.findByPK(userId);
+			if (expenseModel.getExpenseId() != null) {
+				Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
+				if (expenseModel.getAttachmentFile() != null && !expenseModel.getAttachmentFile().isEmpty()) {
+					String fileName = fileHelper.saveFile(expenseModel.getAttachmentFile(), FileTypeEnum.EXPENSE);
+					expense.setReceiptAttachmentFileName(expenseModel.getAttachmentFile().getOriginalFilename());
+					expense.setReceiptAttachmentPath(fileName);
+				}
+				expense.setLastUpdateBy(userId);
+				expense.setLastUpdateDate(LocalDateTime.now());
+				expenseService.update(expense);
+			}
+			return ResponseEntity.status(HttpStatus.OK).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/deletes")
-    public ResponseEntity bulkDelete(@RequestBody DeleteModel expenseIds) {
-        try {
-            expenseService.deleteByIds(expenseIds.getIds());
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+	@ApiOperation(value = "Get Expense Detail by Expanse Id")
+	@RequestMapping(method = RequestMethod.GET, value = "/getExpenseById")
+	public ResponseEntity getExpenseById(@RequestParam("expenseId") Integer expenseId) {
+		try {
+			Expense expense = expenseService.findByPK(expenseId);
+			ExpenseModel expenseModel = expenseRestHelper.getExpenseModel(expense);
+			return new ResponseEntity(expenseModel, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE, value = "/delete")
+	public ResponseEntity delete(@RequestParam("expenseId") Integer expenseId) {
+		try {
+			Expense expense = expenseService.findByPK(expenseId);
+			expense.setDeleteFlag(true);
+			expenseService.update(expense);
+			return ResponseEntity.status(HttpStatus.OK).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE, value = "/deletes")
+	public ResponseEntity bulkDelete(@RequestBody DeleteModel expenseIds) {
+		try {
+			expenseService.deleteByIds(expenseIds.getIds());
+			return ResponseEntity.status(HttpStatus.OK).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 //
 //    @RequestMapping(method = RequestMethod.GET, value = "/categories")
 //    public ResponseEntity getCategorys(@RequestParam("categoryName") String queryString) {

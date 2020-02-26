@@ -139,11 +139,12 @@ class DetailBankTransaction extends React.Component {
       attachementDescription,
     } = data
     const { transaction_id } = this.state;
+    console.log(typeof transactionDate)
 
     let formData = new FormData();
     formData.append("bankAccountId ", bankAccountId ? bankAccountId : '');
     formData.append("id", transaction_id ? transaction_id : '');
-    formData.append("transactionDate", transactionDate ? transactionDate : '');
+    formData.append("transactionDate", typeof transactionDate === 'string' ? moment(transactionDate).toDate() : transactionDate);
     formData.append("transactionDescription", transactionDescription ? transactionDescription : '');
     formData.append("transactionAmount", transactionAmount ? transactionAmount : '');
     formData.append("transactionTypeCode", transactionTypeCode ? transactionTypeCode : '');

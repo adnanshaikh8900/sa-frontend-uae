@@ -408,9 +408,9 @@ class Journal extends React.Component {
                               id="date"
                               name="journalDate"
                               placeholderText="Post Date"
-                              showMonthDropdown
-                              showYearDropdown
-                              dropdownMode="select"
+                              // showMonthDropdown
+                              // showYearDropdown
+                              // dropdownMode="select"
                               dateFormat="dd/MM/yyyy"
 
                               selected={filterData.journalDate}

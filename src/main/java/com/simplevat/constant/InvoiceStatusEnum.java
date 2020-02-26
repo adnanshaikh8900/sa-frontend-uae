@@ -14,8 +14,12 @@ import lombok.Setter;
  */
 public enum InvoiceStatusEnum {
 
-	SAVED("Saved", 1), PENDING("Pending", 2), APPROVED("Approved", 3), PARTIALLY_PAID("Partially Paid", 4),
-	PAID("Paid", 5);
+	SAVED("Saved", 1), 
+	PENDING("Pending", 2),
+	POST("Post",3), 
+	APPROVED("Approved", 4), 
+	PARTIALLY_PAID("Partially Paid", 5),
+	PAID("Paid", 6);
 
 	@Getter
 	@Setter

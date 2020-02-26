@@ -3,7 +3,6 @@ package com.simplevat.entity;
 import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
 import com.simplevat.constant.DiscountType;
-import com.simplevat.constant.InvoiceStatusEnum;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -28,6 +27,9 @@ import org.hibernate.annotations.ColumnDefault;
     @NamedQuery(name = "invoiceForDropdown",
             query = "SELECT new " + CommonConstant.DROPDOWN_MODEL_PACKAGE + "(i.id , i.referenceNumber )"
             + " FROM Invoice i where i.deleteFlag = FALSE order by i.invoiceDate ")
+    ,
+    @NamedQuery(name = "updateStatus",
+    query = "Update Invoice i set i.status = :status where id = :id ")
 
 })
 public class Invoice implements Serializable {

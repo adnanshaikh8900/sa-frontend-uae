@@ -302,6 +302,7 @@ public class TransactionImportRestHelper {
 
 					case CR_AMOUNT:
 					case DR_AMOUNT:
+					case AMOUNT:
 						trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 						MathContext mc = new MathContext(4); // 2 precision
 
@@ -314,14 +315,15 @@ public class TransactionImportRestHelper {
 								currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
 							}
 							trnx.setDebitCreditFlag(
-									(Character) dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()));
+									((String) dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()))
+											.charAt(0));
 						} else {
 							if (dataMap.containsKey(TransactionEnum.DR_AMOUNT.getDisplayName())) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
 								trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 								currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
 								trnx.setDebitCreditFlag('D');
-							} else {
+							} else if (dataMap.containsKey(TransactionEnum.CR_AMOUNT.getDisplayName())) {
 								data = (String) dataMap.get(TransactionEnum.CR_AMOUNT.getDisplayName());
 								trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 								currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);

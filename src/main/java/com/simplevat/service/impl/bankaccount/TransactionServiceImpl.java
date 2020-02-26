@@ -342,7 +342,15 @@ public class TransactionServiceImpl extends TransactionService {
 	@Override
 	public BigDecimal getCurrentBalanceByBankId(Integer bankId) {
 		Transaction trnx = transactionDao.getCurrentBalanceByBankId(bankId);
-		return trnx.getCurrentBalance();
+		if (trnx == null) {
+			BankAccount bank = bankAccountDao.findByPK(bankId);
+			if (bank != null) {
+				return bank.getCurrentBalance() != null ? bank.getCurrentBalance() : new BigDecimal(0);
+			}
+		} else {
+			return trnx.getCurrentBalance();
+		}
+		return new BigDecimal(0);
 	}
 
 	@Override
@@ -351,7 +359,8 @@ public class TransactionServiceImpl extends TransactionService {
 	}
 
 	@Override
-	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,PaginationModel paginationModel) {
-		return transactionDao. getAllTransactionList(filterModel,paginationModel);
+	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,
+			PaginationModel paginationModel) {
+		return transactionDao.getAllTransactionList(filterModel, paginationModel);
 	}
 }

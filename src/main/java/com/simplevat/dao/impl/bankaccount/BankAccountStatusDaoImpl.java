@@ -13,15 +13,15 @@ import com.simplevat.entity.bankaccount.BankAccountStatus;
 
 @Repository
 @Transactional
-public class BankAccountStatusDaoImpl implements BankAccountStatusDao{
+public class BankAccountStatusDaoImpl implements BankAccountStatusDao {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Override
 	public List<BankAccountStatus> getBankAccountStatuses() {
-		List<BankAccountStatus> bankAccountStatuses = entityManager.createNamedQuery("allBankAccountStatuses",
-				BankAccountStatus.class).getResultList();
+		List<BankAccountStatus> bankAccountStatuses = entityManager
+				.createNamedQuery("allBankAccountStatuses", BankAccountStatus.class).getResultList();
 		return bankAccountStatuses;
 	}
 
@@ -32,12 +32,11 @@ public class BankAccountStatusDaoImpl implements BankAccountStatusDao{
 
 	@Override
 	public BankAccountStatus getBankAccountStatusByName(String status) {
-		
-		BankAccountStatus bankAccounStatus = entityManager
-                .createNamedQuery("findBankAccountStatusByName", BankAccountStatus.class)
-                .setParameter("status", status)
-                .getResultList().get(0);
-		return bankAccounStatus;
+
+		List<BankAccountStatus> bankAccounStatus = entityManager
+				.createNamedQuery("findBankAccountStatusByName", BankAccountStatus.class).setParameter("status", status)
+				.getResultList();
+		return bankAccounStatus != null && !bankAccounStatus.isEmpty() ? bankAccounStatus.get(0) : null;
 	}
 
 }

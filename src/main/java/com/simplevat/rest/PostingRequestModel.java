@@ -20,5 +20,4 @@ public class PostingRequestModel implements Serializable {
     private String postingRefType;
     private Integer postingChartOfAccountId;
     private BigDecimal amount;
-
 }

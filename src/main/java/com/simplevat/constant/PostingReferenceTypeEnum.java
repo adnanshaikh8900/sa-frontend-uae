@@ -12,5 +12,6 @@ package com.simplevat.constant;
 public enum PostingReferenceTypeEnum {
     MANUAL,
     INVOICE,
+    EXPENSE,
     PURCHASE;
 }

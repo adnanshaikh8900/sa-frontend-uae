@@ -93,6 +93,9 @@ public class BankAccountController implements Serializable {
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
+	@Autowired
+	private BankHelper bankRestHelper;
+	
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
 	public ResponseEntity getBankAccountList(BankAccountFilterModel filterModel) {
@@ -130,8 +133,7 @@ public class BankAccountController implements Serializable {
 	public ResponseEntity saveBankAccount(@RequestBody BankModel bankModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			BankAccount bankAccount = BankHelper.createBankAccountByBankAccountModel(bankModel, bankAccountService,
-					bankAccountStatusService, currencyService, bankAccountTypeService, countryService);
+			BankAccount bankAccount = bankRestHelper.createBankAccountByBankAccountModel(bankModel);
 			User user = userServiceNew.findByPK(userId);
 			if (bankModel.getBankAccountId() == null) {
 				if (user != null) {
@@ -154,8 +156,7 @@ public class BankAccountController implements Serializable {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			bankModel.setBankAccountId(bankAccountId);
-			BankAccount bankAccount = BankHelper.getBankAccountByBankAccountModel(bankModel, bankAccountService,
-					bankAccountStatusService, currencyService, bankAccountTypeService, countryService);
+			BankAccount bankAccount = bankRestHelper.getBankAccountByBankAccountModel(bankModel);
 			User user = userServiceNew.findByPK(userId);
 			bankAccount.setBankAccountId(bankModel.getBankAccountId());
 			bankAccount.setLastUpdateDate(LocalDateTime.now());

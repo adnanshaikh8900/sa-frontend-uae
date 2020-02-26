@@ -470,7 +470,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	public Transaction getCurrentBalanceByBankId(Integer bankId) {
 		List<Transaction> transactions = getEntityManager().createNamedQuery("getByBankId").setParameter("id", bankId)
 				.setMaxResults(1).getResultList();
-		return transactions != null ? transactions.get(0) : null;
+		return transactions != null&& !transactions.isEmpty() ? transactions.get(0) : null;
 
 	}
 
@@ -490,7 +490,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));
-		List<Transaction> list = this.executeQuery(dbFilters,paginationModel);
+		List<Transaction> list = this.executeQuery(dbFilters);//,paginationModel);
 		return list;
 	}
 

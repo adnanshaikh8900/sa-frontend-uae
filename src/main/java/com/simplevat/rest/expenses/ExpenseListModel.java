@@ -14,5 +14,7 @@ public class ExpenseListModel {
 	private String transactionCategoryName;
 	private BigDecimal expenseAmount;
 	private Date expenseDate;
+	private Integer chartOfAccountId;
+	private String expenseStatus;
 
 }

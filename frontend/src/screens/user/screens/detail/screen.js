@@ -15,12 +15,8 @@ import {
   Label
 } from 'reactstrap'
 import Select from 'react-select'
-
 import DatePicker from 'react-datepicker'
-
 import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
-
-
 import * as UserActions from '../../actions'
 import * as UserDetailActions from './actions'
 
@@ -31,11 +27,9 @@ import { selectOptionsFactory } from 'utils'
 import moment from 'moment'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-
 // import 'react-images-uploader/styles.css'
 // import 'react-images-uploader/font.css'
 import 'react-datepicker/dist/react-datepicker.css'
-
 import './style.scss'
 
 const mapStateToProps = (state) => {
@@ -53,7 +47,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class DetailUser extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -68,16 +61,12 @@ class DetailUser extends React.Component {
       current_user_id: null
     }
 
-
     this.initializeData = this.initializeData.bind(this)
     this.deleteUser = this.deleteUser.bind(this)
     this.removeUser = this.removeUser.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.uploadImage = this.uploadImage.bind(this);
-
-
-
   }
 
   componentDidMount() {
@@ -279,7 +268,7 @@ class DetailUser extends React.Component {
                                         // withIcon={true}
                                         buttonText='Choose images'
                                         onChange={this.uploadImage}
-                                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                        imgExtension={['.jpg', '.gif', '.png', '.gif','.jpeg']}
                                         maxFileSize={1048576}
                                         withPreview={true}
                                         singleImage={true}
@@ -513,7 +502,7 @@ class DetailUser extends React.Component {
                                 <Row>
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                     <FormGroup>
-                                      <Button type="button" color="danger" className="btn-square" onClick={this.deleteInvoice}>
+                                      <Button type="button" color="danger" className="btn-square" onClick={this.deleteUser}>
                                         <i className="fa fa-trash"></i> Delete
                                 </Button>
                                     </FormGroup>

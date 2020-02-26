@@ -408,7 +408,6 @@ class Journal extends React.Component {
                               id="date"
                               name="journalDate"
                               placeholderText="Post Date"
-                              isClearable
                               // showMonthDropdown
                               // showYearDropdown
                               // dropdownMode="select"

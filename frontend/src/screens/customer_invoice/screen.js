@@ -61,7 +61,7 @@ class CustomerInvoice extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       dialog: false,
       actionButtons: {},
       filterData: {
@@ -122,18 +122,18 @@ class CustomerInvoice extends React.Component {
       pageNo: this.options.page,
       pageSize: this.options.sizePerPage
     }
-    filterData = {...filterData,...paginationData }
+    filterData = { ...filterData, ...paginationData }
     this.props.customerInvoiceActions.getCustomerInvoiceList(filterData).then(res => {
       console.log(res)
-    if (res.status === 200) {
+      if (res.status === 200) {
         this.props.customerInvoiceActions.getStatusList()
         this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
         this.setState({ loading: false });
-     }
+      }
     }).catch(err => {
       console.log(err)
-       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
-       this.setState({ loading: false })
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+      this.setState({ loading: false })
     })
   }
 
@@ -157,19 +157,20 @@ class CustomerInvoice extends React.Component {
     }
   }
 
-  postInvoice(row){
+  postInvoice(row) {
     console.log(row)
     const postingRequestModel = {
-      amount : row.invoiceAmount,
+      amount: row.invoiceAmount,
       postingRefId: row.id,
       postingRefType: 'INVOICE'
     }
     this.props.customerInvoiceActions.postInvoice(postingRequestModel).then(res => {
-    if (res.status === 200) {
-      this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
-     }
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
+        this.initializeData()
+      }
     }).catch(err => {
-       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
     })
   }
 
@@ -214,7 +215,7 @@ class CustomerInvoice extends React.Component {
   }
 
 
-  
+
 
 
   renderActions(cell, row) {
@@ -234,14 +235,16 @@ class CustomerInvoice extends React.Component {
           </DropdownToggle>
           <DropdownMenu right>
             <DropdownItem >
-              <div onClick={() => {this.props.history.push('/admin/revenue/customer-invoice/detail', { id: row.id })}}>
-              <i className="fas fa-edit" /> Edit
+              <div onClick={() => { this.props.history.push('/admin/revenue/customer-invoice/detail', { id: row.id }) }}>
+                <i className="fas fa-edit" /> Edit
               </div>
             </DropdownItem>
-            <DropdownItem onClick={()=>{this.postInvoice(row)}}>
-              <i className="fas fa-heart" /> Post
-            </DropdownItem>
-            <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.id)}}>
+            {row.status !== 'Post' && (
+              <DropdownItem onClick={() => { this.postInvoice(row) }}>
+                <i className="fas fa-heart" /> Post
+                        </DropdownItem>
+            )}
+            <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
@@ -312,7 +315,7 @@ class CustomerInvoice extends React.Component {
 
   removeBulk() {
     this.removeDialog()
-    let { selectedRows,  } = this.state;
+    let { selectedRows, } = this.state;
     const { customer_invoice_list } = this.props
     let obj = {
       ids: selectedRows
@@ -351,12 +354,12 @@ class CustomerInvoice extends React.Component {
   }
 
   openInvoicePreviewModal(id) {
-    this.setState({ 
+    this.setState({
       selectedId: id
-    },()=>{
+    }, () => {
       this.setState({
         openInvoicePreviewModal: true
-      }) 
+      })
     })
   }
 
@@ -366,7 +369,7 @@ class CustomerInvoice extends React.Component {
 
   render() {
     const { loading, filterData, dialog, selectedRows } = this.state
-    const {  status_list, customer_list } = this.props
+    const { status_list, customer_list } = this.props
     // const containerStyle = {
     //   zIndex: 1999
     // }
@@ -379,7 +382,7 @@ class CustomerInvoice extends React.Component {
         customerName: customer.name,
         invoiceNumber: customer.referenceNumber,
         invoiceDate: customer.invoiceDate ? moment(customer.invoiceDate).format('DD/MM/YYYY') : '',
-        invoiceDueDate: customer.invoiceDueDate ? moment(customer.invoiceDueDate).format('DD/MM/YYYY'): '',
+        invoiceDueDate: customer.invoiceDueDate ? moment(customer.invoiceDueDate).format('DD/MM/YYYY') : '',
         invoiceAmount: customer.totalAmount,
         vatAmount: customer.totalVatAmount,
       })
@@ -439,7 +442,7 @@ class CustomerInvoice extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-                            // disabled={customer_invoice_list.length === 0}
+                          // disabled={customer_invoice_list.length === 0}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -475,13 +478,13 @@ class CustomerInvoice extends React.Component {
                               name="customer"
                               options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
                               value={filterData.customerId}
-                              onChange={(option) => { 
-                                if(option && option.value) {
+                              onChange={(option) => {
+                                if (option && option.value) {
                                   this.handleChange(option.value, 'customerId')
                                 } else {
                                   this.handleChange('', 'customerId')
                                 }
-                               }}
+                              }}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -528,13 +531,13 @@ class CustomerInvoice extends React.Component {
                               className=""
                               options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list, 'Status') : []}
                               value={this.state.filterData.status}
-                              onChange={(option) => { 
-                                if(option && option.value) {
+                              onChange={(option) => {
+                                if (option && option.value) {
                                   this.handleChange(option.value, 'status')
                                 } else {
                                   this.handleChange('', 'status')
                                 }
-                               }}
+                              }}
                               placeholder="Status"
                             />
                           </Col>
@@ -573,7 +576,7 @@ class CustomerInvoice extends React.Component {
                             Status
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                           
+
                             dataField="customerName"
                             dataSort
                           >
@@ -628,8 +631,8 @@ class CustomerInvoice extends React.Component {
         <PreviewInvoiceModal
           openInvoicePreviewModal={this.state.openInvoicePreviewModal}
           closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
-          getInvoiceById = {this.props.customerInvoiceActions.getInvoiceById}
-          id = {this.state.selectedId}
+          getInvoiceById={this.props.customerInvoiceActions.getInvoiceById}
+          id={this.state.selectedId}
         />
       </div>
 

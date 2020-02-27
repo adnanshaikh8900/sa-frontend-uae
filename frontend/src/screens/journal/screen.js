@@ -453,25 +453,35 @@ class Journal extends React.Component {
                             dataField="journalDate"
                             dataSort
                             dataFormat={this.renderDate}
+                            width="12%"
                           >
                             POST DATE
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="referenceCode"
                             dataSort
+                            width="12%"
                           >
                             JOURNAL NO.
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                            dataField="postingReferenceType"
+                            dataSort
+                            width="10%"
+                          >
+                            Type
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
                             dataField="description"
                             dataSort
+                            width="18%"
                           >
                             DESCRIPTION
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="journalLineItems"
                             dataFormat={this.renderAccount}
-                            width="20%"
+                            width="15%"
                             dataAlign="left"
                             dataSort
                           >
@@ -481,6 +491,7 @@ class Journal extends React.Component {
                              dataField="journalLineItems"
                              dataFormat={this.renderDebitAmount}
                              dataAlign="right"
+                             width="13%"
                              dataSort
                           >
                             DEBIT AMOUNT

@@ -76,7 +76,8 @@ class BankTransactions extends React.Component {
         transactionTypeCode: ''
       },
       selectedData: null,
-      selectedTransactionType: ''
+      selectedTransactionType: '',
+      id: ''
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -126,7 +127,9 @@ class BankTransactions extends React.Component {
       this.props.transactionsActions.getTransactionList(postData).then(res => {
         this.props.transactionsActions.getTransactionTypeList();
         if (res.status === 200) {
-          this.setState({ loading: false });
+          this.setState({ 
+            loading: false 
+          });
         }
       }).catch(err => {
         // this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : '');

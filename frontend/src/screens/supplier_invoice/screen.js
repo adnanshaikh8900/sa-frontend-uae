@@ -63,7 +63,7 @@ class SupplierInvoice extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       dialog: false,
       actionButtons: {},
       filterData: {
@@ -197,9 +197,11 @@ class SupplierInvoice extends React.Component {
             <DropdownItem onClick={() => this.props.history.push('/admin/expense/supplier-invoice/detail', { id: row.id })}>
               <i className="fas fa-edit" /> Edit
             </DropdownItem>
-            <DropdownItem onClick={()=>{this.postInvoice(row)}}>
-              <i className="fas fa-heart" /> Post
-            </DropdownItem>
+            {row.status !== 'Post' && (
+              <DropdownItem onClick={() => { this.postInvoice(row) }}>
+                <i className="fas fa-heart" /> Post
+                        </DropdownItem>
+            )}
             <DropdownItem  onClick={()=>{this.openInvoicePreviewModal()}}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
@@ -322,19 +324,27 @@ class SupplierInvoice extends React.Component {
   }
 
   postInvoice(row){
+    this.setState({
+      loading: true
+    })
     const postingRequestModel = {
       amount : row.invoiceAmount,
       postingRefId: row.id,
       postingRefType: 'INVOICE'
     }
-    console.log(postingRequestModel)
-
     this.props.supplierInvoiceActions.postInvoice(postingRequestModel).then(res => {
     if (res.status === 200) {
       this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
+      this.setState({
+        loading: false
+      })
+      this.initializeData()
      }
     }).catch(err => {
        this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+       this.setState({
+        loading: false
+      })
     })
   }
 
@@ -386,13 +396,14 @@ class SupplierInvoice extends React.Component {
             <CardBody>
               {dialog}
               {
-                loading ?
+                loading &&
                   <Row>
-                    <Col lg={12}>
+                    <Col lg={12} className="rounded-loader">
                       <Loader />
                     </Col>
                   </Row>
-                  :
+              }
+                  
                   <Row>
                     <Col lg={12}>
                       <div className="mb-4 status-panel p-3">
@@ -605,7 +616,6 @@ class SupplierInvoice extends React.Component {
                       </div>
                     </Col>
                   </Row>
-              }
             </CardBody>
           </Card>
         </div>

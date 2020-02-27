@@ -158,7 +158,9 @@ class CustomerInvoice extends React.Component {
   }
 
   postInvoice(row) {
-    console.log(row)
+    this.setState({
+      loading: true
+    })
     const postingRequestModel = {
       amount: row.invoiceAmount,
       postingRefId: row.id,
@@ -167,10 +169,16 @@ class CustomerInvoice extends React.Component {
     this.props.customerInvoiceActions.postInvoice(postingRequestModel).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
+        this.setState({
+          loading: false
+        })
         this.initializeData()
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+      this.setState({
+        loading: false
+      })
     })
   }
 
@@ -407,13 +415,13 @@ class CustomerInvoice extends React.Component {
             <CardBody>
               {dialog}
               {
-                loading ?
+                loading &&
                   <Row>
-                    <Col lg={12}>
+                    <Col lg={12} className="rounded-loader">
                       <Loader />
                     </Col>
                   </Row>
-                  :
+            }
                   <Row>
                     <Col lg={12}>
                       <div className="mb-4 status-panel p-3">
@@ -624,7 +632,7 @@ class CustomerInvoice extends React.Component {
                       </div>
                     </Col>
                   </Row>
-              }
+              
             </CardBody>
           </Card>
         </div>

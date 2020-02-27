@@ -5,6 +5,10 @@
  */
 package com.simplevat.helper;
 
+import com.simplevat.constant.PostingReferenceTypeEnum;
+import com.simplevat.constant.TransactionCategoryCodeEnum;
+import com.simplevat.entity.Journal;
+import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
@@ -177,5 +181,50 @@ public class TransactionHelper {
 		}
 
 		return transactionModel;
+	}
+
+	public Journal getByTransaction(Transaction transaction) {
+		List<JournalLineItem> journalLineItemList = new ArrayList();
+
+		TransactionType transactionType = transaction.getTransactionType();
+		// XXX :  need to be save 1 is MONEY IN (TRANSACTION_TYPE) in constance
+		boolean isdebitFromBank = transactionType.getTransactionTypeCode().equals(1)
+				|| (transactionType.getParentTransactionType() != null
+						&& transactionType.getParentTransactionType().getTransactionTypeCode().equals(1)) ? true
+								: false;
+
+		Journal journal = new Journal();
+		JournalLineItem journalLineItem1 = new JournalLineItem();
+		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
+		if (!isdebitFromBank) {
+			journalLineItem1.setDebitAmount(transaction.getTransactionAmount());
+		} else {
+			journalLineItem1.setCreditAmount(transaction.getTransactionAmount());
+		}
+		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+		journalLineItem1.setReferenceId(transaction.getTransactionId());
+		journalLineItem1.setCreatedBy(transaction.getCreatedBy());
+		journalLineItem1.setJournal(journal);
+		journalLineItemList.add(journalLineItem1);
+
+		JournalLineItem journalLineItem2 = new JournalLineItem();
+		journalLineItem2.setTransactionCategory(transaction.getBankAccount().getTransactionCategory());
+		if (isdebitFromBank) {
+			journalLineItem2.setDebitAmount(transaction.getTransactionAmount());
+		} else {
+			journalLineItem2.setCreditAmount(transaction.getTransactionAmount());
+		}
+		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+		journalLineItem2.setReferenceId(transaction.getTransactionId());
+		journalLineItem2.setCreatedBy(transaction.getCreatedBy());
+		journalLineItem2.setJournal(journal);
+		journalLineItemList.add(journalLineItem2);
+
+		journal.setJournalLineItems(journalLineItemList);
+		journal.setCreatedBy(transaction.getCreatedBy());
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.BANK_ACCOUNT);
+		journal.setJournalDate(LocalDateTime.now());
+		return journal;
+
 	}
 }

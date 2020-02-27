@@ -118,8 +118,8 @@ public class InvoiceRestHelper {
 		invoice.setDiscount(invoiceModel.getDiscount());
 		invoice.setStatus(InvoiceStatusEnum.PENDING.getValue()); // default set, will change in transaction
 		invoice.setDiscountPercentage(invoiceModel.getDiscountPercentage());
-		
-
+		invoice.setInvoiceDuePeriod(invoiceModel.getTerm());
+	
 		return invoice;
 	}
 
@@ -205,6 +205,7 @@ public class InvoiceRestHelper {
 		}
 		requestModel.setDiscount(invoice.getDiscount());
 		requestModel.setDiscountPercentage(invoice.getDiscountPercentage());
+		requestModel.setTerm(invoice.getInvoiceDuePeriod());
 		
 		return requestModel;
 	}

@@ -105,6 +105,10 @@ public class BankAccount implements Serializable{
     @Column(name = "LAST_UPDATED_BY")
     private Integer lastUpdatedBy;
     
+    @OneToOne
+	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE")
+	private TransactionCategory transactionCategory;
+    
     @Basic
     @Column(name = "LAST_UPDATE_DATE")
     @Convert(converter = DateConverter.class)

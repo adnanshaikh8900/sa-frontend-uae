@@ -183,23 +183,29 @@ class BankAccount extends React.Component {
   renderAccountType(cell, row) {
     if (row.bankAccountTypeName) {
       let data = null
-      switch (row.bankAccountTypeName) {
-        case 'saving':
+      switch (row.bankAccountTypeName ) {
+        case 'Saving':
+        case 'saving':  
           data = <label className="badge badge-primary text-white mb-0">{row.bankAccountTypeName}</label>
           break
-        case 'current':
+        case 'Current':
+        case 'current':  
           data = <label className="badge badge-info text-white mb-0">{row.bankAccountTypeName}</label>
           break
-        case 'checking':
+        case 'Checking':
+        case 'checking':  
           data = <label className="badge badge-warning text-white mb-0">{row.bankAccountTypeName}</label>
           break
+        case 'Credit Card':
         case 'credit card':
           data = <label className="badge badge-success text-white mb-0">{row.bankAccountTypeName}</label>
           break
         case 'Others':
+        case 'others':
           data = <label className="badge badge-info text-white mb-0">{row.bankAccountTypeName}</label>
           break
         case 'Paypal':
+        case 'paypal':
           data = <label className="badge badge-danger text-white mb-0">{row.bankAccountTypeName}</label>
           break
         default:

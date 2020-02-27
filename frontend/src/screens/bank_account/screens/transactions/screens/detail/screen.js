@@ -139,7 +139,6 @@ class DetailBankTransaction extends React.Component {
       attachementDescription,
     } = data
     const { transaction_id } = this.state;
-    console.log(typeof transactionDate)
 
     let formData = new FormData();
     formData.append("bankAccountId ", bankAccountId ? bankAccountId : '');
@@ -159,7 +158,7 @@ class DetailBankTransaction extends React.Component {
       if (res.status === 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', 'Update Transaction Detail Successfully.')
-        this.props.history.push('/admin/banking/bank-account')
+        this.props.history.push('/admin/banking/bank-account/transaction',{'bankAccountId': bankAccountId})
       }
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
@@ -421,7 +420,7 @@ class DetailBankTransaction extends React.Component {
                                       <i className="fa fa-dot-circle-o"></i> Update
                                     </Button>
                                     <Button color="secondary" className="btn-square"
-                                      onClick={() => this.props.history.push('/admin/banking/bank-account')}>
+                                      onClick={() => this.props.history.push('/admin/banking/bank-account/transaction',{'bankAccountId': initValue.bankAccountId})}>
                                       <i className="fa fa-ban"></i> Cancel
                                                    </Button>
                                   </FormGroup>

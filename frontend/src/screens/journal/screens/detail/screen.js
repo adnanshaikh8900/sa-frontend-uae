@@ -726,9 +726,6 @@ class DetailJournal extends React.Component {
                               journalLineItems: Yup.array()
                                 .of(
                                   Yup.object().shape({
-                                    description: Yup.string().required(
-                                      "Description is Required"
-                                    ),
                                     vatCategoryId: Yup.string().required(
                                       "Vat is required"
                                     ),

@@ -278,6 +278,9 @@ class Expense extends React.Component {
   }
 
   postExpense(row){
+    this.setState({
+      loading: true
+    })
     const postingRequestModel = {
       amount : row.expenseAmount,
       postingRefId: row.expenseId,
@@ -287,11 +290,16 @@ class Expense extends React.Component {
     this.props.expenseActions.postExpense(postingRequestModel).then(res => {
     if (res.status === 200) {
       this.props.commonActions.tostifyAlert('success', 'Expense Posted Successfully');
+      this.setState({
+        loading: false
+      })
       this.initializeData()
-
      }
     }).catch(err => {
        this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+       this.setState({
+        loading: false
+      })
     })
   }
 
@@ -367,13 +375,13 @@ class Expense extends React.Component {
             </CardHeader>
             <CardBody>
               {
-                loading ?
+                loading &&
                   <Row>
-                    <Col lg={12}>
+                    <Col lg={12} className="rounded-loader">
                       <Loader />
                     </Col>
                   </Row>
-                  :
+  }
                   <Row>
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
@@ -539,7 +547,6 @@ class Expense extends React.Component {
                       </div>
                     </Col>
                   </Row>
-              }
             </CardBody>
           </Card>
         </div>

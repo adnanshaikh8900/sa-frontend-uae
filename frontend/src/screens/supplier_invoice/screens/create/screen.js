@@ -83,7 +83,7 @@ class CreateSupplierInvoice extends React.Component {
         contact_po_number: '',
         currency: '',
         invoiceDueDate: '',
-        invoiceDate: '',
+        invoiceDate: new Date(),
         contactId: '',
         project: '',
         lineItemsString: [{
@@ -97,6 +97,7 @@ class CreateSupplierInvoice extends React.Component {
         invoice_number: '',
         total_net: 0,
         invoiceVATAmount: 0,
+        term: '',
         totalAmount: 0,
         notes: '',
         discount: 0,
@@ -129,11 +130,12 @@ class CreateSupplierInvoice extends React.Component {
     // this.options = {
     //   paginationPosition: 'top'
     // }
-    this.termList = [
-      {label: "Net 7",value:"7"},
-      {label: "Net 10",value:"10"},
-      {label: "Net 30",value:"30"},
-    ]
+		this.termList = [
+			{ label: "Net 7", value: "NET_7" },
+			{ label: "Net 10", value: "NET_10" },
+			{ label: "Net 30", value: "NET_30" },
+			{ label: "Due on Receipt", value: "DUE_ON_RECEIPT" },
+		]
 
     this.renderActions = this.renderActions.bind(this)
     this.renderProductName = this.renderProductName.bind(this)
@@ -402,14 +404,16 @@ class CreateSupplierInvoice extends React.Component {
     }
   }
 
-  setDate = (props,value) => {
-    const { term } = this.state
-    const values = value ? value : props.values.invoiceDate
-    if(term && values) {  
-      const date = moment(values).add(term-1,'days').format('DD/MM/YYYY')
-      props.setFieldValue('invoiceDueDate', date,true)
-    }
-  }
+	setDate = (props, value) => {
+		const { term } = this.state
+		const val = term.split('_')
+		const temp = val[val.length -1] === 'Receipt' ? 1 : val[val.length -1]
+		const values = value ? value : moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate()
+		if (temp && values) {
+			const date = (moment(values).add(temp - 1, 'days').format('DD/MM/YYYY'))
+			props.setFieldValue('invoiceDueDate', date, true)
+		}
+	}
 
 
   updateAmount(data,props) {
@@ -467,6 +471,7 @@ class CreateSupplierInvoice extends React.Component {
       discountPercentage,
       notes
     } = data
+    const {term} = this.state
 
 
     let formData = new FormData();
@@ -483,6 +488,8 @@ class CreateSupplierInvoice extends React.Component {
     formData.append('totalAmount', this.state.initValue.totalAmount);
     formData.append('discount', discount);
     formData.append('discountType', discountType);
+		formData.append('term', term);
+
     if(discountType === 'PERCENTAGE') {
     formData.append('discountPercentage', discountPercentage);
     }
@@ -501,10 +508,10 @@ class CreateSupplierInvoice extends React.Component {
     this.props.supplierInvoiceCreateActions.createInvoice(formData).then(res => {
       this.props.commonActions.tostifyAlert('success', 'New Invoice Created Successfully.')
       if (this.state.createMore) {
-        resetForm(this.state.initValue)
         this.setState({
           createMore: false,
           selectedContact: '',
+					term: '',
           data: [{
             id: 0,
             description: '',
@@ -524,6 +531,7 @@ class CreateSupplierInvoice extends React.Component {
             }
           }
         }, () => {
+        resetForm(this.state.initValue)
           this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
         })
       } else {

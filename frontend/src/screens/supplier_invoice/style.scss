@@ -31,4 +31,9 @@
   .invalid {
     background: rgb(219, 142, 142);
   }
+  .rounded-loader {
+    position: absolute;
+    top: 50%;
+    z-index: 9999;
+  }
 }

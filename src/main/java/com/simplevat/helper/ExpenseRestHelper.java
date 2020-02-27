@@ -63,6 +63,7 @@ public class ExpenseRestHelper implements Serializable {
 
 	public Expense getExpenseEntity(ExpenseModel model, User user) throws Exception {
 		Expense expense = new Expense();
+		expense.setStatus(ExpenseStatusEnum.SAVED.getValue());
 		if (model.getExpenseId() != null) {
 			expense = expenseService.findByPK(model.getExpenseId());
 		}
@@ -88,7 +89,6 @@ public class ExpenseRestHelper implements Serializable {
 		if (model.getExpenseCategory() != null) {
 			expenseBuilder.transactionCategory(transactionCategoryService.findByPK(model.getExpenseCategory()));
 		}
-	
 
 		return expenseBuilder.build();
 	}

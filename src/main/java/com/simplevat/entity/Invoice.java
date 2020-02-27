@@ -3,6 +3,8 @@ package com.simplevat.entity;
 import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
 import com.simplevat.constant.DiscountType;
+import com.simplevat.constant.InvoiceDuePeriodEnum;
+
 import java.io.Serializable;
 import lombok.Data;
 
@@ -155,6 +157,10 @@ public class Invoice implements Serializable {
     @Column(name = "TAX_IDENTIFICATION_NUMBER")
     private String taxIdentificationNumber;
 
+    @Column(name ="INVOICE_DUE_PERIOD",columnDefinition = "varchar(255) default 'NET_7'")
+    @Enumerated(EnumType.STRING)
+    private InvoiceDuePeriodEnum invoiceDuePeriod;
+    
     @Column(name = "TYPE")
     @Basic(optional = false)
     private Integer type;

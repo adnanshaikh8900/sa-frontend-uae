@@ -84,7 +84,7 @@ class CreateCustomerInvoice extends React.Component {
 				contact_po_number: '',
 				currency: '',
 				invoiceDueDate: '',
-				invoiceDate: '',
+				invoiceDate: new Date(),
 				contactId: '',
 				project: '',
 				lineItemsString: [{
@@ -133,9 +133,10 @@ class CreateCustomerInvoice extends React.Component {
 		];
 
 		this.termList = [
-			{ label: "Net 7", value: "7" },
-			{ label: "Net 10", value: "10" },
-			{ label: "Net 30", value: "30" },
+			{ label: "Net 7", value: "NET_7" },
+			{ label: "Net 10", value: "NET_10" },
+			{ label: "Net 30", value: "NET_30" },
+			{ label: "Due on Receipt", value: "DUE_ON_RECEIPT" },
 		]
 
 		this.renderActions = this.renderActions.bind(this)
@@ -282,9 +283,11 @@ class CreateCustomerInvoice extends React.Component {
 
 	setDate = (props, value) => {
 		const { term } = this.state
-		const values = value ? value : props.values.invoiceDate
-		if (term && values) {
-			const date = (moment(values).add(term - 1, 'days').format('DD/MM/YYYY'))
+		const val = term.split('_')
+		const temp = val[val.length -1] === 'Receipt' ? 1 : val[val.length -1]
+		const values = value ? value : moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate()
+		if (temp && values) {
+			const date = (moment(values).add(temp - 1, 'days').format('DD/MM/YYYY'))
 			props.setFieldValue('invoiceDueDate', date, true)
 		}
 	}
@@ -482,6 +485,7 @@ class CreateCustomerInvoice extends React.Component {
 			discountPercentage,
 			notes
 		} = data
+		const { term } = this.state
 
 		const formData = new FormData()
 
@@ -498,6 +502,8 @@ class CreateCustomerInvoice extends React.Component {
 		formData.append('totalAmount', this.state.initValue.totalAmount);
 		formData.append('discount', discount);
 		formData.append('discountType', discountType);
+		formData.append('term', term);
+
 		if (discountType === 'PERCENTAGE') {
 			formData.append('discountPercentage', discountPercentage);
 		}
@@ -516,10 +522,10 @@ class CreateCustomerInvoice extends React.Component {
 		this.props.customerInvoiceCreateActions.createInvoice(formData).then(res => {
 			this.props.commonActions.tostifyAlert('success', 'New Invoice Created Successfully.')
 			if (this.state.createMore) {
-				resetForm(this.state.initValue)
 				this.setState({
 					createMore: false,
 					selectedContact: '',
+					term: '',
 					data: [{
 						id: 0,
 						description: '',
@@ -539,6 +545,7 @@ class CreateCustomerInvoice extends React.Component {
 						}
 					}
 				}, () => {
+					resetForm(this.state.initValue)
 					this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
 				})
 			} else {
@@ -628,43 +635,43 @@ class CreateCustomerInvoice extends React.Component {
 
 													// })
 												}}
-											// validationSchema={
-											//   Yup.object().shape({
-											//     invoice_number: Yup.string()
-											//       .required("Invoice Number is Required"),
-											//     contactId: Yup.string()
-											//       .required("Customer is Required"),
-											//     invoiceDate: Yup.date()
-											//       .required('Invoice Date is Required'),
-											//     invoiceDueDate: Yup.string()
-											//       .required('Invoice Due Date is Required'),
-											//     lineItemsString: Yup.array()
-											//       .required('Atleast one invoice sub detail is mandatory')
-											//       .of(Yup.object().shape({
-											//         description: Yup.string().required("Value is Required"),
-											//         quantity: Yup.number().required("Value is Required"),
-											//         unitPrice: Yup.number().required("Value is Required"),
-											//         vatCategoryId: Yup.string().required("Value is Required"),
-											//       })),
-											//     attachmentFile: Yup.mixed()
-											//       .test('fileType', "*Unsupported File Format", value => {
-											//         if (value && !this.supported_format.includes(value.type)) {
-											//           this.setState({
-											//             fileName: value.name
-											//           })
-											//           return false
-											//         } else {
-											//           return true
-											//         }
-											//       })
-											//       .test('fileSize', "*File Size is too large", value => {
-											//         if (value && value.size >= this.file_size) {
-											//           return false
-											//         } else {
-											//           return true
-											//         }
-											//       })
-											//   })}
+											validationSchema={
+											  Yup.object().shape({
+											    invoice_number: Yup.string()
+											      .required("Invoice Number is Required"),
+											    contactId: Yup.string()
+											      .required("Customer is Required"),
+											    invoiceDate: Yup.date()
+											      .required('Invoice Date is Required'),
+											    invoiceDueDate: Yup.string()
+											      .required('Invoice Due Date is Required'),
+											    lineItemsString: Yup.array()
+											      .required('Atleast one invoice sub detail is mandatory')
+											      .of(Yup.object().shape({
+											        description: Yup.string().required("Value is Required"),
+											        quantity: Yup.number().required("Value is Required"),
+											        unitPrice: Yup.number().required("Value is Required"),
+											        vatCategoryId: Yup.string().required("Value is Required"),
+											      })),
+											    attachmentFile: Yup.mixed()
+											      .test('fileType', "*Unsupported File Format", value => {
+											        if (value && !this.supported_format.includes(value.type)) {
+											          this.setState({
+											            fileName: value.name
+											          })
+											          return false
+											        } else {
+											          return true
+											        }
+											      })
+											      .test('fileSize', "*File Size is too large", value => {
+											        if (value && value.size >= this.file_size) {
+											          return false
+											        } else {
+											          return true
+											        }
+											      })
+											  })}
 											>
 												{props => (
 													<Form onSubmit={props.handleSubmit}>
@@ -1099,6 +1106,7 @@ class CreateCustomerInvoice extends React.Component {
 																								type="number"
 																								disabled={props.values.discountType && props.values.discountType === 'Percentage' ? true : false}
 																								placeholder="Discount Amounts"
+																								value={props.values.discount}
 																								onChange={option => {
 																									props.handleChange('discount')(option)
 																									this.setState({
@@ -1107,7 +1115,6 @@ class CreateCustomerInvoice extends React.Component {
 																										this.updateAmount(this.state.data, props)
 																									})
 																								}}
-																								value={props.values.discount}
 																							/>
 																						</FormGroup>
 																					</Col>
@@ -1161,7 +1168,7 @@ class CreateCustomerInvoice extends React.Component {
 														}
 														<Row>
 															<Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
-																<FormGroup className="text-right">
+																<FormGroup className="text-right w-100">
 																	<Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
 
 																		this.setState({ createMore: false }, () => {

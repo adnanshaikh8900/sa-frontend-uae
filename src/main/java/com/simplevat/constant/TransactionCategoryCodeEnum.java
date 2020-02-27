@@ -15,7 +15,8 @@ public enum TransactionCategoryCodeEnum {
     ACCOUNT_PAYABLE(2101),
     ACCOUNT_RECEIVABLE(1101),
     ACCOUNTANCY_FEE(4102),
-    SALE(3106);
+    SALE(3106),
+    BANK(1201);
 
     @Getter
     private final Integer code;

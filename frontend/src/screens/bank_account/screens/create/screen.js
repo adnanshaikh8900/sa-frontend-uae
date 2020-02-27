@@ -179,14 +179,6 @@ class CreateBankAccount extends React.Component {
                             .required('Bank Name is Required'),
                           account_number: Yup.string()
                             .required('Account Number is Required'),
-                          iban_number: Yup.string()
-                            .required('IBAN Number is Required'),
-                          swift_code: Yup.string()
-                            .required('Swift Code is Required'),
-                          country: Yup.object().shape({
-                            label: Yup.string().required(),
-                            value: Yup.string().required(),
-                          }),
                           account_is_for: Yup.object().shape({
                             label: Yup.string().required(),
                             value: Yup.string().required()

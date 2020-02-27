@@ -28,7 +28,7 @@ export const getBankList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/bank/getbanklist'
+      url: '/rest/bank/list'
     }
     return authApi(data).then(res => {
       if (res.status === 200) {

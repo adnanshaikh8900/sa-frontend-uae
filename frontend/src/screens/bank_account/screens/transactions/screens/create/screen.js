@@ -66,7 +66,8 @@ class CreateBankTransaction extends React.Component {
         receiptNumber: '',
         attachementDescription: '',
         attachment: '',
-      }
+      },
+      id: ''
     }
 
     this.file_size = 1024000;
@@ -90,9 +91,14 @@ class CreateBankTransaction extends React.Component {
   }
 
   initializeData() {
-    this.props.transactionActions.getTransactionCategoryList()
-    this.props.transactionActions.getTransactionTypeList()
-    this.props.transactionActions.getProjectList()
+      if(this.props.location.state && this.props.location.state.bankAccountId) {
+        this.setState({
+          id: this.props.location.state.bankAccountId
+        })
+        this.props.transactionActions.getTransactionCategoryList()
+        this.props.transactionActions.getTransactionTypeList()
+        this.props.transactionActions.getProjectList()
+      }
   }
 
   handleFileChange(e, props) {
@@ -122,7 +128,6 @@ class CreateBankTransaction extends React.Component {
       attachementDescription,
     } = data
 
-    console.log(typeof transactionDate)
     let formData = new FormData();
     formData.append("bankAccountId ", bankAccountId ? bankAccountId : '');
     formData.append("transactionDate", transactionDate ? moment(transactionDate).toString() : '');
@@ -145,7 +150,7 @@ class CreateBankTransaction extends React.Component {
             createMore: false
           })
         } else {
-          this.props.history.push('/admin/banking/bank-account/transaction')
+          this.props.history.push('/admin/banking/bank-account/transaction',{'bankAccountId': bankAccountId})
         }
       }
     }).catch(err => {
@@ -156,7 +161,7 @@ class CreateBankTransaction extends React.Component {
 
   render() {
     const { project_list, transaction_category_list, transaction_type_list } = this.props
-    const { initValue } = this.state
+    const { initValue ,id} = this.state
     return (
       <div className="create-bank-transaction-screen">
         <div className="animated fadeIn">
@@ -186,7 +191,7 @@ class CreateBankTransaction extends React.Component {
                           Yup.object().shape({
                             transactionDate: Yup.date()
                               .required('Transaction Date is Required'),
-                            transactionAmount: Yup.date()
+                            transactionAmount: Yup.string()
                               .required('Transaction Amount is Required'),
                             transactionTypeCode: Yup.string()
                               .required('Transaction Type is Required'),
@@ -407,8 +412,8 @@ class CreateBankTransaction extends React.Component {
                                     }>
                                     <i className="fa fa-repeat"></i> Create and More
                         </Button>
-                                  <Button color="secondary" className="btn-square"
-                                    onClick={() => { this.props.history.push('/admin/banking/bank-account') }}>
+                                  <Button color="secondary" className="btn-square" onClick={() => {
+                                    this.props.history.push('/admin/banking/bank-account/transaction',{'bankAccountId': id})}}>
                                     <i className="fa fa-ban"></i> Cancel
                         </Button>
                                 </FormGroup>

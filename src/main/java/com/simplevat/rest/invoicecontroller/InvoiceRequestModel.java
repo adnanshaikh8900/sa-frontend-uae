@@ -1,6 +1,8 @@
 package com.simplevat.rest.invoicecontroller;
 
 import com.simplevat.constant.DiscountType;
+import com.simplevat.constant.InvoiceDuePeriodEnum;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -34,6 +36,7 @@ public class InvoiceRequestModel {
     private String status;
     private String fileName;
     private String filePath;
+    private InvoiceDuePeriodEnum term;
     
     private DiscountType discountType;
     private BigDecimal discount;

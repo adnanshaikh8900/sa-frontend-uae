@@ -10,6 +10,8 @@ import com.simplevat.model.BankModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.simplevat.constant.TransactionCategoryCodeEnum;
+import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;
@@ -17,6 +19,7 @@ import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.BankAccountStatusService;
 
@@ -29,60 +32,65 @@ public class BankHelper {
 
 	@Autowired
 	BankAccountService bankAccountService;
-	
+
 	@Autowired
 	BankAccountStatusService bankAccountStatusService;
-	
+
 	@Autowired
 	CurrencyService currencyService;
-	
+
 	@Autowired
 	BankAccountTypeService bankAccountTypeService;
-	
+
 	@Autowired
 	CountryService countryService;
 
-	public BankAccount createBankAccountByBankAccountModel(BankModel bankModel) {
-        BankAccount bankAccount = new BankAccount();
-    	
-        if (bankModel.getBankCountry() != null) {
-            bankAccount.setBankCountry(countryService.getCountry(bankModel.getBankCountry()));
-        }
-        bankAccount.setAccountNumber(bankModel.getAccountNumber());
-        bankAccount.setBankAccountName(bankModel.getBankAccountName());
-        bankAccount.setBankName(bankModel.getBankName());
-        bankAccount.setDeleteFlag(Boolean.FALSE);
-        bankAccount.setIbanNumber(bankModel.getIbanNumber());
-        bankAccount.setIsprimaryAccountFlag(bankModel.getIsprimaryAccountFlag());
-        bankAccount.setOpeningBalance(bankModel.getOpeningBalance());
-        bankAccount.setPersonalCorporateAccountInd(bankModel.getPersonalCorporateAccountInd().charAt(0));
-        bankAccount.setSwiftCode(bankModel.getSwiftCode());
-        bankAccount.setVersionNumber(1);
-        
-        if (bankModel.getBankAccountStatus() != null) {
-            BankAccountStatus bankAccountStatus = bankAccountStatusService
-                    .getBankAccountStatus(bankModel.getBankAccountStatus());
-            bankAccount.setBankAccountStatus(bankAccountStatus);
-        }
-        if (bankModel.getBankAccountCurrency() != null) {
-            Currency currency = currencyService
-                    .getCurrency(Integer.valueOf(bankModel.getBankAccountCurrency()));
-            bankAccount.setBankAccountCurrency(currency);
-        }
-        
-        if (bankModel.getBankAccountType() != null) {
-            BankAccountType bankAccountType = bankAccountTypeService.getBankAccountType(bankModel.getBankAccountType());
-            bankAccount.setBankAccountType(bankAccountType);
-        }
-        
-        if (bankModel.getBankAccountId() == null || bankModel.getBankAccountId() == 0) {
-            bankAccount.setCurrentBalance(bankModel.getOpeningBalance());
-            BankAccountStatus bankAccountStatus = bankAccountStatusService.getBankAccountStatusByName("ACTIVE");
-            bankAccount.setBankAccountStatus(bankAccountStatus);
-        }
-        
-        return bankAccount;
-    }
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
+
+	public BankAccount getEntity(BankModel bankModel) {
+		BankAccount bankAccount = new BankAccount();
+
+		if (bankModel.getBankCountry() != null) {
+			bankAccount.setBankCountry(countryService.getCountry(bankModel.getBankCountry()));
+		}
+		bankAccount.setAccountNumber(bankModel.getAccountNumber());
+		bankAccount.setBankAccountName(bankModel.getBankAccountName());
+		bankAccount.setBankName(bankModel.getBankName());
+		bankAccount.setDeleteFlag(Boolean.FALSE);
+		bankAccount.setIbanNumber(bankModel.getIbanNumber());
+		bankAccount.setIsprimaryAccountFlag(bankModel.getIsprimaryAccountFlag());
+		bankAccount.setOpeningBalance(bankModel.getOpeningBalance());
+		bankAccount.setPersonalCorporateAccountInd(bankModel.getPersonalCorporateAccountInd().charAt(0));
+		bankAccount.setSwiftCode(bankModel.getSwiftCode());
+		bankAccount.setVersionNumber(1);
+
+		if (bankModel.getBankAccountStatus() != null) {
+			BankAccountStatus bankAccountStatus = bankAccountStatusService
+					.getBankAccountStatus(bankModel.getBankAccountStatus());
+			bankAccount.setBankAccountStatus(bankAccountStatus);
+		}
+		if (bankModel.getBankAccountCurrency() != null) {
+			Currency currency = currencyService.getCurrency(Integer.valueOf(bankModel.getBankAccountCurrency()));
+			bankAccount.setBankAccountCurrency(currency);
+		}
+
+		if (bankModel.getBankAccountType() != null) {
+			BankAccountType bankAccountType = bankAccountTypeService.getBankAccountType(bankModel.getBankAccountType());
+			bankAccount.setBankAccountType(bankAccountType);
+		}
+
+		if (bankModel.getBankAccountId() == null || bankModel.getBankAccountId() == 0) {
+			bankAccount.setCurrentBalance(bankModel.getOpeningBalance());
+			BankAccountStatus bankAccountStatus = bankAccountStatusService.getBankAccountStatusByName("ACTIVE");
+			bankAccount.setBankAccountStatus(bankAccountStatus);
+		}
+
+		bankAccount.setTransactionCategory(transactionCategoryService
+				.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.BANK.getCode()));
+
+		return bankAccount;
+	}
 
 	public BankAccount getBankAccountByBankAccountModel(BankModel bankModel) {
 		BankAccount bankAccount;

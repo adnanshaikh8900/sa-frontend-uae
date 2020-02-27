@@ -133,7 +133,7 @@ public class BankAccountController implements Serializable {
 	public ResponseEntity saveBankAccount(@RequestBody BankModel bankModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			BankAccount bankAccount = bankRestHelper.createBankAccountByBankAccountModel(bankModel);
+			BankAccount bankAccount = bankRestHelper.getEntity(bankModel);
 			User user = userServiceNew.findByPK(userId);
 			if (bankModel.getBankAccountId() == null) {
 				if (user != null) {

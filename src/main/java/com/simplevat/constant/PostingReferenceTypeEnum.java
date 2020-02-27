@@ -13,5 +13,6 @@ public enum PostingReferenceTypeEnum {
     MANUAL,
     INVOICE,
     EXPENSE,
+    BANK_ACCOUNT,
     PURCHASE;
 }

@@ -9,11 +9,13 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.Invoice;
+import com.simplevat.entity.Journal;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.helper.TransactionHelper;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
+import com.simplevat.service.JournalService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
@@ -71,6 +73,9 @@ public class TransactionController implements Serializable {
 	@Autowired
 	private TransactionHelper transactionHelper;
 
+	@Autowired
+	private JournalService journalService;
+
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
 	public ResponseEntity getAllTransaction(TransactionRequestFilterModel filterModel) {
@@ -118,7 +123,12 @@ public class TransactionController implements Serializable {
 			transaction.setCreatedDate(LocalDateTime.now());
 			transactionService.persist(transaction);
 			if (transaction.getTransactionId() == null) {
+
 				return new ResponseEntity<>("Unable To Save", HttpStatus.OK);
+			} else {
+				// save journal
+				Journal journal = transactionHelper.getByTransaction(transaction);
+				journalService.persist(journal);
 			}
 			return new ResponseEntity<>(transaction.getTransactionId(), HttpStatus.OK);
 		} catch (Exception e) {

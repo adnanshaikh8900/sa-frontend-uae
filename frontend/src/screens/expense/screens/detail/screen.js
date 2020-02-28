@@ -20,7 +20,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 
-import { Formik } from 'formik'
+import { Formik,Field } from 'formik'
 import * as Yup from 'yup'
 
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -63,6 +63,8 @@ class DetailExpense extends React.Component {
       loading: true,
       initValue: null,
       current_expense_id: null,
+      fileName: ''
+
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -70,6 +72,20 @@ class DetailExpense extends React.Component {
     this.deleteExpense = this.deleteExpense.bind(this)
     this.removeExpense = this.removeExpense.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
+    this.handleFileChange = this.handleFileChange.bind(this)
+
+
+    this.file_size = 1024000;
+    this.regEx = /^[0-9\b]+$/;
+
+    this.supported_format = [
+      "",
+      "text/plain",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
   }
 
   componentDidMount() {
@@ -191,6 +207,18 @@ class DetailExpense extends React.Component {
     })
   }
 
+  handleFileChange(e, props) {
+    e.preventDefault();
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    if (file) {
+      reader.onloadend = () => {
+      };
+      reader.readAsDataURL(file);
+      props.setFieldValue('attachmentFile', file,true);
+    }
+  }
+
 
   render() {
 
@@ -240,11 +268,33 @@ class DetailExpense extends React.Component {
                               Yup.object().shape({
                                 expenseCategory: Yup.string()
                                   .required('Expense Category is required'),
+                                  payee: Yup.string()
+                                  .required('Payee is required'),
                                 expenseDate: Yup.date()
                                   .required('Expense Date is Required'),
                                 expenseAmount: Yup.string()
                                   .required('Amount is Required')
-                                  .matches(/^[0-9]*$/, "Enter a Valid Amount")
+                                  .matches(/^[0-9]*$/, "Enter a Valid Amount"),
+                                  currency: Yup.string()
+                                  .required('Currency is required'),
+                                  attachmentFile: Yup.mixed()
+                                  .test('fileType', "*Unsupported File Format", value => { 
+                                    value && this.setState({
+                                      fileName: value.name
+                                    })
+                                    if (value && this.supported_format.includes(value.type)) {
+                                      return true
+                                    } else {
+                                      return false
+                                    }
+                                  })
+                                  .test('fileSize', "*File Size is too large", value => {
+                                    if (value && value.size <= this.file_size) {
+                                      return true
+                                    } else {
+                                      return false
+                                    }
+                                  })
                               })
                             }
                           >
@@ -322,8 +372,19 @@ class DetailExpense extends React.Component {
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currency}
                                         onChange={option => props.handleChange('currency')(option)}
-
+                                        className={
+                                          props.errors.currency &&
+                                            props.touched.currency
+                                            ? "is-invalid"
+                                            : ""
+                                          }
                                       />
+                                        {props.errors.currency &&
+                                        props.touched.currency && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.currency}
+                                          </div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                   <Col lg={4}>
@@ -363,7 +424,7 @@ class DetailExpense extends React.Component {
                                         id="expenseAmount"
                                         rows="5"
                                         className={props.errors.expenseAmount && props.touched.expenseAmount ? "is-invalid" : ""}
-                                        onChange={option => props.handleChange('expenseAmount')(option)}
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('expenseAmount')(option) }}
                                         value={props.values.expenseAmount}
 
                                       />
@@ -427,20 +488,32 @@ class DetailExpense extends React.Component {
                                     </Row>
                                   </Col>
                                   <Col lg={4}>
-                                    <Row>
-                                      <Col lg={12}>
-                                        <FormGroup className="mb-3">
-                                          <Label>Reciept Attachment</Label><br />
-                                          <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                            <i className="fa fa-upload"></i> Upload
+                                  <Row>
+                                  <Col lg={12}>
+                                  <FormGroup className="mb-3">
+                                      <Field name="attachmentFile"
+                                        render={({ field, form }) => (
+                                          <div>
+                                            <Label>Reciept Attachment</Label> <br />
+                                            <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                              <i className="fa fa-upload"></i> Upload
                                   </Button>
-                                          <input id="fileInput" ref={ref => {
-                                            this.uploadFile = ref;
-                                          }}
-                                            type="file" type="file" style={{ display: 'none' }} />
-                                        </FormGroup>
-                                      </Col>
-                                    </Row>
+                                            <input id="fileInput" ref={ref => {
+                                              this.uploadFile = ref;
+                                            }} type="file" style={{ display: 'none' }} onChange={(e) => {
+                                              this.handleFileChange(e, props)
+                                            }} />
+                                            {this.state.fileName}
+
+                                          </div>
+                                        )}
+                                      />
+                                      {props.errors.attachmentFile && props.touched.attachmentFile &&(
+                                        <div className="invalid-file">{props.errors.attachmentFile}</div>
+                                      )}
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
                                   </Col>
                                 </Row>
                                 <Row>

@@ -70,6 +70,8 @@ class DetailBankTransaction extends React.Component {
       "application/vnd.ms-excel",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
+    this.regEx = /^[0-9\d]+$/;
+
     this.formRef = React.createRef()
 
     this.initializeData = this.initializeData.bind(this)
@@ -281,11 +283,11 @@ class DetailBankTransaction extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="transactionAmount">Total Amount</Label>
                                     <Input
-                                      type="number"
+                                      type="text"
                                       id="transactionAmount"
                                       name="transactionAmount"
                                       placeholder="Amount"
-                                      onChange={option => props.handleChange('transactionAmount')(option)}
+                                      onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('transactionAmount')(option) }}
                                       value={props.values.transactionAmount}
                                     />
                                   </FormGroup>

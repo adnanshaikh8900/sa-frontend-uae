@@ -91,6 +91,7 @@ class DetailCustomerInvoice extends React.Component {
 			{ label: "Net 30", value: "NET_30" },
 			{ label: "Due on Receipt", value: "DUE_ON_RECEIPT" },
 		]
+		this.regEx = /^[0-9\b]+$/;
 
 		this.initializeData = this.initializeData.bind(this)
 		this.renderActions = this.renderActions.bind(this)
@@ -159,12 +160,12 @@ class DetailCustomerInvoice extends React.Component {
 							notes: res.data.notes ? res.data.notes : '',
 							lineItemsString: res.data.invoiceLineItems ? res.data.invoiceLineItems : [],
 							discount: res.data.discount ? res.data.discount : 0,
-							discountPercentage: res.data.discountPercentage ? res.data.discountPercentage : 0,
+							discountPercentage: res.data.discountPercentage ? res.data.discountPercentage : '',
 							discountType: res.data.discountType ? res.data.discountType : '',
 							term: res.data.term ? res.data.term : '',
 						},
 						discountAmount: res.data.discount ? res.data.discount : 0,
-						discountPercentage: res.data.discountPercentage ? res.data.discountPercentage : 0,
+						discountPercentage: res.data.discountPercentage ? res.data.discountPercentage : '',
 						data: res.data.invoiceLineItems ? res.data.invoiceLineItems : [],
 						selectedContact: res.data.contactId ? res.data.contactId : '',
 						term: res.data.term ? res.data.term : '',
@@ -245,12 +246,14 @@ class DetailCustomerInvoice extends React.Component {
 			<Field name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<Input
-						type="number"
+						type="text"
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
-						onChange={(e) => { this.selectItem(e, row, 'quantity', form, field, props) }}
+						onChange={(e) => { 
+							if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'quantity', form, field, props) }
+						}
 						placeholder="Quantity"
 						className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+           						${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
 								props.errors.lineItemsString[idx].quantity &&
 								Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
 								props.touched.lineItemsString[idx] &&
@@ -273,12 +276,12 @@ class DetailCustomerInvoice extends React.Component {
 			<Field name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-						type="number"
+						type="text"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-						onChange={(e) => { this.selectItem(e, row, 'unitPrice', form, field, props) }}
+						onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'unitPrice', form, field, props) }}
 						placeholder="Unit Price"
 						className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+                       ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
 								props.errors.lineItemsString[idx].unitPrice &&
 								Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
 								props.touched.lineItemsString[idx] &&
@@ -305,8 +308,8 @@ class DetailCustomerInvoice extends React.Component {
 			data: data.concat({
 				id: this.state.idCount + 1,
 				description: '',
-				quantity: 0,
-				unitPrice: 0,
+				quantity: '',
+				unitPrice: '',
 				vatCategoryId: '',
 				subTotal: 0
 			}), idCount: this.state.idCount + 1
@@ -435,7 +438,7 @@ class DetailCustomerInvoice extends React.Component {
 			total = (total_vat + total_net);
 
 		})
-		const discount = props.values.discountType === 'PERCENTAGE' ? (total * discountPercentage) / 100 : discountAmount
+		const discount = props.values.discountType === 'PERCENTAGE' ? +((total * discountPercentage) / 100).toFixed(2) : discountAmount
 		this.setState({
 			data: data,
 			initValue: {
@@ -652,8 +655,22 @@ class DetailCustomerInvoice extends React.Component {
 																	.required('Atleast one invoice sub detail is mandatory')
 																	.of(Yup.object().shape({
 																		description: Yup.string().required("Value is Required"),
-																		quantity: Yup.number().required("Value is Required"),
-																		unitPrice: Yup.number().required("Value is Required"),
+																		quantity: Yup.string().required("Value is Required").
+																		test('quantity','Quantity Should be Greater than 1',value => {
+																			if(value > 0) {
+																				return true
+																			} else {
+																				return false
+																			}
+																		}),
+																		unitPrice: Yup.string().required("Value is Required")
+																		.test('Unit Price','Unit Price Should be Greater than 1',value => {
+																			if(value > 0) {
+																				return true
+																			} else {
+																				return false
+																			}
+																		}),
 																		vatCategoryId: Yup.string().required("Value is Required"),
 																	}))
 															})}
@@ -734,37 +751,6 @@ class DetailCustomerInvoice extends React.Component {
 																	</Col>
 																</Row>
 																<hr />
-																{/* <Row>
-                            <Col lg={4}>
-                              <FormGroup check inline className="mb-3">
-                                <Input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="is_same_address"
-                                  name="is_same_address"
-                                />
-                                <Label className="form-check-label" check htmlFor="is_same_address">
-                                  Shipping Address is same as above address.
-                                </Label>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col lg={4}>
-                              <FormGroup className="mb-3">
-                                <Label htmlFor="contact">Shipping Contact</Label>
-                                <Select
-                                  className="select-default-width"
-                                  options={selectOptionsFactory.renderOptions('firstName', 'contactId', vendor_list)}
-                                  id="shippingContact"
-                                  name="shippingContact"
-                                  value={props.values.shippingContact}
-                                  onChange={option => props.handleChange('shippingContact')(option)}                                
-                                />
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <hr/> */}
 																<Row>
 																	<Col lg={4}>
 																		<FormGroup className="mb-3">
@@ -1033,8 +1019,11 @@ class DetailCustomerInvoice extends React.Component {
 																										name="discountType"
 																										value={props.values.discountType}
 																										onChange={(item) => {
+																											console.log(item)
+																											props.handleChange('discountPercentage')('')
 																											props.handleChange('discountType')(item.value)
 																											props.setFieldValue('discount', 0)
+
 																											this.setState({
 																												discountPercentage: 0,
 																												discountAmount: 0
@@ -1054,13 +1043,15 @@ class DetailCustomerInvoice extends React.Component {
 																												id="discountPercentage"
 																												name="discountPercentage"
 																												placeholder="Discount Percentage"
+																												type="text"
 																												value={props.values.discountPercentage}
 																												onChange={(e) => {
+																													if(e.target.value === '' || this.regEx.test(e.target.value)) {
 																													props.handleChange('discountPercentage')(e)
 																													this.setState({
 																														discountPercentage: e.target.value,
 																													}, () => { this.updateAmount(this.state.data, props) })
-																												}}
+																												}}}
 																											/>
 																										</FormGroup>
 																									</Col>
@@ -1077,15 +1068,17 @@ class DetailCustomerInvoice extends React.Component {
 																										type="text"
 																										disabled={props.values.discountType && props.values.discountType === 'Percentage' ? true : false}
 																										placeholder="Discount Amounts"
-																										onChange={option => {
-																											props.handleChange('discount')(option)
-																											this.setState({
-																												discountAmount: +option.target.value
-																											}, () => {
-																												this.updateAmount(this.state.data, props)
-																											})
-																										}}
 																										value={props.values.discount}
+																										onChange={option => {
+																											if (option.target.value === '' || this.regEx.test(option.target.value)) {
+																												props.handleChange('discount')(option)
+																												this.setState({
+																													discountAmount: +option.target.value
+																												}, () => {
+																													this.updateAmount(this.state.data, props)
+																												})
+																											}
+																										}}
 																									/>
 																								</FormGroup>
 																							</Col>

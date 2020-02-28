@@ -315,8 +315,8 @@ class BankAccount extends React.Component {
   removeBankAccount(_id) {
     this.removeDialog()
     this.props.bankAccountActions.removeBankAccountByID(_id).then(() => {
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      this.props.bankAccountActions.getBankAccountList()
+      this.props.commonActions.tostifyAlert('success', 'Bank Account Removed Successfully')
+      this.initializeData()
       let temp_List = []
       this.state.selected_id_list.map(item => {
         if (item != _id) {
@@ -406,8 +406,8 @@ class BankAccount extends React.Component {
       ids: selected_id_list
     }
     this.props.bankAccountActions.removeBulkBankAccount(obj).then(() => {
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      this.props.bankAccountActions.getBankAccountList()
+      this.props.commonActions.tostifyAlert('success', 'Bank Account Removed Successfully')
+      this.initializeData()
       this.setState({
         selected_id_list: []
       })

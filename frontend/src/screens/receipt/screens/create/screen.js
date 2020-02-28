@@ -62,6 +62,8 @@ class CreateReceipt extends React.Component {
       }
     }
 
+    this.regEx = /^[0-9\d]+$/;
+
     this.handleSubmit = this.handleSubmit.bind(this)
     this.initializeData = this.initializeData.bind(this)
   }
@@ -265,7 +267,7 @@ class CreateReceipt extends React.Component {
                                     id="amount"
                                     name="amount"
                                     placeholder="Amount"
-                                    onChange={(value) => { props.handleChange('amount')(value) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('amount')(option) }}
                                     value={props.values.amount}
 
                                     className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
@@ -284,7 +286,7 @@ class CreateReceipt extends React.Component {
                                     id="unusedAmount"
                                     name="unusedAmount"
                                     placeholder="Unused Amount"
-                                    onChange={(value) => { props.handleChange('unusedAmount')(value) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('unusedAmount')(option) }}
                                     value={props.values.unusedAmount}
 
                                   />

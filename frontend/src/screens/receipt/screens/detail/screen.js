@@ -59,12 +59,14 @@ class DetailReceipt extends React.Component {
       initValue: {},
       current_receipt_id: null
     }
+
     this.handleSubmit = this.handleSubmit.bind(this)
     this.initializeData = this.initializeData.bind(this)
     this.deleteReceipt = this.deleteReceipt.bind(this)
     this.removeReceipt = this.removeReceipt.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
 
+    this.regEx = /^[0-9\d]+$/;
   }
 
 
@@ -330,8 +332,11 @@ class DetailReceipt extends React.Component {
                                         name="amount"
                                         placeholder="Amount"
                                         value={props.values.amount}
-                                        onChange={(value) => { props.handleChange('amount')(value) }}
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('amount')(option) }}
+                                        value={props.values.amount}
+    
                                         className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
+    
                                       />
                                       {props.errors.amount && props.touched.amount && (
                                         <div className="invalid-feedback">{props.errors.amount}</div>
@@ -346,9 +351,9 @@ class DetailReceipt extends React.Component {
                                         id="unusedAmount"
                                         name="unusedAmount"
                                         placeholder="Unused Amount"
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('unusedAmount')(option) }}
                                         value={props.values.unusedAmount}
-                                        onChange={(value) => { props.handleChange('unusedAmount')(value) }}
-
+    
                                       />
                                     </FormGroup>
                                   </Col>

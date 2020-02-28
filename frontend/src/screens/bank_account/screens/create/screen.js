@@ -64,6 +64,8 @@ class CreateBankAccount extends React.Component {
       currentData: {}
     }
 
+    this.regEx = /^[0-9\d]+$/;
+
     this.initializeData = this.initializeData.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -89,7 +91,7 @@ class CreateBankAccount extends React.Component {
     })
   }
 
-  handleSubmit (data) {
+  handleSubmit (data,resetForm) {
     const {
       account_name,
       currency,
@@ -111,7 +113,7 @@ class CreateBankAccount extends React.Component {
       accountNumber: account_number,
       ibanNumber: iban_number,
       swiftCode: swift_code,
-      bankCountry: country.value,
+      bankCountry: country ? country.value : '',
       personalCorporateAccountInd: account_is_for.value
     }
     this.props.createBankAccountActions.createBankAccount(obj).then(res => {
@@ -120,6 +122,7 @@ class CreateBankAccount extends React.Component {
         this.setState({
           createMore: false
         })
+        resetForm(this.state.initialVals)
       } else {
         this.props.history.push('/admin/banking/bank-account')
       }
@@ -161,12 +164,13 @@ class CreateBankAccount extends React.Component {
                       <Formik
                         initialValues={initialVals}
                         onSubmit={(values, {resetForm}) => {
-                          this.handleSubmit(values)
-                          resetForm(initialVals)
+                          this.handleSubmit(values,resetForm)
                         }}
                         validationSchema={Yup.object().shape({
                           account_name: Yup.string()
                             .required('Account Name is Required'),
+                            opening_balance: Yup.string()
+                            .required('Opening Balance is Required'),
                           currency: Yup.object().shape({
                             label: Yup.string().required(),
                             value: Yup.string().required(),
@@ -229,12 +233,12 @@ class CreateBankAccount extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="opening_balance">Opening Balance</Label>
                                     <Input
-                                      type="number"
+                                      type="type"
                                       id="opening_balance"
                                       name="opening_balance"
                                       placeholder="Your Opening Balance"
                                       value={props.values.opening_balance}
-                                      onChange={props.handleChange}
+                                      onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('opening_balance')(option) }}
                                       className={
                                         props.errors.opening_balance && props.touched.opening_balance
                                           ? 'is-invalid'

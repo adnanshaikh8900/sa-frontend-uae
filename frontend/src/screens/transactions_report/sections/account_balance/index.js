@@ -326,6 +326,7 @@ class AccountBalances extends React.Component {
                     isKey
                     dataField="transactionDate"
                     dataSort
+                    tdAttr={ {'colSpan': '15' } }
                   >
                     Transaction Date
                   </TableHeaderColumn>

@@ -56,7 +56,9 @@ class Journal extends React.Component {
         journalDate: '',
         referenceCode: '',
         description: ''
-      }
+      },
+      sortName: undefined,
+      sortOrder: undefined
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -75,7 +77,7 @@ class Journal extends React.Component {
     this.renderAccount = this.renderAccount.bind(this)
     this.renderCreditAmount = this.renderCreditAmount.bind(this)
     this.renderDebitAmount = this.renderDebitAmount.bind(this)
-
+    this.sortColumn = this.sortColumn.bind(this)
 
     this.toggleActionButton = this.toggleActionButton.bind(this)
 
@@ -86,6 +88,9 @@ class Journal extends React.Component {
       // sizePerPage: 10,
       // onSizePerPageList: this.onSizePerPageList,
       // onPageChange: this.onPageChange,
+      sortName: this.state.sortName,
+      sortOrder: this.state.sortOrder,
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -123,6 +128,15 @@ class Journal extends React.Component {
       this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
+  }
+
+  sortColumn(sortName, sortOrder) {
+    console.log(sortName)
+    console.log(sortOrder)
+    this.setState({
+      sortName,
+      sortOrder
+    });
   }
 
   // renderStatus (cell, row) {
@@ -442,7 +456,7 @@ class Journal extends React.Component {
                           hover
                           keyField="journalId"
                           pagination
-                          // remote
+                          remote
                           // fetchInfo={{ dataTotalSize: journal_list.totalCount ? journal_list.totalCount : 0 }}
                           totalSize={journal_list ? journal_list.length : 0}
                           className="journal-table"
@@ -459,7 +473,7 @@ class Journal extends React.Component {
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="referenceCode"
-                            dataSort
+                            dataSort={true}
                             width="12%"
                           >
                             JOURNAL NO.

@@ -72,8 +72,8 @@ class CreateCustomerInvoice extends React.Component {
 			data: [{
 				id: 0,
 				description: '',
-				quantity: 0,
-				unitPrice: 0,
+				quantity: '',
+				unitPrice: '',
 				vatCategoryId: '',
 				subTotal: 0
 			}],
@@ -90,8 +90,8 @@ class CreateCustomerInvoice extends React.Component {
 				lineItemsString: [{
 					id: 0,
 					description: '',
-					quantity: 0,
-					unitPrice: 0,
+					quantity: '',
+					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0
 				}],
@@ -101,8 +101,8 @@ class CreateCustomerInvoice extends React.Component {
 				totalAmount: 0,
 				notes: '',
 				discount: 0,
-				discountPercentage: 0,
-				discountType: ''
+				discountPercentage: '',
+				discountType: 'FIXED'
 			},
 			currentData: {},
 			contactType: 2,
@@ -111,7 +111,7 @@ class CreateCustomerInvoice extends React.Component {
 			createMore: false,
 			fileName: '',
 			term: '',
-			selectedType: '',
+			selectedType: 'FIXED',
 			discountPercentage: '',
 			discountAmount: 0
 		}
@@ -138,6 +138,8 @@ class CreateCustomerInvoice extends React.Component {
 			{ label: "Net 30", value: "NET_30" },
 			{ label: "Due on Receipt", value: "DUE_ON_RECEIPT" },
 		]
+		 this.regEx = /^[0-9\b]+$/;
+		
 
 		this.renderActions = this.renderActions.bind(this)
 		this.renderProductName = this.renderProductName.bind(this)
@@ -227,9 +229,11 @@ class CreateCustomerInvoice extends React.Component {
 			<Field name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<Input
-						type="number"
+						type="text"
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
-						onChange={(e) => { this.selectItem(e, row, 'quantity', form, field, props) }}
+						onChange={(e) => { 
+							if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'quantity', form, field, props) }
+						}
 						placeholder="Quantity"
 						className={`form-control 
             ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
@@ -255,9 +259,9 @@ class CreateCustomerInvoice extends React.Component {
 			<Field name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-						type="number"
+						type="text"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-						onChange={(e) => { this.selectItem(e, row, 'unitPrice', form, field, props) }}
+						onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'unitPrice', form, field, props) }}
 						placeholder="Unit Price"
 						className={`form-control 
             ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
@@ -284,7 +288,7 @@ class CreateCustomerInvoice extends React.Component {
 	setDate = (props, value) => {
 		const { term } = this.state
 		const val = term.split('_')
-		const temp = val[val.length -1] === 'Receipt' ? 1 : val[val.length -1]
+		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1]
 		const values = value ? value : moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate()
 		if (temp && values) {
 			const date = (moment(values).add(temp - 1, 'days').format('DD/MM/YYYY'))
@@ -311,13 +315,15 @@ class CreateCustomerInvoice extends React.Component {
 			data: data.concat({
 				id: this.state.idCount + 1,
 				description: '',
-				quantity: 0,
-				unitPrice: 0,
+				quantity: '',
+				unitPrice: '',
 				vatCategoryId: '',
 				subTotal: 0
 			}), idCount: this.state.idCount + 1
 		}, () => {
 			this.formRef.current.setFieldValue('lineItemsString', this.state.data, true)
+			this.formRef.current.setFieldTouched(`lineItemsString[${this.state.data.length - 1}]`, false, true)
+
 		})
 	}
 
@@ -437,7 +443,8 @@ class CreateCustomerInvoice extends React.Component {
 			total = (total_vat + total_net);
 		})
 
-		const discount = props.values.discountType === 'PERCENTAGE' ? (total * discountPercentage) / 100 : discountAmount
+		const discount = props.values.discountType === 'PERCENTAGE' ? +((total * discountPercentage) / 100).toFixed(2) : discountAmount
+		console.log(typeof discount)
 		this.setState({
 			data: data,
 			initValue: {
@@ -529,8 +536,8 @@ class CreateCustomerInvoice extends React.Component {
 					data: [{
 						id: 0,
 						description: '',
-						quantity: 0,
-						unitPrice: 0,
+						quantity: '',
+						unitPrice: '',
 						vatCategoryId: '',
 						subTotal: 0
 					}],
@@ -540,8 +547,8 @@ class CreateCustomerInvoice extends React.Component {
 							invoiceVATAmount: 0,
 							totalAmount: 0,
 							discountType: '',
-							discount: 0,
-							discountPercentage: 0
+							discount: '',
+							discountPercentage: '',
 						}
 					}
 				}, () => {
@@ -635,43 +642,57 @@ class CreateCustomerInvoice extends React.Component {
 
 													// })
 												}}
-											validationSchema={
-											  Yup.object().shape({
-											    invoice_number: Yup.string()
-											      .required("Invoice Number is Required"),
-											    contactId: Yup.string()
-											      .required("Customer is Required"),
-											    invoiceDate: Yup.date()
-											      .required('Invoice Date is Required'),
-											    invoiceDueDate: Yup.string()
-											      .required('Invoice Due Date is Required'),
-											    lineItemsString: Yup.array()
-											      .required('Atleast one invoice sub detail is mandatory')
-											      .of(Yup.object().shape({
-											        description: Yup.string().required("Value is Required"),
-											        quantity: Yup.number().required("Value is Required"),
-											        unitPrice: Yup.number().required("Value is Required"),
-											        vatCategoryId: Yup.string().required("Value is Required"),
-											      })),
-											    attachmentFile: Yup.mixed()
-											      .test('fileType', "*Unsupported File Format", value => {
-											        if (value && !this.supported_format.includes(value.type)) {
-											          this.setState({
-											            fileName: value.name
-											          })
-											          return false
-											        } else {
-											          return true
-											        }
-											      })
-											      .test('fileSize', "*File Size is too large", value => {
-											        if (value && value.size >= this.file_size) {
-											          return false
-											        } else {
-											          return true
-											        }
-											      })
-											  })}
+												validationSchema={
+													Yup.object().shape({
+														invoice_number: Yup.string()
+															.required("Invoice Number is Required"),
+														contactId: Yup.string()
+															.required("Customer is Required"),
+														invoiceDate: Yup.date()
+															.required('Invoice Date is Required'),
+														invoiceDueDate: Yup.string()
+															.required('Invoice Due Date is Required'),
+														lineItemsString: Yup.array()
+															.required('Atleast one invoice sub detail is mandatory')
+															.of(Yup.object().shape({
+																description: Yup.string().required("Value is Required"),
+																quantity: Yup.string().required("Value is Required").
+																test('quantity','Quantity Should be Greater than 1',value => {
+																	if(value > 0) {
+																		return true
+																	} else {
+																		return false
+																	}
+																}),
+																unitPrice: Yup.string().required("Value is Required")
+																.test('Unit Price','Unit Price Should be Greater than 1',value => {
+																	if(value > 0) {
+																		return true
+																	} else {
+																		return false
+																	}
+																}),
+																vatCategoryId: Yup.string().required("Value is Required"),
+															})),
+														attachmentFile: Yup.mixed()
+															.test('fileType', "*Unsupported File Format", value => {
+																if (value && !this.supported_format.includes(value.type)) {
+																	this.setState({
+																		fileName: value.name
+																	})
+																	return false
+																} else {
+																	return true
+																}
+															})
+															.test('fileSize', "*File Size is too large", value => {
+																if (value && value.size >= this.file_size) {
+																	return false
+																} else {
+																	return true
+																}
+															})
+													})}
 											>
 												{props => (
 													<Form onSubmit={props.handleSubmit}>
@@ -1063,9 +1084,10 @@ class CreateCustomerInvoice extends React.Component {
 																								value={props.values.discountType}
 																								onChange={(item) => {
 																									props.handleChange('discountType')(item.value)
+																									props.handleChange('discountPercentage')('')
 																									props.setFieldValue('discount', 0)
 																									this.setState({
-																										discountPercentage: 0,
+																										discountPercentage: '',
 																										discountAmount: 0
 																									}, () => {
 																										this.updateAmount(this.state.data, props)
@@ -1083,12 +1105,16 @@ class CreateCustomerInvoice extends React.Component {
 																										id="discountPercentage"
 																										name="discountPercentage"
 																										placeholder="Discount Percentage"
+																										type="text"
+																										value={props.values.discountPercentage}
 																										onChange={(e) => {
+																											if(e.target.value === '' || this.regEx.test(e.target.value)) {
 																											props.handleChange('discountPercentage')(e)
 																											this.setState({
 																												discountPercentage: e.target.value,
 																											}, () => { this.updateAmount(this.state.data, props) })
 																										}}
+																									}
 																									/>
 																								</FormGroup>
 																							</Col>
@@ -1103,17 +1129,19 @@ class CreateCustomerInvoice extends React.Component {
 																							<Input
 																								id="discount"
 																								name="discount"
-																								type="number"
+																								type="text"
 																								disabled={props.values.discountType && props.values.discountType === 'Percentage' ? true : false}
 																								placeholder="Discount Amounts"
 																								value={props.values.discount}
 																								onChange={option => {
-																									props.handleChange('discount')(option)
-																									this.setState({
-																										discountAmount: +option.target.value
-																									}, () => {
-																										this.updateAmount(this.state.data, props)
-																									})
+																									if (option.target.value === '' || this.regEx.test(option.target.value)) {
+																										props.handleChange('discount')(option)
+																										this.setState({
+																											discountAmount: +option.target.value
+																										}, () => {
+																											this.updateAmount(this.state.data, props)
+																										})
+																									}
 																								}}
 																							/>
 																						</FormGroup>

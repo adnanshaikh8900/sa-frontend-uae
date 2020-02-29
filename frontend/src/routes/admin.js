@@ -49,7 +49,7 @@ import {
 
   TransactionsReport,
   FinancialReport,
-
+  DetailedGeneralLedgerReport,
 
 
   ChartAccount,
@@ -330,6 +330,11 @@ const adminRoutes = [
     path: '/admin/report/financial',
     name: 'Financial',
     component: FinancialReport.screen
+  },
+  {
+    path: '/admin/report/detailed-general-ledger',
+    name: 'Detailed General Ledger',
+    component: DetailedGeneralLedgerReport.screen
   },
   {
     redirect: true,

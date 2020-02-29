@@ -80,6 +80,9 @@ class CreatePayment extends React.Component {
     this.options = {
     }
 
+    this.regEx = /^[0-9\d]+$/;
+
+
     this.initializeData = this.initializeData.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -292,6 +295,12 @@ class CreatePayment extends React.Component {
                               .nullable(),
                             paymentDate: Yup.date()
                               .required('Payment Date is Required'),
+                              currency: Yup.string()
+                              .required('Currency is Required')
+                              .nullable(),
+                              invoiceId: Yup.string()
+                              .required('Invoice Number is Required')
+                              .nullable(),
                             amount: Yup.string()
                               .required('Invoice Amount is Required')
                               .matches(/^[0-9]*$/, "Enter a Valid Amount")
@@ -361,6 +370,9 @@ class CreatePayment extends React.Component {
                                               : ''
                                           }
                                         />
+                                         {props.errors.invoiceId && props.touched.invoiceId && (
+                                          <div className="invalid-feedback">{props.errors.invoiceId}</div>
+                                        )}
                                       </FormGroup>
                                     </Col>
                                     <Col lg={4}>
@@ -376,7 +388,7 @@ class CreatePayment extends React.Component {
                                           // defaultValue={props.values.amount}
                                           className={props.errors.amount && props.touched.amount ? "is-invalid" : ""}
                                           value={props.values.amount}
-                                          onChange={option => props.handleChange('amount')(option)}
+                                          onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('amount')(option) }}
                                         />
                                         {props.errors.amount && props.touched.amount && (
                                           <div className="invalid-feedback">{props.errors.amount}</div>
@@ -403,6 +415,9 @@ class CreatePayment extends React.Component {
                                               : ''
                                           }
                                         />
+                                        {props.errors.currency && props.touched.currency && (
+                                          <div className="invalid-feedback">{props.errors.currency}</div>
+                                        )}
                                       </FormGroup>
                                     </Col>
                                     <Col lg={4}>

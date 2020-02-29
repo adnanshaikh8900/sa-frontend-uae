@@ -1478,12 +1478,12 @@ class Profile extends React.Component {
                                       <Col lg={12} className="mt-5">
                                         <FormGroup className="text-right">
                                           <Button type="submit" color="primary" className="btn-square mr-3">
-                                            <i className="fa fa-dot-circle-o"></i> Save
-                                  </Button>
+                                            <i className="fa fa-dot-circle-o"></i> Update
+                                          </Button>
                                           <Button color="secondary" className="btn-square"
                                             onClick={() => { this.props.history.push('/admin/dashboard') }}>
                                             <i className="fa fa-ban"></i> Cancel
-                                  </Button>
+                                         </Button>
                                         </FormGroup>
                                       </Col>
                                     </Row>

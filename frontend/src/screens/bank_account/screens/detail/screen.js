@@ -61,6 +61,8 @@ class DetailBankAccount extends React.Component {
       currentData: {}
     }
 
+    this.regEx = /^[0-9\d]+$/;
+
     this.initializeData = this.initializeData.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -145,7 +147,7 @@ class DetailBankAccount extends React.Component {
       ibanNumber: data.iban_number,
       swiftCode: data.swift_code,
       openingBalance: data.opening_balance,
-      bankCountry: data.country.value,
+      bankCountry: data.country ? data.country.value : '',
       bankAccountType: data.account_type.value
     }
     this.props.detailBankAccountActions.updateBankAccount(obj).then(res => {
@@ -232,6 +234,8 @@ class DetailBankAccount extends React.Component {
                         validationSchema={Yup.object().shape({
                           account_name: Yup.string()
                             .required('Account Name is Required'),
+                          opening_balance: Yup.string()
+                            .required('Opening Balance is Required'),
                           currency: Yup.object().shape({
                             label: Yup.string().required(),
                             value: Yup.string().required(),
@@ -294,12 +298,12 @@ class DetailBankAccount extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="opening_balance">Opening Balance</Label>
                                     <Input
-                                      type="number"
+                                      type="text"
                                       id="opening_balance"
                                       name="opening_balance"
                                       placeholder="Your Opening Balance"
                                       value={props.values.opening_balance}
-                                      onChange={props.handleChange}
+                                      onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('opening_balance')(option) }}
                                       className={
                                         props.errors.opening_balance && props.touched.opening_balance
                                           ? 'is-invalid'

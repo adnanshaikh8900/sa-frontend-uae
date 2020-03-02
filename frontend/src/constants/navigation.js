@@ -92,7 +92,8 @@ export default {
           name: 'Reports Filing',
           url: '/admin/taxes/reports-filing',
           icon: 'fas fa-file-text',
-        }
+        },
+
       ]
     },
     {
@@ -109,6 +110,11 @@ export default {
           name: 'Financial',
           url: '/admin/report/financial',
           icon: 'fas fa-usd',
+        },
+        {
+          name: 'Detailed General Ledger',
+          url: '/admin/report/detailed-general-ledger',
+          icon: 'fas fa-file-text',
         }
       ]
     },

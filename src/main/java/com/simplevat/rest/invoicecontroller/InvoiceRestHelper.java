@@ -15,7 +15,11 @@ import com.simplevat.service.ProjectService;
 import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.FileHelper;
+
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -49,6 +53,9 @@ public class InvoiceRestHelper {
 
 	@Autowired
 	private InvoiceService invoiceService;
+
+	@Autowired
+	private FileHelper fileHelper;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -119,7 +126,7 @@ public class InvoiceRestHelper {
 		invoice.setStatus(InvoiceStatusEnum.PENDING.getValue()); // default set, will change in transaction
 		invoice.setDiscountPercentage(invoiceModel.getDiscountPercentage());
 		invoice.setInvoiceDuePeriod(invoiceModel.getTerm());
-	
+
 		return invoice;
 	}
 
@@ -198,15 +205,15 @@ public class InvoiceRestHelper {
 			requestModel.setInvoiceLineItems(lineItemModels);
 		}
 		if (invoice.getReceiptAttachmentPath() != null) {
-			requestModel.setFilePath("/files/" + invoice.getReceiptAttachmentPath());
+			requestModel.setFilePath("/file/" + fileHelper.convertFilePthToUrl(invoice.getReceiptAttachmentPath()));
 		}
-		if(invoice.getDiscountType() != null) {
+		if (invoice.getDiscountType() != null) {
 			requestModel.setDiscountType(invoice.getDiscountType());
 		}
 		requestModel.setDiscount(invoice.getDiscount());
 		requestModel.setDiscountPercentage(invoice.getDiscountPercentage());
 		requestModel.setTerm(invoice.getInvoiceDuePeriod());
-		
+
 		return requestModel;
 	}
 

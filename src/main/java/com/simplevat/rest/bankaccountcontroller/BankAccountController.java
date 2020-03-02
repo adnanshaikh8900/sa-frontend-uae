@@ -95,7 +95,7 @@ public class BankAccountController implements Serializable {
 
 	@Autowired
 	private BankHelper bankRestHelper;
-	
+
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
 	public ResponseEntity getBankAccountList(BankAccountFilterModel filterModel) {
@@ -120,7 +120,12 @@ public class BankAccountController implements Serializable {
 					currencyService.findByPK(filterModel.getCurrencyCode()));
 		}
 
-		List<BankAccount> bankAccounts = bankAccountService.getBankAccounts(filterDataMap, filterModel);
+		//filterModel.setSortingCol(BankAccounrFilterEnum.ORDER_BY.getDbColumnName());
+		//filterModel.setOrder("DESC");
+
+		filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
+		
+		List<BankAccount> bankAccounts = bankAccountService.getBankAccounts(filterDataMap, null);
 		if (bankAccounts != null) {
 			return new ResponseEntity<>(bankAccountRestHelper.getListModel(bankAccounts), HttpStatus.OK);
 		} else {

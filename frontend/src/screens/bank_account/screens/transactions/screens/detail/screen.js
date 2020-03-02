@@ -11,7 +11,8 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
+  Label,
+  NavLink
 } from 'reactstrap'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
@@ -33,6 +34,7 @@ import * as  transactionActions from "../../actions";
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
+import API_ROOT_URL from '../../../../../../constants/config'
 
 const mapStateToProps = (state) => {
   return ({
@@ -102,6 +104,8 @@ class DetailBankTransaction extends React.Component {
             receiptNumber: res.data.receiptNumber ? res.data.receiptNumber : '',
             attachementDescription: res.data.attachementDescription ? res.data.attachementDescription : '',
             attachment: res.data.attachment ? res.data.attachment : '',
+            fileName: res.data.receiptAttachmentFileName ? res.data.receiptAttachmentFileName : '',
+            filePath: res.data.receiptAttachmentPath ? res.data.receiptAttachmentPath : '',
           },
           loading: false,
         })
@@ -123,7 +127,7 @@ class DetailBankTransaction extends React.Component {
       };
       reader.readAsDataURL(file);
       console.log(file)
-      props.setFieldValue('attachment', file);
+      props.setFieldValue('attachment', file,true);
     }
   }
 
@@ -205,24 +209,35 @@ class DetailBankTransaction extends React.Component {
                                 .required('Transaction Amount is Required'),
                               transactionTypeCode: Yup.string()
                                 .required('Transaction Type is Required'),
-                              // attachment: Yup.mixed()
-                              //   .test('fileType', "*Unsupported File Format", value => {
-                              //     if (value && !this.supported_format.includes(value.type)) {
-                              //       this.setState({
-                              //         fileName: value.name
-                              //       })
-                              //       return false
-                              //     } else {
-                              //       return true
-                              //     }
-                              //   })
-                              //   .test('fileSize', "*File Size is too large", value => {
-                              //     if (value && value.size >= this.file_size) {
-                              //       return false
-                              //     } else {
-                              //       return true
-                              //     }
-                              //   })
+                                attachment: Yup.mixed()
+                                .test(
+                                  "fileType",
+                                  "*Unsupported File Format",
+                                  value => {
+                                    value && this.setState({
+                                      fileName: value.name
+                                    });
+                                    if (
+                                      value &&
+                                      this.supported_format.includes(value.type)
+                                    ) {
+                                      return true;
+                                    } else {
+                                      return false;
+                                    }
+                                  }
+                                )
+                                .test(
+                                  "fileSize",
+                                  "*File Size is too large",
+                                  value => {
+                                    if (value && value.size <= this.file_size) {
+                                      return true;
+                                    } else {
+                                      return false;
+                                    }
+                                  }
+                                )
                             })}
                         >
                           {props => (
@@ -388,29 +403,31 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={4}>
                                   <Row>
                                     <Col lg={12}>
-                                      <FormGroup className="mb-3">
-                                        <Field name="attachment"
-                                          render={({ field, form }) => (
-                                            <div>
-                                              <Label>Reciept Attachment</Label> <br />
-                                              <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                                <i className="fa fa-upload"></i> Upload
-                                                    </Button>
-                                              <input id="fileInput" ref={ref => {
-                                                this.uploadFile = ref;
-                                              }} type="file" style={{ display: 'none' }} onChange={(e) => {
-                                                this.handleFileChange(e, props)
-                                              }} />
-                                              {this.state.fileName}
-
-                                            </div>
+                                    <FormGroup className="mb-3">
+                                          <Field name="attachment"
+                                            render={({ field, form }) => (
+                                              <div>
+                                                <Label>Reciept Attachment</Label> <br />
+                                                <div className="file-upload-cont">
+                                                  <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                                    <i className="fa fa-upload"></i> Upload
+                                         		   </Button>
+                                                  <input id="fileInput" ref={ref => {
+                                                    this.uploadFile = ref;
+                                                  }} type="file" style={{ display: 'none' }} onChange={(e) => {
+                                                    this.handleFileChange(e, props)
+                                                  }} />
+                                                  {this.state.fileName ? this.state.fileName : (
+                                                    <NavLink  download={this.state.initValue.fileName} href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`} style={{ fontSize: '0.875rem' }} target="_blank" >{this.state.initValue.fileName}</NavLink>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            )}
+                                          />
+                                          {props.errors.attachment && (
+                                            <div className="invalid-file">{props.errors.attachment}</div>
                                           )}
-                                        />
-                                        {console.log(props.errors)}
-                                        {props.errors.attachment && (
-                                          <div className="invalid-file">{props.errors.attachment}</div>
-                                        )}
-                                      </FormGroup>
+                                        </FormGroup>
                                     </Col>
                                   </Row>
                                 </Col>

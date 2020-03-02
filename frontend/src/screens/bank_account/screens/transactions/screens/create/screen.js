@@ -111,8 +111,7 @@ class CreateBankTransaction extends React.Component {
       reader.onloadend = () => {
       };
       reader.readAsDataURL(file);
-      console.log(file)
-      props.setFieldValue('attachment', file);
+      props.setFieldValue('attachment', file,true);
     }
   }
 
@@ -197,24 +196,35 @@ class CreateBankTransaction extends React.Component {
                               .required('Transaction Amount is Required'),
                             transactionTypeCode: Yup.string()
                               .required('Transaction Type is Required'),
-                            attachment: Yup.mixed()
-                              .test('fileType', "*Unsupported File Format", value => {
-                                if (value && !this.supported_format.includes(value.type)) {
-                                  this.setState({
-                                    fileName: value.name
-                                  })
-                                  return false
-                                } else {
-                                  return true
-                                }
-                              })
-                              .test('fileSize', "*File Size is too large", value => {
-                                if (value && value.size >= this.file_size) {
-                                  return false
-                                } else {
-                                  return true
-                                }
-                              })
+                              attachment: Yup.mixed()
+															.test(
+																"fileType",
+																"*Unsupported File Format",
+																value => {
+																	value && this.setState({
+																		fileName: value.name
+																	});
+																	if (
+																		value &&
+																		this.supported_format.includes(value.type)
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																}
+															)
+															.test(
+																"fileSize",
+																"*File Size is too large",
+																value => {
+																	if (value && value.size <= this.file_size) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																}
+															)
                           })}
                       >
                         {props => (
@@ -367,7 +377,7 @@ class CreateBankTransaction extends React.Component {
                               <Col lg={4}>
                                 <Row>
                                   <Col lg={12}>
-                                    <FormGroup className="mb-3">
+                                  <FormGroup className="mb-3">
                                       <Field name="attachment"
                                         render={({ field, form }) => (
                                           <div>
@@ -385,8 +395,7 @@ class CreateBankTransaction extends React.Component {
                                           </div>
                                         )}
                                       />
-                                      {console.log(props.errors)}
-                                      {props.errors.attachment && (
+                                      {props.errors.attachment && props.touched.attachment && (
                                         <div className="invalid-file">{props.errors.attachment}</div>
                                       )}
                                     </FormGroup>

@@ -80,7 +80,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	// for testing
 	@Override
 	public List<ENTITY> executeQuery(List<DbFilter> dbFilters, PaginationModel paginationModel) {
-		StringBuilder queryBuilder = new StringBuilder("SELECT o FROM ").append(entityClass.getName()).append(" o ");
+		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());//.append(" o ");
 		int i = 0;
 		for (DbFilter dbFilter : dbFilters) {
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
@@ -89,9 +89,16 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 				} else {
 					queryBuilder.append(" where ");
 				}
-				queryBuilder.append("o.").append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
+				queryBuilder.
+				//append("o.").
+				append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
 				i++;
 			}
+		}
+
+		if (paginationModel.getCol() != null && !paginationModel.getCol().isEmpty()
+				&& !paginationModel.getCol().contains(" ")) {
+			queryBuilder.append(" order by " + paginationModel.getCol() + " " + paginationModel.getOrder());
 		}
 
 		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);

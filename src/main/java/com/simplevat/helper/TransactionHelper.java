@@ -22,6 +22,7 @@ import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionTypeService;
 import com.simplevat.utils.DateFormatUtil;
+import com.simplevat.utils.FileHelper;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -58,6 +59,9 @@ public class TransactionHelper {
 
 	@Autowired
 	private TransactionService transactionService;
+
+	@Autowired
+	private FileHelper fileHelper;
 
 	public Transaction getEntity(TransactionPresistModel transactionModel) {
 		Transaction transaction = new Transaction();
@@ -97,13 +101,6 @@ public class TransactionHelper {
 		transaction.setTransactionAmount(transactionModel.getTransactionAmount());
 		transaction.setReceiptNumber(transactionModel.getReceiptNumber());
 		transaction.setExplainedTransactionAttachementDescription(transactionModel.getAttachementDescription());
-		if (transactionModel.getAttachment() != null) {
-			try {
-				transaction.setExplainedTransactionAttachement(transactionModel.getAttachment().getBytes());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 
 		return transaction;
 	}
@@ -171,13 +168,9 @@ public class TransactionHelper {
 		transactionModel.setTransactionAmount(transaction.getTransactionAmount());
 		transactionModel.setReceiptNumber(transaction.getReceiptNumber());
 		transactionModel.setAttachementDescription(transaction.getExplainedTransactionAttachementDescription());
-		if (transaction.getExplainedTransactionAttachement() != null) {
-//need to send file link
-			// try {
-//				transactionModel.setExplainedTransactionAttachement(transaction.getExplainedTransactionAttachement());
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
+		if (transaction.getExplainedTransactionAttachmentPath() != null) {
+			transactionModel.setReceiptAttachmentPath(
+					"/file/" + fileHelper.convertFilePthToUrl(transaction.getExplainedTransactionAttachmentPath()));
 		}
 
 		return transactionModel;
@@ -187,7 +180,7 @@ public class TransactionHelper {
 		List<JournalLineItem> journalLineItemList = new ArrayList();
 
 		TransactionType transactionType = transaction.getTransactionType();
-		// XXX :  need to be save 1 is MONEY IN (TRANSACTION_TYPE) in constance
+		// XXX : need to be save 1 is MONEY IN (TRANSACTION_TYPE) in constance
 		boolean isdebitFromBank = transactionType.getTransactionTypeCode().equals(1)
 				|| (transactionType.getParentTransactionType() != null
 						&& transactionType.getParentTransactionType().getTransactionTypeCode().equals(1)) ? true

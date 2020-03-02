@@ -11,6 +11,6 @@ package com.simplevat.constant;
  */
 public enum FileTypeEnum {
     
-    EXPENSE, SUPPLIER_INVOICE, CUSTOMER_INVOICE;
+    EXPENSE, SUPPLIER_INVOICE, CUSTOMER_INVOICE,TRANSATION;
     
 }

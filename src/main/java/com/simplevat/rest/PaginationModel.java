@@ -15,7 +15,8 @@ import lombok.Data;
 public class PaginationModel {
     private Integer pageNo;
     private Integer pageSize;
-    
+    private String order;
+    private String col;
     
     public Integer getPageNo() {
         if (pageNo == null) {

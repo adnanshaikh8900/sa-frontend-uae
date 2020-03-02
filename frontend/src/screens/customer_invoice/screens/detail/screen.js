@@ -11,7 +11,8 @@ import {
 	Form,
 	FormGroup,
 	Input,
-	Label
+	Label,
+	NavLink
 } from 'reactstrap'
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
@@ -37,6 +38,7 @@ import {
 
 import './style.scss'
 import moment from 'moment'
+import API_ROOT_URL from '../../../../constants/config'
 
 const mapStateToProps = (state) => {
 	return ({
@@ -78,7 +80,8 @@ class DetailCustomerInvoice extends React.Component {
 			term: '',
 			selectedType: '',
 			discountPercentage: '',
-			discountAmount: 0
+			discountAmount: 0,
+			fileName: ''
 		}
 
 		// this.options = {
@@ -92,6 +95,15 @@ class DetailCustomerInvoice extends React.Component {
 			{ label: "Due on Receipt", value: "DUE_ON_RECEIPT" },
 		]
 		this.regEx = /^[0-9\b]+$/;
+		this.file_size = 1024000;
+		this.supported_format = [
+			"",
+			"text/plain",
+			"application/pdf",
+			"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+			"application/vnd.ms-excel",
+			"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+		];
 
 		this.initializeData = this.initializeData.bind(this)
 		this.renderActions = this.renderActions.bind(this)
@@ -113,20 +125,8 @@ class DetailCustomerInvoice extends React.Component {
 		this.removeInvoice = this.removeInvoice.bind(this)
 		this.removeDialog = this.removeDialog.bind(this)
 		this.checkedRow = this.checkedRow.bind(this)
-
+		this.handleFileChange = this.handleFileChange.bind(this)
 	}
-
-	// renderActions (cell, row) {
-	//   return (
-	//     <Button
-	//       size="sm"
-	//       color="primary"
-	//       className="btn-brand icon"
-	//     >
-	//       <i className="fas fa-trash"></i>
-	//     </Button>
-	//   )
-	// }
 
 	componentDidMount() {
 		this.initializeData();
@@ -163,6 +163,8 @@ class DetailCustomerInvoice extends React.Component {
 							discountPercentage: res.data.discountPercentage ? res.data.discountPercentage : '',
 							discountType: res.data.discountType ? res.data.discountType : '',
 							term: res.data.term ? res.data.term : '',
+							fileName: res.data.fileName ? res.data.fileName : '',
+							filePath: res.data.filePath ? res.data.filePath : '',
 						},
 						discountAmount: res.data.discount ? res.data.discount : 0,
 						discountPercentage: res.data.discountPercentage ? res.data.discountPercentage : '',
@@ -248,8 +250,9 @@ class DetailCustomerInvoice extends React.Component {
 					<Input
 						type="text"
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
-						onChange={(e) => { 
-							if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'quantity', form, field, props) }
+						onChange={(e) => {
+							if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'quantity', form, field, props)
+						}
 						}
 						placeholder="Quantity"
 						className={`form-control 
@@ -467,6 +470,18 @@ class DetailCustomerInvoice extends React.Component {
 		}
 	}
 
+	handleFileChange(e, props) {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {
+			};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachmentFile', file,true);
+		}
+	}
+
 
 	handleSubmit(data) {
 		const { current_customer_id, term } = this.state;
@@ -629,17 +644,7 @@ class DetailCustomerInvoice extends React.Component {
 														ref={this.formRef}
 
 														onSubmit={(values, { resetForm }) => {
-
 															this.handleSubmit(values)
-															// resetForm(initValue)
-
-															// this.setState({
-															//   selectedCurrency: null,
-															//   selectedProject: null,
-															//   selectedBankAccount: null,
-															//   selectedCustomer: null
-
-															// })
 														}}
 														validationSchema={
 															Yup.object().shape({
@@ -656,23 +661,52 @@ class DetailCustomerInvoice extends React.Component {
 																	.of(Yup.object().shape({
 																		description: Yup.string().required("Value is Required"),
 																		quantity: Yup.string().required("Value is Required").
-																		test('quantity','Quantity Should be Greater than 1',value => {
-																			if(value > 0) {
-																				return true
-																			} else {
-																				return false
-																			}
-																		}),
+																			test('quantity', 'Quantity Should be Greater than 1', value => {
+																				if (value > 0) {
+																					return true
+																				} else {
+																					return false
+																				}
+																			}),
 																		unitPrice: Yup.string().required("Value is Required")
-																		.test('Unit Price','Unit Price Should be Greater than 1',value => {
-																			if(value > 0) {
-																				return true
-																			} else {
-																				return false
-																			}
-																		}),
+																			.test('Unit Price', 'Unit Price Should be Greater than 1', value => {
+																				if (value > 0) {
+																					return true
+																				} else {
+																					return false
+																				}
+																			}),
 																		vatCategoryId: Yup.string().required("Value is Required"),
-																	}))
+																	})),
+																	attachmentFile: Yup.mixed()
+																	.test(
+																		"fileType",
+																		"*Unsupported File Format",
+																		value => {
+																			value && this.setState({
+																				fileName: value.name
+																			});
+																			if (
+																				value &&
+																				this.supported_format.includes(value.type)
+																			) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		}
+																	)
+																	.test(
+																		"fileSize",
+																		"*File Size is too large",
+																		value => {
+																			if (value && value.size <= this.file_size) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		}
+																	)
 															})}
 													>
 														{props => (
@@ -890,7 +924,6 @@ class DetailCustomerInvoice extends React.Component {
 																						placeholder="1024 characters..."
 																						onChange={option => props.handleChange('receiptAttachmentDescription')(option)}
 																						defaultValue={props.values.receiptAttachmentDescription}
-
 																					/>
 																				</FormGroup>
 																			</Col>
@@ -900,14 +933,29 @@ class DetailCustomerInvoice extends React.Component {
 																		<Row>
 																			<Col lg={12}>
 																				<FormGroup className="mb-3">
-																					<Label>Reciept Attachment</Label><br />
-																					<Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-																						<i className="fa fa-upload"></i> Upload
-                                    </Button>
-																					<input id="fileInput" ref={ref => {
-																						this.uploadFile = ref;
-																					}}
-																						type="file" type="file" style={{ display: 'none' }} />
+																					<Field name="attachmentFile"
+																						render={({ field, form }) => (
+																							<div>
+																								<Label>Reciept Attachment</Label> <br />
+																								<div className="file-upload-cont">
+																								<Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+																									<i className="fa fa-upload"></i> Upload
+                                         		   </Button>
+																								<input id="fileInput" ref={ref => {
+																									this.uploadFile = ref;
+																								}} type="file" style={{ display: 'none' }} onChange={(e) => {
+																									this.handleFileChange(e, props)
+																								}} />
+																								{this.state.fileName ? this.state.fileName : (
+																									<NavLink href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`} download={this.state.initValue.fileName} style={{ fontSize: '0.875rem' }} target="_blank">{this.state.initValue.fileName}</NavLink>
+																								)}
+																								</div>
+																							</div>
+																						)}
+																					/>
+																					{props.errors.attachmentFile && (
+																						<div className="invalid-file">{props.errors.attachmentFile}</div>
+																					)}
 																				</FormGroup>
 																			</Col>
 																		</Row>
@@ -1046,12 +1094,13 @@ class DetailCustomerInvoice extends React.Component {
 																												type="text"
 																												value={props.values.discountPercentage}
 																												onChange={(e) => {
-																													if(e.target.value === '' || this.regEx.test(e.target.value)) {
-																													props.handleChange('discountPercentage')(e)
-																													this.setState({
-																														discountPercentage: e.target.value,
-																													}, () => { this.updateAmount(this.state.data, props) })
-																												}}}
+																													if (e.target.value === '' || this.regEx.test(e.target.value)) {
+																														props.handleChange('discountPercentage')(e)
+																														this.setState({
+																															discountPercentage: e.target.value,
+																														}, () => { this.updateAmount(this.state.data, props) })
+																													}
+																												}}
 																											/>
 																										</FormGroup>
 																									</Col>

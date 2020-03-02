@@ -192,7 +192,7 @@ export const getVatList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/vat/getvat'
+      url: '/rest/vat/getList'
     }
     return authApi(data).then(res => {
       if (res.status === 200) {

@@ -172,6 +172,7 @@ public class TransactionHelper {
 			transactionModel.setReceiptAttachmentPath(
 					"/file/" + fileHelper.convertFilePthToUrl(transaction.getExplainedTransactionAttachmentPath()));
 		}
+		transactionModel.setReceiptAttachmentFileName(transaction.getExplainedTransactionAttachmentFileName()); 
 
 		return transactionModel;
 	}

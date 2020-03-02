@@ -13,24 +13,24 @@ import lombok.Data;
  */
 @Data
 public class PaginationModel {
-    private Integer pageNo;
-    private Integer pageSize;
-    private String order;
-    private String col;
-    
-    public Integer getPageNo() {
-        if (pageNo == null) {
-            pageNo = 0;
-        }else{
-            pageNo = pageNo * getPageSize();
-        }
-        return pageNo;
-    }
+	private Integer pageNo;
+	private Integer pageSize;
+	// private String order;
+	// private String sortingCol;
 
-    public Integer getPageSize() {
-        if (pageSize == null) {
-            pageSize = 10;
-        }
-        return pageSize;
-    }
+	public Integer getPageNo() {
+		if (pageNo == null) {
+			pageNo = 0;
+		} else {
+			pageNo = pageNo * getPageSize();
+		}
+		return pageNo;
+	}
+
+	public Integer getPageSize() {
+		if (pageSize == null) {
+			pageSize = 10;
+		}
+		return pageSize;
+	}
 }

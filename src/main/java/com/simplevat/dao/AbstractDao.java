@@ -80,33 +80,42 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	// for testing
 	@Override
 	public List<ENTITY> executeQuery(List<DbFilter> dbFilters, PaginationModel paginationModel) {
-		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());//.append(" o ");
+		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());// .append(" o ");
 		int i = 0;
+		DbFilter orderByFilter = null;
 		for (DbFilter dbFilter : dbFilters) {
-			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
+			System.out.println("Db = " + dbFilter);
+			boolean orderBy = isOrderBy(dbFilter);
+			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
 				if (i > 0) {
 					queryBuilder.append(" and ");
 				} else {
 					queryBuilder.append(" where ");
 				}
 				queryBuilder.
-				//append("o.").
-				append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
+				// append("o.").
+						append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
 				i++;
+			} else if (orderBy) {
+				orderByFilter = dbFilter;
+				// java.util.ConcurrentModificationException: dbFilters.remove(orderByFilter);
 			}
 		}
 
-		if (paginationModel.getCol() != null && !paginationModel.getCol().isEmpty()
-				&& !paginationModel.getCol().contains(" ")) {
-			queryBuilder.append(" order by " + paginationModel.getCol() + " " + paginationModel.getOrder());
-		}
+		queryBuilder.append(" Order by " + orderByFilter.getDbCoulmnName()).append(" " + orderByFilter.getValue());
+
+//		if (paginationModel != null && paginationModel.getSortingCol() != null
+//				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ")) {
+//			queryBuilder.append(" order by " + paginationModel.getSortingCol() + " " + paginationModel.getOrder());
+//		}
 
 		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
 		for (DbFilter dbFilter : dbFilters) {
-			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
+			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !isOrderBy(dbFilter)) {
 				typedQuery.setParameter(dbFilter.getDbCoulmnName(), dbFilter.getValue());
 			}
 		}
+
 		if (paginationModel != null) {
 			typedQuery.setFirstResult(paginationModel.getPageNo());
 			typedQuery.setMaxResults(paginationModel.getPageSize());
@@ -228,4 +237,13 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		return resultList;
 	}
 
+	private boolean isOrderBy(DbFilter dbFilter) {
+		if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()
+				&& (dbFilter.getValue().toString().equalsIgnoreCase("ASC")
+						|| dbFilter.getValue().toString().equalsIgnoreCase("DESC"))) {
+
+			return true;
+		}
+		return false;
+	}
 }

@@ -37,5 +37,6 @@ public class TransactionPresistModel implements Serializable {
     private String attachementDescription;
     private MultipartFile attachment;
     private String receiptAttachmentPath;
+    private String receiptAttachmentFileName;
 
 }

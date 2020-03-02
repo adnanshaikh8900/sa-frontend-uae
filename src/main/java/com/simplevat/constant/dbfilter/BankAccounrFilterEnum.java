@@ -10,7 +10,8 @@ public enum BankAccounrFilterEnum {
 	TRANSACTION_DATE("transactionDate","=:transactionDate"),
 	ACCOUNT_NO("accountNumber", " like CONCAT(:accountNumber,'%')"),
 	CURRENCY_CODE("bankAccountCurrency"," =:bankAccountCurrency"),
-	DELETE_FLAG("deleteFlag", " = :deleteFlag");
+	ORDER_BY("bankAccountId"," =:bankAccountId"),
+	DELETE_FLAG("deleteFlag", " =:deleteFlag");
 
 	@Getter
 	String dbColumnName;

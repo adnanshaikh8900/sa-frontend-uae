@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.simplevat.criteria.TransactionCategoryFilterNew;
 import com.simplevat.criteria.bankaccount.TransactionCategoryCriteria;
 import com.simplevat.entity.Activity;
-import com.simplevat.entity.Product;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.TransactionCategoryService;
 import java.time.LocalDateTime;
@@ -77,13 +76,13 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
     }
 
     @Override
-    public List<TransactionCategory> findAllTransactionCategoryByTransactionTypeAndName(Integer transactionTypeCode, String name) {
-        return dao.findAllTransactionCategoryByTransactionTypeAndName(transactionTypeCode, name);
+    public List<TransactionCategory> findAllTransactionCategoryByChartOfAccountIdAndName(Integer chartOfAccountId, String name) {
+        return dao.findAllTransactionCategoryByChartOfAccountIdAndName(chartOfAccountId, name);
     }
 
     @Override
-    public List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode) {
-        return dao.findAllTransactionCategoryByTransactionType(transactionTypeCode);
+    public List<TransactionCategory> findAllTransactionCategoryByChartOfAccount(Integer chartOfAccountId) {
+        return dao.findAllTransactionCategoryByChartOfAccount(chartOfAccountId);
     }
 
     @Override

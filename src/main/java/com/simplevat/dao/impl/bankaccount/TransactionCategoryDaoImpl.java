@@ -39,9 +39,9 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
     }
 
     @Override
-    public List<TransactionCategory> findAllTransactionCategoryByTransactionTypeAndName(Integer transactionTypeCode, String name) {
-        TypedQuery<TransactionCategory> query = getEntityManager().createQuery("SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.transactionType.transactionTypeCode =:transactionTypeCode AND t.transactionCategoryName LIKE '%'||:transactionCategoryName||'%' ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC", TransactionCategory.class);
-        query.setParameter("transactionTypeCode", transactionTypeCode);
+    public List<TransactionCategory> findAllTransactionCategoryByChartOfAccountIdAndName(Integer chartOfAccountId, String name) {
+        TypedQuery<TransactionCategory> query = getEntityManager().createQuery("SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.chartOfAccount.chartOfAccountId =:chartOfAccountId AND t.transactionCategoryName LIKE '%'||:transactionCategoryName||'%' ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC", TransactionCategory.class);
+        query.setParameter("chartOfAccountId", chartOfAccountId);
         query.setParameter("transactionCategoryName", name);
         if (query.getResultList() != null && !query.getResultList().isEmpty()) {
             return query.getResultList();
@@ -50,9 +50,9 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
     }
 
     @Override
-    public List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode) {
-        TypedQuery<TransactionCategory> query = getEntityManager().createQuery("SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.transactionType.transactionTypeCode =:transactionTypeCode ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC", TransactionCategory.class);
-        query.setParameter("transactionTypeCode", transactionTypeCode);
+    public List<TransactionCategory> findAllTransactionCategoryByChartOfAccount(Integer chartOfAccountId) {
+        TypedQuery<TransactionCategory> query = getEntityManager().createQuery("SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.chartOfAccount.chartOfAccountId =:chartOfAccountId ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC", TransactionCategory.class);
+        query.setParameter("chartOfAccountId", chartOfAccountId);
         if (query.getResultList() != null && !query.getResultList().isEmpty()) {
             return query.getResultList();
         }

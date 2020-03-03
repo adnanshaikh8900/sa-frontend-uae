@@ -10,11 +10,11 @@ import com.simplevat.model.FinancialPeriodRestModel;
 import com.simplevat.model.InvoiceReportRestModel;
 import com.simplevat.model.TransactionReportRestModel;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.service.bankaccount.TransactionTypeService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransactionReportRestController {
 
     @Autowired
-    private TransactionTypeService transactionTypeService;
+    private ChartOfAccountService transactionTypeService;
 
     @Autowired
     private TransactionCategoryService transactionCategoryService;
@@ -61,9 +61,9 @@ public class TransactionReportRestController {
 
     @ApiOperation(value = "Get All Transaction Type")
     @RequestMapping(method = RequestMethod.GET, value = "/getTransactionTypes")
-    public ResponseEntity<List<TransactionType>> transactionTypes() throws Exception {
+    public ResponseEntity<List<ChartOfAccount>> transactionTypes() throws Exception {
         try {
-            List<TransactionType> transactionTypeList = transactionTypeService.findAllChild();
+            List<ChartOfAccount> transactionTypeList = transactionTypeService.findAllChild();
             return new ResponseEntity(transactionTypeList, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,15 +73,15 @@ public class TransactionReportRestController {
 
     @ApiOperation(value = "Get All Transaction Category")
     @RequestMapping(method = RequestMethod.GET, value = "/getTransactionCategories")
-    public ResponseEntity<List<TransactionCategory>> transactionCategories(@RequestParam("transactionTypeCode") Integer transactionTypeCode) throws Exception {
+    public ResponseEntity<List<TransactionCategory>> transactionCategories(@RequestParam("chartOfAccountId") Integer chartOfAccountId) throws Exception {
         try {
-            TransactionType transactionType = transactionTypeService.findByPK(transactionTypeCode);
+            ChartOfAccount chartOfAccount = transactionTypeService.findByPK(chartOfAccountId);
             String name = "";
             List<TransactionCategory> transactionCategoryParentList = new ArrayList<>();
             List<TransactionCategory> transactionCategoryList = new ArrayList<>();
             transactionCategoryList.clear();
-            if (transactionType != null) {
-                transactionCategoryList = transactionCategoryService.findAllTransactionCategoryByTransactionTypeAndName(transactionType.getTransactionTypeCode(), name);
+            if (chartOfAccount != null) {
+                transactionCategoryList = transactionCategoryService.findAllTransactionCategoryByChartOfAccountIdAndName(chartOfAccount.getChartOfAccountId(), name);
                 for (TransactionCategory transactionCategory : transactionCategoryList) {
                     if (transactionCategory.getParentTransactionCategory() != null) {
                         transactionCategoryParentList.add(transactionCategory.getParentTransactionCategory());

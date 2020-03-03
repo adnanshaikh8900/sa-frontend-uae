@@ -18,7 +18,7 @@ import javax.persistence.Version;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.converter.DateConverter;
 
 import lombok.Data;

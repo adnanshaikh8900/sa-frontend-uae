@@ -17,7 +17,7 @@ import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;
 import com.simplevat.entity.bankaccount.BankAccountType;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
@@ -25,7 +25,7 @@ import com.simplevat.service.UserService;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.BankAccountStatusService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
-import com.simplevat.service.bankaccount.TransactionTypeService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 import io.swagger.annotations.ApiOperation;
 

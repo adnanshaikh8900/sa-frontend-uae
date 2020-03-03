@@ -17,11 +17,11 @@ public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory
     
     public TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode);
     
-    public List<TransactionCategory> findAllTransactionCategoryByTransactionTypeAndName(Integer transactionTypeCode, String name);
+    public List<TransactionCategory> findAllTransactionCategoryByChartOfAccountIdAndName(Integer chartOfAccountId, String name);
 
     public List<TransactionCategory> findTransactionCategoryListByParentCategory(Integer parentCategoryId);
     
-    public List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode);
+    public List<TransactionCategory> findAllTransactionCategoryByChartOfAccount(Integer chartOfAccount);
 
     public TransactionCategory getDefaultTransactionCategoryByTransactionCategoryId(Integer transactionCategoryId);
 

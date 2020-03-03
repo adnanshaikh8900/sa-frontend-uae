@@ -18,11 +18,15 @@ import org.hibernate.annotations.ColumnDefault;
     @NamedQuery(name = "findAllTransactionCategory",
             query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
     ,
-    @NamedQuery(name = "findAllTransactionCategoryByTransactionType",
-            query = "SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.transactionType.transactionTypeCode =:transactionTypeCode ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
+    @NamedQuery(name = "findAllTransactionCategoryBychartOfAccount",
+            query = "SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.chartOfAccount.chartOfAccountId =:chartOfAccountId ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
     ,
      @NamedQuery(name = "findAllTransactionCategoryByUserId",
             query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (t.createdBy = :createdBy or t.createdBy = 1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
+    ,
+    @NamedQuery(name = "findMaxTnxCodeByChartOfAccId",
+    query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (t.createdBy = :createdBy or t.createdBy = 1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
+
 })
 @Entity
 @Table(name = "TRANSACTION_CATEGORY")
@@ -49,8 +53,8 @@ public class TransactionCategory implements Serializable {
     private String transactionCategoryCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TRANSACTION_TYPE_CODE")
-    private TransactionType transactionType;
+    @JoinColumn(name = "CHART_OF_ACCOUNT_ID")
+    private ChartOfAccount chartOfAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_TRANSACTION_CATEGORY_CODE")

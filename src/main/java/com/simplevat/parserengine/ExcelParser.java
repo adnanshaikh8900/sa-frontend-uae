@@ -65,17 +65,17 @@ public class ExcelParser implements TransactionFileParser {
 				DataFormatter dataFormatter = new DataFormatter();
 
 				workbook.forEach(sheet -> {
-					Map<String, String> dataeMap = new LinkedHashMap<String, String>();
 					sheet.forEach(row -> {
+						Map<String, String> dataeMap = new LinkedHashMap<String, String>();
 						row.forEach(cell -> {
 							String cellValue = dataFormatter.formatCellValue(cell);
 							if (cell.getRow().getRowNum() == firstRowIndex) {
 								indexHeaderMap.put(cell.getColumnIndex(), cellValue);
 							} else if (cell.getRow().getRowNum() > firstRowIndex) {
-
 								dataeMap.put(indexHeaderMap.get(cell.getColumnIndex()), cellValue);
 							}
 						});
+						if(!dataeMap.isEmpty())
 						list.add(dataeMap);
 					});
 				});

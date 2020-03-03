@@ -303,12 +303,12 @@ public class TransactionImportRestHelper {
 					case CR_AMOUNT:
 					case DR_AMOUNT:
 					case AMOUNT:
-						trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
+					
 						MathContext mc = new MathContext(4); // 2 precision
 
 						// need to create enum
 						if (dataMap.containsKey(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName())) {
-
+							trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
 								currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
 							} else {
@@ -318,16 +318,27 @@ public class TransactionImportRestHelper {
 									((String) dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()))
 											.charAt(0));
 						} else {
-							if (dataMap.containsKey(TransactionEnum.DR_AMOUNT.getDisplayName())) {
+							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
-								trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
-								currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
-								trnx.setDebitCreditFlag('D');
-							} else if (dataMap.containsKey(TransactionEnum.CR_AMOUNT.getDisplayName())) {
+								if (!data.equals("-")) {
+									BigDecimal debitAmt = new BigDecimal(Float.valueOf(data));
+									if (debitAmt.compareTo(BigDecimal.valueOf(0)) == 1) {
+										trnx.setTransactionAmount(debitAmt);
+										currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
+										trnx.setDebitCreditFlag('D');
+									}
+								}
+							}
+							if (dbColEnum.equals(TransactionEnum.CR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.CR_AMOUNT.getDisplayName());
-								trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
-								currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
-								trnx.setDebitCreditFlag('C');
+								if (!data.equals("-")) {
+									BigDecimal creditAmt = new BigDecimal(Float.valueOf(data));
+									if (creditAmt.compareTo(BigDecimal.valueOf(0)) == 1) {
+										trnx.setTransactionAmount(creditAmt);
+										currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
+										trnx.setDebitCreditFlag('C');
+									}
+								}
 							}
 						}
 

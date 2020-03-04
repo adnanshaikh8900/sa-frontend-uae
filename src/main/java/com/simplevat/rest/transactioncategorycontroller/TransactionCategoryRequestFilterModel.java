@@ -8,5 +8,5 @@ public class TransactionCategoryRequestFilterModel extends PaginationModel {
 
     private String transactionCategoryName;
     private String transactionCategoryCode;
-    private Integer transactionType;
+    private Integer chartOfAccountId;
 }

@@ -1,11 +1,11 @@
 package com.simplevat.rest.receiptcontroller;
 
-import java.util.Date;
+import com.simplevat.rest.PaginationModel;
 
 import lombok.Data;
 
 @Data
-public class ReceiptRequestFilterModel {
+public class ReceiptRequestFilterModel extends PaginationModel {
 
 	private Integer userId;
 	private Integer contactId;

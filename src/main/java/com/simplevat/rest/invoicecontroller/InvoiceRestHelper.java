@@ -230,32 +230,34 @@ public class InvoiceRestHelper {
 		return lineItemModel;
 	}
 
-	public List<InvoiceListModel> getListModel(List<Invoice> invoices) {
+	public List<InvoiceListModel> getListModel(Object invoices) {
 		List<InvoiceListModel> invoiceListModels = new ArrayList();
-		for (Invoice invoice : invoices) {
-			InvoiceListModel model = new InvoiceListModel();
-			model.setId(invoice.getId());
-			if (invoice.getContact() != null) {
-				if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
-					model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
+		if (invoices != null) {
+			for (Invoice invoice : (List<Invoice>) invoices) {
+				InvoiceListModel model = new InvoiceListModel();
+				model.setId(invoice.getId());
+				if (invoice.getContact() != null) {
+					if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
+						model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
+					}
 				}
-			}
-			model.setReferenceNumber(invoice.getReferenceNumber());
-			if (invoice.getInvoiceDate() != null) {
-				Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
-				model.setInvoiceDate(date);
-			}
-			if (invoice.getInvoiceDueDate() != null) {
-				Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
-				model.setInvoiceDueDate(date);
-			}
-			model.setTotalAmount(invoice.getTotalAmount());
-			model.setTotalVatAmount(invoice.getTotalVatAmount());
+				model.setReferenceNumber(invoice.getReferenceNumber());
+				if (invoice.getInvoiceDate() != null) {
+					Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
+					model.setInvoiceDate(date);
+				}
+				if (invoice.getInvoiceDueDate() != null) {
+					Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
+					model.setInvoiceDueDate(date);
+				}
+				model.setTotalAmount(invoice.getTotalAmount());
+				model.setTotalVatAmount(invoice.getTotalVatAmount());
 
-			if (invoice.getStatus() != null) {
-				model.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
+				if (invoice.getStatus() != null) {
+					model.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
+				}
+				invoiceListModels.add(model);
 			}
-			invoiceListModels.add(model);
 		}
 		return invoiceListModels;
 	}

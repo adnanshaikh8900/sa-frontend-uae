@@ -28,7 +28,7 @@ import com.simplevat.rest.transactioncategorycontroller.TransactionCategoryBean;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ProductCategoryService;
 import com.simplevat.service.UserService;
-import com.simplevat.service.bankaccount.TransactionTypeService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -53,7 +53,7 @@ public class ProductCategoryRestController {
 	private ProductCategoryRestHelper productCategoryRestHelper;
 
 	@Autowired
-	private TransactionTypeService transactionTypeService;
+	private ChartOfAccountService transactionTypeService;
 
 	@ApiOperation(value = "Get All Product Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/getList")

@@ -12,7 +12,7 @@ import lombok.Data;
 public class JournalRequestModel implements Serializable{
 	private Integer journalId;
 	private Date journalDate;
-	private String referenceCode;
+	private String journalReferenceNo;
 	private String description;
 	private Integer currencyCode;
 	private BigDecimal subTotalDebitAmount;

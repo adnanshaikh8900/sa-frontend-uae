@@ -29,7 +29,7 @@ import com.simplevat.service.BankAccountService;
 import com.simplevat.service.TransactionParsingSettingService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
-import com.simplevat.service.bankaccount.TransactionTypeService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -77,7 +77,7 @@ public class TransactionImportController implements Serializable {
 	private TransactionService transactionService;
 
 	@Autowired
-	private TransactionTypeService transactionTypeService;
+	private ChartOfAccountService transactionTypeService;
 
 	@Autowired
 	private TransactionStatusService transactionStatusService;

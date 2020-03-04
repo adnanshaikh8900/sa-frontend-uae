@@ -17,11 +17,11 @@ import org.springframework.stereotype.Repository;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.bankaccount.BankAccountDao;
 import com.simplevat.dao.bankaccount.TransactionDao;
-import com.simplevat.dao.bankaccount.TransactionTypeDao;
+import com.simplevat.dao.bankaccount.ChartOfAccountDao;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionView;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
@@ -38,7 +38,7 @@ import javax.persistence.TypedQuery;
 public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implements TransactionDao {
 
 	@Autowired
-	private TransactionTypeDao transactionTypeDao;
+	private ChartOfAccountDao transactionTypeDao;
 
 	@Autowired
 	private BankAccountDao bankAccountDao;
@@ -173,9 +173,9 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				transactionReportRestModel.setTransactionDate(transaction.getTransactionDate());
 				transactionReportRestModel.setTransactionDescription(transaction.getTransactionDescription());
 				transactionReportRestModel.setTransactionId(transaction.getTransactionId());
-				if (transaction.getTransactionType() != null) {
+				if (transaction.getChartOfAccount() != null) {
 					transactionReportRestModel
-							.setTransactionType(transaction.getTransactionType().getTransactionTypeName());
+							.setTransactionType(transaction.getChartOfAccount().getChartOfAccountName());
 				}
 				transactionReportRestModelList.add(transactionReportRestModel);
 			}

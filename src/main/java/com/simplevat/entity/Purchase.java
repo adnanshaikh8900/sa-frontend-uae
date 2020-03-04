@@ -1,7 +1,7 @@
 package com.simplevat.entity;
 
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 
@@ -78,7 +78,7 @@ public class Purchase implements Serializable {
     @Basic
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRANSACTION_TYPE_CODE")
-    private TransactionType transactionType;
+    private ChartOfAccount transactionType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRANSACTION_CATEGORY_CODE")

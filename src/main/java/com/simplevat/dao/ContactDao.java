@@ -3,6 +3,8 @@ package com.simplevat.dao;
 import com.simplevat.constant.dbfilter.ContactFilterEnum;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.contactController.ContactRequestFilterModel;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public interface ContactDao extends Dao<Integer, Contact> {
 
     public List<Contact> getAllContacts(Integer pageNo, Integer pageSize);
     
-    public List<Contact> getContactList(Map<ContactFilterEnum, Object> filterDataMap);
+    public PaginationResponseModel getContactList(Map<ContactFilterEnum, Object> filterDataMap,PaginationModel paginationModel);
 
     public List<Contact> getContacts(ContactRequestFilterModel filterModel, Integer pageNo, Integer pageSize);
 

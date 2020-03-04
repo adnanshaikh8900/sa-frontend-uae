@@ -11,6 +11,7 @@ import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
 import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.InvoiceService;
@@ -96,11 +97,14 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 			filterDataMap.put(InvoiceFilterEnum.USER_ID, userId);
 			filterDataMap.put(InvoiceFilterEnum.DELETE_FLAG, false);
 			filterDataMap.put(InvoiceFilterEnum.TYPE, filterModel.getType());
-			List<Invoice> invoices = invoiceService.getInvoiceList(filterDataMap);
-			if (invoices == null) {
+			filterDataMap.put(InvoiceFilterEnum.ORDER_BY, "DESC");
+
+			PaginationResponseModel responseModel = invoiceService.getInvoiceList(filterDataMap, filterModel);
+			if (responseModel == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity(invoiceRestHelper.getListModel(invoices), HttpStatus.OK);
+			responseModel.setData(invoiceRestHelper.getListModel(responseModel.getData()));
+			return new ResponseEntity(responseModel,HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);

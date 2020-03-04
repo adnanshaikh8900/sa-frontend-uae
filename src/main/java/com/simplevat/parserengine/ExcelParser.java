@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -64,17 +65,17 @@ public class ExcelParser implements TransactionFileParser {
 				DataFormatter dataFormatter = new DataFormatter();
 
 				workbook.forEach(sheet -> {
-					Map<String, String> dataeMap = new LinkedHashMap<String, String>();
 					sheet.forEach(row -> {
+						Map<String, String> dataeMap = new LinkedHashMap<String, String>();
 						row.forEach(cell -> {
 							String cellValue = dataFormatter.formatCellValue(cell);
 							if (cell.getRow().getRowNum() == firstRowIndex) {
 								indexHeaderMap.put(cell.getColumnIndex(), cellValue);
 							} else if (cell.getRow().getRowNum() > firstRowIndex) {
-
 								dataeMap.put(indexHeaderMap.get(cell.getColumnIndex()), cellValue);
 							}
 						});
+						if(!dataeMap.isEmpty())
 						list.add(dataeMap);
 					});
 				});
@@ -109,7 +110,12 @@ public class ExcelParser implements TransactionFileParser {
 				Workbook workbook = WorkbookFactory.create(file.getInputStream());
 
 				// Create a DataFormatter to format and get each cell's value as String
+
+				DateFormat format = dateformatDao.findByPK(model.getDateFormatId());
+
 				DataFormatter dataFormatter = new DataFormatter();
+				// dataFormatter.addFormat("dd/mm/yyyy", new
+				// java.text.SimpleDateFormat(format.getFormat()));
 
 				Sheet sheet = workbook.getSheetAt(0);
 
@@ -128,9 +134,12 @@ public class ExcelParser implements TransactionFileParser {
 										&& displayName.equals(TransactionEnum.TRANSACTION_DATE.getDisplayName())) {
 
 									try {
-										DateFormat format = dateformatDao.findByPK(model.getDateFormatId());
-										SimpleDateFormat formatter = new SimpleDateFormat(format.getFormat());
-										formatter.parse(cellValue);
+										// bydefault excel give dd/mm/yyyy convert to specific format
+										SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yy");
+										Date date = formatter.parse(cellValue);
+
+										formatter = new SimpleDateFormat(format.getFormat());
+										cellValue = formatter.format(date);
 									} catch (ParseException e) {
 										errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap,
 												cell.getRow().getRowNum(), cell.getColumnIndex());

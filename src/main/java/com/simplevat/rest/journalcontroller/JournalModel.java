@@ -14,7 +14,7 @@ public class JournalModel {
     private Integer journalId;
     private String description;
     private Date journalDate;
-    private String referenceCode;
+    private String journalReferenceNo;
     private BigDecimal subTotalDebitAmount;
     private BigDecimal subTotalCreditAmount;
     private BigDecimal totalCreditAmount;

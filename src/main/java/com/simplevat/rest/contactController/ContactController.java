@@ -7,8 +7,10 @@ package com.simplevat.rest.contactController;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.ContactFilterEnum;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.security.JwtTokenUtil;
 import java.io.IOException;
@@ -38,112 +40,118 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rest/contact")
 public class ContactController implements Serializable {
 
-    @Autowired
-    private ContactService contactService;
+	@Autowired
+	private ContactService contactService;
 
-    @Autowired
-    private ContactHelper contactHelper;
+	@Autowired
+	private ContactHelper contactHelper;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
 
-    @GetMapping(value = "/getContactList")
-    public ResponseEntity getContactList(ContactRequestFilterModel filterModel, HttpServletRequest request) throws IOException {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        try {
-            Map<ContactFilterEnum, Object> filterDataMap = new HashMap();
-            filterDataMap.put(ContactFilterEnum.CONTACT_TYPE, filterModel.getContactType());
-            filterDataMap.put(ContactFilterEnum.NAME, filterModel.getName());
-            filterDataMap.put(ContactFilterEnum.EMAIL, filterModel.getEmail());
-            filterDataMap.put(ContactFilterEnum.DELETE_FLAG, false);
-            filterDataMap.put(ContactFilterEnum.USER_ID, userId);
-            List<ContactListModel> contactListModels = new ArrayList<>();
-            List<Contact> contactList = contactService.getContactList(filterDataMap);
-            if (contactList == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-            contactList.forEach(contact -> contactListModels.add(contactHelper.getListModel(contact)));
-            return new ResponseEntity<>(contactListModels, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	@GetMapping(value = "/getContactList")
+	public ResponseEntity getContactList(ContactRequestFilterModel filterModel, HttpServletRequest request)
+			throws IOException {
+		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+		try {
+			Map<ContactFilterEnum, Object> filterDataMap = new HashMap();
+			filterDataMap.put(ContactFilterEnum.CONTACT_TYPE, filterModel.getContactType());
+			filterDataMap.put(ContactFilterEnum.NAME, filterModel.getName());
+			filterDataMap.put(ContactFilterEnum.EMAIL, filterModel.getEmail());
+			filterDataMap.put(ContactFilterEnum.DELETE_FLAG, false);
+			filterDataMap.put(ContactFilterEnum.USER_ID, userId);
+			filterDataMap.put(ContactFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
-    @GetMapping(value = "/getContactsForDropdown")
-    public ResponseEntity getContactsForDropdown(@RequestParam(name = "contactType", required = false) Integer contactType) throws IOException {
-        List<DropdownModel> dropdownModels = contactService.getContactForDropdown(contactType);
-        return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
-    }
+			PaginationResponseModel response = contactService.getContactList(filterDataMap, filterModel);
+			if (response == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			if (response.getData() != null) {
+				response.setData(contactHelper.getModelList(response.getData()));
+			}
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    @GetMapping(value = "/getContactById")
-    public ResponseEntity getContactById(@RequestParam("contactId") Integer contactId) throws IOException {
-        ContactPersistModel contactPersistModel = contactHelper.getContactPersistModel(contactService.findByPK(contactId));
-        return new ResponseEntity<>(contactPersistModel, HttpStatus.OK);
-    }
+	@GetMapping(value = "/getContactsForDropdown")
+	public ResponseEntity getContactsForDropdown(
+			@RequestParam(name = "contactType", required = false) Integer contactType) throws IOException {
+		List<DropdownModel> dropdownModels = contactService.getContactForDropdown(contactType);
+		return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+	}
 
-    @PostMapping(value = "/save")
-    public ResponseEntity save(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+	@GetMapping(value = "/getContactById")
+	public ResponseEntity getContactById(@RequestParam("contactId") Integer contactId) throws IOException {
+		ContactPersistModel contactPersistModel = contactHelper
+				.getContactPersistModel(contactService.findByPK(contactId));
+		return new ResponseEntity<>(contactPersistModel, HttpStatus.OK);
+	}
 
-        try {
-            Contact contact = contactHelper.getEntity(contactPersistModel, userId);
-            contact.setCreatedBy(userId);
-            contact.setCreatedDate(LocalDateTime.now());
-            contact.setDeleteFlag(false);
-            contactService.persist(contact);
-            return new ResponseEntity<>(contact, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	@PostMapping(value = "/save")
+	public ResponseEntity save(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
+		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-        }
-    }
+		try {
+			Contact contact = contactHelper.getEntity(contactPersistModel, userId);
+			contact.setCreatedBy(userId);
+			contact.setCreatedDate(LocalDateTime.now());
+			contact.setDeleteFlag(false);
+			contactService.persist(contact);
+			return new ResponseEntity<>(contact, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-    @PostMapping(value = "/update")
-    public ResponseEntity update(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+		}
+	}
 
-        try {
-            if (contactPersistModel.getContactId() != null && contactPersistModel.getContactId() > 0) {
-                Contact contact = contactHelper.getEntity(contactPersistModel, userId);
-                contact.setLastUpdatedBy(userId);
-                contact.setLastUpdateDate(LocalDateTime.now());
-                contactService.update(contact);
-            }
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	@PostMapping(value = "/update")
+	public ResponseEntity update(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
+		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-        }
-    }
+		try {
+			if (contactPersistModel.getContactId() != null && contactPersistModel.getContactId() > 0) {
+				Contact contact = contactHelper.getEntity(contactPersistModel, userId);
+				contact.setLastUpdatedBy(userId);
+				contact.setLastUpdateDate(LocalDateTime.now());
+				contactService.update(contact);
+			}
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-    @DeleteMapping(value = "/delete")
-    public ResponseEntity delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+		}
+	}
 
-        Contact contact = contactService.findByPK(id);
-        if (contact == null) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        contact.setDeleteFlag(Boolean.TRUE);
-        contact.setLastUpdatedBy(userId);
-        contactService.update(contact);
-        return new ResponseEntity<>(HttpStatus.OK);
+	@DeleteMapping(value = "/delete")
+	public ResponseEntity delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
+		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-    }
+		Contact contact = contactService.findByPK(id);
+		if (contact == null) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		contact.setDeleteFlag(Boolean.TRUE);
+		contact.setLastUpdatedBy(userId);
+		contactService.update(contact);
+		return new ResponseEntity<>(HttpStatus.OK);
 
-    @DeleteMapping(value = "/deletes")
-    public ResponseEntity deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
+	}
 
-        Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-        try {
-            contactService.deleleByIds(ids.getIds());
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	@DeleteMapping(value = "/deletes")
+	public ResponseEntity deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
 
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+		try {
+			contactService.deleleByIds(ids.getIds());
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

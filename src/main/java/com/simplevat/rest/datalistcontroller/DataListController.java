@@ -9,7 +9,7 @@ import com.simplevat.entity.Country;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.IndustryType;
 import com.simplevat.entity.bankaccount.BankAccountType;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.rest.DropdownModel;
@@ -18,7 +18,7 @@ import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
-import com.simplevat.service.bankaccount.TransactionTypeService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class DataListController implements Serializable {
     private BankAccountTypeService bankAccountTypeService;
 
     @Autowired
-    private TransactionTypeService transactionTypeService;
+    private ChartOfAccountService transactionTypeService;
 
     @Autowired
     private IndustryTypeService industryTypeService;
@@ -89,7 +89,7 @@ public class DataListController implements Serializable {
     @GetMapping(value = "/getTransactionTypes")
     public ResponseEntity getTransactionTypes() {
         try {
-            List<TransactionType> transactionTypes = transactionTypeService.findAll();
+            List<ChartOfAccount> transactionTypes = transactionTypeService.findAll();
             if (transactionTypes != null && !transactionTypes.isEmpty()) {
                 return new ResponseEntity<>(transactionTypes, HttpStatus.OK);
             } else {

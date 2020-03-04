@@ -11,6 +11,6 @@ public class TransactionRequestFilterModel extends PaginationModel{
 	private Integer bankId;
 	//formate
 	private String transactionDate;
-	private Integer transactionTypeCode;
+	private Integer chartOfAccountId;
 	private Integer transactionStatusCode;
 }

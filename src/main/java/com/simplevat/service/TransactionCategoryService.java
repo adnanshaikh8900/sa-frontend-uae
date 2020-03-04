@@ -5,7 +5,10 @@ import java.util.Map;
 
 import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.criteria.bankaccount.TransactionCategoryCriteria;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 public abstract class TransactionCategoryService extends SimpleVatService<Integer, TransactionCategory> {
 
@@ -15,9 +18,9 @@ public abstract class TransactionCategoryService extends SimpleVatService<Intege
     
     public abstract List<TransactionCategory> findAllTransactionCategoryByUserId(Integer userId);
 
-    public abstract List<TransactionCategory> findAllTransactionCategoryByTransactionTypeAndName(Integer transactionTypeCode, String name);
+    public abstract List<TransactionCategory> findAllTransactionCategoryByChartOfAccountIdAndName(Integer transactionTypeCode, String name);
 
-    public abstract List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode);
+    public abstract List<TransactionCategory> findAllTransactionCategoryByChartOfAccount(Integer transactionTypeCode);
 
     public abstract List<TransactionCategory> findTransactionCategoryListByParentCategory(Integer parentCategoryId);
 
@@ -29,5 +32,7 @@ public abstract class TransactionCategoryService extends SimpleVatService<Intege
 
     public abstract void deleteByIds(List<Integer> ids);
 
-    public abstract List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap);
+    public abstract PaginationResponseModel  getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap,PaginationModel paginationModel);
+    
+    public abstract String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount);
 }

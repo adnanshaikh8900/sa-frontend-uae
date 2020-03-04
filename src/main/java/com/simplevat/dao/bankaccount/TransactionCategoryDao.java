@@ -5,7 +5,10 @@ import java.util.Map;
 
 import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.dao.Dao;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory> {
 
@@ -17,15 +20,17 @@ public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory
     
     public TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode);
     
-    public List<TransactionCategory> findAllTransactionCategoryByTransactionTypeAndName(Integer transactionTypeCode, String name);
+    public List<TransactionCategory> findAllTransactionCategoryByChartOfAccountIdAndName(Integer chartOfAccountId, String name);
 
     public List<TransactionCategory> findTransactionCategoryListByParentCategory(Integer parentCategoryId);
     
-    public List<TransactionCategory> findAllTransactionCategoryByTransactionType(Integer transactionTypeCode);
+    public List<TransactionCategory> findAllTransactionCategoryByChartOfAccount(Integer chartOfAccount);
 
     public TransactionCategory getDefaultTransactionCategoryByTransactionCategoryId(Integer transactionCategoryId);
 
     public void deleteByIds(List<Integer> ids);
 
-	public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap);
+	public PaginationResponseModel getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap,PaginationModel PaginationModel);
+
+	public String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount);
 }

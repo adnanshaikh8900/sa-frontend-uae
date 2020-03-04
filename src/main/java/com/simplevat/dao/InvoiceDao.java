@@ -8,6 +8,9 @@ package com.simplevat.dao;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +20,12 @@ import java.util.Map;
  */
 public interface InvoiceDao extends Dao<Integer, Invoice> {
 
-    public List<Invoice> getInvoiceList(Map<InvoiceFilterEnum, Object> map);
+    public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap, PaginationModel paginationModel);
     
     public List<DropdownModel> getInvoicesForDropdown();
 
     public void deleteByIds(List<Integer> ids);
+
+	
 
 }

@@ -16,6 +16,7 @@ public enum PaymentFilterEnum {
     INVOICE_AMOUNT("invoiceAmount", " like CONCAT(:invoiceAmount,'%')"),
     PAYMENT_DATE("paymentDate", " = :paymentDate"),
     DELETE_FLAG("deleteFlag", " = :deleteFlag"),
+    ORDER_BY("paymentId"," =:paymentId"),
     USER_ID("createdBy", "= :createdBy");
 
     @Getter

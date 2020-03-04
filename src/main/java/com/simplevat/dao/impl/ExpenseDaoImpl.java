@@ -17,6 +17,8 @@ import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ExpenseDao;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Product;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -121,13 +123,15 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 	}
 
 	@Override
-	public List<Expense> getExpenseList(Map<ExpenseFIlterEnum, Object> filterMap) {
+	public PaginationResponseModel getExpenseList(Map<ExpenseFIlterEnum, Object> filterMap, PaginationModel paginationModel) {
 
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		List<Expense> expenses = this.executeQuery(dbFilters);
-		return expenses;
+		PaginationResponseModel request = new PaginationResponseModel();
+		request.setData(this.executeQuery(dbFilters, paginationModel));
+		request.setCount(this.getResultCount(dbFilters));
+		return request;
 	}
 }

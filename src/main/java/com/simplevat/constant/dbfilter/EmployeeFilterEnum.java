@@ -6,6 +6,7 @@ public enum EmployeeFilterEnum {
 
 	   EMAIL("email", " like CONCAT(:email,'%')"),
 	    FIRST_NAME("firstName", " like CONCAT(:firstName,'%')"),
+		ORDER_BY("id"," =:id"),
 	    DELETE_FLAG("deleteFlag", " = :deleteFlag");
 
 	    @Getter

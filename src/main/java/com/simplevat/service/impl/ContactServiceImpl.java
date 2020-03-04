@@ -5,6 +5,8 @@ import com.simplevat.dao.ContactDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.contactController.ContactRequestFilterModel;
 import com.simplevat.service.ContactService;
 import java.util.List;
@@ -30,8 +32,8 @@ public class ContactServiceImpl extends ContactService {
     }
 
     @Override
-    public List<Contact> getContactList(Map<ContactFilterEnum, Object> filterDataMap) {
-        return this.contactDao.getContactList(filterDataMap);
+    public PaginationResponseModel getContactList(Map<ContactFilterEnum, Object> filterDataMap,PaginationModel paginationModel) {
+        return this.contactDao.getContactList(filterDataMap,paginationModel);
     }
 
     @Override

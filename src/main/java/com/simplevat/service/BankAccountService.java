@@ -6,6 +6,7 @@ import java.util.Map;
 import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.SimpleVatService;
 
 public abstract class BankAccountService extends SimpleVatService<Integer, BankAccount> {
@@ -18,6 +19,6 @@ public abstract class BankAccountService extends SimpleVatService<Integer, BankA
 
 	public abstract void deleteByIds(List<Integer> ids);
 
-	public abstract List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,
+	public abstract PaginationResponseModel getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,
 			PaginationModel paginationModel);
 }

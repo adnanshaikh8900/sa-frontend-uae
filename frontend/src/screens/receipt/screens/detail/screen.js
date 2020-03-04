@@ -125,11 +125,10 @@ class DetailReceipt extends React.Component {
       amount: amount ? amount : '',
       unusedAmount: unusedAmount ? unusedAmount : '',
       invoiceId: invoiceId && invoiceId !== null ? invoiceId : ''
-      // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
     this.props.receiptDetailActions.updateReceipt(postData).then(res => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Updated successfully!')
+        this.props.commonActions.tostifyAlert('success', 'Reeceipt Updated successfully!')
         this.props.history.push('/admin/revenue/receipt')
       }
     }).catch((err) => {
@@ -312,7 +311,7 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="mode">Mode</Label>
+                                      <Label htmlFor="mode">Mode(TBD)</Label>
                                       <Select
                                         className="select-default-width"
                                         options={[]}

@@ -7,8 +7,8 @@ import moment from 'moment'
 
 
 export const getJournalList = (obj) => {
-  const { journalDate , referenceCode , description} = obj
-  let url = `/rest/journal/getList?referenceCode=${referenceCode}&description=${description}`
+  const { journalDate , journalReferenceNo , description,pageNo,pageSize} = obj
+  let url = `/rest/journal/getList?journalReferenceNo=${journalReferenceNo}&description=${description}&pageNo=${pageNo}&pageSize=${pageSize}`
   if(journalDate) {
     let date = moment(journalDate).format('DD-MM-YYYY')
     url = url + `&journalDate=${date}`
@@ -55,7 +55,7 @@ export const getTransactionCategoryList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/transactioncategory/gettransactioncategory`,
+      url: `/rest/transactioncategory/getList`,
     }
 
     return authApi(data).then(res => {

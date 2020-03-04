@@ -54,7 +54,7 @@ class CreateChartAccount extends React.Component {
       initValue: {
         transactionCategoryCode: '',
         transactionCategoryName: '',
-        transactionType: ''
+        chartOfAccount: ''
       },
       loading: false,
       createMore: false
@@ -128,7 +128,7 @@ class CreateChartAccount extends React.Component {
                               .required("Code Name is Required"),
                             transactionCategoryName: Yup.string()
                               .required("Account is Required"),
-                            transactionType: Yup.string()
+                            chartOfAccount: Yup.string()
                               .required("Type is Required")
                           })}
                       >
@@ -176,26 +176,26 @@ class CreateChartAccount extends React.Component {
                               <Label htmlFor="name">Type</Label>
                               <Select
                                 className="select-default-width"
-                                options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list,'Type') : ''}
-                                value={props.values.transactionType}
+                                options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : ''}
+                                value={props.values.chartOfAccount}
                                 onChange={option => {
                                   if(option && option.value) {
-                                    props.handleChange('transactionType')(option.value)
+                                    props.handleChange('chartOfAccount')(option.value)
                                   } else {
-                                    props.handleChange('transactionType')('')
+                                    props.handleChange('chartOfAccount')('')
                                   }
                                 }}
                                 placeholder="Select Type"
-                                id="transactionType"
-                                name="transactionType"
+                                id="chartOfAccount"
+                                name="chartOfAccount"
                                 className={
-                                  props.errors.transactionType && props.touched.transactionType
+                                  props.errors.chartOfAccount && props.touched.chartOfAccount
                                     ? "is-invalid"
                                     : ""
                                 }
                               />
-                              {props.errors.transactionType && props.touched.transactionType && (
-                                <div className="invalid-feedback">{props.errors.transactionType}</div>
+                              {props.errors.chartOfAccount && props.touched.chartOfAccount && (
+                                <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                               )}
                             </FormGroup>
 

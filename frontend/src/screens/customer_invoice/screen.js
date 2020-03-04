@@ -83,9 +83,9 @@ class CustomerInvoice extends React.Component {
     this.renderInvoiceNumber = this.renderInvoiceNumber.bind(this)
     this.renderInvoiceStatus = this.renderInvoiceStatus.bind(this)
     this.renderActions = this.renderActions.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.toggleActionButton = this.toggleActionButton.bind(this)
+    this.onRowSelAll = this.onSelectAll.bind(this)
+    this.toggleAcect = this.onRowSelect.bind(this)
+    this.onSelecttionButton = this.toggleActionButton.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
     this.bulkDelete = this.bulkDelete.bind(this);
@@ -97,7 +97,7 @@ class CustomerInvoice extends React.Component {
 
     this.options = {
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -119,19 +119,17 @@ class CustomerInvoice extends React.Component {
   initializeData() {
     let { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     filterData = { ...filterData, ...paginationData }
     this.props.customerInvoiceActions.getCustomerInvoiceList(filterData).then(res => {
-      console.log(res)
       if (res.status === 200) {
         this.props.customerInvoiceActions.getStatusList()
         this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
         this.setState({ loading: false });
       }
     }).catch(err => {
-      console.log(err)
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
       this.setState({ loading: false })
     })
@@ -331,7 +329,7 @@ class CustomerInvoice extends React.Component {
     this.props.customerInvoiceActions.removeBulk(obj).then((res) => {
       if (res.status == 200) {
         this.initializeData()
-        this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+        this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
         if (customer_invoice_list && customer_invoice_list.length > 0) {
           this.setState({
             selectedRows: []
@@ -377,12 +375,9 @@ class CustomerInvoice extends React.Component {
 
   render() {
     const { loading, filterData, dialog, selectedRows } = this.state
-    const { status_list, customer_list } = this.props
-    // const containerStyle = {
-    //   zIndex: 1999
-    // }
+    const { status_list, customer_list ,customer_invoice_list} = this.props
 
-    const customer_invoice_data = this.props.customer_invoice_list ? this.props.customer_invoice_list.map(customer =>
+    const customer_invoice_data = this.props.customer_invoice_list && this.props.customer_invoice_list.data ? this.props.customer_invoice_list.data.map(customer =>
 
       ({
         id: customer.id,
@@ -564,10 +559,10 @@ class CustomerInvoice extends React.Component {
                           data={customer_invoice_data ? customer_invoice_data : []}
                           version="4"
                           hover
-                          pagination
+                          currencyList
                           keyField="id"
                           remote
-                          fetchInfo={{ dataTotalSize: customer_invoice_data.totalCount ? customer_invoice_data.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: customer_invoice_list.count ? customer_invoice_list.count : 0 }}
                           className="customer-invoice-table"
                           csvFileName="Customer_Invoice.csv"
                           ref={node => {

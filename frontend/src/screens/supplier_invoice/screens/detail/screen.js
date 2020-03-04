@@ -149,7 +149,6 @@ class DetailSupplierInvoice extends React.Component {
   }
 
   initializeData() {
-    console.log(this.props.location.state)
     if (this.props.location.state && this.props.location.state.id) {
       this.props.supplierInvoiceDetailActions.getInvoiceById(this.props.location.state.id).then(res => {
         if (res.status === 200) {
@@ -366,9 +365,6 @@ class DetailSupplierInvoice extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        if (Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
-          // console.log(props.touched.lineItemsString[idx].vatCategoryId)
-        }
       }
     });
 
@@ -401,13 +397,11 @@ class DetailSupplierInvoice extends React.Component {
 
 
   deleteRow(e, row, props) {
-    console.log(row)
     const id = row['id'];
     let newData = []
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
-    // console.log(newData)
     props.setFieldValue('lineItemsString', newData, true)
     this.updateAmount(newData, props)
   }
@@ -552,7 +546,7 @@ class DetailSupplierInvoice extends React.Component {
     const { current_supplier_id } = this.state;
     this.props.supplierInvoiceDetailActions.deleteInvoice(current_supplier_id).then(res => {
       if (res.status == 200) {
-        this.props.commonActions.tostifyAlert('success', 'Invoice Removed Successfully')
+        this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
         this.props.history.push('/admin/expense/supplier-invoice')
       }
     }).catch(err => {

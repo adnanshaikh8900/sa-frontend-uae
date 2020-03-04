@@ -372,7 +372,6 @@ class CreateSupplierInvoice extends React.Component {
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
-    // console.log(newData)
     props.setFieldValue('lineItemsString', newData, true)
     this.updateAmount(newData)
   }

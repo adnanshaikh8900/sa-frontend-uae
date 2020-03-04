@@ -97,6 +97,7 @@ class DetailUser extends React.Component {
             loading: false,
             selectedStatus: res.data.active ? true : false,
             userPhoto: res.data.profilePicByteArray ? this.state.userPhoto.concat(res.data.profilePicByteArray) : [],
+            current_user_id: this.props.location.state.id
           })
         }
       }).catch(err => {
@@ -162,7 +163,7 @@ class DetailUser extends React.Component {
     const { current_user_id } = this.state;
     const { userPhotoFile } = this.state;
     let formData = new FormData();
-    formData.append("id", current_user_id);
+    formData.append("id", +current_user_id);
 
     formData.append("firstName", firstName ? firstName : '');
     formData.append("lastName", lastName ? lastName : '');

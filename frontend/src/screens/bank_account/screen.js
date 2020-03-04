@@ -95,7 +95,11 @@ class BankAccount extends React.Component {
     this.handleSearch = this.handleSearch.bind(this)
 
     this.options = {
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      page: 1,
+      sizePerPage: 10,
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
 
     this.selectRowProp = {
@@ -114,16 +118,24 @@ class BankAccount extends React.Component {
   }
 
   initializeData() {
-    this.props.bankAccountActions.getAccountTypeList()
-    this.props.bankAccountActions.getCurrencyList()
-    this.props.bankAccountActions.getBankAccountList(this.state.filterData).then((res) => {
+    let { filterData } = this.state
+    const data = {
+      pageNo: this.options.page ? this.options.page - 1 : 0,
+      pageSize: this.options.sizePerPage
+    }
+    filterData = { ...filterData, ...data }
+    this.props.bankAccountActions.getBankAccountList(filterData).then(res => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        this.props.bankAccountActions.getAccountTypeList()
+        this.props.bankAccountActions.getCurrencyList()
+        // this.props.chartOfAccountActions.getTransactionTypes();
+        this.setState({ loading: false });
       }
     }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : '');
       this.setState({ loading: false })
-      // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
+
   }
 
   inputHandler(name, val) {
@@ -280,7 +292,6 @@ class BankAccount extends React.Component {
               <i className="fas fa-edit" /> Edit
             </DropdownItem>
             <DropdownItem onClick={() => {
-              console.log(row.bankAccountId)
               this.props.history.push('/admin/banking/bank-account/transaction', {
                 bankAccountId: row.bankAccountId
               })
@@ -315,7 +326,7 @@ class BankAccount extends React.Component {
   removeBankAccount(_id) {
     this.removeDialog()
     this.props.bankAccountActions.removeBankAccountByID(_id).then(() => {
-      this.props.commonActions.tostifyAlert('success', 'Bank Account Removed Successfully')
+      this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
       this.initializeData()
       let temp_List = []
       this.state.selected_id_list.map(item => {
@@ -406,7 +417,7 @@ class BankAccount extends React.Component {
       ids: selected_id_list
     }
     this.props.bankAccountActions.removeBulkBankAccount(obj).then(() => {
-      this.props.commonActions.tostifyAlert('success', 'Bank Account Removed Successfully')
+      this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
       this.initializeData()
       this.setState({
         selected_id_list: []
@@ -416,6 +427,20 @@ class BankAccount extends React.Component {
     })
   }
 
+
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
+  }
 
   render() {
 
@@ -429,8 +454,6 @@ class BankAccount extends React.Component {
       currency_list,
       bank_account_list
     } = this.props
-
-    // let displayData = this.filterBankAccountList(bank_account_list)
 
     return (
       <div className="bank-account-screen">
@@ -467,14 +490,6 @@ class BankAccount extends React.Component {
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
                           </Button>
-                          {/* <Button
-                            color="info"
-                            className="btn-square"
-                            onClick={() => this.props.history.push('/admin/banking/upload-statement')}
-                          >
-                            <i className="fa glyphicon glyphicon-export fa-upload mr-1" />
-                            Upload Statement
-                          </Button> */}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -550,11 +565,14 @@ class BankAccount extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={bank_account_list ? bank_account_list : []}
+                          data={bank_account_list && bank_account_list.data ? bank_account_list.data : []}
                           version="4"
                           hover
-                          pagination
-                          totalSize={bank_account_list ? bank_account_list.length : 0}
+                          transaction_category_list
+                          // totalSize={bank_account_list ? bank_account_list.length : 0}
+                          pagination = {bank_account_list && bank_account_list.data && bank_account_list.data.length > 0 ? true : false}
+                          remote
+                          fetchInfo={{ dataTotalSize: bank_account_list && bank_account_list.count ? bank_account_list.count : 0 }}
                           className="bank-account-table"
                           trClassName="cursor-pointer"
                         >
@@ -577,18 +595,19 @@ class BankAccount extends React.Component {
                             Account Type
                           </TableHeaderColumn>
                           <TableHeaderColumn
+                            dataField="accounName"
+                            dataSort
+                          >
+                            Account Name
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
                             dataField="accountNumber"
                             dataFormat={this.renderAccountNumber}
                             dataSort
                           >
                             Account Number
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="accounName"
-                            dataSort
-                          >
-                            Account Name
-                          </TableHeaderColumn>
+
                           <TableHeaderColumn
                             dataFormat={this.renderCurrency}
                             dataSort

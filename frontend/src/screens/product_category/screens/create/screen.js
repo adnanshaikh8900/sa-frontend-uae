@@ -93,7 +93,6 @@ class CreateProductCategory extends React.Component {
 
         if(this.state.createMore){
           resetForm(this.state.initValue);
-          console.log('------aaa')
           this.setState({
             createMore: false
           })

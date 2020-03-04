@@ -98,7 +98,7 @@ class DetailBankTransaction extends React.Component {
             transactionDate: res.data.transactionDate ? res.data.transactionDate : '',
             transactionDescription: res.data.transactionDescription ? res.data.transactionDescription : '',
             transactionAmount: res.data.transactionAmount ? res.data.transactionAmount : '',
-            transactionTypeCode: res.data.transactionTypeCode !== null ? res.data.transactionTypeCode : '',
+            chartOfAccountId: res.data.chartOfAccountId !== null ? res.data.chartOfAccountId : '',
             transactionCategoryId: res.data.transactionCategoryId !== null ? res.data.transactionCategoryId : '',
             projectId: res.data.projectId ? res.data.projectId : '',
             receiptNumber: res.data.receiptNumber ? res.data.receiptNumber : '',
@@ -126,7 +126,6 @@ class DetailBankTransaction extends React.Component {
       reader.onloadend = () => {
       };
       reader.readAsDataURL(file);
-      console.log(file)
       props.setFieldValue('attachment', file,true);
     }
   }
@@ -138,7 +137,7 @@ class DetailBankTransaction extends React.Component {
       transactionDate,
       transactionDescription,
       transactionAmount,
-      transactionTypeCode,
+      chartOfAccountId,
       transactionCategoryId,
       projectId,
       receiptNumber,
@@ -152,7 +151,7 @@ class DetailBankTransaction extends React.Component {
     formData.append("transactionDate", typeof transactionDate === 'string' ? moment(transactionDate).toDate() : transactionDate);
     formData.append("transactionDescription", transactionDescription ? transactionDescription : '');
     formData.append("transactionAmount", transactionAmount ? transactionAmount : '');
-    formData.append("transactionTypeCode", transactionTypeCode ? transactionTypeCode : '');
+    formData.append("chartOfAccountId", chartOfAccountId ? chartOfAccountId : '');
     formData.append("transactionCategoryId", transactionCategoryId ? transactionCategoryId : '');
     formData.append("projectId", projectId ? projectId : '');
     formData.append("receiptNumber", receiptNumber ? receiptNumber : '');
@@ -163,7 +162,7 @@ class DetailBankTransaction extends React.Component {
     this.props.transactionDetailActions.updateTransaction(formData).then(res => {
       if (res.status === 200) {
         resetForm()
-        this.props.commonActions.tostifyAlert('success', 'Update Transaction Detail Successfully.')
+        this.props.commonActions.tostifyAlert('success', 'Transaction Detail Updated Successfully.')
         this.props.history.push('/admin/banking/bank-account/transaction',{'bankAccountId': bankAccountId})
       }
     }).catch(err => {
@@ -207,7 +206,7 @@ class DetailBankTransaction extends React.Component {
                                 .required('Transaction Date is Required'),
                               transactionAmount: Yup.string()
                                 .required('Transaction Amount is Required'),
-                              transactionTypeCode: Yup.string()
+                              chartOfAccountId: Yup.string()
                                 .required('Transaction Type is Required'),
                                 attachment: Yup.mixed()
                                 .test(
@@ -219,7 +218,7 @@ class DetailBankTransaction extends React.Component {
                                     });
                                     if (
                                       value &&
-                                      this.supported_format.includes(value.type)
+                                      this.supported_format.includes(value.type) || !value
                                     ) {
                                       return true;
                                     } else {
@@ -231,7 +230,7 @@ class DetailBankTransaction extends React.Component {
                                   "fileSize",
                                   "*File Size is too large",
                                   value => {
-                                    if (value && value.size <= this.file_size) {
+                                    if (value && value.size <= this.file_size || !value) {
                                       return true;
                                     } else {
                                       return false;
@@ -245,29 +244,29 @@ class DetailBankTransaction extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="transactionTypeCode">Transaction Type</Label>
+                                    <Label htmlFor="chartOfAccountId">Transaction Type</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list, 'Type') : ''}
-                                      value={props.values.transactionTypeCode}
+                                      options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type') : ''}
+                                      value={props.values.chartOfAccountId}
                                       onChange={option => {
                                         if (option && option.value) {
-                                          props.handleChange('transactionTypeCode')(option.value)
+                                          props.handleChange('chartOfAccountId')(option.value)
                                         } else {
-                                          props.handleChange('transactionTypeCode')('')
+                                          props.handleChange('chartOfAccountId')('')
                                         }
                                       }}
                                       placeholder="Select Type"
-                                      id="transactionTypeCode"
-                                      name="transactionTypeCode"
+                                      id="chartOfAccountId"
+                                      name="chartOfAccountId"
                                       className={
-                                        props.errors.transactionTypeCode && props.touched.transactionTypeCode
+                                        props.errors.chartOfAccountId && props.touched.chartOfAccountId
                                           ? "is-invalid"
                                           : ""
                                       }
                                     />
-                                    {props.errors.transactionTypeCode && props.touched.transactionTypeCode && (
-                                      <div className="invalid-feedback">{props.errors.transactionTypeCode}</div>
+                                    {props.errors.chartOfAccountId && props.touched.chartOfAccountId && (
+                                      <div className="invalid-feedback">{props.errors.chartOfAccountId}</div>
                                     )}
                                   </FormGroup>
                                 </Col>
@@ -355,7 +354,6 @@ class DetailBankTransaction extends React.Component {
                                       name="projectId"
                                       value={props.values.projectId}
                                       onChange={option => {
-                                        console.log(option)
                                         if (option && option.value) {
                                           props.handleChange('projectId')(option.value)
                                         } else {

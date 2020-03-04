@@ -6,7 +6,6 @@ import {
 import moment from 'moment'
 
 export const getTransactionList = (obj) => {
-  console.log(obj)
   const { transactionTypeCode, transactionDate , id , pageNo , pageSize} = obj
   let param = `/rest/transaction/list?bankId=${id}&transactionTypeCode=${transactionTypeCode}&pageNo=${pageNo}&pageSize=${pageSize}`
   if(transactionDate !== '') {
@@ -65,6 +64,7 @@ export const getTransactionTypeList = () => {
           payload: res.data
         })
       }
+      return res
     }).catch(err => {
       throw err
     })
@@ -90,11 +90,12 @@ export const getProjectList = () => {
   }
 }
 
-export const deleteTransaction = (id) => {
+export const deleteTransactionById = (id) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: `/rest/transaction/delete?id=${id}`
+      url: `/rest/transaction/delete`,
+      data: {'id': id}
     }
     return authApi(data).then(res => {
       return res

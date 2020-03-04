@@ -57,7 +57,6 @@ class CustomerModal extends React.Component {
 
   // Create or Contact
   handleSubmit(data, resetForm, setSubmitting) {
-    console.log(data);
     this.props
       .createCustomer(data)
       .then(res => {

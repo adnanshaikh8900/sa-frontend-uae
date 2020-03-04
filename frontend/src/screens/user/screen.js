@@ -94,7 +94,7 @@ class User extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -117,7 +117,7 @@ class User extends React.Component {
   initializeData() {
     let { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
@@ -208,7 +208,7 @@ class User extends React.Component {
     this.removeDialog()
     this.props.userActions.removeBulk(obj).then((res) => {
       this.initializeData();
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+      this.props.commonActions.tostifyAlert('success', 'User Deleted Successfully')
       if (user_list && user_list.length > 0) {
         this.setState({
           selectedRows: []
@@ -405,7 +405,7 @@ class User extends React.Component {
                           keyField="id"
                           pagination
                           remote
-                          fetchInfo={{ dataTotalSize: user_list.totalCount ? user_list.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: user_list.count ? user_list.count : 0 }}
                           className="product-table"
                           trClassName="cursor-pointer"
                           ref={node => {

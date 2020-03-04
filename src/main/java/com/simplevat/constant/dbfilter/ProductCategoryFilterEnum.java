@@ -8,6 +8,7 @@ public enum ProductCategoryFilterEnum {
     PRODUCT_CATEGORY_CODE("productCategoryCode" ," like CONCAT(:productCategoryCode,'%')"),
     PRODUCT_CATEGORY_NAME("productCategoryName", " like CONCAT(:productCategoryName,'%')"),
     DELETE_FLAG("deleteFlag", " = :deleteFlag"),
+	ORDER_BY("id"," =:id"),
     USER_ID("createdBy", "= :createdBy");
 
     @Getter

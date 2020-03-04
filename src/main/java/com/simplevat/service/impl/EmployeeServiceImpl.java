@@ -5,6 +5,8 @@ import com.simplevat.dao.Dao;
 import com.simplevat.dao.EmployeeDao;
 import com.simplevat.entity.Employee;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.EmployeeService;
 
 import java.util.ArrayList;
@@ -51,8 +53,8 @@ public class EmployeeServiceImpl extends EmployeeService {
     }
     
     @Override
-    public List<Employee> getEmployeeList(Map<EmployeeFilterEnum, Object> filterMap){
-    	return employeeDao.getEmployeeList( filterMap);
+    public PaginationResponseModel getEmployeeList(Map<EmployeeFilterEnum, Object> filterMap,PaginationModel paginationModel){
+    	return employeeDao.getEmployeeList( filterMap,paginationModel);
     }
 
 	@Override

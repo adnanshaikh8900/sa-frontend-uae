@@ -57,7 +57,8 @@ class DetailedGeneralLedgerReport extends React.Component {
       view: false,
       initValue : {
         from_date: moment().startOf('month').format('DD/MM/YYYY'),
-				to_date: moment().endOf('month').format('DD/MM/YYYY'),
+        to_date: moment().endOf('month').format('DD/MM/YYYY'),
+        report_basis: 'Accrual'
       }
     }
     this.columnHeader = [
@@ -125,7 +126,16 @@ class DetailedGeneralLedgerReport extends React.Component {
   };
 
   generateReport = (value) => {
-    
+    this.setState(prevState => {
+      return { 
+        initValue: {
+          from_date: moment(value.from_date).format('DD/MM/YYY'),
+          to_date: moment(value.to_date).format('DD/MM/YYY'),
+          report_basis: value.report_basis.value
+        },
+        view: !this.state.view
+      }
+    });
   }
   render() {
     return (
@@ -166,16 +176,18 @@ class DetailedGeneralLedgerReport extends React.Component {
                 <div style={{ textAlign: 'center',margin: '3rem 0' }}>
                   <p>SimpleVat Solutions Pvt Ltd<br style={{ marginBottom: '5px' }} />
                     Detailed General Ledger<br style={{ marginBottom: '5px' }} />
-                    Basis: Accrual<br style={{ marginBottom: '5px' }} />
+                    Basis: {this.state.initValue.report_basis}<br style={{ marginBottom: '5px' }} />
                     From {this.state.initValue.from_date} To {this.state.initValue.to_date}
                 </p>
                 </div>
                 <div className="table-wrapper">
                   <Table>
                     <thead>
-                      {this.columnHeader.map(column => {
-                        return <th style={{ fontWeight: '600'}}>{column}</th>
+                      <tr>
+                      {this.columnHeader.map((column,index) => {
+                        return <th key={index} style={{ fontWeight: '600'}}>{column}</th>
                       })}
+                      </tr>
                     </thead>
                     <tbody>
                       {this.tempdata.map((item, index) => {
@@ -189,9 +201,9 @@ class DetailedGeneralLedgerReport extends React.Component {
                               <td>0.00</td>
                               <td></td>
                             </tr>
-                            {item.map(row => {
+                            {item.map((row,index) => {
                               return (
-                                <tr>
+                                <tr key={index}>
                                   <td style={{ width: '15%' }}>{row.Date}</td>
                                   <td>{row.Account}</td>
                                   <td>{row['Transaction Details']}</td>

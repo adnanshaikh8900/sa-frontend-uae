@@ -350,7 +350,6 @@ class DetailCustomerInvoice extends React.Component {
 			if (obj.id === row.id) {
 				idx = index
 				if (Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
-					console.log(props.touched.lineItemsString[idx].vatCategoryId)
 				}
 			}
 		});
@@ -384,13 +383,11 @@ class DetailCustomerInvoice extends React.Component {
 
 
 	deleteRow(e, row, props) {
-		console.log(row)
 		const id = row['id'];
 		let newData = []
 		e.preventDefault();
 		const data = this.state.data
 		newData = data.filter(obj => obj.id !== id);
-		// console.log(newData)
 		props.setFieldValue('lineItemsString', newData, true)
 		this.updateAmount(newData, props)
 	}
@@ -587,7 +584,7 @@ class DetailCustomerInvoice extends React.Component {
 		const { current_customer_id } = this.state;
 		this.props.customerInvoiceDetailActions.deleteInvoice(current_customer_id).then(res => {
 			if (res.status == 200) {
-				this.props.commonActions.tostifyAlert('success', 'Data Removed Successfully')
+				this.props.commonActions.tostifyAlert('success', 'Data Deleted Successfully')
 				this.props.history.push('/admin/revenue/customer-invoice')
 			}
 		}).catch(err => {
@@ -1067,7 +1064,6 @@ class DetailCustomerInvoice extends React.Component {
 																										name="discountType"
 																										value={props.values.discountType}
 																										onChange={(item) => {
-																											console.log(item)
 																											props.handleChange('discountPercentage')('')
 																											props.handleChange('discountType')(item.value)
 																											props.setFieldValue('discount', 0)

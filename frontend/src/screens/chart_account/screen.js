@@ -53,7 +53,7 @@ class ChartAccount extends React.Component {
       filterData: {
         transactionCategoryCode: '',
         transactionCategoryName: '',
-        transactionType: ''
+        chartOfAccountId: ''
       },
       selectedTransactionType: ''
     }
@@ -77,7 +77,7 @@ class ChartAccount extends React.Component {
     this.options = {
       onRowClick: this.goToDetailPage,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -106,7 +106,7 @@ class ChartAccount extends React.Component {
   initializeData() {
     let { filterData } = this.state
     const data = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     filterData = { ...filterData, ...data }
@@ -201,8 +201,8 @@ class ChartAccount extends React.Component {
     }
     this.props.chartOfAccountActions.removeBulk(obj).then(() => {
       this.initializeData();
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if (transaction_category_list && transaction_category_list.length > 0) {
+      this.props.commonActions.tostifyAlert('success', 'Chart of Accounts Deleted Successfully')
+      if (transaction_category_list && transaction_category_list.data &&  transaction_category_list.data.length > 0) {
         this.setState({
           selectedRows: []
         })
@@ -273,7 +273,7 @@ class ChartAccount extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-                            disabled={transaction_category_list.length === 0}
+                            disabled={transaction_category_list && transaction_category_list.data && transaction_category_list.data.length === 0 ? true : false}
 
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -312,13 +312,13 @@ class ChartAccount extends React.Component {
                               <FormGroup className="mb-3">
 
                                 <Select
-                                  options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list, 'Type') : []}
+                                  options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type') : []}
                                   onChange={(val) => {
                                     if (val && val['value']) {
-                                      this.handleChange(val['value'], 'transactionType')
+                                      this.handleChange(val['value'], 'chartOfAccountId')
                                       this.setState({ 'selectedTransactionType': val['value'] })
                                     } else {
-                                      this.handleChange('', 'transactionType')
+                                      this.handleChange('', 'chartOfAccountId')
                                       this.setState({ 'selectedTransactionType': '' })
                                     }
                                   }}
@@ -342,12 +342,12 @@ class ChartAccount extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={transaction_category_list ? transaction_category_list : []}
+                          data={transaction_category_list && transaction_category_list.data ? transaction_category_list.data : []}
                           version="4"
                           hover
-                          pagination
+                          pagination={transaction_category_list && transaction_category_list.data && transaction_category_list.data.length ? true : false}
                           remote
-                          fetchInfo={{ dataTotalSize: transaction_category_list.totalCount ? transaction_category_list.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: transaction_category_list.count ? transaction_category_list.count : 0 }}
                           className="product-table"
                           trClassName="cursor-pointer"
                           csvFileName="Chart_Of_Account.csv"
@@ -368,7 +368,7 @@ class ChartAccount extends React.Component {
                             Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="transactionType"
+                            dataField="chartOfAccountId"
                             dataSort
                             dataFormat={this.typeFormatter}
                           >

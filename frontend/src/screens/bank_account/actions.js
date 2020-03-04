@@ -52,8 +52,10 @@ export const getBankAccountList = (obj) => {
     bankAccountName,
     transactionDate,
     accountNumber,
-    currencyCode } = obj
-  let param = `/rest/bank/list?bankName=${bankName}&bankAccountTypeId=${bankAccountTypeId}&bankAccountName=${bankAccountName}&accountNumber=${accountNumber}&currencyCode=${currencyCode}`
+    currencyCode,
+    pageNo,
+    pageSize } = obj
+  let param = `/rest/bank/list?bankName=${bankName}&bankAccountTypeId=${bankAccountTypeId}&bankAccountName=${bankAccountName}&accountNumber=${accountNumber}&currencyCode=${currencyCode}&pageNo=${pageNo}&pageSize=${pageSize}`
 
   return (dispatch) => {
     let data = {
@@ -69,6 +71,7 @@ export const getBankAccountList = (obj) => {
           }
         })
       }
+      return res
     }).catch(err => {
       throw err
     })

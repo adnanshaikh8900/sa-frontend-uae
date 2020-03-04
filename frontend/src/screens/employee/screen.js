@@ -71,7 +71,7 @@ class Employee extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -100,7 +100,7 @@ class Employee extends React.Component {
   initializeData() {
     const { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
@@ -174,9 +174,9 @@ class Employee extends React.Component {
     }
     this.props.employeeActions.removeBulkEmployee(obj).then(res => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+        this.props.commonActions.tostifyAlert('success', 'Employees Deleted Successfully')
         this.initializeData();
-        if (employee_list && employee_list.length > 0) {
+        if (employee_list && employee_list.data &&  employee_list.data.length > 0) {
           this.setState({
             selectedRows: []
           })
@@ -307,13 +307,13 @@ class Employee extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={employee_list ? employee_list : []}
+                          data={employee_list && employee_list.data ? employee_list.data : []}
                           version="4"
                           hover
-                          pagination
+                          pagination = {employee_list && employee_list.data && employee_list.data.length > 0 ? true : false}
                           keyField="id"
                           remote
-                          fetchInfo={{ dataTotalSize: employee_list.totalCount ? employee_list.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: employee_list.count ? employee_list.count : 0 }}
                           className="employee-table"
                           trClassName="cursor-pointer"
                           csvFileName="employee_list.csv"

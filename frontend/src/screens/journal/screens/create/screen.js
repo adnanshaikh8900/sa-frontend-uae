@@ -77,7 +77,7 @@ class CreateJournal extends React.Component {
       idCount: 1,
       initValue: {
         journalDate: '',
-        referenceCode: '',
+        journalReferenceNo: '',
         description: '',
         currencyCode: '',
         subTotalDebitAmount: 0,
@@ -176,9 +176,6 @@ class CreateJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        // if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
-        //   console.log(props.touched.journalLineItems[idx].transactionCategoryId)
-        // }
       }
     });
 
@@ -257,9 +254,6 @@ class CreateJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        // if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
-        //   console.log(props.touched.journalLineItems[idx].contactId)
-        // }
       }
     });
 
@@ -309,9 +303,6 @@ class CreateJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index
-        // if (Object.keys(props.touched).length && props.touched.journalLineItems && props.touched.journalLineItems[idx]) {
-        //   console.log(props.touched.journalLineItems[idx].vatCategoryId)
-        // }
       }
     });
 
@@ -464,7 +455,6 @@ class CreateJournal extends React.Component {
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
-    // console.log(newData)
     props.setFieldValue('journalLineItems', newData, true)
     this.updateAmount(newData)
     // const index = data.findIndex(item => item.id === id)
@@ -519,7 +509,7 @@ class CreateJournal extends React.Component {
         })
         const postData = {
           journalDate: values.journalDate ? values.journalDate : '',
-          referenceCode: values.referenceCode ? values.referenceCode : '',
+          journalReferenceNo: values.journalReferenceNo ? values.journalReferenceNo : '',
           description: values.description ? values.description : '',
           currencyCode: values.currencyCode ? values.currencyCode : '',
           subTotalCreditAmount: initValue.subTotalCreditAmount,
@@ -654,14 +644,14 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="referenceCode">Reference #</Label>
+                                  <Label htmlFor="journalReferenceNo">Reference #</Label>
                                   <Input
                                     type="text"
-                                    id="referenceCode"
-                                    name="referenceCode"
+                                    id="journalReferenceNo"
+                                    name="journalReferenceNo"
                                     placeholder="Reference Number"
-                                    value={props.values.referenceCode || ''}
-                                    onChange={(value) => { props.handleChange("referenceCode")(value) }}
+                                    value={props.values.journalReferenceNo || ''}
+                                    onChange={(value) => { props.handleChange("journalReferenceNo")(value) }}
                                   />
                                 </FormGroup>
                               </Col>

@@ -193,7 +193,6 @@ class CreateExpense extends React.Component {
     if (file) {
       reader.onloadend = () => { };
       reader.readAsDataURL(file);
-      console.log(file);
       props.setFieldValue("attachmentFile", file,true);
     }
   }

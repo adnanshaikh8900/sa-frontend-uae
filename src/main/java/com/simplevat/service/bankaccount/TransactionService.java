@@ -10,6 +10,7 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.SimpleVatService;
 
 import java.math.BigDecimal;
@@ -83,7 +84,7 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
 
 	public abstract void deleteByIds(ArrayList<Integer> ids);
 
-	public abstract List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,
+	public abstract PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,
 			PaginationModel paginationModel) ;
 	
 }

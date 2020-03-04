@@ -8,6 +8,7 @@ public enum TransactionFilterEnum {
 	CHART_OF_ACCOUNT("chartOfAccount"," =:chartOfAccount"),
 	TRANSACTION_STATUS("transactionStatus"," =:transactionStatus"),
     DELETE_FLAG("deleteFlag", " = :deleteFlag"),
+    ORDER_BY("transactionId", " = :transactionId"),
     USER_ID("createdBy", "= :createdBy");
 
     @Getter

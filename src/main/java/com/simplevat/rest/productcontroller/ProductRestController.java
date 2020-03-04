@@ -82,7 +82,7 @@ public class ProductRestController implements Serializable {
 					response.setData(productListModels);
 				}
 			}
-			return new ResponseEntity(productListModels, HttpStatus.OK);
+			return new ResponseEntity(response, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);

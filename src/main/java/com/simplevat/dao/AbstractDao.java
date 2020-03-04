@@ -126,6 +126,49 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	}
 
 	@Override
+	public Integer getResultCount(List<DbFilter> dbFilters) {
+
+		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());// .append(" o ");
+		int i = 0;
+		DbFilter orderByFilter = null;
+		for (DbFilter dbFilter : dbFilters) {
+			System.out.println("Db = " + dbFilter);
+			boolean orderBy = isOrderBy(dbFilter);
+			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
+				if (i > 0) {
+					queryBuilder.append(" and ");
+				} else {
+					queryBuilder.append(" where ");
+				}
+				queryBuilder.
+				// append("o.").
+						append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
+				i++;
+			} else if (orderBy) {
+				orderByFilter = dbFilter;
+				// java.util.ConcurrentModificationException: dbFilters.remove(orderByFilter);
+			}
+		}
+
+		queryBuilder.append(" Order by " + orderByFilter.getDbCoulmnName()).append(" " + orderByFilter.getValue());
+
+//		if (paginationModel != null && paginationModel.getSortingCol() != null
+//				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ")) {
+//			queryBuilder.append(" order by " + paginationModel.getSortingCol() + " " + paginationModel.getOrder());
+//		}
+
+		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
+		for (DbFilter dbFilter : dbFilters) {
+			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !isOrderBy(dbFilter)) {
+				typedQuery.setParameter(dbFilter.getDbCoulmnName(), dbFilter.getValue());
+			}
+		}
+		System.out.println("count query = " + queryBuilder.toString());
+		List<ENTITY> result = typedQuery.getResultList();
+		return result != null && !result.isEmpty() ? result.size() : 0;
+	}
+
+	@Override
 	@Transactional
 	public ENTITY persist(ENTITY entity) {
 		entityManager.persist(entity);

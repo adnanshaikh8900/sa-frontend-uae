@@ -1,6 +1,7 @@
 package com.simplevat.dao.impl.bankaccount;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import com.simplevat.dao.bankaccount.BankAccountDao;
 import com.simplevat.entity.Product;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 import javax.persistence.TypedQuery;
 
@@ -68,13 +70,18 @@ public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implem
 	}
 
 	@Override
-	public List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,
+	public PaginationResponseModel getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,
 			PaginationModel paginationModel) {
 		List<DbFilter> dbFilters = new ArrayList();
 		filterDataMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));
 		List<BankAccount> list = this.executeQuery(dbFilters, paginationModel);
-		return list;
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+	
+		PaginationResponseModel resposne = new PaginationResponseModel();
+		resposne.setCount(this.getResultCount(dbFilters));
+		resposne.setData(list);
+		return resposne;
 	}
 
 }

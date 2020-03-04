@@ -9,6 +9,7 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.helper.BankHelper;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.model.BankModel;
 import com.simplevat.entity.Country;
@@ -120,14 +121,14 @@ public class BankAccountController implements Serializable {
 					currencyService.findByPK(filterModel.getCurrencyCode()));
 		}
 
-		//filterModel.setSortingCol(BankAccounrFilterEnum.ORDER_BY.getDbColumnName());
-		//filterModel.setOrder("DESC");
+		// filterModel.setSortingCol(BankAccounrFilterEnum.ORDER_BY.getDbColumnName());
+		// filterModel.setOrder("DESC");
 
 		filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
-		
-		List<BankAccount> bankAccounts = bankAccountService.getBankAccounts(filterDataMap, null);
-		if (bankAccounts != null) {
-			return new ResponseEntity<>(bankAccountRestHelper.getListModel(bankAccounts), HttpStatus.OK);
+
+		PaginationResponseModel paginatinResponseModel = bankAccountService.getBankAccounts(filterDataMap, filterModel);
+		if (paginatinResponseModel != null) {
+			return new ResponseEntity<>(bankAccountRestHelper.getListModel(paginatinResponseModel), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

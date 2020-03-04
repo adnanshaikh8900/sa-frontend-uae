@@ -11,6 +11,8 @@ import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.JournalDao;
 import com.simplevat.entity.Journal;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.JournalService;
 
 @Service("JournalServiceImpl")
@@ -20,18 +22,9 @@ public class JournalServiceImpl extends JournalService {
 	private JournalDao journalDao;
 
 	@Override
-	public List<Journal> getJornalList(Map<JournalFilterEnum, Object> filterMap) {
-		List<Journal> journalList = journalDao.getJornalList(filterMap);
-		// need to replace in abstract dao impl with order by
-		if (journalList != null && !journalList.isEmpty())
-			journalList.sort(new Comparator<Journal>() {
-
-				@Override
-				public int compare(Journal o1, Journal o2) {
-					return o2.getJournalDate().compareTo(o1.getJournalDate());
-				}
-			});
-		return journalList;
+	public PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,
+			PaginationModel paginationModel) {
+		return journalDao.getJornalList(filterMap, paginationModel);
 	}
 
 	@Override

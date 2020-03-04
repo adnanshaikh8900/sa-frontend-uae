@@ -259,7 +259,6 @@ class CreateExpense extends React.Component {
                               "fileType",
                               "*Unsupported File Format",
                               value => {
-                                console.log(value)
                                  value && this.setState({
                                   fileName: value.name
                                 });

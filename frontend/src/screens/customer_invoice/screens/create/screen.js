@@ -138,8 +138,8 @@ class CreateCustomerInvoice extends React.Component {
 			{ label: "Net 30", value: "NET_30" },
 			{ label: "Due on Receipt", value: "DUE_ON_RECEIPT" },
 		]
-		 this.regEx = /^[0-9\b]+$/;
-		
+		this.regEx = /^[0-9\b]+$/;
+
 
 		this.renderActions = this.renderActions.bind(this)
 		this.renderProductName = this.renderProductName.bind(this)
@@ -231,8 +231,9 @@ class CreateCustomerInvoice extends React.Component {
 					<Input
 						type="text"
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
-						onChange={(e) => { 
-							if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'quantity', form, field, props) }
+						onChange={(e) => {
+							if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'quantity', form, field, props)
+						}
 						}
 						placeholder="Quantity"
 						className={`form-control 
@@ -470,7 +471,7 @@ class CreateCustomerInvoice extends React.Component {
 			reader.onloadend = () => {
 			};
 			reader.readAsDataURL(file);
-			props.setFieldValue('attachmentFile', file);
+			props.setFieldValue('attachmentFile', file,true);
 		}
 	}
 
@@ -657,41 +658,52 @@ class CreateCustomerInvoice extends React.Component {
 															.of(Yup.object().shape({
 																description: Yup.string().required("Value is Required"),
 																quantity: Yup.string().required("Value is Required").
-																test('quantity','Quantity Should be Greater than 1',value => {
-																	if(value > 0) {
-																		return true
-																	} else {
-																		return false
-																	}
-																}),
+																	test('quantity', 'Quantity Should be Greater than 1', value => {
+																		if (value > 0) {
+																			return true
+																		} else {
+																			return false
+																		}
+																	}),
 																unitPrice: Yup.string().required("Value is Required")
-																.test('Unit Price','Unit Price Should be Greater than 1',value => {
-																	if(value > 0) {
-																		return true
-																	} else {
-																		return false
-																	}
-																}),
+																	.test('Unit Price', 'Unit Price Should be Greater than 1', value => {
+																		if (value > 0) {
+																			return true
+																		} else {
+																			return false
+																		}
+																	}),
 																vatCategoryId: Yup.string().required("Value is Required"),
 															})),
 														attachmentFile: Yup.mixed()
-															.test('fileType', "*Unsupported File Format", value => {
-																if (value && !this.supported_format.includes(value.type)) {
-																	this.setState({
+															.test(
+																"fileType",
+																"*Unsupported File Format",
+																value => {
+																	value && this.setState({
 																		fileName: value.name
-																	})
-																	return false
-																} else {
-																	return true
+																	});
+																	if (
+																		value &&
+																		this.supported_format.includes(value.type)
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
 																}
-															})
-															.test('fileSize', "*File Size is too large", value => {
-																if (value && value.size >= this.file_size) {
-																	return false
-																} else {
-																	return true
+															)
+															.test(
+																"fileSize",
+																"*File Size is too large",
+																value => {
+																	if (value && value.size <= this.file_size) {
+																		return true;
+																	} else {
+																		return false;
+																	}
 																}
-															})
+															)
 													})}
 											>
 												{props => (
@@ -966,7 +978,7 @@ class CreateCustomerInvoice extends React.Component {
 																					</div>
 																				)}
 																			/>
-																			{props.errors.attachmentFile && (
+																			{props.errors.attachmentFile && props.touched.attachmentFile && (
 																				<div className="invalid-file">{props.errors.attachmentFile}</div>
 																			)}
 																		</FormGroup>
@@ -1108,13 +1120,14 @@ class CreateCustomerInvoice extends React.Component {
 																										type="text"
 																										value={props.values.discountPercentage}
 																										onChange={(e) => {
-																											if(e.target.value === '' || this.regEx.test(e.target.value)) {
-																											props.handleChange('discountPercentage')(e)
-																											this.setState({
-																												discountPercentage: e.target.value,
-																											}, () => { this.updateAmount(this.state.data, props) })
-																										}}
-																									}
+																											if (e.target.value === '' || this.regEx.test(e.target.value)) {
+																												props.handleChange('discountPercentage')(e)
+																												this.setState({
+																													discountPercentage: e.target.value,
+																												}, () => { this.updateAmount(this.state.data, props) })
+																											}
+																										}
+																										}
 																									/>
 																								</FormGroup>
 																							</Col>

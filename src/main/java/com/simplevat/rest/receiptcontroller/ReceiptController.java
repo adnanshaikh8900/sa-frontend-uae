@@ -22,6 +22,7 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.entity.Receipt;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.InvoiceService;
@@ -36,129 +37,132 @@ import java.time.ZoneId;
 @RequestMapping("/rest/receipt")
 public class ReceiptController {
 
-    @Autowired
-    private ReceiptService receiptService;
+	@Autowired
+	private ReceiptService receiptService;
 
-    @Autowired
-    private ReceiptRestHelper receiptRestHelper;
+	@Autowired
+	private ReceiptRestHelper receiptRestHelper;
 
-    @Autowired
-    private ContactService contactService;
+	@Autowired
+	private ContactService contactService;
 
-    @Autowired
-    private InvoiceService invoiceService;
+	@Autowired
+	private InvoiceService invoiceService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
 
-    @ApiOperation(value = "Get receipt List")
-        @GetMapping(value = "/getList")
-    public ResponseEntity getList(ReceiptRequestFilterModel filterModel, HttpServletRequest request) {
-        try {
-            Map<ReceiptFilterEnum, Object> filterDataMap = new HashMap();
+	@ApiOperation(value = "Get receipt List")
+	@GetMapping(value = "/getList")
+	public ResponseEntity getList(ReceiptRequestFilterModel filterModel, HttpServletRequest request) {
+		try {
+			Map<ReceiptFilterEnum, Object> filterDataMap = new HashMap();
 
-            filterDataMap.put(ReceiptFilterEnum.USER_ID, filterModel.getUserId());
-            if (filterModel.getContactId() != null) {
-                filterDataMap.put(ReceiptFilterEnum.CONTACT, contactService.findByPK(filterModel.getContactId()));
-            }
-            if (filterModel.getInvoiceId() != null) {
-                filterDataMap.put(ReceiptFilterEnum.INVOICE, invoiceService.findByPK(filterModel.getInvoiceId()));
-            }
-            filterDataMap.put(ReceiptFilterEnum.REFERENCE_CODE, filterModel.getReferenceCode());
-            filterDataMap.put(ReceiptFilterEnum.DELETE, false);
-            if (filterModel.getReceiptDate() != null && !filterModel.getReceiptDate().isEmpty()) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getReceiptDate()).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-                filterDataMap.put(ReceiptFilterEnum.RECEIPT_DATE, dateTime);
-            }
+			filterDataMap.put(ReceiptFilterEnum.USER_ID, filterModel.getUserId());
+			if (filterModel.getContactId() != null) {
+				filterDataMap.put(ReceiptFilterEnum.CONTACT, contactService.findByPK(filterModel.getContactId()));
+			}
+			if (filterModel.getInvoiceId() != null) {
+				filterDataMap.put(ReceiptFilterEnum.INVOICE, invoiceService.findByPK(filterModel.getInvoiceId()));
+			}
+			filterDataMap.put(ReceiptFilterEnum.REFERENCE_CODE, filterModel.getReferenceCode());
+			filterDataMap.put(ReceiptFilterEnum.DELETE, false);
+			if (filterModel.getReceiptDate() != null && !filterModel.getReceiptDate().isEmpty()) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getReceiptDate()).getTime())
+						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+				filterDataMap.put(ReceiptFilterEnum.RECEIPT_DATE, dateTime);
+			}
+			filterDataMap.put(ReceiptFilterEnum.ORDER_BY, "DESC");
 
-            List<Receipt> receipts = receiptService.getReceiptList(filterDataMap);
-            if (receipts == null) {
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity(receiptRestHelper.getListModel(receipts), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+			PaginationResponseModel response = receiptService.getReceiptList(filterDataMap, filterModel);
+			if (response == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			response.setData(receiptRestHelper.getListModel(response.getData()));
+			return new ResponseEntity(response, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    @ApiOperation(value = "Delete Receipt By ID")
-    @DeleteMapping(value = "/delete")
-    public ResponseEntity deleteReceipt(@RequestParam(value = "id") Integer id) {
-        try {
-            Receipt receipt = receiptService.findByPK(id);
-            if (receipt != null) {
-                receipt.setDeleteFlag(Boolean.TRUE);
-                receiptService.update(receipt, receipt.getId());
-            }
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	@ApiOperation(value = "Delete Receipt By ID")
+	@DeleteMapping(value = "/delete")
+	public ResponseEntity deleteReceipt(@RequestParam(value = "id") Integer id) {
+		try {
+			Receipt receipt = receiptService.findByPK(id);
+			if (receipt != null) {
+				receipt.setDeleteFlag(Boolean.TRUE);
+				receiptService.update(receipt, receipt.getId());
+			}
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    @ApiOperation(value = "Delete Reecipt in Bulk")
-    @DeleteMapping(value = "/deletes")
-    public ResponseEntity deleteReceipts(@RequestBody DeleteModel ids) {
-        try {
-            receiptService.deleteByIds(ids.getIds());
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	@ApiOperation(value = "Delete Reecipt in Bulk")
+	@DeleteMapping(value = "/deletes")
+	public ResponseEntity deleteReceipts(@RequestBody DeleteModel ids) {
+		try {
+			receiptService.deleteByIds(ids.getIds());
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
-    }
+	}
 
-    @ApiOperation(value = "Get Receipt By ID")
-    @GetMapping(value = "/getReceiptById")
-    public ResponseEntity getReceiptById(@RequestParam(value = "id") Integer id) {
-        try {
-            Receipt receipt = receiptService.findByPK(id);
-            if (receipt == null) {
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            } else {
-                return new ResponseEntity<>(receiptRestHelper.getRequestModel(receipt), HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	@ApiOperation(value = "Get Receipt By ID")
+	@GetMapping(value = "/getReceiptById")
+	public ResponseEntity getReceiptById(@RequestParam(value = "id") Integer id) {
+		try {
+			Receipt receipt = receiptService.findByPK(id);
+			if (receipt == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			} else {
+				return new ResponseEntity<>(receiptRestHelper.getRequestModel(receipt), HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    @ApiOperation(value = "Add New Receipt")
-    @PostMapping(value = "/save")
-    public ResponseEntity save(@RequestBody ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
-            receipt.setCreatedBy(userId);
-            receipt.setCreatedDate(LocalDateTime.now());
-            receipt.setDeleteFlag(Boolean.FALSE);
-            receiptService.persist(receipt);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	@ApiOperation(value = "Add New Receipt")
+	@PostMapping(value = "/save")
+	public ResponseEntity save(@RequestBody ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
+			receipt.setCreatedBy(userId);
+			receipt.setCreatedDate(LocalDateTime.now());
+			receipt.setDeleteFlag(Boolean.FALSE);
+			receiptService.persist(receipt);
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    @ApiOperation(value = "Update Receipt")
-    @PostMapping(value = "/update")
-    public ResponseEntity update(@RequestBody ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
-        try {
-            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-            Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
-            receipt.setLastUpdateDate(LocalDateTime.now());
-            receipt.setLastUpdatedBy(userId);
-            receiptService.update(receipt);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+	@ApiOperation(value = "Update Receipt")
+	@PostMapping(value = "/update")
+	public ResponseEntity update(@RequestBody ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
+			receipt.setLastUpdateDate(LocalDateTime.now());
+			receipt.setLastUpdatedBy(userId);
+			receiptService.update(receipt);
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 }

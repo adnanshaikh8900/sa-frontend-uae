@@ -163,7 +163,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 				typedQuery.setParameter(dbFilter.getDbCoulmnName(), dbFilter.getValue());
 			}
 		}
-		System.out.println("count query = " + queryBuilder.toString());
 		List<ENTITY> result = typedQuery.getResultList();
 		return result != null && !result.isEmpty() ? result.size() : 0;
 	}

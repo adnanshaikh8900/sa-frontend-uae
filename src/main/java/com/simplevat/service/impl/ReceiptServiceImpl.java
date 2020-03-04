@@ -10,23 +10,26 @@ import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.ReceiptDao;
 import com.simplevat.entity.Receipt;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ReceiptService;
 
 @Service("ReceiptService")
-public class ReceiptServiceImpl extends ReceiptService{
+public class ReceiptServiceImpl extends ReceiptService {
 
 	@Autowired
 	private ReceiptDao receiptDao;
-	
+
 	@Override
-	public List<Receipt> getReceiptList(Map<ReceiptFilterEnum, Object> filterMap) {
-        return receiptDao.getProductList(filterMap);
-        }
+	public PaginationResponseModel getReceiptList(Map<ReceiptFilterEnum, Object> filterMap,
+			PaginationModel paginationModel) {
+		return receiptDao.getProductList(filterMap, paginationModel);
+	}
 
 	@Override
 	public void deleteByIds(List<Integer> ids) {
-	receiptDao.deleteByIds(ids);
-		
+		receiptDao.deleteByIds(ids);
+
 	}
 
 	@Override

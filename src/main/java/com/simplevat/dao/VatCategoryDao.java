@@ -7,6 +7,9 @@ package com.simplevat.dao;
 
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.entity.VatCategory;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
+
 import java.util.List;
 import java.util.Map;
 
@@ -24,5 +27,5 @@ public interface VatCategoryDao extends Dao<Integer, VatCategory> {
 
     public void deleteByIds(List<Integer> ids);
 
-	public List<VatCategory> getVatCategoryList(Map<VatCategoryFilterEnum, Object> filterDataMap);
+	public PaginationResponseModel getVatCategoryList(Map<VatCategoryFilterEnum, Object> filterDataMa,PaginationModel paginationModel);
 }

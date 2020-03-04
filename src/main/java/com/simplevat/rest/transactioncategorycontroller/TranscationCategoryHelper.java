@@ -94,6 +94,10 @@ public class TranscationCategoryHelper {
 			ChartOfAccount chartOfAccount = transactionTypeService
 					.findByPK(transactionCategoryBean.getChartOfAccount());
 			transactionCategory.setChartOfAccount(chartOfAccount);
+
+			transactionCategory.setTransactionCategoryCode(
+					transactionCategoryService.getNxtTransactionCatCodeByChartOfAccount(chartOfAccount));
+
 		}
 		if (transactionCategoryBean.getVatCategory() != null) {
 			transactionCategory.setVatCategory(vatCategoryService.findByPK(transactionCategoryBean.getVatCategory()));

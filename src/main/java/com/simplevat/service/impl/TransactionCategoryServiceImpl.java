@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.simplevat.criteria.TransactionCategoryFilterNew;
 import com.simplevat.criteria.bankaccount.TransactionCategoryCriteria;
 import com.simplevat.entity.Activity;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.TransactionCategoryService;
 import java.time.LocalDateTime;
@@ -124,4 +125,9 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
     public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap) {
         return dao.getTransactionCategoryList(filterMap);
     }
+
+	@Override
+	public String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount) {
+		return dao.getNxtTransactionCatCodeByChartOfAccount(chartOfAccount);
+	}
 }

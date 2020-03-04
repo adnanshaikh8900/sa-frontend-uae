@@ -45,9 +45,9 @@ public class ChartOfAccount implements Serializable {
 	@Basic(optional = false)
 	private Character debitCreditFlag;
 
-//	@Column(name = "CHART_OF_ACCOUNT_CODE")
-//	@Basic(optional = false)
-//	private Double chartOfAccountCode;
+	@Column(name = "CHART_OF_ACCOUNT_CODE")
+	@Basic(optional = false)
+	private String chartOfAccountCode;
 
 	@Column(name = "DEFAULT_FLAG")
 	@ColumnDefault(value = "'N'")
@@ -58,33 +58,10 @@ public class ChartOfAccount implements Serializable {
 	@Basic(optional = true)
 	private Integer orderSequence;
 
-	@Column(name = "CREATED_BY")
-	@Basic(optional = false)
-	private Integer createdBy;
-
-	@Column(name = "CREATED_DATE")
-	@ColumnDefault(value = "CURRENT_TIMESTAMP")
-	@Basic(optional = false)
-	@Convert(converter = DateConverter.class)
-	private LocalDateTime createdDate;
-
-	@Column(name = "LAST_UPDATED_BY")
-	private Integer lateUpdatedBy;
-
-	@Column(name = "LAST_UPDATE_DATE")
-	@Convert(converter = DateConverter.class)
-	private LocalDateTime LastUpdatedDate;
-
 	@Column(name = "DELETE_FLAG")
 	@ColumnDefault(value = "0")
 	@Basic(optional = false)
 	private boolean deleteFlag;
-
-	@Column(name = "VERSION_NUMBER")
-	@ColumnDefault(value = "1")
-	@Basic(optional = false)
-	@Version
-	private Integer versionNumber;
 
 	public ChartOfAccount(Integer chartOfAccountId) {
 		this.chartOfAccountId = chartOfAccountId;

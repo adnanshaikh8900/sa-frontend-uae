@@ -25,7 +25,7 @@ import org.hibernate.annotations.ColumnDefault;
             query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (t.createdBy = :createdBy or t.createdBy = 1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
     ,
     @NamedQuery(name = "findMaxTnxCodeByChartOfAccId",
-    query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (t.createdBy = :createdBy or t.createdBy = 1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
+    query = "SELECT t FROM TransactionCategory t where chartOfAccount =:chartOfAccountId ORDER BY  CAST(t.transactionCategoryCode as int) DESC")
 
 })
 @Entity
@@ -48,6 +48,7 @@ public class TransactionCategory implements Serializable {
     @Column(name = "TRANSACTION_CATEGORY_DESCRIPTION")
     private String transactionCategoryDescription;
 
+  
     @Basic
     @Column(name = "TRANSACTION_CATEGORY_CODE")
     private String transactionCategoryCode;

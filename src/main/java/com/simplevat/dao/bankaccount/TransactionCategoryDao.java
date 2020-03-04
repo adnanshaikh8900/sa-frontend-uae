@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.dao.Dao;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 
 public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory> {
@@ -28,4 +29,6 @@ public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory
     public void deleteByIds(List<Integer> ids);
 
 	public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap);
+
+	public String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount);
 }

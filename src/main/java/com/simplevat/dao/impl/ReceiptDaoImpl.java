@@ -13,19 +13,25 @@ import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ReceiptDao;
 import com.simplevat.entity.Receipt;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 @Repository
 @Transactional
 public class ReceiptDaoImpl extends AbstractDao<Integer, Receipt> implements ReceiptDao {
 
 	@Override
-	public List<Receipt> getProductList(Map<ReceiptFilterEnum, Object> filterMap) {
+	public PaginationResponseModel getProductList(Map<ReceiptFilterEnum, Object> filterMap,
+			PaginationModel paginamtionModel) {
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		List<Receipt> receipts = this.executeQuery(dbFilters);
-		return receipts;
+
+		PaginationResponseModel responseModel = new PaginationResponseModel();
+		responseModel.setCount(this.getResultCount(dbFilters));
+		responseModel.setData(this.executeQuery(dbFilters,paginamtionModel));
+		return responseModel;
 	}
 
 	@Override

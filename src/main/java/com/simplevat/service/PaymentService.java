@@ -7,6 +7,9 @@ package com.simplevat.service;
 
 import com.simplevat.constant.dbfilter.PaymentFilterEnum;
 import com.simplevat.entity.Payment;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +19,7 @@ import java.util.Map;
  */
 public abstract class PaymentService extends SimpleVatService<Integer, Payment> {
     
-    public abstract List<Payment> getPayments(Map<PaymentFilterEnum, Object> map);
+    public abstract PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> map,PaginationModel paginationModel);
     
     public abstract void deleteByIds(List<Integer> ids);
 

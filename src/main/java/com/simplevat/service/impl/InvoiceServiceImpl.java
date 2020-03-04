@@ -11,6 +11,8 @@ import com.simplevat.service.InvoiceService;
 import java.util.Map;
 import com.simplevat.dao.InvoiceDao;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 @Service("SupplierInvoiceService")
 public class InvoiceServiceImpl extends InvoiceService {
@@ -24,8 +26,8 @@ public class InvoiceServiceImpl extends InvoiceService {
     }
 
     @Override
-    public List<Invoice> getInvoiceList(Map<InvoiceFilterEnum, Object> map) {
-        return supplierInvoiceDao.getInvoiceList(map);
+    public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> map,PaginationModel paginationModel ) {
+        return supplierInvoiceDao.getInvoiceList(map,paginationModel);
     }
 
     @Override

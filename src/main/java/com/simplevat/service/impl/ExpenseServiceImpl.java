@@ -16,6 +16,8 @@ import com.simplevat.dao.Dao;
 import com.simplevat.dao.ExpenseDao;
 import com.simplevat.dao.ProjectDao;
 import com.simplevat.entity.Expense;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.report.model.BankAccountTransactionReportModel;
 import com.simplevat.util.ChartUtil;
@@ -69,8 +71,8 @@ public class ExpenseServiceImpl extends ExpenseService {
 	}
 
 	@Override
-	public List<Expense> getExpensesList(Map<ExpenseFIlterEnum, Object> filterMap) {
-		return expenseDao.getExpenseList(filterMap);
+	public PaginationResponseModel getExpensesList(Map<ExpenseFIlterEnum, Object> filterMap,PaginationModel paginationModel) {
+		return expenseDao.getExpenseList(filterMap,paginationModel);
 	}
 
 }

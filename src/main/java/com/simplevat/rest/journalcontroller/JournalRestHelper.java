@@ -15,6 +15,7 @@ import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.User;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.JournalLineItemService;
@@ -60,7 +61,7 @@ public class JournalRestHelper {
 		if (journalRequestModel.getCurrencyCode() != null) {
 			journal.setCurrency(currencyService.getCurrency(journalRequestModel.getCurrencyCode()));
 		}
-		journal.setReferenceCode(journalRequestModel.getReferenceCode());
+		journal.setJournlReferencenNo(journalRequestModel.getJournalReferenceNo());
 		if (journalRequestModel.getJournalDate() != null) {
 			LocalDateTime journalDate = Instant.ofEpochMilli(journalRequestModel.getJournalDate().getTime())
 					.atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -134,16 +135,18 @@ public class JournalRestHelper {
 		return lineItems;
 	}
 
-	public List<JournalModel> getListModel(List<Journal> journals) {
+	public PaginationResponseModel getListModel(PaginationResponseModel responseModel) {
 
-		if (journals != null && journals.size() > 0) {
+		if (responseModel != null) {
 
 			List<JournalModel> journalModelList = new ArrayList<JournalModel>();
-
-			for (Journal journal : journals) {
-				journalModelList.add(getModel(journal, true));
+			if (responseModel.getData() != null) {
+				for (Journal journal : (List<Journal>) responseModel.getData()) {
+					journalModelList.add(getModel(journal, true));
+				}
+				responseModel.setData(journalModelList);
+				return responseModel;
 			}
-			return journalModelList;
 		}
 		return null;
 	}
@@ -153,10 +156,9 @@ public class JournalRestHelper {
 		boolean isManual = journal.getPostingReferenceType().equals(PostingReferenceTypeEnum.MANUAL);
 
 		JournalModel model = new JournalModel();
-		// XXX: need to add attribute accordingly
 		model.setJournalId(journal.getId());
 		model.setDescription(isManual ? journal.getDescription() : journal.getPostingReferenceType().toString());
-		model.setReferenceCode(isManual ? journal.getReferenceCode() : String.valueOf(journal.getId()));
+		model.setJournalReferenceNo(isManual ? journal.getJournlReferencenNo() : String.valueOf(journal.getId()));
 
 		BigDecimal totalCreditAmount = getTotalCreditAmount(journal.getJournalLineItems());
 		BigDecimal totalDebitAmount = getTotalDebitAmount(journal.getJournalLineItems());

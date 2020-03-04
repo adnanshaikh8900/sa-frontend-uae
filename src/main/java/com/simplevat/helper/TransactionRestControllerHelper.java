@@ -49,7 +49,7 @@ public class TransactionRestControllerHelper {
         }
         transaction.setTransactionDescription(model.getTransactionDescription());
         transaction.setTransactionAmount(model.getTransactionAmount());
-        transaction.setTransactionType(model.getTransactionType());
+        transaction.setChartOfAccount(model.getChartOfAccountId());
         transaction.setReceiptNumber(model.getReceiptNumber());
         transaction.setDebitCreditFlag(model.getDebitCreditFlag());
         transaction.setProject(model.getProject());
@@ -89,7 +89,7 @@ public class TransactionRestControllerHelper {
 
         transactionModel.setTransactionDescription(entity.getTransactionDescription());
         transactionModel.setTransactionAmount(entity.getTransactionAmount());
-        transactionModel.setTransactionType(entity.getTransactionType());
+        transactionModel.setChartOfAccountId(entity.getChartOfAccount());
         transactionModel.setReceiptNumber(entity.getReceiptNumber());
         transactionModel.setDebitCreditFlag(entity.getDebitCreditFlag());
         transactionModel.setProject(entity.getProject());
@@ -171,7 +171,7 @@ public class TransactionRestControllerHelper {
                 }
                 transaction.setTransactionDescription(model.getTransactionDescription());
                 transaction.setTransactionAmount(model.getTransactionAmount());
-                transaction.setTransactionType(model.getTransactionType());
+                transaction.setChartOfAccount(model.getChartOfAccountId());
                 transaction.setReceiptNumber(model.getReceiptNumber());
                 transaction.setDebitCreditFlag(model.getDebitCreditFlag());
                 transaction.setProject(model.getProject());
@@ -213,7 +213,7 @@ public class TransactionRestControllerHelper {
 
                 transactionModel.setTransactionDescription(transaction.getTransactionDescription());
                 transactionModel.setTransactionAmount(transaction.getTransactionAmount());
-                transactionModel.setTransactionType(transaction.getTransactionType());
+                transactionModel.setChartOfAccountId(transaction.getChartOfAccount());
                 transactionModel.setReceiptNumber(transaction.getReceiptNumber());
                 transactionModel.setDebitCreditFlag(transaction.getDebitCreditFlag());
                 transactionModel.setProject(transaction.getProject());

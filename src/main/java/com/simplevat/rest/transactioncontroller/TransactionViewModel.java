@@ -8,7 +8,7 @@ package com.simplevat.rest.transactioncontroller;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -11,7 +11,8 @@ public enum ReceiptFilterEnum {
     CONTACT("contact", "= :contact"),
     REFERENCE_CODE("referenceCode", " like CONCAT(:referenceCode,'%')"),
     DELETE("deleteFlag", " = :deleteFlag"),
-    USER_ID("createdBy", "= :createdBy");
+    USER_ID("createdBy", "= :createdBy"),
+    ORDER_BY("id"," =:id"),;
 
     @Getter
     String dbColumnName;

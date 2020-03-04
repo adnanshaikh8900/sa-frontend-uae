@@ -12,6 +12,8 @@ import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.JournalDao;
 import com.simplevat.entity.Journal;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 @Repository
 public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements JournalDao {
@@ -28,14 +30,18 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 	}
 
 	@Override
-	public List<Journal> getJornalList(Map<JournalFilterEnum, Object> filterMap) {
+	public PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,
+			PaginationModel paginationModel) {
 
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		List<Journal> journals = this.executeQuery(dbFilters);
-		return journals;
+		List<Journal> journals = this.executeQuery(dbFilters, paginationModel);
 
+		PaginationResponseModel resposne = new PaginationResponseModel();
+		resposne.setCount(this.getResultCount(dbFilters));
+		resposne.setData(journals);
+		return resposne;
 	}
 }

@@ -20,7 +20,7 @@ public class TransactionCategoryBean implements Serializable{
     private String transactionCategoryName;
     private String transactionCategoryDescription;
     private String transactionCategoryCode;
-    private Integer transactionType;
+    private Integer chartOfAccount;
     private Integer parentTransactionCategory;
     private Integer vatCategory;
     private String defaltFlag;

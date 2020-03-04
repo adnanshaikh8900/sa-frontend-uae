@@ -24,6 +24,7 @@ import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.JournalService;
@@ -63,20 +64,20 @@ public class JournalRestController {
 			Map<JournalFilterEnum, Object> filterDataMap = new HashMap();
 			filterDataMap.put(JournalFilterEnum.USER_ID, userId);
 			filterDataMap.put(JournalFilterEnum.DESCRIPTION, filterModel.getDescription());
-			filterDataMap.put(JournalFilterEnum.REFERENCE_CODE, filterModel.getReferenceCode());
+			filterDataMap.put(JournalFilterEnum.REFERENCE_NO, filterModel.getReferenceCode());
 			if (filterModel.getJournalDate() != null && !filterModel.getJournalDate().isEmpty()) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getJournalDate()).getTime())
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 				filterDataMap.put(JournalFilterEnum.JOURNAL_DATE, dateTime);
 			}
-		//	filterDataMap.put(JournalFilterEnum.POSTING_REFERENCE_TYPE, PostingReferenceTypeEnum.MUNUAL);
 			filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
-			List<Journal> journals = journalService.getJornalList(filterDataMap);
-			if (journals == null) {
+			filterDataMap.put(JournalFilterEnum.ORDER_BY, "DESC");
+			PaginationResponseModel responseModel = journalService.getJornalList(filterDataMap,filterModel);
+			if (responseModel == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity(journalRestHelper.getListModel(journals), HttpStatus.OK);
+			return new ResponseEntity(journalRestHelper.getListModel(responseModel), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -123,7 +124,7 @@ public class JournalRestController {
 		if (journal == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		} else {
-			return new ResponseEntity<>(journalRestHelper.getModel(journal,false), HttpStatus.OK);
+			return new ResponseEntity<>(journalRestHelper.getModel(journal, false), HttpStatus.OK);
 		}
 	}
 

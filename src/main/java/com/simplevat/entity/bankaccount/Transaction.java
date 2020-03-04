@@ -49,7 +49,7 @@ public class Transaction implements Serializable {
 	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "TRANSACTION_TYPE_CODE")
-	private TransactionType transactionType;
+	private ChartOfAccount chartOfAccount;
 
 	@Basic
 	@Column(name = "RECEIPT_NUMBER")

@@ -7,6 +7,9 @@ package com.simplevat.dao;
 
 import com.simplevat.constant.dbfilter.PaymentFilterEnum;
 import com.simplevat.entity.Payment;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +19,7 @@ import java.util.Map;
  */
 public interface PaymentDao extends Dao<Integer, Payment> {
 
-    public List<Payment> getPayments(Map<PaymentFilterEnum, Object> filterMap);
+    public PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> filterMap,PaginationModel paginationModel);
 
     public void deleteByIds(List<Integer> ids);
 

@@ -20,7 +20,8 @@ public enum InvoiceFilterEnum {
     STATUS("status", " = :status "),
     USER_ID("createdBy", " = :createdBy "),
     TYPE("type", " = :type "),
-    DELETE_FLAG("deleteFlag", " = :deleteFlag ");
+    DELETE_FLAG("deleteFlag", " = :deleteFlag "),
+    ORDER_BY("id"," =:id");
 
     @Getter
     String dbColumnName;

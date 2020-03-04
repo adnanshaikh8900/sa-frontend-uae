@@ -10,7 +10,7 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.bankaccount.TransactionStatus;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class TransactionRestModel implements Comparable<TransactionRestModel> {
     private Date transactionDate;
     private String transactionDescription;
     private BigDecimal transactionAmount;
-    private TransactionType transactionType;
+    private ChartOfAccount chartOfAccountId;
     private String receiptNumber;
     private Character debitCreditFlag;
     private Project project;

@@ -9,7 +9,8 @@ package com.simplevat.constant;
  *
  * @author admin
  */
-public class TransactionTypeConstant {
+public class ChartOfAccountConstant {
 
     public static final int TRANSACTION_TYPE_EXPENSE = 8;
+    public static final int MONEY_IN = 1;
 }

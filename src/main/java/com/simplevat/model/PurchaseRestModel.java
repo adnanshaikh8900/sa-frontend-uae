@@ -10,7 +10,7 @@ import com.simplevat.entity.Currency;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class PurchaseRestModel {
     private String purchaseDescription;
     private String receiptNumber;
     private User user;
-    private TransactionType transactionType;
+    private ChartOfAccount transactionType;
     private TransactionCategory transactionCategory;
     private Currency currency;
     private Project project;

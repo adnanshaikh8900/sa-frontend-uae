@@ -19,7 +19,7 @@ import com.simplevat.service.BankAccountService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
-import com.simplevat.service.bankaccount.TransactionTypeService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.FileHelper;
 
@@ -70,7 +70,7 @@ public class TransactionController implements Serializable {
 	private TransactionStatusService transactionStatusService;
 
 	@Autowired
-	private TransactionTypeService transactionTypeService;
+	private ChartOfAccountService chartOfAccountService;
 
 	@Autowired
 	private TransactionHelper transactionHelper;
@@ -105,9 +105,9 @@ public class TransactionController implements Serializable {
 			dataMap.put(TransactionFilterEnum.TRANSACTION_STATUS,
 					transactionStatusService.findByPK(filterModel.getTransactionStatusCode()));
 		}
-		if (filterModel.getTransactionTypeCode() != null) {
-			dataMap.put(TransactionFilterEnum.TRANSACTION_TYPE,
-					transactionTypeService.findByPK(filterModel.getTransactionTypeCode()));
+		if (filterModel.getChartOfAccountId() != null) {
+			dataMap.put(TransactionFilterEnum.CHART_OF_ACCOUNT,
+					chartOfAccountService.findByPK(filterModel.getChartOfAccountId()));
 		}
 
 		List<Transaction> trasactionList = transactionService.getAllTransactionList(dataMap, filterModel);

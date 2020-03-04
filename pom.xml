@@ -177,7 +177,7 @@
 	<build>
 		<finalName>ROOT</finalName>
 		<plugins>
-	<!-- 		<plugin>
+	 		<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
 					<execution>
@@ -233,7 +233,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin> -->
+			</plugin> 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

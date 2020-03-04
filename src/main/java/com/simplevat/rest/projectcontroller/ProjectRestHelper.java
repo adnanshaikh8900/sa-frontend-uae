@@ -17,66 +17,69 @@ import com.simplevat.service.ProjectService;
 @Service
 public class ProjectRestHelper {
 
-    @Autowired
-    private ContactService contactService;
+	@Autowired
+	private ContactService contactService;
 
-    @Autowired
-    private LanguageService languageService;
+	@Autowired
+	private LanguageService languageService;
 
-    @Autowired
-    private CurrencyService currencyservice;
+	@Autowired
+	private CurrencyService currencyservice;
 
-    @Autowired
-    private ProjectService projectService;
+	@Autowired
+	private ProjectService projectService;
 
-    public List<ProjectListModel> getListModel(List<Project> projectList) {
-        List<ProjectListModel> projectListModels = new ArrayList();
-        for (Project project : projectList) {
-            ProjectListModel projectModel = new ProjectListModel();
-            BeanUtils.copyProperties(project, projectModel);
-            projectListModels.add(projectModel);
-        }
-        return projectListModels;
-    }
+	public List<ProjectListModel> getListModel(Object projectList) {
+		List<ProjectListModel> projectListModels = new ArrayList();
 
-    public ProjectRequestModel getRequestModel(Project project) {
+		if (projectList != null) {
+			for (Project project : (List<Project>) projectList) {
+				ProjectListModel projectModel = new ProjectListModel();
+				BeanUtils.copyProperties(project, projectModel);
+				projectListModels.add(projectModel);
+			}
+		}
+		return projectListModels;
+	}
 
-        ProjectRequestModel projectModel = new ProjectRequestModel();
+	public ProjectRequestModel getRequestModel(Project project) {
 
-        BeanUtils.copyProperties(project, projectModel);
-        if (project.getContact() != null) {
-            projectModel.setContactId(project.getContact().getContactId());
-        }
-        if (project.getInvoiceLanguageCode() != null) {
-            projectModel.setInvoiceLanguageCode(project.getInvoiceLanguageCode().getLanguageCode());
-        }
-        if (project.getCurrency() != null) {
-            projectModel.setCurrencyCode(project.getCurrency().getCurrencyCode());
-        }
+		ProjectRequestModel projectModel = new ProjectRequestModel();
 
-        return projectModel;
-    }
+		BeanUtils.copyProperties(project, projectModel);
+		if (project.getContact() != null) {
+			projectModel.setContactId(project.getContact().getContactId());
+		}
+		if (project.getInvoiceLanguageCode() != null) {
+			projectModel.setInvoiceLanguageCode(project.getInvoiceLanguageCode().getLanguageCode());
+		}
+		if (project.getCurrency() != null) {
+			projectModel.setCurrencyCode(project.getCurrency().getCurrencyCode());
+		}
 
-    public Project getEntity(ProjectRequestModel projectRequestModel) {
-        Project project = new Project();
-        if (projectRequestModel.getProjectId() != null) {
-            project = projectService.findByPK(projectRequestModel.getProjectId());
-            project.setProjectId(projectRequestModel.getProjectId());
-        }
-        project.setProjectName(projectRequestModel.getProjectName());
-        project.setExpenseBudget(projectRequestModel.getExpenseBudget());
-        project.setRevenueBudget(projectRequestModel.getRevenueBudget());
-        project.setContractPoNumber(projectRequestModel.getContractPoNumber());
-        if (projectRequestModel.getContactId() != null) {
-            project.setContact(contactService.findByPK(projectRequestModel.getContactId()));
-        }
-        project.setVatRegistrationNumber(projectRequestModel.getVatRegistrationNumber());
-        if (projectRequestModel.getInvoiceLanguageCode() != null) {
-            project.setInvoiceLanguageCode(languageService.findByPK(projectRequestModel.getInvoiceLanguageCode()));
-        }
-        if (projectRequestModel.getCurrencyCode() != null) {
-            project.setCurrency(currencyservice.findByPK(projectRequestModel.getCurrencyCode()));
-        }
-        return project;
-    }
+		return projectModel;
+	}
+
+	public Project getEntity(ProjectRequestModel projectRequestModel) {
+		Project project = new Project();
+		if (projectRequestModel.getProjectId() != null) {
+			project = projectService.findByPK(projectRequestModel.getProjectId());
+			project.setProjectId(projectRequestModel.getProjectId());
+		}
+		project.setProjectName(projectRequestModel.getProjectName());
+		project.setExpenseBudget(projectRequestModel.getExpenseBudget());
+		project.setRevenueBudget(projectRequestModel.getRevenueBudget());
+		project.setContractPoNumber(projectRequestModel.getContractPoNumber());
+		if (projectRequestModel.getContactId() != null) {
+			project.setContact(contactService.findByPK(projectRequestModel.getContactId()));
+		}
+		project.setVatRegistrationNumber(projectRequestModel.getVatRegistrationNumber());
+		if (projectRequestModel.getInvoiceLanguageCode() != null) {
+			project.setInvoiceLanguageCode(languageService.findByPK(projectRequestModel.getInvoiceLanguageCode()));
+		}
+		if (projectRequestModel.getCurrencyCode() != null) {
+			project.setCurrency(currencyservice.findByPK(projectRequestModel.getCurrencyCode()));
+		}
+		return project;
+	}
 }

@@ -1,6 +1,7 @@
 package com.simplevat.dao;
 
 import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.rest.PaginationModel;
 
 import java.lang.reflect.ParameterizedType;
@@ -281,8 +282,8 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 
 	private boolean isOrderBy(DbFilter dbFilter) {
 		if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()
-				&& (dbFilter.getValue().toString().equalsIgnoreCase("ASC")
-						|| dbFilter.getValue().toString().equalsIgnoreCase("DESC"))) {
+				&& (dbFilter.getValue().toString().equalsIgnoreCase(ORDERBYENUM.ASC.toString())
+						|| dbFilter.getValue().toString().equalsIgnoreCase(ORDERBYENUM.DESC.toString()))) {
 
 			return true;
 		}

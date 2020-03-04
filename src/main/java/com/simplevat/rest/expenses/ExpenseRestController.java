@@ -9,8 +9,10 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.rest.AbstractDoubleEntryRestController;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Product;
 import com.simplevat.entity.User;
@@ -94,12 +96,14 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 			}
 			filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
 			filterDataMap.put(ExpenseFIlterEnum.DELETE_FLAG, false);
-
-			List<Expense> expenseList = expenseService.getExpensesList(filterDataMap);
-			if (expenseList == null) {
+			filterDataMap.put(ExpenseFIlterEnum.ORDER_BY, ORDERBYENUM.DESC); 
+			
+			PaginationResponseModel response = expenseService.getExpensesList(filterDataMap,expenseRequestFilterModel);
+			if (response == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity(expenseRestHelper.getExpenseList(expenseList), HttpStatus.OK);
+			response.setData(expenseRestHelper.getExpenseList(response.getData()));
+			return new ResponseEntity(response, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

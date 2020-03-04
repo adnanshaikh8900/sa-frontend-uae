@@ -143,13 +143,13 @@ public class ExpenseRestHelper implements Serializable {
 		return null;
 	}
 
-	public List<ExpenseListModel> getExpenseList(List<Expense> expenseList) {
+	public List<ExpenseListModel> getExpenseList(Object expenseList) {
 
-		if (expenseList != null && expenseList.size() > 0) {
+		if (expenseList != null) {
 
 			List<ExpenseListModel> expenseDtoList = new ArrayList<ExpenseListModel>();
 
-			for (Expense expense : expenseList) {
+			for (Expense expense : (List<Expense>) expenseList) {
 
 				ExpenseListModel expenseModel = new ExpenseListModel();
 				expenseModel.setReceiptNumber(expense.getReceiptNumber());

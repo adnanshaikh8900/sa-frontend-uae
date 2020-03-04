@@ -8,6 +8,7 @@ public enum TransactionCategoryFilterEnum {
     TRANSACTION_CATEGORY_NAME("transactionCategoryName", " like CONCAT(:transactionCategoryName,'%')"),
     CHART_OF_ACCOUNT("chartOfAccount", " = :chartOfAccount"),
     DELETE_FLAG("deleteFlag", " = :deleteFlag"),
+	ORDER_BY("transactionCategoryId"," =:transactionCategoryId"),
     USER_ID("createdBy", "= :createdBy");
 
     @Getter

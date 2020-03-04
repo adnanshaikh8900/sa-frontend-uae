@@ -7,6 +7,8 @@ import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.criteria.bankaccount.TransactionCategoryCriteria;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 public abstract class TransactionCategoryService extends SimpleVatService<Integer, TransactionCategory> {
 
@@ -30,7 +32,7 @@ public abstract class TransactionCategoryService extends SimpleVatService<Intege
 
     public abstract void deleteByIds(List<Integer> ids);
 
-    public abstract List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap);
+    public abstract PaginationResponseModel  getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap,PaginationModel paginationModel);
     
     public abstract String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount);
 }

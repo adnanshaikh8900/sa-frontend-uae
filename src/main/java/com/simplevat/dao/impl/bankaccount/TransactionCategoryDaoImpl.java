@@ -12,6 +12,9 @@ import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
+
 import javax.persistence.TypedQuery;
 import org.springframework.transaction.annotation.Transactional;
 import com.simplevat.dao.bankaccount.TransactionCategoryDao;
@@ -116,13 +119,14 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 	}
 
 	@Override
-	public List<TransactionCategory> getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap) {
+	public PaginationResponseModel getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap,
+			PaginationModel paginationModel) {
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach((transactionCategoryFilter, value) -> dbFilters
 				.add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
 						.condition(transactionCategoryFilter.getCondition()).value(value).build()));
-		List<TransactionCategory> transactionCategories = this.executeQuery(dbFilters);
-		return transactionCategories;
+		return new PaginationResponseModel(this.getResultCount(dbFilters),
+				this.executeQuery(dbFilters, paginationModel));
 	}
 
 	@Override

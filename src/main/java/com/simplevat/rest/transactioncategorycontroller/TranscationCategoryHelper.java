@@ -110,11 +110,11 @@ public class TranscationCategoryHelper {
 		return transactionCategory;
 	}
 
-	public List<TransactionCategoryModel> getListModel(List<TransactionCategory> transactionCategories) {
+	public List<TransactionCategoryModel> getListModel(Object transactionCategories) {
 		List<TransactionCategoryModel> transactionCategoryModelList = new ArrayList<TransactionCategoryModel>();
 
-		if (transactionCategories != null && transactionCategories.size() > 0) {
-			for (TransactionCategory transactionCategory : transactionCategories) {
+		if (transactionCategories != null) {
+			for (TransactionCategory transactionCategory : (List<TransactionCategory>) transactionCategories) {
 				TransactionCategoryModel transactionCategoryModel = new TransactionCategoryModel();
 				BeanUtils.copyProperties(transactionCategory, transactionCategoryModel);
 				if (transactionCategory.getChartOfAccount() != null) {

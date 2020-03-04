@@ -7,6 +7,7 @@ package com.simplevat.rest.transactioncategorycontroller;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ChartOfAccountConstant;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.entity.bankaccount.TransactionCategory;
@@ -15,6 +16,7 @@ import com.simplevat.entity.Product;
 import com.simplevat.entity.User;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.productcontroller.ProductRequestFilterModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.UserService;
@@ -91,13 +93,15 @@ public class TransactionCategoryRestController implements Serializable {
 			filterDataMap.put(TransactionCategoryFilterEnum.CHART_OF_ACCOUNT,
 					chartOfAccountService.findByPK(filterModel.getChartOfAccountId()));
 		}
-
-		List<TransactionCategory> transactionCategories = transactionCategoryService
-				.getTransactionCategoryList(filterDataMap);
-		if (transactionCategories == null) {
+		filterDataMap.put(TransactionCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
+		
+		PaginationResponseModel response = transactionCategoryService.getTransactionCategoryList(filterDataMap,
+				filterModel);
+		if (response == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity(transcationCategoryHelper.getListModel(transactionCategories), HttpStatus.OK);
+		response.setData(transcationCategoryHelper.getListModel(response.getData()));
+		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Get Transaction Category By ID")
@@ -144,7 +148,7 @@ public class TransactionCategoryRestController implements Serializable {
 			User user = userServiceNew.findByPK(userId);
 			TransactionCategory selectedTransactionCategory = transcationCategoryHelper
 					.getEntity(transactionCategoryBean);
-			
+
 			selectedTransactionCategory.setCreatedBy(user.getUserId());
 			selectedTransactionCategory.setCreatedDate(LocalDateTime.now());
 			transactionCategoryService.persist(selectedTransactionCategory);
@@ -169,8 +173,8 @@ public class TransactionCategoryRestController implements Serializable {
 			selectedTransactionCategory
 					.setTransactionCategoryName(transactionCategoryBean.getTransactionCategoryName());
 			if (transactionCategoryBean.getChartOfAccount() != null) {
-				selectedTransactionCategory.setChartOfAccount(
-						chartOfAccountService.findByPK(transactionCategoryBean.getChartOfAccount()));
+				selectedTransactionCategory
+						.setChartOfAccount(chartOfAccountService.findByPK(transactionCategoryBean.getChartOfAccount()));
 			}
 			selectedTransactionCategory.setLastUpdateBy(user.getUserId());
 			selectedTransactionCategory.setLastUpdateDate(LocalDateTime.now());

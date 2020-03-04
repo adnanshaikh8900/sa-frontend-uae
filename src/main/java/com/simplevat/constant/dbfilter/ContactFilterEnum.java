@@ -16,6 +16,7 @@ public enum ContactFilterEnum {
     EMAIL("email", " like CONCAT(:email,'%')"),
     CONTACT_TYPE("contactType", " = :contactType"),
     DELETE_FLAG("deleteFlag", " = :deleteFlag"),
+    ORDER_BY("contactId"," =:contactId"),
     USER_ID("createdBy", "= :createdBy");
 
     @Getter

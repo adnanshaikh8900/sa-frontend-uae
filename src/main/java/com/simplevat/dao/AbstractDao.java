@@ -85,7 +85,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		int i = 0;
 		DbFilter orderByFilter = null;
 		for (DbFilter dbFilter : dbFilters) {
-			System.out.println("Db = " + dbFilter);
 			boolean orderBy = isOrderBy(dbFilter);
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
 				if (i > 0) {
@@ -133,7 +132,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		int i = 0;
 		DbFilter orderByFilter = null;
 		for (DbFilter dbFilter : dbFilters) {
-			System.out.println("Db = " + dbFilter);
 			boolean orderBy = isOrderBy(dbFilter);
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
 				if (i > 0) {

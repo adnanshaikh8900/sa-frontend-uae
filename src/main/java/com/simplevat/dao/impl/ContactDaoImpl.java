@@ -7,6 +7,8 @@ import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ContactDao;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.contactController.ContactRequestFilterModel;
 import java.util.ArrayList;
 
@@ -59,14 +61,13 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
     }
 
     @Override
-    public List<Contact> getContactList(Map<ContactFilterEnum, Object> filterMap) {
+    public PaginationResponseModel getContactList(Map<ContactFilterEnum, Object> filterDataMap,PaginationModel paginationModel) {
         List<DbFilter> dbFilters = new ArrayList();
-        filterMap.forEach((productFilter, value) -> dbFilters.add(DbFilter.builder()
+        filterDataMap.forEach((productFilter, value) -> dbFilters.add(DbFilter.builder()
                 .dbCoulmnName(productFilter.getDbColumnName())
                 .condition(productFilter.getCondition())
                 .value(value).build()));
-        List<Contact> contacts = this.executeQuery(dbFilters);
-        return contacts;
+        return new PaginationResponseModel(this.getResultCount(dbFilters), this.executeQuery(dbFilters, paginationModel));
     }
 
     @Override

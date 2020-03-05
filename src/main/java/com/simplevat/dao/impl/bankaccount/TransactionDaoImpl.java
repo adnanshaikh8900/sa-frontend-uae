@@ -24,6 +24,7 @@ import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionView;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.utils.CommonUtil;
 import com.simplevat.utils.DateUtils;
@@ -470,7 +471,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	public Transaction getCurrentBalanceByBankId(Integer bankId) {
 		List<Transaction> transactions = getEntityManager().createNamedQuery("getByBankId").setParameter("id", bankId)
 				.setMaxResults(1).getResultList();
-		return transactions != null&& !transactions.isEmpty() ? transactions.get(0) : null;
+		return transactions != null && !transactions.isEmpty() ? transactions.get(0) : null;
 
 	}
 
@@ -486,12 +487,13 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	}
 
 	@Override
-	public List<Transaction> getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,PaginationModel paginationModel) {
+	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,
+			PaginationModel paginationModel) {
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));
-		List<Transaction> list = this.executeQuery(dbFilters);//,paginationModel);
-		return list;
+		return new PaginationResponseModel(this.getResultCount(dbFilters),
+				this.executeQuery(dbFilters, paginationModel));
 	}
 
 }

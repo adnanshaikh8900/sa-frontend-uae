@@ -16,6 +16,7 @@ public enum ProjectFilterEnum {
     EXPENSE_BUDGET("expenseBudget", " like CONCAT(:expenseBudget,'%')"),
     REVENUE_BUDGET("revenueBudget", " like CONCAT(:revenueBudget,'%')"),
     DELETE_FLAG("deleteFlag", " = :deleteFlag"),   
+	ORDER_BY("projectId"," =:projectId"),
     USER_ID("createdBy", "= :createdBy");
 
     @Getter

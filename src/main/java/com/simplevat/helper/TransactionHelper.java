@@ -121,11 +121,11 @@ public class TransactionHelper {
 		return transaction;
 	}
 
-	public List<TransactionViewModel> getModelList(List<Transaction> trasactionList) {
+	public List<TransactionViewModel> getModelList(Object trasactionList) {
 
 		List<TransactionViewModel> transactionModelList = new ArrayList<TransactionViewModel>();
 		if (trasactionList != null) {
-			for (Transaction transaction : trasactionList) {
+			for (Transaction transaction : (List<Transaction>) trasactionList) {
 				TransactionViewModel transactionModel = new TransactionViewModel();
 
 				transactionModel.setId(transaction.getTransactionId());

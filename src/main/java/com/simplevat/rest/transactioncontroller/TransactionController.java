@@ -8,12 +8,14 @@ package com.simplevat.rest.transactioncontroller;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.helper.TransactionHelper;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.JournalService;
@@ -109,12 +111,14 @@ public class TransactionController implements Serializable {
 			dataMap.put(TransactionFilterEnum.CHART_OF_ACCOUNT,
 					chartOfAccountService.findByPK(filterModel.getChartOfAccountId()));
 		}
+		dataMap.put(TransactionFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
-		List<Transaction> trasactionList = transactionService.getAllTransactionList(dataMap, filterModel);
-		if (trasactionList == null) {
+		PaginationResponseModel response = transactionService.getAllTransactionList(dataMap, filterModel);
+		if (response == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity(transactionHelper.getModelList(trasactionList), HttpStatus.OK);
+		response.setData(transactionHelper.getModelList(response.getData()));
+		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Add New Transaction", response = Transaction.class)

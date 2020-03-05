@@ -17,6 +17,8 @@ import com.simplevat.dao.ProductCategoryDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.ProductCategory;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ProductCategoryService;
 import com.simplevat.service.SimpleVatService;
 
@@ -73,8 +75,8 @@ public class ProductCategoryServiceImpl extends ProductCategoryService {
 	}
 	
 	@Override
-	public List<ProductCategory> getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterList){
-		return productCategoryDao.getProductCategoryList(filterList);
+	public PaginationResponseModel getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterList,PaginationModel paginationModel){
+		return productCategoryDao.getProductCategoryList(filterList,paginationModel);
 			
 	}
 

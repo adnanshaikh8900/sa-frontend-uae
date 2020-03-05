@@ -9,6 +9,7 @@ public enum UserFilterEnum {
     ROLE("role", " like CONCAT(:role,'%')"),
     ACTIVE("isActive", " = :isActive"),
     COMPANY("company", " = :company"),
+	ORDER_BY("userId"," =:userId"),
     DELETE_FLAG("deleteFlag", " = :deleteFlag");
 
     @Getter

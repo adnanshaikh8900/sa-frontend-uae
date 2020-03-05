@@ -11,6 +11,8 @@ import com.simplevat.dao.Dao;
 import com.simplevat.dao.VatCategoryDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.VatCategory;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.VatCategoryService;
 import java.time.LocalDateTime;
 
@@ -69,8 +71,8 @@ public class VatCategoryServiceImpl extends VatCategoryService {
 	}
 
 	@Override
-	public List<VatCategory> getVatCategoryList(Map<VatCategoryFilterEnum, Object> filterDataMap) {
-		return vatCategoryDao.getVatCategoryList(filterDataMap);
+	public PaginationResponseModel getVatCategoryList(Map<VatCategoryFilterEnum, Object> filterDataMap,PaginationModel pagiantionModel) {
+		return vatCategoryDao.getVatCategoryList(filterDataMap,pagiantionModel);
 	}
 
 }

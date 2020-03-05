@@ -18,6 +18,7 @@ import com.simplevat.service.ConfigurationService;
 import com.simplevat.service.RoleService;
 import com.simplevat.service.UserService;
 import com.simplevat.constant.EmailConstant;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.UserFilterEnum;
 import com.simplevat.utils.FileHelper;
 import com.simplevat.utils.MailConfigurationModel;
@@ -105,6 +106,7 @@ public class UserController implements Serializable {
 			if (filterModel.getRoleId() != null) {
 				filterDataMap.put(UserFilterEnum.ROLE, roleService.findByPK(filterModel.getRoleId()));
 			}
+			filterDataMap.put(UserFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 			PaginationResponseModel response = userService.getUserList(filterDataMap, filterModel);
 			if (response == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);

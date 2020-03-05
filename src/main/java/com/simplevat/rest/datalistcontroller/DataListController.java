@@ -175,7 +175,7 @@ public class DataListController implements Serializable {
 				}
 				return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

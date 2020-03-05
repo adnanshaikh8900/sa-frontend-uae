@@ -65,7 +65,7 @@ class CreateJournal extends React.Component {
         contactId: '',
         debitAmount: 0,
         creditAmount: 0,
-      },{
+      }, {
         id: 1,
         description: '',
         transactionCategoryId: '',
@@ -94,7 +94,7 @@ class CreateJournal extends React.Component {
           debitAmount: 0,
           creditAmount: 0,
           // error: []
-        },{
+        }, {
           id: 1,
           description: '',
           transactionCategoryId: '',
@@ -146,7 +146,7 @@ class CreateJournal extends React.Component {
       <Button
         size="sm"
         className="btn-twitter btn-brand icon"
-        disabled={this.state.data.length <=2  ? true : false}
+        disabled={this.state.data.length <= 2 ? true : false}
         onClick={(e) => { this.deleteRow(e, rows, props) }}
       >
         <i className="fas fa-trash"></i>
@@ -171,7 +171,7 @@ class CreateJournal extends React.Component {
 
   renderAccount(cell, row, props) {
     const { transaction_category_list } = this.props;
-    let transactionCategoryList = transaction_category_list.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select Account' }, ...transaction_category_list] : transaction_category_list
+    let transactionCategoryList = transaction_category_list && transaction_category_list.data && transaction_category_list.data.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select Account' }, ...transaction_category_list.data] : transaction_category_list.data
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -423,8 +423,8 @@ class CreateJournal extends React.Component {
     const data = this.state.data
     data.map((obj, index) => {
       if (obj.id === row.id) {
-        if(name === 'debitAmount') { obj[name] = e.target.value;obj['creditAmount'] = 0}
-        else if(name === 'creditAmount') {obj[name] = e.target.value;obj['debitAmount'] = 0}
+        if (name === 'debitAmount') { obj[name] = e.target.value; obj['creditAmount'] = 0 }
+        else if (name === 'creditAmount') { obj[name] = e.target.value; obj['debitAmount'] = 0 }
         else obj[name] = e.target.value
         idx = index
       }
@@ -433,11 +433,11 @@ class CreateJournal extends React.Component {
       form.setFieldValue(`journalLineItems.[${idx}].creditAmount`, 0, true)
       form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
-    } else if(name === 'creditAmount') {
+    } else if (name === 'creditAmount') {
       form.setFieldValue(field.name, this.state.data[idx][name], true)
       form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
       this.updateAmount(data)
-    } else if(name === 'vatCategoryId') {
+    } else if (name === 'vatCategoryId') {
       form.setFieldValue(field.name, this.state.data[idx][name], true)
       this.updateAmount(data);
     } else {
@@ -499,25 +499,25 @@ class CreateJournal extends React.Component {
   handleSubmit(values, resetForm) {
 
     const { data, initValue } = this.state
-    const postData = {...initValue,...values,...{journalLineItems: this.state.data}}
-    if(initValue.totalCreditAmount == initValue.totalDebitAmount) {
-        data.map(item => {
-          delete item.id
-          item.transactionCategoryId = item.transactionCategoryId ? item.transactionCategoryId : ''
-          item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
-          item.contactId = item.contactId ? item.contactId : ''
-        })
-        const postData = {
-          journalDate: values.journalDate ? values.journalDate : '',
-          journalReferenceNo: values.journalReferenceNo ? values.journalReferenceNo : '',
-          description: values.description ? values.description : '',
-          currencyCode: values.currencyCode ? values.currencyCode : '',
-          subTotalCreditAmount: initValue.subTotalCreditAmount,
-          subTotalDebitAmount: initValue.subTotalDebitAmount,
-          totalCreditAmount: initValue.totalCreditAmount,
-          totalDebitAmount: initValue.totalDebitAmount,
-          journalLineItems: data
-        }
+    const postData = { ...initValue, ...values, ...{ journalLineItems: this.state.data } }
+    if (initValue.totalCreditAmount == initValue.totalDebitAmount) {
+      data.map(item => {
+        delete item.id
+        item.transactionCategoryId = item.transactionCategoryId ? item.transactionCategoryId : ''
+        item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
+        item.contactId = item.contactId ? item.contactId : ''
+      })
+      const postData = {
+        journalDate: values.journalDate ? values.journalDate : '',
+        journalReferenceNo: values.journalReferenceNo ? values.journalReferenceNo : '',
+        description: values.description ? values.description : '',
+        currencyCode: values.currencyCode ? values.currencyCode : '',
+        subTotalCreditAmount: initValue.subTotalCreditAmount,
+        subTotalDebitAmount: initValue.subTotalDebitAmount,
+        totalCreditAmount: initValue.totalCreditAmount,
+        totalDebitAmount: initValue.totalDebitAmount,
+        journalLineItems: data
+      }
       this.props.journalCreateActions.createJournal(postData).then(res => {
         if (res.status === 200) {
           resetForm({});
@@ -610,7 +610,7 @@ class CreateJournal extends React.Component {
                                   creditAmount: Yup.number().required(),
                                 })
                               )
-                              .min(2,'Atleast Two Journal Debit and Credit Details is mandatory')
+                              .min(2, 'Atleast Two Journal Debit and Credit Details is mandatory')
                           })
                         }
                       >
@@ -697,7 +697,7 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={12} className="mb-3">
                                 <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
-                                  // disabled={this.checkedRow() ? true : false}
+                                // disabled={this.checkedRow() ? true : false}
                                 >
                                   <i className="fa fa-plus"></i> Add More
                             </Button>
@@ -705,11 +705,11 @@ class CreateJournal extends React.Component {
                             </Row>
                             {props.errors.journalLineItems && typeof props.errors.journalLineItems === 'string' && (
                               <div className={props.errors.journalLineItems ? "is-invalid" : ""}>
-                                <div className="invalid-feedback"><Badge color="danger" style={{padding: '10px',marginBottom: '5px'}}>{props.errors.journalLineItems}</Badge></div>
+                                <div className="invalid-feedback"><Badge color="danger" style={{ padding: '10px', marginBottom: '5px' }}>{props.errors.journalLineItems}</Badge></div>
                               </div>
                             )}
-                            {this.state.submitJournal && this.state.initValue.totalCreditAmount.toFixed(2) !== this.state.initValue.totalDebitAmount.toFixed(2) && <div className={this.state.initValue.totalDebitAmount !== this.state.initValue.totalCreditAmount  ? "is-invalid" : ""}>
-                              <div className="invalid-feedback"><Badge color="danger" style={{padding: '10px',marginBottom: '5px'}}>*Total Credit Amount and Total Debit Amount Should be Equal</Badge></div>
+                            {this.state.submitJournal && this.state.initValue.totalCreditAmount.toFixed(2) !== this.state.initValue.totalDebitAmount.toFixed(2) && <div className={this.state.initValue.totalDebitAmount !== this.state.initValue.totalCreditAmount ? "is-invalid" : ""}>
+                              <div className="invalid-feedback"><Badge color="danger" style={{ padding: '10px', marginBottom: '5px' }}>*Total Credit Amount and Total Debit Amount Should be Equal</Badge></div>
                             </div>}
                             <Row>
                               <Col lg={12}>
@@ -824,7 +824,7 @@ class CreateJournal extends React.Component {
                                 <FormGroup className="text-right">
                                   <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
                                     // () => {
-                                    this.setState({ createMore: false,submitJournal: true }, () => {
+                                    this.setState({ createMore: false, submitJournal: true }, () => {
                                       props.handleSubmit()
                                     })
                                     // }
@@ -835,7 +835,7 @@ class CreateJournal extends React.Component {
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={
                                       () => {
-                                        this.setState({ createMore: true ,submitJournal: true}, () => {
+                                        this.setState({ createMore: true, submitJournal: true }, () => {
                                           props.handleSubmit()
                                         })
                                       }

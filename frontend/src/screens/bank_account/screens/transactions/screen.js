@@ -73,7 +73,7 @@ class BankTransactions extends React.Component {
       actionButtons: {},
       filterData: {
         transactionDate: '',
-        transactionTypeCode: ''
+        chartOfAccountId: ''
       },
       selectedData: null,
       selectedTransactionType: '',
@@ -265,18 +265,19 @@ class BankTransactions extends React.Component {
   }
 
   closeTransaction = (id) => {
+    const obj = {'id': id}
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
-        okHandler={() => this.removeTransaction(id)}
+        okHandler={() => this.removeTransaction(obj)}
         cancelHandler={this.removeDialog}
       />
     })
   }
 
-  removeTransaction = (id) => {
+  removeTransaction = (obj) => {
     this.removeDialog()
-    this.props.transactionsActions.deleteTransactionById(id).then((res) => {
+    this.props.transactionsActions.deleteTransactionById(obj).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Transaction Deleted Successfully')
       this.initializeData()
     }).catch(err => {
@@ -378,13 +379,13 @@ class BankTransactions extends React.Component {
                             <FormGroup className="mb-3">
 
                               <Select
-                                options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list, 'Transaction Type') : []}
+                                options={transaction_type_list  ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Transaction Type') : []}
                                 onChange={(val) => {
                                   if (val && val.value) {
-                                    this.handleChange(val.value, 'transactionTypeCode')
+                                    this.handleChange(val.value, 'chartOfAccountId')
                                     this.setState({ 'selectedTransactionType': val.value })
                                   } else {
-                                    this.handleChange('', 'transactionTypeCode')
+                                    this.handleChange('', 'chartOfAccountId')
                                     this.setState({ 'selectedTransactionType': '' })
                                   }
                                 }}

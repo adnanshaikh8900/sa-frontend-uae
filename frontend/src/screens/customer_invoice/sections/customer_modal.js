@@ -257,7 +257,7 @@ class CustomerModal extends React.Component {
                             value={props.values.middleName}
                             className={
                               props.errors.middleName &&
-                              props.touched.middleName
+                                props.touched.middleName
                                 ? "is-invalid"
                                 : ""
                             }
@@ -315,7 +315,7 @@ class CustomerModal extends React.Component {
                             value={props.values.organization}
                             className={
                               props.errors.organization &&
-                              props.touched.organization
+                                props.touched.organization
                                 ? "is-invalid"
                                 : ""
                             }
@@ -341,7 +341,7 @@ class CustomerModal extends React.Component {
                             value={props.values.poBoxNumber}
                             className={
                               props.errors.poBoxNumber &&
-                              props.touched.poBoxNumber
+                                props.touched.poBoxNumber
                                 ? "is-invalid"
                                 : ""
                             }
@@ -420,7 +420,7 @@ class CustomerModal extends React.Component {
                             value={props.values.mobileNumber}
                             className={
                               props.errors.mobileNumber &&
-                              props.touched.mobileNumber
+                                props.touched.mobileNumber
                                 ? "is-invalid"
                                 : ""
                             }
@@ -448,7 +448,7 @@ class CustomerModal extends React.Component {
                             value={props.values.addressLine1}
                             className={
                               props.errors.addressLine1 &&
-                              props.touched.addressLine1
+                                props.touched.addressLine1
                                 ? "is-invalid"
                                 : ""
                             }
@@ -499,11 +499,11 @@ class CustomerModal extends React.Component {
                             options={
                               country_list
                                 ? selectOptionsFactory.renderOptions(
-                                    "countryName",
-                                    "countryCode",
-                                    country_list,
-                                    "Country"
-                                  )
+                                  "countryName",
+                                  "countryCode",
+                                  country_list,
+                                  "Country"
+                                )
                                 : []
                             }
                             value={props.values.countryId}
@@ -546,7 +546,7 @@ class CustomerModal extends React.Component {
                             name="stateRegion"
                             className={
                               props.errors.stateRegion &&
-                              props.touched.stateRegion
+                                props.touched.stateRegion
                                 ? "is-invalid"
                                 : ""
                             }
@@ -600,7 +600,7 @@ class CustomerModal extends React.Component {
                             value={props.values.postZipCode}
                             className={
                               props.errors.postZipCode &&
-                              props.touched.postZipCode
+                                props.touched.postZipCode
                                 ? "is-invalid"
                                 : ""
                             }
@@ -631,7 +631,7 @@ class CustomerModal extends React.Component {
                             value={props.values.billingEmail}
                             className={
                               props.errors.billingEmail &&
-                              props.touched.billingEmail
+                                props.touched.billingEmail
                                 ? "is-invalid"
                                 : ""
                             }
@@ -658,7 +658,7 @@ class CustomerModal extends React.Component {
                             value={props.values.contractPoNumber}
                             className={
                               props.errors.contractPoNumber &&
-                              props.touched.contractPoNumber
+                                props.touched.contractPoNumber
                                 ? "is-invalid"
                                 : ""
                             }
@@ -690,7 +690,7 @@ class CustomerModal extends React.Component {
                             value={props.values.vatRegistrationNumber}
                             className={
                               props.errors.vatRegistrationNumber &&
-                              props.touched.vatRegistrationNumber
+                                props.touched.vatRegistrationNumber
                                 ? "is-invalid"
                                 : ""
                             }
@@ -711,11 +711,11 @@ class CustomerModal extends React.Component {
                             options={
                               currency_list
                                 ? selectOptionsFactory.renderOptions(
-                                    "currencyName",
-                                    "currencyCode",
-                                    currency_list,
-                                    "Currency"
-                                  )
+                                  "currencyName",
+                                  "currencyCode",
+                                  currency_list,
+                                  "Currency"
+                                )
                                 : []
                             }
                             value={props.values.currencyCode}
@@ -733,7 +733,7 @@ class CustomerModal extends React.Component {
                             name="currencyCode"
                             className={
                               props.errors.currencyCode &&
-                              props.touched.currencyCode
+                                props.touched.currencyCode
                                 ? "is-invalid"
                                 : ""
                             }

@@ -475,7 +475,7 @@ class DetailCustomerInvoice extends React.Component {
 			reader.onloadend = () => {
 			};
 			reader.readAsDataURL(file);
-			props.setFieldValue('attachmentFile', file,true);
+			props.setFieldValue('attachmentFile', file, true);
 		}
 	}
 
@@ -675,35 +675,35 @@ class DetailCustomerInvoice extends React.Component {
 																			}),
 																		vatCategoryId: Yup.string().required("Value is Required"),
 																	})),
-																	attachmentFile: Yup.mixed()
-																	.test(
-																		"fileType",
-																		"*Unsupported File Format",
-																		value => {
-																			value && this.setState({
-																				fileName: value.name
-																			});
-																			if (
-																				value &&
-																				this.supported_format.includes(value.type)
-																			) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		}
-																	)
-																	.test(
-																		"fileSize",
-																		"*File Size is too large",
-																		value => {
-																			if (value && value.size <= this.file_size) {
-																				return true;
-																			} else {
-																				return false;
-																			}
-																		}
-																	)
+																// attachmentFile: Yup.mixed()
+																// 	.test(
+																// 		"fileType",
+																// 		"*Unsupported File Format",
+																// 		value => {
+																// 			value && this.setState({
+																// 				fileName: value.name
+																// 			});
+																// 			if (
+																// 				value &&
+																// 				this.supported_format.includes(value.type)
+																// 			) {
+																// 				return true;
+																// 			} else {
+																// 				return false;
+																// 			}
+																// 		}
+																// 	)
+																// 	.test(
+																// 		"fileSize",
+																// 		"*File Size is too large",
+																// 		value => {
+																// 			if (value && value.size <= this.file_size) {
+																// 				return true;
+																// 			} else {
+																// 				return false;
+																// 			}
+																// 		}
+																// 	)
 															})}
 													>
 														{props => (
@@ -935,17 +935,17 @@ class DetailCustomerInvoice extends React.Component {
 																							<div>
 																								<Label>Reciept Attachment</Label> <br />
 																								<div className="file-upload-cont">
-																								<Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-																									<i className="fa fa-upload"></i> Upload
+																									<Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+																										<i className="fa fa-upload"></i> Upload
                                          		   </Button>
-																								<input id="fileInput" ref={ref => {
-																									this.uploadFile = ref;
-																								}} type="file" style={{ display: 'none' }} onChange={(e) => {
-																									this.handleFileChange(e, props)
-																								}} />
-																								{this.state.fileName ? this.state.fileName : (
-																									<NavLink href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`} download={this.state.initValue.fileName} style={{ fontSize: '0.875rem' }} target="_blank">{this.state.initValue.fileName}</NavLink>
-																								)}
+																									<input id="fileInput" ref={ref => {
+																										this.uploadFile = ref;
+																									}} type="file" style={{ display: 'none' }} onChange={(e) => {
+																										this.handleFileChange(e, props)
+																									}} />
+																									{this.state.fileName ? this.state.fileName : (
+																										<NavLink href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`} download={this.state.initValue.fileName} style={{ fontSize: '0.875rem' }} target="_blank">{this.state.initValue.fileName}</NavLink>
+																									)}
 																								</div>
 																							</div>
 																						)}

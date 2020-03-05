@@ -181,15 +181,15 @@ class DetailJournal extends React.Component {
 
   renderAccount(cell, row, props) {
     const { transaction_category_list } = this.props;
-    let transactionCategoryList = transaction_category_list.length
+    let transactionCategoryList = transaction_category_list && transaction_category_list.data && transaction_category_list.data.length
       ? [
         {
           transactionCategoryId: "",
           transactionCategoryName: "Select Account"
         },
-        ...transaction_category_list
+        ...transaction_category_list.data
       ]
-      : transaction_category_list;
+      : [];
     let idx;
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {

@@ -427,7 +427,7 @@ class CreatePayment extends React.Component {
                                           className="select-default-width"
                                           id="project"
                                           name="project"
-                                          options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list, 'Project') : []}
+                                          options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                           value={props.values.project}
                                           onChange={option => props.handleChange('project')(option)}
                                           className={

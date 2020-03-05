@@ -193,8 +193,8 @@ class Expense extends React.Component {
           </DropdownToggle>
           <DropdownMenu right>
             <DropdownItem >
-              <div onClick={() => { this.props.history.push('/admin/expense/expense/detail', { expenseId: row['expenseId'] })}}>
-              <i className="fas fa-edit" /> Edit
+              <div onClick={() => { this.props.history.push('/admin/expense/expense/detail', { expenseId: row['expenseId'] }) }}>
+                <i className="fas fa-edit" /> Edit
               </div>
             </DropdownItem>
             {row.expenseStatus !== 'Post' && (
@@ -277,27 +277,27 @@ class Expense extends React.Component {
     }
   }
 
-  postExpense(row){
+  postExpense(row) {
     this.setState({
       loading: true
     })
     const postingRequestModel = {
-      amount : row.expenseAmount,
+      amount: row.expenseAmount,
       postingRefId: row.expenseId,
       postingRefType: 'EXPENSE',
       postingChartOfAccountId: row.chartOfAccountId
     }
     this.props.expenseActions.postExpense(postingRequestModel).then(res => {
-    if (res.status === 200) {
-      this.props.commonActions.tostifyAlert('success', 'Expense Posted Successfully');
-      this.setState({
-        loading: false
-      })
-      this.initializeData()
-     }
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'Expense Posted Successfully');
+        this.setState({
+          loading: false
+        })
+        this.initializeData()
+      }
     }).catch(err => {
-       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
-       this.setState({
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+      this.setState({
         loading: false
       })
     })
@@ -376,177 +376,177 @@ class Expense extends React.Component {
             <CardBody>
               {
                 loading &&
-                  <Row>
-                    <Col lg={12} className="rounded-loader">
-                      <Loader />
-                    </Col>
-                  </Row>
-  }
-                  <Row>
-                    <Col lg={12}>
-                      <div className="d-flex justify-content-end">
-                        <ButtonGroup size="sm">
-                          <Button
-                            color="success"
-                            className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                            disabled={expense_list && expense_list.data && expense_list.data.length === 0 ? true : false}
-                          >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                <Row>
+                  <Col lg={12} className="rounded-loader">
+                    <Loader />
+                  </Col>
+                </Row>
+              }
+              <Row>
+                <Col lg={12}>
+                  <div className="d-flex justify-content-end">
+                    <ButtonGroup size="sm">
+                      <Button
+                        color="success"
+                        className="btn-square"
+                        onClick={() => this.table.handleExportCSV()}
+                        disabled={expense_list && expense_list.data && expense_list.data.length === 0 ? true : false}
+                      >
+                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                        Export to CSV
                           </Button>
-                          <Button
-                            color="primary"
-                            className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/expense/expense/create`)}
-                          >
-                            <i className="fas fa-plus mr-1" />
-                            New Expense
+                      <Button
+                        color="primary"
+                        className="btn-square"
+                        onClick={() => this.props.history.push(`/admin/expense/expense/create`)}
+                      >
+                        <i className="fas fa-plus mr-1" />
+                        New Expense
                           </Button>
-                          <Button
-                            color="warning"
-                            className="btn-square"
-                            onClick={this.bulkDeleteExpenses}
-                            disabled={selectedRows.length === 0}
-                          >
-                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-                            Bulk Delete
+                      <Button
+                        color="warning"
+                        className="btn-square"
+                        onClick={this.bulkDeleteExpenses}
+                        disabled={selectedRows.length === 0}
+                      >
+                        <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+                        Bulk Delete
                           </Button>
-                        </ButtonGroup>
-                      </div>
-                      <div className="py-3">
-                        <h5>Filter : </h5>
-                        <Row>
-                          <Col lg={2} className="mb-1">
-                            <Input
-                              type="text"
-                              placeholder="Payee"
-                              value={filterData.payee}
-                              onChange={e => this.handleChange(e.target.value, 'payee')}
-                            />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            {/* <DateRangePicker>
+                    </ButtonGroup>
+                  </div>
+                  <div className="py-3">
+                    <h5>Filter : </h5>
+                    <Row>
+                      <Col lg={2} className="mb-1">
+                        <Input
+                          type="text"
+                          placeholder="Payee"
+                          value={filterData.payee}
+                          onChange={e => this.handleChange(e.target.value, 'payee')}
+                        />
+                      </Col>
+                      <Col lg={2} className="mb-1">
+                        {/* <DateRangePicker>
                               <Input type="text" placeholder="Expense Date" />
                             </DateRangePicker> */}
-                            <DatePicker
-                              className="form-control"
-                              id="date"
-                              name="expenseDate"
-                              placeholderText="Expense Date"
-                              selected={filterData.expenseDate}
-                              showMonthDropdown
-                              showYearDropdown
-                                          dateFormat="dd/MM/yyyy"
-                              dropdownMode="select"
-                              value={filterData.expenseDate}
-                              onChange={(value) => {
-                                this.handleChange(value, "expenseDate")
-                              }}
-                            />
-                          </Col>
+                        <DatePicker
+                          className="form-control"
+                          id="date"
+                          name="expenseDate"
+                          placeholderText="Expense Date"
+                          selected={filterData.expenseDate}
+                          showMonthDropdown
+                          showYearDropdown
+                          dateFormat="dd/MM/yyyy"
+                          dropdownMode="select"
+                          value={filterData.expenseDate}
+                          onChange={(value) => {
+                            this.handleChange(value, "expenseDate")
+                          }}
+                        />
+                      </Col>
 
-                          <Col lg={2} className="mb-1">
-                            {/* <Input type="text" placeholder="Supplier Name" /> */}
-                            <FormGroup className="mb-3">
-                              <Select
-                                className="select-default-width"
-                                id="expenseCategoryId"
-                                name="expenseCategoryId"
-                                value={filterData.transactionCategoryId}
-                                options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
-                                onChange={(option) => {
-                                  if (option && option.value) {
-                                    this.handleChange(option.value, 'transactionCategoryId')
-                                  } else {
-                                    this.handleChange('', 'transactionCategoryId')
-                                  }
-                                }}
-                                placeholder="Expense Category"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
-                              <i className="fa fa-search"></i>
-                            </Button>
-                          </Col>
-                        </Row>
-                      </div>
-                      <div>
-                        <BootstrapTable
-                          selectRow={this.selectRowProp}
-                          search={false}
-                          options={this.options}
-                          data={expense_list && expense_list.data ? expense_list.data : []}
-                          version="4"
-                          hover
-                          keyField="expenseId"
-                          pagination = {expense_list && expense_list.data && expense_list.data.length > 0 ? true : false}
-                          remote
-                          fetchInfo={{ dataTotalSize: expense_list.count ? expense_list.count : 0 }}
-                          className="expense-table"
-                          trClassName="cursor-pointer"
-                          ref={node => this.table = node}
-                          csvFileName="expense_list.csv"
-                        >
-                          <TableHeaderColumn
-                            dataField="payee"
-                            dataSort
-                          >
-                            Payee
+                      <Col lg={2} className="mb-1">
+                        {/* <Input type="text" placeholder="Supplier Name" /> */}
+                        <FormGroup className="mb-3">
+                          <Select
+                            className="select-default-width"
+                            id="expenseCategoryId"
+                            name="expenseCategoryId"
+                            value={filterData.transactionCategoryId}
+                            options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
+                            onChange={(option) => {
+                              if (option && option.value) {
+                                this.handleChange(option.value, 'transactionCategoryId')
+                              } else {
+                                this.handleChange('', 'transactionCategoryId')
+                              }
+                            }}
+                            placeholder="Expense Category"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col lg={1} className="mb-1">
+                        <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <i className="fa fa-search"></i>
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div>
+                    <BootstrapTable
+                      selectRow={this.selectRowProp}
+                      search={false}
+                      options={this.options}
+                      data={expense_list && expense_list.data ? expense_list.data : []}
+                      version="4"
+                      hover
+                      keyField="expenseId"
+                      pagination={expense_list && expense_list.data && expense_list.data.length > 0 ? true : false}
+                      remote
+                      fetchInfo={{ dataTotalSize: expense_list.count ? expense_list.count : 0 }}
+                      className="expense-table"
+                      trClassName="cursor-pointer"
+                      ref={node => this.table = node}
+                      csvFileName="expense_list.csv"
+                    >
+                      <TableHeaderColumn
+                        dataField="payee"
+                        dataSort
+                      >
+                        Payee
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        width="130"
+                        dataField="expenseStatus"
+                        dataFormat={this.renderInvoiceStatus}
+                        dataSort
+                      >
+                        Status
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="expenseDescription"
+                        dataSort
+                      >
+                        Description
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="receiptNumber"
+                        dataSort
+                      >
+                        Receipt Number
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="expenseAmount"
+                        dataSort
+                      >
+                        Expense Amount
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            width="130"
-                            dataField="expenseStatus"
-                            dataFormat={this.renderInvoiceStatus}
-                            dataSort
-                          >
-                            Status
+                      <TableHeaderColumn
+                        dataField="transactionCategoryName"
+                        dataSort
+                        width="20%"
+                      >
+                        Transaction Category
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="expenseDescription"
-                            dataSort
-                          >
-                            Description
+                      <TableHeaderColumn
+                        dataField="expenseDate"
+                        dataSort
+                        dataFormat={this.renderDate}
+                      >
+                        Expense Date
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="receiptNumber"
-                            dataSort
-                          >
-                            Receipt Number
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="expenseAmount"
-                            dataSort
-                          >
-                            Expense Amount
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="transactionCategoryName"
-                            dataSort
-                            width="20%"
-                          >
-                            Transaction Category
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="expenseDate"
-                            dataSort
-                            dataFormat={this.renderDate}
-                          >
-                            Expense Date
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            className="text-right"
-                            columnClassName="text-right"
-                            width="55"
-                            dataFormat={this.renderActions}
-                          >
-                          </TableHeaderColumn>
-                        </BootstrapTable>
-                      </div>
-                    </Col>
-                  </Row>
+                      <TableHeaderColumn
+                        className="text-right"
+                        columnClassName="text-right"
+                        width="55"
+                        dataFormat={this.renderActions}
+                      >
+                      </TableHeaderColumn>
+                    </BootstrapTable>
+                  </div>
+                </Col>
+              </Row>
             </CardBody>
           </Card>
         </div>

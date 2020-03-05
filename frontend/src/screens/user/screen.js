@@ -399,7 +399,7 @@ class User extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={user_list ? user_list : []}
+                          data={user_list && user_list.data ? user_list.data : []}
                           version="4"
                           hover
                           keyField="id"

@@ -196,35 +196,35 @@ class CreateBankTransaction extends React.Component {
                               .required('Transaction Amount is Required'),
                             chartOfAccountId: Yup.string()
                               .required('Transaction Type is Required'),
-                              attachment: Yup.mixed()
-															.test(
-																"fileType",
-																"*Unsupported File Format",
-																value => {
-																	value && this.setState({
-																		fileName: value.name
-																	});
-																	if (
-																		value && 
-																		this.supported_format.includes(value.type) || !value
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																}
-															)
-															.test(
-																"fileSize",
-																"*File Size is too large",
-																value => {
-																	if (value && value.size <= this.file_size || !value) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																}
-															)
+                              // attachment: Yup.mixed()
+															// .test(
+															// 	"fileType",
+															// 	"*Unsupported File Format",
+															// 	value => {
+															// 		value && this.setState({
+															// 			fileName: value.name
+															// 		});
+															// 		if (
+															// 			value && 
+															// 			this.supported_format.includes(value.type) || !value
+															// 		) {
+															// 			return true;
+															// 		} else {
+															// 			return false;
+															// 		}
+															// 	}
+															// )
+															// .test(
+															// 	"fileSize",
+															// 	"*File Size is too large",
+															// 	value => {
+															// 		if (value && value.size <= this.file_size || !value) {
+															// 			return true;
+															// 		} else {
+															// 			return false;
+															// 		}
+															// 	}
+															// )
                           })}
                       >
                         {props => (
@@ -301,7 +301,7 @@ class CreateBankTransaction extends React.Component {
                                   <Label htmlFor="transactionCategoryId">Category</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={transaction_category_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list, 'Category') : []}
+                                    options={transaction_category_list && transaction_category_list.data ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list.data, 'Category') : []}
                                     id="transactionCategoryId"
                                     value={props.values.transactionCategoryId}
                                     onChange={option => props.handleChange('transactionCategoryId')(option.value)}
@@ -331,7 +331,7 @@ class CreateBankTransaction extends React.Component {
                                   <Label htmlFor="projectId">Project</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list, 'Project') : []}
+                                    options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                     id="projectId"
                                     name="projectId"
                                     onChange={option => props.handleChange('projectId')(option.value)}

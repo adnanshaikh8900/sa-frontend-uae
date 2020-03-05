@@ -88,7 +88,7 @@ export const getProductVatCategoryList = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: 'rest/vat/getList'
+      url: 'rest/datalist/vatCategory'
     }
 
     return authApi(data).then(res => {

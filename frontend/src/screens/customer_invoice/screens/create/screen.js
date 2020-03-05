@@ -469,7 +469,7 @@ class CreateCustomerInvoice extends React.Component {
 			reader.onloadend = () => {
 			};
 			reader.readAsDataURL(file);
-			props.setFieldValue('attachmentFile', file,true);
+			props.setFieldValue('attachmentFile', file, true);
 		}
 	}
 
@@ -673,35 +673,35 @@ class CreateCustomerInvoice extends React.Component {
 																	}),
 																vatCategoryId: Yup.string().required("Value is Required"),
 															})),
-														attachmentFile: Yup.mixed()
-															.test(
-																"fileType",
-																"*Unsupported File Format",
-																value => {
-																	value && this.setState({
-																		fileName: value.name
-																	});
-																	if (
-																		value &&
-																		this.supported_format.includes(value.type)
-																	) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																}
-															)
-															.test(
-																"fileSize",
-																"*File Size is too large",
-																value => {
-																	if (value && value.size <= this.file_size) {
-																		return true;
-																	} else {
-																		return false;
-																	}
-																}
-															)
+														// attachmentFile: Yup.mixed()
+														// 	.test(
+														// 		"fileType",
+														// 		"*Unsupported File Format",
+														// 		value => {
+														// 			value && this.setState({
+														// 				fileName: value.name
+														// 			});
+														// 			if (
+														// 				value &&
+														// 				this.supported_format.includes(value.type)
+														// 			) {
+														// 				return true;
+														// 			} else {
+														// 				return false;
+														// 			}
+														// 		}
+														// 	)
+														// 	.test(
+														// 		"fileSize",
+														// 		"*File Size is too large",
+														// 		value => {
+														// 			if (value && value.size <= this.file_size) {
+														// 				return true;
+														// 			} else {
+														// 				return false;
+														// 			}
+														// 		}
+														// 	)
 													})}
 											>
 												{props => (

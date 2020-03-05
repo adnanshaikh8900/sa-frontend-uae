@@ -480,8 +480,8 @@ class DetailPayment extends React.Component {
                                         options={
                                           project_list
                                             ? selectOptionsFactory.renderOptions(
-                                              "projectName",
-                                              "projectId",
+                                              "label",
+                                              "value",
                                               project_list,
                                               "Project"
                                             )

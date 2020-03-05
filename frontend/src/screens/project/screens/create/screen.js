@@ -108,7 +108,7 @@ class CreateProject extends React.Component {
     this.props.projectActions.getCurrencyList();
     this.props.projectActions.getContactList();
     this.props.projectActions.getCountryList();
-    this.props.projectActions.getTitleList();
+    // this.props.projectActions.getTitleList();
 
   }
 
@@ -231,7 +231,7 @@ class CreateProject extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="contactId"><span className="text-danger">*</span>Contact</Label>
                                   <Select
-                                    options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'id', contact_list, 'Contact Name') : []}
+                                    options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Contact Name') : []}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedContact: option.value

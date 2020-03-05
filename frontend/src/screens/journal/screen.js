@@ -495,7 +495,6 @@ class Journal extends React.Component {
                             dataFormat={this.renderAccount}
                             width="15%"
                             dataAlign="left"
-                            dataSort
                           >
                             Account
                           </TableHeaderColumn>
@@ -504,7 +503,6 @@ class Journal extends React.Component {
                              dataFormat={this.renderDebitAmount}
                              dataAlign="right"
                              width="13%"
-                             dataSort
                           >
                             DEBIT AMOUNT
                           </TableHeaderColumn>
@@ -512,7 +510,6 @@ class Journal extends React.Component {
                              dataField="journalLineItems"
                              dataFormat={this.renderCreditAmount}
                              dataAlign="right"
-                             dataSort
                           >
                             CREDIT AMOUNT
                           </TableHeaderColumn>

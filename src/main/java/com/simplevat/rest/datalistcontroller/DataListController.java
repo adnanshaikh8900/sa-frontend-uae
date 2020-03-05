@@ -15,14 +15,17 @@ import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.dbfilter.CurrencyFilterEnum;
 import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
+import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
 import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
+import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
@@ -61,6 +64,12 @@ public class DataListController implements Serializable {
 
 	@Autowired
 	private IndustryTypeService industryTypeService;
+
+	@Autowired
+	private VatCategoryService vatCategoryService;
+
+	@Autowired
+	private VatCategoryRestHelper vatCategoryRestHelper;
 
 	@GetMapping(value = "/getcountry")
 	public ResponseEntity getCountry() {
@@ -165,6 +174,25 @@ public class DataListController implements Serializable {
 					dropdownModels.add(new DropdownModel(type.getId(), type.getIndustryTypeName()));
 				}
 				return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+			} else {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@GetMapping(value = "/vatCategory")
+	public ResponseEntity getVatCAtegory() {
+		try {
+			Map<VatCategoryFilterEnum, Object> filterDataMap = new HashMap();
+			filterDataMap.put(VatCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
+			filterDataMap.put(VatCategoryFilterEnum.DELETE_FLAG, false);
+
+			PaginationResponseModel respone = vatCategoryService.getVatCategoryList(filterDataMap, null);
+			if (respone != null) {
+				return new ResponseEntity(vatCategoryRestHelper.getList(respone.getData()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}

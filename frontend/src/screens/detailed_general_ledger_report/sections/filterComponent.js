@@ -37,13 +37,8 @@ class FilterComponent extends Component {
 		]
 	}
 
-	handleSubmit = (values) => {
-		console.log(values)
-	}
-
 	render() {
 		const { initValue } = this.state
-		console.log(this.props)
 		return (
 			<div>
 				<Card>
@@ -54,9 +49,6 @@ class FilterComponent extends Component {
 					<CardBody>
 						<Formik
 							initialValues={initValue}
-							onSubmit={(values, { resetForm }) => {
-								this.handleSubmit(values, resetForm);
-							}}
 						>
 							{props => (
 								<Form>
@@ -78,6 +70,9 @@ class FilterComponent extends Component {
 													dateFormat="dd/MM/yyyy"
 													onChange={value => {
 														props.handleChange("from_date")(value);
+														if(moment(value).isAfter(props.values.to_date)){
+															props.setFieldValue('to_date',moment(value).add(1, 'M'))
+														}
 													}}
 												/>
 											</FormGroup>
@@ -134,7 +129,7 @@ class FilterComponent extends Component {
 									<Row>
 										<Col lg={12} className="mt-5">
 											<FormGroup className="text-right">
-												<Button type="button" color="primary" className="btn-square mr-3" onClick={() => {this.props.generateReport(props.values)}
+												<Button type="button" color="primary" className="btn-square mr-3" onClick={() => { this.props.generateReport(props.values) }
 												}>
 													<i className="fa fa-dot-circle-o"></i> Run Report
                         </Button>

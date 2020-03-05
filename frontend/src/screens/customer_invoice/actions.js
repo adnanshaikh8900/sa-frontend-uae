@@ -6,7 +6,6 @@ import {
 import moment from 'moment'
 
 export const getCustomerInvoiceList = (postObj) => {
-  console.log(postObj)
   let customerName = postObj ? postObj.customerId : ''
   let referenceNumber =  postObj ? postObj.referenceNumber : ''
   let invoiceDate =  postObj.invoiceDate

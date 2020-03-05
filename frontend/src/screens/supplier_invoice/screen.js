@@ -97,7 +97,11 @@ class SupplierInvoice extends React.Component {
     this.openInvoicePreviewModal = this.openInvoicePreviewModal.bind(this)
 
     this.options = {
-      paginationPosition: 'top'
+      paginationPosition: 'top',
+      page: 1,
+      sizePerPage: 10,
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
     }
     this.selectRowProp = {
       mode: 'checkbox',
@@ -115,7 +119,7 @@ class SupplierInvoice extends React.Component {
   initializeData() {
     let { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     const postData = {...filterData,...paginationData }
@@ -294,7 +298,7 @@ class SupplierInvoice extends React.Component {
     }
     this.props.supplierInvoiceActions.removeBulk(obj).then((res) => {
       this.initializeData(filterData)
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+      this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
       if (supplier_invoice_list && supplier_invoice_list.length > 0) {
         this.setState({
           selectedRows: []
@@ -356,14 +360,28 @@ class SupplierInvoice extends React.Component {
     this.setState({ openInvoicePreviewModal: false })
   }
 
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
+  }
+
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
+  }
+
   render() {
     const { loading, filterData, dialog, selectedRows } = this.state
-    const {  status_list, supplier_list } = this.props
+    const {  status_list, supplier_list,supplier_invoice_list } = this.props
     // const containerStyle = {
     //   zIndex: 1999
     // }
 
-    const supplier_invoice_data = this.props.supplier_invoice_list ? this.props.supplier_invoice_list.map(supplier =>
+    const supplier_invoice_data = supplier_invoice_list && supplier_invoice_list.data ? this.props.supplier_invoice_list.data.map(supplier =>
 
       ({
         id: supplier.id,
@@ -549,13 +567,13 @@ class SupplierInvoice extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={supplier_invoice_data}
+                          data={supplier_invoice_data ? supplier_invoice_data : []}
                           version="4"
                           hover
                           keyField="id"
-                          pagination
+                          pagination = {supplier_invoice_data && supplier_invoice_data.data && supplier_invoice_data.data.length > 0 ? true : false}
                           remote
-                          fetchInfo={{ dataTotalSize: supplier_invoice_data.totalCount ? supplier_invoice_data.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: supplier_invoice_list.count ? supplier_invoice_list.count : 0 }}
                           className="supplier-invoice-table"
                           ref={node => this.table = node}
                         >

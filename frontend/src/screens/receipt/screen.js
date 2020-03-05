@@ -78,7 +78,7 @@ class Receipt extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -101,7 +101,7 @@ class Receipt extends React.Component {
   initializeData() {
     let { filterData } = this.state
     const data = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...data };
@@ -198,7 +198,7 @@ class Receipt extends React.Component {
     this.removeDialog()
     this.props.receiptActions.removeBulk(obj).then((res) => {
       this.initializeData();
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+      this.props.commonActions.tostifyAlert('success', 'Receipt Deleted Successfully')
       if (receipt_list && receipt_list.length > 0) {
         this.setState({
           selectedRows: []
@@ -358,13 +358,13 @@ class Receipt extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={receipt_list ? receipt_list : []}
+                          data={receipt_list  && receipt_list.data ? receipt_list.data : []}
                           version="4"
                           keyField="receiptId"
                           hover
-                          pagination
+                          pagination = {receipt_list && receipt_list.data && receipt_list.data.length > 0 ? true : false}
                           remote
-                          fetchInfo={{ dataTotalSize: receipt_list.totalCount ? receipt_list.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: receipt_list.count ? receipt_list.count : 0 }}
                           className="receipt-table"
                           trClassName="cursor-pointer"
                           csvFileName="Receipt.csv"

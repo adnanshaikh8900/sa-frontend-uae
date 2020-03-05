@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -42,7 +42,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class CreateBankAccount extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
@@ -51,37 +51,41 @@ class CreateBankAccount extends React.Component {
 
       initialVals: {
         account_name: '',
-        currency: null,
+        currency: '',
         opening_balance: '',
-        account_type: null,
+        account_type: '',
         bank_name: '',
         account_number: '',
         iban_number: '',
         swift_code: '',
-        country: null,
-        account_is_for: null
+        country: '',
+        account_is_for: ''
       },
       currentData: {}
     }
 
     this.regEx = /^[0-9\d]+$/;
+    this.account_for = [
+      { label: 'Personal', value: 'Personal' },
+      { label: 'Corporate', value: 'Corporate' }
+    ]
 
     this.initializeData = this.initializeData.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.initializeData()
   }
 
-  initializeData () {
+  initializeData() {
     this.props.createBankAccountActions.getAccountTypeList()
     this.props.createBankAccountActions.getCurrencyList()
     this.props.createBankAccountActions.getCountryList()
   }
 
-  handleChange (e, name) {
+  handleChange(e, name) {
     this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -91,7 +95,7 @@ class CreateBankAccount extends React.Component {
     })
   }
 
-  handleSubmit (data,resetForm) {
+  handleSubmit(data, resetForm) {
     const {
       account_name,
       currency,
@@ -106,15 +110,15 @@ class CreateBankAccount extends React.Component {
     } = data
     let obj = {
       bankAccountName: account_name,
-      bankAccountCurrency: currency.value,
+      bankAccountCurrency: currency,
       openingBalance: opening_balance,
-      bankAccountType: account_type.value,
+      bankAccountType: account_type,
       bankName: bank_name,
       accountNumber: account_number,
       ibanNumber: iban_number,
       swiftCode: swift_code,
-      bankCountry: country ? country.value : '',
-      personalCorporateAccountInd: account_is_for.value
+      bankCountry: country ,
+      personalCorporateAccountInd: account_is_for
     }
     this.props.createBankAccountActions.createBankAccount(obj).then(res => {
       this.props.commonActions.tostifyAlert('success', 'New Bank Account Created Successfully.')
@@ -163,30 +167,27 @@ class CreateBankAccount extends React.Component {
                     <Col lg={12}>
                       <Formik
                         initialValues={initialVals}
-                        onSubmit={(values, {resetForm}) => {
-                          this.handleSubmit(values,resetForm)
+                        onSubmit={(values, { resetForm }) => {
+                          this.handleSubmit(values, resetForm)
                         }}
                         validationSchema={Yup.object().shape({
                           account_name: Yup.string()
                             .required('Account Name is Required'),
-                            opening_balance: Yup.string()
+                          opening_balance: Yup.string()
                             .required('Opening Balance is Required'),
-                          currency: Yup.object().shape({
-                            label: Yup.string().required(),
-                            value: Yup.string().required(),
-                          }),
-                          account_type: Yup.object().shape({
-                            label: Yup.string().required(),
-                            value: Yup.string().required(),
-                          }),
+                            currency: Yup.string().required(
+                              "Currency is required"
+                            ),
+                          account_type: Yup.string().required(
+                            "Account Type is required"
+                          ),
                           bank_name: Yup.string()
                             .required('Bank Name is Required'),
                           account_number: Yup.string()
                             .required('Account Number is Required'),
-                          account_is_for: Yup.object().shape({
-                            label: Yup.string().required(),
-                            value: Yup.string().required()
-                          })
+                          account_is_for:Yup.string().required(
+                            "Account for is required"
+                          ),
                         })}
                       >
                         {
@@ -209,6 +210,9 @@ class CreateBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
+                                    {props.errors.account_name && props.touched.account_name && (
+                                      <div className="invalid-feedback">{props.errors.account_name}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={4}>
@@ -218,15 +222,24 @@ class CreateBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="currency"
                                       name="currency"
-                                      options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list,'Currency') : []}
+                                      options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                       value={props.values.currency}
-                                      onChange={option => props.handleChange('currency')(option)}
+                                      onChange={option => {
+                                        if (option && option.value) {
+                                          props.handleChange('currency')(option.value)
+                                        } else {
+                                          props.handleChange('currency')('')
+                                        }
+                                      }}
                                       className={
                                         props.errors.currency && props.touched.currency
                                           ? 'is-invalid'
                                           : ''
                                       }
                                     />
+                                      {props.errors.currency && props.touched.currency && (
+                                      <div className="invalid-feedback">{props.errors.currency}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={4}>
@@ -245,6 +258,9 @@ class CreateBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
+                                     {props.errors.opening_balance && props.touched.opening_balance && (
+                                      <div className="invalid-feedback">{props.errors.opening_balance}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                               </Row>
@@ -256,15 +272,24 @@ class CreateBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="account_type"
                                       name="account_type"
-                                      options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list,"Account Type") : []}
+                                      options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, "Account Type") : []}
                                       value={props.values.account_type}
-                                      onChange={option => props.handleChange('account_type')(option)}
+                                      onChange={option => {
+                                        if (option && option.value) {
+                                          props.handleChange('account_type')(option.value)
+                                        } else {
+                                          props.handleChange('account_type')('')
+                                        }
+                                      }}
                                       className={
                                         props.errors.account_type && props.touched.account_type
                                           ? 'is-invalid'
                                           : ''
                                       }
                                     />
+                                     {props.errors.account_type && props.touched.account_type && (
+                                      <div className="invalid-feedback">{props.errors.account_type}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                               </Row>
@@ -286,6 +311,9 @@ class CreateBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
+                                     {props.errors.bank_name && props.touched.bank_name && (
+                                      <div className="invalid-feedback">{props.errors.bank_name}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={4}>
@@ -304,6 +332,9 @@ class CreateBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
+                                    {props.errors.account_number && props.touched.account_number && (
+                                      <div className="invalid-feedback">{props.errors.account_number}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                               </Row>
@@ -353,7 +384,13 @@ class CreateBankAccount extends React.Component {
                                       name="country"
                                       options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                       value={props.values.country}
-                                      onChange={option => props.handleChange('country')(option)}
+                                      onChange={option => {
+                                        if (option && option.value) {
+                                          props.handleChange('country')(option.value)
+                                        } else {
+                                          props.handleChange('country')('')
+                                        }
+                                      }}
                                       className={
                                         props.errors.country && props.touched.country
                                           ? 'is-invalid'
@@ -371,18 +408,24 @@ class CreateBankAccount extends React.Component {
                                       className="select-default-width"
                                       id="account_is_for"
                                       name="account_is_for"
-                                      options={[
-                                        {label: 'Personal', value: 'Personal'},
-                                        {label: 'Corporate', value: 'Corporate'}
-                                      ]}
+                                      options={this.account_for ? selectOptionsFactory.renderOptions('label', 'value', this.account_for, 'Account is for') : []}
                                       value={props.values.account_is_for}
-                                      onChange={option => props.handleChange('account_is_for')(option)}
+                                      onChange={option => {
+                                        if (option && option.value) {
+                                          props.handleChange('account_is_for')(option.value)
+                                        } else {
+                                          props.handleChange('account_is_for')('')
+                                        }
+                                      }}
                                       className={
                                         props.errors.account_is_for && props.touched.account_is_for
                                           ? 'is-invalid'
                                           : ''
                                       }
                                     />
+                                     {props.errors.account_is_for && props.touched.account_is_for && (
+                                      <div className="invalid-feedback">{props.errors.account_is_for}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                               </Row>
@@ -394,15 +437,15 @@ class CreateBankAccount extends React.Component {
                                     </Button>
                                     <Button type="button" name="button" color="primary" className="btn-square mr-3"
                                       onClick={() => {
-                                        this.setState({createMore: true}, () => {
+                                        this.setState({ createMore: true }, () => {
                                           props.handleSubmit()
                                         })
                                       }}
                                     >
                                       <i className="fa fa-repeat"></i> Create and More
                                     </Button>
-                                    <Button type="button" name="button" color="secondary" className="btn-square" 
-                                      onClick={() => {this.props.history.push('/admin/banking/bank-account')}}>
+                                    <Button type="button" name="button" color="secondary" className="btn-square"
+                                      onClick={() => { this.props.history.push('/admin/banking/bank-account') }}>
                                       <i className="fa fa-ban"></i> Cancel
                                     </Button>
                                   </FormGroup>

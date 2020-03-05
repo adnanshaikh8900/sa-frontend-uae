@@ -94,7 +94,7 @@ class Expense extends React.Component {
     this.options = {
       // onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -123,7 +123,7 @@ class Expense extends React.Component {
   initializeData() {
     const { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
@@ -329,8 +329,8 @@ class Expense extends React.Component {
     }
     this.props.expenseActions.removeBulkExpenses(obj).then(() => {
       this.initializeData()
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if (expense_list && expense_list.length > 0) {
+      this.props.commonActions.tostifyAlert('success', 'Expense Deleted Successfully')
+      if (expense_list && expense_list.data && expense_list.data.length > 0) {
         this.setState({
           selectedRows: []
         })
@@ -390,7 +390,7 @@ class Expense extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-                            disabled={expense_list.length === 0}
+                            disabled={expense_list && expense_list.data && expense_list.data.length === 0 ? true : false}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -478,13 +478,13 @@ class Expense extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={expense_list ? expense_list : []}
+                          data={expense_list && expense_list.data ? expense_list.data : []}
                           version="4"
                           hover
                           keyField="expenseId"
-                          pagination
+                          pagination = {expense_list && expense_list.data && expense_list.data.length > 0 ? true : false}
                           remote
-                          fetchInfo={{ dataTotalSize: expense_list.totalCount ? expense_list.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: expense_list.count ? expense_list.count : 0 }}
                           className="expense-table"
                           trClassName="cursor-pointer"
                           ref={node => this.table = node}

@@ -77,7 +77,7 @@ class Product extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -106,7 +106,7 @@ class Product extends React.Component {
   initializeData() {
     const { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
@@ -178,9 +178,9 @@ class Product extends React.Component {
     }
     this.props.productActions.removeBulk(obj).then(res => {
       if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+        this.props.commonActions.tostifyAlert('success', 'Product Deleted Successfully')
         this.initializeData();
-        if (product_list && product_list.length > 0) {
+        if (product_list && product_list.data && product_list.data.length > 0) {
           this.setState({
             selectedRows: []
           })
@@ -332,12 +332,12 @@ class Product extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={product_list ? product_list : []}
+                          data={product_list && product_list.data ? product_list.data : []}
                           version="4"
                           hover
-                          pagination
+                          pagination = {product_list && product_list.data && product_list.data.length > 0 ? true : false}    
                           remote
-                          fetchInfo={{ dataTotalSize: product_list.totalCount ? product_list.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: product_list.count ? product_list.count : 0 }}
                           className="product-table"
                           trClassName="cursor-pointer"
                           csvFileName="product_list.csv"

@@ -20,7 +20,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 
-import { Loader } from 'components'
+import { Loader , ConfirmDeleteModal} from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -77,7 +77,8 @@ class BankTransactions extends React.Component {
       },
       selectedData: null,
       selectedTransactionType: '',
-      id: ''
+      id: '',
+      dialog: null,
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -96,7 +97,7 @@ class BankTransactions extends React.Component {
 
     this.options = {
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -119,7 +120,7 @@ class BankTransactions extends React.Component {
   initializeData() {
     let { filterData } = this.state
     const data = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     if (this.props.location.state && this.props.location.state.bankAccountId) {
@@ -223,8 +224,8 @@ class BankTransactions extends React.Component {
             <DropdownItem>
               <i className="fas fa-wrench" /> Archive
             </DropdownItem>
-            {/* <DropdownItem>
-              <i className="fa fa-trash" /> Delete
+            {/* <DropdownItem onClick={() => this.closeTransaction(row.id)}>
+              <i className="fa fa-trash" /> Close
             </DropdownItem> */}
           </DropdownMenu>
         </ButtonDropdown>
@@ -233,10 +234,8 @@ class BankTransactions extends React.Component {
   }
 
   onRowSelect(row, isSelected, e) {
-    console.log('one row checked ++++++++', row)
   }
   onSelectAll(isSelected, rows) {
-    console.log('current page all row checked ++++++++', rows)
   }
 
   onSizePerPageList = (sizePerPage) => {
@@ -265,12 +264,39 @@ class BankTransactions extends React.Component {
     this.initializeData();
   }
 
+  closeTransaction = (id) => {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={() => this.removeTransaction(id)}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeTransaction = (id) => {
+    this.removeDialog()
+    this.props.transactionsActions.deleteTransactionById(id).then((res) => {
+      this.props.commonActions.tostifyAlert('success', 'Transaction Deleted Successfully')
+      this.initializeData()
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    })
+  }
+
+  removeDialog = () => {
+    this.setState({
+      dialog: null
+    })
+  }
+
   render() {
 
     const {
       loading,
       statusOptions,
-      filterData
+      filterData,
+      dialog
     } = this.state
     const { bank_transaction_list, transaction_type_list } = this.props
 
@@ -290,6 +316,7 @@ class BankTransactions extends React.Component {
               </Row>
             </CardHeader>
             <CardBody>
+            {dialog}
               {
                 loading ?
                   <Row>
@@ -340,7 +367,7 @@ class BankTransactions extends React.Component {
                       <div className="py-3">
                         <h6>Filter : </h6>
                         <Row>
-                          <Col lg={2} className="mb-1">
+                          <Col lg={3} className="mb-1">
                             <Select
                               className=""
                               options={statusOptions}
@@ -394,14 +421,14 @@ class BankTransactions extends React.Component {
                         <BootstrapTable
                           search={false}
                           options={this.options}
-                          data={bank_transaction_list ? bank_transaction_list : []}
+                          data={bank_transaction_list.data ? bank_transaction_list.data : []}
                           version="4"
                           hover
                           keyField="id"
-                          pagination
+                          pagination = {bank_transaction_list && bank_transaction_list.data && bank_transaction_list.data.length > 0 ? true : false}
                           // totalSize={bank_transaction_list ? bank_transaction_list.length : 0}
                           remote
-                          fetchInfo={{ dataTotalSize: bank_transaction_list.totalCount ? bank_transaction_list.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: bank_transaction_list.count ? bank_transaction_list.count : 0 }}
                           className="bank-transaction-table"
                         >
                           {/* <TableHeaderColumn

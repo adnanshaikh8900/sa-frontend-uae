@@ -72,7 +72,7 @@ class Contact extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -100,7 +100,7 @@ class Contact extends React.Component {
   initializeData() {
     let { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     filterData = { ...filterData, ...paginationData }
@@ -188,8 +188,8 @@ class Contact extends React.Component {
     }
     this.props.contactActions.removeBulk(obj).then((res) => {
       this.initializeData();
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if (contact_list && contact_list.length > 0) {
+      this.props.commonActions.tostifyAlert('success', 'Contacts Deleted Successfully')
+      if (contact_list && contact_list.data && contact_list.data.length > 0) {
         this.setState({
           selectedRows: []
         })
@@ -258,7 +258,7 @@ class Contact extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-                            disabled={contact_list.length === 0}
+                            disabled={contact_list && contact_list.data && contact_list.data.length === 0 ? true : false}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -331,12 +331,12 @@ class Contact extends React.Component {
                               selectRow={this.selectRowProp}
                               search={false}
                               options={this.options}
-                              data={contact_list ? contact_list : []}
+                              data={contact_list && contact_list.data ? contact_list.data : []}
                               version="4"
                               hover
-                              pagination
+                              pagination = {contact_list && contact_list.data && contact_list.data.length > 0 ? true : false}
                               remote
-                              fetchInfo={{ dataTotalSize: contact_list.totalCount ? contact_list.totalCount : 0 }}
+                              fetchInfo={{ dataTotalSize: contact_list.count ? contact_list.count : 0 }}
                               className="product-table"
                               trClassName="cursor-pointer"
                               csvFileName="Contact.csv"

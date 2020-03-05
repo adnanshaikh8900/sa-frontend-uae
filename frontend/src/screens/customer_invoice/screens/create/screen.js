@@ -357,7 +357,6 @@ class CreateCustomerInvoice extends React.Component {
 			if (obj.id === row.id) {
 				idx = index
 				if (Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
-					console.log(props.touched.lineItemsString[idx].vatCategoryId)
 				}
 			}
 		});
@@ -445,7 +444,6 @@ class CreateCustomerInvoice extends React.Component {
 		})
 
 		const discount = props.values.discountType === 'PERCENTAGE' ? +((total * discountPercentage) / 100).toFixed(2) : discountAmount
-		console.log(typeof discount)
 		this.setState({
 			data: data,
 			initValue: {

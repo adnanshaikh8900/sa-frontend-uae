@@ -6,9 +6,8 @@ import {
 import moment from 'moment'
 
 export const getTransactionList = (obj) => {
-  console.log(obj)
-  const { transactionTypeCode, transactionDate , id , pageNo , pageSize} = obj
-  let param = `/rest/transaction/list?bankId=${id}&transactionTypeCode=${transactionTypeCode}&pageNo=${pageNo}&pageSize=${pageSize}`
+  const { chartOfAccountId, transactionDate , id , pageNo , pageSize} = obj
+  let param = `/rest/transaction/list?bankId=${id}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}`
   if(transactionDate !== '') {
     let date = moment(transactionDate).format('DD-MM-YYYY')
     param = param +`&transactionDate=${date}`
@@ -65,6 +64,7 @@ export const getTransactionTypeList = () => {
           payload: res.data
         })
       }
+      return res
     }).catch(err => {
       throw err
     })
@@ -75,7 +75,7 @@ export const getProjectList = () => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: '/rest/project/getList'
+      url: '/rest/project/getProjectsForDropdown'
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
@@ -90,11 +90,12 @@ export const getProjectList = () => {
   }
 }
 
-export const deleteTransaction = (id) => {
+export const deleteTransactionById = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: `/rest/transaction/delete?id=${id}`
+      url: `/rest/transaction/delete`,
+      data: obj
     }
     return authApi(data).then(res => {
       return res

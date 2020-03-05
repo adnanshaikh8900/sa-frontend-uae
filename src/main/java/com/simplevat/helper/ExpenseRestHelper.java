@@ -19,6 +19,8 @@ import com.simplevat.service.ExpenseService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.FileHelper;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -60,6 +62,9 @@ public class ExpenseRestHelper implements Serializable {
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	private FileHelper fileHelper;
 
 	public Expense getExpenseEntity(ExpenseModel model, User user) throws Exception {
 		Expense expense = new Expense();
@@ -127,7 +132,10 @@ public class ExpenseRestHelper implements Serializable {
 				expenseModel.setExpenseCategory(entity.getTransactionCategory().getTransactionCategoryId());
 			}
 			expenseModel.setVersionNumber(entity.getVersionNumber());
-
+			if (entity.getReceiptAttachmentPath() != null) {
+				expenseModel.setReceiptAttachmentPath(
+						"/file/" + fileHelper.convertFilePthToUrl(entity.getReceiptAttachmentPath()));
+			}
 			return expenseModel;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,13 +143,13 @@ public class ExpenseRestHelper implements Serializable {
 		return null;
 	}
 
-	public List<ExpenseListModel> getExpenseList(List<Expense> expenseList) {
+	public List<ExpenseListModel> getExpenseList(Object expenseList) {
 
-		if (expenseList != null && expenseList.size() > 0) {
+		if (expenseList != null) {
 
 			List<ExpenseListModel> expenseDtoList = new ArrayList<ExpenseListModel>();
 
-			for (Expense expense : expenseList) {
+			for (Expense expense : (List<Expense>) expenseList) {
 
 				ExpenseListModel expenseModel = new ExpenseListModel();
 				expenseModel.setReceiptNumber(expense.getReceiptNumber());

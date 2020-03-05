@@ -7,17 +7,18 @@ import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 public interface BankAccountDao extends Dao<Integer, BankAccount> {
 
-    List<BankAccount> getBankAccounts();
+	List<BankAccount> getBankAccounts();
 
-    List<BankAccount> getBankAccountByUser(int userId);
+	List<BankAccount> getBankAccountByUser(int userId);
 
-    BankAccount getBankAccountById(int id);
+	BankAccount getBankAccountById(int id);
 
-    void deleteByIds(List<Integer> ids);
+	void deleteByIds(List<Integer> ids);
 
-	List<BankAccount> getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,
+	PaginationResponseModel getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,
 			PaginationModel paginationModel);
 }

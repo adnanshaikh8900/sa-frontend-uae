@@ -40,4 +40,6 @@ public interface Dao<PK, ENTITY> {
 
 	// for testing
 	List<ENTITY> executeQuery(List<DbFilter> dbFilters);
+
+	Integer getResultCount(List<DbFilter> dbFilters);
 }

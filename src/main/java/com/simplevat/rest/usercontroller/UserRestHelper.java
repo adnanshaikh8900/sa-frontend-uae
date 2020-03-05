@@ -30,13 +30,13 @@ public class UserRestHelper {
 	@Autowired
 	private DateFormatUtil dateUtil;
 
-	public List<UserModel> getModelList(List<User> userList) {
+	public List<UserModel> getModelList(Object userList) {
 
 		List<UserModel> userModelList = new ArrayList<UserModel>();
 
-		if (userList != null && userList.size() > 0) {
+		if (userList != null) {
 
-			for (User user : userList) {
+			for (User user : (List<User>) userList) {
 				UserModel userModel = new UserModel();
 
 				userModel.setId(user.getUserId());

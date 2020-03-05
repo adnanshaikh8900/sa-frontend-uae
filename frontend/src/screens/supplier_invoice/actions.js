@@ -7,15 +7,9 @@ import moment from 'moment'
 
 
 export const getSupplierInvoiceList = (postObj) => {
-  let supplierName = postObj ? postObj.supplierId : ''
-  let referenceNumber =  postObj ? postObj.referenceNumber : ''
-  let invoiceDate =  postObj.invoiceDate
-  let invoiceDueDate =  postObj.invoiceDueDate
-  let amount =  postObj ? postObj.amount : ''
-  let status =  postObj ? postObj.status : ''
-  let contactType = postObj ? postObj.contactType : ''
+    const { supplierId, contactType , referenceNumber , amount, status , pageNo , pageSize , invoiceDate, invoiceDueDate} = postObj
   return (dispatch) => {
-    let param = `rest/invoice/getList?contact=${supplierName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}`
+    let param = `rest/invoice/getList?contact=${supplierId}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}`
     if(invoiceDate) {
       let date = moment(invoiceDate).format('DD-MM-YYYY')
       param = param +`&invoiceDate=${date}`
@@ -137,7 +131,7 @@ export const getVatList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/vat/getList'
+      url: 'rest/datalist/vatCategory'
     }
     return authApi(data).then(res => {
       if (res.status === 200) {

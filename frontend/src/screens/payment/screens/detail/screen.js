@@ -480,8 +480,8 @@ class DetailPayment extends React.Component {
                                         options={
                                           project_list
                                             ? selectOptionsFactory.renderOptions(
-                                              "projectName",
-                                              "projectId",
+                                              "label",
+                                              "value",
                                               project_list,
                                               "Project"
                                             )
@@ -559,26 +559,6 @@ class DetailPayment extends React.Component {
                                       />
                                     </FormGroup>
                                   </Col>
-                                  {console.log(props.errors)}
-                                  {/* <Col lg={4}>
-                                  <FormGroup className="mb-3">
-                                    <Label htmlFor="referenceNo">Reference Number</Label>
-                                    <Input
-                                      type="text"
-                                      id="referenceNo"
-                                      name="referenceNo"
-                                      placeholder="Enter Reference Number"
-                                      required
-                                      onChange={option => props.handleChange('referenceNo')(option)}
-                                      value={props.values.referenceNo}
-                                      className={
-                                        props.errors.referenceNo && props.touched.referenceNo
-                                          ? 'is-invalid'
-                                          : ''
-                                      }
-                                    />
-                                  </FormGroup>
-                                </Col> */}
                                 </Row>
                                 <Row>
                                   <Col lg={8}>

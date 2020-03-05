@@ -19,16 +19,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductCategoryFilterEnum;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.ProductCategory;
 import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.transactioncategorycontroller.TransactionCategoryBean;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ProductCategoryService;
 import com.simplevat.service.UserService;
-import com.simplevat.service.bankaccount.TransactionTypeService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -53,12 +55,11 @@ public class ProductCategoryRestController {
 	private ProductCategoryRestHelper productCategoryRestHelper;
 
 	@Autowired
-	private TransactionTypeService transactionTypeService;
+	private ChartOfAccountService transactionTypeService;
 
 	@ApiOperation(value = "Get All Product Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getAllProductCategory(ProductCategoryFilterModel filterModel,
-			HttpServletRequest request) {
+	public ResponseEntity getAllProductCategory(ProductCategoryFilterModel filterModel, HttpServletRequest request) {
 
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		User user = userServiceNew.findByPK(userId);
@@ -68,10 +69,12 @@ public class ProductCategoryRestController {
 		filterDataMap.put(ProductCategoryFilterEnum.PRODUCT_CATEGORY_NAME, filterModel.getProductCategoryName());
 		filterDataMap.put(ProductCategoryFilterEnum.USER_ID, filterModel.getUserId());
 		filterDataMap.put(ProductCategoryFilterEnum.DELETE_FLAG, false);
+		filterDataMap.put(ProductCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
-		List<ProductCategory> productcategories = productCategoryService.getProductCategoryList(filterDataMap);
-		if (productcategories != null) {
-			return new ResponseEntity(productCategoryRestHelper.getListModel(productcategories), HttpStatus.OK);
+		PaginationResponseModel response = productCategoryService.getProductCategoryList(filterDataMap, filterModel);
+		if (response != null) {
+			response.setData(productCategoryRestHelper.getListModel(response.getData()));
+			return new ResponseEntity(response, HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

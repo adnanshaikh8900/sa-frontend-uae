@@ -372,7 +372,6 @@ class CreateSupplierInvoice extends React.Component {
     e.preventDefault();
     const data = this.state.data
     newData = data.filter(obj => obj.id !== id);
-    // console.log(newData)
     props.setFieldValue('lineItemsString', newData, true)
     this.updateAmount(newData)
   }
@@ -554,7 +553,7 @@ class CreateSupplierInvoice extends React.Component {
       reader.onloadend = () => {
       };
       reader.readAsDataURL(file);
-      props.setFieldValue('attachmentFile', file);
+      props.setFieldValue('attachmentFile', file,true);
     }
   }
 
@@ -627,43 +626,54 @@ class CreateSupplierInvoice extends React.Component {
 
                           // })
                         }}
-                        // validationSchema={
-                        //   Yup.object().shape({
-                        //     invoice_number: Yup.string()
-                        //       .required("Invoice Number is Required"),
-                        //     contactId: Yup.string()
-                        //       .required("Supplier is Required"),
-                        //     invoiceDate: Yup.date()
-                        //       .required('Invoice Date is Required'),
-                        //     invoiceDueDate: Yup.string()
-                        //       .required('Invoice Due Date is Required'),
-                        //     lineItemsString: Yup.array()
-                        //       .required('Atleast one invoice sub detail is mandatory')
-                        //       .of(Yup.object().shape({
-                        //         description: Yup.string().required("Value is Required"),
-                        //         quantity: Yup.number().required("Value is Required"),
-                        //         unitPrice: Yup.number().required("Value is Required"),
-                        //         vatCategoryId: Yup.string().required("Value is Required"),
-                        //       })),
-                        //     attachmentFile: Yup.mixed()
-                        //       .test('fileType', "*Unsupported File Format", value => {
-                        //         if (value && !this.supported_format.includes(value.type)) {
-                        //           this.setState({
-                        //             fileName: value.name
-                        //           })
-                        //           return false
-                        //         } else {
-                        //           return true
-                        //         }
-                        //       })
-                        //       .test('fileSize', "*File Size is too large", value => {
-                        //         if (value && value.size >= this.file_size) {
-                        //           return false
-                        //         } else {
-                        //           return true
-                        //         }
-                        //       })
-                        //   })}
+                        validationSchema={
+                          Yup.object().shape({
+                            invoice_number: Yup.string()
+                              .required("Invoice Number is Required"),
+                            contactId: Yup.string()
+                              .required("Supplier is Required"),
+                            invoiceDate: Yup.date()
+                              .required('Invoice Date is Required'),
+                            invoiceDueDate: Yup.string()
+                              .required('Invoice Due Date is Required'),
+                            lineItemsString: Yup.array()
+                              .required('Atleast one invoice sub detail is mandatory')
+                              .of(Yup.object().shape({
+                                description: Yup.string().required("Value is Required"),
+                                quantity: Yup.number().required("Value is Required"),
+                                unitPrice: Yup.number().required("Value is Required"),
+                                vatCategoryId: Yup.string().required("Value is Required"),
+                              })),
+                              // attachmentFile: Yup.mixed()
+															// .test(
+															// 	"fileType",
+															// 	"*Unsupported File Format",
+															// 	value => {
+															// 		value && this.setState({
+															// 			fileName: value.name
+															// 		});
+															// 		if (
+															// 			value &&
+															// 			this.supported_format.includes(value.type)
+															// 		) {
+															// 			return true;
+															// 		} else {
+															// 			return false;
+															// 		}
+															// 	}
+															// )
+															// .test(
+															// 	"fileSize",
+															// 	"*File Size is too large",
+															// 	value => {
+															// 		if (value && value.size <= this.file_size) {
+															// 			return true;
+															// 		} else {
+															// 			return false;
+															// 		}
+															// 	}
+															// )
+                          })}
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit}>
@@ -933,7 +943,7 @@ class CreateSupplierInvoice extends React.Component {
                                           </div>
                                         )}
                                       />
-                                      {props.errors.attachmentFile && (
+                                      {props.errors.attachmentFile && props.touched.attachmentFile && (
                                         <div className="invalid-file">{props.errors.attachmentFile}</div>
                                       )}
                                     </FormGroup>

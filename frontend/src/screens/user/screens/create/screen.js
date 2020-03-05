@@ -340,7 +340,6 @@ class CreateUser extends React.Component {
                                               checked={props.values.active == 'true'}
                                               value='true'
                                               onChange={e => {
-                                                console.log(e.target.value)
                                                 props.handleChange('active')(e.target.value)
                                               }}
                                             />
@@ -357,7 +356,6 @@ class CreateUser extends React.Component {
                                               checked={props.values.active == 'false'}
                                               value='false'
                                               onChange={e => {
-                                                console.log(e.target.value)
                                                 props.handleChange('active')(e.target.value)
                                               }}
                                             />

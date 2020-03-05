@@ -15,7 +15,11 @@ import com.simplevat.service.ProjectService;
 import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.FileHelper;
+
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -49,6 +53,9 @@ public class InvoiceRestHelper {
 
 	@Autowired
 	private InvoiceService invoiceService;
+
+	@Autowired
+	private FileHelper fileHelper;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -119,7 +126,7 @@ public class InvoiceRestHelper {
 		invoice.setStatus(InvoiceStatusEnum.PENDING.getValue()); // default set, will change in transaction
 		invoice.setDiscountPercentage(invoiceModel.getDiscountPercentage());
 		invoice.setInvoiceDuePeriod(invoiceModel.getTerm());
-	
+
 		return invoice;
 	}
 
@@ -198,15 +205,15 @@ public class InvoiceRestHelper {
 			requestModel.setInvoiceLineItems(lineItemModels);
 		}
 		if (invoice.getReceiptAttachmentPath() != null) {
-			requestModel.setFilePath("/files/" + invoice.getReceiptAttachmentPath());
+			requestModel.setFilePath("/file/" + fileHelper.convertFilePthToUrl(invoice.getReceiptAttachmentPath()));
 		}
-		if(invoice.getDiscountType() != null) {
+		if (invoice.getDiscountType() != null) {
 			requestModel.setDiscountType(invoice.getDiscountType());
 		}
 		requestModel.setDiscount(invoice.getDiscount());
 		requestModel.setDiscountPercentage(invoice.getDiscountPercentage());
 		requestModel.setTerm(invoice.getInvoiceDuePeriod());
-		
+
 		return requestModel;
 	}
 
@@ -223,32 +230,34 @@ public class InvoiceRestHelper {
 		return lineItemModel;
 	}
 
-	public List<InvoiceListModel> getListModel(List<Invoice> invoices) {
+	public List<InvoiceListModel> getListModel(Object invoices) {
 		List<InvoiceListModel> invoiceListModels = new ArrayList();
-		for (Invoice invoice : invoices) {
-			InvoiceListModel model = new InvoiceListModel();
-			model.setId(invoice.getId());
-			if (invoice.getContact() != null) {
-				if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
-					model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
+		if (invoices != null) {
+			for (Invoice invoice : (List<Invoice>) invoices) {
+				InvoiceListModel model = new InvoiceListModel();
+				model.setId(invoice.getId());
+				if (invoice.getContact() != null) {
+					if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
+						model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
+					}
 				}
-			}
-			model.setReferenceNumber(invoice.getReferenceNumber());
-			if (invoice.getInvoiceDate() != null) {
-				Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
-				model.setInvoiceDate(date);
-			}
-			if (invoice.getInvoiceDueDate() != null) {
-				Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
-				model.setInvoiceDueDate(date);
-			}
-			model.setTotalAmount(invoice.getTotalAmount());
-			model.setTotalVatAmount(invoice.getTotalVatAmount());
+				model.setReferenceNumber(invoice.getReferenceNumber());
+				if (invoice.getInvoiceDate() != null) {
+					Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
+					model.setInvoiceDate(date);
+				}
+				if (invoice.getInvoiceDueDate() != null) {
+					Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
+					model.setInvoiceDueDate(date);
+				}
+				model.setTotalAmount(invoice.getTotalAmount());
+				model.setTotalVatAmount(invoice.getTotalVatAmount());
 
-			if (invoice.getStatus() != null) {
-				model.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
+				if (invoice.getStatus() != null) {
+					model.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
+				}
+				invoiceListModels.add(model);
 			}
-			invoiceListModels.add(model);
 		}
 		return invoiceListModels;
 	}

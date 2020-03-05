@@ -9,6 +9,7 @@ import com.simplevat.entity.Purchase;
 import com.simplevat.entity.PurchaseLineItem;
 import com.simplevat.entity.TaxTransaction;
 import com.simplevat.entity.bankaccount.Transaction;
+import com.simplevat.rest.PaginationModel;
 import com.simplevat.service.PurchaseService;
 import com.simplevat.service.TaxTransactionService;
 import com.simplevat.service.bankaccount.TransactionService;
@@ -60,7 +61,7 @@ public class TaxTransactionController implements Serializable {
 
 	@ApiOperation(value = "Get Open Tax Transaction List")
 	@GetMapping(value = "/getOpenTaxTransaction")
-	public ResponseEntity<List<TaxTransaction>> getOpenTaxTranscation() {
+	public ResponseEntity<List<TaxTransaction>> getOpenTaxTranscation(PaginationModel paginationModel) {
 		List<TaxTransaction> taxTransactionList = taxTransactionService.getOpenTaxTransactionList();
 		Date startDate = taxTranscationRestHelper.getStartDate();
 		Date endDate = taxTranscationRestHelper.getEndDate();

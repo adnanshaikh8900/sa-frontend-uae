@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import com.simplevat.constant.dbfilter.UserFilterEnum;
 import com.simplevat.entity.User;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 public abstract class UserService extends SimpleVatService<Integer, User> {
 
@@ -21,5 +23,5 @@ public abstract class UserService extends SimpleVatService<Integer, User> {
 
 	public abstract void deleteByIds(List<Integer> ids);
 
-	public abstract List<User> getUserList(Map<UserFilterEnum, Object> filterMap);
+	public abstract PaginationResponseModel getUserList(Map<UserFilterEnum, Object> filterMap,PaginationModel paginationModel);
 }

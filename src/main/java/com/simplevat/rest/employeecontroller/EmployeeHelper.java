@@ -29,94 +29,96 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmployeeHelper {
 
-    @Autowired
-    CountryService countryService;
+	@Autowired
+	CountryService countryService;
 
-    @Autowired
-    CurrencyService currencyService;
+	@Autowired
+	CurrencyService currencyService;
 
-    @Autowired
-    private EmployeeService employeeService;
+	@Autowired
+	private EmployeeService employeeService;
 
-    public List<EmployeeListModel> getListModel(List<Employee> employeList) {
+	public List<EmployeeListModel> getListModel(Object employeList) {
 
-        List<EmployeeListModel> employeeListModels = new ArrayList<>();
-        for (Employee employee : employeList) {
-            EmployeeListModel empModel = new EmployeeListModel();
-            empModel.setId(employee.getId());
-            empModel.setReferenceCode(employee.getReferenceCode());
-            empModel.setTitle(employee.getTitle());
-            empModel.setEmail(employee.getEmail());
-            empModel.setFirstName(employee.getFirstName());
-            empModel.setMiddleName(employee.getMiddleName());
-            empModel.setLastName(employee.getLastName());
-            empModel.setDob(employee.getDob());
-            empModel.setBillingEmail(employee.getBillingEmail());
-            empModel.setPoBoxNumber(employee.getPoBoxNumber());
-            empModel.setVatRegestationNo(employee.getVatRegistrationNo());
-            if (employee.getCurrency() != null) {
-                empModel.setCurrencyCode(employee.getCurrency().getCurrencyCode());
-            }
-            employeeListModels.add(empModel);
-        }
+		List<EmployeeListModel> employeeListModels = new ArrayList<>();
+		if (employeList != null) {
+			for (Employee employee : (List<Employee>) employeList) {
+				EmployeeListModel empModel = new EmployeeListModel();
+				empModel.setId(employee.getId());
+				empModel.setReferenceCode(employee.getReferenceCode());
+				empModel.setTitle(employee.getTitle());
+				empModel.setEmail(employee.getEmail());
+				empModel.setFirstName(employee.getFirstName());
+				empModel.setMiddleName(employee.getMiddleName());
+				empModel.setLastName(employee.getLastName());
+				empModel.setDob(employee.getDob());
+				empModel.setBillingEmail(employee.getBillingEmail());
+				empModel.setPoBoxNumber(employee.getPoBoxNumber());
+				empModel.setVatRegestationNo(employee.getVatRegistrationNo());
+				if (employee.getCurrency() != null) {
+					empModel.setCurrencyCode(employee.getCurrency().getCurrencyCode());
+				}
+				employeeListModels.add(empModel);
+			}
+		}
 
-        return employeeListModels;
-    }
+		return employeeListModels;
+	}
 
-    public Employee getEntity(EmployeePersistModel employeePersistModel, Integer userId) {
-        Employee employee = new Employee();
-        if (employeePersistModel.getId() != null) {
-            employee = employeeService.findByPK(employeePersistModel.getId());
-        }
-        employee.setEmail(employeePersistModel.getEmail());
-        employee.setFirstName(employeePersistModel.getFirstName());
-        employee.setMiddleName(employeePersistModel.getMiddleName());
-        employee.setLastName(employeePersistModel.getLastName());
-        if (employeePersistModel.getId() != null) {
-            employee.setCreatedBy(userId);
-            employee.setCreatedDate(LocalDateTime.now());
-        } else {
-            employee.setLastUpdatedBy(userId);
-            employee.setLastUpdateDate(LocalDateTime.now());
-        }
-        employee.setTitle(employeePersistModel.getTitle());
-        if (employeePersistModel.getPassword() != null && !employeePersistModel.getPassword().trim().isEmpty()) {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String encodedPassword = passwordEncoder.encode(employeePersistModel.getPassword());
-            employee.setPassword(encodedPassword);
-        }
-        if (employeePersistModel.getDob() != null) {
-            LocalDateTime dob = Instant.ofEpochMilli(employeePersistModel.getDob().getTime())
-                    .atZone(ZoneId.systemDefault()).toLocalDateTime();
-            employee.setDob(dob);
-        }
-        employee.setBillingEmail(employeePersistModel.getBillingEmail());
-        employee.setPoBoxNumber(employeePersistModel.getPoBoxNumber());
-        employee.setReferenceCode(employeePersistModel.getReferenceCode());
-        employee.setVatRegistrationNo(employeePersistModel.getVatRegestationNo());
-        if (employeePersistModel.getCurrencyCode() != null) {
-            employee.setCurrency(currencyService.getCurrency(employeePersistModel.getCurrencyCode()));
-        }
-        return employee;
-    }
+	public Employee getEntity(EmployeePersistModel employeePersistModel, Integer userId) {
+		Employee employee = new Employee();
+		if (employeePersistModel.getId() != null) {
+			employee = employeeService.findByPK(employeePersistModel.getId());
+		}
+		employee.setEmail(employeePersistModel.getEmail());
+		employee.setFirstName(employeePersistModel.getFirstName());
+		employee.setMiddleName(employeePersistModel.getMiddleName());
+		employee.setLastName(employeePersistModel.getLastName());
+		if (employeePersistModel.getId() != null) {
+			employee.setCreatedBy(userId);
+			employee.setCreatedDate(LocalDateTime.now());
+		} else {
+			employee.setLastUpdatedBy(userId);
+			employee.setLastUpdateDate(LocalDateTime.now());
+		}
+		employee.setTitle(employeePersistModel.getTitle());
+		if (employeePersistModel.getPassword() != null && !employeePersistModel.getPassword().trim().isEmpty()) {
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			String encodedPassword = passwordEncoder.encode(employeePersistModel.getPassword());
+			employee.setPassword(encodedPassword);
+		}
+		if (employeePersistModel.getDob() != null) {
+			LocalDateTime dob = Instant.ofEpochMilli(employeePersistModel.getDob().getTime())
+					.atZone(ZoneId.systemDefault()).toLocalDateTime();
+			employee.setDob(dob);
+		}
+		employee.setBillingEmail(employeePersistModel.getBillingEmail());
+		employee.setPoBoxNumber(employeePersistModel.getPoBoxNumber());
+		employee.setReferenceCode(employeePersistModel.getReferenceCode());
+		employee.setVatRegistrationNo(employeePersistModel.getVatRegestationNo());
+		if (employeePersistModel.getCurrencyCode() != null) {
+			employee.setCurrency(currencyService.getCurrency(employeePersistModel.getCurrencyCode()));
+		}
+		return employee;
+	}
 
-    public EmployeeListModel getModel(Employee employee) {
-        EmployeeListModel empModel = new EmployeeListModel();
-        empModel.setId(employee.getId());
-        empModel.setReferenceCode(employee.getReferenceCode());
-        empModel.setTitle(employee.getTitle());
-        empModel.setEmail(employee.getEmail());
-        empModel.setFirstName(employee.getFirstName());
-        empModel.setMiddleName(employee.getMiddleName());
-        empModel.setLastName(employee.getLastName());
-        empModel.setDob(employee.getDob());
-        empModel.setBillingEmail(employee.getBillingEmail());
-        empModel.setPoBoxNumber(employee.getPoBoxNumber());
-        empModel.setVatRegestationNo(employee.getVatRegistrationNo());
-        if (employee.getCurrency() != null) {
-            empModel.setCurrencyCode(employee.getCurrency().getCurrencyCode());
-        }
-        return empModel;
-    }
+	public EmployeeListModel getModel(Employee employee) {
+		EmployeeListModel empModel = new EmployeeListModel();
+		empModel.setId(employee.getId());
+		empModel.setReferenceCode(employee.getReferenceCode());
+		empModel.setTitle(employee.getTitle());
+		empModel.setEmail(employee.getEmail());
+		empModel.setFirstName(employee.getFirstName());
+		empModel.setMiddleName(employee.getMiddleName());
+		empModel.setLastName(employee.getLastName());
+		empModel.setDob(employee.getDob());
+		empModel.setBillingEmail(employee.getBillingEmail());
+		empModel.setPoBoxNumber(employee.getPoBoxNumber());
+		empModel.setVatRegestationNo(employee.getVatRegistrationNo());
+		if (employee.getCurrency() != null) {
+			empModel.setCurrencyCode(employee.getCurrency().getCurrencyCode());
+		}
+		return empModel;
+	}
 
 }

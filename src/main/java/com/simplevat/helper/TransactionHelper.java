@@ -5,6 +5,7 @@
  */
 package com.simplevat.helper;
 
+import com.simplevat.constant.ChartOfAccountConstant;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.Journal;
@@ -13,17 +14,19 @@ import com.simplevat.entity.Project;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
 import com.simplevat.rest.transactioncontroller.TransactionViewModel;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.service.bankaccount.TransactionTypeService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.utils.DateFormatUtil;
+import com.simplevat.utils.FileHelper;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -42,7 +45,7 @@ import org.springframework.stereotype.Service;
 public class TransactionHelper {
 
 	@Autowired
-	private TransactionTypeService transactionTypeService;
+	private ChartOfAccountService chartOfAccountService;
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
@@ -59,6 +62,9 @@ public class TransactionHelper {
 	@Autowired
 	private TransactionService transactionService;
 
+	@Autowired
+	private FileHelper fileHelper;
+
 	public Transaction getEntity(TransactionPresistModel transactionModel) {
 		Transaction transaction = new Transaction();
 
@@ -66,17 +72,31 @@ public class TransactionHelper {
 			transaction = transactionService.findByPK(transactionModel.getId());
 		}
 
+		BigDecimal currentBal = BigDecimal.valueOf(0);
+
 		if (transactionModel.getBankAccountId() != null) {
 			BankAccount bankAccount = bankAccountService.getBankAccountById(transactionModel.getBankAccountId());
 			bankAccount.setBankAccountId(transactionModel.getBankAccountId());
 			transaction.setBankAccount(bankAccount);
+			currentBal = bankAccount.getCurrentBalance();
 		}
-		if (transactionModel.getTransactionTypeCode() != null) {
-			TransactionType transactionType = transactionTypeService
-					.getTransactionType(transactionModel.getTransactionTypeCode());
-			transactionType.setTransactionTypeCode(transactionModel.getTransactionTypeCode());
-			transaction.setTransactionType(transactionType);
-			transaction.setDebitCreditFlag(transactionType.getDebitCreditFlag());
+
+		if (transactionModel.getChartOfAccountId() != null) {
+			ChartOfAccount chartOfAccount = chartOfAccountService
+					.getChartOfAccount(transactionModel.getChartOfAccountId());
+			chartOfAccount.setChartOfAccountId(transactionModel.getChartOfAccountId());
+			transaction.setChartOfAccount(chartOfAccount);
+			transaction.setDebitCreditFlag(chartOfAccount.getDebitCreditFlag());
+
+			boolean isdebitFromBank = chartOfAccount.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
+					|| (chartOfAccount.getParentChartOfAccount() != null
+							&& chartOfAccount.getParentChartOfAccount().getChartOfAccountId() != null
+							&& chartOfAccount.getParentChartOfAccount().getChartOfAccountId()
+									.equals(ChartOfAccountConstant.MONEY_IN)) ? true : false;
+
+			transaction.setCurrentBalance(isdebitFromBank ? currentBal.subtract(transactionModel.getTransactionAmount())
+					: currentBal.add(transactionModel.getTransactionAmount()));
+			transaction.getBankAccount().setCurrentBalance(currentBal);
 		}
 
 		if (transactionModel.getTransactionDate() != null) {
@@ -97,22 +117,15 @@ public class TransactionHelper {
 		transaction.setTransactionAmount(transactionModel.getTransactionAmount());
 		transaction.setReceiptNumber(transactionModel.getReceiptNumber());
 		transaction.setExplainedTransactionAttachementDescription(transactionModel.getAttachementDescription());
-		if (transactionModel.getAttachment() != null) {
-			try {
-				transaction.setExplainedTransactionAttachement(transactionModel.getAttachment().getBytes());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 
 		return transaction;
 	}
 
-	public List<TransactionViewModel> getModelList(List<Transaction> trasactionList) {
+	public List<TransactionViewModel> getModelList(Object trasactionList) {
 
 		List<TransactionViewModel> transactionModelList = new ArrayList<TransactionViewModel>();
 		if (trasactionList != null) {
-			for (Transaction transaction : trasactionList) {
+			for (Transaction transaction : (List<Transaction>) trasactionList) {
 				TransactionViewModel transactionModel = new TransactionViewModel();
 
 				transactionModel.setId(transaction.getTransactionId());
@@ -134,8 +147,8 @@ public class TransactionHelper {
 							: 0.0);
 					transactionModel.setWithdrawalAmount(0.0);
 				}
-				transactionModel.setTransactionTypeName(transaction.getTransactionType() != null
-						? transaction.getTransactionType().getTransactionTypeName()
+				transactionModel.setTransactionTypeName(transaction.getChartOfAccount() != null
+						? transaction.getChartOfAccount().getChartOfAccountName()
 						: "-");
 				transactionModelList.add(transactionModel);
 			}
@@ -148,8 +161,8 @@ public class TransactionHelper {
 		if (transaction.getBankAccount() != null) {
 			transactionModel.setBankAccountId(transaction.getBankAccount().getBankAccountId());
 		}
-		if (transaction.getTransactionType() != null) {
-			transactionModel.setTransactionTypeCode(transaction.getTransactionType().getTransactionTypeCode());
+		if (transaction.getChartOfAccount() != null) {
+			transactionModel.setChartOfAccountId(transaction.getChartOfAccount().getChartOfAccountId());
 			// transactionModel.set(transaction.getTransactionType().getDebitCreditFlag());
 		}
 
@@ -171,14 +184,11 @@ public class TransactionHelper {
 		transactionModel.setTransactionAmount(transaction.getTransactionAmount());
 		transactionModel.setReceiptNumber(transaction.getReceiptNumber());
 		transactionModel.setAttachementDescription(transaction.getExplainedTransactionAttachementDescription());
-		if (transaction.getExplainedTransactionAttachement() != null) {
-//need to send file link
-			// try {
-//				transactionModel.setExplainedTransactionAttachement(transaction.getExplainedTransactionAttachement());
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
+		if (transaction.getExplainedTransactionAttachmentPath() != null) {
+			transactionModel.setReceiptAttachmentPath(
+					"/file/" + fileHelper.convertFilePthToUrl(transaction.getExplainedTransactionAttachmentPath()));
 		}
+		transactionModel.setReceiptAttachmentFileName(transaction.getExplainedTransactionAttachmentFileName());
 
 		return transactionModel;
 	}
@@ -186,12 +196,13 @@ public class TransactionHelper {
 	public Journal getByTransaction(Transaction transaction) {
 		List<JournalLineItem> journalLineItemList = new ArrayList();
 
-		TransactionType transactionType = transaction.getTransactionType();
-		// XXX :  need to be save 1 is MONEY IN (TRANSACTION_TYPE) in constance
-		boolean isdebitFromBank = transactionType.getTransactionTypeCode().equals(1)
-				|| (transactionType.getParentTransactionType() != null
-						&& transactionType.getParentTransactionType().getTransactionTypeCode().equals(1)) ? true
-								: false;
+		ChartOfAccount transactionType = transaction.getChartOfAccount();
+
+		boolean isdebitFromBank = transactionType.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
+				|| (transactionType.getParentChartOfAccount() != null
+						&& transactionType.getParentChartOfAccount().getChartOfAccountId() != null
+						&& transactionType.getParentChartOfAccount().getChartOfAccountId()
+								.equals(ChartOfAccountConstant.MONEY_IN)) ? true : false;
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();

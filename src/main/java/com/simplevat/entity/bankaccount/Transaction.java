@@ -23,8 +23,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Data
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 @NamedQueries({
-		@NamedQuery(name = "getByBankId", query = "from Transaction t where t.bankAccount.id = :id order by t.id desc") 
-		})
+		@NamedQuery(name = "getByBankId", query = "from Transaction t where t.bankAccount.id = :id order by t.id desc") })
 public class Transaction implements Serializable {
 
 	private static final long serialVersionUID = 848122185643690684L;
@@ -50,7 +49,7 @@ public class Transaction implements Serializable {
 	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "TRANSACTION_TYPE_CODE")
-	private TransactionType transactionType;
+	private ChartOfAccount chartOfAccount;
 
 	@Basic
 	@Column(name = "RECEIPT_NUMBER")
@@ -80,6 +79,14 @@ public class Transaction implements Serializable {
 	@Lob
 	@Column(name = "EXPLAINED_TRANSACTION_ATTACHEMENT")
 	private byte[] explainedTransactionAttachement;
+
+	@Basic
+	@Column(name = "EXPLAINED_TRANSACTION_ATTACHEMENT_FILE_NAME")
+	private String explainedTransactionAttachmentFileName;
+
+	@Basic
+	@Column(name = "EXPLAINED_TRANSACTION_ATTACHEMENT_PATH")
+	private String explainedTransactionAttachmentPath;
 
 	@Basic
 	@ManyToOne(fetch = FetchType.LAZY)

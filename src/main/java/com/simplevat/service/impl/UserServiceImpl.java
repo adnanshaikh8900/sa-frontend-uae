@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.simplevat.constant.dbfilter.UserFilterEnum;
 import com.simplevat.entity.User;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.UserService;
 import java.io.Serializable;
 import com.simplevat.dao.UserDao;
@@ -57,7 +59,7 @@ public class UserServiceImpl extends UserService implements Serializable {
     }
     
     @Override
-	public List<User> getUserList(Map<UserFilterEnum, Object> filterMap){
-		return dao.getUserList(filterMap); 
+	public PaginationResponseModel getUserList(Map<UserFilterEnum, Object> filterMap,PaginationModel paginationModel){
+		return dao.getUserList(filterMap,paginationModel); 
 	}
 }

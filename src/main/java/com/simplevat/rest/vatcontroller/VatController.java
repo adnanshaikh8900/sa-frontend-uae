@@ -6,8 +6,10 @@
 package com.simplevat.rest.vatcontroller;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.entity.VatCategory;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.VatCategoryService;
 
@@ -60,11 +62,14 @@ public class VatController implements Serializable {
         if (filterModel.getVatPercentage() != null && !filterModel.getVatPercentage().contentEquals("")) {
             filterDataMap.put(VatCategoryFilterEnum.VAT_RATE, new BigDecimal(filterModel.getVatPercentage()));
         }
+        filterDataMap.put(VatCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
         filterDataMap.put(VatCategoryFilterEnum.DELETE_FLAG, false);
 
-        List<VatCategory> vatCategorys = vatCategoryService.getVatCategoryList(filterDataMap);
-        if (vatCategorys != null) {
-            return new ResponseEntity(vatCategoryRestHelper.getList(vatCategorys), HttpStatus.OK);
+        PaginationResponseModel respone = vatCategoryService.getVatCategoryList(filterDataMap,filterModel);
+        if (respone != null) {
+        	
+        	respone.setData(vatCategoryRestHelper.getList(respone.getData()));
+            return new ResponseEntity(respone, HttpStatus.OK);
         } else {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }

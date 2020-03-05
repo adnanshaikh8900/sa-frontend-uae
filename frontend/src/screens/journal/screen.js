@@ -54,7 +54,7 @@ class Journal extends React.Component {
       selectedRows: [],
       filterData: {
         journalDate: '',
-        referenceCode: '',
+        journalReferenceNo: '',
         description: ''
       },
       sortName: undefined,
@@ -84,10 +84,10 @@ class Journal extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      // page: 0,
-      // sizePerPage: 10,
-      // onSizePerPageList: this.onSizePerPageList,
-      // onPageChange: this.onPageChange,
+      page: 1,
+      sizePerPage: 10,
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
       sortName: this.state.sortName,
       sortOrder: this.state.sortOrder,
       onSortChange: this.sortColumn
@@ -116,7 +116,7 @@ class Journal extends React.Component {
   initializeData() {
     const { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
@@ -131,8 +131,6 @@ class Journal extends React.Component {
   }
 
   sortColumn(sortName, sortOrder) {
-    console.log(sortName)
-    console.log(sortOrder)
     this.setState({
       sortName,
       sortOrder
@@ -250,8 +248,8 @@ class Journal extends React.Component {
   renderAccount(cell, rows) {
     const temp = []
     const data =  rows && rows.journalLineItems ? rows.journalLineItems.map(item =>{temp.push(item['transactionCategoryName'])}) : []
-    const listItems = temp.map((number) =>
-    <li style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
+    const listItems = temp.map((number,index) =>
+    <li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
   );
     return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
     }
@@ -259,8 +257,8 @@ class Journal extends React.Component {
   renderCreditAmount(cell, rows) {
     const temp = []
     const data =  rows && rows.journalLineItems ? rows.journalLineItems.map(item =>{temp.push(item['creditAmount'])}) : []
-    const listItems = temp.map((number) =>
-    <li style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
+    const listItems = temp.map((number,index) =>
+    <li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
   );
   return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
 
@@ -269,8 +267,8 @@ class Journal extends React.Component {
   renderDebitAmount(cell, rows) {
     const temp = []
     const data =  rows && rows.journalLineItems ? rows.journalLineItems.map(item =>{temp.push(item['debitAmount'])}) : []
-    const listItems = temp.map((number) =>
-    <li style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
+    const listItems = temp.map((number,index) =>
+    <li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
   );
     return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
     }
@@ -314,7 +312,7 @@ class Journal extends React.Component {
     this.props.journalActions.removeBulkJournal(obj).then((res) => {
       if (res.status === 200) {
         this.initializeData()
-        this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+        this.props.commonActions.tostifyAlert('success', 'Journal Deleted Successfully')
         if (journal_list && journal_list.length > 0) {
           this.setState({
             selectedRows: []
@@ -332,19 +330,19 @@ class Journal extends React.Component {
     })
   }
 
-  // onSizePerPageList = (sizePerPage) => {
-  //   // if (this.options.sizePerPage !== sizePerPage) {
-  //   //   this.options.sizePerPage = sizePerPage
-  //   //   this.initializeData()
-  //   // }
-  // }
+  onSizePerPageList = (sizePerPage) => {
+    if (this.options.sizePerPage !== sizePerPage) {
+      this.options.sizePerPage = sizePerPage
+      this.initializeData()
+    }
+  }
 
-  // onPageChange = (page, sizePerPage) => {
-  //   // if (this.options.page !== page) {
-  //   //   this.options.page = page
-  //   //   this.initializeData()
-  //   // }
-  // }
+  onPageChange = (page, sizePerPage) => {
+    if (this.options.page !== page) {
+      this.options.page = page
+      this.initializeData()
+    }
+  }
 
   render() {
 
@@ -434,7 +432,7 @@ class Journal extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder=" Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'referenceCode') }} />
+                            <Input type="text" placeholder=" Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'journalReferenceNo') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Input type="text" placeholder="Description" onChange={(e) => { this.handleChange(e.target.value, 'description') }} />
@@ -451,14 +449,14 @@ class Journal extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={journal_list}
+                          data={journal_list && journal_list.data ? journal_list.data : []}
                           version="4"
                           hover
                           keyField="journalId"
-                          pagination
+                          pagination={journal_list && journal_list.data && journal_list.data.length ? true : false}
                           remote
-                          // fetchInfo={{ dataTotalSize: journal_list.totalCount ? journal_list.totalCount : 0 }}
-                          totalSize={journal_list ? journal_list.length : 0}
+                          fetchInfo={{ dataTotalSize: journal_list.count ? journal_list.count : 0 }}
+                          // totalSize={journal_list ? journal_list.length : 0}
                           className="journal-table"
                           trClassName="cursor-pointer"
                           ref={node => this.table = node}
@@ -472,11 +470,11 @@ class Journal extends React.Component {
                             POST DATE
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="referenceCode"
+                            dataField="journalReferenceNo"
                             dataSort={true}
                             width="12%"
                           >
-                            JOURNAL NO.
+                            JOURNAL REFERENCE NO.
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="postingReferenceType"
@@ -497,7 +495,6 @@ class Journal extends React.Component {
                             dataFormat={this.renderAccount}
                             width="15%"
                             dataAlign="left"
-                            dataSort
                           >
                             Account
                           </TableHeaderColumn>
@@ -506,7 +503,6 @@ class Journal extends React.Component {
                              dataFormat={this.renderDebitAmount}
                              dataAlign="right"
                              width="13%"
-                             dataSort
                           >
                             DEBIT AMOUNT
                           </TableHeaderColumn>
@@ -514,7 +510,6 @@ class Journal extends React.Component {
                              dataField="journalLineItems"
                              dataFormat={this.renderCreditAmount}
                              dataAlign="right"
-                             dataSort
                           >
                             CREDIT AMOUNT
                           </TableHeaderColumn>

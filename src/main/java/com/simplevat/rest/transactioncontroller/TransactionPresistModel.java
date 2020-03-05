@@ -28,7 +28,7 @@ public class TransactionPresistModel implements Serializable {
     private String transactionDescription;
     private BigDecimal transactionAmount;
     @NotNull
-    private Integer transactionTypeCode;
+    private Integer chartOfAccountId;
     private Integer transactionCategoryId;
     @NotNull
     private Integer bankAccountId;
@@ -36,5 +36,7 @@ public class TransactionPresistModel implements Serializable {
     private String receiptNumber;
     private String attachementDescription;
     private MultipartFile attachment;
+    private String receiptAttachmentPath;
+    private String receiptAttachmentFileName;
 
 }

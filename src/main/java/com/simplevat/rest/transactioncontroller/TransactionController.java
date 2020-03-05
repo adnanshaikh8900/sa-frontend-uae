@@ -6,20 +6,24 @@
 package com.simplevat.rest.transactioncontroller;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.helper.TransactionHelper;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
-import com.simplevat.service.bankaccount.TransactionTypeService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.utils.DateFormatUtil;
+import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
@@ -68,13 +72,16 @@ public class TransactionController implements Serializable {
 	private TransactionStatusService transactionStatusService;
 
 	@Autowired
-	private TransactionTypeService transactionTypeService;
+	private ChartOfAccountService chartOfAccountService;
 
 	@Autowired
 	private TransactionHelper transactionHelper;
 
 	@Autowired
 	private JournalService journalService;
+
+	@Autowired
+	private FileHelper fileHelper;
 
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
@@ -100,16 +107,18 @@ public class TransactionController implements Serializable {
 			dataMap.put(TransactionFilterEnum.TRANSACTION_STATUS,
 					transactionStatusService.findByPK(filterModel.getTransactionStatusCode()));
 		}
-		if (filterModel.getTransactionTypeCode() != null) {
-			dataMap.put(TransactionFilterEnum.TRANSACTION_TYPE,
-					transactionTypeService.findByPK(filterModel.getTransactionTypeCode()));
+		if (filterModel.getChartOfAccountId() != null) {
+			dataMap.put(TransactionFilterEnum.CHART_OF_ACCOUNT,
+					chartOfAccountService.findByPK(filterModel.getChartOfAccountId()));
 		}
+		dataMap.put(TransactionFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
-		List<Transaction> trasactionList = transactionService.getAllTransactionList(dataMap, filterModel);
-		if (trasactionList == null) {
+		PaginationResponseModel response = transactionService.getAllTransactionList(dataMap, filterModel);
+		if (response == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity(transactionHelper.getModelList(trasactionList), HttpStatus.OK);
+		response.setData(transactionHelper.getModelList(response.getData()));
+		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Add New Transaction", response = Transaction.class)
@@ -119,6 +128,12 @@ public class TransactionController implements Serializable {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Transaction transaction = transactionHelper.getEntity(transactionPresistModel);
+			if (transactionPresistModel.getAttachment() != null && !transactionPresistModel.getAttachment().isEmpty()) {
+				String fileName = fileHelper.saveFile(transactionPresistModel.getAttachment(), FileTypeEnum.TRANSATION);
+				transaction.setExplainedTransactionAttachmentFileName(
+						transactionPresistModel.getAttachment().getOriginalFilename());
+				transaction.setExplainedTransactionAttachmentPath(fileName);
+			}
 			transaction.setCreatedBy(userId);
 			transaction.setCreatedDate(LocalDateTime.now());
 			transactionService.persist(transaction);
@@ -144,12 +159,17 @@ public class TransactionController implements Serializable {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Transaction transaction = transactionHelper.getEntity(transactionPresistModel);
+			if (transactionPresistModel.getAttachment() != null && !transactionPresistModel.getAttachment().isEmpty()) {
+				String fileName = fileHelper.saveFile(transactionPresistModel.getAttachment(), FileTypeEnum.TRANSATION);
+				transaction.setExplainedTransactionAttachmentFileName(
+						transactionPresistModel.getAttachment().getOriginalFilename());
+				transaction.setExplainedTransactionAttachmentPath(fileName);
+			}
 			transaction.setLastUpdateBy(userId);
 			transaction.setLastUpdateDate(LocalDateTime.now());
 			transactionService.persist(transaction);
 			if (transaction.getTransactionId() == null) {
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//				return new ResponseEntity<>("Unable To Update", HttpStatus.OK);
 			}
 			return new ResponseEntity<>(transaction.getTransactionId(), HttpStatus.OK);
 		} catch (Exception e) {

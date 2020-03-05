@@ -40,92 +40,92 @@ import lombok.Data;
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 public class Journal implements Serializable {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -6038849464759772457L;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -6038849464759772457L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID")
+	private int id;
 
-    @Basic
-    @Column(name = "JOURNAL_DATE")
-    @Convert(converter = DateConverter.class)
-    private LocalDateTime journalDate;
+	@Basic
+	@Column(name = "JOURNAL_DATE")
+	@Convert(converter = DateConverter.class)
+	private LocalDateTime journalDate;
 
-    @Basic
-    @Column(name = "REFERENCE_CODE")
-    private String referenceCode;
+	@Basic
+	@Column(name = "JOURNAL_REFERENCE_NO")
+	private String journlReferencenNo;
 
-    @Basic
-    @Column(name = "DESCRIPTION")
-    private String description;
+	@Basic
+	@Column(name = "DESCRIPTION")
+	private String description;
 
-    @OneToOne
-    @JoinColumn(name = "CURRENCY_ID")
-    private Currency currency;
+	@OneToOne
+	@JoinColumn(name = "CURRENCY_ID")
+	private Currency currency;
 
-    @Basic
-    @Column(name = "SUB_TOTAL_DEBIT_AMOUNT")
-    @ColumnDefault(value = "0.00")
-    private BigDecimal subTotalDebitAmount;
+	@Basic
+	@Column(name = "SUB_TOTAL_DEBIT_AMOUNT")
+	@ColumnDefault(value = "0.00")
+	private BigDecimal subTotalDebitAmount;
 
-    @Basic
-    @Column(name = "TOTAL_DEBIT_AMOUNT")
-    @ColumnDefault(value = "0.00")
-    private BigDecimal totalDebitAmount;
+	@Basic
+	@Column(name = "TOTAL_DEBIT_AMOUNT")
+	@ColumnDefault(value = "0.00")
+	private BigDecimal totalDebitAmount;
 
-    @Basic
-    @Column(name = "TOTAL_CREDIT_AMOUNT")
-    @ColumnDefault(value = "0.00")
-    private BigDecimal TotalCreditAmount;
+	@Basic
+	@Column(name = "TOTAL_CREDIT_AMOUNT")
+	@ColumnDefault(value = "0.00")
+	private BigDecimal TotalCreditAmount;
 
-    @Basic
-    @Column(name = "SUB_TOTAL_CREDIT_AMOUNT")
-    @ColumnDefault(value = "0.00")
-    private BigDecimal subTotalCreditAmount;
+	@Basic
+	@Column(name = "SUB_TOTAL_CREDIT_AMOUNT")
+	@ColumnDefault(value = "0.00")
+	private BigDecimal subTotalCreditAmount;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "journal")
-    private Collection<JournalLineItem> journalLineItems;
-    
-    @Column(name = "CREATED_BY")
-    @Basic(optional = false)
-    private Integer createdBy;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "journal")
+	private Collection<JournalLineItem> journalLineItems;
 
-    @Column(name = "CREATED_DATE")
-    @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    @Basic(optional = false)
-    @Convert(converter = DateConverter.class)
-    private LocalDateTime createdDate;
+	@Column(name = "CREATED_BY")
+	@Basic(optional = false)
+	private Integer createdBy;
 
-    @Column(name = "LAST_UPDATED_BY")
-    private Integer lastUpdateBy;
+	@Column(name = "CREATED_DATE")
+	@ColumnDefault(value = "CURRENT_TIMESTAMP")
+	@Basic(optional = false)
+	@Convert(converter = DateConverter.class)
+	private LocalDateTime createdDate;
 
-    @Column(name = "LAST_UPDATE_DATE")
-    @Convert(converter = DateConverter.class)
-    private LocalDateTime lastUpdateDate;
+	@Column(name = "LAST_UPDATED_BY")
+	private Integer lastUpdateBy;
 
-    @Column(name = "DELETE_FLAG")
-    @ColumnDefault(value = "0")
-    @Basic(optional = false)
-    private Boolean deleteFlag = Boolean.FALSE;
+	@Column(name = "LAST_UPDATE_DATE")
+	@Convert(converter = DateConverter.class)
+	private LocalDateTime lastUpdateDate;
 
-    @Column(name = "REFERENCE_TYPE")
-    @Basic(optional = false)
-    @Enumerated(value = EnumType.STRING)
-    private PostingReferenceTypeEnum postingReferenceType;
+	@Column(name = "DELETE_FLAG")
+	@ColumnDefault(value = "0")
+	@Basic(optional = false)
+	private Boolean deleteFlag = Boolean.FALSE;
 
-    @PrePersist
-    public void updateDates() {
-        createdDate = LocalDateTime.now();
-        lastUpdateDate = LocalDateTime.now();
-    }
+	@Column(name = "REFERENCE_TYPE")
+	@Basic(optional = false)
+	@Enumerated(value = EnumType.STRING)
+	private PostingReferenceTypeEnum postingReferenceType;
 
-    @PreUpdate
-    public void updateLastUpdatedDate() {
-        lastUpdateDate = LocalDateTime.now();
-    }
+	@PrePersist
+	public void updateDates() {
+		createdDate = LocalDateTime.now();
+		lastUpdateDate = LocalDateTime.now();
+	}
+
+	@PreUpdate
+	public void updateLastUpdatedDate() {
+		lastUpdateDate = LocalDateTime.now();
+	}
 
 }

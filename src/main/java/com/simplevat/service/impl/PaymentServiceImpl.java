@@ -9,6 +9,8 @@ import com.simplevat.constant.dbfilter.PaymentFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.PaymentDao;
 import com.simplevat.entity.Payment;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.PaymentService;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +35,8 @@ public class PaymentServiceImpl extends PaymentService {
     }
 
     @Override
-    public List<Payment> getPayments(Map<PaymentFilterEnum, Object> map) {
-        return this.paymentDao.getPayments(map);
+    public PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> map,PaginationModel paginationModel) {
+        return this.paymentDao.getPayments(map,paginationModel);
     }
     
     @Override

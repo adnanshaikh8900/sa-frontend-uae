@@ -176,7 +176,7 @@ class DetailBankAccount extends React.Component {
     } = this.state
     this.removeDialog()
     this.props.detailBankAccountActions.removeBankAccountByID(current_bank_account_id).then(() => {
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+      this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
       this.props.history.push('/admin/banking/bank-account')
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)

@@ -9,13 +9,13 @@ import com.simplevat.criteria.SortOrder;
 
 @Getter
 @Setter
-public class TransactionTypeCriteria extends AbstractCriteria {
+public class ChartOfAccountCriteria extends AbstractCriteria {
 
 	public enum OrderBy {
 
 		NAME                ("name", OrderByType.STRING),
         CANONICAL_NAME      ("canonicalName", OrderByType.STRING),
-        ID                  ("transactionTypeCode", OrderByType.STRING),
+        ID                  ("ChartOfAccountId", OrderByType.STRING),
         ORDER_SEQUENCE      ("orderSequence", OrderByType.STRING);
 
 		private final String columnName;
@@ -36,7 +36,7 @@ public class TransactionTypeCriteria extends AbstractCriteria {
 		}
 	}
 
-	private Integer transactionTypeCode;
+	private Integer chartOfAccountId;
 	
 	private Boolean active;
 

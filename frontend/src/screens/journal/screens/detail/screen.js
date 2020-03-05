@@ -111,7 +111,7 @@ class DetailJournal extends React.Component {
                 initValue: {
                   journalId: res.data.journalId,
                   journalDate: res.data.journalDate ? res.data.journalDate : "",
-                  referenceCode: res.data.referenceCode ? res.data.referenceCode : "",
+                  journalReferenceNo: res.data.journalReferenceNo ? res.data.journalReferenceNo : "",
                   description: res.data.description ? res.data.description : "",
                   currencyCode: res.data.currencyCode ? res.data.currencyCode : "",
                   subTotalDebitAmount: res.data.subTotalDebitAmount ? res.data.subTotalDebitAmount : 0,
@@ -181,28 +181,19 @@ class DetailJournal extends React.Component {
 
   renderAccount(cell, row, props) {
     const { transaction_category_list } = this.props;
-    let transactionCategoryList = transaction_category_list.length
+    let transactionCategoryList = transaction_category_list && transaction_category_list.data && transaction_category_list.data.length
       ? [
         {
           transactionCategoryId: "",
           transactionCategoryName: "Select Account"
         },
-        ...transaction_category_list
+        ...transaction_category_list.data
       ]
-      : transaction_category_list;
+      : [];
     let idx;
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index;
-        if (
-          Object.keys(props.touched).length &&
-          props.touched.journalLineItems &&
-          props.touched.journalLineItems[idx]
-        ) {
-          console.log(
-            props.touched.journalLineItems[idx].transactionCategoryId
-          );
-        }
       }
     });
 
@@ -295,13 +286,6 @@ class DetailJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index;
-        if (
-          Object.keys(props.touched).length &&
-          props.touched.journalLineItems &&
-          props.touched.journalLineItems[idx]
-        ) {
-          console.log(props.touched.journalLineItems[idx].contactId);
-        }
       }
     });
 
@@ -550,7 +534,6 @@ class DetailJournal extends React.Component {
     e.preventDefault();
     const data = this.state.data;
     newData = data.filter(obj => obj.id !== id);
-    // console.log(newData)
     props.setFieldValue("journalLineItems", newData, true);
     this.updateAmount(newData);
   }
@@ -652,7 +635,7 @@ class DetailJournal extends React.Component {
       const postData = {
         journalId: values.journalId,
         journalDate: values.journalDate ? values.journalDate : "",
-        referenceCode: values.referenceCode ? values.referenceCode : "",
+        journalReferenceNo: values.journalReferenceNo ? values.journalReferenceNo : "",
         description: values.description ? values.description : "",
         currencyCode: values.currencyCode ? values.currencyCode : "",
         subTotalCreditAmount: initValue.subTotalCreditAmount,
@@ -777,18 +760,18 @@ class DetailJournal extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="referenceCode">
+                                      <Label htmlFor="journalReferenceNo">
                                         Reference #
                                     </Label>
                                       <Input
                                         type="text"
-                                        id="referenceCode"
-                                        name="referenceCode"
+                                        id="journalReferenceNo"
+                                        name="journalReferenceNo"
                                         disabled={props.values.postingReferenceType === "MANUAL" ? false : true}
                                         placeholder="Reference Number"
-                                        value={props.values.referenceCode}
+                                        value={props.values.journalReferenceNo}
                                         onChange={value => {
-                                          props.handleChange("referenceCode")(
+                                          props.handleChange("journalReferenceNo")(
                                             value
                                           );
                                         }}

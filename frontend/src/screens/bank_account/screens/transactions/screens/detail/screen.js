@@ -11,7 +11,8 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
+  Label,
+  NavLink
 } from 'reactstrap'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
@@ -33,6 +34,7 @@ import * as  transactionActions from "../../actions";
 
 import 'react-datepicker/dist/react-datepicker.css'
 import './style.scss'
+import API_ROOT_URL from '../../../../../../constants/config'
 
 const mapStateToProps = (state) => {
   return ({
@@ -96,12 +98,14 @@ class DetailBankTransaction extends React.Component {
             transactionDate: res.data.transactionDate ? res.data.transactionDate : '',
             transactionDescription: res.data.transactionDescription ? res.data.transactionDescription : '',
             transactionAmount: res.data.transactionAmount ? res.data.transactionAmount : '',
-            transactionTypeCode: res.data.transactionTypeCode !== null ? res.data.transactionTypeCode : '',
+            chartOfAccountId: res.data.chartOfAccountId !== null ? res.data.chartOfAccountId : '',
             transactionCategoryId: res.data.transactionCategoryId !== null ? res.data.transactionCategoryId : '',
             projectId: res.data.projectId ? res.data.projectId : '',
             receiptNumber: res.data.receiptNumber ? res.data.receiptNumber : '',
             attachementDescription: res.data.attachementDescription ? res.data.attachementDescription : '',
             attachment: res.data.attachment ? res.data.attachment : '',
+            fileName: res.data.receiptAttachmentFileName ? res.data.receiptAttachmentFileName : '',
+            filePath: res.data.receiptAttachmentPath ? res.data.receiptAttachmentPath : '',
           },
           loading: false,
         })
@@ -122,8 +126,7 @@ class DetailBankTransaction extends React.Component {
       reader.onloadend = () => {
       };
       reader.readAsDataURL(file);
-      console.log(file)
-      props.setFieldValue('attachment', file);
+      props.setFieldValue('attachment', file,true);
     }
   }
 
@@ -134,7 +137,7 @@ class DetailBankTransaction extends React.Component {
       transactionDate,
       transactionDescription,
       transactionAmount,
-      transactionTypeCode,
+      chartOfAccountId,
       transactionCategoryId,
       projectId,
       receiptNumber,
@@ -148,7 +151,7 @@ class DetailBankTransaction extends React.Component {
     formData.append("transactionDate", typeof transactionDate === 'string' ? moment(transactionDate).toDate() : transactionDate);
     formData.append("transactionDescription", transactionDescription ? transactionDescription : '');
     formData.append("transactionAmount", transactionAmount ? transactionAmount : '');
-    formData.append("transactionTypeCode", transactionTypeCode ? transactionTypeCode : '');
+    formData.append("chartOfAccountId", chartOfAccountId ? chartOfAccountId : '');
     formData.append("transactionCategoryId", transactionCategoryId ? transactionCategoryId : '');
     formData.append("projectId", projectId ? projectId : '');
     formData.append("receiptNumber", receiptNumber ? receiptNumber : '');
@@ -159,7 +162,7 @@ class DetailBankTransaction extends React.Component {
     this.props.transactionDetailActions.updateTransaction(formData).then(res => {
       if (res.status === 200) {
         resetForm()
-        this.props.commonActions.tostifyAlert('success', 'Update Transaction Detail Successfully.')
+        this.props.commonActions.tostifyAlert('success', 'Transaction Detail Updated Successfully.')
         this.props.history.push('/admin/banking/bank-account/transaction',{'bankAccountId': bankAccountId})
       }
     }).catch(err => {
@@ -203,26 +206,37 @@ class DetailBankTransaction extends React.Component {
                                 .required('Transaction Date is Required'),
                               transactionAmount: Yup.string()
                                 .required('Transaction Amount is Required'),
-                              transactionTypeCode: Yup.string()
+                              chartOfAccountId: Yup.string()
                                 .required('Transaction Type is Required'),
-                              // attachment: Yup.mixed()
-                              //   .test('fileType', "*Unsupported File Format", value => {
-                              //     if (value && !this.supported_format.includes(value.type)) {
-                              //       this.setState({
-                              //         fileName: value.name
-                              //       })
-                              //       return false
-                              //     } else {
-                              //       return true
-                              //     }
-                              //   })
-                              //   .test('fileSize', "*File Size is too large", value => {
-                              //     if (value && value.size >= this.file_size) {
-                              //       return false
-                              //     } else {
-                              //       return true
-                              //     }
-                              //   })
+                                // attachment: Yup.mixed()
+                                // .test(
+                                //   "fileType",
+                                //   "*Unsupported File Format",
+                                //   value => {
+                                //     value && this.setState({
+                                //       fileName: value.name
+                                //     });
+                                //     if (
+                                //       value &&
+                                //       this.supported_format.includes(value.type) || !value
+                                //     ) {
+                                //       return true;
+                                //     } else {
+                                //       return false;
+                                //     }
+                                //   }
+                                // )
+                                // .test(
+                                //   "fileSize",
+                                //   "*File Size is too large",
+                                //   value => {
+                                //     if (value && value.size <= this.file_size || !value) {
+                                //       return true;
+                                //     } else {
+                                //       return false;
+                                //     }
+                                //   }
+                                // )
                             })}
                         >
                           {props => (
@@ -230,29 +244,29 @@ class DetailBankTransaction extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="transactionTypeCode">Transaction Type</Label>
+                                    <Label htmlFor="chartOfAccountId">Transaction Type</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={transaction_type_list ? selectOptionsFactory.renderOptions('transactionTypeName', 'transactionTypeCode', transaction_type_list, 'Type') : ''}
-                                      value={props.values.transactionTypeCode}
+                                      options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type') : ''}
+                                      value={props.values.chartOfAccountId}
                                       onChange={option => {
                                         if (option && option.value) {
-                                          props.handleChange('transactionTypeCode')(option.value)
+                                          props.handleChange('chartOfAccountId')(option.value)
                                         } else {
-                                          props.handleChange('transactionTypeCode')('')
+                                          props.handleChange('chartOfAccountId')('')
                                         }
                                       }}
                                       placeholder="Select Type"
-                                      id="transactionTypeCode"
-                                      name="transactionTypeCode"
+                                      id="chartOfAccountId"
+                                      name="chartOfAccountId"
                                       className={
-                                        props.errors.transactionTypeCode && props.touched.transactionTypeCode
+                                        props.errors.chartOfAccountId && props.touched.chartOfAccountId
                                           ? "is-invalid"
                                           : ""
                                       }
                                     />
-                                    {props.errors.transactionTypeCode && props.touched.transactionTypeCode && (
-                                      <div className="invalid-feedback">{props.errors.transactionTypeCode}</div>
+                                    {props.errors.chartOfAccountId && props.touched.chartOfAccountId && (
+                                      <div className="invalid-feedback">{props.errors.chartOfAccountId}</div>
                                     )}
                                   </FormGroup>
                                 </Col>
@@ -299,7 +313,7 @@ class DetailBankTransaction extends React.Component {
                                     <Label htmlFor="transactionCategoryId">Category</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={transaction_category_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list, 'Category') : []}
+                                      options={transaction_category_list && transaction_category_list.data ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list.data, 'Category') : []}
                                       id="transactionCategoryId"
                                       value={props.values.transactionCategoryId}
                                       onChange={option => {
@@ -335,12 +349,11 @@ class DetailBankTransaction extends React.Component {
                                     <Label htmlFor="projectId">Project</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={project_list ? selectOptionsFactory.renderOptions('projectName', 'projectId', project_list, 'Project') : []}
+                                      options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                       id="projectId"
                                       name="projectId"
                                       value={props.values.projectId}
                                       onChange={option => {
-                                        console.log(option)
                                         if (option && option.value) {
                                           props.handleChange('projectId')(option.value)
                                         } else {
@@ -371,15 +384,15 @@ class DetailBankTransaction extends React.Component {
                                   <Row>
                                     <Col lg={12}>
                                       <FormGroup className="mb-3">
-                                        <Label htmlFor="receiptAttachmentDescription">Attachment Description</Label>
+                                        <Label htmlFor="attachementDescription">Attachment Description</Label>
                                         <Input
                                           type="textarea"
-                                          name="receiptAttachmentDescription"
-                                          id="receiptAttachmentDescription"
+                                          name="attachementDescription"
+                                          id="attachementDescription"
                                           rows="5"
                                           placeholder="1024 characters..."
-                                          onChange={option => props.handleChange('receiptAttachmentDescription')(option)}
-                                          value={props.values.receiptAttachmentDescription}
+                                          onChange={option => props.handleChange('attachementDescription')(option)}
+                                          value={props.values.attachementDescription}
                                         />
                                       </FormGroup>
                                     </Col>
@@ -388,29 +401,31 @@ class DetailBankTransaction extends React.Component {
                                 <Col lg={4}>
                                   <Row>
                                     <Col lg={12}>
-                                      <FormGroup className="mb-3">
-                                        <Field name="attachment"
-                                          render={({ field, form }) => (
-                                            <div>
-                                              <Label>Reciept Attachment</Label> <br />
-                                              <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                                <i className="fa fa-upload"></i> Upload
-                                                    </Button>
-                                              <input id="fileInput" ref={ref => {
-                                                this.uploadFile = ref;
-                                              }} type="file" style={{ display: 'none' }} onChange={(e) => {
-                                                this.handleFileChange(e, props)
-                                              }} />
-                                              {this.state.fileName}
-
-                                            </div>
+                                    <FormGroup className="mb-3">
+                                          <Field name="attachment"
+                                            render={({ field, form }) => (
+                                              <div>
+                                                <Label>Reciept Attachment</Label> <br />
+                                                <div className="file-upload-cont">
+                                                  <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                                    <i className="fa fa-upload"></i> Upload
+                                         		   </Button>
+                                                  <input id="fileInput" ref={ref => {
+                                                    this.uploadFile = ref;
+                                                  }} type="file" style={{ display: 'none' }} onChange={(e) => {
+                                                    this.handleFileChange(e, props)
+                                                  }} />
+                                                  {this.state.fileName ? this.state.fileName : (
+                                                    <NavLink  download={this.state.initValue.fileName} href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`} style={{ fontSize: '0.875rem' }} target="_blank" >{this.state.initValue.fileName}</NavLink>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            )}
+                                          />
+                                          {props.errors.attachment && (
+                                            <div className="invalid-file">{props.errors.attachment}</div>
                                           )}
-                                        />
-                                        {console.log(props.errors)}
-                                        {props.errors.attachment && (
-                                          <div className="invalid-file">{props.errors.attachment}</div>
-                                        )}
-                                      </FormGroup>
+                                        </FormGroup>
                                     </Col>
                                   </Row>
                                 </Col>

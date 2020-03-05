@@ -6,7 +6,6 @@ import {
 import moment from 'moment'
 
 export const getCustomerInvoiceList = (postObj) => {
-  console.log(postObj)
   let customerName = postObj ? postObj.customerId : ''
   let referenceNumber =  postObj ? postObj.referenceNumber : ''
   let invoiceDate =  postObj.invoiceDate
@@ -140,7 +139,7 @@ export const getVatList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/vat/getList'
+      url: 'rest/datalist/vatCategory'
     }
     return authApi(data).then(res => {
       if (res.status === 200) {

@@ -24,4 +24,10 @@ public class DbFilter {
         this.value = value;
         
     }
+	@Override
+	public String toString() {
+		return "DbFilter [dbCoulmnName=" + dbCoulmnName + ", condition=" + condition + ", value=" + value + "]";
+	}
+    
+    
 }

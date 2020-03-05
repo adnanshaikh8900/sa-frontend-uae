@@ -134,7 +134,7 @@ export const getContactList = () => {
     return (dispatch) => {
       let data = {
         method: 'GET',
-        url: '/rest/contact/getContactList'
+        url: '/rest/contact/getContactsForDropdown'
       }
   
       return authApi(data).then(res => {

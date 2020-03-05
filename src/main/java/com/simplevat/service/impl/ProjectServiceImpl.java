@@ -14,6 +14,8 @@ import com.simplevat.dao.Dao;
 import com.simplevat.dao.ProjectDao;
 import com.simplevat.entity.Project;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ProjectService;
 import java.math.BigDecimal;
 
@@ -68,7 +70,7 @@ public class ProjectServiceImpl extends ProjectService {
     }
 
     @Override
-    public List<Project> getProjectList(Map<ProjectFilterEnum, Object> filterMap) {
-        return projectDao.getProjectList(filterMap);
+    public PaginationResponseModel getProjectList(Map<ProjectFilterEnum, Object> filterMap,PaginationModel paginationModel) {
+        return projectDao.getProjectList(filterMap,paginationModel);
     }
 }

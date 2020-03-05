@@ -71,7 +71,7 @@ class Project extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -94,7 +94,7 @@ class Project extends React.Component {
   initializeData() {
     let { filterData } = this.state
     const data = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...data }
@@ -184,8 +184,8 @@ class Project extends React.Component {
     this.removeDialog()
     this.props.projectActions.removeBulk(obj).then((res) => {
       this.initializeData();
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if (project_list && project_list.length > 0) {
+      this.props.commonActions.tostifyAlert('success', 'Projects Deleted Successfully')
+      if (project_list && project_list.data &&  project_list.data.length > 0) {
         this.setState({
           selectedRows: []
         })
@@ -311,13 +311,13 @@ class Project extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={project_list ? project_list : []}
+                          data={project_list && project_list.data ? project_list.data : []}
                           version="4"
                           hover
                           keyField="projectId"
-                          pagination
+                          pagination = {project_list && project_list.data &&  project_list.data.length > 0  ? true : false}
                           remote
-                          fetchInfo={{ dataTotalSize: project_list.totalCount ? project_list.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: project_list.count ? project_list.count : 0 }}
                           className="product-table"
                           trClassName="cursor-pointer"
                           csvFileName="project.csv"

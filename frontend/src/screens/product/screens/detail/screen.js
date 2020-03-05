@@ -281,7 +281,7 @@ class DetailProduct extends React.Component {
                                     <Label htmlFor="productCategoryId">Product Category</Label>
                                     <Select
                                       className="select-default-width"
-                                      options={product_category_list ? selectOptionsFactory.renderOptions('productCategoryName', 'id', product_category_list,'Product Category') : []}
+                                      options={product_category_list && product_category_list.data? selectOptionsFactory.renderOptions('productCategoryName', 'id', product_category_list.data,'Product Category') : []}
                                       id="productCategoryId"
                                       name="productCategoryId"
                                       value={props.values.productCategoryId}

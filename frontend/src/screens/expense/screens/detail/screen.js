@@ -11,7 +11,8 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
+  Label,
+  NavLink
 } from 'reactstrap'
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
@@ -35,6 +36,7 @@ import {
 
 import moment from 'moment'
 import './style.scss'
+import API_ROOT_URL from '../../../../constants/config'
 
 const mapStateToProps = (state) => {
   return ({
@@ -116,6 +118,8 @@ class DetailExpense extends React.Component {
               attachmentFile: res.data.attachmentFile,
               receiptAttachmentDescription: res.data.receiptAttachmentDescription,
               employee: res.data.employeeId ? res.data.employeeId : '',
+              fileName: res.data.fileName ? res.data.fileName : '',
+							filePath: res.data.receiptAttachmentPath ? res.data.receiptAttachmentPath : '',
             },
           })
         }
@@ -277,24 +281,24 @@ class DetailExpense extends React.Component {
                                   .matches(/^[0-9]*$/, "Enter a Valid Amount"),
                                   currency: Yup.string()
                                   .required('Currency is required'),
-                                  attachmentFile: Yup.mixed()
-                                  .test('fileType', "*Unsupported File Format", value => { 
-                                    value && this.setState({
-                                      fileName: value.name
-                                    })
-                                    if (value && this.supported_format.includes(value.type)) {
-                                      return true
-                                    } else {
-                                      return false
-                                    }
-                                  })
-                                  .test('fileSize', "*File Size is too large", value => {
-                                    if (value && value.size <= this.file_size) {
-                                      return true
-                                    } else {
-                                      return false
-                                    }
-                                  })
+                              //     attachmentFile: Yup.mixed()
+                              //     .test('fileType', "*Unsupported File Format", value => { 
+                              //       value && this.setState({
+                              //         fileName: value.name
+                              //       })
+                              //       if (value && this.supported_format.includes(value.type)) {
+                              //         return true
+                              //       } else {
+                              //         return false
+                              //       }
+                              //     })
+                              //     .test('fileSize', "*File Size is too large", value => {
+                              //       if (value && value.size <= this.file_size) {
+                              //         return true
+                              //       } else {
+                              //         return false
+                              //       }
+                              //     })
                               })
                             }
                           >
@@ -491,27 +495,30 @@ class DetailExpense extends React.Component {
                                   <Row>
                                   <Col lg={12}>
                                   <FormGroup className="mb-3">
-                                      <Field name="attachmentFile"
-                                        render={({ field, form }) => (
-                                          <div>
-                                            <Label>Reciept Attachment</Label> <br />
-                                            <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
-                                              <i className="fa fa-upload"></i> Upload
-                                  </Button>
-                                            <input id="fileInput" ref={ref => {
-                                              this.uploadFile = ref;
-                                            }} type="file" style={{ display: 'none' }} onChange={(e) => {
-                                              this.handleFileChange(e, props)
-                                            }} />
-                                            {this.state.fileName}
-
-                                          </div>
-                                        )}
-                                      />
-                                      {props.errors.attachmentFile && props.touched.attachmentFile &&(
-                                        <div className="invalid-file">{props.errors.attachmentFile}</div>
-                                      )}
-                                    </FormGroup>
+                                          <Field name="attachmentFile"
+                                            render={({ field, form }) => (
+                                              <div>
+                                                <Label>Reciept Attachment</Label> <br />
+                                                <div className="file-upload-cont">
+                                                  <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
+                                                    <i className="fa fa-upload"></i> Upload
+                                         		   </Button>
+                                                  <input id="fileInput" ref={ref => {
+                                                    this.uploadFile = ref;
+                                                  }} type="file" style={{ display: 'none' }} onChange={(e) => {
+                                                    this.handleFileChange(e, props)
+                                                  }} />
+                                                  {this.state.fileName ? this.state.fileName : (
+                                                  <NavLink href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`} download style={{ fontSize: '0.875rem' }} target="_blank">{this.state.initValue.fileName}</NavLink>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            )}
+                                          />
+                                          {props.errors.attachmentFile && (
+                                            <div className="invalid-file">{props.errors.attachmentFile}</div>
+                                          )}
+                                        </FormGroup>
                                   </Col>
                                 </Row>
                                   </Col>

@@ -75,7 +75,7 @@ class VatCode extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -96,7 +96,7 @@ class VatCode extends React.Component {
   initializeData() {
     let { filterData } = this.state
     const data = {
-      pageNo: this.options.page ? this.options.page : 1,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
     }
     filterData = { ...filterData, ...data }
@@ -197,8 +197,8 @@ class VatCode extends React.Component {
     this.removeDialog()
     this.props.vatActions.deleteVat(obj).then((res) => {
       this.initializeData();
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
-      if (vat_list && vat_list.length > 0) {
+      this.props.commonActions.tostifyAlert('success', 'Vat Deleted Successfully')
+      if (vat_list && vat_list.data && vat_list.data.length > 0) {
         this.setState({
           selectedRows: []
         })
@@ -354,15 +354,15 @@ class VatCode extends React.Component {
                       </Row>
                     </div>
                     <BootstrapTable 
-                      data={vat_list.length > 0 ? vat_list : []}
+                      data={vat_list && vat_list.data &&  vat_list.data.length > 0 ? vat_list.data : []}
                       hover
                       version="4"
-                      pagination
+                      pagination = {vat_list && vat_list.data && vat_list.data.length > 0 ? true : false}
                       search={false}
                       selectRow={ this.selectRowProp }
                       options={ this.options }
                       remote
-                      fetchInfo={{ dataTotalSize: vat_list.totalCount ? vat_list.totalCount : 0 }}
+                      fetchInfo={{ dataTotalSize: vat_list.count ? vat_list.count : 0 }}
                       trClassName="cursor-pointer"
                       csvFileName="vat_code.csv"
                       ref={node => {

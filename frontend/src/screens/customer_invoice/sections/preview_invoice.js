@@ -160,7 +160,7 @@ class PreviewInvoiceModal extends React.Component {
                           >
                             Term :{" "}
                           </label>
-                          <p style={{ textAlign: "right",width:'20%' }}>
+                          <p style={{ textAlign: "right", width: '20%' }}>
                             Net 7
                           </p>
                         </div>

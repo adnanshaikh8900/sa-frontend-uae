@@ -12,38 +12,44 @@ import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
 import com.simplevat.dao.InvoiceDao;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
+
+import net.bytebuddy.asm.Advice.This;
 
 @Repository
 public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements InvoiceDao {
 
-    @Override
-    public List<Invoice> getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap) {
-        List<DbFilter> dbFilters = new ArrayList();
-        filterMap.forEach((productFilter, value) -> dbFilters.add(DbFilter.builder()
-                .dbCoulmnName(productFilter.getDbColumnName())
-                .condition(productFilter.getCondition())
-                .value(value).build()));
-        List<Invoice> invoices = this.executeQuery(dbFilters);
-        return invoices;
-    }
+	@Override
+	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,
+			PaginationModel paginationModel) {
+		List<DbFilter> dbFilters = new ArrayList();
+		filterMap.forEach(
+				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
+						.condition(productFilter.getCondition()).value(value).build()));
 
-    @Override
-    public List<DropdownModel> getInvoicesForDropdown() {
-        List<DropdownModel> empSelectItemModels = getEntityManager()
-                .createNamedQuery("invoiceForDropdown", DropdownModel.class)
-                .getResultList();
-        return empSelectItemModels;
-    }
+		PaginationResponseModel response = new PaginationResponseModel();
+		response.setCount(this.getResultCount(dbFilters));
+		response.setData(this.executeQuery(dbFilters, paginationModel));
+		return response;
+	}
 
-    @Override
-    @Transactional
-    public void deleteByIds(List<Integer> ids) {
-        if (ids != null && !ids.isEmpty()) {
-            for (Integer id : ids) {
-                Invoice supplierInvoice = findByPK(id);
-                supplierInvoice.setDeleteFlag(Boolean.TRUE);
-                update(supplierInvoice);
-            }
-        }
-    }
+	@Override
+	public List<DropdownModel> getInvoicesForDropdown() {
+		List<DropdownModel> empSelectItemModels = getEntityManager()
+				.createNamedQuery("invoiceForDropdown", DropdownModel.class).getResultList();
+		return empSelectItemModels;
+	}
+
+	@Override
+	@Transactional
+	public void deleteByIds(List<Integer> ids) {
+		if (ids != null && !ids.isEmpty()) {
+			for (Integer id : ids) {
+				Invoice supplierInvoice = findByPK(id);
+				supplierInvoice.setDeleteFlag(Boolean.TRUE);
+				update(supplierInvoice);
+			}
+		}
+	}
 }

@@ -5,10 +5,12 @@ import java.util.Map;
 
 import com.simplevat.constant.dbfilter.ProductCategoryFilterEnum;
 import com.simplevat.entity.ProductCategory;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 public interface ProductCategoryDao extends Dao<Integer, ProductCategory> {
 
 	public void deleteByIds(List<Integer> ids);
 
-	public List<ProductCategory> getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterMap);
+	public PaginationResponseModel getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterMap,PaginationModel paginatioModel);
 }

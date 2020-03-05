@@ -6,9 +6,11 @@
 package com.simplevat.rest.projectcontroller;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProjectFilterEnum;
 import com.simplevat.entity.Project;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ProjectService;
 
 import io.swagger.annotations.ApiOperation;
@@ -77,11 +79,14 @@ public class ProjectController implements Serializable {
         filterDataMap.put(ProjectFilterEnum.REVENUE_BUDGET, filterModel.getRevenueBudget());
         filterDataMap.put(ProjectFilterEnum.EXPENSE_BUDGET, filterModel.getExpenseBudget());
         filterDataMap.put(ProjectFilterEnum.DELETE_FLAG, filterModel.isDeleteFlag());
-        List<Project> products = projectService.getProjectList(filterDataMap);
-        if (products == null) {
+        filterDataMap.put(ProjectFilterEnum.ORDER_BY,ORDERBYENUM.DESC);
+        
+        PaginationResponseModel response = projectService.getProjectList(filterDataMap,filterModel);
+        if (response == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity(projectRestHelper.getListModel(products), HttpStatus.OK);
+        response.setData(projectRestHelper.getListModel(response.getData()));
+        return new ResponseEntity(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/getProjectsForDropdown")

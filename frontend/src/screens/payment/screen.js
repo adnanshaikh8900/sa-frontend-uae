@@ -78,7 +78,7 @@ class Payment extends React.Component {
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
-      page: 0,
+      page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
@@ -102,7 +102,7 @@ class Payment extends React.Component {
   initializeData() {
     const { filterData } = this.state
     const paginationData = {
-      pageNo: this.options.page,
+      pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
     const postData = { ...filterData, ...paginationData }
@@ -156,7 +156,7 @@ class Payment extends React.Component {
     }
     const { payment_list } = this.props;
     this.props.paymentActions.removeBulkPayments(obj).then((res) => {
-      this.props.commonActions.tostifyAlert('success', 'Removed Successfully')
+      this.props.commonActions.tostifyAlert('success', 'Payment Deleted Successfully')
       this.initializeData();
       if (payment_list.length > 0) {
         this.setState({
@@ -349,13 +349,13 @@ class Payment extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={payment_list ? payment_list : []}
+                          data={payment_list && payment_list.data? payment_list.data : []}
                           version="4"
                           hover
                           keyField="paymentId"
-                          pagination
+                          pagination = {payment_list && payment_list.data && payment_list.data.length > 0 ? true : false}
                           remote
-                          fetchInfo={{ dataTotalSize: payment_list.totalCount ? payment_list.totalCount : 0 }}
+                          fetchInfo={{ dataTotalSize: payment_list.count ? payment_list.count : 0 }}
                           className="payment-table"
                           trClassName="cursor-pointer"
                           csvFileName="payment.csv"

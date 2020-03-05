@@ -38,5 +38,6 @@ public class ExpenseModel {
     private LocalDateTime lastUpdateDate;
     private boolean deleteFlag = false;
     private Integer versionNumber;
+    private String receiptAttachmentPath;
 
 }

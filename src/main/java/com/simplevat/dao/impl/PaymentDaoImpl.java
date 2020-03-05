@@ -10,6 +10,9 @@ import com.simplevat.constant.dbfilter.PaymentFilterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.PaymentDao;
 import com.simplevat.entity.Payment;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,27 +26,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository(value = "paymentDao")
 public class PaymentDaoImpl extends AbstractDao<Integer, Payment> implements PaymentDao {
 
-    @Override
-    public List<Payment> getPayments(Map<PaymentFilterEnum, Object> filterMap) {
-        List<DbFilter> dbFilters = new ArrayList();
-        filterMap.forEach((productFilter, value) -> dbFilters.add(DbFilter.builder()
-                .dbCoulmnName(productFilter.getDbColumnName())
-                .condition(productFilter.getCondition())
-                .value(value).build()));
-        List<Payment> payments = this.executeQuery(dbFilters);
-        return payments;
-    }
+	@Override
+	public PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> filterMap,
+			PaginationModel paginationModel) {
+		List<DbFilter> dbFilters = new ArrayList();
+		filterMap.forEach(
+				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
+						.condition(productFilter.getCondition()).value(value).build()));
+		return new PaginationResponseModel(this.getResultCount(dbFilters),
+				this.executeQuery(dbFilters, paginationModel));
+	}
 
-    @Override
-    @Transactional
-    public void deleteByIds(List<Integer> ids) {
-        if (ids != null && !ids.isEmpty()) {
-            for (Integer id : ids) {
-                Payment payment = findByPK(id);
-                payment.setDeleteFlag(Boolean.TRUE);
-                update(payment);
-            }
-        }
-    }
+	@Override
+	@Transactional
+	public void deleteByIds(List<Integer> ids) {
+		if (ids != null && !ids.isEmpty()) {
+			for (Integer id : ids) {
+				Payment payment = findByPK(id);
+				payment.setDeleteFlag(Boolean.TRUE);
+				update(payment);
+			}
+		}
+	}
 
 }

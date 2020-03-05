@@ -132,6 +132,10 @@ public class FileHelper {
 			case SUPPLIER_INVOICE:
 				map.put(dateString + File.separator, dateString + File.separator + "si-" + fileName);
 				break;
+			case TRANSATION:
+				map.put(dateString + File.separator, dateString + File.separator + "Tr-" + fileName);
+				break;
+
 			default:
 				map.put(dateString + File.separator, dateString + File.separator + fileName);
 			}
@@ -145,6 +149,16 @@ public class FileHelper {
 			return fileName.substring(fileName.lastIndexOf(".") + 1);
 		}
 		return null;
+	}
+
+	public String convertFilePthToUrl(String filePath) {
+		String url = filePath;
+
+		if (filePath.contains(File.separator)) {
+			url = url.replaceAll("\\\\", "/");
+		}
+
+		return url;
 	}
 
 }

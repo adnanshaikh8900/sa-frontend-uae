@@ -9,6 +9,7 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.helper.BankHelper;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.model.BankModel;
 import com.simplevat.entity.Country;
@@ -17,7 +18,7 @@ import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;
 import com.simplevat.entity.bankaccount.BankAccountType;
-import com.simplevat.entity.bankaccount.TransactionType;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
@@ -25,7 +26,7 @@ import com.simplevat.service.UserService;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.BankAccountStatusService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
-import com.simplevat.service.bankaccount.TransactionTypeService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -95,7 +96,7 @@ public class BankAccountController implements Serializable {
 
 	@Autowired
 	private BankHelper bankRestHelper;
-	
+
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
 	public ResponseEntity getBankAccountList(BankAccountFilterModel filterModel) {
@@ -120,9 +121,14 @@ public class BankAccountController implements Serializable {
 					currencyService.findByPK(filterModel.getCurrencyCode()));
 		}
 
-		List<BankAccount> bankAccounts = bankAccountService.getBankAccounts(filterDataMap, filterModel);
-		if (bankAccounts != null) {
-			return new ResponseEntity<>(bankAccountRestHelper.getListModel(bankAccounts), HttpStatus.OK);
+		// filterModel.setSortingCol(BankAccounrFilterEnum.ORDER_BY.getDbColumnName());
+		// filterModel.setOrder("DESC");
+
+		filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
+
+		PaginationResponseModel paginatinResponseModel = bankAccountService.getBankAccounts(filterDataMap, filterModel);
+		if (paginatinResponseModel != null) {
+			return new ResponseEntity<>(bankAccountRestHelper.getListModel(paginatinResponseModel), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

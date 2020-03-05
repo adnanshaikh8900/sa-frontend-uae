@@ -2,10 +2,13 @@ package com.simplevat.rest.usercontroller;
 
 import java.util.Date;
 
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
+
 import lombok.Data;
 
 @Data
-public class UserRequestFilterModel {
+public class UserRequestFilterModel extends PaginationModel{
 
 	private String name;
 	private String dob;

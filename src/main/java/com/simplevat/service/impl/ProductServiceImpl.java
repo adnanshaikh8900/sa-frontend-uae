@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.ProductDao;
 import com.simplevat.entity.Product;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ProductService;
 import java.util.Map;
 
@@ -23,8 +25,8 @@ public class ProductServiceImpl extends ProductService {
     }
 
     @Override
-    public List<Product> getProductList(Map<ProductFilterEnum, Object> filterMap) {
-        return productDao.getProductList(filterMap);
+    public PaginationResponseModel getProductList(Map<ProductFilterEnum, Object> filterMap,PaginationModel paginationModel) {
+        return productDao.getProductList(filterMap,paginationModel);
     }
 
     @Override

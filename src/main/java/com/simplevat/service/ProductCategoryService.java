@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.simplevat.constant.dbfilter.ProductCategoryFilterEnum;
 import com.simplevat.entity.ProductCategory;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 public abstract class ProductCategoryService extends SimpleVatService<Integer, ProductCategory> {
 
@@ -13,6 +15,6 @@ public abstract class ProductCategoryService extends SimpleVatService<Integer, P
 
 	public abstract void deleteByIds(ArrayList<Integer> ids);
 
-	public abstract List<ProductCategory> getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterList);
+	public abstract PaginationResponseModel getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterList,PaginationModel paginationModel);
 
 }

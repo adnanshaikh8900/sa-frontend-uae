@@ -6,6 +6,7 @@
 package com.simplevat.rest.productcontroller;
 
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.Product;
 import com.simplevat.entity.ProductWarehouse;
@@ -13,6 +14,7 @@ import com.simplevat.entity.VatCategory;
 import com.simplevat.service.ProductService;
 import com.simplevat.service.ProductWarehouseService;
 import com.simplevat.service.VatCategoryService;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.productcontroller.ProductRequestModel;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -60,18 +62,18 @@ public class ProductController implements Serializable {
 		filterDataMap.put(ProductFilterEnum.PRODUCT_NAME, filterModel.getName());
 		filterDataMap.put(ProductFilterEnum.PRODUCT_CODE, filterModel.getProductCode());
 		filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE, filterModel.getVatPercentage());
+		filterDataMap.put(ProductFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
-		List<Product> products = productService.getProductList(filterDataMap);
+		PaginationResponseModel response = productService.getProductList(filterDataMap, filterModel);
 
 		try {
-			if (products == null) {
+			if (response == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity(products, HttpStatus.OK);
+		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/deleteproduct")

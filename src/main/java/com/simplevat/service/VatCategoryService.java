@@ -2,6 +2,9 @@ package com.simplevat.service;
 
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.entity.VatCategory;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +18,5 @@ public abstract class VatCategoryService extends SimpleVatService<Integer, VatCa
 
     public abstract void deleteByIds(List<Integer> ids);
 
-	public abstract List<VatCategory> getVatCategoryList(Map<VatCategoryFilterEnum, Object> filterDataMap);
+	public abstract PaginationResponseModel getVatCategoryList(Map<VatCategoryFilterEnum, Object> filterDataMap,PaginationModel paginationModel );
 }

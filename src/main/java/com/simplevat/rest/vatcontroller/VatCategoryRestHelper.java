@@ -34,13 +34,13 @@ public class VatCategoryRestHelper {
 		return null;
 	}
 
-	public List<VatCategoryModel> getList(List<VatCategory> vatCategories) {
+	public List<VatCategoryModel> getList(Object vatCategories) {
 
 		List<VatCategoryModel> vatCatModelList = new ArrayList<VatCategoryModel>();
 
-		if (vatCategories != null && vatCategories.size() > 0) {
+		if (vatCategories != null) {
 
-			for (VatCategory vatCategory : vatCategories) {
+			for (VatCategory vatCategory : (List<VatCategory>) vatCategories) {
 
 				VatCategoryModel vatCatModel = new VatCategoryModel();
 

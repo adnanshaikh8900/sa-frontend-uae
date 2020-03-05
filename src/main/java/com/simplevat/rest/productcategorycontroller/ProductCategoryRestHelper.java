@@ -11,12 +11,15 @@ import com.simplevat.entity.ProductCategory;
 @Component
 public class ProductCategoryRestHelper {
 
-	public List<ProductCategoryListModel> getListModel(List<ProductCategory> productCategoryList) {
+	public List<ProductCategoryListModel> getListModel(Object productCategoryList) {
 		List<ProductCategoryListModel> ProductCategoryListModels = new ArrayList();
-		for (ProductCategory productCategory : productCategoryList) {
-			ProductCategoryListModel productCategoryModel = new ProductCategoryListModel();
-			BeanUtils.copyProperties(productCategory, productCategoryModel);
-			ProductCategoryListModels.add(productCategoryModel);
+
+		if (productCategoryList != null) {
+			for (ProductCategory productCategory : (List<ProductCategory>) productCategoryList) {
+				ProductCategoryListModel productCategoryModel = new ProductCategoryListModel();
+				BeanUtils.copyProperties(productCategory, productCategoryModel);
+				ProductCategoryListModels.add(productCategoryModel);
+			}
 		}
 		return ProductCategoryListModels;
 	}

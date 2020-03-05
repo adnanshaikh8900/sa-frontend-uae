@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.model.BankModel;
 import com.simplevat.rest.PaginationResponseModel;
 
 @Component
@@ -40,5 +41,17 @@ public class BankAccountRestHelper {
 			}
 		}
 		return pagiantionResponseModel;
+	}
+
+	public BankModel getModel(BankAccount bank) {
+
+		if (bank != null) {
+			BankModel model = new BankModel();
+				
+			//model.set
+			
+			return model;
+		}
+		return null;
 	}
 }

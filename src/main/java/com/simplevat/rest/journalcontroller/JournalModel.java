@@ -22,5 +22,6 @@ public class JournalModel {
     private String createdByName;
     private Integer currencyCode;
     private PostingReferenceTypeEnum postingReferenceType;
+    private String postingReferenceTypeDisplayName;
     private List<JournalLineItemRequestModel> journalLineItems;
 }

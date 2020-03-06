@@ -1,5 +1,6 @@
 package com.simplevat.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ public interface JournalDao extends Dao<Integer, Journal> {
 
 	public void deleteByIds(List<Integer> ids);
 
-	public PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,PaginationModel paginationModel);
+	public PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,
+			PaginationModel paginationModel);
 
+	public List<Journal> getJornalList(Date startDate, Date endDate, PaginationModel paginationModel);
 }

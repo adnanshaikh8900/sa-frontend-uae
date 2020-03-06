@@ -574,7 +574,6 @@ class BankAccount extends React.Component {
                           remote
                           fetchInfo={{ dataTotalSize: bank_account_list && bank_account_list.count ? bank_account_list.count : 0 }}
                           className="bank-account-table"
-                          trClassName="cursor-pointer"
                         >
                           <TableHeaderColumn
                             isKey

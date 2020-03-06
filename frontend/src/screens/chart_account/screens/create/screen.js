@@ -52,7 +52,7 @@ class CreateChartAccount extends React.Component {
     super(props);
     this.state = {
       initValue: {
-        transactionCategoryCode: '',
+        // transactionCategoryCode: '',
         transactionCategoryName: '',
         chartOfAccount: ''
       },
@@ -83,7 +83,7 @@ class CreateChartAccount extends React.Component {
   handleSubmit(data,resetForm) {
     this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
       if (res.status == 200) {
-        this.props.commonActions.tostifyAlert('success', 'New Account Created Successfully')
+        this.props.commonActions.tostifyAlert('success', 'New Chart of Account Created Successfully')
         if (this.state.createMore) {
           this.setState({
             createMore: false
@@ -124,8 +124,8 @@ class CreateChartAccount extends React.Component {
                         }}
                         validationSchema={
                           Yup.object().shape({
-                            transactionCategoryCode: Yup.string()
-                              .required("Code Name is Required"),
+                            // transactionCategoryCode: Yup.string()
+                            //   .required("Code Name is Required"),
                             transactionCategoryName: Yup.string()
                               .required("Account is Required"),
                             chartOfAccount: Yup.string()
@@ -134,7 +134,7 @@ class CreateChartAccount extends React.Component {
                       >
                         {props => (
                           <Form onSubmit={props.handleSubmit} name="simpleForm">
-                            <FormGroup>
+                            {/* <FormGroup>
                               <Label htmlFor="transactionCategoryCode">Code</Label>
                               <Input
                                 type="text"
@@ -152,9 +152,9 @@ class CreateChartAccount extends React.Component {
                               {props.errors.transactionCategoryCode && props.touched.transactionCategoryCode && (
                                 <div className="invalid-feedback">{props.errors.transactionCategoryCode}</div>
                               )}
-                            </FormGroup>
+                            </FormGroup> */}
                             <FormGroup>
-                              <Label htmlFor="name">Name</Label>
+                              <Label htmlFor="name"><span className="text-danger">*</span>Name</Label>
                               <Input
                                 type="text"
                                 id="transactionCategoryName"
@@ -173,7 +173,7 @@ class CreateChartAccount extends React.Component {
                               )}
                             </FormGroup>
                             <FormGroup>
-                              <Label htmlFor="name">Type</Label>
+                              <Label htmlFor="name"><span className="text-danger">*</span>Type</Label>
                               <Select
                                 className="select-default-width"
                                 options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : ''}

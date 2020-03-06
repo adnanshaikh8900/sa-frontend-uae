@@ -97,7 +97,6 @@ class DetailCustomerInvoice extends React.Component {
 		this.regEx = /^[0-9\b]+$/;
 		this.file_size = 1024000;
 		this.supported_format = [
-			"",
 			"text/plain",
 			"application/pdf",
 			"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -649,6 +648,8 @@ class DetailCustomerInvoice extends React.Component {
 																	.required("Invoice Number is Required"),
 																contactId: Yup.string()
 																	.required("Supplier is Required"),
+																	term: Yup.string()
+																	.required('term is Required'),
 																invoiceDate: Yup.string()
 																	.required('Invoice Date is Required'),
 																invoiceDueDate: Yup.string()
@@ -675,35 +676,35 @@ class DetailCustomerInvoice extends React.Component {
 																			}),
 																		vatCategoryId: Yup.string().required("Value is Required"),
 																	})),
-																// attachmentFile: Yup.mixed()
-																// 	.test(
-																// 		"fileType",
-																// 		"*Unsupported File Format",
-																// 		value => {
-																// 			value && this.setState({
-																// 				fileName: value.name
-																// 			});
-																// 			if (
-																// 				value &&
-																// 				this.supported_format.includes(value.type)
-																// 			) {
-																// 				return true;
-																// 			} else {
-																// 				return false;
-																// 			}
-																// 		}
-																// 	)
-																// 	.test(
-																// 		"fileSize",
-																// 		"*File Size is too large",
-																// 		value => {
-																// 			if (value && value.size <= this.file_size) {
-																// 				return true;
-																// 			} else {
-																// 				return false;
-																// 			}
-																// 		}
-																// 	)
+																attachmentFile: Yup.mixed()
+																	.test(
+																		"fileType",
+																		"*Unsupported File Format",
+																		value => {
+																			value && this.setState({
+																				fileName: value.name
+																			});
+																			if (!value ||
+																				value &&
+																				this.supported_format.includes(value.type)
+																			) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		}
+																	)
+																	.test(
+																		"fileSize",
+																		"*File Size is too large",
+																		value => {
+																			if (!value || value && value.size <= this.file_size) {
+																				return true;
+																			} else {
+																				return false;
+																			}
+																		}
+																	)
 															})}
 													>
 														{props => (
@@ -711,7 +712,7 @@ class DetailCustomerInvoice extends React.Component {
 																<Row>
 																	<Col lg={4}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="invoice_number">Invoice Number</Label>
+																			<Label htmlFor="invoice_number"><span className="text-danger">*</span>Invoice Number</Label>
 																			<Input
 																				type="text"
 																				id="invoice_number"
@@ -749,7 +750,7 @@ class DetailCustomerInvoice extends React.Component {
 																<Row>
 																	<Col lg={4}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="contactId">Customer Name</Label>
+																			<Label htmlFor="contactId"><span className="text-danger">*</span>Customer Name</Label>
 																			<Select
 
 																				id="contactId"
@@ -785,7 +786,7 @@ class DetailCustomerInvoice extends React.Component {
 																<Row>
 																	<Col lg={4}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="term">Terms <i className="fa fa-question-circle"></i></Label>
+																			<Label htmlFor="term"><span className="text-danger">*</span>Terms <i className="fa fa-question-circle"></i></Label>
 																			<Select
 																				className="select-default-width"
 																				options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
@@ -807,12 +808,16 @@ class DetailCustomerInvoice extends React.Component {
 																						})
 																					}
 																				}}
+																				className={`${props.errors.term && props.touched.term ? "is-invalid" : ""}`}
 																			/>
+																			{props.errors.term && props.touched.term && (
+																				<div className="invalid-feedback">{props.errors.term}</div>
+																			)}
 																		</FormGroup>
 																	</Col>
 																	<Col lg={4}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="date">Invoice Date</Label>
+																			<Label htmlFor="date"><span className="text-danger">*</span>Invoice Date</Label>
 																			<DatePicker
 																				id="invoiceDate"
 																				name="invoiceDate"

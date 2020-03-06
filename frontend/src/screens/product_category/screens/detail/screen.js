@@ -49,7 +49,7 @@ class DetailProductCategory extends React.Component {
     super(props);
     this.state = {
       initValue: {},
-      loading: false,
+      loading: true,
       dialog: null,
       current_product_category_id: null
     }
@@ -60,25 +60,26 @@ class DetailProductCategory extends React.Component {
   }
 
   componentDidMount() {
-    // if (this.props.location.state && this.props.location.state.id) {
-    //   this.props.detailProductCategoryAction.getProductCategoryById(this.props.location.state.id).then(res => {
-    //     if (res.status === 200)
-    //       this.setState({
-    //         loading: false,
-                //  current_product_category_id: this.props.location.state.id
-    //         initValue: {
-    //           id:res.data.id ? res.data.id : '',
-    //           productCategoryCode: res.data.productCategoryCode ? res.data.productCategoryCode : '',
-    //           productCategoryName: res.data.productCategoryName ? res.data.productCategoryName : ''
-    //         }
-    //       })
-    //   }).catch(err => {
-    //     this.setState({loading: false})
-    //     this.props.history.push('/admin/master/product-category')
-    //   })
-    // } else {
-    //   this.props.history.push('/admin/master/product-category')
-    // }
+    if (this.props.location.state && this.props.location.state.id) {
+      this.props.detailProductCategoryAction.getProductCategoryById(this.props.location.state.id).then(res => {
+        if (res.status === 200) {
+          this.setState({
+            loading: false,
+            current_product_category_id: this.props.location.state.id,
+            initValue: {
+              id:res.data.id ? res.data.id : '',
+              productCategoryCode: res.data.productCategoryCode ? res.data.productCategoryCode : '',
+              productCategoryName: res.data.productCategoryName ? res.data.productCategoryName : ''
+            }
+          })
+        }
+      }).catch(err => {
+        this.setState({loading: false})
+        this.props.history.push('/admin/master/product-category')
+      })
+    } else {
+      this.props.history.push('/admin/master/product-category')
+    }
   }
 
   // Create or Edit Vat
@@ -165,14 +166,14 @@ class DetailProductCategory extends React.Component {
                             {props => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <FormGroup>
-                                  <Label htmlFor="productCategoryCode">Product Category Code</Label>
+                                  <Label htmlFor="productCategoryCode"><span className="text-danger">*</span>Product Category Code</Label>
                                   <Input
                                     type="text"
                                     id="productCategoryCode"
                                     name="productCategoryCode"
                                     placeholder="Enter Product Category Code"
                                     onChange={props.handleChange}
-                                    defaultValue={props.values.productCategoryCode}
+                                    value={props.values.productCategoryCode}
                                     className={
                                       props.errors.productCategoryCode && props.touched.productCategoryCode
                                         ? "is-invalid"
@@ -184,14 +185,14 @@ class DetailProductCategory extends React.Component {
                                   )}
                                 </FormGroup>
                                 <FormGroup>
-                                  <Label htmlFor="name">Product Category Name</Label>
+                                  <Label htmlFor="name"><span className="text-danger">*</span>Product Category Name</Label>
                                   <Input
                                     type="text"
                                     id="productCategoryName"
                                     name="productCategoryName"
                                     placeholder="Enter Product Category Name"
                                     onChange={props.handleChange}
-                                    defaultValue={props.values.productCategoryName}
+                                    value={props.values.productCategoryName}
                                     className={
                                       props.errors.productCategoryName && props.touched.productCategoryName
                                         ? "is-invalid"

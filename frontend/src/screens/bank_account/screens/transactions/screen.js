@@ -224,9 +224,9 @@ class BankTransactions extends React.Component {
             <DropdownItem>
               <i className="fas fa-wrench" /> Archive
             </DropdownItem>
-            {/* <DropdownItem onClick={() => this.closeTransaction(row.id)}>
+            <DropdownItem onClick={() => this.closeTransaction(row.id)}>
               <i className="fa fa-trash" /> Close
-            </DropdownItem> */}
+            </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
       </div>
@@ -265,19 +265,18 @@ class BankTransactions extends React.Component {
   }
 
   closeTransaction = (id) => {
-    const obj = {'id': id}
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
-        okHandler={() => this.removeTransaction(obj)}
+        okHandler={() => this.removeTransaction(id)}
         cancelHandler={this.removeDialog}
       />
     })
   }
 
-  removeTransaction = (obj) => {
+  removeTransaction = (id) => {
     this.removeDialog()
-    this.props.transactionsActions.deleteTransactionById(obj).then((res) => {
+    this.props.transactionsActions.deleteTransactionById(id).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Transaction Deleted Successfully')
       this.initializeData()
     }).catch(err => {

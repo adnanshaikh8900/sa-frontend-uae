@@ -81,7 +81,7 @@ class DetailChartAccount extends React.Component {
           this.setState({
             loading: false,
             initValue: {
-              transactionCategoryCode: res.data.transactionCategoryCode,
+              // transactionCategoryCode: res.data.transactionCategoryCode,
               transactionCategoryName: res.data.transactionCategoryName,
               chartOfAccount: res.data.transactionTypeId ? res.data.transactionTypeId : '',
             }
@@ -144,7 +144,7 @@ class DetailChartAccount extends React.Component {
   // Create or Edit Vat
   handleSubmit(data, resetForm) {
     const id = this.props.location.state.id
-    const { transactionCategoryCode, transactionCategoryName, chartOfAccount } = data
+    const {  transactionCategoryName, chartOfAccount } = data
     const postData = Object.assign(data, { transactionCategoryId: id })
     this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then(res => {
       if (res.status == 200) {
@@ -189,8 +189,8 @@ class DetailChartAccount extends React.Component {
                             }}
                             validationSchema={
                               Yup.object().shape({
-                                transactionCategoryCode: Yup.string()
-                                  .required("Code Name is Required"),
+                                // transactionCategoryCode: Yup.string()
+                                //   .required("Code Name is Required"),
                                 transactionCategoryName: Yup.string()
                                   .required("Account is Required"),
                                 chartOfAccount: Yup.string()
@@ -200,7 +200,7 @@ class DetailChartAccount extends React.Component {
                           >
                             {props => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
-                                <FormGroup>
+                                {/* <FormGroup>
                                   <Label htmlFor="transactionCategoryCode">Code</Label>
                                   <Input
                                     type="text"
@@ -218,9 +218,9 @@ class DetailChartAccount extends React.Component {
                                   {props.errors.transactionCategoryCode && props.touched.transactionCategoryCode && (
                                     <div className="invalid-feedback">{props.errors.transactionCategoryCode}</div>
                                   )}
-                                </FormGroup>
+                                </FormGroup> */}
                                 <FormGroup>
-                                  <Label htmlFor="transactionCategoryName">Name</Label>
+                                  <Label htmlFor="transactionCategoryName"><span className="text-danger">*</span>Name</Label>
                                   <Input
                                     type="text"
                                     id="transactionCategoryName"
@@ -239,7 +239,7 @@ class DetailChartAccount extends React.Component {
                                   )}
                                 </FormGroup>
                                 <FormGroup>
-                                  <Label htmlFor="chartOfAccount">Type</Label>
+                                  <Label htmlFor="chartOfAccount"><span className="text-danger">*</span>Type</Label>
                                   <Select
                                     className="select-default-width"
                                     options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : []}

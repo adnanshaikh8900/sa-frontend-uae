@@ -50,7 +50,7 @@ class Currency extends React.Component {
     super(props)
     this.state = {
       openCurrencyModal: false,
-      loading: false,
+      loading: true,
       currencies: [
         {name: 'AED- UAE Dirham', symbol: 'AED'},
         {name: 'AUD- Australian Dollar', symbol: '$'},
@@ -79,7 +79,13 @@ class Currency extends React.Component {
   }
 
   getCurrencyDetails = () => {
-    this.props.currenciesActions.getCurrencyList();
+    this.props.currenciesActions.getCurrencyList().then(res => {
+      if(res.status === 200) {
+        this.setState({
+          loading:false
+        })
+      }
+    })
   }
 
   // Show Invite User Modal

@@ -78,6 +78,7 @@ class SupplierInvoice extends React.Component {
       selectedRows: [],
       contactType: 1,
       openInvoicePreviewModal: false,
+      selectedId: ''
 
     }
 
@@ -154,17 +155,17 @@ class SupplierInvoice extends React.Component {
 
   renderInvoiceStatus(cell, row) {
     let classname = ''
-    if (row.status === 'Paid') {
+    if (row.status === 'Post') {
       classname = 'badge-success'
     } else if (row.status === 'Unpaid') {
       classname = 'badge-danger'
-    } else if (row.status === 'PARTIALLY PAID') {
-      classname = "badget-info"
+    } else if (row.status === 'Pending') {
+      classname = "badge-warning"
     } else {
       classname = 'badge-primary'
     }
     return (
-      <span className={`badge ${classname} mb-0`}>{row.status}</span>
+      <span className={`badge ${classname} mb-0`} style={{color: 'white'}}>{row.status}</span>
     )
   }
 
@@ -206,7 +207,7 @@ class SupplierInvoice extends React.Component {
                 <i className="fas fa-heart" /> Post
                         </DropdownItem>
             )}
-            <DropdownItem  onClick={()=>{this.openInvoicePreviewModal()}}>
+            <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
@@ -218,7 +219,7 @@ class SupplierInvoice extends React.Component {
             <DropdownItem>
               <i className="fas fa-times" /> Cancel
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem onClick={()=>{this.closeInvoice(row.id)}}>
               <i className="fa fa-trash-o" /> Delete
             </DropdownItem>
           </DropdownMenu>
@@ -352,8 +353,14 @@ class SupplierInvoice extends React.Component {
     })
   }
 
-  openInvoicePreviewModal() {
-    this.setState({ openInvoicePreviewModal: true })
+  openInvoicePreviewModal(id) {
+    this.setState({
+      selectedId: id
+    }, () => {
+      this.setState({
+        openInvoicePreviewModal: true
+      })
+    })
   }
 
   closeInvoicePreviewModal(res) {
@@ -372,6 +379,26 @@ class SupplierInvoice extends React.Component {
       this.options.page = page
       this.initializeData()
     }
+  }
+
+  closeInvoice = (id) => {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={() => this.removeInvoice(id)}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeInvoice = (id) => {
+    this.removeDialog()
+    this.props.supplierInvoiceActions.deleteInvoice(id).then((res) => {
+      this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
+      this.initializeData()
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    })
   }
 
   render() {
@@ -640,6 +667,8 @@ class SupplierInvoice extends React.Component {
         <PreviewInvoiceModal
           openInvoicePreviewModal={this.state.openInvoicePreviewModal}
           closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
+          getInvoiceById={this.props.supplierInvoiceActions.getInvoiceById}
+          id={this.state.selectedId}
         />
       </div>
 

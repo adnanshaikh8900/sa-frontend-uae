@@ -283,7 +283,7 @@ class ImportBankStatement extends React.Component {
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   <Col md="2">
-                                    <label htmlFor="Other">Select File to Upload</label>
+                                    <label htmlFor="Other"><span className="text-danger">*</span>Select File to Upload</label>
                                   </Col>
                                   <Col md="3">
                                     <FormGroup className="">
@@ -303,7 +303,7 @@ class ImportBankStatement extends React.Component {
                                 </Row>
                                 <Row className="align-template">
                                   <Col lg={2}>
-                                    <label>Parsing Template</label>
+                                    <label><span className="text-danger">*</span>Parsing Template</label>
                                     <FormGroup>
                                       <Select
                                         className="select-default-width"

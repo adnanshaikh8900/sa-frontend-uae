@@ -71,6 +71,9 @@ class CreateProduct extends React.Component {
     this.showWarehouseModal = this.showWarehouseModal.bind(this)
     this.closeWarehouseModal = this.closeWarehouseModal.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this);
+
+		this.regEx = /^[0-9\b]+$/;
+
   }
 
 
@@ -259,8 +262,11 @@ class CreateProduct extends React.Component {
                                       id="unitPrice"
                                       name="unitPrice"
                                       placeholder="Enter Product Price"
-                                      onChange={(value) => {props.handleChange("unitPrice")(value)}}
-
+                                      onChange={(option) => {
+                                        if (option.target.value === '' || this.regEx.test(option.target.value)) {
+                                          props.handleChange('unitPrice')(option)
+                                        }
+                                      }}
                                       value={props.values.unitPrice}
                                     />
                                   </FormGroup>

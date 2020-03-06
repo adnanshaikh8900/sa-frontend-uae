@@ -93,13 +93,21 @@ class PreviewInvoiceModal extends React.Component {
                       <div>UNITED ARAB EMIRATES</div>
                     </div>
                     <div style={{ width: "40%", textAlign: "right" }}>
-                      <h1>Invoice</h1>
-                      <p># {invoiceData.referenceNumber}</p>
-                      <p>
-                        Balance Due
+                      <Table className="table-clear">
+                        <tbody>
+                          <tr style={{ textAlign: "right" }}>
+                            <td className="left" style={{ width: '75%',fontSize: '1.5rem',fontWeight:'500' }}>Invoice</td>
+                          </tr>
+                          <tr style={{ textAlign: "right" }}>
+                            <td className="left" style={{ width: '75%' }}># {invoiceData.referenceNumber}</td>
+                          </tr>
+                          <tr style={{ textAlign: "right" }}>
+                            <td className="left" style={{ width: '75%' }}>   Balance Due
                         <br />
-                        <b style={{ fontWeight: "600" }}>AED 20000</b>
-                      </p>
+                              <b style={{ fontWeight: "600" }}>AED 20000</b></td>
+                          </tr>
+                        </tbody>
+                      </Table>
                     </div>
                   </div>
 
@@ -132,55 +140,26 @@ class PreviewInvoiceModal extends React.Component {
                       }}
                     >
                       <div style={{ width: "100%" }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end"
-                          }}
-                        >
-                          <label
-                            style={{ marginBottom: "1rem", textAlign: "right" }}
-                          >
-                            Invoice Date :{" "}
-                          </label>
-                          <p style={{ textAlign: "right", width: "20%" }}>
-                            {moment(invoiceData.invoiceDate).format(
-                              "DD MMM YYYY"
-                            )}
-                          </p>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end"
-                          }}
-                        >
-                          <label
-                            style={{ marginBottom: "1rem", textAlign: "right" }}
-                          >
-                            Term :{" "}
-                          </label>
-                          <p style={{ textAlign: "right", width: '20%' }}>
-                            Net 7
-                          </p>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end"
-                          }}
-                        >
-                          <label
-                            style={{ marginBottom: "1rem", textAlign: "right" }}
-                          >
-                            Due Date :{" "}
-                          </label>
-                          <p style={{ textAlign: "right", width: "20%" }}>
-                            {moment(invoiceData.invoiceDueDate).format(
-                              "DD MMM YYYY"
-                            )}
-                          </p>
-                        </div>
+                        <Table className="table-clear">
+                          <tbody>
+                            <tr style={{ textAlign: "right" }}>
+                              <td className="left" style={{ width: '75%' }}>Invoice Date :</td>
+                              <td className="right" style={{ width: '25%' }}> {moment(invoiceData.invoiceDate).format(
+                                "DD MMM YYYY"
+                              )}</td>
+                            </tr>
+                            <tr style={{ textAlign: "right" }}>
+                              <td className="left" style={{ width: '75%' }}>Term :</td>
+                              <td className="right" style={{ width: '18%' }}>{invoiceData.term}</td>
+                            </tr>
+                            <tr style={{ textAlign: "right" }}>
+                              <td className="left" style={{ width: '75%' }}>Due Date :</td>
+                              <td className="right" style={{ width: '25%' }}>{moment(invoiceData.invoiceDueDate).format(
+                                "DD MMM YYYY"
+                              )}</td>
+                            </tr>
+                          </tbody>
+                        </Table>
                       </div>
                     </div>
                   </div>
@@ -237,11 +216,11 @@ class PreviewInvoiceModal extends React.Component {
                           <tr style={{ textAlign: "right" }}>
                             <td className="left">
                               <strong>
-                                Discount (
+                                Discount 
                                 {invoiceData.discountPercentage
-                                  ? `${invoiceData.discountPercentage}%`
+                                  ? `(${invoiceData.discountPercentage}%)`
                                   : ""}
-                                )
+                                
                               </strong>
                             </td>
                             <td className="right">${invoiceData.discount} </td>

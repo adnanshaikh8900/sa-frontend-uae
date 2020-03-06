@@ -87,6 +87,7 @@ class CreateCustomerInvoice extends React.Component {
 				invoiceDate: new Date(),
 				contactId: '',
 				project: '',
+				term: '',
 				lineItemsString: [{
 					id: 0,
 					description: '',
@@ -356,8 +357,6 @@ class CreateCustomerInvoice extends React.Component {
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index
-				if (Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
-				}
 			}
 		});
 
@@ -546,7 +545,7 @@ class CreateCustomerInvoice extends React.Component {
 							invoiceVATAmount: 0,
 							totalAmount: 0,
 							discountType: '',
-							discount: '',
+							discount: 0,
 							discountPercentage: '',
 						}
 					}
@@ -647,10 +646,12 @@ class CreateCustomerInvoice extends React.Component {
 															.required("Invoice Number is Required"),
 														contactId: Yup.string()
 															.required("Customer is Required"),
-														invoiceDate: Yup.date()
+															term: Yup.string()
+															.required('Term is Required'),
+														invoiceDate: Yup.string()
 															.required('Invoice Date is Required'),
-														invoiceDueDate: Yup.string()
-															.required('Invoice Due Date is Required'),
+														// invoiceDueDate: Yup.string()
+														// 	.required('Invoice Due Date is Required'),
 														lineItemsString: Yup.array()
 															.required('Atleast one invoice sub detail is mandatory')
 															.of(Yup.object().shape({
@@ -673,35 +674,35 @@ class CreateCustomerInvoice extends React.Component {
 																	}),
 																vatCategoryId: Yup.string().required("Value is Required"),
 															})),
-														// attachmentFile: Yup.mixed()
-														// 	.test(
-														// 		"fileType",
-														// 		"*Unsupported File Format",
-														// 		value => {
-														// 			value && this.setState({
-														// 				fileName: value.name
-														// 			});
-														// 			if (
-														// 				value &&
-														// 				this.supported_format.includes(value.type)
-														// 			) {
-														// 				return true;
-														// 			} else {
-														// 				return false;
-														// 			}
-														// 		}
-														// 	)
-														// 	.test(
-														// 		"fileSize",
-														// 		"*File Size is too large",
-														// 		value => {
-														// 			if (value && value.size <= this.file_size) {
-														// 				return true;
-														// 			} else {
-														// 				return false;
-														// 			}
-														// 		}
-														// 	)
+														attachmentFile: Yup.mixed()
+															.test(
+																"fileType",
+																"*Unsupported File Format",
+																value => {
+																	value && this.setState({
+																		fileName: value.name
+																	});
+																	if (
+																		!value || value &&
+																		this.supported_format.includes(value.type)
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																}
+															)
+															.test(
+																"fileSize",
+																"*File Size is too large",
+																value => {
+																	if (!value || value && value.size <= this.file_size) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																}
+															)
 													})}
 											>
 												{props => (
@@ -709,7 +710,7 @@ class CreateCustomerInvoice extends React.Component {
 														<Row>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="invoice_number">Invoice Number</Label>
+																	<Label htmlFor="invoice_number"><span className="text-danger">*</span>Invoice Number</Label>
 																	<Input
 																		type="text"
 																		id="invoice_number"
@@ -745,7 +746,7 @@ class CreateCustomerInvoice extends React.Component {
 														<Row>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="contactId">Customer Name</Label>
+																	<Label htmlFor="contactId"><span className="text-danger">*</span>Customer Name</Label>
 																	<Select
 
 																		id="contactId"
@@ -778,41 +779,10 @@ class CreateCustomerInvoice extends React.Component {
 															</Col>
 														</Row>
 														<hr />
-														{/* <Row>
-                          <Col lg={4}>
-                            <FormGroup check inline className="mb-3">
-                              <Input
-                                className="form-check-input"
-                                type="checkbox"
-                                id="is_same_address"
-                                name="is_same_address"
-                              />
-                              <Label className="form-check-label" check htmlFor="is_same_address">
-                                Shipping Address is same as above address.
-                              </Label>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="contact">Shipping Contact</Label>
-                              <Select
-                                className="select-default-width"
-                                options={selectOptionsFactory.renderOptions('firstName', 'contactId', vendor_list)}
-                                id="shippingContact"
-                                name="shippingContact"
-                                value={props.values.shippingContact}
-                                onChange={option => props.handleChange('shippingContact')(option)}                                
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <hr/> */}
 														<Row>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="term">Terms <i className="fa fa-question-circle"></i></Label>
+																	<Label htmlFor="term"><span className="text-danger">*</span>Terms <i className="fa fa-question-circle"></i></Label>
 																	<Select
 																		className="select-default-width"
 																		options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
@@ -834,12 +804,16 @@ class CreateCustomerInvoice extends React.Component {
 																				})
 																			}
 																		}}
-																	/>
+																		className={`${props.errors.term && props.touched.term ? "is-invalid" : ""}`}
+																		/>
+																		{props.errors.term && props.touched.term && (
+																			<div className="invalid-feedback">{props.errors.term}</div>
+																		)}
 																</FormGroup>
 															</Col>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="date">Invoice Date</Label>
+																	<Label htmlFor="date"><span className="text-danger">*</span>Invoice Date</Label>
 																	<DatePicker
 																		id="invoiceDate"
 																		name="invoiceDate"
@@ -870,7 +844,6 @@ class CreateCustomerInvoice extends React.Component {
 																			id="invoiceDueDate"
 																			name="invoiceDueDate"
 																			placeholderText="Invoice Due Date"
-																			// selected={props.values.invoiceDueDate}
 																			showMonthDropdown
 																			showYearDropdown
 																			disabled
@@ -880,11 +853,11 @@ class CreateCustomerInvoice extends React.Component {
 																			onChange={(value) => {
 																				props.handleChange("invoiceDueDate")(value)
 																			}}
-																			className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}
+																			// className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}
 																		/>
-																		{props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
+																		{/* {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
 																			<div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
-																		)}
+																		)} */}
 																	</div>
 																</FormGroup>
 															</Col>
@@ -932,7 +905,6 @@ class CreateCustomerInvoice extends React.Component {
 																				placeholder="Reciept Number"
 																				onChange={option => props.handleChange('receiptNumber')(option)}
 																				value={props.values.receiptNumber}
-
 																			/>
 																		</FormGroup>
 																	</Col>
@@ -949,7 +921,6 @@ class CreateCustomerInvoice extends React.Component {
 																				placeholder="1024 characters..."
 																				onChange={option => props.handleChange('receiptAttachmentDescription')(option)}
 																				value={props.values.receiptAttachmentDescription}
-
 																			/>
 																		</FormGroup>
 																	</Col>
@@ -996,6 +967,7 @@ class CreateCustomerInvoice extends React.Component {
 															</Col>
 														</Row>
 														<Row>
+															{console.log(props.errors)}
 															{props.errors.lineItemsString && typeof props.errors.lineItemsString === 'string' && (
 																<div className={props.errors.lineItemsString ? "is-invalid" : ""}>
 																	<div className="invalid-feedback">{props.errors.lineItemsString}</div>

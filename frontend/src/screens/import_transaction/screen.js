@@ -346,7 +346,7 @@ class ImportTransaction extends React.Component {
                             <Form >
                               <Row>
                                 <Col lg={3}>
-                                  <Label>Name</Label>
+                                  <Label><span className="text-danger">*</span>Name</Label>
                                 </Col>
                                 <Col lg={3}>
                                   <FormGroup>
@@ -450,7 +450,7 @@ class ImportTransaction extends React.Component {
 
                                         <Row>
                                           <Col md="5">
-                                            <label htmlFor="Other">Provide Sample</label>
+                                            <label htmlFor="Other"><span className="text-danger">*</span>Provide Sample</label>
                                           </Col>
                                           <Col md="7">
                                             <FormGroup className="mb-0">
@@ -527,7 +527,7 @@ class ImportTransaction extends React.Component {
                                         </Row>
                                         <Row>
                                           <Col md={5}>
-                                            <Label htmlFor="description">Date Format</Label>
+                                            <Label htmlFor="description"><span className="text-danger">*</span>Date Format</Label>
                                           </Col>
                                           <Col md={7}>
                                             <FormGroup className="" style={{flexDirection: 'column'}}>

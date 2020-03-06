@@ -170,7 +170,8 @@ class DetailProject extends React.Component {
     this.props.detailProjectActions.updateProject(postData).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Project Updated successfully!')
-        } else this.props.history.push('/admin/master/project')
+         this.props.history.push('/admin/master/project')
+      }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
@@ -236,7 +237,7 @@ class DetailProject extends React.Component {
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
                           this.projectHandleSubmit(values)
-                          resetForm(initValue)
+                          // resetForm(initValue)
                         }}
                         validationSchema={Yup.object().shape({
                           projectName: Yup.string()

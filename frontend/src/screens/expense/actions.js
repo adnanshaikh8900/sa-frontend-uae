@@ -242,3 +242,18 @@ export const postExpense = (obj) => {
     })
   }
 }
+
+export const deleteExpense = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/expense/delete?expenseId=${id}`
+    }
+
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}

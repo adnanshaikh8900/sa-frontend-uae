@@ -70,6 +70,9 @@ class DetailProduct extends React.Component {
     this.deleteProduct = this.deleteProduct.bind(this)
     this.removeProduct = this.removeProduct.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
+
+		this.regEx = /^[0-9\b]+$/;
+
   }
 
   componentDidMount() {
@@ -248,7 +251,7 @@ class DetailProduct extends React.Component {
                                     id="productName"
                                     name="productName"
                                     onChange={props.handleChange}
-                                    defaultValue={props.values.productName}
+                                    value={props.values.productName ||  ''}
                                     placeholder="Enter Product Name"
                                     className={
                                       props.errors.productName && props.touched.productName
@@ -270,7 +273,7 @@ class DetailProduct extends React.Component {
                                     id="productCode"
                                     name="productCode"
                                     onChange={props.handleChange}
-                                    defaultValue={props.values.productCode}
+                                    value={props.values.productCode ||  ''}
                                     placeholder="Enter Product Code"
                                   />
                                 </FormGroup>
@@ -284,7 +287,7 @@ class DetailProduct extends React.Component {
                                       options={product_category_list && product_category_list.data? selectOptionsFactory.renderOptions('productCategoryName', 'id', product_category_list.data,'Product Category') : []}
                                       id="productCategoryId"
                                       name="productCategoryId"
-                                      value={props.values.productCategoryId}
+                                      value={props.values.productCategoryId ||  ''}
                                       onChange={(option) => {
                                         // this.setState({
                                         //   selectedParentProduct: option.value
@@ -309,8 +312,8 @@ class DetailProduct extends React.Component {
                                     id="unitPrice"
                                     name="unitPrice"
                                     placeholder="Enter Product Price"
-                                    onChange={props.handleChange}
-                                    defaultValue={props.values.unitPrice}
+                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('unitPrice')(option) }}
+                                    value={props.values.unitPrice ||  ''}
                                   />
                                 </FormGroup>
                               </Col>
@@ -408,7 +411,7 @@ class DetailProduct extends React.Component {
                                     rows="6"
                                     placeholder="Description..."
                                     onChange={props.handleChange}
-                                    defaultValue={props.values.productDescription}
+                                    value={props.values.productDescription ||  ''}
                                   />
                                 </FormGroup>
                               </Col>

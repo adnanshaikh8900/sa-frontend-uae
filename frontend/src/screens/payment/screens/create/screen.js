@@ -315,7 +315,7 @@ class CreatePayment extends React.Component {
                                   <Row>
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
-                                        <Label htmlFor="supplier">Supplier Name</Label>
+                                        <Label htmlFor="supplier"><span className="text-danger">*</span>Supplier Name</Label>
                                         <Select
 
                                           id="supplier"
@@ -344,7 +344,7 @@ class CreatePayment extends React.Component {
                                     </Col>
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
-                                        <Label htmlFor="invoiceId">Invoice</Label>
+                                        <Label htmlFor="invoiceId"><span className="text-danger">*</span>Invoice #</Label>
                                         <Select
                                           className="select-default-width"
                                           id="invoiceId"
@@ -377,7 +377,7 @@ class CreatePayment extends React.Component {
                                     </Col>
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
-                                        <Label htmlFor="amount">Invoice Amount</Label>
+                                        <Label htmlFor="amount"><span className="text-danger">*</span>Invoice Amount</Label>
                                         <Input
                                           // className="form-control"
                                           type="text"
@@ -399,7 +399,7 @@ class CreatePayment extends React.Component {
                                   <Row>
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
-                                        <Label htmlFor="currency">Currency</Label>
+                                        <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                         <Select
                                           className="select-default-width"
                                           id="currency"
@@ -440,7 +440,7 @@ class CreatePayment extends React.Component {
                                     </Col>
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
-                                        <Label htmlFor="paymentDate">Payment Date</Label>
+                                        <Label htmlFor="paymentDate"><span className="text-danger">*</span>Payment Date</Label>
                                         <DatePicker
 
                                           id="date"
@@ -471,7 +471,7 @@ class CreatePayment extends React.Component {
                                           className="select-default-width"
                                           id="bank"
                                           name="bank"
-                                          options={bank_list ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list, 'Bank') : []}
+                                          options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}
                                           value={props.values.bank}
                                           onChange={option => props.handleChange('bank')(option)}
                                           className={

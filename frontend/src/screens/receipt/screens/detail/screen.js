@@ -235,9 +235,8 @@ class DetailReceipt extends React.Component {
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="receipt_date">Receipt Date</Label>
+                                      <Label htmlFor="receipt_date"><span className="text-danger">*</span>Receipt Date</Label>
                                       <DatePicker
-                                        className="form-control"
                                         id="date"
                                         name="receiptDate"
                                         showMonthDropdown
@@ -249,14 +248,18 @@ class DetailReceipt extends React.Component {
                                         onChange={(value) => {
                                           props.handleChange("receiptDate")(value)
                                         }}
-                                      />
+                                        className={`form-control ${props.errors.receiptDate && props.touched.receiptDate ? "is-invalid" : ""}`}
+                                        />
+                                        {props.errors.receiptDate && props.touched.receiptDate && (
+                                          <div className="invalid-feedback">{props.errors.receiptDate}</div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="referenceCode">Reference Number</Label>
+                                      <Label htmlFor="referenceCode"><span className="text-danger">*</span>Reference Number</Label>
                                       <Input
                                         type="text"
                                         id="referenceCode"
@@ -264,12 +267,16 @@ class DetailReceipt extends React.Component {
                                         placeholder="Reference Number"
                                         value={props.values.referenceCode}
                                         onChange={option => { props.handleChange('referenceCode')(option) }}
-                                      />
+                                        className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
+                                        />
+                                        {props.errors.referenceCode && props.touched.referenceCode && (
+                                          <div className="invalid-feedback">{props.errors.referenceCode}</div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="customer_name">Customer Name</Label>
+                                      <Label htmlFor="customer_name"><span className="text-danger">*</span>Customer Name</Label>
                                       <Select
                                         options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer Name') : []}
                                         className="select-default-width"
@@ -282,7 +289,11 @@ class DetailReceipt extends React.Component {
                                             props.handleChange('contactId')('')
                                           }
                                         }}
-                                      />
+                                        className={`${props.errors.contactId && props.touched.contactId ? "is-invalid" : ""}`}
+                                        />
+                                        {props.errors.contactId && props.touched.contactId && (
+                                          <div className="invalid-feedback">{props.errors.contactId}</div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -324,7 +335,7 @@ class DetailReceipt extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="amount">Amount</Label>
+                                      <Label htmlFor="amount"><span className="text-danger">*</span>Amount</Label>
                                       <Input
                                         type="text"
                                         id="amount"

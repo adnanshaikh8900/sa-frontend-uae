@@ -83,9 +83,9 @@ class CustomerInvoice extends React.Component {
     this.renderInvoiceNumber = this.renderInvoiceNumber.bind(this)
     this.renderInvoiceStatus = this.renderInvoiceStatus.bind(this)
     this.renderActions = this.renderActions.bind(this)
-    this.onRowSelAll = this.onSelectAll.bind(this)
-    this.toggleAcect = this.onRowSelect.bind(this)
-    this.onSelecttionButton = this.toggleActionButton.bind(this)
+    this.onRowSelect = this.onRowSelect.bind(this)
+    this.onSelectAll = this.onSelectAll.bind(this)
+    this.toggleActionButton = this.toggleActionButton.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
     this.bulkDelete = this.bulkDelete.bind(this);
@@ -194,17 +194,17 @@ class CustomerInvoice extends React.Component {
 
   renderInvoiceStatus(cell, row) {
     let classname = ''
-    if (row.status === 'Paid') {
+    if (row.status === 'Post') {
       classname = 'badge-success'
     } else if (row.status === 'Unpaid') {
       classname = 'badge-danger'
-    } else if (row.status === 'PARTIALLY PAID') {
-      classname = "badget-info"
+    } else if (row.status === 'Pending') {
+      classname = "badge-warning"
     } else {
       classname = 'badge-primary'
     }
     return (
-      <span className={`badge ${classname} mb-0`}>{row.status}</span>
+      <span className={`badge ${classname} mb-0`} style={{color: 'white'}}>{row.status}</span>
     )
   }
 
@@ -262,7 +262,7 @@ class CustomerInvoice extends React.Component {
             <DropdownItem>
               <i className="fas fa-times" /> Cancel
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem onClick={()=> {this.closeInvoice(row.id)}}>
               <i className="fa fa-trash-o" /> Delete
             </DropdownItem>
           </DropdownMenu>
@@ -272,6 +272,7 @@ class CustomerInvoice extends React.Component {
   }
 
   onRowSelect(row, isSelected, e) {
+    console.log(row)
     let temp_list = []
     if (isSelected) {
       temp_list = Object.assign([], this.state.selectedRows)
@@ -369,6 +370,26 @@ class CustomerInvoice extends React.Component {
     })
   }
 
+  closeInvoice = (id) => {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={() => this.removeInvoice(id)}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeInvoice = (id) => {
+    this.removeDialog()
+    this.props.customerInvoiceActions.deleteInvoice(id).then((res) => {
+      this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
+      this.initializeData()
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    })
+  }
+
   closeInvoicePreviewModal(res) {
     this.setState({ openInvoicePreviewModal: false })
   }
@@ -413,7 +434,9 @@ class CustomerInvoice extends React.Component {
                 loading &&
                   <Row>
                     <Col lg={12} className="rounded-loader">
+                      <div>
                       <Loader />
+                      </div>
                     </Col>
                   </Row>
             }

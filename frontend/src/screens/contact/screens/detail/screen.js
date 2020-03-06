@@ -247,7 +247,7 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="select">First Name</Label>
+                                      <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
                                       <Input
                                         type="text"
                                         id="firstName"
@@ -289,7 +289,7 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="lastName">Last Name</Label>
+                                      <Label htmlFor="lastName"><span className="text-danger">*</span>Last Name</Label>
                                       <Input
                                         type="text"
                                         id="lastName"
@@ -389,7 +389,7 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="email">Email</Label>
+                                      <Label htmlFor="email"><span className="text-danger">*</span>Email</Label>
                                       <Input
                                         type="text"
                                         id="email"
@@ -433,7 +433,7 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="mobileNumber">Mobile Number</Label>
+                                      <Label htmlFor="mobileNumber"><span className="text-danger">*</span>Mobile Number</Label>
                                       <Input
                                         type="text"
                                         id="mobileNumber"
@@ -507,7 +507,7 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="countryId">Country</Label>
+                                      <Label htmlFor="countryId"><span className="text-danger">*</span>Country</Label>
                                       <Select
                                         className="select-default-width"
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}

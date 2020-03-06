@@ -288,7 +288,7 @@ class DetailUser extends React.Component {
                                     <Row>
                                       <Col lg={6}>
                                         <FormGroup>
-                                          <Label htmlFor="select">First Name</Label>
+                                          <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
                                           <Input
                                             type="text"
                                             id="firstName"
@@ -304,7 +304,7 @@ class DetailUser extends React.Component {
                                       </Col>
                                       <Col lg={6}>
                                         <FormGroup>
-                                          <Label htmlFor="select">Last Name</Label>
+                                          <Label htmlFor="select"><span className="text-danger">*</span>Last Name</Label>
                                           <Input
                                             type="text"
                                             id="lastName"
@@ -322,7 +322,7 @@ class DetailUser extends React.Component {
                                     <Row>
                                       <Col lg={6}>
                                         <FormGroup className="mb-3">
-                                          <Label htmlFor="email">Email ID</Label>
+                                          <Label htmlFor="email"><span className="text-danger">*</span>Email ID</Label>
                                           <Input
                                             type="text"
                                             id="email"
@@ -338,7 +338,7 @@ class DetailUser extends React.Component {
                                       </Col>
                                       <Col lg={6}>
                                         <FormGroup className="mb-3">
-                                          <Label htmlFor="date">Date Of Birth</Label>
+                                          <Label htmlFor="date"><span className="text-danger">*</span>Date Of Birth</Label>
                                           <DatePicker
                                             className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                             id="dob "
@@ -465,7 +465,7 @@ class DetailUser extends React.Component {
                                     <Row>
                                       <Col lg={6}>
                                         <FormGroup>
-                                          <Label htmlFor="select">Password</Label>
+                                          <Label htmlFor="select"><span className="text-danger">*</span>Password</Label>
                                           <Input
                                             type="password"
                                             id="password"
@@ -484,7 +484,7 @@ class DetailUser extends React.Component {
                                       </Col>
                                       <Col lg={6}>
                                         <FormGroup>
-                                          <Label htmlFor="select">Confirm Password</Label>
+                                          <Label htmlFor="select"><span className="text-danger">*</span>Confirm Password</Label>
                                           <Input
                                             type="password"
                                             id="confirmPassword"

@@ -278,3 +278,18 @@ export const getInvoiceById = (_id) => {
     })
   }
 }
+
+export const deleteInvoice = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'DELETE',
+      url: `/rest/invoice/delete?id=${id}`
+    }
+
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}

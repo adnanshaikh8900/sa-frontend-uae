@@ -208,35 +208,35 @@ class DetailBankTransaction extends React.Component {
                                 .required('Transaction Amount is Required'),
                               chartOfAccountId: Yup.string()
                                 .required('Transaction Type is Required'),
-                                // attachment: Yup.mixed()
-                                // .test(
-                                //   "fileType",
-                                //   "*Unsupported File Format",
-                                //   value => {
-                                //     value && this.setState({
-                                //       fileName: value.name
-                                //     });
-                                //     if (
-                                //       value &&
-                                //       this.supported_format.includes(value.type) || !value
-                                //     ) {
-                                //       return true;
-                                //     } else {
-                                //       return false;
-                                //     }
-                                //   }
-                                // )
-                                // .test(
-                                //   "fileSize",
-                                //   "*File Size is too large",
-                                //   value => {
-                                //     if (value && value.size <= this.file_size || !value) {
-                                //       return true;
-                                //     } else {
-                                //       return false;
-                                //     }
-                                //   }
-                                // )
+                                attachment: Yup.mixed()
+                                .test(
+                                  "fileType",
+                                  "*Unsupported File Format",
+                                  value => {
+                                    value && this.setState({
+                                      fileName: value.name
+                                    });
+                                    if (
+                                      !value || value &&
+                                      this.supported_format.includes(value.type) || !value
+                                    ) {
+                                      return true;
+                                    } else {
+                                      return false;
+                                    }
+                                  }
+                                )
+                                .test(
+                                  "fileSize",
+                                  "*File Size is too large",
+                                  value => {
+                                    if (!value || value && value.size <= this.file_size || !value) {
+                                      return true;
+                                    } else {
+                                      return false;
+                                    }
+                                  }
+                                )
                             })}
                         >
                           {props => (
@@ -244,7 +244,7 @@ class DetailBankTransaction extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="chartOfAccountId">Transaction Type</Label>
+                                    <Label htmlFor="chartOfAccountId"><span className="text-danger">*</span>Transaction Type</Label>
                                     <Select
                                       className="select-default-width"
                                       options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type') : ''}
@@ -272,7 +272,7 @@ class DetailBankTransaction extends React.Component {
                                 </Col>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="date">Transaction Date</Label>
+                                    <Label htmlFor="date"><span className="text-danger">*</span>Transaction Date</Label>
                                     <DatePicker
                                       id="transactionDate"
                                       name="transactionDate"
@@ -295,7 +295,7 @@ class DetailBankTransaction extends React.Component {
                                 </Col>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="transactionAmount">Total Amount</Label>
+                                    <Label htmlFor="transactionAmount"><span className="text-danger">*</span>Total Amount</Label>
                                     <Input
                                       type="text"
                                       id="transactionAmount"
@@ -303,7 +303,15 @@ class DetailBankTransaction extends React.Component {
                                       placeholder="Amount"
                                       onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('transactionAmount')(option) }}
                                       value={props.values.transactionAmount}
+                                      className={
+                                        props.errors.transactionAmount && props.touched.transactionAmount
+                                          ? "is-invalid"
+                                          : ""
+                                      }
                                     />
+                                    {props.errors.transactionAmount && props.touched.transactionAmount && (
+                                      <div className="invalid-feedback">{props.errors.transactionAmount}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                               </Row>

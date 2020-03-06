@@ -157,7 +157,7 @@ class DetailVatCode extends React.Component {
                             {props => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <FormGroup>
-                                  <Label htmlFor="name">Vat Code Name</Label>
+                                  <Label htmlFor="name"><span className="text-danger">*</span>Vat Code Name</Label>
                                   <Input
                                     type="text"
                                     id="name"
@@ -176,7 +176,7 @@ class DetailVatCode extends React.Component {
                                   )}
                                 </FormGroup>
                                 <FormGroup>
-                                  <Label htmlFor="name">Percentage</Label>
+                                  <Label htmlFor="name"><span className="text-danger">*</span>Percentage</Label>
                                   <Input
                                     type="number"
                                     id="name"

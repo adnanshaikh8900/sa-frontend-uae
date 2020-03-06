@@ -253,35 +253,35 @@ class CreateExpense extends React.Component {
                           expenseAmount: Yup.string()
                             .required("Amount is Required")
                             .matches(/^[0-9]*$/, "Enter a Valid Amount"),
-                          // attachmentFile: Yup.mixed()
-                          //   .test(
-                          //     "fileType",
-                          //     "*Unsupported File Format",
-                          //     value => {
-                          //        value && this.setState({
-                          //         fileName: value.name
-                          //       });
-                          //       if (
-                          //         value &&
-                          //         this.supported_format.includes(value.type)
-                          //       ) {
-                          //         return true;
-                          //       } else {
-                          //         return false;
-                          //       }
-                          //     }
-                          //   )
-                          //   .test(
-                          //     "fileSize",
-                          //     "*File Size is too large",
-                          //     value => {
-                          //       if (value && value.size <= this.file_size) {
-                          //         return true;
-                          //       } else {
-                          //         return false;
-                          //       }
-                          //     }
-                          //   )
+                          attachmentFile: Yup.mixed()
+                            .test(
+                              "fileType",
+                              "*Unsupported File Format",
+                              value => {
+                                 value && this.setState({
+                                  fileName: value.name
+                                });
+                                if (!value ||
+                                  value &&
+                                  this.supported_format.includes(value.type)
+                                ) {
+                                  return true;
+                                } else {
+                                  return false;
+                                }
+                              }
+                            )
+                            .test(
+                              "fileSize",
+                              "*File Size is too large",
+                              value => {
+                                if (!value || value && value.size <= this.file_size) {
+                                  return true;
+                                } else {
+                                  return false;
+                                }
+                              }
+                            )
                         })}
                       >
                         {props => (
@@ -290,7 +290,7 @@ class CreateExpense extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="expenseCategoryId">
-                                    Expense Category
+                                  <span className="text-danger">*</span>Expense Category
                                   </Label>
                                   <Select
                                     id="expenseCategory"
@@ -328,7 +328,7 @@ class CreateExpense extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="payee">Payee</Label>
+                                  <Label htmlFor="payee"><span className="text-danger">*</span>Payee</Label>
                                   <Input
                                     type="text"
                                     name="payee"
@@ -355,7 +355,7 @@ class CreateExpense extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="expense_date">
-                                    Expense Date
+                                  <span className="text-danger">*</span>Expense Date
                                   </Label>
                                   <DatePicker
                                     id="date"
@@ -389,7 +389,7 @@ class CreateExpense extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="currency">Currency</Label>
+                                  <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                   <Select
                                     className="select-default-width"
                                     id="currencyCode"
@@ -475,7 +475,7 @@ class CreateExpense extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="expenseAmount">Amount</Label>
+                                  <Label htmlFor="expenseAmount"><span className="text-danger">*</span>Amount</Label>
                                   <Input
                                     type="text"
                                     name="expenseAmount"

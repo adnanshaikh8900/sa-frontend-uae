@@ -90,12 +90,11 @@ export const getProjectList = () => {
   }
 }
 
-export const deleteTransactionById = (obj) => {
+export const deleteTransactionById = (id) => {
   return (dispatch) => {
     let data = {
-      method: 'delete',
-      url: `/rest/transaction/delete`,
-      data: obj
+      method: 'DELETE',
+      url: `/rest/transaction/delete?id=${id}`,
     }
     return authApi(data).then(res => {
       return res

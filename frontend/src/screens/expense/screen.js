@@ -202,7 +202,7 @@ class Expense extends React.Component {
                 <i className="fas fa-heart" /> Post
                         </DropdownItem>
             )}
-            {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.expenseId)}}>
+             {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.expenseId)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
@@ -213,10 +213,10 @@ class Expense extends React.Component {
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-times" /> Cancel
-            </DropdownItem>
-            <DropdownItem>
+            </DropdownItem>  */}
+            <DropdownItem onClick={()=>{this.closeExpense(row.expenseId)}}>
               <i className="fa fa-trash-o" /> Delete
-            </DropdownItem> */}
+            </DropdownItem> 
           </DropdownMenu>
         </ButtonDropdown>
       </div>
@@ -245,17 +245,17 @@ class Expense extends React.Component {
 
   renderInvoiceStatus(cell, row) {
     let classname = ''
-    if (row.status === 'Paid') {
+    if (row.expenseStatus === 'Post') {
       classname = 'badge-success'
-    } else if (row.status === 'Unpaid') {
+    } else if (row.expenseStatus === 'Unpaid') {
       classname = 'badge-danger'
-    } else if (row.status === 'PARTIALLY PAID') {
-      classname = "badget-info"
+    } else if (row.expenseStatus === 'Pending') {
+      classname = "badge-warning"
     } else {
       classname = 'badge-primary'
     }
     return (
-      <span className={`badge ${classname} mb-0`}>{row.expenseStatus}</span>
+      <span className={`badge ${classname} mb-0`} style={{color: 'white'}}>{row.expenseStatus}</span>
     )
   }
 
@@ -335,6 +335,26 @@ class Expense extends React.Component {
           selectedRows: []
         })
       }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    })
+  }
+
+  closeExpense = (id) => {
+    this.setState({
+      dialog: <ConfirmDeleteModal
+        isOpen={true}
+        okHandler={() => this.removeExpense(id)}
+        cancelHandler={this.removeDialog}
+      />
+    })
+  }
+
+  removeExpense = (id) => {
+    this.removeDialog()
+    this.props.expenseActions.deleteExpense(id).then((res) => {
+      this.props.commonActions.tostifyAlert('success', 'Expense Deleted Successfully')
+      this.initializeData()
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })

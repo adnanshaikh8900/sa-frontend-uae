@@ -141,7 +141,7 @@ class CreateVatCode extends React.Component {
                         //     .required("Vat Percentage is Required")
                         // })}
                         validate={values => {
-                          let status: boolean;
+                          let status = false
                           let errors = {};
                           if (!values.name) {
                             errors.name = 'Name is  required';
@@ -162,7 +162,7 @@ class CreateVatCode extends React.Component {
                         {props => (
                           <Form onSubmit={props.handleSubmit} name="simpleForm">
                             <FormGroup>
-                              <Label htmlFor="name">Vat Code Name</Label>
+                              <Label htmlFor="name"><span className="text-danger">*</span>Vat Code Name</Label>
                               <Input
                                 type="text"
                                 id="name"
@@ -182,7 +182,7 @@ class CreateVatCode extends React.Component {
                               )}
                             </FormGroup>
                             <FormGroup>
-                              <Label htmlFor="name">Percentage</Label>
+                              <Label htmlFor="name"><span className="text-danger">*</span>Percentage</Label>
                               <Input
                                 type="number"
                                 id="name"

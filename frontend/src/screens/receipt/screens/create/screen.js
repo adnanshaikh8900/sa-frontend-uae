@@ -157,7 +157,7 @@ class CreateReceipt extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="receipt_date">Receipt Date</Label>
+                                  <Label htmlFor="receipt_date"><span className="text-danger">*</span>Receipt Date</Label>
                                   <DatePicker
 
                                     id="date"
@@ -183,16 +183,15 @@ class CreateReceipt extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="referenceCode">Reference Number</Label>
+                                  <Label htmlFor="referenceCode"><span className="text-danger">*</span>Reference Number</Label>
                                   <Input
                                     type="text"
                                     id="referenceCode"
                                     name="referenceCode"
                                     placeholder="Reference Number"
                                     onChange={option => { props.handleChange('referenceCode')(option) }}
-                                    className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
                                     value={props.values.referenceCode}
-
+                                    className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
                                   />
                                   {props.errors.referenceCode && props.touched.referenceCode && (
                                     <div className="invalid-feedback">{props.errors.referenceCode}</div>
@@ -201,7 +200,7 @@ class CreateReceipt extends React.Component {
                               </Col>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="customer_name">Customer Name</Label>
+                                  <Label htmlFor="customer_name"><span className="text-danger">*</span>Customer Name</Label>
                                   <Select
                                     options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer Name') : []}
                                     // className="select-default-width"
@@ -261,7 +260,7 @@ class CreateReceipt extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="amount">Amount</Label>
+                                  <Label htmlFor="amount"><span className="text-danger">*</span>Amount</Label>
                                   <Input
                                     type="text"
                                     id="amount"
@@ -271,7 +270,6 @@ class CreateReceipt extends React.Component {
                                     value={props.values.amount}
 
                                     className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
-
                                   />
                                   {props.errors.amount && props.touched.amount && (
                                     <div className="invalid-feedback">{props.errors.amount}</div>

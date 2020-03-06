@@ -129,6 +129,7 @@ class DetailSupplierInvoice extends React.Component {
       "application/vnd.ms-excel",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
+		this.regEx = /^[0-9\b]+$/;
 
   }
 
@@ -257,61 +258,63 @@ class DetailSupplierInvoice extends React.Component {
   }
 
   renderQuantity(cell, row, props) {
-    let idx
-    this.state.data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index
-      }
-    });
+		let idx
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index
+			}
+		});
 
-    return (
-      <Field name={`lineItemsString.${idx}.quantity`}
-        render={({ field, form }) => (
-          <Input
-            type="number"
-            value={row['quantity'] !== 0 ? row['quantity'] : 0}
-            onChange={(e) => { this.selectItem(e, row, 'quantity', form, field, props) }}
-            placeholder="Quantity"
-            className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
-                props.errors.lineItemsString[idx].quantity &&
-                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
-                props.touched.lineItemsString[idx] &&
-                props.touched.lineItemsString[idx].quantity ? "is-invalid" : ""}`}
-          />
-        )}
-      />
-    )
-  }
+		return (
+			<Field name={`lineItemsString.${idx}.quantity`}
+				render={({ field, form }) => (
+					<Input
+						type="text"
+						value={row['quantity'] !== 0 ? row['quantity'] : 0}
+						onChange={(e) => {
+							if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'quantity', form, field, props)
+						}
+						}
+						placeholder="Quantity"
+						className={`form-control 
+           						${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+								props.errors.lineItemsString[idx].quantity &&
+								Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+								props.touched.lineItemsString[idx] &&
+								props.touched.lineItemsString[idx].quantity ? "is-invalid" : ""}`}
+					/>
+				)}
+			/>
+		)
+	}
 
-  renderUnitPrice(cell, row, props) {
-    let idx
-    this.state.data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index
-      }
-    });
+	renderUnitPrice(cell, row, props) {
+		let idx
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index
+			}
+		});
 
-    return (
-      <Field name={`lineItemsString.${idx}.unitPrice`}
-        render={({ field, form }) => (
-          <Input
-            type="number"
-            value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-            onChange={(e) => { this.selectItem(e, row, 'unitPrice', form, field, props) }}
-            placeholder="Unit Price"
-            className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
-                props.errors.lineItemsString[idx].unitPrice &&
-                Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
-                props.touched.lineItemsString[idx] &&
-                props.touched.lineItemsString[idx].unitPrice ? "is-invalid" : ""}`}
-          />
-        )}
-      />
-    )
-  }
-
+		return (
+			<Field name={`lineItemsString.${idx}.unitPrice`}
+				render={({ field, form }) => (
+					<Input
+						type="text"
+						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
+						onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'unitPrice', form, field, props) }}
+						placeholder="Unit Price"
+						className={`form-control 
+                       ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
+								props.errors.lineItemsString[idx].unitPrice &&
+								Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
+								props.touched.lineItemsString[idx] &&
+								props.touched.lineItemsString[idx].unitPrice ? "is-invalid" : ""}`}
+					/>
+				)}
+			/>
+		)
+	}
 
 
   renderSubTotal(cell, row) {
@@ -325,12 +328,12 @@ class DetailSupplierInvoice extends React.Component {
     const data = [...this.state.data]
     this.setState({
       data: data.concat({
-        id: this.state.idCount + 1,
-        description: '',
-        quantity: 0,
-        unitPrice: 0,
-        vatCategoryId: '',
-        subTotal: 0
+				id: this.state.idCount + 1,
+				description: '',
+				quantity: '',
+				unitPrice: '',
+				vatCategoryId: '',
+				subTotal: 0
       }), idCount: this.state.idCount + 1
     }, () => {
       this.formRef.current.setFieldValue('lineItemsString', this.state.data, true)
@@ -653,26 +656,16 @@ class DetailSupplierInvoice extends React.Component {
                             ref={this.formRef}
 
                             onSubmit={(values, { resetForm }) => {
-
                               this.handleSubmit(values)
-                              // resetForm(initValue)
-
-                              // this.setState({
-                              //   selectedCurrency: null,
-                              //   selectedProject: null,
-                              //   selectedBankAccount: null,
-                              //   selectedCustomer: null
-
-                              // })
                             }}
                             validationSchema={
                               Yup.object().shape({
                                 invoice_number: Yup.string()
                                   .required("Invoice Number is Required"),
-
                                 contactId: Yup.string()
                                   .required("Supplier is Required"),
-
+                                  term: Yup.string()
+                                  .required("Term is Required"),
                                 invoiceDate: Yup.string()
                                   .required('Invoice Date is Required'),
                                 invoiceDueDate: Yup.string()
@@ -685,35 +678,35 @@ class DetailSupplierInvoice extends React.Component {
                                     unitPrice: Yup.number().required("Value is Required"),
                                     vatCategoryId: Yup.string().required("Value is Required"),
                                   })),
-                                  // attachmentFile: Yup.mixed()
-                                  // .test(
-                                  //   "fileType",
-                                  //   "*Unsupported File Format",
-                                  //   value => {
-                                  //     value && this.setState({
-                                  //       fileName: value.name
-                                  //     });
-                                  //     if (
-                                  //       value &&
-                                  //       this.supported_format.includes(value.type)
-                                  //     ) {
-                                  //       return true;
-                                  //     } else {
-                                  //       return false;
-                                  //     }
-                                  //   }
-                                  // )
-                                  // .test(
-                                  //   "fileSize",
-                                  //   "*File Size is too large",
-                                  //   value => {
-                                  //     if (value && value.size <= this.file_size) {
-                                  //       return true;
-                                  //     } else {
-                                  //       return false;
-                                  //     }
-                                  //   }
-                                  // )
+                                  attachmentFile: Yup.mixed()
+                                  .test(
+                                    "fileType",
+                                    "*Unsupported File Format",
+                                    value => {
+                                      value && this.setState({
+                                        fileName: value.name
+                                      });
+                                      if (
+                                        !value || value &&
+                                        this.supported_format.includes(value.type)
+                                      ) {
+                                        return true;
+                                      } else {
+                                        return false;
+                                      }
+                                    }
+                                  )
+                                  .test(
+                                    "fileSize",
+                                    "*File Size is too large",
+                                    value => {
+                                      if (!value || value && value.size <= this.file_size) {
+                                        return true;
+                                      } else {
+                                        return false;
+                                      }
+                                    }
+                                  )
                               })}
                           >
                             {props => (
@@ -721,7 +714,7 @@ class DetailSupplierInvoice extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="invoice_number">Invoice Number</Label>
+                                      <Label htmlFor="invoice_number"><span className="text-danger">*</span>Invoice Number</Label>
                                       <Input
                                         type="text"
                                         id="invoice_number"
@@ -759,7 +752,7 @@ class DetailSupplierInvoice extends React.Component {
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="contactId">Supplier Name</Label>
+                                      <Label htmlFor="contactId"><span className="text-danger">*</span>Supplier Name</Label>
                                       <Select
                                         id="contactId"
                                         name="contactId"
@@ -791,41 +784,10 @@ class DetailSupplierInvoice extends React.Component {
                                   </Col>
                                 </Row>
                                 <hr />
-                                {/* <Row>
-                            <Col lg={4}>
-                              <FormGroup check inline className="mb-3">
-                                <Input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="is_same_address"
-                                  name="is_same_address"
-                                />
-                                <Label className="form-check-label" check htmlFor="is_same_address">
-                                  Shipping Address is same as above address.
-                                </Label>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col lg={4}>
-                              <FormGroup className="mb-3">
-                                <Label htmlFor="contact">Shipping Contact</Label>
-                                <Select
-                                  className="select-default-width"
-                                  options={selectOptionsFactory.renderOptions('firstName', 'contactId', vendor_list)}
-                                  id="shippingContact"
-                                  name="shippingContact"
-                                  value={props.values.shippingContact}
-                                  onChange={option => props.handleChange('shippingContact')(option)}                                
-                                />
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <hr/> */}
                                 <Row>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="term">Terms <i className="fa fa-question-circle"></i></Label>
+                                      <Label htmlFor="term"><span className="text-danger">*</span>Terms <i className="fa fa-question-circle"></i></Label>
                                       <Select
                                         className="select-default-width"
                                         options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
@@ -847,12 +809,20 @@ class DetailSupplierInvoice extends React.Component {
                                             })
                                           }
                                         }}
+                                        className={
+                                          props.errors.term && props.touched.term
+                                            ? 'is-invalid'
+                                            : ''
+                                        }
                                       />
+                                      {props.errors.term && props.touched.term && (
+                                        <div className="invalid-feedback">{props.errors.term}</div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="date">Invoice Date</Label>
+                                      <Label htmlFor="date"><span className="text-danger">*</span>Invoice Date</Label>
                                       <DatePicker
                                         id="invoiceDate"
                                         name="invoiceDate"
@@ -1094,122 +1064,129 @@ class DetailSupplierInvoice extends React.Component {
                                         </FormGroup>
                                       </Col>
                                       <Col lg={4}>
-                                        <div className="">
-                                          <div className="total-item p-2">
-                                            <Row>
-                                              <Col lg={6}>
-                                                <FormGroup>
-                                                  <Label htmlFor="discountType">Discount Type</Label>
-                                                  <Select
-                                                    className="select-default-width"
-                                                    options={discountOptions}
-                                                    id="discountType"
-                                                    name="discountType"
-                                                    value={props.values.discountType}
-                                                    onChange={(item) => {
-                                                      props.handleChange('discountType')(item.value)
-                                                      props.setFieldValue('discount', 0)
-                                                      this.setState({
-                                                        discountPercentage: 0,
-                                                        discountAmount: 0
-                                                      }, () => {
-                                                        this.updateAmount(this.state.data, props)
-                                                      })
-                                                    }}
-                                                  />
-                                                </FormGroup>
-                                              </Col>
-                                              {
-                                                props.values.discountType === 'PERCENTAGE' && (
-                                                  <Col lg={6}>
-                                                    <FormGroup>
-                                                      <Label htmlFor="discountPercentage">Percentage</Label>
-                                                      <Input
-                                                        id="discountPercentage"
-                                                        name="discountPercentage"
-                                                        placeholder="Discount Percentage"
-                                                        value={props.values.discountPercentage}
-                                                        onChange={(e) => {
-                                                          props.handleChange('discountPercentage')(e)
-                                                          this.setState({
-                                                            discountPercentage: e.target.value,
-                                                          }, () => { this.updateAmount(this.state.data, props) })
-                                                        }}
-                                                      />
-                                                    </FormGroup>
-                                                  </Col>
-                                                )
-                                              }
-                                            </Row>
-                                            <Row>
-                                              <Col lg={6} className="mt-4">
-                                                <FormGroup>
-                                                  <Label htmlFor="discount">Discount Amount</Label>
-                                                  <Input
-                                                    id="discount"
-                                                    name="discount"
-                                                    type="text"
-                                                    disabled={props.values.discountType && props.values.discountType === 'Percentage' ? true : false}
-                                                    placeholder="Discount Amounts"
-                                                    onChange={option => {
-                                                      props.handleChange('discount')(option)
-                                                      this.setState({
-                                                        discountAmount: +option.target.value
-                                                      }, () => {
-                                                        this.updateAmount(this.state.data, props)
-                                                      })
-                                                    }}
-                                                    value={props.values.discount}
-                                                  />
-                                                </FormGroup>
-                                              </Col>
-                                            </Row>
-                                          </div>
-                                          <div className="total-item p-2">
-                                            <Row>
-                                              <Col lg={6}>
-                                                <h5 className="mb-0 text-right">Total Net</h5>
-                                              </Col>
-                                              <Col lg={6} className="text-right">
-                                                <label className="mb-0">{(initValue.total_net).toFixed(2)}</label>
-                                              </Col>
-                                            </Row>
-                                          </div>
-                                          <div className="total-item p-2">
-                                            <Row>
-                                              <Col lg={6}>
-                                                <h5 className="mb-0 text-right">Total Vat</h5>
-                                              </Col>
-                                              <Col lg={6} className="text-right">
-                                                <label className="mb-0">{(initValue.invoiceVATAmount).toFixed(2)}</label>
-                                              </Col>
-                                            </Row>
-                                          </div>
-                                          <div className="total-item p-2">
-                                            <Row>
-                                              <Col lg={6}>
-                                                <h5 className="mb-0 text-right">Discount</h5>
-                                              </Col>
-                                              <Col lg={6} className="text-right">
-                                                <label className="mb-0">{(this.state.initValue.discount).toFixed(2)}</label>
-                                              </Col>
-                                            </Row>
-                                          </div>
-                                          <div className="total-item p-2">
-                                            <Row>
-                                              <Col lg={6}>
-                                                <h5 className="mb-0 text-right">Total</h5>
-                                              </Col>
-                                              <Col lg={6} className="text-right">
-                                                <label className="mb-0">{(initValue.totalAmount).toFixed(2)}</label>
-                                              </Col>
-                                            </Row>
-                                          </div>
-                                        </div>
-                                      </Col>
-                                    </Row>
-                                  )
-                                }
+																				<div className="">
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<FormGroup>
+																									<Label htmlFor="discountType">Discount Type</Label>
+																									<Select
+																										className="select-default-width"
+																										options={discountOptions}
+																										id="discountType"
+																										name="discountType"
+																										value={props.values.discountType}
+																										onChange={(item) => {
+																											props.handleChange('discountPercentage')('')
+																											props.handleChange('discountType')(item.value)
+																											props.setFieldValue('discount', 0)
+
+																											this.setState({
+																												discountPercentage: 0,
+																												discountAmount: 0
+																											}, () => {
+																												this.updateAmount(this.state.data, props)
+																											})
+																										}}
+																									/>
+																								</FormGroup>
+																							</Col>
+																							{
+																								props.values.discountType === 'PERCENTAGE' && (
+																									<Col lg={6}>
+																										<FormGroup>
+																											<Label htmlFor="discountPercentage">Percentage</Label>
+																											<Input
+																												id="discountPercentage"
+																												name="discountPercentage"
+																												placeholder="Discount Percentage"
+																												type="text"
+																												value={props.values.discountPercentage}
+																												onChange={(e) => {
+																													if (e.target.value === '' || this.regEx.test(e.target.value)) {
+																														props.handleChange('discountPercentage')(e)
+																														this.setState({
+																															discountPercentage: e.target.value,
+																														}, () => { this.updateAmount(this.state.data, props) })
+																													}
+																												}}
+																											/>
+																										</FormGroup>
+																									</Col>
+																								)
+																							}
+																						</Row>
+																						<Row>
+																							<Col lg={6} className="mt-4">
+																								<FormGroup>
+																									<Label htmlFor="discount">Discount Amount</Label>
+																									<Input
+																										id="discount"
+																										name="discount"
+																										type="text"
+																										disabled={props.values.discountType && props.values.discountType === 'Percentage' ? true : false}
+																										placeholder="Discount Amounts"
+																										value={props.values.discount}
+																										onChange={option => {
+																											if (option.target.value === '' || this.regEx.test(option.target.value)) {
+																												props.handleChange('discount')(option)
+																												this.setState({
+																													discountAmount: +option.target.value
+																												}, () => {
+																													this.updateAmount(this.state.data, props)
+																												})
+																											}
+																										}}
+																									/>
+																								</FormGroup>
+																							</Col>
+																						</Row>
+																					</div>
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">Total Net</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">{(initValue.total_net).toFixed(2)}</label>
+																							</Col>
+																						</Row>
+																					</div>
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">Total Vat</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">{(initValue.invoiceVATAmount).toFixed(2)}</label>
+																							</Col>
+																						</Row>
+																					</div>
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">Discount</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">{(this.state.initValue.discount).toFixed(2)}</label>
+																							</Col>
+																						</Row>
+																					</div>
+																					<div className="total-item p-2">
+																						<Row>
+																							<Col lg={6}>
+																								<h5 className="mb-0 text-right">Total</h5>
+																							</Col>
+																							<Col lg={6} className="text-right">
+																								<label className="mb-0">{(initValue.totalAmount).toFixed(2)}</label>
+																							</Col>
+																						</Row>
+																					</div>
+																				</div>
+																			</Col>
+																		</Row>
+																	)
+																}
                                 <Row>
                                   <Col lg={12} className="mt-5 d-flex flex-wrap align-items-center justify-content-between">
                                     <FormGroup>

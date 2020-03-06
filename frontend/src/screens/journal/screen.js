@@ -477,7 +477,7 @@ class Journal extends React.Component {
                             JOURNAL REFERENCE NO.
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="postingReferenceType"
+                            dataField="postingReferenceTypeDisplayName"
                             dataSort
                             width="10%"
                           >

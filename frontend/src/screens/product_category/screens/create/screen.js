@@ -157,7 +157,7 @@ class CreateProductCategory extends React.Component {
                             {props => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <FormGroup>
-                                  <Label htmlFor="productCategoryCode ">Product Category Code</Label>
+                                  <Label htmlFor="productCategoryCode"><span className="text-danger">*</span>Product Category Code</Label>
                                   <Input
                                     type="text"
                                     id="productCategoryCode"
@@ -178,7 +178,7 @@ class CreateProductCategory extends React.Component {
                                   )}
                                 </FormGroup>
                                 <FormGroup>
-                                  <Label htmlFor="name">Product Category Name</Label>
+                                  <Label htmlFor="name"><span className="text-danger">*</span>Product Category Name</Label>
                                   <Input
                                     type="text"
                                     id="productCategoryName"

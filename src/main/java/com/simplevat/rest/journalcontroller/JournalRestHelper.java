@@ -157,7 +157,7 @@ public class JournalRestHelper {
 
 		JournalModel model = new JournalModel();
 		model.setJournalId(journal.getId());
-		model.setDescription(isManual ? journal.getDescription() : journal.getPostingReferenceType().toString());
+		model.setDescription(journal.getDescription());
 		model.setJournalReferenceNo(isManual ? journal.getJournlReferencenNo() : String.valueOf(journal.getId()));
 
 		BigDecimal totalCreditAmount = getTotalCreditAmount(journal.getJournalLineItems());
@@ -183,6 +183,7 @@ public class JournalRestHelper {
 			}
 		}
 		model.setPostingReferenceType(journal.getPostingReferenceType());
+		model.setPostingReferenceTypeDisplayName(journal.getPostingReferenceType().getDisplayName());
 		List<JournalLineItemRequestModel> requestModels = new ArrayList<>();
 		if (journal.getJournalLineItems() != null && !journal.getJournalLineItems().isEmpty()) {
 			for (JournalLineItem lineItem : journal.getJournalLineItems()) {

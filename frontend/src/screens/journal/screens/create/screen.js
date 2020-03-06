@@ -619,7 +619,7 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="date">Journal Date</Label>
+                                  <Label htmlFor="date"><span className="text-danger">*</span>Journal Date</Label>
                                   <DatePicker
                                     className="form-control"
                                     id="journalDate"
@@ -644,7 +644,7 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="journalReferenceNo">Reference #</Label>
+                                  <Label htmlFor="journalReferenceNo">Journal Reference #</Label>
                                   <Input
                                     type="text"
                                     id="journalReferenceNo"

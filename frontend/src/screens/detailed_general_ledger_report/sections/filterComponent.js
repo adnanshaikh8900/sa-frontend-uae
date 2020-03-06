@@ -18,6 +18,7 @@ import Select from "react-select"
 import moment from 'moment'
 
 import { selectOptionsFactory } from "utils";
+import './style.scss'
 
 
 class FilterComponent extends Component {

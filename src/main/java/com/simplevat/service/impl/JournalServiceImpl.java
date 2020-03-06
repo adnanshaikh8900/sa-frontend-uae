@@ -1,6 +1,7 @@
 package com.simplevat.service.impl;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,12 @@ public class JournalServiceImpl extends JournalService {
 	@Override
 	protected Dao<Integer, Journal> getDao() {
 		return journalDao;
+	}
+
+	@Override
+	public List<Journal> getJornalList(Date startDate, Date endDate, PaginationModel paginationModel) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

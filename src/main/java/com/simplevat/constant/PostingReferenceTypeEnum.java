@@ -5,14 +5,23 @@
  */
 package com.simplevat.constant;
 
+import lombok.Getter;
+
 /**
  *
  * @author uday
  */
 public enum PostingReferenceTypeEnum {
-    MANUAL,
-    INVOICE,
-    EXPENSE,
-    BANK_ACCOUNT,
-    PURCHASE;
+    MANUAL("Manual"),
+    INVOICE("Invoice"),
+    EXPENSE("Expense"),
+    BANK_ACCOUNT("Bank Account"),
+    PURCHASE("Purchase");
+	
+	@Getter
+	private String displayName;
+
+	private PostingReferenceTypeEnum(String displayName) {
+		this.displayName = displayName;
+	}
 }

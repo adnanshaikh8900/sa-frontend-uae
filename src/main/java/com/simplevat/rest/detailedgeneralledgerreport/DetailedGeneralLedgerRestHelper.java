@@ -100,9 +100,9 @@ public class DetailedGeneralLedgerRestHelper {
 
 					PostingReferenceTypeEnum postingType = data.getReferenceType();
 					model.setPostingReferenceTypeEnum(postingType.getDisplayName());
-					boolean isDebit = data.getDebitAmount() != null && new BigDecimal(0).equals(data.getDebitAmount())
-							? true
-							: false;
+					boolean isDebit = data.getDebitAmount() != null
+							|| (data.getDebitAmount() != null && new BigDecimal(0).equals(data.getDebitAmount())) ? true
+									: false;
 
 					switch (postingType) {
 					case BANK_ACCOUNT:
@@ -121,8 +121,8 @@ public class DetailedGeneralLedgerRestHelper {
 						expenseMap = findOrGetFromDbEx(expenseMap, data.getReferenceId());
 						Expense expense = expenseMap.get(data.getReferenceId());
 						model.setAmount(expense.getExpenseAmount());
-						model.setDebitAmount(isDebit ? expense.getExpenseAmount() : new BigDecimal(0));
-						model.setCreditAmount(!isDebit ? new BigDecimal(0) : expense.getExpenseAmount());
+						model.setDebitAmount(expense.getExpenseAmount());
+						model.setCreditAmount(new BigDecimal(0));
 						model.setName(expense.getPayee() != null && !expense.getPayee().equals(" ") ? expense.getPayee()
 								: "");
 						break;
@@ -134,8 +134,8 @@ public class DetailedGeneralLedgerRestHelper {
 
 						model.setReferenceNo(journal.getJournlReferencenNo());
 						model.setAmount(invoice.getTotalAmount());
-						model.setCreditAmount(isDebit ? data.getCreditAmount() : new BigDecimal(0));
-						model.setDebitAmount(!isDebit ? new BigDecimal(0) : invoice.getTotalAmount());
+						model.setCreditAmount(invoice.getTotalAmount());
+						model.setDebitAmount(new BigDecimal(0));
 						model.setName(data.getContact() != null
 								? data.getContact().getFirstName() + " " + data.getContact().getLastName()
 								: "");

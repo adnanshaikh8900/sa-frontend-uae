@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 public class DetailedGeneralLedgerReportController implements Serializable{
 
 	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private JwtTokenUtil jwtTokenUtil;		
 
 	@Autowired
 	private DetailedGeneralLedgerRestHelper detailedGeneralLedgerRestHelper;

@@ -585,6 +585,7 @@ class CustomerInvoice extends React.Component {
                           currencyList
                           keyField="id"
                           remote
+                          pagination={customer_invoice_data && customer_invoice_data.length > 0 ? true : false}
                           fetchInfo={{ dataTotalSize: customer_invoice_list.count ? customer_invoice_list.count : 0 }}
                           className="customer-invoice-table"
                           csvFileName="Customer_Invoice.csv"

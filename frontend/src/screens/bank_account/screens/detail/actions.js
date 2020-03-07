@@ -91,6 +91,7 @@ export const getBankAccountByID = (_id) => {
 export const updateBankAccount = (obj) => {
   return (dispatch) => {
     let url = `rest/bank/${obj.bankAccountId}?bankAccountId=${obj.bankAccountId}`
+    delete obj['bankAccountId']
     for (let key in obj) {
       url += `&${key}=${obj[key]}`
     }

@@ -120,10 +120,7 @@ public class BankAccountController implements Serializable {
 			filterDataMap.put(BankAccounrFilterEnum.CURRENCY_CODE,
 					currencyService.findByPK(filterModel.getCurrencyCode()));
 		}
-
-		// filterModel.setSortingCol(BankAccounrFilterEnum.ORDER_BY.getDbColumnName());
-		// filterModel.setOrder("DESC");
-
+		
 		filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
 
 		PaginationResponseModel paginatinResponseModel = bankAccountService.getBankAccounts(filterDataMap, filterModel);
@@ -242,7 +239,12 @@ public class BankAccountController implements Serializable {
 	public ResponseEntity getById(@RequestParam("id") Integer id) {
 		try {
 			BankAccount bankAccount = bankAccountService.findByPK(id);
-			return new ResponseEntity<>(bankAccount, HttpStatus.OK);
+			
+			if(bankAccount == null) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+			
+			return new ResponseEntity<>(bankAccountRestHelper.getModel(bankAccount), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

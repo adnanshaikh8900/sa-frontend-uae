@@ -265,11 +265,11 @@ public class DetailedGeneralLedgerRestHelper {
 					if (data == null)
 						date = LocalDateTime.now();
 					model.setDate(dateUtil.getDateAsString(date, "dd/MM/yyyy"));
-					System.out.println("date = " + model.getDate());
 					model.setTransactionTypeName(data.getTransactionCategory().getTransactionCategoryName());
-
+					
 					PostingReferenceTypeEnum postingType = data.getReferenceType();
 					model.setPostingReferenceTypeEnum(postingType.getDisplayName());
+					model.setPostingReferenceType(postingType);
 					boolean isDebit = data.getDebitAmount() != null
 							|| (data.getDebitAmount() != null && new BigDecimal(0).equals(data.getDebitAmount())) ? true
 									: false;

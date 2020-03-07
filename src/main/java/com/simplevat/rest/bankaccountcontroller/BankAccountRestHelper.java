@@ -6,7 +6,10 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.simplevat.entity.Currency;
 import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.entity.bankaccount.BankAccountStatus;
+import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.model.BankModel;
 import com.simplevat.rest.PaginationResponseModel;
 
@@ -46,11 +49,33 @@ public class BankAccountRestHelper {
 	public BankModel getModel(BankAccount bank) {
 
 		if (bank != null) {
-			BankModel model = new BankModel();
-				
-			//model.set
-			
-			return model;
+			BankModel bankModel = new BankModel();
+
+			bankModel.setBankAccountId(bank.getBankAccountId());
+			if (bank.getBankCountry() != null) {
+				bankModel.setBankCountry(bank.getBankCountry().getCountryCode());
+
+				bankModel.setAccountNumber(bank.getAccountNumber());
+				bankModel.setBankAccountName(bank.getBankAccountName());
+				bankModel.setBankName(bank.getBankName());
+				bankModel.setIbanNumber(bank.getIbanNumber());
+				bankModel.setIsprimaryAccountFlag(bank.getIsprimaryAccountFlag());
+				bankModel.setOpeningBalance(bank.getOpeningBalance());
+				bankModel.setPersonalCorporateAccountInd(bank.getPersonalCorporateAccountInd().toString());
+				bankModel.setSwiftCode(bank.getSwiftCode());
+
+				if (bank.getBankAccountStatus() != null) {
+					bankModel.setBankAccountStatus(bank.getBankAccountStatus().getBankAccountStatusCode());
+				}
+				if (bank.getBankAccountCurrency() != null) {
+					bankModel.setBankAccountCurrency(bank.getBankAccountCurrency().getCurrencyCode().toString());
+				}
+
+				if (bank.getBankAccountType() != null) {
+					bankModel.setBankAccountType(bank.getBankAccountType().getId());
+				}
+			}
+			return bankModel;
 		}
 		return null;
 	}

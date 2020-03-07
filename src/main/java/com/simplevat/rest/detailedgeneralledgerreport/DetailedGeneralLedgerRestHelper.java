@@ -1,11 +1,15 @@
 package com.simplevat.rest.detailedgeneralledgerreport;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +45,9 @@ public class DetailedGeneralLedgerRestHelper {
 	private JournalService journalService;
 
 	@Autowired
+	private JournalLineItemService journalLineItemService;
+
+	@Autowired
 	private TransactionService transactionalService;
 
 	@Autowired
@@ -53,8 +60,6 @@ public class DetailedGeneralLedgerRestHelper {
 	private DateFormatUtil dateUtil;
 
 	public List<Object> getDetailedGeneralLedgerReport(ReportRequestModel reportRequestModel) {
-
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
 
 		List<Object> resposneList = new ArrayList<Object>();
 		Map<JournalFilterEnum, Object> filterDataMap = new HashMap();
@@ -191,6 +196,144 @@ public class DetailedGeneralLedgerRestHelper {
 			transactionMap.put(transaction.getTransactionId(), transaction);
 		}
 		return transactionMap;
+	}
+
+	public List<Object> getDetailedGeneralLedgerReport1(ReportRequestModel reportRequestModel) {
+
+		List<Object> resposneList = new ArrayList<Object>();
+		Map<JournalFilterEnum, Object> filterDataMap = new HashMap();
+
+		filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
+
+		// PaginationResponseModel response =
+		// journalService.getJornalList(filterDataMap, null);
+
+		LocalDateTime fromDate = null;
+		LocalDateTime toDate = null;
+		try {
+			fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), "dd/MM/yyyy");
+		} catch (Exception e) {
+
+		}
+		try {
+			toDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), "dd/MM/yyyy");
+		} catch (Exception e) {
+
+		}
+		List<JournalLineItem> itemList = journalLineItemService.getList(fromDate, toDate, reportRequestModel);
+
+		if (itemList != null && itemList.size() > 0) {
+
+			Map<Integer, List<JournalLineItem>> map = new HashMap<Integer, List<JournalLineItem>>();
+			Map<Integer, Expense> expenseMap = new HashMap<Integer, Expense>();
+			Map<Integer, Transaction> transactionMap = new HashMap<Integer, Transaction>();
+			Map<Integer, Invoice> invoiceMap = new HashMap<Integer, Invoice>();
+
+			// for (Journal journal : journalList) {
+			for (JournalLineItem item : itemList) {
+				if (item.getTransactionCategory() != null) {
+					if (map.containsKey(item.getTransactionCategory().getTransactionCategoryId())) {
+						map.get(item.getTransactionCategory().getTransactionCategoryId()).add(item);
+					} else {
+						List<JournalLineItem> jlList = new ArrayList<JournalLineItem>();
+						jlList.add(item);
+						map.put(item.getTransactionCategory().getTransactionCategoryId(), jlList);
+					}
+				}
+			}
+			// }
+
+			for (Integer item : map.keySet()) {
+				List<DetailedGeneralLedgerReportListModel> dataList = new LinkedList<DetailedGeneralLedgerReportListModel>();
+				List<JournalLineItem> journalLineItemList = (List<JournalLineItem>) map.get(item);
+
+				Comparator<JournalLineItem> dateComparator = new Comparator<JournalLineItem>() {
+					@Override
+					public int compare(JournalLineItem j1, JournalLineItem j2) {
+						return j1.getJournal().getJournalDate().compareTo(j2.getJournal().getJournalDate());
+					}
+				};
+
+				Collections.sort(journalLineItemList, dateComparator);
+
+				for (JournalLineItem data : journalLineItemList) {
+
+					DetailedGeneralLedgerReportListModel model = new DetailedGeneralLedgerReportListModel();
+
+					Journal journal = data.getJournal();
+					LocalDateTime date = journal.getJournalDate();
+					if (data == null)
+						date = LocalDateTime.now();
+					model.setDate(dateUtil.getDateAsString(date, "dd/MM/yyyy"));
+					System.out.println("date = " + model.getDate());
+					model.setTransactionTypeName(data.getTransactionCategory().getTransactionCategoryName());
+
+					PostingReferenceTypeEnum postingType = data.getReferenceType();
+					model.setPostingReferenceTypeEnum(postingType.getDisplayName());
+					boolean isDebit = data.getDebitAmount() != null
+							|| (data.getDebitAmount() != null && new BigDecimal(0).equals(data.getDebitAmount())) ? true
+									: false;
+
+					switch (postingType) {
+					case BANK_ACCOUNT:
+
+						transactionMap = findOrGetFromDbTr(transactionMap, data.getReferenceId());
+						Transaction tr = transactionMap.get(data.getReferenceId());
+
+						model.setAmount(tr.getTransactionAmount());
+						model.setDebitAmount(isDebit ? tr.getTransactionAmount() : new BigDecimal(0));
+						model.setCreditAmount(isDebit ? new BigDecimal(0) : tr.getTransactionAmount());
+						model.setName(tr.getBankAccount() != null ? tr.getBankAccount().getBankAccountName() : "");
+						break;
+
+					case EXPENSE:
+
+						expenseMap = findOrGetFromDbEx(expenseMap, data.getReferenceId());
+						Expense expense = expenseMap.get(data.getReferenceId());
+						model.setAmount(expense.getExpenseAmount());
+						model.setDebitAmount(expense.getExpenseAmount());
+						model.setCreditAmount(new BigDecimal(0));
+						model.setName(expense.getPayee() != null && !expense.getPayee().equals(" ") ? expense.getPayee()
+								: "");
+						break;
+
+					case INVOICE:
+
+						invoiceMap = findOrGetFromDbIn(invoiceMap, data.getReferenceId());
+						Invoice invoice = invoiceMap.get(data.getReferenceId());
+
+						model.setReferenceNo(journal.getJournlReferencenNo());
+						model.setAmount(invoice.getTotalAmount());
+						model.setCreditAmount(invoice.getTotalAmount());
+						model.setDebitAmount(new BigDecimal(0));
+						model.setName(data.getContact() != null
+								? data.getContact().getFirstName() + " " + data.getContact().getLastName()
+								: "");
+						model.setTransactonRefNo(invoice.getReferenceNumber());
+						break;
+
+					case MANUAL:
+						model.setReferenceNo(journal.getJournlReferencenNo());
+						model.setAmount(isDebit ? data.getDebitAmount() : data.getCreditAmount());
+						model.setCreditAmount(data.getCreditAmount());
+						model.setDebitAmount(data.getDebitAmount());
+						model.setName(data.getContact() != null
+								? data.getContact().getFirstName() + " " + data.getContact().getLastName()
+								: "");
+						break;
+
+					case PURCHASE:
+						break;
+					}
+
+					dataList.add(model);
+				}
+				resposneList.add(dataList);
+			}
+
+		}
+
+		return resposneList;
 	}
 
 }

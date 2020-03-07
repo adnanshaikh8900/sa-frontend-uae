@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -35,8 +37,9 @@ import lombok.Data;
 @Entity
 @Table(name = "JOURNAL_LINE_ITEM")
 @Data
+@NamedQueries({
+		@NamedQuery(name = "getListByFrmToDateWthPagintion", query = " select jn from JournalLineItem jn INNER join Journal j on j.id = jn.journal.id where j.journalDate BETWEEN :startDate and :endDate") })
 public class JournalLineItem implements Serializable {
-
 	/**
 	 *
 	 */

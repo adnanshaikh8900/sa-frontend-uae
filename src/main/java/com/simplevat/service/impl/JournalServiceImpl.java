@@ -38,10 +38,4 @@ public class JournalServiceImpl extends JournalService {
 		return journalDao;
 	}
 
-	@Override
-	public List<Journal> getJornalList(Date startDate, Date endDate, PaginationModel paginationModel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

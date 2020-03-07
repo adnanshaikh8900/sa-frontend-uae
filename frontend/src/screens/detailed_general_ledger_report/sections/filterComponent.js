@@ -26,8 +26,8 @@ class FilterComponent extends Component {
 		super(props)
 		this.state = {
 			initValue: {
-				from_date: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
-				to_date: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
+				startDate: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
+				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
 				report_basis: ''
 			}
 		}
@@ -56,23 +56,23 @@ class FilterComponent extends Component {
 									<Row>
 										<Col lg={4}>
 											<FormGroup className="mb-3">
-												<Label htmlFor="from_date">
+												<Label htmlFor="startDate">
 													From
                                   </Label>
 												<DatePicker
 													id="date"
-													name="from_date"
+													name="startDate"
 													className={`form-control`}
 													placeholderText="From"
 													showMonthDropdown
 													showYearDropdown
-													value={moment(props.values.from_date).format('DD/MM/YYYY')}
+													value={moment(props.values.startDate).format('DD/MM/YYYY')}
 													dropdownMode="select"
 													dateFormat="dd/MM/yyyy"
 													onChange={value => {
-														props.handleChange("from_date")(value);
-														if(moment(value).isAfter(props.values.to_date)){
-															props.setFieldValue('to_date',moment(value).add(1, 'M'))
+														props.handleChange("startDate")(value);
+														if(moment(value).isAfter(props.values.endDate)){
+															props.setFieldValue('endDate',moment(value).add(1, 'M'))
 														}
 													}}
 												/>
@@ -81,21 +81,21 @@ class FilterComponent extends Component {
 
 										<Col lg={4}>
 											<FormGroup className="mb-3">
-												<Label htmlFor="to_date">
+												<Label htmlFor="endDate">
 													To
                                   </Label>
 												<DatePicker
 													id="date"
-													name="to_date"
+													name="endDate"
 													className={`form-control`}
 													placeholderText="From"
 													showMonthDropdown
 													showYearDropdown
-													value={moment(props.values.to_date).format('DD/MM/YYYY')}
+													value={moment(props.values.endDate).format('DD/MM/YYYY')}
 													dropdownMode="select"
 													dateFormat="dd/MM/yyyy"
 													onChange={value => {
-														props.handleChange("to_date")(value);
+														props.handleChange("endDate")(value);
 													}}
 												/>
 											</FormGroup>

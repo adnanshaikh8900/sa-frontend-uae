@@ -12,7 +12,7 @@ import lombok.Getter;
  * @author ashish
  */
 public enum InvoiceFilterEnum {
-    CONTACT("contact", " = :invoiceDate"),
+    CONTACT("contact", " = :contact"),
     INVOICE_NUMBER("referenceNumber", " like CONCAT(:referenceNumber,'%')"),
     INVOICE_DATE("invoiceDate", " = :invoiceDate "),
     INVOICE_DUE_DATE("invoiceDueDate", " = :invoiceDueDate "),

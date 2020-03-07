@@ -5,14 +5,22 @@
  */
 package com.simplevat.dao;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+
 import com.simplevat.entity.JournalLineItem;
+import com.simplevat.rest.PaginationModel;
 
 /**
  *
  * @author daynil
  */
 public interface JournalLineItemDao extends Dao<Integer, JournalLineItem> {
-    
-    public void deleteByJournalId(Integer journalId);
+
+	public void deleteByJournalId(Integer journalId);
+
+	public List<JournalLineItem> getList(LocalDateTime startDate, LocalDateTime endDate,
+			PaginationModel paginationModel);
 
 }

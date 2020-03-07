@@ -13,6 +13,7 @@ public class DetailedGeneralLedgerReportListModel {
 	private String transactionTypeName;
 	private String name;
 	private String postingReferenceTypeEnum;
+	private PostingReferenceTypeEnum postingReferenceType;
 	private String transactonRefNo;
 	private String referenceNo;
 	private BigDecimal debitAmount;

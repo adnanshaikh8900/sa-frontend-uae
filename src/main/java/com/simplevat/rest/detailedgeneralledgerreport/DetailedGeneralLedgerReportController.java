@@ -39,7 +39,7 @@ public class DetailedGeneralLedgerReportController implements Serializable{
 		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
 
 		List list = detailedGeneralLedgerRestHelper
-				.getDetailedGeneralLedgerReport(reportRequestModel);
+				.getDetailedGeneralLedgerReport1(reportRequestModel);
 
 		try {
 			if (list == null) {

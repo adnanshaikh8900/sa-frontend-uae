@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.TransactionCategoryCodeEnum;
-import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;

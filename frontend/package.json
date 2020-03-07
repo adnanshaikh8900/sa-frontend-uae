@@ -53,6 +53,7 @@
     "react-grid-layout": "^0.16.6",
     "react-images-upload": "^1.2.7",
     "react-images-uploader": "^1.2.0-rc1",
+    "react-js-pagination": "^3.0.3",
     "react-ladda": "6.0.0",
     "react-loader-spinner": "^3.1.5",
     "react-progress-button": "^5.1.0",

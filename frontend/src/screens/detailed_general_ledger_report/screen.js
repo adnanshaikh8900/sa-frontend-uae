@@ -244,7 +244,7 @@ class DetailedGeneralLedgerReport extends React.Component {
                             })}
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="data-column">
                           {this.state.detailedGeneralLedgerList && this.state.detailedGeneralLedgerList.length > 0 ? this.state.detailedGeneralLedgerList.map((item, index) => {
                             // console.log(item[index]['transactionTypeName'])
                             return (
@@ -268,7 +268,7 @@ class DetailedGeneralLedgerReport extends React.Component {
                                       <td>{row["referenceNo"]}</td>
                                       <td>{row.debitAmount > 0 ? <p onClick={this.getInvoice(row['postingReferenceType'])}>{row.debitAmount}</p> : ''}</td>
                                       <td>{row.creditAmount > 0 ? <p onClick={this.getInvoice(row['postingReferenceType'])}>{row.creditAmount}</p> : ''}</td>
-                                      <td>{row.amount}</td>
+                                      <td className="amount-col">{row.amount}</td>
                                     </tr>
                                   )
                                 })}

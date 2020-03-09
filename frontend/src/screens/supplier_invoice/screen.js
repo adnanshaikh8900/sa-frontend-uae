@@ -598,7 +598,7 @@ class SupplierInvoice extends React.Component {
                           version="4"
                           hover
                           keyField="id"
-                          pagination = {supplier_invoice_data && supplier_invoice_data.data && supplier_invoice_data.data.length > 0 ? true : false}
+                          pagination = {supplier_invoice_data  && supplier_invoice_data.length > 0 ? true : false}
                           remote
                           fetchInfo={{ dataTotalSize: supplier_invoice_list.count ? supplier_invoice_list.count : 0 }}
                           className="supplier-invoice-table"

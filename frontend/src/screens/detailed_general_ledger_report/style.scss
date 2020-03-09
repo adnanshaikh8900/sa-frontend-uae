@@ -9,6 +9,33 @@
         background: white;
       }
     }
+    .data-column  {
+      tr {
+        cursor: pointer;
+        td{
+          vertical-align: middle !important;
+          p{
+            margin-bottom: 0 !important;
+            cursor: pointer;
+            color: #428bca;
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+        .amount-col {
+          cursor: pointer;
+          color: #428bca;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .data-column > tr:last-child {
+      border-bottom: 1px solid lightgray!important;
+  }
     .badge {
       padding: 0.4em 0.6em;
       font-size: 90%;

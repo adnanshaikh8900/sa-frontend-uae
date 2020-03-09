@@ -13,9 +13,13 @@ import com.simplevat.entity.Payment;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.TypedQuery;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +51,19 @@ public class PaymentDaoImpl extends AbstractDao<Integer, Payment> implements Pay
 				update(payment);
 			}
 		}
+	}
+
+	@Override
+	public BigDecimal getAmountByInvoiceId(Integer invoiceId) {
+		TypedQuery<Payment> query = getEntityManager().createNamedQuery("getAmountByInvoiceId", Payment.class);
+		query.setParameter("id", invoiceId);
+		List<Payment> paymentList = query.getResultList();
+		BigDecimal totalAmount = new BigDecimal(0);
+
+		for (Payment p : paymentList) {
+			totalAmount = totalAmount.add(p.getInvoiceAmount());
+		}
+		return totalAmount;
 	}
 
 }

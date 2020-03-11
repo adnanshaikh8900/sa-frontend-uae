@@ -60,4 +60,16 @@
   top: 30px;
   transform: rotate(-45deg);
 }
+@media print {
+  body *{
+    visibility: hidden;
+    position: relative;
+  }
+
+  #singlePage, #singlePage * {
+    visibility: visible;
+  }
+
+
+}
 

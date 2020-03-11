@@ -654,6 +654,8 @@ class DetailCustomerInvoice extends React.Component {
 																	.required('Invoice Date is Required'),
 																invoiceDueDate: Yup.string()
 																	.required('Invoice Due Date is Required'),
+																	currency: Yup.string()
+																	.required("Currency is Required"),
 																lineItemsString: Yup.array()
 																	.required('Atleast one invoice sub detail is mandatory')
 																	.of(Yup.object().shape({
@@ -877,7 +879,11 @@ class DetailCustomerInvoice extends React.Component {
 																				name="currency"
 																				value={props.values.currency}
 																				onChange={option => props.handleChange('currency')(option)}
-																			/>
+																				className={`${props.errors.currency && props.touched.currency ? "is-invalid" : ""}`}
+																				/>
+																				{props.errors.currency && props.touched.currency && (
+																					<div className="invalid-feedback">{props.errors.currency}</div>
+																				)}
 																		</FormGroup>
 																	</Col>
 																	<Col lg={4}>
@@ -896,6 +902,7 @@ class DetailCustomerInvoice extends React.Component {
 																</Row>
 
 																<hr />
+																{console.log(props.errors)}
 																<Row>
 																	<Col lg={8}>
 																		<Row>

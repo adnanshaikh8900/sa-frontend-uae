@@ -31,13 +31,18 @@ class PreviewInvoiceModal extends React.Component {
     this.state = {
       loading: false,
       invoiceData: {},
-      totalNet: 0
+      totalNet: 0,
+      currencyData: {}
     };
   }
 
   exportPDFWithComponent = () => {
     this.pdfExportComponent.save();
   };
+
+  componentDidMount() {
+    
+  }
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.id !== this.props.id && nextProps.id) {
@@ -50,7 +55,20 @@ class PreviewInvoiceModal extends React.Component {
           this.setState({
             invoiceData: res.data,
             totalNet: val
+          },()=>{
+            if(this.state.invoiceData.currencyCode) {
+              const temp = nextProps.currency_list.filter(item => item.currencyCode === this.state.invoiceData.currencyCode)
+              this.setState({
+                 currencyData : temp
+              },()=>{
+                console.log(this.state.currencyData[0])
+              })
+            }
           });
+        }
+      }).catch(err => {
+        if(err) {
+          this.props.closeInvoicePreviewModal()
         }
       });
     }
@@ -58,7 +76,7 @@ class PreviewInvoiceModal extends React.Component {
 
   render() {
     const { openInvoicePreviewModal, closeInvoicePreviewModal } = this.props;
-    const { invoiceData } = this.state;
+    const { invoiceData,currencyData } = this.state;
     return (
       <div className="contact-modal-screen">
         <Modal
@@ -86,11 +104,11 @@ class PreviewInvoiceModal extends React.Component {
                     }}
                   >
                     <div style={{ width: "60%" }}>
-                      <h6 className="mb-3">VAT Department:</h6>
+                      {/* <h6 className="mb-3">VAT Department:</h6>
                       <h6>1</h6>
                       <div></div>
                       <div>Peshawar KPK 25000</div>
-                      <div>UNITED ARAB EMIRATES</div>
+                      <div>UNITED ARAB EMIRATES</div> */}
                     </div>
                     <div style={{ width: "40%", textAlign: "right" }}>
                       <Table className="table-clear">
@@ -104,7 +122,7 @@ class PreviewInvoiceModal extends React.Component {
                           <tr style={{ textAlign: "right" }}>
                             <td className="left" style={{ width: '75%' }}>   Balance Due
                         <br />
-                              <b style={{ fontWeight: "600" }}>AED 20000</b></td>
+                   <b style={{ fontWeight: "600" }}>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${invoiceData.dueAmount}` : `${invoiceData.dueAmount}`}</b></td>
                           </tr>
                         </tbody>
                       </Table>
@@ -211,7 +229,7 @@ class PreviewInvoiceModal extends React.Component {
                             <td className="left">
                               <strong>Subtotal</strong>
                             </td>
-                            <td className="right">${this.state.totalNet}</td>
+                            <td className="right">{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${this.state.totalNet}`: `${this.state.totalNet}`}</td>
                           </tr>
                           <tr style={{ textAlign: "right" }}>
                             <td className="left">
@@ -223,14 +241,14 @@ class PreviewInvoiceModal extends React.Component {
                                 
                               </strong>
                             </td>
-                            <td className="right">${invoiceData.discount} </td>
+                            <td className="right">{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} `:''}{invoiceData.discount ? invoiceData.discount : 0.00} </td>
                           </tr>
                           <tr style={{ textAlign: "right" }}>
                             <td className="left">
                               <strong>VAT</strong>
                             </td>
                             <td className="right">
-                              ${invoiceData.totalVatAmount}
+                            {currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${invoiceData.totalVatAmount}`: `${invoiceData.totalVatAmount}`}
                             </td>
                           </tr>
                           <tr style={{ textAlign: "right" }}>
@@ -238,7 +256,7 @@ class PreviewInvoiceModal extends React.Component {
                               <strong>Total</strong>
                             </td>
                             <td className="right">
-                              <strong>${invoiceData.totalAmount}</strong>
+                              <strong>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${invoiceData.totalAmount}`:`${invoiceData.totalAmount}`}</strong>
                             </td>
                           </tr>
                           <tr style={{ textAlign: "right" }}>
@@ -246,7 +264,7 @@ class PreviewInvoiceModal extends React.Component {
                               <strong>Balance Due</strong>
                             </td>
                             <td className="right">
-                              <strong>AED 20000</strong>
+                                <strong>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${invoiceData.dueAmount}`:`${invoiceData.dueAmount}`}</strong>
                             </td>
                           </tr>
                         </tbody>

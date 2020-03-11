@@ -37,6 +37,8 @@ import ImportTransaction from './import_transaction'
 import CustomerInvoice from './customer_invoice'
 import CreateCustomerInvoice from './customer_invoice/screens/create'
 import DetailCustomerInvoice from './customer_invoice/screens/detail'
+import ViewCustomerInvoice from './customer_invoice/screens/view'
+
 import Receipt from './receipt'
 import CreateReceipt from './receipt/screens/create'
 import DetailReceipt from './receipt/screens/detail'
@@ -47,9 +49,12 @@ import DetailReceipt from './receipt/screens/detail'
 import SupplierInvoice from './supplier_invoice'
 import CreateSupplierInvoice from './supplier_invoice/screens/create'
 import DetailSupplierInvoice from './supplier_invoice/screens/detail'
+import ViewInvoice from './supplier_invoice/screens/view'
+
 import Expense from './expense'
 import CreateExpense from './expense/screens/create'
 import DetailExpense from './expense/screens/detail'
+
 import Payment from './payment'
 import CreatePayment from './payment/screens/create'
 import DetailPayment from './payment/screens/detail'
@@ -149,6 +154,8 @@ export {
   CustomerInvoice,
   CreateCustomerInvoice,
   DetailCustomerInvoice,
+  ViewCustomerInvoice,
+
   Receipt,
   CreateReceipt,
   DetailReceipt,
@@ -158,6 +165,8 @@ export {
   SupplierInvoice,
   CreateSupplierInvoice,
   DetailSupplierInvoice,
+  ViewInvoice,
+
   Expense,
   CreateExpense,
   DetailExpense,

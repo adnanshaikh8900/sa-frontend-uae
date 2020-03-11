@@ -48,7 +48,9 @@ const mapStateToProps = (state) => {
   return ({
     supplier_invoice_list: state.supplier_invoice.supplier_invoice_list,
     supplier_list: state.supplier_invoice.supplier_list,
-    status_list: state.supplier_invoice.status_list
+    status_list: state.supplier_invoice.status_list,
+    currency_list: state.customer_invoice.currency_list,
+
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -123,16 +125,20 @@ class SupplierInvoice extends React.Component {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = {...filterData,...paginationData }
+    const postData = { ...filterData, ...paginationData }
     this.props.supplierInvoiceActions.getSupplierInvoiceList(postData).then(res => {
-    if (res.status === 200) {
+      if (res.status === 200) {
         this.props.supplierInvoiceActions.getStatusList()
         this.props.supplierInvoiceActions.getSupplierList(filterData.contactType);
-        this.setState({ loading: false });
-     }
+        this.setState({ loading: false }, () => {
+          if (this.props.location.state && this.props.location.state.id) {
+            this.openInvoicePreviewModal(this.props.location.state.id)
+          }
+        });
+      }
     }).catch(err => {
-       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
-       this.setState({ loading: false })
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+      this.setState({ loading: false })
     })
 
   }
@@ -165,7 +171,7 @@ class SupplierInvoice extends React.Component {
       classname = 'badge-primary'
     }
     return (
-      <span className={`badge ${classname} mb-0`} style={{color: 'white'}}>{row.status}</span>
+      <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>{row.status}</span>
     )
   }
 
@@ -207,7 +213,10 @@ class SupplierInvoice extends React.Component {
                 <i className="fas fa-heart" /> Post
                         </DropdownItem>
             )}
-            <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.id)}}>
+            {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.id)}}>
+              <i className="fas fa-eye" /> View
+            </DropdownItem> */}
+            <DropdownItem onClick={() => this.props.history.push('/admin/expense/supplier-invoice/view', { id: row.id })}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
@@ -219,7 +228,7 @@ class SupplierInvoice extends React.Component {
             <DropdownItem>
               <i className="fas fa-times" /> Cancel
             </DropdownItem>
-            <DropdownItem onClick={()=>{this.closeInvoice(row.id)}}>
+            <DropdownItem onClick={() => { this.closeInvoice(row.id) }}>
               <i className="fa fa-trash-o" /> Delete
             </DropdownItem>
           </DropdownMenu>
@@ -328,26 +337,26 @@ class SupplierInvoice extends React.Component {
     this.initializeData()
   }
 
-  postInvoice(row){
+  postInvoice(row) {
     this.setState({
       loading: true
     })
     const postingRequestModel = {
-      amount : row.invoiceAmount,
+      amount: row.invoiceAmount,
       postingRefId: row.id,
       postingRefType: 'INVOICE'
     }
     this.props.supplierInvoiceActions.postInvoice(postingRequestModel).then(res => {
-    if (res.status === 200) {
-      this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
-      this.setState({
-        loading: false
-      })
-      this.initializeData()
-     }
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
+        this.setState({
+          loading: false
+        })
+        this.initializeData()
+      }
     }).catch(err => {
-       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
-       this.setState({
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+      this.setState({
         loading: false
       })
     })
@@ -403,7 +412,7 @@ class SupplierInvoice extends React.Component {
 
   render() {
     const { loading, filterData, dialog, selectedRows } = this.state
-    const {  status_list, supplier_list,supplier_invoice_list } = this.props
+    const { status_list, supplier_list, supplier_invoice_list } = this.props
     // const containerStyle = {
     //   zIndex: 1999
     // }
@@ -416,7 +425,7 @@ class SupplierInvoice extends React.Component {
         customerName: supplier.name,
         invoiceNumber: supplier.referenceNumber,
         invoiceDate: supplier.invoiceDate ? moment(supplier.invoiceDate).format('DD/MM/YYYY') : '',
-        invoiceDueDate: supplier.invoiceDueDate ? moment(supplier.invoiceDueDate).format('DD/MM/YYYY'): '',
+        invoiceDueDate: supplier.invoiceDueDate ? moment(supplier.invoiceDueDate).format('DD/MM/YYYY') : '',
         invoiceAmount: supplier.totalAmount,
         vatAmount: supplier.totalVatAmount,
       })
@@ -442,225 +451,225 @@ class SupplierInvoice extends React.Component {
               {dialog}
               {
                 loading &&
-                  <Row>
-                    <Col lg={12} className="rounded-loader">
-                      <Loader />
-                    </Col>
-                  </Row>
+                <Row>
+                  <Col lg={12} className="rounded-loader">
+                    <Loader />
+                  </Col>
+                </Row>
               }
-                  
-                  <Row>
-                    <Col lg={12}>
-                      <div className="mb-4 status-panel p-3">
-                        <Row>
-                          <Col lg={3}>
-                            <h5>Overdue</h5>
-                            <h3 className="status-title">$53.25 USD</h3>
-                          </Col>
-                          <Col lg={3}>
-                            <h5>Due Within This Week</h5>
-                            <h3 className="status-title">$220.28 USD</h3>
-                          </Col>
-                          <Col lg={3}>
-                            <h5>Due Within 30 Days</h5>
-                            <h3 className="status-title">$220.28 USD</h3>
-                          </Col>
-                          <Col lg={3}>
-                            <h5>Average Time to Get Paid</h5>
-                            <h3 className="status-title">0 day</h3>
-                          </Col>
-                        </Row>
-                      </div>
-                      <div className="d-flex justify-content-end">
-                        <ButtonGroup size="sm">
-                          <Button
-                            color="success"
-                            type="button"
-                            className="btn-square"
-                            onClick={() => {
-                              this.table.handleExportCSV()
-                            }}
-                            // disabled={supplier_invoice_list.length === 0}
-                          >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
-                          </Button>
-                          <Button
-                            color="primary"
-                            className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/expense/supplier-invoice/create`)}
-                          >
-                            <i className="fas fa-plus mr-1" />
-                            New Invoice
-                          </Button>
-                          <Button
-                            color="warning"
-                            className="btn-square"
-                            onClick={this.bulkDelete}
-                            disabled={selectedRows.length === 0}
 
-                          >
-                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-                            Bulk Delete
+              <Row>
+                <Col lg={12}>
+                  <div className="mb-4 status-panel p-3">
+                    <Row>
+                      <Col lg={3}>
+                        <h5>Overdue</h5>
+                        <h3 className="status-title">$53.25 USD</h3>
+                      </Col>
+                      <Col lg={3}>
+                        <h5>Due Within This Week</h5>
+                        <h3 className="status-title">$220.28 USD</h3>
+                      </Col>
+                      <Col lg={3}>
+                        <h5>Due Within 30 Days</h5>
+                        <h3 className="status-title">$220.28 USD</h3>
+                      </Col>
+                      <Col lg={3}>
+                        <h5>Average Time to Get Paid</h5>
+                        <h3 className="status-title">0 day</h3>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div className="d-flex justify-content-end">
+                    <ButtonGroup size="sm">
+                      <Button
+                        color="success"
+                        type="button"
+                        className="btn-square"
+                        onClick={() => {
+                          this.table.handleExportCSV()
+                        }}
+                      // disabled={supplier_invoice_list.length === 0}
+                      >
+                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                        Export to CSV
                           </Button>
-                        </ButtonGroup>
-                      </div>
-                      <div className="py-3">
-                        <h5>Filter : </h5>
-                        <Row>
-                          <Col lg={2} className="mb-1">
-                            <Select
-                              className="select-default-width"
-                              placeholder="Select Supplier"
-                              id="supplier"
-                              name="supplier"
-                              options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list, 'Supplier Name') : []}
-                              value={filterData.supplierId}
-                              onChange={(option) => { 
-                                if(option && option.value) {
-                                  this.handleChange(option.value, 'supplierId')
-                                } else {
-                                  this.handleChange('', 'supplierId')
-                                }
-                               }}
-                            />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'referenceNumber') }} />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <DatePicker
-                              className="form-control"
-                              id="date"
-                              name="invoiceDate"
-                              placeholderText="Invoice Date"
-                              showMonthDropdown
-                              showYearDropdown
-                              dropdownMode="select"
-                              dateFormat="dd/MM/yyyy"
-                              selected={filterData.invoiceDate}
-                              // value={filterData.invoiceDate}
-                              onChange={(value) => {
-                                this.handleChange(value, "invoiceDate")
-                              }}
-                            />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <DatePicker
-                              className="form-control"
-                              id="date"
-                              name="invoiceDueDate"
-                              placeholderText="Invoice Due Date"
-                              showMonthDropdown
-                              showYearDropdown
-                              dropdownMode="select"
-                              dateFormat="dd/MM/yyyy"
-                              selected={filterData.invoiceDueDate}
-                              onChange={(value) => {
-                                this.handleChange(value, "invoiceDueDate")
-                              }}
-                            />
-                          </Col>
-                          <Col lg={1} className="mb-1">
-                            <Input type="text" placeholder="Amount" onChange={(e) => { this.handleChange(e.target.value, 'amount') }} />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Select
-                              className=""
-                              // options={status_list ? status_list.map(item => {
-                              //   return { label: item, value: item }
-                              // }) : ''}
-                              options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list, 'Status') : []}
-                              value={this.state.filterData.status}
-                              onChange={(option) => { 
-                                if(option && option.value) {
-                                  this.handleChange(option.value, 'status')
-                                } else {
-                                  this.handleChange('', 'status')
-                                }
-                               }}
-                              placeholder="Status"
-                            />
-                          </Col>
-                          <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
-                              <i className="fa fa-search"></i>
-                            </Button>
-                          </Col>
-                        </Row>
-                      </div>
-                      <div>
-                        <BootstrapTable
-                          selectRow={this.selectRowProp}
-                          search={false}
-                          options={this.options}
-                          data={supplier_invoice_data ? supplier_invoice_data : []}
-                          version="4"
-                          hover
-                          keyField="id"
-                          pagination = {supplier_invoice_data  && supplier_invoice_data.length > 0 ? true : false}
-                          remote
-                          fetchInfo={{ dataTotalSize: supplier_invoice_list.count ? supplier_invoice_list.count : 0 }}
-                          className="supplier-invoice-table"
-                          ref={node => this.table = node}
-                        >
+                      <Button
+                        color="primary"
+                        className="btn-square"
+                        onClick={() => this.props.history.push(`/admin/expense/supplier-invoice/create`)}
+                      >
+                        <i className="fas fa-plus mr-1" />
+                        New Invoice
+                          </Button>
+                      <Button
+                        color="warning"
+                        className="btn-square"
+                        onClick={this.bulkDelete}
+                        disabled={selectedRows.length === 0}
 
-                          <TableHeaderColumn
-                            width="130"
-                            dataField="status"
-                            dataFormat={this.renderInvoiceStatus}
-                            dataSort
-                          >
-                            Status
+                      >
+                        <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+                        Bulk Delete
+                          </Button>
+                    </ButtonGroup>
+                  </div>
+                  <div className="py-3">
+                    <h5>Filter : </h5>
+                    <Row>
+                      <Col lg={2} className="mb-1">
+                        <Select
+                          className="select-default-width"
+                          placeholder="Select Supplier"
+                          id="supplier"
+                          name="supplier"
+                          options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list, 'Supplier Name') : []}
+                          value={filterData.supplierId}
+                          onChange={(option) => {
+                            if (option && option.value) {
+                              this.handleChange(option.value, 'supplierId')
+                            } else {
+                              this.handleChange('', 'supplierId')
+                            }
+                          }}
+                        />
+                      </Col>
+                      <Col lg={2} className="mb-1">
+                        <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'referenceNumber') }} />
+                      </Col>
+                      <Col lg={2} className="mb-1">
+                        <DatePicker
+                          className="form-control"
+                          id="date"
+                          name="invoiceDate"
+                          placeholderText="Invoice Date"
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
+                          dateFormat="dd/MM/yyyy"
+                          selected={filterData.invoiceDate}
+                          // value={filterData.invoiceDate}
+                          onChange={(value) => {
+                            this.handleChange(value, "invoiceDate")
+                          }}
+                        />
+                      </Col>
+                      <Col lg={2} className="mb-1">
+                        <DatePicker
+                          className="form-control"
+                          id="date"
+                          name="invoiceDueDate"
+                          placeholderText="Invoice Due Date"
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
+                          dateFormat="dd/MM/yyyy"
+                          selected={filterData.invoiceDueDate}
+                          onChange={(value) => {
+                            this.handleChange(value, "invoiceDueDate")
+                          }}
+                        />
+                      </Col>
+                      <Col lg={1} className="mb-1">
+                        <Input type="text" placeholder="Amount" onChange={(e) => { this.handleChange(e.target.value, 'amount') }} />
+                      </Col>
+                      <Col lg={2} className="mb-1">
+                        <Select
+                          className=""
+                          // options={status_list ? status_list.map(item => {
+                          //   return { label: item, value: item }
+                          // }) : ''}
+                          options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list, 'Status') : []}
+                          value={this.state.filterData.status}
+                          onChange={(option) => {
+                            if (option && option.value) {
+                              this.handleChange(option.value, 'status')
+                            } else {
+                              this.handleChange('', 'status')
+                            }
+                          }}
+                          placeholder="Status"
+                        />
+                      </Col>
+                      <Col lg={1} className="mb-1">
+                        <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <i className="fa fa-search"></i>
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div>
+                    <BootstrapTable
+                      selectRow={this.selectRowProp}
+                      search={false}
+                      options={this.options}
+                      data={supplier_invoice_data ? supplier_invoice_data : []}
+                      version="4"
+                      hover
+                      keyField="id"
+                      pagination={supplier_invoice_data && supplier_invoice_data.length > 0 ? true : false}
+                      remote
+                      fetchInfo={{ dataTotalSize: supplier_invoice_list.count ? supplier_invoice_list.count : 0 }}
+                      className="supplier-invoice-table"
+                      ref={node => this.table = node}
+                    >
+
+                      <TableHeaderColumn
+                        width="130"
+                        dataField="status"
+                        dataFormat={this.renderInvoiceStatus}
+                        dataSort
+                      >
+                        Status
                           </TableHeaderColumn>
-                          <TableHeaderColumn                           
-                            dataField="customerName"
-                            dataSort
-                          >
-                            Supplier Name
+                      <TableHeaderColumn
+                        dataField="customerName"
+                        dataSort
+                      >
+                        Supplier Name
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="invoiceNumber"
-                            // dataFormat={this.renderInvoiceNumber}
-                            dataSort
-                          >
-                            Invoice Number
+                      <TableHeaderColumn
+                        dataField="invoiceNumber"
+                        // dataFormat={this.renderInvoiceNumber}
+                        dataSort
+                      >
+                        Invoice Number
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="invoiceDate"
-                            dataSort
-                          >
-                            Invoice Date
+                      <TableHeaderColumn
+                        dataField="invoiceDate"
+                        dataSort
+                      >
+                        Invoice Date
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="invoiceDueDate"
-                            dataSort
-                          >
-                            Due Date
+                      <TableHeaderColumn
+                        dataField="invoiceDueDate"
+                        dataSort
+                      >
+                        Due Date
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="invoiceAmount"
-                            dataSort
-                          >
-                            Invoice Amount
+                      <TableHeaderColumn
+                        dataField="invoiceAmount"
+                        dataSort
+                      >
+                        Invoice Amount
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="vatAmount"
-                            dataSort
-                          >
-                            VAT Amount
+                      <TableHeaderColumn
+                        dataField="vatAmount"
+                        dataSort
+                      >
+                        VAT Amount
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            className="text-right"
-                            columnClassName="text-right"
-                            width="55"
-                            dataFormat={this.renderActions}
-                          >
-                          </TableHeaderColumn>
-                        </BootstrapTable>
-                      </div>
-                    </Col>
-                  </Row>
+                      <TableHeaderColumn
+                        className="text-right"
+                        columnClassName="text-right"
+                        width="55"
+                        dataFormat={this.renderActions}
+                      >
+                      </TableHeaderColumn>
+                    </BootstrapTable>
+                  </div>
+                </Col>
+              </Row>
             </CardBody>
           </Card>
         </div>
@@ -669,6 +678,8 @@ class SupplierInvoice extends React.Component {
           closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
           getInvoiceById={this.props.supplierInvoiceActions.getInvoiceById}
           id={this.state.selectedId}
+          currency_list={this.props.currency_list}
+          history={this.props.history}
         />
       </div>
 

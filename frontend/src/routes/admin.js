@@ -24,6 +24,8 @@ import {
   CustomerInvoice,
   CreateCustomerInvoice,
   DetailCustomerInvoice,
+  ViewCustomerInvoice,
+
   Receipt,
   CreateReceipt,
   DetailReceipt,
@@ -33,6 +35,8 @@ import {
   SupplierInvoice,
   CreateSupplierInvoice,
   DetailSupplierInvoice,
+  ViewInvoice,
+
   Expense,
   CreateExpense,
   DetailExpense,
@@ -204,6 +208,11 @@ const adminRoutes = [
     component: CreateCustomerInvoice.screen
   },
   {
+    path: '/admin/revenue/customer-invoice/view',
+    name: 'View',
+    component: ViewCustomerInvoice.screen
+  },
+  {
     path: '/admin/revenue/customer-invoice/detail',
     name: 'Detail',
     component: DetailCustomerInvoice.screen
@@ -244,6 +253,11 @@ const adminRoutes = [
     path: '/admin/expense/supplier-invoice/create',
     name: 'Create',
     component: CreateSupplierInvoice.screen
+  },
+  {
+    path: '/admin/expense/supplier-invoice/view',
+    name: 'View Invoice',
+    component: ViewInvoice.screen
   },
   {
     path: '/admin/expense/supplier-invoice/detail',

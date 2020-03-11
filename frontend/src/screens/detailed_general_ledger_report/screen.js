@@ -170,21 +170,25 @@ class DetailedGeneralLedgerReport extends React.Component {
 
   }
 
-  getInvoice = (type) => {
-    // switch (type) {
-    //   case 'INVOICE':
-    //     this.props.history.push('/admin/revenue/customer-invoice')
-    //     break;
-    //   case 'EXPENSE':
-    //     this.props.history.push('/admin/revenue/customer-invoice');
-    //     break;
-    //   case 'BANK_ACCOUNT':
-    //     this.props.history.push('/admin/revenue/customer-invoice');
-    //     break;
-    //   case 'MANUAL':
-    //     this.props.history.push('/admin/revenue/customer-invoice');
-    //     break;
-    // }
+  getInvoice = (postingType,type,id) => {
+    switch (postingType) {
+      case 'INVOICE':
+        if(type == 1) {
+        this.props.history.push('/admin/expense/supplier-invoice/view',{'id': id})
+        } else {
+        this.props.history.push('/admin/revenue/customer-invoice/view',{'id': id})
+        }
+        break;
+      case 'EXPENSE':
+        // this.props.history.push('/admin/expense/expense',{'id': id});
+        break;
+      case 'BANK_ACCOUNT':
+        // this.props.history.push('admin/banking/bank-account/transaction',{'id': id});
+        break;
+      case 'MANUAL':
+        // this.props.history.push('/admin/accountant/journal',{'id': id});
+        break;
+    }
   }
 
   render() {
@@ -266,9 +270,9 @@ class DetailedGeneralLedgerReport extends React.Component {
                                       <td>{row["postingReferenceTypeEnum"]}</td>
                                       <td>{row["transactonRefNo"]}</td>
                                       <td>{row["referenceNo"]}</td>
-                                      <td>{row.debitAmount > 0 ? <p onClick={this.getInvoice(row['postingReferenceType'])}>{row.debitAmount}</p> : ''}</td>
-                                      <td>{row.creditAmount > 0 ? <p onClick={this.getInvoice(row['postingReferenceType'])}>{row.creditAmount}</p> : ''}</td>
-                                      <td className="amount-col">{row.amount}</td>
+                                      <td>{row.debitAmount > 0 ? <p className="text-right" onClick={()=>this.getInvoice(row['postingReferenceType'],row['invoiceType'],row['referenceId'])}>{(row.debitAmount).toFixed(2)}</p> : ''}</td>
+                                      <td>{row.creditAmount > 0 ? <p className="text-right" onClick={()=>this.getInvoice(row['postingReferenceType'],row['invoiceType'],row['referenceId'])}>{(row.creditAmount).toFixed(2)}</p> : ''}</td>
+                                     <td className="amount-col text-right"  onClick={()=>this.getInvoice(row['postingReferenceType'],row['invoiceType'],row['referenceId'])}>{`${(row.amount).toFixed(2)}`}{`${row.debitAmount}` > 0 ? ' Dr': ' Cr'}</td>
                                     </tr>
                                   )
                                 })}

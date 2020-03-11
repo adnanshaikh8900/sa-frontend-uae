@@ -1,6 +1,7 @@
 package com.simplevat.rest.detailedgeneralledgerreport;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -266,10 +267,11 @@ public class DetailedGeneralLedgerRestHelper {
 						date = LocalDateTime.now();
 					model.setDate(dateUtil.getDateAsString(date, "dd/MM/yyyy"));
 					model.setTransactionTypeName(data.getTransactionCategory().getTransactionCategoryName());
-					
+
 					PostingReferenceTypeEnum postingType = data.getReferenceType();
 					model.setPostingReferenceTypeEnum(postingType.getDisplayName());
 					model.setPostingReferenceType(postingType);
+					model.setReferenceId(data.getReferenceId());
 					boolean isDebit = data.getDebitAmount() != null
 							|| (data.getDebitAmount() != null && new BigDecimal(0).equals(data.getDebitAmount())) ? true
 									: false;
@@ -310,6 +312,7 @@ public class DetailedGeneralLedgerRestHelper {
 								? data.getContact().getFirstName() + " " + data.getContact().getLastName()
 								: "");
 						model.setTransactonRefNo(invoice.getReferenceNumber());
+						model.setInvoiceType(invoice.getType());
 						break;
 
 					case MANUAL:
@@ -325,6 +328,10 @@ public class DetailedGeneralLedgerRestHelper {
 					case PURCHASE:
 						break;
 					}
+
+//					model.setAmount(model.getAmount().setScale(2, RoundingMode.HALF_UP));
+//					model.setCreditAmount(model.getCreditAmount().setScale(2, RoundingMode.HALF_UP));
+//					model.setDebitAmount(model.getDebitAmount().setScale(2, RoundingMode.HALF_UP));
 
 					dataList.add(model);
 				}

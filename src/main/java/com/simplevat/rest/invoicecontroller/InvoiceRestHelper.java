@@ -14,6 +14,7 @@ import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.service.InvoiceService;
+import com.simplevat.service.PaymentService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.utils.FileHelper;
 
@@ -56,6 +57,9 @@ public class InvoiceRestHelper {
 
 	@Autowired
 	private FileHelper fileHelper;
+
+	@Autowired
+	private PaymentService paymentService;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -213,7 +217,8 @@ public class InvoiceRestHelper {
 		requestModel.setDiscount(invoice.getDiscount());
 		requestModel.setDiscountPercentage(invoice.getDiscountPercentage());
 		requestModel.setTerm(invoice.getInvoiceDuePeriod());
-
+		requestModel
+				.setDueAmount(invoice.getTotalAmount().subtract(paymentService.getAmountByInvoiceId(invoice.getId())));
 		return requestModel;
 	}
 

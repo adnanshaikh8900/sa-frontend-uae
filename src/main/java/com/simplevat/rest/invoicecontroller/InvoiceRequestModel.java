@@ -48,4 +48,5 @@ public class InvoiceRequestModel {
     private Boolean deleteFlag = Boolean.FALSE;
     private Boolean active;
     private Integer versionNumber;
+    private BigDecimal dueAmount;
 }

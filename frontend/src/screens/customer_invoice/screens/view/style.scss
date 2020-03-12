@@ -22,20 +22,50 @@
   z-index: -1;
   content: '';
   display: block;
-  border: 5px solid #2980b9;
 }
 .ribbon span {
   position: absolute;
   display: block;
   width: 225px;
   padding: 15px 0;
-  background-color: #3498db;
+  // background-color: #3498db;
   box-shadow: 0 5px 10px rgba(0,0,0,.1);
   color: #fff;
   font: 700 18px/1 'Lato', sans-serif;
   text-shadow: 0 1px 1px rgba(0,0,0,.2);
   text-transform: uppercase;
   text-align: center;
+}
+.pending-color {
+  span{
+  background-color: #ffc107!important;
+  }
+}
+.pending-color::before,
+.pending-color::after {
+  border: 5px solid #ffc107!important;
+}
+
+.post-color {
+  span {
+  background-color:#4dbd74!important;
+  }
+}
+
+.post-color::before,
+.post-color::after {
+  border: 5px solid #4dbd74!important;
+}
+
+.saved-color {
+  span {
+  background-color: #3498db!important;
+  }
+}
+
+.saved-color::before,
+.saved-color::after {
+  border: 5px solid #3498db!important;
 }
 
 /* top left*/
@@ -93,25 +123,34 @@
 #singlePage {
   .header-row{
     color: white;
+    background-color: black;
   }
 }
 @media print {
-  body * {
+
+  html, body {
+    height: initial !important;
+    overflow: initial !important;
+    -webkit-print-color-adjust: exact;
     visibility: hidden;
+
   }
 
   #singlePage, #singlePage * {
     visibility: visible!important;
+    overflow-y: visible!important;
   }
 
   #singlePage *{
-    position: absolute;
-    left: 0;
-    top: 0;
+    // position: absolute;
+    // left: 0;
+    // top: 0;
   }
-  #singlePage .header-row{
-    color: black!important;
-    background-color: black!important;
+  #singlePage {
+    .header-row{
+      color: white!important;
+      background-color: black!important;
+    }
   }
   #singlePage .cal-table tbody tr{
 

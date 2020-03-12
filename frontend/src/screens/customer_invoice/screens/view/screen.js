@@ -154,7 +154,7 @@ class ViewCustomerInvoice extends React.Component {
                   trigger={() => <Button
                     type="button"
                     className="btn btn-sm print-btn"
-                    onClick={() => window.print()}
+                    // onClick={() => window.print()}
                   >
                     <i className="fa fa-print"></i>
                   </Button>}
@@ -167,7 +167,7 @@ class ViewCustomerInvoice extends React.Component {
                 <PDFExport
                   ref={component => (this.pdfExportComponent = component)}
                   scale={0.8}
-                  paperSize="A4"
+                  paperSize="A3"
                 //   margin="2cm"
                 >
                   <InvoiceTemplate invoiceData={invoiceData} currencyData={currencyData} ref={el => (this.componentRef = el)} totalNet={this.state.totalNet}/>

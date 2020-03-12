@@ -18,13 +18,33 @@ class InvoiceTemplate extends Component {
     }
   }
 
+  //   componentWillReceiveProps(nextProps) {
+  //     if (nextProps.invoiceData !== this.props.hidden) {
+  //         IntercomAPI("update", { hide_default_launcher: nextProps.hidden });
+  //     }
+  // }
+
+  getRibbonColor = () => {
+    const { invoiceData } = this.props
+    if (invoiceData) {
+      switch (invoiceData.status) {
+        case 'Pending':
+          return 'pending-color';
+        case 'Post':
+          return 'post-color';
+        case 'Saved':
+          return 'saved-color'
+      }
+    }
+  }
+
   render() {
-    const {invoiceData,currencyData,totalNet} = this.props
+    const { invoiceData, currencyData, totalNet } = this.props
     console.log(currencyData)
     return (
       <div>
         <Card id="singlePage" className="box">
-          <div className="ribbon ribbon-top-left">
+          <div className={`ribbon ribbon-top-left ${this.getRibbonColor()}`}>
             <span>{invoiceData.status}</span>
           </div>
           <CardBody style={{ marginTop: "7rem" }}>
@@ -49,10 +69,10 @@ class InvoiceTemplate extends Component {
                       <td style={{ width: '75%', fontSize: '1.5rem', fontWeight: '500' }}>Invoice</td>
                     </tr>
                     <tr style={{ textAlign: "right" }}>
-                      <td  style={{ width: '75%' }}># {invoiceData.referenceNumber}</td>
+                      <td style={{ width: '75%' }}># {invoiceData.referenceNumber}</td>
                     </tr>
                     <tr style={{ textAlign: "right" }}>
-                      <td  style={{ width: '75%' }}>   Balance Due
+                      <td style={{ width: '75%' }}>   Balance Due
                         <br />
                         <b style={{ fontWeight: "600" }}>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${invoiceData.dueAmount}` : `${invoiceData.dueAmount}`}</b></td>
                     </tr>
@@ -93,17 +113,17 @@ class InvoiceTemplate extends Component {
                   <Table className="table-clear">
                     <tbody>
                       <tr style={{ textAlign: "right" }}>
-                        <td  style={{ width: '75%' }}>Invoice Date :</td>
+                        <td style={{ width: '75%' }}>Invoice Date :</td>
                         <td style={{ width: '25%' }}> {moment(invoiceData.invoiceDate).format(
                           "DD MMM YYYY"
                         )}</td>
                       </tr>
                       <tr style={{ textAlign: "right" }}>
-                        <td  style={{ width: '75%' }}>Term :</td>
+                        <td style={{ width: '75%' }}>Term :</td>
                         <td style={{ width: '18%' }}>{invoiceData.term}</td>
                       </tr>
                       <tr style={{ textAlign: "right" }}>
-                        <td  style={{ width: '75%' }}>Due Date :</td>
+                        <td style={{ width: '75%' }}>Due Date :</td>
                         <td style={{ width: '25%' }}>{moment(invoiceData.invoiceDueDate).format(
                           "DD MMM YYYY"
                         )}</td>
@@ -127,6 +147,9 @@ class InvoiceTemplate extends Component {
                   <th style={{ padding: "0.5rem", textAlign: "right" }}>
                     Unit Cost
                         </th>
+                        <th style={{ padding: "0.5rem",textAlign: 'right' }}>
+                    Vat
+                        </th>
                   <th style={{ padding: "0.5rem", textAlign: "right" }}>
                     Total
                         </th>
@@ -141,9 +164,10 @@ class InvoiceTemplate extends Component {
                         <td className="center">{index + 1}</td>
                         <td >{item.description}</td>
                         <td >{item.quantity}</td>
-                        <td style={{ textAlign: "right" }}>
+                        <td style={{ textAlign: "right",width: '20%'}}>
                           {item.unitPrice}
                         </td>
+                        <td style={{ textAlign: "right" }}>{`${item.vatPercentage}%`}</td>
                         <td style={{ textAlign: "right" }}>
                           {item.subTotal}
                         </td>
@@ -158,7 +182,7 @@ class InvoiceTemplate extends Component {
                 <Table className="table-clear cal-table">
                   <tbody>
                     <tr style={{ textAlign: "right" }}>
-                      <td style={{width:'60%'}}>
+                      <td style={{ width: '60%' }}>
                         <strong>Subtotal</strong>
                       </td>
                       <td>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${totalNet}` : `${totalNet}`}</td>
@@ -191,7 +215,7 @@ class InvoiceTemplate extends Component {
                         <strong>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${invoiceData.totalAmount}` : `${invoiceData.totalAmount}`}</strong>
                       </td>
                     </tr>
-                    <tr style={{ textAlign: "right" ,background: '#f2f2f2'}}>
+                    <tr style={{ textAlign: "right", background: '#f2f2f2' }}>
                       <td>
                         <strong>Balance Due</strong>
                       </td>

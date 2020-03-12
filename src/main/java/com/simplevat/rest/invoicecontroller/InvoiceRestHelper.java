@@ -231,6 +231,7 @@ public class InvoiceRestHelper {
 		lineItemModel.setSubTotal(lineItem.getSubTotal());
 		if (lineItem.getVatCategory() != null && lineItem.getVatCategory().getId() != null) {
 			lineItemModel.setVatCategoryId(lineItem.getVatCategory().getId().toString());
+			lineItemModel.setVatPercentage(lineItem.getVatCategory().getVat().intValue());
 		}
 		return lineItemModel;
 	}

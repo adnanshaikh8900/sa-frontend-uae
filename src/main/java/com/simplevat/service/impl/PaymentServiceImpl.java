@@ -12,6 +12,8 @@ import com.simplevat.entity.Payment;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.PaymentService;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +28,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PaymentServiceImpl extends PaymentService {
 
-    @Autowired
-    private PaymentDao paymentDao;
+	@Autowired
+	private PaymentDao paymentDao;
 
-    @Override
-    protected Dao<Integer, Payment> getDao() {
-        return this.paymentDao;
-    }
+	@Override
+	protected Dao<Integer, Payment> getDao() {
+		return this.paymentDao;
+	}
 
-    @Override
-    public PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> map,PaginationModel paginationModel) {
-        return this.paymentDao.getPayments(map,paginationModel);
-    }
-    
-    @Override
-    public void deleteByIds(List<Integer> ids) {
-        paymentDao.deleteByIds(ids);
-    }
+	@Override
+	public PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> map, PaginationModel paginationModel) {
+		return this.paymentDao.getPayments(map, paginationModel);
+	}
+
+	@Override
+	public void deleteByIds(List<Integer> ids) {
+		paymentDao.deleteByIds(ids);
+	}
+
+	@Override
+	public BigDecimal getAmountByInvoiceId(Integer invoiceId) {
+		return paymentDao.getAmountByInvoiceId(invoiceId);
+	}
 
 }

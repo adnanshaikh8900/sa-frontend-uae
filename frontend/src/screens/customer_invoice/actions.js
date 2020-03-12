@@ -123,10 +123,9 @@ export const getCurrencyList = () => {
       if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.CURRENCY_LIST,
-          payload:  {
-            data: res.data
-          }
+          payload:  res
         })
+        return res
       }
     }).catch(err => {
       throw err

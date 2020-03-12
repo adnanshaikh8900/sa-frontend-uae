@@ -18,14 +18,28 @@ class InvoiceTemplate extends Component {
     }
   }
 
+  getRibbonColor = () => {
+    const { invoiceData } = this.props
+    if(invoiceData) {
+      switch (invoiceData.status) {
+        case 'Pending':
+          return 'pending-color';
+        case 'Post':
+          return 'post-color';
+        case 'Saved':
+            return 'saved-color'
+      }
+    }
+  }
+
   render() {
     const {invoiceData,currencyData,totalNet} = this.props
     console.log(currencyData)
     return (
       <div>
         <Card id="singlePage" className="box">
-          <div className="ribbon ribbon-top-left">
-            <span>{invoiceData.status}</span>
+          <div className={`ribbon ribbon-top-left ${this.getRibbonColor()}`}>
+          <span>{invoiceData.status}</span>
           </div>
           <CardBody style={{ marginTop: "7rem" }}>
             <div
@@ -114,8 +128,8 @@ class InvoiceTemplate extends Component {
               </div>
             </div>
             <Table striped responsive>
-              <thead style={{ backgroundColor: "black" }}>
-                <tr className="header-row">
+              <thead className="header-row">
+                <tr>
                   <th className="center" style={{ padding: "0.5rem" }}>
                     #
                         </th>
@@ -126,6 +140,9 @@ class InvoiceTemplate extends Component {
                         </th>
                   <th style={{ padding: "0.5rem", textAlign: "right" }}>
                     Unit Cost
+                        </th>
+                        <th style={{ padding: "0.5rem",textAlign: 'right' }}>
+                    Vat
                         </th>
                   <th style={{ padding: "0.5rem", textAlign: "right" }}>
                     Total
@@ -141,9 +158,10 @@ class InvoiceTemplate extends Component {
                         <td className="center">{index + 1}</td>
                         <td >{item.description}</td>
                         <td >{item.quantity}</td>
-                        <td style={{ textAlign: "right" }}>
+                        <td style={{ textAlign: "right",width: '20%'}}>
                           {item.unitPrice}
                         </td>
+                        <td style={{ textAlign: "right" }}>{`${item.vatPercentage}%`}</td>
                         <td style={{ textAlign: "right" }}>
                           {item.subTotal}
                         </td>

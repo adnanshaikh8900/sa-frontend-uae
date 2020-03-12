@@ -10,6 +10,7 @@ import com.simplevat.entity.Payment;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -22,5 +23,7 @@ public abstract class PaymentService extends SimpleVatService<Integer, Payment> 
     public abstract PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> map,PaginationModel paginationModel);
     
     public abstract void deleteByIds(List<Integer> ids);
+    
+    public abstract BigDecimal getAmountByInvoiceId(Integer invoiceId);
 
 }

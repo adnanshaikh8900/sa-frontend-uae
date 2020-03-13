@@ -438,7 +438,7 @@ class CreateSupplierInvoice extends React.Component {
       total = (total_vat + total_net);
 
     })
-    const discount = props.values.discountType === 'PERCENTAGE' ? (total*discountPercentage)/100 : discountAmount
+    const discount = props.values.discountType === 'PERCENTAGE' ? (total_net*discountPercentage)/100 : discountAmount
 
     this.setState({
       data: data,
@@ -446,8 +446,8 @@ class CreateSupplierInvoice extends React.Component {
         ...this.state.initValue, ...{
           total_net: total_net,
           invoiceVATAmount: total_vat,
-          discount: total > discount ? discount : 0,
-          totalAmount: total > discount ? total - discount : total
+          discount: total_net > discount ? discount : 0,
+          totalAmount: total_net > discount ? total - discount : total
         }
       }
     }, () => {
@@ -535,7 +535,6 @@ class CreateSupplierInvoice extends React.Component {
             }
           }
         }, () => {
-          console.log(this.state.initValue)
         resetForm(this.state.initValue)
           this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
         })

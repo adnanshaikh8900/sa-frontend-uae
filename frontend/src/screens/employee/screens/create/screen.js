@@ -379,7 +379,7 @@ class CreateEmployee extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="vatRegestationNo">Vat Registration Number</Label>
+                                  <Label htmlFor="vatRegestationNo">Tax Registration Number</Label>
                                   <Input
                                     type="text"
                                     id="vatRegestationNo"

@@ -133,7 +133,7 @@ class CustomerModal extends React.Component {
               //     contractPoNumber: Yup.number()
               //       .required("Contract PoNumber is Required"),
               //       vatRegistrationNumber: Yup.number()
-              //       .required("Vat Registration Number is Required"),
+              //       .required("Tax Registration Number is Required"),
               //       currencyCode: Yup.string()
               //       .required("Please Select Currency")
               //       .nullable(),
@@ -676,7 +676,7 @@ class CustomerModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="vatRegistrationNumber">
-                            Vat Registration Number
+                            Tax Registration Number
                           </Label>
                           <Input
                             type="text"

@@ -115,7 +115,6 @@ class ProductCategory extends React.Component {
 
 
   goToDetail(row) {
-    console.log(row)
     this.props.history.push(`/admin/master/product-category/detail`, { id: row.id })
   }
 

@@ -252,7 +252,7 @@ class DetailedGeneralLedgerReport extends React.Component {
         // this.props.history.push('/admin/expense/expense',{'id': id});
         break;
       case 'BANK_ACCOUNT':
-        // this.props.history.push('admin/banking/bank-account/transaction',{'id': id});
+        // this.props.history.push('/admin/banking/bank-account/transaction/detail',{'id': id,'view': true});
         break;
       case 'MANUAL':
         // this.props.history.push('/admin/accountant/journal',{'id': id});
@@ -323,7 +323,6 @@ class DetailedGeneralLedgerReport extends React.Component {
                         {/* </thead> */}
                         <tbody className="data-column">
                           {this.state.detailedGeneralLedgerList && this.state.detailedGeneralLedgerList.length > 0 ? this.state.detailedGeneralLedgerList.map((item, index) => {
-                            // console.log(item[index]['transactionTypeName'])
                             return (
                               <>
                                 <tr style={{ background: '#f7f7f7' }}><td colSpan="9"><b style={{ fontWeight: '600' }}>{item[0]['transactionTypeName']}</b></td></tr>

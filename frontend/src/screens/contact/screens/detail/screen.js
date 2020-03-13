@@ -115,6 +115,7 @@ class DetailContact extends React.Component {
 
   handleSubmit(data,resetForm) {
     const { current_contact_id } = this.state
+    
     const postData = {...data, ...{ contactId: current_contact_id } }
 
     this.props.detailContactActions.updateContact(postData).then(res => {
@@ -234,7 +235,7 @@ class DetailContact extends React.Component {
                             //     contractPoNumber: Yup.number()
                             //       .required("Contract PoNumber is Required"),
                             //       vatRegistrationNumber: Yup.number()
-                            //       .required("Vat Registration Number is Required"),
+                            //       .required("Tax Registration Number is Required"),
                             //       currencyCode: Yup.string()
                             //       .required("Please Select Currency")
                             //       .nullable(),
@@ -513,7 +514,12 @@ class DetailContact extends React.Component {
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                         value={props.values.countryId}
                                         onChange={option => {
-                                          props.handleChange('countryId')(option)
+                                          if(option && option.value) {
+                                            props.handleChange('countryId')(option.value)
+                                          } else {
+                                            props.handleChange('countryId')('')
+
+                                          }
                                         }}
                                         placeholder="Select Country"
                                         id="countryId"
@@ -652,7 +658,7 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="vatRegistrationNumber">Vat Registration Number</Label>
+                                      <Label htmlFor="vatRegistrationNumber">Tax Registration Number</Label>
                                       <Input
                                         type="text"
                                         id="vatRegistrationNumber"
@@ -680,7 +686,12 @@ class DetailContact extends React.Component {
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currencyCode}
                                         onChange={option => {
-                                          props.handleChange('currencyCode')(option)
+                                          if(option && option.value) {
+                                            props.handleChange('currencyCode')(option.value)
+                                          } else {
+                                            props.handleChange('currencyCode')('')
+
+                                          }
                                         }}
                                         placeholder="Select Currency"
                                         id="currencyCode"

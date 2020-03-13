@@ -44,6 +44,7 @@ import { InvoiceTemplate } from './sections'
 
 const mapStateToProps = (state) => {
   return ({
+    profile: state.auth.profile
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -90,7 +91,7 @@ class ViewCustomerInvoice extends React.Component {
       this.props.supplierInvoiceDetailActions.getInvoiceById(this.props.location.state.id).then(res => {
         let val = 0;
         if (res.status === 200) {
-          res.data.invoiceLineItems.map(item => {
+          res.data.invoiceLineItems && res.data.invoiceLineItems.map(item => {
             val = val + item.subTotal;
           });
           this.setState({
@@ -100,13 +101,11 @@ class ViewCustomerInvoice extends React.Component {
           }, () => {
             if (this.state.invoiceData.currencyCode) {
               this.props.supplierInvoiceActions.getCurrencyList().then(res => {
-                console.log(res)
                 if (res.status === 200) {
                   const temp = res.data.filter(item => item.currencyCode === this.state.invoiceData.currencyCode)
                   this.setState({
                     currencyData: temp
                   },()=>{
-                    console.log(this.state.currencyData)
                   })
                 }
               })
@@ -125,7 +124,7 @@ class ViewCustomerInvoice extends React.Component {
   render() {
     const { invoiceData, currencyData, id } = this.state;
 
-    const { project_list, contact_list, currency_list, supplier_list } = this.props
+    const { profile} = this.props
     return (
       <div className="view-invoice-screen">
         <div className="animated fadeIn">
@@ -161,7 +160,7 @@ class ViewCustomerInvoice extends React.Component {
                   content={() => this.componentRef}
                 />
 
-                <p className="close" onClick={()=>{ this.props.history.push('/admin/expense/supplier-invoice')}}>X</p>
+                <p className="close" onClick={()=>{ this.props.history.push('/admin/revenue/customer-invoice')}}>X</p>
               </div>
               <div>
                 <PDFExport
@@ -170,7 +169,7 @@ class ViewCustomerInvoice extends React.Component {
                   paperSize="A3"
                 //   margin="2cm"
                 >
-                  <InvoiceTemplate invoiceData={invoiceData} currencyData={currencyData} ref={el => (this.componentRef = el)} totalNet={this.state.totalNet}/>
+                  <InvoiceTemplate invoiceData={invoiceData} currencyData={currencyData} ref={el => (this.componentRef = el)} totalNet={this.state.totalNet} companyData={profile}/>
                 </PDFExport>
               </div>
 

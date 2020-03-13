@@ -61,7 +61,6 @@ class PreviewInvoiceModal extends React.Component {
               this.setState({
                  currencyData : temp
               },()=>{
-                console.log(this.state.currencyData[0])
               })
             }
           });

@@ -121,6 +121,15 @@
     }
 }
 #singlePage {
+  .companyDetails {
+    text-align: left;
+    margin: 20px 0;
+    img {
+      width: 80px !important;
+      height: 80px;
+      border-radius: 50%;
+    }
+  }
   .header-row{
     color: white;
     background-color: black;

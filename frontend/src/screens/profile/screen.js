@@ -1082,6 +1082,7 @@ class Profile extends React.Component {
                                             name="invoicingAddressLine1"
                                             placeholder="Enter Invoicing Address Line1"
                                             rows="5"
+                                            value={props.values.invoicingAddressLine1}
                                             onChange={option => {
                                               props.handleChange('invoicingAddressLine1')(option)
                                               this.setState({
@@ -1097,7 +1098,7 @@ class Profile extends React.Component {
                                       </Col>
                                       <Col lg={4}>
                                         <FormGroup className="mb-3">
-                                          <Label htmlFor="product_code">Invoicing Address Line1</Label>
+                                          <Label htmlFor="product_code">Invoicing Address Line2</Label>
                                           <Input
                                             type="textarea"
                                             id="categoryDiscription"

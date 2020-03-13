@@ -39,14 +39,14 @@ class InvoiceTemplate extends Component {
   }
 
   render() {
-    const { invoiceData, currencyData, totalNet } = this.props
-    console.log(currencyData)
+    const { invoiceData, currencyData, totalNet,companyData } = this.props
     return (
       <div>
         <Card id="singlePage" className="box">
           <div className={`ribbon ribbon-top-left ${this.getRibbonColor()}`}>
             <span>{invoiceData.status}</span>
           </div>
+
           <CardBody style={{ marginTop: "7rem" }}>
             <div
               style={{
@@ -56,11 +56,18 @@ class InvoiceTemplate extends Component {
               }}
             >
               <div style={{ width: "60%" }}>
-                {/* <h6 className="mb-3">VAT Department:</h6>
-                <h6>1</h6>
-                <div></div>
-                <div>Peshawar KPK 25000</div>
-                <div>UNITED ARAB EMIRATES</div> */}
+                <div className="companyDetails">
+                  <img src={companyData && companyData.company && companyData.company.companyLogo ? 'data:image/jpg;base64,' + companyData.company.companyLogo : ''} className="img-avatar" alt="" />
+                  <h4 className="mb-0">{companyData && companyData.company.companyName && companyData.company.companyName}</h4>
+                  <h6 className="mb-0">{companyData && companyData.company.companyName && companyData.company.emailAddress}</h6>
+
+                  <h6 className="mb-0">
+                   <span> {companyData && companyData.company.companyName && companyData.company.invoicingAddressLine1 && `${companyData.company.invoicingAddressLine1},`} </span>
+                   <span> {companyData && companyData.company.companyName  && companyData.company.invoicingAddressLine2 && `${companyData.company.invoicingAddressLine2},`} </span>
+                   <span> {companyData && companyData.company.companyName && companyData.company.invoicingAddressLine3 && `${companyData.company.invoicingAddressLine3}.`} </span>
+                   </h6>
+                  <h6>{companyData && companyData.company.companyCountryCode ?  companyData.company.companyCountryCode.countryDescription : '' }</h6>
+                </div>
               </div>
               <div style={{ width: "40%", textAlign: "right" }}>
                 <Table className="table-clear">
@@ -94,13 +101,16 @@ class InvoiceTemplate extends Component {
                   width: "50%",
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "end"
+                  justifyContent: "center"
                 }}
               >
-                <h6 style={{ fontWeight: "600" }}>
-                  Bill To
-                        <br />#
-                      </h6>
+                <h6 style={{ fontWeight: "600" }} className="mb-0">
+                  Bill To,
+                </h6>
+                <h6 className="mb-0">{invoiceData.name}</h6>
+                <h6 className="mb-0">{invoiceData.organisationName}</h6>
+                <h6 className="mb-0">{invoiceData.email}</h6>
+                <h6 className="mb-0">{invoiceData.address}</h6>
               </div>
               <div
                 style={{
@@ -134,8 +144,8 @@ class InvoiceTemplate extends Component {
               </div>
             </div>
             <Table striped responsive>
-              <thead style={{ backgroundColor: "black" }}>
-                <tr className="header-row">
+              <thead className="header-row">
+                <tr>
                   <th className="center" style={{ padding: "0.5rem" }}>
                     #
                         </th>
@@ -147,7 +157,7 @@ class InvoiceTemplate extends Component {
                   <th style={{ padding: "0.5rem", textAlign: "right" }}>
                     Unit Cost
                         </th>
-                        <th style={{ padding: "0.5rem",textAlign: 'right' }}>
+                  <th style={{ padding: "0.5rem", textAlign: 'right' }}>
                     Vat
                         </th>
                   <th style={{ padding: "0.5rem", textAlign: "right" }}>
@@ -164,7 +174,7 @@ class InvoiceTemplate extends Component {
                         <td className="center">{index + 1}</td>
                         <td >{item.description}</td>
                         <td >{item.quantity}</td>
-                        <td style={{ textAlign: "right",width: '20%'}}>
+                        <td style={{ textAlign: "right", width: '20%' }}>
                           {item.unitPrice}
                         </td>
                         <td style={{ textAlign: "right" }}>{`${item.vatPercentage}%`}</td>
@@ -188,7 +198,7 @@ class InvoiceTemplate extends Component {
                       <td>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${totalNet}` : `${totalNet}`}</td>
                     </tr>
                     <tr style={{ textAlign: "right" }}>
-                      <td>
+                      <td style={{ width: '60%' }}>
                         <strong>
                           Discount
                                 {invoiceData.discountPercentage
@@ -200,7 +210,7 @@ class InvoiceTemplate extends Component {
                       <td>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ` : ''}{invoiceData.discount ? invoiceData.discount : 0.00} </td>
                     </tr>
                     <tr style={{ textAlign: "right" }}>
-                      <td>
+                      <td style={{ width: '60%' }}>
                         <strong>VAT</strong>
                       </td>
                       <td>
@@ -208,7 +218,7 @@ class InvoiceTemplate extends Component {
                       </td>
                     </tr>
                     <tr style={{ textAlign: "right" }}>
-                      <td>
+                      <td style={{ width: '60%' }}>
                         <strong>Total</strong>
                       </td>
                       <td>
@@ -216,7 +226,7 @@ class InvoiceTemplate extends Component {
                       </td>
                     </tr>
                     <tr style={{ textAlign: "right", background: '#f2f2f2' }}>
-                      <td>
+                      <td style={{ width: '60%' }}>
                         <strong>Balance Due</strong>
                       </td>
                       <td>

@@ -49,4 +49,11 @@ public class InvoiceRequestModel {
     private Boolean active;
     private Integer versionNumber;
     private BigDecimal dueAmount;
+    
+    private String organisationName;
+    private String name;
+    private String address;
+    private String email;
+    private String taxRegistrationNo;
+    
 }

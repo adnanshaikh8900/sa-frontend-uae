@@ -1,7 +1,4 @@
-import { CUSTOMER_INVOICE } from 'constants/types'
 import {
-  api,
-  authApi,
   authFileUploadApi
 } from 'utils'
 

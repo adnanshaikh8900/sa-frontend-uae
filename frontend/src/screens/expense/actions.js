@@ -1,6 +1,5 @@
 import { EXPENSE } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 import moment from 'moment'
@@ -16,14 +15,7 @@ export const getExpenseList = (expenseData) => {
     let data = {
       method: 'GET',
       url: param
-      // data: postObj
     }
-
-    // let data = {
-    //   method: 'GET',
-    //   url: '/rest/expense/getList'
-    // }
-
     return authApi(data).then(res => {
       dispatch({
         type: EXPENSE.EXPENSE_LIST,
@@ -220,6 +212,25 @@ export const getEmployeeList = () => {
         payload: res.data
       })
       return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getBankList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/bank/list'
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: EXPENSE.BANK_LIST,
+          payload: res
+        })
+      }
     }).catch(err => {
       throw err
     })

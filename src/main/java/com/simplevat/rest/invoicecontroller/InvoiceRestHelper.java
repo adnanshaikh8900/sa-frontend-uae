@@ -9,6 +9,7 @@ import com.simplevat.entity.Invoice;
 import com.simplevat.entity.InvoiceLineItem;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.invoice.model.InvoiceItemModel;
+import com.simplevat.rest.contactController.ContactHelper;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.ProjectService;
@@ -60,6 +61,9 @@ public class InvoiceRestHelper {
 
 	@Autowired
 	private PaymentService paymentService;
+
+	@Autowired
+	private ContactHelper contactHelper;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -219,6 +223,15 @@ public class InvoiceRestHelper {
 		requestModel.setTerm(invoice.getInvoiceDuePeriod());
 		requestModel
 				.setDueAmount(invoice.getTotalAmount().subtract(paymentService.getAmountByInvoiceId(invoice.getId())));
+		if (invoice.getContact() != null) {
+			Contact contact = invoice.getContact();
+
+			requestModel.setOrganisationName(contact.getOrganization());
+			requestModel.setName(getFullName(contact));
+			requestModel.setAddress(getAddress(contact));
+			requestModel.setEmail(contact.getBillingEmail());
+			requestModel.setTaxRegistrationNo(contact.getVatRegistrationNumber());
+		}
 		return requestModel;
 	}
 
@@ -268,4 +281,47 @@ public class InvoiceRestHelper {
 		return invoiceListModels;
 	}
 
+	private String getFullName(Contact contact) {
+		StringBuilder sb = new StringBuilder();
+		if (contact.getFirstName() != null && !contact.getFirstName().isEmpty()) {
+			sb.append(contact.getFirstName()).append(" ");
+		}
+		if (contact.getMiddleName() != null && !contact.getMiddleName().isEmpty()) {
+			sb.append(contact.getMiddleName()).append(" ");
+		}
+		if (contact.getLastName() != null && !contact.getLastName().isEmpty()) {
+			sb.append(contact.getLastName());
+		}
+		return sb.toString();
+	}
+
+	private String getAddress(Contact contact) {
+		StringBuilder sb = new StringBuilder();
+		if (contact.getAddressLine1() != null && !contact.getAddressLine1().isEmpty()) {
+			sb.append(contact.getAddressLine1()).append(" ");
+		}
+		if (contact.getAddressLine2() != null && !contact.getAddressLine2().isEmpty()) {
+			sb.append(contact.getAddressLine1()).append(" ");
+		}
+		if (contact.getAddressLine3() != null && !contact.getAddressLine3().isEmpty()) {
+			sb.append(contact.getAddressLine1());
+		}
+		if (sb.length() > 0) {
+			sb.append("\n");
+		}
+		if (contact.getCountry() != null && contact.getCountry().getCountryName() != null) {
+			sb.append(contact.getCountry().getCountryName()).append(", ");
+		}
+		if (contact.getState() != null && !contact.getState().isEmpty()) {
+			sb.append(contact.getState()).append(", ");
+		}
+		if (contact.getCity() != null && !contact.getCity().isEmpty()) {
+			sb.append(contact.getCity()).append(", ");
+		}
+		if (contact.getPoBoxNumber() != null && !contact.getPoBoxNumber().isEmpty()) {
+			sb.append(contact.getPoBoxNumber()).append(".");
+		}
+
+		return sb.toString();
+	}
 }

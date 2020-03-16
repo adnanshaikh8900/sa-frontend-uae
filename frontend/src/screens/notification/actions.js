@@ -1,7 +1,6 @@
-import { NOTIFICATION } from 'constants/types'
+// import { NOTIFICATION } from 'constants/types'
 import {
-  api,
-  authApi
+  // authApi
 } from 'utils'
 
 export const initialData = (obj) => {

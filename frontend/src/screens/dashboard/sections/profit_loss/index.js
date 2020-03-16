@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import { HorizontalBar } from 'react-chartjs-2'
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
+// import { HorizontalBar } from 'react-chartjs-2'
+// import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import {
   Nav,
   NavItem,
@@ -15,22 +15,22 @@ import { DateRangePicker2 } from 'components'
 import moment from 'moment'
 import './style.scss'
 
-const invoiceOption = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips
-  },
-  legend: {
-    display: false,
-    position: 'right',
-    labels: {
-      boxWidth: 15,
-    }
-  },
-  scales: {
-  }, 
-  maintainAspectRatio: false
-}
+// const invoiceOption = {
+//   tooltips: {
+//     enabled: false,
+//     custom: CustomTooltips
+//   },
+//   legend: {
+//     display: false,
+//     position: 'right',
+//     labels: {
+//       boxWidth: 15,
+//     }
+//   },
+//   scales: {
+//   }, 
+//   maintainAspectRatio: false
+// }
 
 const ranges =  {
   // 'Today': [moment(), moment()],
@@ -70,16 +70,16 @@ class ProfitAndLoss extends Component {
   }
 
   render() {
-    const invoiceBar = {
-      labels: ['', ''],
-      datasets: [
-        {
-        label: 'Profit',
-        backgroundColor: '#36A2EB89',
-        data: [2500, 4000],
-        },
-      ]
-    }
+    // const invoiceBar = {
+    //   labels: ['', ''],
+    //   datasets: [
+    //     {
+    //     label: 'Profit',
+    //     backgroundColor: '#36A2EB89',
+    //     data: [2500, 4000],
+    //     },
+    //   ]
+    // }
 
     return (
       <div className="animated fadeIn">

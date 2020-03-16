@@ -2,40 +2,23 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
-  Card,
-  CardHeader,
-  CardBody,
   Button,
   Row,
   Col,
-  Table
 } from 'reactstrap'
-import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-import DatePicker from 'react-datepicker'
-import { Formik, Field } from 'formik';
-import _ from 'lodash'
-import * as Yup from 'yup'
 import * as SupplierInvoiceDetailActions from './actions';
 import * as  SupplierInvoiceActions from "../../actions";
 import ReactToPrint from "react-to-print";
 
-import { SupplierModal } from '../../sections'
-import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import {
   CommonActions
 } from 'services/global'
-import {
-  selectOptionsFactory,
-  filterFactory
-} from 'utils'
+
 
 import './style.scss'
-import moment from 'moment'
-import API_ROOT_URL from '../../../../constants/config'
 import { PDFExport } from "@progress/kendo-react-pdf";
 
 import './style.scss'
@@ -44,6 +27,7 @@ import { InvoiceTemplate } from './sections'
 
 const mapStateToProps = (state) => {
   return ({
+    profile: state.auth.profile
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -92,6 +76,7 @@ class ViewInvoice extends React.Component {
         if (res.status === 200) {
           res.data.invoiceLineItems.map(item => {
             val = val + item.subTotal;
+            return item
           });
           this.setState({
             invoiceData: res.data,
@@ -100,17 +85,13 @@ class ViewInvoice extends React.Component {
           }, () => {
             if (this.state.invoiceData.currencyCode) {
               this.props.supplierInvoiceActions.getCurrencyList().then(res => {
-                console.log(res)
                 if (res.status === 200) {
                   const temp = res.data.filter(item => item.currencyCode === this.state.invoiceData.currencyCode)
                   this.setState({
                     currencyData: temp
-                  },()=>{
-                    console.log(this.state.currencyData)
                   })
                 }
               })
-
             }
           });
         }
@@ -125,7 +106,7 @@ class ViewInvoice extends React.Component {
   render() {
     const { invoiceData, currencyData, id } = this.state;
 
-    const { project_list, contact_list, currency_list, supplier_list } = this.props
+    const { profile} = this.props
     return (
       <div className="view-invoice-screen">
         <div className="animated fadeIn">
@@ -137,8 +118,7 @@ class ViewInvoice extends React.Component {
                   className="btn btn-sm edit-btn"
                   onClick={() => {
                     this.props.history.push('/admin/expense/supplier-invoice/detail', { id: id })
-                  }
-                  }
+                  }}
                 >
                   <i className="fa fa-pencil"></i>
                 </Button>
@@ -161,16 +141,15 @@ class ViewInvoice extends React.Component {
                   content={() => this.componentRef}
                 />
 
-                <p className="close" onClick={()=>{ this.props.history.push('/admin/expense/supplier-invoice')}}>X</p>
+                <p className="close" onClick={() => { this.props.history.push('/admin/expense/supplier-invoice') }}>X</p>
               </div>
               <div>
                 <PDFExport
                   ref={component => (this.pdfExportComponent = component)}
                   scale={0.8}
                   paperSize="A3"
-                //   margin="2cm"
                 >
-                  <InvoiceTemplate invoiceData={invoiceData} currencyData={currencyData} ref={el => (this.componentRef = el)} totalNet={this.state.totalNet}/>
+                  <InvoiceTemplate invoiceData={invoiceData} currencyData={currencyData} ref={el => (this.componentRef = el)} totalNet={this.state.totalNet} companyData={profile} />
                 </PDFExport>
               </div>
 

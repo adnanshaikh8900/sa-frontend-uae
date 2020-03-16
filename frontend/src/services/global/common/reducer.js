@@ -33,6 +33,7 @@ const CommonReducer = (state = initState, action) => {
       if (state.tostifyAlertFunc) {
         state.tostifyAlertFunc(payload.status, payload.message)
       }
+      // break;
 
     case COMMON.VAT_VERSION:
       return {

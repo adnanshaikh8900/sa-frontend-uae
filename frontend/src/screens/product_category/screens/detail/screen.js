@@ -13,12 +13,8 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
-import _ from "lodash"
 import { Loader , ConfirmDeleteModal} from 'components'
-import {
-  selectOptionsFactory
-} from 'utils'
+
 import {
   CommonActions
 } from 'services/global'
@@ -29,7 +25,6 @@ import './style.scss'
 import * as DetailProductCategoryAction from './actions'
 
 import { Formik } from 'formik';
-import * as Yup from "yup";
 
 
 // const mapStateToProps = (state) => {

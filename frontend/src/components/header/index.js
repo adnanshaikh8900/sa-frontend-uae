@@ -25,9 +25,6 @@ import logo from 'assets/images/brand/logo.png'
 import sygnet from 'assets/images/brand/sygnet.png'
 // import avatar from 'assets/images/avatars/6.jpg'
 
-import {
-  AuthActions
-} from 'services/global'
 
 const propTypes = {
   children: PropTypes.node
@@ -65,7 +62,7 @@ class Header extends Component {
   }
 
   render() {
-    const { children, profile} = this.props
+    const {profile} = this.props
     // ...attributes
     // const { profilePic } = this.state
     return (
@@ -126,9 +123,9 @@ class Header extends Component {
             </DropdownMenu>
           </UncontrolledDropdown>
           <NavItem className="px-3">
-            <a className="nav-link d-flex align-items-center my-link" onClick={this.signOut}>
+            <button  className="nav-link d-flex align-items-center my-link" onClick={this.signOut}>
               <i className="fa fa-sign-out header-icon mr-1"></i> Log Out
-            </a>
+            </button>
           </NavItem>
         </Nav>
       </React.Fragment>

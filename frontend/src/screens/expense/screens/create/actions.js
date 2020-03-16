@@ -1,6 +1,4 @@
-import { EXPENSE } from 'constants/types'
 import {
-  api,
   authFileUploadApi
 } from 'utils'
 

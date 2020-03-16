@@ -11,7 +11,6 @@ import {
   Col,
   ButtonGroup,
   Input,
-  Label,
   ButtonDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -39,8 +38,7 @@ import {
 } from 'utils'
 
 import './style.scss'
-// import { setNestedObjectValues } from 'formik';
-import { PreviewInvoiceModal } from './sections'
+
 
 const mapStateToProps = (state) => {
   return ({
@@ -337,7 +335,7 @@ class CustomerInvoice extends React.Component {
       ids: selectedRows
     }
     this.props.customerInvoiceActions.removeBulk(obj).then((res) => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.initializeData()
         this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
         if (customer_invoice_list && customer_invoice_list.length > 0) {
@@ -664,13 +662,13 @@ class CustomerInvoice extends React.Component {
             </CardBody>
           </Card>
         </div>
-        <PreviewInvoiceModal
+        {/* <PreviewInvoiceModal
           openInvoicePreviewModal={this.state.openInvoicePreviewModal}
           closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
           getInvoiceById={this.props.customerInvoiceActions.getInvoiceById}
           currency_list={this.props.currency_list}
           id={this.state.selectedId}
-        />
+        /> */}
       </div>
 
 

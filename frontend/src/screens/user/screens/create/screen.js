@@ -15,14 +15,10 @@ import {
   Label
 } from 'reactstrap'
 import Select from 'react-select'
-// import ImageUploader from 'react-images-upload'
 import DatePicker from 'react-datepicker'
-
-// import 'react-images-upload/styles.css'
-// import 'react-images-upload/font.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
-import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
+import { ImageUploader } from 'components'
 
 import * as UserActions from '../../actions'
 import * as UserCreateActions from './actions'
@@ -105,7 +101,6 @@ class CreateUser extends React.Component {
       companyId,
       active,
     } = data;
-    const { userPhoto } = this.state;
     let formData = new FormData();
     formData.append("firstName", firstName ? firstName : '');
     formData.append("lastName", lastName ? lastName : '');
@@ -139,7 +134,7 @@ class CreateUser extends React.Component {
 
   render() {
 
-    const { role_list, company_type_list } = this.props;
+    const { role_list } = this.props;
 
     return (
       <div className="create-user-screen">
@@ -337,7 +332,7 @@ class CreateUser extends React.Component {
                                               type="radio"
                                               id="inline-radio1"
                                               name="active"
-                                              checked={props.values.active == 'true'}
+                                              checked={props.values.active === 'true'}
                                               value='true'
                                               onChange={e => {
                                                 props.handleChange('active')(e.target.value)
@@ -353,7 +348,7 @@ class CreateUser extends React.Component {
                                               type="radio"
                                               id="inline-radio2"
                                               name="active"
-                                              checked={props.values.active == 'false'}
+                                              checked={props.values.active === 'false'}
                                               value='false'
                                               onChange={e => {
                                                 props.handleChange('active')(e.target.value)

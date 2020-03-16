@@ -205,8 +205,8 @@ class CreateBankTransaction extends React.Component {
 																		fileName: value.name
 																	});
 																	if (!value ||
-																		value && 
-																		this.supported_format.includes(value.type) || !value
+																		(value && 
+																		this.supported_format.includes(value.type)) || !value
 																	) {
 																		return true;
 																	} else {
@@ -218,7 +218,7 @@ class CreateBankTransaction extends React.Component {
 																"fileSize",
 																"*File Size is too large",
 																value => {
-																	if (!value || value && value.size <= this.file_size || !value) {
+																	if (!value || (value && value.size <= this.file_size) || !value) {
 																		return true;
 																	} else {
 																		return false;

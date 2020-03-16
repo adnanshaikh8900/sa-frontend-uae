@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+// import { bindActionCreators } from 'redux'
 import {
   Card,
   CardHeader,
@@ -9,24 +9,20 @@ import {
   Row,
   Col,
   FormGroup,
-  Label,
   Form,
-  Table,
   ButtonGroup,
-  Input
 } from "reactstrap"
 import DatePicker from 'react-datepicker'
 
-import _ from "lodash"
 import Select from 'react-select'
 import { DateRangePicker2 } from 'components'
 import moment from 'moment'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
-import 'react-select/dist/react-select.css'
-import './style.scss'
+ import 'react-select/dist/react-select.css'
+ import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
@@ -43,11 +39,11 @@ const vatOptions = [
   { value: 'all', label: 'All' },
 ]
 
-const statusOptions = [
-  { value: 'paid', label: 'Paid' },
-  { value: 'generated', label: 'Generated' },
-  { value: 'cancalled', label: 'Cancelled' },
-]
+// const statusOptions = [
+//   { value: 'paid', label: 'Paid' },
+//   { value: 'generated', label: 'Generated' },
+//   { value: 'cancalled', label: 'Cancelled' },
+// ]
 
 const tempdata = [{
   transactionDate: '10/15/2019',

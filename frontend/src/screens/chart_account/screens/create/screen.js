@@ -13,9 +13,7 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
 import Select from 'react-select'
-import _ from 'lodash'
 import { Loader } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -82,7 +80,7 @@ class CreateChartAccount extends React.Component {
   // Create or Edit Vat
   handleSubmit(data,resetForm) {
     this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Chart of Account Created Successfully')
         if (this.state.createMore) {
           this.setState({

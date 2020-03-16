@@ -1,10 +1,10 @@
-import { TEMP } from 'constants/types'
+// import { TEMP } from 'constants/types'
 
 const initState = {
 }
 
 const TempReducer = (state = initState, action) => {
-  const { type, payload} = action
+  const { type} = action
   
   switch(type) {
 

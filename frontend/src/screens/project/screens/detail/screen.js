@@ -14,7 +14,6 @@ import {
   Label,
 } from 'reactstrap'
 import Select from 'react-select'
-import _ from 'lodash'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
@@ -23,7 +22,7 @@ import { ContactModal } from '../../sections'
 import { Loader ,ConfirmDeleteModal } from 'components'
 
 import * as ProjectActions from '../../actions'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import {
   CommonActions

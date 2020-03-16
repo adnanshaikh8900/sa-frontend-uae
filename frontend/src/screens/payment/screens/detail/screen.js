@@ -14,14 +14,9 @@ import {
   Label
 } from "reactstrap";
 import Select from "react-select";
-import _ from "lodash";
 import { selectOptionsFactory } from "utils";
 import { Formik } from "formik";
-import {
-  BootstrapTable,
-  TableHeaderColumn,
-  SearchField
-} from "react-bootstrap-table";
+
 import DatePicker from "react-datepicker";
 import * as Yup from "yup";
 import { Loader, ConfirmDeleteModal } from "components";
@@ -247,7 +242,7 @@ class DetailPayment extends React.Component {
   }
 
   render() {
-    const { data, loading, initValue, dialog, selectedSupplier } = this.state;
+    const { loading, initValue, dialog, selectedSupplier } = this.state;
     const {
       currency_list,
       bank_list,
@@ -388,7 +383,6 @@ class DetailPayment extends React.Component {
                                         }
                                         value={props.values.invoiceId}
                                         onChange={option => {
-                                          let data;
                                           // data = invoice_list.filter(item => item.invoiceId === option.value);
                                           // props.handleChange('amount')(data[0]['invoiceAmount'])
                                           props.handleChange("invoiceId")(option);

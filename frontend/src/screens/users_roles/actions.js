@@ -1,7 +1,7 @@
-import { USERS_ROLES } from 'constants/types'
+// import { USERS_ROLES } from 'constants/types'
 import {
-  api,
-  authApi
+  // api,
+  // authApi
 } from 'utils'
 
 export const initialData = (obj) => {

@@ -1,10 +1,10 @@
-import { REPORTS_FILING } from 'constants/types'
+// import { REPORTS_FILING } from 'constants/types'
 
 const initState = {
 }
 
 const ReportsFilingReducer = (state = initState, action) => {
-  const { type, payload} = action
+  const { type} = action
   
   switch(type) {
 

@@ -1,6 +1,5 @@
 import { TRANSACTION } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 

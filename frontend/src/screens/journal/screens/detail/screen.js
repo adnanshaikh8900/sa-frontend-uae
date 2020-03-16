@@ -18,13 +18,11 @@ import Select from "react-select";
 import {
   BootstrapTable,
   TableHeaderColumn,
-  SearchField
 } from "react-bootstrap-table";
 import DatePicker from "react-datepicker";
 
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
-import _ from "lodash";
 import moment from "moment";
 
 import { CommonActions } from "services/global";
@@ -195,6 +193,7 @@ class DetailJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index;
       }
+      return obj
     });
 
     return (
@@ -245,6 +244,7 @@ class DetailJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index;
       }
+      return obj
     });
 
     return (
@@ -287,6 +287,7 @@ class DetailJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index;
       }
+      return obj
     });
 
     return (
@@ -351,13 +352,8 @@ class DetailJournal extends React.Component {
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         idx = index;
-        if (
-          Object.keys(props.touched).length &&
-          props.touched.journalLineItems &&
-          props.touched.journalLineItems[idx]
-        ) {
-        }
       }
+      return obj
     });
 
     return (
@@ -407,6 +403,7 @@ class DetailJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index;
       }
+      return obj
     });
 
     return (
@@ -445,6 +442,7 @@ class DetailJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index;
       }
+      return obj
     });
 
     return (
@@ -509,6 +507,7 @@ class DetailJournal extends React.Component {
         else obj[name] = e.target.value
         idx = index
       }
+      return obj
     });
     if (name === 'debitAmount') {
       form.setFieldValue(`journalLineItems.[${idx}].creditAmount`, 0, true)
@@ -542,8 +541,8 @@ class DetailJournal extends React.Component {
     const { vat_list } = this.props;
     let subTotalDebitAmount = 0;
     let subTotalCreditAmount = 0;
-    let totalDebitAmount = 0;
-    let totalCreditAmount = 0;
+    // let totalDebitAmount = 0;
+    // let totalCreditAmount = 0;
 
     data.map(obj => {
       const index =
@@ -563,6 +562,7 @@ class DetailJournal extends React.Component {
         subTotalDebitAmount = 0
         subTotalCreditAmount = 0
       }
+      return obj
     });
 
     this.setState({
@@ -623,7 +623,7 @@ class DetailJournal extends React.Component {
     const { data, initValue } = this.state;
 
     // const postData = { ...values, ...calData, ...{ journalLineItems: this.state.data } }
-    if (initValue.totalCreditAmount == initValue.totalDebitAmount) {
+    if (initValue.totalCreditAmount === initValue.totalDebitAmount) {
       data.map(item => {
         delete item.id;
         item.transactionCategoryId = item.transactionCategoryId
@@ -631,6 +631,8 @@ class DetailJournal extends React.Component {
           : "";
         item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : "";
         item.contactId = item.contactId ? item.contactId : "";
+
+        return item
       });
       const postData = {
         journalId: values.journalId,

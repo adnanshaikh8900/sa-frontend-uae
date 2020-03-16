@@ -16,12 +16,12 @@ class Footer extends Component {
   
   render() {
 
-    const { children, version, ...attributes } = this.props
+    const {  version } = this.props
 
     return (
       <React.Fragment>
         <div className="d-flex align-items-center justify-content-between w-100">
-          <img src={logo} className="m-2 footer-logo" />
+          <img src={logo} className="m-2 footer-logo" alt="logo"/>
           <span>
             <Link to="/admin">Simple Vat</Link>&nbsp;
             {

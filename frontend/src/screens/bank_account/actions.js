@@ -1,6 +1,5 @@
 import { BANK_ACCOUNT } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 
@@ -50,7 +49,6 @@ export const getBankAccountList = (obj) => {
   const { bankName,
     bankAccountTypeId,
     bankAccountName,
-    transactionDate,
     accountNumber,
     currencyCode,
     pageNo,

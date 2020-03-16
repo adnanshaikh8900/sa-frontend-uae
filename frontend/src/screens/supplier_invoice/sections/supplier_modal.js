@@ -13,13 +13,12 @@ import {
   ModalFooter,
 } from 'reactstrap'
 import Select from 'react-select'
-import _ from 'lodash'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
 import { selectOptionsFactory } from 'utils'
-import { ToastContainer, toast } from 'react-toastify'
+import {  toast } from 'react-toastify'
 
 
 
@@ -63,7 +62,6 @@ class SupplierModal extends React.Component {
     this.props.createSupplier(data).then(res => {
       if (res.status === 200) {
         resetForm();
-        const val = res.data
         this.props.closeSupplierModal(true)
         this.props.getCurrentUser(res.data)
       }
@@ -131,7 +129,7 @@ class SupplierModal extends React.Component {
                 //     contractPoNumber: Yup.number()
                 //       .required("Contract PoNumber is Required"),
                 //       vatRegistrationNumber: Yup.number()
-                //       .required("Vat Registration Number is Required"),
+                //       .required("Tax Registration Number is Required"),
                 //       currencyCode: Yup.string()
                 //       .required("Please Select Currency")
                 //       .nullable(),
@@ -596,7 +594,7 @@ class SupplierModal extends React.Component {
                     <Row className="row-wrapper">
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="vatRegistrationNumber">Vat Registration Number</Label>
+                          <Label htmlFor="vatRegistrationNumber">Tax Registration Number</Label>
                           <Input
                             type="text"
                             id="vatRegistrationNumber"

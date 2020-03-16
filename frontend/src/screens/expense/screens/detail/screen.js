@@ -15,7 +15,6 @@ import {
   NavLink
 } from 'reactstrap'
 import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 import 'react-datepicker/dist/react-datepicker.css'
@@ -46,6 +45,8 @@ const mapStateToProps = (state) => {
     employee_list: state.expense.employee_list,
     vat_list: state.expense.vat_list,
     expense_categories_list: state.expense.expense_categories_list,
+    bank_list: state.expense.bank_list,
+
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -88,6 +89,10 @@ class DetailExpense extends React.Component {
       "application/vnd.ms-excel",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
+    this.paymentMode= [{
+      label: 'Cash',value: 'cash' },
+     { label: 'Bank',value: 'bank'
+    }]
   }
 
   componentDidMount() {
@@ -103,6 +108,8 @@ class DetailExpense extends React.Component {
           this.props.expenseActions.getProjectList();
           this.props.expenseActions.getEmployeeList();
           this.props.expenseActions.getExpenseCategoriesList();
+          this.props.expenseActions.getBankList();
+
           this.setState({
             loading: false,
             current_expense_id: this.props.location.state,
@@ -143,7 +150,6 @@ class DetailExpense extends React.Component {
       employee,
       expenseDescription,
       receiptNumber,
-      attachmentFile,
       receiptAttachmentDescription,
     } = data
 
@@ -226,8 +232,8 @@ class DetailExpense extends React.Component {
 
   render() {
 
-    const { expense_detail, currency_list, project_list, payment_list, employee_list, expense_categories_list } = this.props
-    const { data, initValue, loading, dialog } = this.state
+    const {  currency_list, project_list, employee_list,bank_list,vat_list, expense_categories_list } = this.props
+    const {  initValue, loading, dialog } = this.state
 
     return (
       <div className="detail-expense-screen">
@@ -286,14 +292,14 @@ class DetailExpense extends React.Component {
                                     value && this.setState({
                                       fileName: value.name
                                     })
-                                    if (!value || value && this.supported_format.includes(value.type)) {
+                                    if (!value || (value && this.supported_format.includes(value.type))) {
                                       return true
                                     } else {
                                       return false
                                     }
                                   })
                                   .test('fileSize', "*File Size is too large", value => {
-                                    if (!value || value && value.size <= this.file_size) {
+                                    if (!value || (value && value.size <= this.file_size)) {
                                       return true
                                     } else {
                                       return false
@@ -437,7 +443,77 @@ class DetailExpense extends React.Component {
                                       )}
                                     </FormGroup>
                                   </Col>
-                                  <Col lg={8}>
+                                  <Col lg={2}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="vat">Tax</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    id="vat"
+                                    name="vat"
+                                    options={
+                                      vat_list
+                                        ? selectOptionsFactory.renderOptions(
+                                          "name",
+                                          "id",
+                                          vat_list,
+                                          "Tax"
+                                        )
+                                        : []
+                                    }
+                                    value={props.values.project}
+                                    onChange={option =>
+                                      props.handleChange("project")(option)
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+
+                              <Col lg={2}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="pay_through">Pay Through</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    id="pay_through"
+                                    name="pay_through"
+                                    options={
+                                      this.paymentMode
+                                        ? selectOptionsFactory.renderOptions(
+                                          "label",
+                                          "value",
+                                          this.paymentMode,
+                                          ""
+                                        )
+                                        : []
+                                    }
+                                    value={props.values.project}
+                                    onChange={option =>
+                                      props.handleChange("project")(option)
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+
+                              <Col lg={4}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="bank">Bank</Label>
+                                        <Select
+                                          className="select-default-width"
+                                          id="bank"
+                                          name="bank"
+                                          options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}
+                                          value={props.values.bank}
+                                          onChange={option => props.handleChange('bank')(option)}
+                                          className={
+                                            props.errors.bank && props.touched.bank
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                <Col lg={8}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="expenseDescription">Description</Label>
                                       <Input

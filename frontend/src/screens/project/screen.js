@@ -347,7 +347,7 @@ class Project extends React.Component {
                             dataField="vatRegistrationNumber"
                             dataSort
                           >
-                            Vat Registration Number
+                            Tax Registration Number
                           </TableHeaderColumn>
                         </BootstrapTable>
                       </div>

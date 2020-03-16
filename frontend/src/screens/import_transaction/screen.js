@@ -12,15 +12,10 @@ import {
   FormGroup,
   Input,
   Label,
-  TabContent,
-  TabPane,
-  Nav,
-  NavItem,
-  NavLink,
+
 } from 'reactstrap'
 import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-import Stepper from 'react-stepper-horizontal'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import * as ImportTransactionActions from './actions';
 import { selectOptionsFactory } from 'utils'
 import {
@@ -30,8 +25,7 @@ import {
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import './style.scss'
-import { Formik } from 'formik';
-import * as Yup from "yup";
+
 import { Loader } from 'components'
 
 const mapStateToProps = (state) => {
@@ -178,6 +172,8 @@ class ImportTransaction extends React.Component {
                   tempStatus.push(tempObj)
                   tempDropDown.push(obj)
                   tempError.push(false)
+
+                  return val
                 })
                 this.setState({
                   loading: false,
@@ -233,6 +229,7 @@ class ImportTransaction extends React.Component {
       if (multiSelected.length > 0) {
         multiSelected.map(item => {
           tempStatus[item] = { label: '', status: false }
+          return item
         })
       }
       tempDataSelectedValueDropdown[index] = e
@@ -244,7 +241,7 @@ class ImportTransaction extends React.Component {
     } else {
       let a = tempStatus.map((item, i) => {
         let idx = tempDataSelectedValueDropdown.map(val => val.value).indexOf(item.label);
-        if (idx === index || item.label == '') {
+        if (idx === index || item.label === '') {
           return { label: '', status: false }
         } else {
           return { label: `${item.label}`, status: `${item.status}` }
@@ -252,11 +249,12 @@ class ImportTransaction extends React.Component {
       })
       a[index] = { label: '', status: false }
       tempDataSelectedValueDropdown[index] = e
-      this.state.selectError[index] = false
+      const tempSelectError = [...this.state.selectError]
+      tempSelectError[index] = false
       this.setState({
         columnStatus: a,
         selectedValueDropdown: tempDataSelectedValueDropdown,
-        selectError: this.state.selectError
+        selectError: tempSelectError
       })
     }
   }
@@ -289,6 +287,7 @@ class ImportTransaction extends React.Component {
           obj[val] = index
           a = { ...a, ...obj }
         }
+        return item
       })
       let postData = { ...this.state.initValue }
       postData.indexMap = a
@@ -306,7 +305,7 @@ class ImportTransaction extends React.Component {
   }
 
   render() {
-    const { initValue, loading, tableDataKey, tableData, initialloading, configurationList } = this.state;
+    const {  loading,  tableData, initialloading, configurationList } = this.state;
     const { date_format_list } = this.props
 
     return (
@@ -378,7 +377,7 @@ class ImportTransaction extends React.Component {
                                       value={this.state.selectedConfiguration || ''}
                                       options={configurationList ? selectOptionsFactory.renderOptions('name', 'id', configurationList, 'Configuration') : []}
                                       onChange={(e) => {
-                                        let data = configurationList.filter(item => item.id == e.value);
+                                        let data = configurationList.filter(item => item.id === e.value);
                                         if (data.length > 0) {
                                           this.setState({
                                             initValue: {

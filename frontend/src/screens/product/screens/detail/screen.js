@@ -144,7 +144,7 @@ class DetailProduct extends React.Component {
       vatIncluded: vatIncluded,
     }
     this.props.detailProductActions.updateProduct(postData).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success','Product Updated Successfully');
         this.props.history.push('/admin/master/product')
       }

@@ -13,12 +13,9 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
 import _ from 'lodash'
 import { Loader } from 'components'
-import {
-  selectOptionsFactory
-} from 'utils'
+
 import {
   CommonActions
 } from 'services/global'
@@ -30,7 +27,6 @@ import * as CreateProductCategoryActions from './actions'
 import * as ProductCategoryActions from '../../actions'
 
 import { Formik } from 'formik';
-import * as Yup from "yup";
 
 
 const mapStateToProps = (state) => {

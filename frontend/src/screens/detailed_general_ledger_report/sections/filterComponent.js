@@ -27,7 +27,7 @@ class FilterComponent extends Component {
 			initValue: {
 				startDate: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
 				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
-				reportBasis: '',
+				reportBasis: 'ACCRUAL',
 				chartOfAccountId: ''
 			}
 		}

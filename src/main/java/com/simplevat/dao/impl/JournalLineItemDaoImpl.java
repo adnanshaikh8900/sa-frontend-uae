@@ -53,11 +53,16 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		String queryStr = "select jn from JournalLineItem jn INNER join Journal j on j.id = jn.journal.id where j.journalDate BETWEEN :startDate and :endDate ";
 
 		if (reportRequestModel.getChartOfAccountId() != null) {
-			queryStr += " and jn.transactionCategory.chartOfAccount.chartOfAccountId = :chartOfAccountId";
+			queryStr += " and jn.transactionCategory.transactionCategoryId = :transactionCategoryId";
 		}
-		if (reportRequestModel.getReportBasic() != null && !reportRequestModel.getReportBasic().isEmpty()
-				&& reportRequestModel.getReportBasic().equals("CASH")) {
-			queryStr += " and jn.transactionCategory.transactionCategoryId in :transactionCategoryId";
+		if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
+				&& reportRequestModel.getReportBasis().equals("CASH")) {
+			if (reportRequestModel.getChartOfAccountId() != null) {
+				queryStr += " or ";
+			} else {
+				queryStr += " and ";
+			}
+			queryStr += " jn.transactionCategory.transactionCategoryId in :transactionCategoryIdList";
 		}
 
 		TypedQuery<JournalLineItem> query = getEntityManager().createQuery(queryStr, JournalLineItem.class);
@@ -68,14 +73,13 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			query.setParameter("endDate", toDate);
 		}
 		if (reportRequestModel.getChartOfAccountId() != null) {
-			query.setParameter("chartOfAccountId", reportRequestModel.getChartOfAccountId());
+			query.setParameter("transactionCategoryId", reportRequestModel.getChartOfAccountId());
 		}
-		if (reportRequestModel.getReportBasic() != null && !reportRequestModel.getReportBasic().isEmpty()
-				&& reportRequestModel.getReportBasic().equals("CASH")) {
-			query.setParameter("transactionCategoryId",
+		if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
+				&& reportRequestModel.getReportBasis().equals("CASH")) {
+			query.setParameter("transactionCategoryIdList",
 					Arrays.asList(new Integer[] { TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
 							TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode() }));
-			queryStr += " and jn.transactionCategory.transactionCategoryId in :transactionCategoryId";
 		}
 //		if (paginationModel != null && paginationModel.getPageNo() != null) {
 //			query.setMaxResults(paginationModel.getPageSize());

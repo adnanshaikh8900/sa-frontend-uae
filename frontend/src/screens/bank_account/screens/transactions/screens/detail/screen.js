@@ -187,7 +187,7 @@ class DetailBankTransaction extends React.Component {
 
   render() {
     const { project_list, transaction_category_list, transaction_type_list } = this.props
-    const { initValue, loading, viewDetail } = this.state
+    const { initValue, loading } = this.state
     // console.log(initValue)
     return (
       <div className="detail-bank-transaction-screen">
@@ -233,8 +233,8 @@ class DetailBankTransaction extends React.Component {
                                         fileName: value.name
                                       });
                                       if (
-                                        !value || value &&
-                                        this.supported_format.includes(value.type) || !value
+                                        !value || (value &&
+                                        this.supported_format.includes(value.type)) || !value
                                       ) {
                                         return true;
                                       } else {
@@ -246,7 +246,7 @@ class DetailBankTransaction extends React.Component {
                                     "fileSize",
                                     "*File Size is too large",
                                     value => {
-                                      if (!value || value && value.size <= this.file_size || !value) {
+                                      if (!value || (value && value.size <= this.file_size) || !value) {
                                         return true;
                                       } else {
                                         return false;

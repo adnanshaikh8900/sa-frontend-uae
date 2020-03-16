@@ -21,7 +21,7 @@ import {
 } from 'reactstrap'
 import Select from 'react-select'
 // import ImagesUploader from 'react-images-uploader'
-import { Loader, ConfirmDeleteModal, ImageUploader } from 'components'
+import { Loader, ImageUploader } from 'components'
 import { selectOptionsFactory ,cryptoService} from 'utils'
 
 
@@ -219,11 +219,10 @@ class Profile extends React.Component {
       password,
       roleId,
       // companyId,
-      active,
     } = data;
+    const {userPhotoFile} = this.state
     const userId = cryptoService.decryptService('userId')
 
-    const { userPhotoFile } = this.state;
     let formData = new FormData();
     formData.append("id", userId);
     formData.append("firstName", firstName ? firstName : '');
@@ -354,7 +353,6 @@ class Profile extends React.Component {
       dateFormat
     } = data;
     const { companyAddress, isSame } = this.state;
-    const { userPhotoFile } = this.state;
     let formData = new FormData();
     // formData.append("id", companyId);
     formData.append("companyName", companyName ? companyName : '');

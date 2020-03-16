@@ -1,10 +1,10 @@
-import { USERS_ROLES } from 'constants/types'
+// import { USERS_ROLES } from 'constants/types'
 
 const initState = {
 }
 
 const UsersRolesReducer = (state = initState, action) => {
-  const { type, payload} = action
+  const { type} = action
   
   switch(type) {
 

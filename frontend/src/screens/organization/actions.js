@@ -1,6 +1,5 @@
 import { ORGANIZATION } from 'constants/types'
 import {
-  api,
   authFileUploadApi,
   authApi
 } from 'utils'

@@ -246,8 +246,7 @@ class Journal extends React.Component {
   }
 
   renderAccount(cell, rows) {
-    const temp = []
-    const data =  rows && rows.journalLineItems ? rows.journalLineItems.map(item =>{temp.push(item['transactionCategoryName'])}) : []
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['transactionCategoryName']}) : []
     const listItems = temp.map((number,index) =>
     <li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
   );
@@ -255,20 +254,16 @@ class Journal extends React.Component {
     }
 
   renderCreditAmount(cell, rows) {
-    const temp = []
-    const data =  rows && rows.journalLineItems ? rows.journalLineItems.map(item =>{temp.push(item['creditAmount'])}) : []
-    const listItems = temp.map((number,index) =>
-    <li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['creditAmount']}) : []
+    const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>)
   );
   return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
 
     }
 
   renderDebitAmount(cell, rows) {
-    const temp = []
-    const data =  rows && rows.journalLineItems ? rows.journalLineItems.map(item =>{temp.push(item['debitAmount'])}) : []
-    const listItems = temp.map((number,index) =>
-    <li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['debitAmount']}) : []
+    const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>)
   );
     return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
     }

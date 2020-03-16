@@ -1,10 +1,10 @@
-import { NOTIFICATION } from 'constants/types'
+// import { NOTIFICATION } from 'constants/types'
 
 const initState = {
 }
 
 const NotificationReducer = (state = initState, action) => {
-  const { type, payload} = action
+  const { type} = action
   
   switch(type) {
 

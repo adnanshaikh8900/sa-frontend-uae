@@ -1,6 +1,5 @@
 import { CUSTOMER_INVOICE } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 import moment from 'moment'
@@ -89,29 +88,6 @@ export const getCustomerList = (nameCode) => {
     })
   }
 }
-
-
-// export const getVendorList = () => {
-//   return (dispatch) => {
-//     let data = {
-//       method: 'get',
-//       url: 'rest/contact/contactvendorlist'
-//     }
-//     return authApi(data).then(res => {
-//       if (res.status === 200) {
-//         dispatch({
-//           type: CUSTOMER_INVOICE.VENDOR_LIST,
-//           payload:  {
-//             data: res.data
-//           }
-//         })
-//       }
-//     }).catch(err => {
-//       throw err
-//     })
-//   }
-// }
-
 
 export const getCurrencyList = () => {
   return (dispatch) => {

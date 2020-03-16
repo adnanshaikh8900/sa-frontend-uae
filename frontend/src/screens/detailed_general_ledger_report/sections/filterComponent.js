@@ -13,7 +13,6 @@ import {
 import DatePicker from "react-datepicker"
 
 import { Formik } from "formik"
-import * as Yup from "yup"
 import Select from "react-select"
 import moment from 'moment'
 
@@ -28,18 +27,23 @@ class FilterComponent extends Component {
 			initValue: {
 				startDate: moment().startOf('month').format('YYYY-MM-DD hh:mm'),
 				endDate: moment().endOf('month').format('YYYY-MM-DD hh:mm'),
-				report_basis: ''
+				reportBasis: '',
+				chartOfAccountId: ''
 			}
 		}
 
-		this.report_basis = [
-			{ label: 'cash', value: 'cash' },
-			{ label: 'accrual', value: 'accrual' }
+		this.reportBasis = [
+			{ label: 'Cash', value: 'CASH' },
+			{ label: 'Accrual', value: 'ACCRUAL' }
 		]
+
 	}
 
 	render() {
 		const { initValue } = this.state
+		const {chart_of_account_list} = this.props
+
+		console.log(chart_of_account_list)
 		return (
 			<div>
 				<Card>
@@ -107,24 +111,30 @@ class FilterComponent extends Component {
 									<Row>
 										<Col lg={4}>
 											<FormGroup className="mb-3">
-												<Label htmlFor="report_basis">Report Basis</Label>
+												<Label htmlFor="reportBasis">Report Basis</Label>
 												<Select
 													className="select-default-width"
-													id="report_basis"
-													name="report_basis"
-													options={
-														this.report_basis
-															? selectOptionsFactory.renderOptions(
-																"label",
-																"value",
-																this.report_basis,
-																""
-															)
-															: []
-													}
-													value={props.values.report_basis}
+													id="reportBasis"
+													name="reportBasis"
+												  options={this.reportBasis}
+													value={props.values.reportBasis}
 													onChange={option =>
-														props.handleChange("report_basis")(option)
+														props.handleChange("reportBasis")(option)
+													}
+												/>
+											</FormGroup>
+										</Col>
+										<Col lg={4}>
+											<FormGroup className="mb-3">
+												<Label htmlFor="chart_of_account">Chart Of Account</Label>
+												<Select
+													className="select-default-width"
+													id="chart_of_account"
+													name="chart_of_account_list"
+													options={chart_of_account_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', chart_of_account_list, 'Chart of Account') : []}
+													value={props.values.chartOfAccountId}
+													onChange={option =>
+														props.handleChange("chartOfAccountId")(option)
 													}
 												/>
 											</FormGroup>

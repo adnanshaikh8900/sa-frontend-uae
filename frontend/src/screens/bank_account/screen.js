@@ -9,8 +9,6 @@ import {
   Row,
   Col,
   ButtonGroup,
-  Form,
-  FormGroup,
   Input,
   ButtonDropdown,
   DropdownToggle,
@@ -19,7 +17,7 @@ import {
 } from 'reactstrap'
 import Select from 'react-select'
 
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
 import {
   Loader,
@@ -27,7 +25,6 @@ import {
 } from 'components'
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils'
 
 import {
@@ -73,27 +70,6 @@ class BankAccount extends React.Component {
       }
     }
 
-    this.initializeData = this.initializeData.bind(this)
-    this.inputHandler = this.inputHandler.bind(this)
-    // this.filterBankAccountList = this.filterBankAccountList.bind(this)
-
-    this.closeBankAccount = this.closeBankAccount.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    this.removeBankAccount = this.removeBankAccount.bind(this)
-    this.bulkDeleteBankAccount = this.bulkDeleteBankAccount.bind(this)
-    this.removeBulkBankAccount = this.removeBulkBankAccount.bind(this)
-
-    this.renderAccountNumber = this.renderAccountNumber.bind(this)
-    this.renderAccountType = this.renderAccountType.bind(this)
-    this.renderCurrency = this.renderCurrency.bind(this)
-    this.renderActions = this.renderActions.bind(this)
-    this.renderLastReconciled = this.renderLastReconciled.bind(this)
-
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.toggleActionButton = this.toggleActionButton.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-
     this.options = {
       paginationPosition: 'top',
       page: 1,
@@ -117,7 +93,7 @@ class BankAccount extends React.Component {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     let { filterData } = this.state
     const data = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -128,7 +104,6 @@ class BankAccount extends React.Component {
       if (res.status === 200) {
         this.props.bankAccountActions.getAccountTypeList()
         this.props.bankAccountActions.getCurrencyList()
-        // this.props.chartOfAccountActions.getTransactionTypes();
         this.setState({ loading: false });
       }
     }).catch(err => {
@@ -138,7 +113,7 @@ class BankAccount extends React.Component {
 
   }
 
-  inputHandler(name, val) {
+  inputHandler = (name, val) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -146,7 +121,7 @@ class BankAccount extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData()
   }
 
@@ -192,7 +167,7 @@ class BankAccount extends React.Component {
   //   return data
   // }
 
-  renderAccountType(cell, row) {
+  renderAccountType  = (cell, row) => {
     if (row.bankAccountTypeName) {
       let data = null
       switch (row.bankAccountTypeName ) {
@@ -232,7 +207,7 @@ class BankAccount extends React.Component {
     }
   }
 
-  toggleActionButton(index) {
+  toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -244,7 +219,7 @@ class BankAccount extends React.Component {
     })
   }
 
-  renderAccountNumber(cell, row) {
+  renderAccountNumber = (cell, row) => {
     return (
       <label
         className="mb-0 my-link"
@@ -256,7 +231,7 @@ class BankAccount extends React.Component {
     )
   }
 
-  renderCurrency(cell, row) {
+  renderCurrency = (cell, row) => {
     if (
       row.currancyName
     ) {
@@ -270,7 +245,7 @@ class BankAccount extends React.Component {
     }
   }
 
-  renderActions(cell, row) {
+  renderActions = (cell, row) => {
     return (
       <div>
         <ButtonDropdown
@@ -298,9 +273,6 @@ class BankAccount extends React.Component {
             }}>
               <i className="fas fa-eye" /> View Transactions
             </DropdownItem>
-            {/* <DropdownItem onClick={() => this.props.history.push('/admin/banking/upload-statement')}>
-              <i className="fas fa-upload" /> Upload Statement
-            </DropdownItem> */}
             <DropdownItem>
               <i className="fa fa-connectdevelop" /> Reconcile
             </DropdownItem>
@@ -313,7 +285,7 @@ class BankAccount extends React.Component {
     )
   }
 
-  closeBankAccount(_id) {
+  closeBankAccount = (_id) => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -323,16 +295,17 @@ class BankAccount extends React.Component {
     })
   }
 
-  removeBankAccount(_id) {
+  removeBankAccount = (_id) => {
     this.removeDialog()
     this.props.bankAccountActions.removeBankAccountByID(_id).then(() => {
       this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
       this.initializeData()
       let temp_List = []
       this.state.selected_id_list.map(item => {
-        if (item != _id) {
+        if (item !== _id) {
           temp_List.push(item)
         }
+        return item
       })
       this.setState({
         selected_id_list: temp_List
@@ -342,13 +315,13 @@ class BankAccount extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  renderLastReconciled(cell, row) {
+  renderLastReconciled = (cell, row) => {
     return (
       <div>
         <div>
@@ -363,27 +336,29 @@ class BankAccount extends React.Component {
   }
 
 
-  onRowSelect(row, isSelected, e) {
+  onRowSelect = (row, isSelected, e) => {
     let temp_list = []
     if (isSelected) {
       temp_list = Object.assign([], this.state.selected_id_list)
       temp_list.push(row.bankAccountId)
     } else {
       this.state.selected_id_list.map(item => {
-        if (item != row.bankAccountId) {
+        if (item !== row.bankAccountId) {
           temp_list.push(item)
         }
+        return item
       })
     }
     this.setState({
       selected_id_list: temp_list
     })
   }
-  onSelectAll(isSelected, rows) {
+  onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.bankAccountId)
+        return item
       })
     }
     this.setState({
@@ -391,7 +366,7 @@ class BankAccount extends React.Component {
     })
   }
 
-  bulkDeleteBankAccount() {
+  bulkDeleteBankAccount = () => {
     let {
       selected_id_list
     } = this.state
@@ -408,7 +383,7 @@ class BankAccount extends React.Component {
     }
   }
 
-  removeBulkBankAccount() {
+  removeBulkBankAccount = () => {
     this.removeDialog()
     let {
       selected_id_list

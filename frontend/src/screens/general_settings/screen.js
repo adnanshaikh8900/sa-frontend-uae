@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import { bindActionCreators } from 'redux'
+// import { bindActionCreators } from 'redux'
 import { Editor } from "react-draft-wysiwyg"
 import { EditorState } from "draft-js"
 

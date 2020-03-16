@@ -1,10 +1,10 @@
-import { VAT_TRANSACTIONS } from 'constants/types'
+// import { VAT_TRANSACTIONS } from 'constants/types'
 
 const initState = {
 }
 
 const VatTransactionsReducer = (state = initState, action) => {
-  const { type, payload} = action
+  const { type} = action
   
   switch(type) {
 

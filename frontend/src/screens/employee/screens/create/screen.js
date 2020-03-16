@@ -18,7 +18,6 @@ import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import _ from 'lodash'
 
 import {
   CommonActions

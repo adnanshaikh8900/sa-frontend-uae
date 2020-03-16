@@ -1,18 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './style.css';
-import FlipMove from 'react-flip-move';
 import Loader from 'react-loader-spinner'
-// import UploadIcon from './UploadIcon.svg';
-import { withRouter,Redirect } from "react-router-dom";
+import { withRouter, } from "react-router-dom";
 
-const styles = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  flexWrap: "wrap",
-  width: "100%",
-};
+// const styles = {
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "center",
+//   flexWrap: "wrap",
+//   width: "100%",
+// };
 
 const ERROR = {
   NOT_SUPPORTED_EXTENSION: 'NOT_SUPPORTED_EXTENSION',

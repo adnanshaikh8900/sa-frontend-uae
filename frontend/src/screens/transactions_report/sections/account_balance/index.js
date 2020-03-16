@@ -2,37 +2,30 @@ import React from 'react'
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
-  Card,
-  CardHeader,
-  CardBody,
   Button,
   Row,
   Col,
   FormGroup,
-  Label,
   Form,
-  Table,
   Input,
   ButtonGroup
 } from 'reactstrap'
 
-import _ from "lodash"
 import Select from 'react-select'
 import { DateRangePicker2 } from 'components'
 import moment from 'moment'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DateRangePicker from 'react-bootstrap-daterangepicker'
 
 import * as accountBalanceData from '../../actions';
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils' 
 
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
-import 'react-select/dist/react-select.css'
-import 'bootstrap-daterangepicker/daterangepicker.css'
+ import 'react-select/dist/react-select.css'
+ import 'bootstrap-daterangepicker/daterangepicker.css'
 import './style.scss'
 
 const mapStateToProps = (state) => {
@@ -50,76 +43,20 @@ const mapDispatchToProps = (dispatch) => {
   })
 }
 
-const colourOptions = [
-  { value: 'ocean', label: 'Ocean', color: '#00B8D9', isFixed: true },
-  { value: 'blue', label: 'Blue', color: '#0052CC', isDisabled: true },
-  { value: 'purple', label: 'Purple', color: '#5243AA' },
-  { value: 'red', label: 'Red', color: '#FF5630', isFixed: true },
-  { value: 'orange', label: 'Orange', color: '#FF8B00' },
-  { value: 'yellow', label: 'Yellow', color: '#FFC400' },
-  { value: 'green', label: 'Green', color: '#36B37E' },
-  { value: 'forest', label: 'Forestasd fsad fas fsad fsad fsa', color: '#00875A' },
-  { value: 'slate', label: 'Slate', color: '#253858' },
-  { value: 'silver', label: 'Silver', color: '#666666' },
-]
+// const colourOptions = [
+//   { value: 'ocean', label: 'Ocean', color: '#00B8D9', isFixed: true },
+//   { value: 'blue', label: 'Blue', color: '#0052CC', isDisabled: true },
+//   { value: 'purple', label: 'Purple', color: '#5243AA' },
+//   { value: 'red', label: 'Red', color: '#FF5630', isFixed: true },
+//   { value: 'orange', label: 'Orange', color: '#FF8B00' },
+//   { value: 'yellow', label: 'Yellow', color: '#FFC400' },
+//   { value: 'green', label: 'Green', color: '#36B37E' },
+//   { value: 'forest', label: 'Forestasd fsad fas fsad fsad fsa', color: '#00875A' },
+//   { value: 'slate', label: 'Slate', color: '#253858' },
+//   { value: 'silver', label: 'Silver', color: '#666666' },
+// ]
 
-const tempdata = [{
-  transactionDate: '10/15/2019',
-  transactionCategoryId: 2,
-  transactionCategoryCode: 2,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}, {
-  transactionDate: '10/15/2019',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}, {
-  transactionDate: '10/15/2019',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}, {
-  transactionDate: '10/15/2019',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}, {
-  transactionDate: '10/15/2019',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-},{
-  transactionDate: '10/15/2019',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-},{
-  transactionDate: '10/15/2019',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}]
+
 
 const ranges =  {
   'Last 7 Days': [moment().subtract(6, 'days'), moment()],

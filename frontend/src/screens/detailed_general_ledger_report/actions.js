@@ -1,6 +1,4 @@
-import { TEMP } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 
@@ -25,3 +23,18 @@ export const getDetailedGeneralLedgerList = (postData) => {
   }
 }
 
+export const getTransactionCategoryList = () => {
+  return (dispatch) => {
+    let data ={
+      method: 'get',
+      url: '/rest/transactioncategory/getList'
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}

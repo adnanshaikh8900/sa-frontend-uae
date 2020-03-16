@@ -13,7 +13,7 @@ import {
   FormGroup,
   Label
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import ImageUploader from 'react-images-upload'
 
 import Select from 'react-select'
@@ -31,17 +31,15 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 // import 'react-images-uploader/font.css'
 
 import { selectOptionsFactory } from 'utils'
-import moment from 'moment'
 import { Formik } from 'formik';
-import * as Yup from "yup";
 import './style.scss'
 
 
-const industryOptions = [
-  { value: 'input', label: 'Option1' },
-  { value: 'output', label: 'Option2' },
-  { value: 'all', label: 'Option3' },
-]
+// const industryOptions = [
+//   { value: 'input', label: 'Option1' },
+//   { value: 'output', label: 'Option2' },
+//   { value: 'all', label: 'Option3' },
+// ]
 
 const mapStateToProps = (state) => {
   return ({

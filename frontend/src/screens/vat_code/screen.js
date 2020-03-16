@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -11,11 +11,10 @@ import {
   Input,
   ButtonGroup
 } from 'reactstrap'
-import {  toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
-import moment from 'moment'
 
-import { Loader , ConfirmDeleteModal} from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -51,26 +50,6 @@ class VatCode extends React.Component {
         vatPercentage: ''
       }
     }
-
-    // this.deleteVat = this.deleteVat.bind(this)
-    this.success = this.success.bind(this)
-    this.vatPercentageFormat = this.vatPercentageFormat.bind(this)
-
-    // this.showConfirmModal = this.showConfirmModal.bind(this)
-    // this.closeConfirmModal = this.closeConfirmModal.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
-
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-
-    this.bulkDelete = this.bulkDelete.bind(this)
-    this.removeBulk = this.removeBulk.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    this.initializeData = this.initializeData.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.onPageChange = this.onPageChange.bind(this);
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -112,42 +91,41 @@ class VatCode extends React.Component {
     })
   }
 
-  onRowSelect(row, isSelected) {
-    if(isSelected) {
+  onRowSelect = (row, isSelected) => {
+    if (isSelected) {
       this.state.selectedRows.push(row.id)
-
       this.setState({
         selectedRows: this.state.selectedRows
       })
     }
-    else 
+    else
       this.setState({
-        selectedRows: this.state.selectedRows.filter(el => el!=row.id)
+        selectedRows: this.state.selectedRows.filter(el => el !== row.id)
       })
   }
 
-  onSelectAll(isSelected, rows) {
+  onSelectAll = (isSelected, rows) => {
     this.setState({
-      selectedRows: isSelected?rows.map(row => row.id):[]
-    }) 
+      selectedRows: isSelected ? rows.map(row => row.id) : []
+    })
   }
 
   // -------------------------
   // Data Table Custom Fields
   //--------------------------
-  
-  vatPercentageFormat(cell, row) {
-    return(`${row.vat} %`)
+
+  vatPercentageFormat = (cell, row) => {
+    return (`${row.vat} %`)
   }
 
-  goToDetail (row) {
-    this.props.history.push('/admin/master/vat-code/detail',{id: row.id})
+  goToDetail = (row) => {
+    this.props.history.push('/admin/master/vat-code/detail', { id: row.id })
   }
 
   // Show Success Toast
-  success() {
+  success = () => {
     return toast.success('Vat Code Deleted Successfully... ', {
-        position: toast.POSITION.TOP_RIGHT
+      position: toast.POSITION.TOP_RIGHT
     })
   }
 
@@ -158,7 +136,7 @@ class VatCode extends React.Component {
     }
   }
 
-  onPageChange = (page, sizePerPage) => {
+  onPageChange = (page) => {
     if (this.options.page !== page) {
       this.options.page = page
       this.initializeData()
@@ -170,7 +148,7 @@ class VatCode extends React.Component {
   //--------------------------
 
   // Delete Vat By ID
-  bulkDelete() {
+  bulkDelete = () => {
     const {
       selectedRows
     } = this.state
@@ -187,8 +165,7 @@ class VatCode extends React.Component {
     }
   }
 
-  removeBulk() {
-    const { filterData } = this.state;
+  removeBulk = () => {
     let { selectedRows } = this.state;
     const { vat_list } = this.props
     let obj = {
@@ -208,56 +185,13 @@ class VatCode extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
-  // deleteVat() {
-  //   // this.setState({ loading: true })
-  //   this.setState({ openDeleteModal: false })
-  //   this.props.vatActions.deleteVat(this.state.selectedRows).then(res => {
-  //     if (res.status === 200) {
-  //       // this.setState({ loading: false })
-  //       this.initializeData()
-  //     }
-  //   })
-  // }
 
-  // Open Confirm Modal
-  // showConfirmModal() {
-  //   this.setState({ openDeleteModal: true })
-  // }
-  // // Close Confirm Modal
-  // closeConfirmModal() {
-  //   this.setState({ openDeleteModal: false })
-  // }
-
-
-  // handleFilterChange(e, name) {
-  //   this.setState({
-  //     filters: _.set(
-  //       { ...this.state.filters },
-  //       e.target.name && e.target.name !== '' ? e.target.name : name,
-  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //     )
-  //   })
-  // }
-
-  // filterVatList(vat_list) {
-  //   const {filters} = this.state
-
-  //   const data = vat_list.filter(item => {
-  //     for (var key in filters) {
-  //       if (item[key] === undefined || !item[key].toString().includes(filters[key]))
-  //         return false;
-  //     }
-  //     return true;
-  //   })
-
-  //   return data
-  // }  // }  // }
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -265,15 +199,13 @@ class VatCode extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData();
   }
 
   render() {
-    const { loading, selectedRows ,dialog} = this.state
-    const {vat_list} = this.props
-   
-    // let display_data = this.filterVatList(vatList)
+    const { loading, selectedRows, dialog } = this.state
+    const { vat_list } = this.props
 
     return (
       <div className="vat-code-screen">
@@ -286,120 +218,98 @@ class VatCode extends React.Component {
               </div>
             </CardHeader>
             <CardBody>
-            {dialog}
-            {
-              loading ?
-                <Loader></Loader>: 
-                <Row>
-                  <Col lg={12}>
-                    <div className="d-flex justify-content-end">
-                      <ButtonGroup className="toolbar" size="sm">
-                        <Button
-                          color="success"
-                          className="btn-square"
-                        >
-                          <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+              {dialog}
+              {
+                loading ?
+                  <Loader></Loader> :
+                  <Row>
+                    <Col lg={12}>
+                      <div className="d-flex justify-content-end">
+                        <ButtonGroup className="toolbar" size="sm">
+                          <Button
+                            color="success"
+                            className="btn-square"
+                          >
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                           Export to CSV
                         </Button>
-                        <Button
-                          color="primary"
-                          className="btn-square"
-                          onClick={() => this.props.history.push(`/admin/master/vat-code/create`)}
-                        >
-                          <i className="fas fa-plus mr-1" />
+                          <Button
+                            color="primary"
+                            className="btn-square"
+                            onClick={() => this.props.history.push(`/admin/master/vat-code/create`)}
+                          >
+                            <i className="fas fa-plus mr-1" />
                           New Code
                         </Button>
-                        <Button
-                          color="warning"
-                          className="btn-square"
-                          onClick={this.bulkDelete}
-                          disabled={selectedRows.length === 0}
-                        >
-                          <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+                          <Button
+                            color="warning"
+                            className="btn-square"
+                            onClick={this.bulkDelete}
+                            disabled={selectedRows.length === 0}
+                          >
+                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                           Bulk Delete
                         </Button>
-                      </ButtonGroup>
-                    </div>
-                    <div className="py-3">
-                      <h5>Filter : </h5>
-                      <Row>
-                        <Col lg={4} className="mb-1">
-                        <Input type="text" placeholder="Name" onChange={(e) => { 
-                          e.preventDefault()
-                          this.handleChange(e.target.value, 'name') 
-                          }} />
-                        </Col>
-                        <Col lg={4} className="mb-1">
-                        <Input type="number" placeholder="Vat Percentage" onChange={(e) => { 
-                          e.preventDefault()
-                          this.handleChange(e.target.value, 'vatPercentage')
-                           }} />
-                        </Col>
-                        <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
-                                <i className="fa fa-search"></i>
+                        </ButtonGroup>
+                      </div>
+                      <div className="py-3">
+                        <h5>Filter : </h5>
+                        <Row>
+                          <Col lg={4} className="mb-1">
+                            <Input type="text" placeholder="Name" onChange={(e) => {
+                              e.preventDefault()
+                              this.handleChange(e.target.value, 'name')
+                            }} />
+                          </Col>
+                          <Col lg={4} className="mb-1">
+                            <Input type="number" placeholder="Vat Percentage" onChange={(e) => {
+                              e.preventDefault()
+                              this.handleChange(e.target.value, 'vatPercentage')
+                            }} />
+                          </Col>
+                          <Col lg={2} className="mb-1">
+                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                              <i className="fa fa-search"></i>
                             </Button>
-                            </Col>
-                        {/* <Col>
-                          <Select
-                            className=""
-                            options={[{'value':'121', label:'11111'}, {value:'222', label:'123131'}]}
-                            name="type"
-                            placeholder="Account Type"
-                            onChange={(val)=> {
-                              this.handleFilterChange({target: { name:'type', value: val.value }})
-                            }}
-                          />
-                        </Col> */}
-                      </Row>
-                    </div>
-                    <BootstrapTable 
-                      data={vat_list && vat_list.data &&  vat_list.data.length > 0 ? vat_list.data : []}
-                      hover
-                      version="4"
-                      pagination = {vat_list && vat_list.data && vat_list.data.length > 0 ? true : false}
-                      search={false}
-                      selectRow={ this.selectRowProp }
-                      options={ this.options }
-                      remote
-                      fetchInfo={{ dataTotalSize: vat_list.count ? vat_list.count : 0 }}
-                      trClassName="cursor-pointer"
-                      csvFileName="vat_code.csv"
-                      ref={node => {
-                        this.table = node
-                      }}
-                    >
-                      <TableHeaderColumn
-                        isKey
-                        dataField="name"
-                        dataSort
+                          </Col>
+                        </Row>
+                      </div>
+                      <BootstrapTable
+                        data={vat_list && vat_list.data && vat_list.data.length > 0 ? vat_list.data : []}
+                        hover
+                        version="4"
+                        pagination={vat_list && vat_list.data && vat_list.data.length > 0 ? true : false}
+                        search={false}
+                        selectRow={this.selectRowProp}
+                        options={this.options}
+                        remote
+                        fetchInfo={{ dataTotalSize: vat_list.count ? vat_list.count : 0 }}
+                        trClassName="cursor-pointer"
+                        csvFileName="vat_code.csv"
+                        ref={node => {
+                          this.table = node
+                        }}
                       >
-                        Vat Name
+                        <TableHeaderColumn
+                          isKey
+                          dataField="name"
+                          dataSort
+                        >
+                          Vat Name
                       </TableHeaderColumn>
-                      <TableHeaderColumn
-                        dataField="vat"
-                        dataFormat={this.vatPercentageFormat}
-                        dataSort
-                      >
-                        Vat Percentage
+                        <TableHeaderColumn
+                          dataField="vat"
+                          dataFormat={this.vatPercentageFormat}
+                          dataSort
+                        >
+                          Vat Percentage
                       </TableHeaderColumn>
-                    </BootstrapTable>
-                  </Col>
-                </Row>
-            }
+                      </BootstrapTable>
+                    </Col>
+                  </Row>
+              }
             </CardBody>
           </Card>
-          {/* <Modal isOpen={this.state.openDeleteModal}
-              className={'modal-danger ' + this.props.className}>
-              <ModalHeader toggle={this.toggleDanger}>Delete</ModalHeader>
-              <ModalBody>
-                  Are you sure want to delete this record?
-            </ModalBody>
-              <ModalFooter>
-                  <Button color="danger" onClick={this.deleteVat}>Yes</Button>&nbsp;
-                  <Button color="secondary" onClick={this.closeConfirmModal}>No</Button>
-              </ModalFooter>
-          </Modal> */}
         </div>
       </div>
     )

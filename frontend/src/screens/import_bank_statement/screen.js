@@ -10,17 +10,10 @@ import {
   Col,
   Form,
   FormGroup,
-  Input,
-  Label,
-  TabContent,
-  TabPane,
-  Nav,
-  NavItem,
-  NavLink,
+
 } from 'reactstrap'
 import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-import Stepper from 'react-stepper-horizontal'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
@@ -80,7 +73,7 @@ class ImportBankStatement extends React.Component {
   initializeData() {
     if(this.props.location.state && this.props.location.state.bankAccountId) {
       this.props.importBankStatementActions.getTemplateList().then(res => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           let id;
           id = this.props.location.state && this.props.location.state.id ? id : ''
           this.setState({
@@ -123,7 +116,7 @@ class ImportBankStatement extends React.Component {
 
   handleSubmit(data) {
     this.setState({ loading: true })
-    const { initValue, selectedTemplate } = this.state
+    const {  selectedTemplate } = this.state
     let formData = new FormData()
     if (this.uploadFile && this.uploadFile.files[0]) {
       formData.append("file", this.uploadFile.files[0]);
@@ -163,7 +156,6 @@ class ImportBankStatement extends React.Component {
 
   render() {
 
-    const { bank_transaction_list } = this.props
     const { templateList, initValue } = this.state
 
     return (

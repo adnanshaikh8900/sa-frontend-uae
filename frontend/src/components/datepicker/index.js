@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
-  Input,
+  // Input,
   ButtonDropdown,
-  Button,
-  DropdownItem,
-  DropdownMenu,
+  // Button,
+  // DropdownItem,
+  // DropdownMenu,
   DropdownToggle
 } from 'reactstrap'
 import moment from 'moment'
@@ -32,6 +32,7 @@ class DateRangePicker2 extends React.Component{
           endDate: this.props.ranges[key][1]
         })
       }
+      return key
     })
   }
 
@@ -52,6 +53,7 @@ class DateRangePicker2 extends React.Component{
         nick_key = key
         return true
       }
+      return key
     })
 
     if(this.state.startDate !== null && nick_key === null)

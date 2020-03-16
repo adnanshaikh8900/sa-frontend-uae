@@ -1,6 +1,5 @@
 import { PAYMENT } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 import moment from 'moment'

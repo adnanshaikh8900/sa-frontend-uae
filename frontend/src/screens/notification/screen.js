@@ -1,19 +1,16 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import { bindActionCreators } from 'redux'
 import {
   Card,
   CardHeader,
   CardBody,
-  Button,
   Row,
-  Input,
   Col,
   Form,     
   FormGroup,
   Label
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import { AppSwitch } from '@coreui/react'
 
 import { Loader } from 'components'

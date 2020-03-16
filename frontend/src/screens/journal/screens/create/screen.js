@@ -14,13 +14,12 @@ import {
   Label,
   Badge
 } from 'reactstrap'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 
 import { Formik, Field } from 'formik';
 import * as Yup from "yup";
-import _ from 'lodash'
 
 import {
   CommonActions
@@ -177,6 +176,7 @@ class CreateJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (
@@ -222,6 +222,7 @@ class CreateJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (
@@ -255,6 +256,7 @@ class CreateJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (
@@ -304,6 +306,7 @@ class CreateJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (
@@ -339,6 +342,7 @@ class CreateJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (
@@ -367,6 +371,7 @@ class CreateJournal extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (
@@ -428,6 +433,7 @@ class CreateJournal extends React.Component {
         else obj[name] = e.target.value
         idx = index
       }
+      return obj
     });
     if (name === 'debitAmount') {
       form.setFieldValue(`journalLineItems.[${idx}].creditAmount`, 0, true)
@@ -466,18 +472,19 @@ class CreateJournal extends React.Component {
     const { vat_list } = this.props;
     let subTotalDebitAmount = 0;
     let subTotalCreditAmount = 0;
-    let totalDebitAmount = 0;
-    let totalCreditAmount = 0;
+    // let totalDebitAmount = 0;
+    // let totalCreditAmount = 0;
 
     data.map(obj => {
       const index = obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
       const vat = index !== '' ? vat_list[index].vat : ''
 
-      if (vat !== '' && obj.debitAmount || vat !== '' && obj.creditAmount) {
+      if ((vat !== '' && obj.debitAmount) || (vat !== '' && obj.creditAmount)) {
         // const val = (+obj.debitAmount) + (((+obj.debitAmount)*vat)/100)
         subTotalDebitAmount = subTotalDebitAmount + (+obj.debitAmount) + (((+obj.debitAmount) * vat) / 100);
         subTotalCreditAmount = subTotalCreditAmount + (+obj.creditAmount) + (((+obj.creditAmount) * vat) / 100);
       }
+      return obj
     })
 
 
@@ -497,15 +504,16 @@ class CreateJournal extends React.Component {
   }
 
   handleSubmit(values, resetForm) {
-
     const { data, initValue } = this.state
-    const postData = { ...initValue, ...values, ...{ journalLineItems: this.state.data } }
-    if (initValue.totalCreditAmount == initValue.totalDebitAmount) {
+    // const postData = { ...initValue, ...values, ...{ journalLineItems: this.state.data } }
+    if (initValue.totalCreditAmount === initValue.totalDebitAmount) {
       data.map(item => {
         delete item.id
         item.transactionCategoryId = item.transactionCategoryId ? item.transactionCategoryId : ''
         item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
         item.contactId = item.contactId ? item.contactId : ''
+
+        return item
       })
       const postData = {
         journalDate: values.journalDate ? values.journalDate : '',
@@ -635,9 +643,9 @@ class CreateJournal extends React.Component {
                                     }}
                                     className={`form-control ${props.errors.journalDate && props.touched.journalDate ? "is-invalid" : ""}`}
                                   />
-                                  {props.errors.journalDate && props.touched.journalDate && (
+                                  {props.errors.journalDate && props.touched.journalDate ? (
                                     <div className="invalid-feedback">{props.errors.journalDate}</div>
-                                  )}
+                                  ) : null}
                                 </FormGroup>
                               </Col>
                             </Row>

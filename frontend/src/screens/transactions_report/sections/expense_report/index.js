@@ -1,31 +1,24 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import { bindActionCreators } from 'redux'
 import {
-  Card,
-  CardHeader,
-  CardBody,
   Button,
   Row,
   Col,
   FormGroup,
   ButtonGroup,
-  Label,
   Form,
   Input
 } from "reactstrap"
 
-import _ from "lodash"
-import Select from 'react-select'
 import { DateRangePicker2 } from 'components'
 import moment from 'moment'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DateRangePicker from 'react-bootstrap-daterangepicker'
 
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
-import 'react-select/dist/react-select.css'
-import 'bootstrap-daterangepicker/daterangepicker.css'
+ import 'react-select/dist/react-select.css'
+ import 'bootstrap-daterangepicker/daterangepicker.css'
 import './style.scss'
 
 const mapStateToProps = (state) => {

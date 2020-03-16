@@ -13,7 +13,7 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
+import {  toast } from 'react-toastify'
 import Select from 'react-select'
 import _ from 'lodash'
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -76,7 +76,7 @@ class DetailChartAccount extends React.Component {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
       this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then(res => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           this.props.chartOfAccontActions.getTransactionTypes();
           this.setState({
             loading: false,
@@ -126,7 +126,7 @@ class DetailChartAccount extends React.Component {
   removeChartAccount() {
     const id = this.props.location.state.id;
     this.props.detailChartOfAccontActions.deleteChartAccount(id).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Account Deleted Successfully')
         this.props.history.push('/admin/master/chart-account')
       }
@@ -144,10 +144,9 @@ class DetailChartAccount extends React.Component {
   // Create or Edit Vat
   handleSubmit(data, resetForm) {
     const id = this.props.location.state.id
-    const {  transactionCategoryName, chartOfAccount } = data
     const postData = Object.assign(data, { transactionCategoryId: id })
     this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', 'Chart Account Updated Successfully')
         this.props.history.push('/admin/master/chart-account')
@@ -160,9 +159,7 @@ class DetailChartAccount extends React.Component {
   render() {
     const { loading, dialog } = this.state
     const { transaction_type_list } = this.props
-    const containerStyle = {
-      zIndex: 1999
-    }
+
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">

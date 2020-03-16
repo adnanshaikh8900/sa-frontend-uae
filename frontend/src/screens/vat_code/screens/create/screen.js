@@ -13,12 +13,10 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
+import {  toast } from 'react-toastify'
 import _ from 'lodash'
 import { Loader } from 'components'
-import {
-  selectOptionsFactory
-} from 'utils'
+
 import {
   CommonActions
 } from 'services/global'
@@ -31,7 +29,6 @@ import * as VatActions from '../../actions'
 
 
 import { Formik } from 'formik';
-import * as Yup from "yup";
 
 
 const mapStateToProps = (state) => {
@@ -141,7 +138,7 @@ class CreateVatCode extends React.Component {
                         //     .required("Vat Percentage is Required")
                         // })}
                         validate={values => {
-                          let status = false
+                          // let status = false
                           let errors = {};
                           if (!values.name) {
                             errors.name = 'Name is  required';
@@ -152,9 +149,7 @@ class CreateVatCode extends React.Component {
                           }
 
                           if (!values.vat) {
-                            {
                               errors.vat = 'Percentage is  required';
-                            }
                           }
                           return errors;
                         }}

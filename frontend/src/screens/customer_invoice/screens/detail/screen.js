@@ -15,11 +15,10 @@ import {
 	NavLink
 } from 'reactstrap'
 import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup'
-import _ from 'lodash'
 import * as CustomerInvoiceDetailActions from './actions';
 import * as  CustomerInvoiceActions from "../../actions";
 
@@ -32,8 +31,7 @@ import {
 	CommonActions
 } from 'services/global'
 import {
-	selectOptionsFactory,
-	filterFactory
+	selectOptionsFactory
 } from 'utils'
 
 import './style.scss'
@@ -197,6 +195,7 @@ class DetailCustomerInvoice extends React.Component {
 		let total_net = 0
 		data.map(obj => {
 			total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
+			return obj
 		})
 		this.setState({
 			initValue: Object.assign(this.state.initValue, { total_net: total_net })
@@ -210,6 +209,7 @@ class DetailCustomerInvoice extends React.Component {
 			if (obj.id === row.id) {
 				idx = index
 			}
+			return obj
 		});
 
 		return (
@@ -241,6 +241,7 @@ class DetailCustomerInvoice extends React.Component {
 			if (obj.id === row.id) {
 				idx = index
 			}
+			return obj
 		});
 
 		return (
@@ -272,6 +273,7 @@ class DetailCustomerInvoice extends React.Component {
 			if (obj.id === row.id) {
 				idx = index
 			}
+			return obj
 		});
 
 		return (
@@ -329,6 +331,7 @@ class DetailCustomerInvoice extends React.Component {
 				obj[name] = e.target.value
 				idx = index
 			}
+			return obj
 		});
 		if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
 			form.setFieldValue(field.name, this.state.data[idx][name], true)
@@ -348,9 +351,8 @@ class DetailCustomerInvoice extends React.Component {
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index
-				if (Object.keys(props.touched).length && props.touched.lineItemsString && props.touched.lineItemsString[idx]) {
-				}
 			}
+			return obj
 		});
 
 		return (
@@ -436,6 +438,8 @@ class DetailCustomerInvoice extends React.Component {
 			total_vat = +((total_vat + val));
 			total = (total_vat + total_net);
 
+			return obj
+
 		})
 		const discount = props.values.discountType === 'PERCENTAGE' ? +((total_net * discountPercentage) / 100).toFixed(2) : discountAmount
 		this.setState({
@@ -491,8 +495,6 @@ class DetailCustomerInvoice extends React.Component {
 			contactId,
 			project,
 			invoice_number,
-			invoiceVATAmount,
-			totalAmount,
 			notes,
 			discount,
 			discountType,
@@ -582,7 +584,7 @@ class DetailCustomerInvoice extends React.Component {
 	removeInvoice() {
 		const { current_customer_id } = this.state;
 		this.props.customerInvoiceDetailActions.deleteInvoice(current_customer_id).then(res => {
-			if (res.status == 200) {
+			if (res.status === 200) {
 				this.props.commonActions.tostifyAlert('success', 'Data Deleted Successfully')
 				this.props.history.push('/admin/revenue/customer-invoice')
 			}
@@ -608,7 +610,7 @@ class DetailCustomerInvoice extends React.Component {
 			dialog
 		} = this.state
 
-		const { project_list, contact_list, currency_list, customer_list } = this.props
+		const { project_list,currency_list, customer_list } = this.props
 		return (
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -660,8 +662,8 @@ class DetailCustomerInvoice extends React.Component {
 																	.required('Atleast one invoice sub detail is mandatory')
 																	.of(Yup.object().shape({
 																		description: Yup.string().required("Value is Required"),
-																		quantity: Yup.string().required("Value is Required").
-																			test('quantity', 'Quantity Should be Greater than 1', value => {
+																		quantity: Yup.string().required("Value is Required")
+																		.test('quantity', 'Quantity Should be Greater than 1', value => {
 																				if (value > 0) {
 																					return true
 																				} else {
@@ -687,8 +689,8 @@ class DetailCustomerInvoice extends React.Component {
 																				fileName: value.name
 																			});
 																			if (!value ||
-																				value &&
-																				this.supported_format.includes(value.type)
+																				(value &&
+																				this.supported_format.includes(value.type))
 																			) {
 																				return true;
 																			} else {
@@ -700,7 +702,7 @@ class DetailCustomerInvoice extends React.Component {
 																		"fileSize",
 																		"*File Size is too large",
 																		value => {
-																			if (!value || value && value.size <= this.file_size) {
+																			if (!value || (value && value.size <= this.file_size)) {
 																				return true;
 																			} else {
 																				return false;

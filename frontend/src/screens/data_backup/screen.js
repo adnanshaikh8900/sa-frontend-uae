@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import { bindActionCreators } from 'redux'
+// import { bindActionCreators } from 'redux'
 import {
   Card,
   CardHeader,
@@ -10,7 +10,7 @@ import {
   Col,
   Table
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import { Loader } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -94,14 +94,14 @@ class DataBackup extends React.Component {
                             <td>admin</td>
                             <td>CSV</td>
                             <td>Completed</td>
-                            <td><a href=""><i className="cui-cloud-download icons mr-2" />Download</a></td>
+                            <td><a href="#"><i className="cui-cloud-download icons mr-2" />Download</a></td>
                           </tr>
                           <tr>
                             <td>10/01/2019</td>
                             <td>admin</td>
                             <td>CSV</td>
                             <td>Completed</td>
-                            <td><a href=""><i className="cui-cloud-download icons mr-2" />Download</a></td>
+                            <td><a href="#"><i className="cui-cloud-download icons mr-2" />Download</a></td>
                           </tr>
                         </tbody>
                       </Table>

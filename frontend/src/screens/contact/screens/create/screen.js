@@ -15,8 +15,6 @@ import {
 } from 'reactstrap'
 import Select from 'react-select'
 import { selectOptionsFactory } from 'utils'
-import { Loader } from 'components'
-import { ToastContainer, toast } from 'react-toastify'
 
 
 import './style.scss'
@@ -95,7 +93,7 @@ class CreateContact extends React.Component {
 
   handleSubmit(data,resetForm) {
     this.props.createContactActions.createContact(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Contact Created Successfully')
         resetForm();
         if (this.state.createMore) {
@@ -110,7 +108,7 @@ class CreateContact extends React.Component {
   }
 
   render() {
-    const { currency_list, country_list, loading ,contact_type_list} = this.props;
+    const { currency_list, country_list,contact_type_list} = this.props;
     const { initValue } = this.state;
     return (
       <div className="create-contact-screen">

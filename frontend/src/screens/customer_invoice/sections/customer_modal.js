@@ -13,13 +13,12 @@ import {
   ModalFooter
 } from "reactstrap";
 import Select from "react-select";
-import _ from "lodash";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
 
 import { selectOptionsFactory } from "utils";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 
 class CustomerModal extends React.Component {
   constructor(props) {
@@ -62,7 +61,6 @@ class CustomerModal extends React.Component {
       .then(res => {
         if (res.status === 200) {
           resetForm();
-          const val = res.data;
           this.props.closeCustomerModal(true);
           this.props.getCurrentUser(res.data);
         }

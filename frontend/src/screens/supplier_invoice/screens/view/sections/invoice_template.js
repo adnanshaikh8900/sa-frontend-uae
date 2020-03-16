@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import {
   Card,
-  CardHeader,
   CardBody,
-  Button,
   Row,
   Col,
   Table
@@ -18,12 +16,6 @@ class InvoiceTemplate extends Component {
     }
   }
 
-  //   componentWillReceiveProps(nextProps) {
-  //     if (nextProps.invoiceData !== this.props.hidden) {
-  //         IntercomAPI("update", { hide_default_launcher: nextProps.hidden });
-  //     }
-  // }
-
   getRibbonColor = () => {
     const { invoiceData } = this.props
     if (invoiceData) {
@@ -34,12 +26,14 @@ class InvoiceTemplate extends Component {
           return 'post-color';
         case 'Saved':
           return 'saved-color'
+          default:
+            break;
       }
     }
   }
 
   render() {
-    const { invoiceData, currencyData, totalNet,companyData } = this.props
+    const { invoiceData, currencyData, totalNet, companyData } = this.props
     return (
       <div>
         <Card id="singlePage" className="box">
@@ -62,9 +56,9 @@ class InvoiceTemplate extends Component {
                   <h6 className="mb-0">{companyData && companyData.company.companyName && companyData.company.emailAddress}</h6>
 
                   <h6 className="mb-0">
-                   <span> {companyData && companyData.company.companyName && companyData.company.invoicingAddressLine1 && `${companyData.company.invoicingAddressLine1},`} </span>
-                   <span> {companyData && companyData.company.companyName  && companyData.company.invoicingAddressLine2 && `${companyData.company.invoicingAddressLine2},`} </span>
-                   <span> {companyData && companyData.company.companyName && companyData.company.invoicingAddressLine3 && `${companyData.company.invoicingAddressLine3}.`} </span>
+                   <span>{companyData && companyData.company.companyName && companyData.company.invoicingAddressLine1 && `${companyData.company.invoicingAddressLine1},`}</span> <br/>
+                   <span>{companyData && companyData.company.companyName  && companyData.company.invoicingAddressLine2 && `${companyData.company.invoicingAddressLine2},`}</span>
+                   <span>{companyData && companyData.company.companyName && companyData.company.invoicingAddressLine3 && `${companyData.company.invoicingAddressLine3}.`}</span>
                    </h6>
                   <h6>{companyData && companyData.company.companyCountryCode ?  companyData.company.companyCountryCode.countryDescription : '' }</h6>
                 </div>
@@ -81,7 +75,7 @@ class InvoiceTemplate extends Component {
                     <tr style={{ textAlign: "right" }}>
                       <td style={{ width: '75%' }}>   Balance Due
                         <br />
-                        <b style={{ fontWeight: "600" }}>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${invoiceData.dueAmount}` : `${invoiceData.dueAmount}`}</b></td>
+                        <b style={{ fontWeight: "600", fontFamily: 'Arial' }}>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol}` : ''}{invoiceData.dueAmount ? invoiceData.dueAmount : 0.00}</b></td>
                     </tr>
                   </tbody>
                 </Table>
@@ -195,7 +189,7 @@ class InvoiceTemplate extends Component {
                       <td style={{ width: '60%' }}>
                         <strong>Subtotal</strong>
                       </td>
-                      <td>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${totalNet}` : `${totalNet}`}</td>
+                      <td>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol}`: ''}{totalNet ? totalNet : 0.00} </td>
                     </tr>
                     <tr style={{ textAlign: "right" }}>
                       <td style={{ width: '60%' }}>
@@ -207,30 +201,26 @@ class InvoiceTemplate extends Component {
 
                         </strong>
                       </td>
-                      <td>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ` : ''}{invoiceData.discount ? invoiceData.discount : 0.00} </td>
+                      <td>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol}`: ''}{invoiceData.discount ? invoiceData.discount : 0.00} </td>
                     </tr>
                     <tr style={{ textAlign: "right" }}>
                       <td style={{ width: '60%' }}>
                         <strong>VAT</strong>
                       </td>
-                      <td>
-                        {currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${invoiceData.totalVatAmount}` : `${invoiceData.totalVatAmount}`}
-                      </td>
+                      <td>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol}` : ''}{invoiceData.totalVatAmount ? invoiceData.totalVatAmount : 0.00} </td>
                     </tr>
                     <tr style={{ textAlign: "right" }}>
                       <td style={{ width: '60%' }}>
                         <strong>Total</strong>
                       </td>
-                      <td>
-                        <strong>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${invoiceData.totalAmount}` : `${invoiceData.totalAmount}`}</strong>
-                      </td>
+                      <td>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol}` : ''}{invoiceData.totalAmount ? invoiceData.totalAmount : 0.00} </td>
                     </tr>
                     <tr style={{ textAlign: "right", background: '#f2f2f2' }}>
                       <td style={{ width: '60%' }}>
                         <strong>Balance Due</strong>
                       </td>
                       <td>
-                        <strong>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol} ${invoiceData.dueAmount}` : `${invoiceData.dueAmount}`}</strong>
+                        <strong>{currencyData[0] && currencyData[0].currencySymbol ? `${currencyData[0].currencySymbol}` : ''}{invoiceData.dueAmount ? invoiceData.dueAmount : 0.00}</strong>
                       </td>
                     </tr>
                   </tbody>

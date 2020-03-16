@@ -17,7 +17,7 @@ import Select from 'react-select'
 import { selectOptionsFactory } from 'utils'
 import { Loader, ConfirmDeleteModal } from 'components'
 
-import { ToastContainer, toast } from 'react-toastify'
+import {  toast } from 'react-toastify'
 
 
 import './style.scss'
@@ -119,7 +119,7 @@ class DetailContact extends React.Component {
     const postData = {...data, ...{ contactId: current_contact_id } }
 
     this.props.detailContactActions.updateContact(postData).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', ' Contact Updated Successfully')
         this.props.history.push('/admin/master/contact');
@@ -148,7 +148,7 @@ class DetailContact extends React.Component {
   removeContact() {
     const {current_contact_id} = this.state
     this.props.detailContactActions.deleteContact(current_contact_id).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Contact Deleted Successfully')
         this.props.history.push('/admin/master/contact')
       }

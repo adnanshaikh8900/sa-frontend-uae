@@ -12,14 +12,11 @@ import {
   ModalBody,
   ModalFooter,
 } from 'reactstrap'
-import Select from 'react-select'
-import _ from 'lodash'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
-import { selectOptionsFactory } from 'utils'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 
 
@@ -46,7 +43,6 @@ class SupplierModal extends React.Component {
     this.props.createSupplier(data).then(res => {
       if (res.status === 200) {
         resetForm();
-        const val = res.data
         this.props.closeSupplierModal(true)
         this.props.getCurrentUser(res.data)
       }

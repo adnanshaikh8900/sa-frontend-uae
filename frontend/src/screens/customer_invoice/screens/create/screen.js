@@ -14,17 +14,15 @@ import {
 	Label
 } from 'reactstrap'
 import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup'
-import _ from 'lodash'
 import * as CustomerInvoiceCreateActions from './actions';
 import * as  CustomerInvoiceActions from "../../actions";
 
 import { CustomerModal } from '../../sections'
 
-import { Loader } from 'components'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -33,7 +31,6 @@ import {
 } from 'services/global'
 import {
 	selectOptionsFactory,
-	filterFactory
 } from 'utils'
 
 import './style.scss'
@@ -43,7 +40,6 @@ import moment from 'moment'
 const mapStateToProps = (state) => {
 	return ({
 		project_list: state.customer_invoice.project_list,
-		// contact_list: state.customer_invoice.contact_list,
 		currency_list: state.customer_invoice.currency_list,
 		vat_list: state.customer_invoice.vat_list,
 		customer_list: state.customer_invoice.customer_list,
@@ -120,9 +116,7 @@ class CreateCustomerInvoice extends React.Component {
 
 		this.formRef = React.createRef()
 
-		// this.options = {
-		//   paginationPosition: 'top'
-		// }
+
 		this.file_size = 1024000;
 		this.supported_format = [
 			"",
@@ -193,6 +187,7 @@ class CreateCustomerInvoice extends React.Component {
 			if (obj.id === row.id) {
 				idx = index
 			}
+			return obj
 		});
 
 		return (
@@ -224,6 +219,7 @@ class CreateCustomerInvoice extends React.Component {
 			if (obj.id === row.id) {
 				idx = index
 			}
+			return obj
 		});
 
 		return (
@@ -255,6 +251,7 @@ class CreateCustomerInvoice extends React.Component {
 			if (obj.id === row.id) {
 				idx = index
 			}
+			return obj
 		});
 
 		return (
@@ -338,6 +335,7 @@ class CreateCustomerInvoice extends React.Component {
 				obj[name] = e.target.value
 				idx = index
 			}
+			return obj
 		});
 		if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
 			form.setFieldValue(field.name, this.state.data[idx][name], true)
@@ -358,13 +356,13 @@ class CreateCustomerInvoice extends React.Component {
 			if (obj.id === row.id) {
 				idx = index
 			}
+			return obj
 		});
 
 		return (
 
 			<Field name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
-
 					<Input type="select" onChange={(e) => {
 						this.selectItem(e, row, 'vatCategoryId', form, field, props)
 						// this.formRef.current.props.handleChange(field.name)(e.value)
@@ -388,7 +386,7 @@ class CreateCustomerInvoice extends React.Component {
 	}
 
 
-	deleteRow(e, row, props) {
+	deleteRow = (e, row, props) => {
 		const id = row['id'];
 		let newData = []
 		e.preventDefault();
@@ -398,7 +396,7 @@ class CreateCustomerInvoice extends React.Component {
 		this.updateAmount(newData, props)
 	}
 
-	renderActions(cell, rows, props) {
+	renderActions = (cell, rows, props) => {
 		return (
 			<Button
 				size="sm"
@@ -411,7 +409,7 @@ class CreateCustomerInvoice extends React.Component {
 		)
 	}
 
-	checkedRow() {
+	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1
 			let temp = Object.values(this.state.data[length]).indexOf('');
@@ -425,7 +423,7 @@ class CreateCustomerInvoice extends React.Component {
 		}
 	}
 
-	updateAmount(data, props) {
+	updateAmount = (data, props) => {
 		const { vat_list } = this.props;
 		const { discountPercentage, discountAmount } = this.state
 		let total_net = 0;
@@ -440,6 +438,8 @@ class CreateCustomerInvoice extends React.Component {
 			total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
 			total_vat = +((total_vat + val));
 			total = (total_vat + total_net);
+			
+			return obj
 		})
 
 		const discount = props.values.discountType === 'PERCENTAGE' ? +((total_net * discountPercentage) / 100).toFixed(2) : discountAmount
@@ -460,7 +460,7 @@ class CreateCustomerInvoice extends React.Component {
 		})
 	}
 
-	handleFileChange(e, props) {
+	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
 		let file = e.target.files[0];
@@ -472,7 +472,7 @@ class CreateCustomerInvoice extends React.Component {
 		}
 	}
 
-	handleSubmit(data, resetForm) {
+	handleSubmit = (data, resetForm) => {
 		const {
 			receiptAttachmentDescription,
 			receiptNumber,
@@ -483,8 +483,6 @@ class CreateCustomerInvoice extends React.Component {
 			contactId,
 			project,
 			invoice_number,
-			invoiceVATAmount,
-			totalAmount,
 			discount,
 			discountType,
 			discountPercentage,
@@ -579,9 +577,6 @@ class CreateCustomerInvoice extends React.Component {
 				value: data.contactId,
 			}
 		}
-		// this.setState({
-		//   selectedContact: option
-		// })
 		this.formRef.current.setFieldValue('contactId', option.value, true)
 	}
 
@@ -597,14 +592,13 @@ class CreateCustomerInvoice extends React.Component {
 	}
 
 	render() {
-
 		const {
 			data,
 			discountOptions,
 			initValue,
 		} = this.state
 
-		const { project_list, contact_list, currency_list, customer_list } = this.props
+		const { project_list , currency_list, customer_list } = this.props
 		return (
 			<div className="create-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -630,15 +624,6 @@ class CreateCustomerInvoice extends React.Component {
 												onSubmit={(values, { resetForm }) => {
 
 													this.handleSubmit(values, resetForm)
-
-
-													// this.setState({
-													//   selectedCurrency: null,
-													//   selectedProject: null,
-													//   selectedBankAccount: null,
-													//   selectedCustomer: null
-
-													// })
 												}}
 												validationSchema={
 													Yup.object().shape({
@@ -658,8 +643,8 @@ class CreateCustomerInvoice extends React.Component {
 															.required('Atleast one invoice sub detail is mandatory')
 															.of(Yup.object().shape({
 																description: Yup.string().required("Value is Required"),
-																quantity: Yup.string().required("Value is Required").
-																	test('quantity', 'Quantity Should be Greater than 1', value => {
+																quantity: Yup.string().required("Value is Required")
+																.test('quantity', 'Quantity Should be Greater than 1', value => {
 																		if (value > 0) {
 																			return true
 																		} else {
@@ -685,8 +670,8 @@ class CreateCustomerInvoice extends React.Component {
 																		fileName: value.name
 																	});
 																	if (
-																		!value || value &&
-																		this.supported_format.includes(value.type)
+																		!value || (value &&
+																		this.supported_format.includes(value.type))
 																	) {
 																		return true;
 																	} else {
@@ -698,7 +683,7 @@ class CreateCustomerInvoice extends React.Component {
 																"fileSize",
 																"*File Size is too large",
 																value => {
-																	if (!value || value && value.size <= this.file_size) {
+																	if (!value || (value && value.size <= this.file_size)) {
 																		return true;
 																	} else {
 																		return false;
@@ -750,13 +735,11 @@ class CreateCustomerInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId"><span className="text-danger">*</span>Customer Name</Label>
 																	<Select
-
 																		id="contactId"
 																		name="contactId"
 																		options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
 																		value={props.values.contactId}
 																		onChange={option => {
-																			// this.getCurrentUser(option)
 																			if (option && option.value) {
 																				props.handleChange('contactId')(option.value)
 																			} else {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Card,
@@ -7,22 +7,17 @@ import {
   CardBody,
   Button,
   Modal,
-  ModalHeader, 
+  ModalHeader,
   ModalBody,
   ModalFooter,
   Row,
   Input,
   ButtonGroup,
   Col,
-  Form, 
-  FormGroup,
-  Label
+
 } from 'reactstrap'
 import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
-import moment from 'moment'
-import ImagesUploader from 'react-images-uploader'
-import Select from 'react-select'
 
 import { Loader } from 'components'
 
@@ -35,11 +30,11 @@ import './style.scss'
 import * as TransactionActions from './actions'
 
 
-const industryOptions = [
-  { value: 'input', label: 'Input'},
-  { value: 'output', label: 'Output'},
-  { value: 'all', label: 'All'},
-]
+// const industryOptions = [
+//   { value: 'input', label: 'Input' },
+//   { value: 'output', label: 'Output' },
+//   { value: 'all', label: 'All' },
+// ]
 
 
 const mapStateToProps = (state) => {
@@ -54,7 +49,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class TransactionCategory extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
@@ -62,14 +57,6 @@ class TransactionCategory extends React.Component {
       openDeleteModal: false,
       loading: true,
     }
-
-    this.deleteTransaction = this.deleteTransaction.bind(this)
-    this.customSearchField = this.customSearchField.bind(this)
-    this.success = this.success.bind(this)
-    this.customTotal = this.customTotal.bind(this)
-    this.getTransactionType = this.getTransactionType.bind(this)
-    this.getparentTransactionCategory = this.getparentTransactionCategory.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -86,16 +73,16 @@ class TransactionCategory extends React.Component {
   }
 
   // Table Custom Search Field
-  customSearchField(props) {
+  customSearchField = (props) => {
     return (
       <SearchField
         defaultValue=''
-        placeholder='Search ...'/>
+        placeholder='Search ...' />
     )
   }
 
   // Table Custom Pagination Label
-  customTotal(from, to, size) {
+  customTotal = (from, to, size) => {
     return (
       <span className="react-bootstrap-table-pagination-total">
         Showing {from} to {to} of {size} Results
@@ -107,32 +94,32 @@ class TransactionCategory extends React.Component {
   // Data Table Custom Fields
   //--------------------------
 
-  getTransactionType(cell, row) { 
-    return(row.transactionType.transactionTypeName)
+  getTransactionType = (cell, row) => {
+    return (row.transactionType.transactionTypeName)
   }
 
-  getparentTransactionCategory(cell, row) {
-    return(row.parentTransactionCategory.transactionCategoryDescription)
+  getparentTransactionCategory = (cell, row) => {
+    return (row.parentTransactionCategory.transactionCategoryDescription)
   }
 
-  goToDetail (row) {
+  goToDetail = (row) => {
     this.props.history.push('/admin/settings/transaction-category/detail')
   }
 
   // Show Success Toast
-  success() {
+  success = () => {
     return toast.success('Transaction Category Deleted Successfully...', {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.getTransactionListData()
   }
 
   // Get All Transaction Categories
-  getTransactionListData() {
+  getTransactionListData = () => {
     this.setState({ loading: true })
     this.props.transactionActions.getTransactionList().then(res => {
       if (res.status === 200) {
@@ -142,7 +129,7 @@ class TransactionCategory extends React.Component {
   }
 
   // Delete Transaction By ID
-  deleteTransaction() {
+  deleteTransaction = () => {
     this.setState({ loading: true })
     this.setState({ openDeleteModal: false })
     this.props.transactionActions.deleteTransaction(this.state.selectedData.id).then(res => {
@@ -153,8 +140,7 @@ class TransactionCategory extends React.Component {
     })
   }
 
-  // Cloase Confirm Modal
-  closeModal() {
+  closeModal = () => {
     this.setState({ openDeleteModal: false })
   }
 
@@ -181,12 +167,12 @@ class TransactionCategory extends React.Component {
               </div>
             </CardHeader>
             <CardBody>
-            {
-              loading ?
-                <Loader></Loader>: 
-                <Row>
-                  <Col lg={12}>
-                    <div className="d-flex justify-content-end">
+              {
+                loading ?
+                  <Loader></Loader> :
+                  <Row>
+                    <Col lg={12}>
+                      <div className="d-flex justify-content-end">
                         <ButtonGroup className="toolbar" size="sm">
                           <Button
                             color="success"
@@ -211,73 +197,73 @@ class TransactionCategory extends React.Component {
                             Bulk Delete
                           </Button>
                         </ButtonGroup>
-                        </div>
-                        <div className="py-3">
-                          <h5>Filter : </h5>
-                          <Row>
-                            <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Category Code" />
-                            </Col>
-                            <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Category Name" />
-                            </Col>
-                            <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Category Description" />
-                            </Col>
-                            <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Paret Transaction Category Name " />
-                            </Col>
-                            <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Transaction Type" />
-                            </Col>
-                          </Row>
-                        </div>
-                        <BootstrapTable 
-                          data={transactionList} 
-                          hover
-                          pagination
-                          version="4"
-                          search={false}
-                          selectRow={ this.selectRowProp }
-                          options={this.options}
-                          trClassName="cursor-pointer"
+                      </div>
+                      <div className="py-3">
+                        <h5>Filter : </h5>
+                        <Row>
+                          <Col lg={2} className="mb-1">
+                            <Input type="text" placeholder="Category Code" />
+                          </Col>
+                          <Col lg={2} className="mb-1">
+                            <Input type="text" placeholder="Category Name" />
+                          </Col>
+                          <Col lg={2} className="mb-1">
+                            <Input type="text" placeholder="Category Description" />
+                          </Col>
+                          <Col lg={2} className="mb-1">
+                            <Input type="text" placeholder="Paret Transaction Category Name " />
+                          </Col>
+                          <Col lg={2} className="mb-1">
+                            <Input type="text" placeholder="Transaction Type" />
+                          </Col>
+                        </Row>
+                      </div>
+                      <BootstrapTable
+                        data={transactionList}
+                        hover
+                        pagination
+                        version="4"
+                        search={false}
+                        selectRow={this.selectRowProp}
+                        options={this.options}
+                        trClassName="cursor-pointer"
+                      >
+                        <TableHeaderColumn
+                          isKey
+                          dataField="transactionCategoryCode"
+                          dataSort
                         >
-                          <TableHeaderColumn
-                            isKey
-                            dataField="transactionCategoryCode"
-                            dataSort
-                          >
-                            Category Code
+                          Category Code
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="transactionCategoryName"
-                            dataSort
-                          >
-                            Category Name
+                        <TableHeaderColumn
+                          dataField="transactionCategoryName"
+                          dataSort
+                        >
+                          Category Name
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="transactionCategoryDescription"
-                            dataSort
-                          >
-                            Category Description
+                        <TableHeaderColumn
+                          dataField="transactionCategoryDescription"
+                          dataSort
+                        >
+                          Category Description
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataFormat={this.getparentTransactionCategory}
-                            dataSort
-                          >
-                            Parent Transaction Category Name
+                        <TableHeaderColumn
+                          dataFormat={this.getparentTransactionCategory}
+                          dataSort
+                        >
+                          Parent Transaction Category Name
                           </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataFormat={this.getTransactionType}
-                            dataSort
-                          >
-                            Transaction Type
+                        <TableHeaderColumn
+                          dataFormat={this.getTransactionType}
+                          dataSort
+                        >
+                          Transaction Type
                           </TableHeaderColumn>
-                          
-                        </BootstrapTable>
-                  </Col>
-                </Row>
-            }
+
+                      </BootstrapTable>
+                    </Col>
+                  </Row>
+              }
             </CardBody>
           </Card>
 
@@ -289,7 +275,7 @@ class TransactionCategory extends React.Component {
             <ModalBody>Are you sure want to delete this record?</ModalBody>
             <ModalFooter>
               <Button color="danger" onClick={this.deleteTransaction}>Yes</Button>&nbsp;
-              <Button color="secondary"onClick={this.closeModal}>No</Button>
+              <Button color="secondary" onClick={this.closeModal}>No</Button>
             </ModalFooter>
           </Modal>
         </div>

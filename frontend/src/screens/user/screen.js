@@ -12,7 +12,7 @@ import {
   Input
 } from 'reactstrap'
 import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -175,6 +175,7 @@ class User extends React.Component {
     if (isSelected) {
       rows.map(item => {
         temp_list.push(item.id)
+        return item
       })
     }
     this.setState({

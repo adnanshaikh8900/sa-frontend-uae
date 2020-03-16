@@ -1,35 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+// import { bindActionCreators } from 'redux'
 
 import {
   Card,
   CardHeader,
   CardBody,
-  Button,
   Row,
   Col,
-  Form,
   FormGroup,
-  Input,
   Label,
   NavLink
 } from 'reactstrap'
-import Select from 'react-select'
-import _ from 'lodash'
-import { Formik } from 'formik'
-import * as Yup from 'yup'
 
-import {
-  Loader,
-  ConfirmDeleteModal
-} from 'components'
-import {
-  selectOptionsFactory
-} from 'utils'
-import {
-  CommonActions
-} from 'services/global'
 
 // import './style.scss'
 import  moment  from 'moment'
@@ -48,12 +31,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class ViewBankAccount extends React.Component {
-
-  constructor(props) {
-    super(props)
-
-  }
-
   render() {
 
     const {

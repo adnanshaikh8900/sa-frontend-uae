@@ -18,10 +18,9 @@ import {
   FormGroup,
   Label
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { ToastContainer } from 'react-toastify'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
-import moment from 'moment'
 import Select from 'react-select'
 
 import { Loader } from 'components'
@@ -96,7 +95,7 @@ class UsersRoles extends React.Component {
     const avatar = require('assets/images/avatars/6.jpg')
 
     return(<div className="d-flex">
-      <img src={avatar} width="50" height="50" className="img-avatar"></img> 
+      <img src={avatar} width="50" height="50" className="img-avatar" alt='logo'></img> 
       <div className="ml-2">
         <div>
           <label

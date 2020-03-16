@@ -1,8 +1,5 @@
-import { SUPPLIER_INVOICE } from 'constants/types'
 import {
-  api,
   authApi,
-  authFileUploadApi
 } from 'utils'
 
 export const getInvoiceById = (_id) => {

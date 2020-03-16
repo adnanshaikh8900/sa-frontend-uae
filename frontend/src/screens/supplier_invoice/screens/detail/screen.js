@@ -15,10 +15,9 @@ import {
   NavLink
 } from 'reactstrap'
 import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import { Formik, Field } from 'formik';
-import _ from 'lodash'
 import * as Yup from 'yup'
 import * as SupplierInvoiceDetailActions from './actions';
 import * as  SupplierInvoiceActions from "../../actions";
@@ -32,8 +31,7 @@ import {
   CommonActions
 } from 'services/global'
 import {
-  selectOptionsFactory,
-  filterFactory
+  selectOptionsFactory
 } from 'utils'
 
 import './style.scss'
@@ -213,12 +211,10 @@ class DetailSupplierInvoice extends React.Component {
   }
 
   calTotalNet(data) {
-    const { vat_list } = this.props;
     let total_net = 0
-    let vat = 0;
-    let val = 0;
     data.map(obj => {
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
+      return obj
     })
     this.setState({
       initValue: Object.assign(this.state.initValue, { total_net: total_net })
@@ -232,6 +228,7 @@ class DetailSupplierInvoice extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (
@@ -262,7 +259,8 @@ class DetailSupplierInvoice extends React.Component {
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index
-			}
+      }
+      return obj
 		});
 
 		return (
@@ -293,7 +291,8 @@ class DetailSupplierInvoice extends React.Component {
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index
-			}
+      }
+      return obj
 		});
 
 		return (
@@ -349,6 +348,7 @@ class DetailSupplierInvoice extends React.Component {
         obj[name] = e.target.value
         idx = index
       }
+      return obj
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
       form.setFieldValue(field.name, this.state.data[idx][name], true)
@@ -369,6 +369,7 @@ class DetailSupplierInvoice extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (
@@ -454,8 +455,9 @@ class DetailSupplierInvoice extends React.Component {
       total_vat = +((total_vat + val));
       total = (total_vat + total_net);
 
+      return obj
     })
-    const discount = props.values.discountType === 'PERCENTAGE' ? (total * discountPercentage) / 100 : discountAmount
+    const discount = props.values.discountType === 'PERCENTAGE' ? (total_net * discountPercentage) / 100 : discountAmount
 
     this.setState({
       data: data,
@@ -463,8 +465,8 @@ class DetailSupplierInvoice extends React.Component {
         ...this.state.initValue, ...{
           total_net: total_net,
           invoiceVATAmount: total_vat,
-          discount: total > discount ? discount : 0,
-          totalAmount: total > discount ? total - discount : total
+          discount: total_net > discount ? discount : 0,
+          totalAmount: total_net > discount ? total - discount : total
         }
       }
     }, () => {
@@ -486,8 +488,6 @@ class DetailSupplierInvoice extends React.Component {
       contactId,
       project,
       invoice_number,
-      invoiceVATAmount,
-      totalAmount,
       notes,
       discount,
       discountType,
@@ -548,7 +548,7 @@ class DetailSupplierInvoice extends React.Component {
   removeInvoice() {
     const { current_supplier_id } = this.state;
     this.props.supplierInvoiceDetailActions.deleteInvoice(current_supplier_id).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
         this.props.history.push('/admin/expense/supplier-invoice')
       }
@@ -582,7 +582,7 @@ class DetailSupplierInvoice extends React.Component {
 
   getCurrentUser(data) {
     let option
-    if (data && data.label || data.value) {
+    if (data && (data.label || data.value)) {
       option = data
     } else {
       option = {
@@ -618,13 +618,12 @@ class DetailSupplierInvoice extends React.Component {
     const {
       data,
       discountOptions,
-      discount_option,
       initValue,
       loading,
       dialog
     } = this.state
 
-    const { project_list, contact_list, currency_list, supplier_list } = this.props
+    const { project_list, currency_list, supplier_list } = this.props
     return (
       <div className="detail-supplier-invoice-screen">
         <div className="animated fadeIn">
@@ -687,8 +686,8 @@ class DetailSupplierInvoice extends React.Component {
                                         fileName: value.name
                                       });
                                       if (
-                                        !value || value &&
-                                        this.supported_format.includes(value.type)
+                                        !value || (value &&
+                                        this.supported_format.includes(value.type))
                                       ) {
                                         return true;
                                       } else {
@@ -700,7 +699,7 @@ class DetailSupplierInvoice extends React.Component {
                                     "fileSize",
                                     "*File Size is too large",
                                     value => {
-                                      if (!value || value && value.size <= this.file_size) {
+                                      if (!value || (value && value.size <= this.file_size)) {
                                         return true;
                                       } else {
                                         return false;

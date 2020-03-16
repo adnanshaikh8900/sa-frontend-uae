@@ -1,6 +1,5 @@
 import { PROJECT } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 
@@ -13,7 +12,6 @@ export const getProjectList = (obj) => {
     }
 
     return authApi(data).then(res => {
-
       dispatch({
         type: PROJECT.PROJECT_LIST,
         payload: res.data
@@ -136,7 +134,6 @@ export const getContactList = () => {
         method: 'GET',
         url: '/rest/contact/getContactsForDropdown'
       }
-  
       return authApi(data).then(res => {
         dispatch({
           type: PROJECT.CONTACT_LIST,

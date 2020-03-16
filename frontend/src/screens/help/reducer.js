@@ -1,10 +1,10 @@
-import { HELP } from 'constants/types'
+// import { HELP } from 'constants/types'
 
 const initState = {
 }
 
 const HelpReducer = (state = initState, action) => {
-  const { type, payload} = action
+  const { type} = action
   
   switch(type) {
 

@@ -1,6 +1,5 @@
 import { EXPENSE } from 'constants/types'
 import {
-  api,
   authApi,
   authFileUploadApi
 } from 'utils'

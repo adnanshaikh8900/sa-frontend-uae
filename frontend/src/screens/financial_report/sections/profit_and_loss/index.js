@@ -1,30 +1,20 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import { bindActionCreators } from 'redux'
 import {
-  Card,
-  CardHeader,
-  CardBody,
   Button,
-  Row,
-  Col,
   FormGroup,
-  Label,
   Form,
   Table,
   ButtonGroup
 } from "reactstrap"
 
-import _ from "lodash"
-import Select from 'react-select'
 import { DateRangePicker2 } from 'components'
 import moment from 'moment'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
-import 'react-select/dist/react-select.css'
-import './style.scss'
+ import 'react-select/dist/react-select.css'
+ import './style.scss'
 
 const mapStateToProps = (state) => {
   return ({
@@ -473,7 +463,7 @@ const ranges =  {
   'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
 }
 
-const dateRanges = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+// const dateRanges = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 
 
 class ProfitAndLoss extends React.Component {

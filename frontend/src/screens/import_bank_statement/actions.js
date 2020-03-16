@@ -1,6 +1,4 @@
-import { BANK_STATEMENT } from 'constants/types'
 import {
-  api,
   authApi,
   authFileUploadApi
 } from 'utils'

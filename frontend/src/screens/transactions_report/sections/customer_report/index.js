@@ -2,11 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
-  Card,
-  CardHeader,
-  CardBody,
   FormGroup,
-  Label,
   Form,
   Badge,
   Row,
@@ -16,25 +12,22 @@ import {
   ButtonGroup
 } from "reactstrap"
  
-import _ from "lodash"
 import Select from 'react-select'
 import * as customerReportData from '../../actions';
-import DatePicker from 'react-datepicker'
 
 import { DateRangePicker2 } from 'components'
 import moment from 'moment'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DateRangePicker from 'react-bootstrap-daterangepicker'
 
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
-import 'react-select/dist/react-select.css'
-import 'bootstrap-daterangepicker/daterangepicker.css'
+ import 'react-select/dist/react-select.css'
+ import 'bootstrap-daterangepicker/daterangepicker.css'
 import 'bootstrap/dist/css/bootstrap.css';
 import './style.scss'
 import {
   selectOptionsFactory,
-  filterFactory
 } from 'utils' 
 
 
@@ -49,65 +42,6 @@ const mapDispatchToProps = (dispatch) => {
     customerReportData: bindActionCreators(customerReportData, dispatch)
   })
 }
-
-const tempdata = [{
-  status: 'paid',
-  transactionCategoryId: 2,
-  transactionCategoryCode: 2,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}, {
-  status: 'paid',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}, {
-  status: 'paid',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}, {
-  status: 'unpaid',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}, {
-  status: 'unpaid',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-},{
-  status: 'paid',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-},{
-  status: 'unpaid',
-  transactionCategoryId: 1,
-  transactionCategoryCode: 4,
-  transactionCategoryName: 'temp',
-  transactionCategoryDescription: 'temp',
-  parentTransactionCategory: 'Loream Ipsume',
-  transactionType: 'TEMP'
-}]
-
 
 const ranges =  {
   'This Week': [moment().startOf('week'), moment().endOf('week')],

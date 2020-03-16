@@ -219,7 +219,8 @@ class CreateSupplierInvoice extends React.Component {
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index
-			}
+      }
+      return obj
 		});
 
 		return (
@@ -250,7 +251,8 @@ class CreateSupplierInvoice extends React.Component {
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
 				idx = index
-			}
+      }
+      return obj
 		});
 
 		return (
@@ -436,9 +438,9 @@ class CreateSupplierInvoice extends React.Component {
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
       total_vat = +((total_vat + val));
       total = (total_vat + total_net);
-
+      return obj
     })
-    const discount = props.values.discountType === 'PERCENTAGE' ? (total*discountPercentage)/100 : discountAmount
+    const discount = props.values.discountType === 'PERCENTAGE' ? (total_net*discountPercentage)/100 : discountAmount
 
     this.setState({
       data: data,
@@ -446,8 +448,8 @@ class CreateSupplierInvoice extends React.Component {
         ...this.state.initValue, ...{
           total_net: total_net,
           invoiceVATAmount: total_vat,
-          discount: total > discount ? discount : 0,
-          totalAmount: total > discount ? total - discount : total
+          discount: total_net > discount ? discount : 0,
+          totalAmount: total_net > discount ? total - discount : total
         }
       }
     }, () => {
@@ -468,8 +470,6 @@ class CreateSupplierInvoice extends React.Component {
       contactId,
       project,
       invoice_number,
-      invoiceVATAmount,
-      totalAmount,
       discount,
       discountType,
       discountPercentage,
@@ -535,7 +535,6 @@ class CreateSupplierInvoice extends React.Component {
             }
           }
         }, () => {
-          console.log(this.state.initValue)
         resetForm(this.state.initValue)
           this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
         })
@@ -591,12 +590,10 @@ class CreateSupplierInvoice extends React.Component {
     const {
       data,
       discountOptions,
-      discount_option,
       initValue,
-      selectedContact
     } = this.state
 
-    const { project_list, contact_list, currency_list, supplier_list } = this.props
+    const { project_list, currency_list, supplier_list } = this.props
     return (
       <div className="create-supplier-invoice-screen">
         <div className="animated fadeIn">
@@ -642,14 +639,12 @@ class CreateSupplierInvoice extends React.Component {
 															.required('Term is Required'),
 														invoiceDate: Yup.string()
 															.required('Invoice Date is Required'),
-														// invoiceDueDate: Yup.string()
-														// 	.required('Invoice Due Date is Required'),
 														lineItemsString: Yup.array()
 															.required('Atleast one invoice sub detail is mandatory')
 															.of(Yup.object().shape({
 																description: Yup.string().required("Value is Required"),
-																quantity: Yup.string().required("Value is Required").
-																	test('quantity', 'Quantity Should be Greater than 1', value => {
+																quantity: Yup.string().required("Value is Required")
+																	.test('quantity', 'Quantity Should be Greater than 1', value => {
 																		if (value > 0) {
 																			return true
 																		} else {
@@ -675,8 +670,8 @@ class CreateSupplierInvoice extends React.Component {
 																		fileName: value.name
 																	});
 																	if (
-																		!value || value &&
-																		this.supported_format.includes(value.type)
+																		!value || (value &&
+																		this.supported_format.includes(value.type))
 																	) {
 																		return true;
 																	} else {
@@ -688,7 +683,7 @@ class CreateSupplierInvoice extends React.Component {
 																"fileSize",
 																"*File Size is too large",
 																value => {
-																	if (!value || value && value.size <= this.file_size) {
+																	if (!value || (value && value.size <= this.file_size)) {
 																		return true;
 																	} else {
 																		return false;

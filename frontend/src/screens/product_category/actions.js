@@ -1,6 +1,5 @@
 import { PRODUCT_CATEGORY } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 

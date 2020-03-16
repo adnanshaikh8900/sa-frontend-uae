@@ -70,22 +70,19 @@ class CreateBankAccount extends React.Component {
       { label: 'Corporate', value: 'Corporate' }
     ]
 
-    this.initializeData = this.initializeData.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChange = this.handleChange.bind(this)
   }
 
   componentDidMount() {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.createBankAccountActions.getAccountTypeList()
     this.props.createBankAccountActions.getCurrencyList()
     this.props.createBankAccountActions.getCountryList()
   }
 
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -95,7 +92,7 @@ class CreateBankAccount extends React.Component {
     })
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const {
       account_name,
       currency,
@@ -117,7 +114,7 @@ class CreateBankAccount extends React.Component {
       accountNumber: account_number,
       ibanNumber: iban_number,
       swiftCode: swift_code,
-      bankCountry: country ,
+      bankCountry: country,
       personalCorporateAccountInd: account_is_for
     }
     this.props.createBankAccountActions.createBankAccount(obj).then(res => {
@@ -175,9 +172,9 @@ class CreateBankAccount extends React.Component {
                             .required('Account Name is Required'),
                           opening_balance: Yup.string()
                             .required('Opening Balance is Required'),
-                            currency: Yup.string().required(
-                              "Currency is required"
-                            ),
+                          currency: Yup.string().required(
+                            "Currency is required"
+                          ),
                           account_type: Yup.string().required(
                             "Account Type is required"
                           ),
@@ -185,7 +182,7 @@ class CreateBankAccount extends React.Component {
                             .required('Bank Name is Required'),
                           account_number: Yup.string()
                             .required('Account Number is Required'),
-                          account_is_for:Yup.string().required(
+                          account_is_for: Yup.string().required(
                             "Account for is required"
                           ),
                         })}
@@ -237,7 +234,7 @@ class CreateBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
-                                      {props.errors.currency && props.touched.currency && (
+                                    {props.errors.currency && props.touched.currency && (
                                       <div className="invalid-feedback">{props.errors.currency}</div>
                                     )}
                                   </FormGroup>
@@ -258,7 +255,7 @@ class CreateBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
-                                     {props.errors.opening_balance && props.touched.opening_balance && (
+                                    {props.errors.opening_balance && props.touched.opening_balance && (
                                       <div className="invalid-feedback">{props.errors.opening_balance}</div>
                                     )}
                                   </FormGroup>
@@ -287,7 +284,7 @@ class CreateBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
-                                     {props.errors.account_type && props.touched.account_type && (
+                                    {props.errors.account_type && props.touched.account_type && (
                                       <div className="invalid-feedback">{props.errors.account_type}</div>
                                     )}
                                   </FormGroup>
@@ -311,7 +308,7 @@ class CreateBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
-                                     {props.errors.bank_name && props.touched.bank_name && (
+                                    {props.errors.bank_name && props.touched.bank_name && (
                                       <div className="invalid-feedback">{props.errors.bank_name}</div>
                                     )}
                                   </FormGroup>
@@ -423,7 +420,7 @@ class CreateBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
-                                     {props.errors.account_is_for && props.touched.account_is_for && (
+                                    {props.errors.account_is_for && props.touched.account_is_for && (
                                       <div className="invalid-feedback">{props.errors.account_is_for}</div>
                                     )}
                                   </FormGroup>

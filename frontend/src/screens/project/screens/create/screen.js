@@ -14,7 +14,6 @@ import {
   Label,
 } from 'reactstrap'
 import Select from 'react-select'
-import _ from 'lodash'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
@@ -80,7 +79,6 @@ class CreateProject extends React.Component {
         expenseBudget: '',
         revenueBudget: '',
         currency: '',
-        contractPoNumber: '',
       },
     }
 

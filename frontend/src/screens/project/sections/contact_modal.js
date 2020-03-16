@@ -13,18 +13,13 @@ import {
   ModalFooter,
 } from 'reactstrap'
 import Select from 'react-select'
-import _ from 'lodash'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
-import * as ProjectActions from '../actions'
 import {selectOptionsFactory} from 'utils'
 
-const INVOICE_LANGUAGE_OPTIONS = [
-  { value: 1, label: 'English'},
-  { value: 2, label: 'Arabic'}
-]
+
 
 class ContactModal extends React.Component {
   
@@ -49,16 +44,13 @@ class ContactModal extends React.Component {
       },
     }
 
-    this.contactHandleSubmit = this.contactHandleSubmit.bind(this)
   }
 
   // Create or Contact
-  contactHandleSubmit(data) {
-
+  contactHandleSubmit = (data) => {
     const request = this.props.createContact(data);
     request.then(res => {
       if (res.status === 200) {
-      // this.success()
       this.props.closeContactModal(true)
       }
     })

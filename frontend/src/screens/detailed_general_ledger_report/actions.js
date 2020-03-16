@@ -1,15 +1,17 @@
-import { TEMP } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 
 export const getDetailedGeneralLedgerList = (postData) => {
-  const { startDate, endDate} = postData
+  const { startDate, endDate,reportBasis,chartOfAccountId} = postData
+  let url = `/rest/detailedGeneralLedgerReport/getList?startDate=${startDate}&endDate=${endDate}&reportBasis=${reportBasis}`
+  if(chartOfAccountId){
+    url = url + `&chartOfAccountId=${chartOfAccountId}`
+  }
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: `/rest/detailedGeneralLedgerReport/getList?startDate=${startDate}&endDate=${endDate}`
+      url: url
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
@@ -25,3 +27,18 @@ export const getDetailedGeneralLedgerList = (postData) => {
   }
 }
 
+export const getTransactionCategoryList = () => {
+  return (dispatch) => {
+    let data ={
+      method: 'get',
+      url: '/rest/transactioncategory/getList'
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}

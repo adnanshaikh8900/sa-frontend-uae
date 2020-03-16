@@ -17,12 +17,10 @@ import {
   Form, 
   FormGroup,
   Label,
-  Table
 } from 'reactstrap'
-import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
+import { ToastContainer } from 'react-toastify'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
-import moment from 'moment'
 import Select from 'react-select'
 
 import { Loader } from 'components'
@@ -102,7 +100,7 @@ class Currency extends React.Component {
   }
 
   render() {
-    const { loading, currencies, openCurrencyModal } = this.state;
+    const { loading, openCurrencyModal } = this.state;
     const containerStyle = {
       zIndex: 1999
     };

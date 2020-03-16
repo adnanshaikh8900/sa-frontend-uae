@@ -1,12 +1,19 @@
 package com.simplevat.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.JournalLineItemDao;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
+import com.simplevat.utils.DateFormatUtil;
+import com.simplevat.utils.DateUtils;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -17,6 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem> implements JournalLineItemDao {
 
+	@Autowired
+	private DateFormatUtil dateUtil;
+
 	@Override
 	@Transactional
 	public void deleteByJournalId(Integer journalId) {
@@ -26,15 +36,50 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 	}
 
 	@Override
-	public List<JournalLineItem> getList(LocalDateTime startDate, LocalDateTime endDate,
-			PaginationModel paginationModel) {
-		TypedQuery<JournalLineItem> query = getEntityManager().createNamedQuery("getListByFrmToDateWthPagintion",
-				JournalLineItem.class);
-		if (startDate != null) {
-			query.setParameter("startDate", startDate);
+	public List<JournalLineItem> getList(ReportRequestModel reportRequestModel) {
+		LocalDateTime fromDate = null;
+		LocalDateTime toDate = null;
+		try {
+			fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), "dd/MM/yyyy");
+		} catch (Exception e) {
+
 		}
-		if (endDate != null) {
-			query.setParameter("endDate", endDate);
+		try {
+			toDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), "dd/MM/yyyy");
+		} catch (Exception e) {
+
+		}
+
+		String queryStr = "select jn from JournalLineItem jn INNER join Journal j on j.id = jn.journal.id where j.journalDate BETWEEN :startDate and :endDate ";
+
+		if (reportRequestModel.getChartOfAccountId() != null) {
+			queryStr += " and jn.transactionCategory.transactionCategoryId = :transactionCategoryId";
+		}
+		if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
+				&& reportRequestModel.getReportBasis().equals("CASH")) {
+			if (reportRequestModel.getChartOfAccountId() != null) {
+				queryStr += " or ";
+			} else {
+				queryStr += " and ";
+			}
+			queryStr += " jn.transactionCategory.transactionCategoryId in :transactionCategoryIdList";
+		}
+
+		TypedQuery<JournalLineItem> query = getEntityManager().createQuery(queryStr, JournalLineItem.class);
+		if (fromDate != null) {
+			query.setParameter("startDate", fromDate);
+		}
+		if (toDate != null) {
+			query.setParameter("endDate", toDate);
+		}
+		if (reportRequestModel.getChartOfAccountId() != null) {
+			query.setParameter("transactionCategoryId", reportRequestModel.getChartOfAccountId());
+		}
+		if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
+				&& reportRequestModel.getReportBasis().equals("CASH")) {
+			query.setParameter("transactionCategoryIdList",
+					Arrays.asList(new Integer[] { TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
+							TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode() }));
 		}
 //		if (paginationModel != null && paginationModel.getPageNo() != null) {
 //			query.setMaxResults(paginationModel.getPageSize());

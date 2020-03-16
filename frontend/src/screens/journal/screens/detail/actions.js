@@ -1,6 +1,4 @@
-import { JOURNAL } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 

@@ -1,10 +1,10 @@
-import { SETTINGS } from 'constants/types'
+// import { SETTINGS } from 'constants/types'
 
 const initState = {
 }
 
 const SettingsReducer = (state = initState, action) => {
-  const { type, payload} = action
+  const { type} = action
   
   switch(type) {
 

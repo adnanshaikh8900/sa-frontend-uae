@@ -209,19 +209,7 @@ public class DetailedGeneralLedgerRestHelper {
 		// PaginationResponseModel response =
 		// journalService.getJornalList(filterDataMap, null);
 
-		LocalDateTime fromDate = null;
-		LocalDateTime toDate = null;
-		try {
-			fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), "dd/MM/yyyy");
-		} catch (Exception e) {
-
-		}
-		try {
-			toDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), "dd/MM/yyyy");
-		} catch (Exception e) {
-
-		}
-		List<JournalLineItem> itemList = journalLineItemService.getList(fromDate, toDate, reportRequestModel);
+		List<JournalLineItem> itemList = journalLineItemService.getList(reportRequestModel);
 
 		if (itemList != null && itemList.size() > 0) {
 

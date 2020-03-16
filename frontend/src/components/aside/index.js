@@ -13,7 +13,7 @@ class Aside extends Component {
 
   render() {
 
-    const { children, ...attributes } = this.props
+    // const { children} = this.props
 
     return (
       <React.Fragment>

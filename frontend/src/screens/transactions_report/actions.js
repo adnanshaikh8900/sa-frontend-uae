@@ -1,29 +1,19 @@
 import { TEMP } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 
-export const initialData = (obj) => {
-  return (dispatch) => {
-    
-  }
-}
-
-
 export const getCustomerInvoiceReport = (inputObj) => {
   
-  let startDate = inputObj && inputObj.startDate  !== '' ? `startDate=${inputObj.startDate}` : ""
-  let endDate = inputObj && inputObj.endDate  !== '' ? `endDate=${inputObj.endDate}` : ""
+  // let startDate = inputObj && inputObj.startDate  !== '' ? `startDate=${inputObj.startDate}` : ""
+  // let endDate = inputObj && inputObj.endDate  !== '' ? `endDate=${inputObj.endDate}` : ""
   let contactId = inputObj && inputObj.contactName  !== '' ? `contactId=${inputObj.contactName.value}` : ""  
   let refNumber =  inputObj && inputObj.refNumber  !== '' ? `refNumber=${inputObj.refNumber}` : ""
 
   return (dispatch) => {
     let data ={
       method: 'post',
-      
       url: `rest/transactionreport/customerInvoiceReport?${refNumber}&${contactId}`,
-      // url: 'rest/transactionreport/customerInvoiceReport'  ,
       data: inputObj    
     }
     return authApi(data).then(res => {

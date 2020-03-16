@@ -19,7 +19,6 @@ import {
   selectOptionsFactory
 } from 'utils'
 import { Formik } from 'formik'
-import { BootstrapTable, TableHeaderColumn, SearchField } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 import * as Yup from 'yup'
 import { Loader } from 'components'
@@ -258,7 +257,7 @@ class CreatePayment extends React.Component {
       initialVals,
       selectedSupplier
     } = this.state
-    const { data, loading } = this.state
+    const {  loading } = this.state
 
     return (
       <div className="create-payment-screen">

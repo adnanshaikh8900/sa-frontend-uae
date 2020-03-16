@@ -10,7 +10,6 @@ import {
   Row,
   Col,
   ButtonGroup,
-
   Input,
   ButtonDropdown,
   DropdownToggle,
@@ -40,8 +39,6 @@ import {
 } from 'utils'
 
 import './style.scss'
-// import { setNestedObjectValues } from 'formik';
-import { PreviewInvoiceModal } from './sections'
 
 
 const mapStateToProps = (state) => {
@@ -673,14 +670,14 @@ class SupplierInvoice extends React.Component {
             </CardBody>
           </Card>
         </div>
-        <PreviewInvoiceModal
+        {/* <PreviewInvoiceModal
           openInvoicePreviewModal={this.state.openInvoicePreviewModal}
           closeInvoicePreviewModal={(e) => { this.closeInvoicePreviewModal(e) }}
           getInvoiceById={this.props.supplierInvoiceActions.getInvoiceById}
           id={this.state.selectedId}
           currency_list={this.props.currency_list}
           history={this.props.history}
-        />
+        /> */}
       </div>
 
 

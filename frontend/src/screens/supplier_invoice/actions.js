@@ -1,6 +1,5 @@
 import { SUPPLIER_INVOICE } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 import moment from 'moment'
@@ -190,7 +189,7 @@ export const removeBulk = (obj) => {
       data: obj
     }
     return authApi(data).then(res => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         return res
       }
     }).catch(err => {

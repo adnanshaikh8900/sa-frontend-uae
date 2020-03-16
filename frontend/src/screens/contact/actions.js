@@ -1,6 +1,5 @@
 import { CONTACT } from 'constants/types'
 import {
-  api,
   authApi
 } from 'utils'
 

@@ -7,7 +7,7 @@ export const getTransactionTypes = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/datalist/getTransactionTypes`
+      url: `/rest/datalist/getsubChartofAccount`
     }
 
     return authApi(data).then(res => {

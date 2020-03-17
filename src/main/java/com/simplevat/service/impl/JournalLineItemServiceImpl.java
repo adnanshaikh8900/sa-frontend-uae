@@ -10,6 +10,7 @@ import com.simplevat.dao.Dao;
 import com.simplevat.dao.JournalLineItemDao;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.service.JournalLineItemService;
 
 @Service("JournalLineItemService")
@@ -29,9 +30,8 @@ public class JournalLineItemServiceImpl extends JournalLineItemService {
 	}
 
 	@Override
-	public List<JournalLineItem> getList(LocalDateTime startDate, LocalDateTime endDate,
-			PaginationModel paginationModel) {
-		return journalLineItemDao.getList(startDate, endDate, paginationModel);
+	public List<JournalLineItem> getList(ReportRequestModel reportRequestModel) {
+		return journalLineItemDao.getList(reportRequestModel);
 	}
 
 }

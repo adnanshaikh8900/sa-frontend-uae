@@ -48,7 +48,7 @@ class DetailedGeneralLedgerReport extends React.Component {
       initValue: {
         startDate: moment().startOf('month').format('DD/MM/YYYY'),
         endDate: moment().endOf('month').format('DD/MM/YYYY'),
-        reportBasis: 'Accrual',
+        reportBasis: 'ACCRUAL',
         chartOfAccountId: ''
       },
       csvData: [],

@@ -10,7 +10,7 @@ const initState = {
   expense_categories_list: [],
   vat_list: [],
   bank_list: [],
-
+  pay_mode_list: []
 }
 
 const ExpenseReducer = (state = initState, action) => {
@@ -105,7 +105,12 @@ const ExpenseReducer = (state = initState, action) => {
           ...state,
           expense_categories_list: Object.assign([], payload)
         }
-  
+
+        case EXPENSE.PAY_MODE:
+          return {
+            ...state,
+            pay_mode_list: Object.assign([], payload)
+          }
 
     default:
       return state

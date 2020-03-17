@@ -5,14 +5,12 @@
  */
 package com.simplevat.helper;
 
-import com.simplevat.model.ExpenseItemModel;
 import com.simplevat.constant.ExpenseStatusEnum;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.User;
-import com.simplevat.entity.VatCategory;
 import com.simplevat.rest.expenses.ExpenseListModel;
 import com.simplevat.rest.expenses.ExpenseModel;
-import com.simplevat.rest.expenses.ExpenseRestModel;
+import com.simplevat.service.BankAccountService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.EmployeeService;
 import com.simplevat.service.ExpenseService;
@@ -22,7 +20,6 @@ import com.simplevat.service.VatCategoryService;
 import com.simplevat.utils.FileHelper;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -30,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +58,8 @@ public class ExpenseRestHelper implements Serializable {
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
+	@Autowired
+	private BankAccountService bankAccountService;
 
 	@Autowired
 	private FileHelper fileHelper;
@@ -93,6 +91,14 @@ public class ExpenseRestHelper implements Serializable {
 		}
 		if (model.getExpenseCategory() != null) {
 			expenseBuilder.transactionCategory(transactionCategoryService.findByPK(model.getExpenseCategory()));
+		}
+		if (model.getVatCategoryId() != null) {
+			expenseBuilder.vatCategory(vatCategoryService.findByPK(model.getVatCategoryId()));
+		}
+		expenseBuilder.payMode(model.getPayMode());
+
+		if (model.getBankAccountId() != null) {
+			expenseBuilder.bankAccount(bankAccountService.findByPK(model.getBankAccountId()));
 		}
 
 		return expenseBuilder.build();
@@ -136,6 +142,16 @@ public class ExpenseRestHelper implements Serializable {
 				expenseModel.setReceiptAttachmentPath(
 						"/file/" + fileHelper.convertFilePthToUrl(entity.getReceiptAttachmentPath()));
 			}
+
+			if (entity.getVatCategory() != null) {
+				expenseModel.setVatCategoryId(entity.getVatCategory().getId());
+			}
+			expenseModel.setPayMode(entity.getPayMode());
+
+			if (entity.getBankAccount() != null) {
+				expenseModel.setBankAccountId(entity.getBankAccount().getBankAccountId());
+			}
+
 			return expenseModel;
 		} catch (Exception e) {
 			e.printStackTrace();

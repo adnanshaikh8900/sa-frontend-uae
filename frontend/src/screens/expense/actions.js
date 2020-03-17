@@ -268,3 +268,23 @@ export const deleteExpense = (id) => {
     })
   }
 }
+
+export const getPaymentMode = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/datalist/payMode'
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: EXPENSE.PAY_MODE,
+          payload: res.data
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+

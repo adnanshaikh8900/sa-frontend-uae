@@ -11,6 +11,8 @@ import java.util.Date;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.simplevat.constant.PayMode;
+
 /**
  *
  * @author daynil
@@ -18,26 +20,28 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class ExpenseModel {
 
-    private Integer expenseId;
-    private BigDecimal expenseAmount;
-    private Date expenseDate;
-    private String expenseDescription;
-    private String receiptNumber;
-    private Integer expenseCategory;
-    private Integer currencyCode;
-    private Integer employeeId;
-    private Integer projectId;
-    private String receiptAttachmentDescription;
-    private MultipartFile attachmentFile;
-    private String fileName;
-    private String payee;
-    private Integer userId;
-    private Integer createdBy;
-    private LocalDateTime createdDate;
-    private Integer lastUpdatedBy;
-    private LocalDateTime lastUpdateDate;
-    private boolean deleteFlag = false;
-    private Integer versionNumber;
-    private String receiptAttachmentPath;
-
+	private Integer expenseId;
+	private BigDecimal expenseAmount;
+	private Date expenseDate;
+	private String expenseDescription;
+	private String receiptNumber;
+	private Integer expenseCategory;
+	private Integer currencyCode;
+	private Integer employeeId;
+	private Integer projectId;
+	private String receiptAttachmentDescription;
+	private MultipartFile attachmentFile;
+	private String fileName;
+	private String payee;
+	private Integer userId;
+	private Integer createdBy;
+	private LocalDateTime createdDate;
+	private Integer lastUpdatedBy;
+	private LocalDateTime lastUpdateDate;
+	private boolean deleteFlag = false;
+	private Integer versionNumber;
+	private String receiptAttachmentPath;
+	private Integer vatCategoryId;
+	private PayMode payMode;
+	private Integer bankAccountId;
 }

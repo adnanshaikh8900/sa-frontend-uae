@@ -61,6 +61,49 @@ class CreateChartAccount extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
     // this.success = this.success.bind(this)
+
+    this.data = {
+      "Money Out": [
+        {
+          "value": 8,
+          "label": "Expense"
+        },
+        {
+          "value": 9,
+          "label": "Salary"
+        },
+        {
+          "value": 10,
+          "label": "Sales Cost"
+        },
+        {
+          "value": 11,
+          "label": "Transfer To"
+        }
+      ],
+      "Money In": [
+        {
+          "value": 4,
+          "label": "Interest"
+        },
+        {
+          "value": 6,
+          "label": "Other Loans"
+        },
+        {
+          "value": 3,
+          "label": "Refund"
+        },
+        {
+          "value": 2,
+          "label": "Sales"
+        },
+        {
+          "value": 5,
+          "label": "Transfer From"
+        }
+      ]
+    }
   }
 
   componentDidMount() {
@@ -78,7 +121,7 @@ class CreateChartAccount extends React.Component {
   // }
 
   // Create or Edit Vat
-  handleSubmit(data,resetForm) {
+  handleSubmit(data, resetForm) {
     this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Chart of Account Created Successfully')
@@ -95,6 +138,16 @@ class CreateChartAccount extends React.Component {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
+
+  renderOptions = options => {
+    return options.map(option => {
+      return (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      );
+    });
+  };
 
   render() {
     const { loading } = this.state
@@ -118,7 +171,7 @@ class CreateChartAccount extends React.Component {
                       <Formik
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values,resetForm)
+                          this.handleSubmit(values, resetForm)
                         }}
                         validationSchema={
                           Yup.object().shape({
@@ -172,7 +225,7 @@ class CreateChartAccount extends React.Component {
                             </FormGroup>
                             <FormGroup>
                               <Label htmlFor="name"><span className="text-danger">*</span>Type</Label>
-                              <Select
+                              {/* <Select
                                 className="select-default-width"
                                 options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : ''}
                                 value={props.values.chartOfAccount}
@@ -194,14 +247,35 @@ class CreateChartAccount extends React.Component {
                               />
                               {props.errors.chartOfAccount && props.touched.chartOfAccount && (
                                 <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
+                              )} */}
+                              <select
+                                id='chartOfAccount'
+                                className="form-control select-coa"
+                                name='chartOfAccount'
+                                value={props.values.chartOfAccount}
+                                // size="1"
+                                onChange={(e)=>{
+                                  console.log(e.target.value)
+                                  props.handleChange('chartOfAccount')(e.target.value)
+                                }}
+                              >
+                                {Object.keys(this.data).map((group, index) => {
+                                  return (
+                                    <optgroup key={index} label={group}>
+                                      {this.renderOptions(this.data[group])}
+                                    </optgroup>
+                                  );
+                                })}
+                              </select>
+                              {props.errors.chartOfAccount && props.touched.chartOfAccount && (
+                                <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                               )}
                             </FormGroup>
-
                             <FormGroup className="text-right mt-5">
-                              <Button type="button" name="submit" color="primary" className="btn-square mr-3"  onClick={() => {
-                                  this.setState({ createMore: false })
-                                  props.handleSubmit()
-                                }}>
+                              <Button type="button" name="submit" color="primary" className="btn-square mr-3" onClick={() => {
+                                this.setState({ createMore: false })
+                                props.handleSubmit()
+                              }}>
                                 <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
                               <Button name="button" color="primary" className="btn-square mr-3"

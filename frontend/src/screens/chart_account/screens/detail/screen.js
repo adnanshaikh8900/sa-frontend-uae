@@ -66,6 +66,7 @@ class DetailChartAccount extends React.Component {
     this.deleteChartAccount = this.deleteChartAccount.bind(this)
     this.removeChartAccount = this.removeChartAccount.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
+
   }
 
   componentDidMount() {
@@ -237,7 +238,7 @@ class DetailChartAccount extends React.Component {
                                 </FormGroup>
                                 <FormGroup>
                                   <Label htmlFor="chartOfAccount"><span className="text-danger">*</span>Type</Label>
-                                  <Select
+                                  {/* <Select
                                     className="select-default-width"
                                     options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : []}
                                     value={props.values.chartOfAccount}
@@ -256,7 +257,25 @@ class DetailChartAccount extends React.Component {
                                         ? "is-invalid"
                                         : ""
                                     }
-                                  />
+                                  /> */}
+                                   <select
+                                id='chartOfAccount'
+                                className="form-control select-coa"
+                                name='chartOfAccount'
+                                value={props.values.chartOfAccount}
+                                // size="1"
+                                onChange={(e)=>{
+                                  props.handleChange('chartOfAccount')(e.target.value)
+                                }}
+                              >
+                                {transaction_type_list && Object.keys(transaction_type_list).map((group, index) => {
+                                  return (
+                                    <optgroup key={index} label={group}>
+                                      {this.renderOptions(this.data[group])}
+                                    </optgroup>
+                                  );
+                                })}
+                              </select>
                                   {props.errors.chartOfAccount && props.touched.chartOfAccount && (
                                     <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                                   )}

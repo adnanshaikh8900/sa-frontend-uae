@@ -34,7 +34,7 @@ import * as Yup from "yup";
 
 const mapStateToProps = (state) => {
   return ({
-    transaction_type_list: state.chart_account.transaction_type_list
+    sub_transaction_type_list: state.chart_account.sub_transaction_type_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -62,48 +62,6 @@ class CreateChartAccount extends React.Component {
     this.initializeData = this.initializeData.bind(this)
     // this.success = this.success.bind(this)
 
-    this.data = {
-      "Money Out": [
-        {
-          "value": 8,
-          "label": "Expense"
-        },
-        {
-          "value": 9,
-          "label": "Salary"
-        },
-        {
-          "value": 10,
-          "label": "Sales Cost"
-        },
-        {
-          "value": 11,
-          "label": "Transfer To"
-        }
-      ],
-      "Money In": [
-        {
-          "value": 4,
-          "label": "Interest"
-        },
-        {
-          "value": 6,
-          "label": "Other Loans"
-        },
-        {
-          "value": 3,
-          "label": "Refund"
-        },
-        {
-          "value": 2,
-          "label": "Sales"
-        },
-        {
-          "value": 5,
-          "label": "Transfer From"
-        }
-      ]
-    }
   }
 
   componentDidMount() {
@@ -111,7 +69,7 @@ class CreateChartAccount extends React.Component {
   }
 
   initializeData() {
-    this.props.ChartOfAccontActions.getTransactionTypes();
+    this.props.ChartOfAccontActions.getSubTransactionTypes();
   }
   // Show Success Toast
   // success() {
@@ -151,7 +109,7 @@ class CreateChartAccount extends React.Component {
 
   render() {
     const { loading } = this.state
-    const { transaction_type_list } = this.props
+    const { sub_transaction_type_list } = this.props
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
@@ -259,10 +217,10 @@ class CreateChartAccount extends React.Component {
                                   props.handleChange('chartOfAccount')(e.target.value)
                                 }}
                               >
-                                {Object.keys(this.data).map((group, index) => {
+                                {Object.keys(sub_transaction_type_list).map((group, index) => {
                                   return (
                                     <optgroup key={index} label={group}>
-                                      {this.renderOptions(this.data[group])}
+                                      {this.renderOptions(sub_transaction_type_list[group])}
                                     </optgroup>
                                   );
                                 })}

@@ -36,7 +36,7 @@ import {
 
 const mapStateToProps = (state) => {
   return ({
-    transaction_type_list: state.chart_account.transaction_type_list
+    sub_transaction_type_list: state.chart_account.sub_transaction_type_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -77,8 +77,9 @@ class DetailChartAccount extends React.Component {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
       this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then(res => {
+        console.log(res.data)
         if (res.status === 200) {
-          this.props.chartOfAccontActions.getTransactionTypes();
+          this.props.chartOfAccontActions.getSubTransactionTypes();
           this.setState({
             loading: false,
             initValue: {
@@ -157,9 +158,20 @@ class DetailChartAccount extends React.Component {
     })
   }
 
+  renderOptions = options => {
+    return options.map(option => {
+      return (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      );
+    });
+  };
+
+
   render() {
     const { loading, dialog } = this.state
-    const { transaction_type_list } = this.props
+    const { sub_transaction_type_list } = this.props
 
     return (
       <div className="chart-account-screen">
@@ -240,7 +252,7 @@ class DetailChartAccount extends React.Component {
                                   <Label htmlFor="chartOfAccount"><span className="text-danger">*</span>Type</Label>
                                   {/* <Select
                                     className="select-default-width"
-                                    options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : []}
+                                    options={sub_transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', sub_transaction_type_list,'Type') : []}
                                     value={props.values.chartOfAccount}
                                     onChange={option => {
                                       if(option && option.value) {
@@ -268,10 +280,10 @@ class DetailChartAccount extends React.Component {
                                   props.handleChange('chartOfAccount')(e.target.value)
                                 }}
                               >
-                                {transaction_type_list && Object.keys(transaction_type_list).map((group, index) => {
+                                {sub_transaction_type_list && Object.keys(sub_transaction_type_list).map((group, index) => {
                                   return (
                                     <optgroup key={index} label={group}>
-                                      {this.renderOptions(this.data[group])}
+                                      {this.renderOptions(sub_transaction_type_list[group])}
                                     </optgroup>
                                   );
                                 })}

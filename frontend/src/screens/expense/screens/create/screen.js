@@ -152,7 +152,7 @@ class CreateExpense extends React.Component {
     if (vatCategoryId && vatCategoryId.value) {
       formData.append("vatCategoryId", vatCategoryId.value);
     }
-    if (bankAccountId && bankAccountId.value && payMode.value === 'BANK') {
+    if (bankAccountId && bankAccountId.value && payMode === 'BANK') {
       formData.append("bankAccountId", bankAccountId.value);
     }
     if (project && project.value) {
@@ -553,10 +553,10 @@ class CreateExpense extends React.Component {
                                     id="payMode"
                                     name="payMode"
                                     options={
-                                      this.payMode ? selectOptionsFactory.renderOptions(
+                                      pay_mode_list ? selectOptionsFactory.renderOptions(
                                         "label",
                                         "value",
-                                        this.payMode,
+                                        pay_mode_list,
                                         ""
                                       )
                                         : []
@@ -587,7 +587,6 @@ class CreateExpense extends React.Component {
                                     )}
                                 </FormGroup>
                               </Col>
-                                    {console.log(props.errors)}
                               {payMode === 'BANK' && (<Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="bankAccountId"><span className="text-danger">*</span>Bank</Label>

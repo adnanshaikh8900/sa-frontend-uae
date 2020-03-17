@@ -279,7 +279,7 @@ export const getPaymentMode = () => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.PAY_MODE,
-          payload: res
+          payload: res.data
         })
       }
     }).catch(err => {

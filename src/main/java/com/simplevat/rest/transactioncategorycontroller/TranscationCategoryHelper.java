@@ -181,7 +181,11 @@ public class TranscationCategoryHelper {
 
 				String parentCategory = "";
 				categoryList = idTrnxCatListMap.get(key);
+
 				List<DropdownModel> dropDownModelList = new ArrayList<DropdownModel>();
+				dropDownModelList
+						.add(new DropdownModel(categoryList.get(0).getParentChartOfAccount().getChartOfAccountId(),
+								categoryList.get(0).getParentChartOfAccount().getChartOfAccountName()));
 				for (ChartOfAccount trnxCat : categoryList) {
 					parentCategory = trnxCat.getParentChartOfAccount().getChartOfAccountName();
 					dropDownModelList
@@ -192,7 +196,7 @@ public class TranscationCategoryHelper {
 //				Map<Object, Object> map = new HashMap<Object, Object>();
 //				map.put(parentCategory, dropDownModelList);
 
-				chartOfAccountDropdownModelList.put(parentCategory,dropDownModelList);
+				chartOfAccountDropdownModelList.put(parentCategory, dropDownModelList);
 			}
 			return chartOfAccountDropdownModelList;
 		}

@@ -109,7 +109,7 @@ const ExpenseReducer = (state = initState, action) => {
         case EXPENSE.PAY_MODE:
           return {
             ...state,
-            pay_mode_list: Object.assign({}, payload)
+            pay_mode_list: Object.assign([], payload)
           }
 
     default:

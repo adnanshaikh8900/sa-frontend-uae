@@ -90,12 +90,6 @@ class DetailExpense extends React.Component {
       "application/vnd.ms-excel",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
-    this.paymentMode = [{
-      label: 'Cash', value: 'cash'
-    },
-    {
-      label: 'Bank', value: 'bank'
-    }]
   }
 
   componentDidMount() {
@@ -187,7 +181,7 @@ class DetailExpense extends React.Component {
     if (vatCategoryId && vatCategoryId.value) {
       formData.append("vatCategoryId", vatCategoryId.value);
     }
-    if (bankAccountId && bankAccountId.value && payMode.value === 'BANK') {
+    if (bankAccountId && bankAccountId.value && payMode === 'BANK') {
       formData.append("bankAccountId", bankAccountId.value);
     }
     if (this.uploadFile.files[0]) {
@@ -469,11 +463,11 @@ class DetailExpense extends React.Component {
                                   </Col>
                                   <Col lg={2}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="vat">Tax</Label>
+                                      <Label htmlFor="vatCategoryId">Tax</Label>
                                       <Select
                                         className="select-default-width"
-                                        id="vat"
-                                        name="vat"
+                                        id="vatCategoryId"
+                                        name="vatCategoryId"
                                         options={
                                           vat_list
                                             ? selectOptionsFactory.renderOptions(
@@ -484,9 +478,9 @@ class DetailExpense extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={props.values.project}
+                                        value={props.values.vatCategoryId}
                                         onChange={option =>
-                                          props.handleChange("project")(option)
+                                          props.handleChange("vatCategoryId")(option)
                                         }
                                       />
                                     </FormGroup>
@@ -500,41 +494,66 @@ class DetailExpense extends React.Component {
                                         id="pay_through"
                                         name="pay_through"
                                         options={
-                                          this.paymentMode
+                                          pay_mode_list
                                             ? selectOptionsFactory.renderOptions(
                                               "label",
                                               "value",
-                                              this.paymentMode,
+                                              pay_mode_list,
                                               ""
                                             )
                                             : []
                                         }
-                                        value={props.values.project}
-                                        onChange={option =>
-                                          props.handleChange("project")(option)
-                                        }
-                                      />
-                                    </FormGroup>
-                                  </Col>
-
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="bank">Bank</Label>
-                                      <Select
-                                        className="select-default-width"
-                                        id="bank"
-                                        name="bank"
-                                        options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}
-                                        value={props.values.bank}
-                                        onChange={option => props.handleChange('bank')(option)}
+                                        value={props.values.payMode}
+                                        onChange={option => {
+                                          props.handleChange("payMode")(option.value)
+                                          if (option && option.value) {
+                                            this.setState({
+                                              payMode: option.value
+                                            })
+                                          } else {
+                                            this.setState({ payMode: '' })
+                                          }
+                                        }}
                                         className={
-                                          props.errors.bank && props.touched.bank
+                                          props.errors.payMode && props.touched.payMode
                                             ? 'is-invalid'
                                             : ''
                                         }
                                       />
+                                      {props.errors.payMode &&
+                                        props.touched.payMode && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.payMode}
+                                          </div>
+                                        )}
                                     </FormGroup>
                                   </Col>
+
+                                  {props.values.payMode === 'BANK' && (<Col lg={4}>
+                                    <FormGroup className="mb-3">
+                                      <Label htmlFor="bankAccountId">bankAccountId</Label>
+                                      <Select
+                                        className="select-default-width"
+                                        id="bankAccountId"
+                                        name="bankAccountId"
+                                        options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}
+                                        value={props.values.bankAccountId}
+                                        onChange={option => props.handleChange('bankAccountId')(option)}
+                                        className={
+                                          props.errors.bankAccountId && props.touched.bankAccountId
+                                            ? 'is-invalid'
+                                            : ''
+                                        }
+                                      />
+                                       {props.errors.bankAccountId &&
+                                    props.touched.bankAccountId && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.bankAccountId}
+                                      </div>
+                                    )}
+                                    </FormGroup>
+                                  </Col>
+                                   ) }
                                 </Row>
                                 <Row>
                                   <Col lg={8}>

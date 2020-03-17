@@ -3,11 +3,30 @@ import {
   authApi
 } from 'utils'
 
-export const getTransactionTypes = () => {
+export const getSubTransactionTypes = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
       url: `/rest/datalist/getsubChartofAccount`
+    }
+
+    return authApi(data).then(res => {
+      dispatch({
+        type: CHART_ACCOUNT.SUB_TRANSACTION_TYPES,
+        payload: res.data
+      })
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getTransactionTypes = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/datalist/getTransactionTypes`
     }
 
     return authApi(data).then(res => {

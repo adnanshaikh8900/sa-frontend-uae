@@ -93,7 +93,8 @@ public class UserController implements Serializable {
 			Map<UserFilterEnum, Object> filterDataMap = new HashMap<UserFilterEnum, Object>();
 			filterDataMap.put(UserFilterEnum.FIRST_NAME, filterModel.getName());
 			filterDataMap.put(UserFilterEnum.DELETE_FLAG, false);
-			filterDataMap.put(UserFilterEnum.ACTIVE, filterModel.isActive());
+			if (filterModel.getActive() != null)
+				filterDataMap.put(UserFilterEnum.ACTIVE, filterModel.getActive().equals(1) ? true : false);
 			if (filterModel.getDob() != null && !filterModel.getDob().isEmpty()) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getDob()).getTime())

@@ -200,11 +200,11 @@ class DetailContact extends React.Component {
                             validationSchema={
                               Yup.object().shape({
                                 firstName: Yup.string()
-                                  .required("FirstName is Required"),
+                                  .required("First Name is Required"),
                                 lastName: Yup.string()
-                                  .required("LastName is Required"),
+                                  .required("Last Name is Required"),
                                 // middleName: Yup.string()
-                                //   .required("MiddleName is Required"),
+                                //   .required("Middle Name is Required"),
                                   // contactType: Yup.string()
                                   // .required("Please Select Contact Type"),
                             //       organization: Yup.string()

@@ -63,8 +63,9 @@ public class JournalRestController {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Map<JournalFilterEnum, Object> filterDataMap = new HashMap();
 			filterDataMap.put(JournalFilterEnum.USER_ID, userId);
-			filterDataMap.put(JournalFilterEnum.DESCRIPTION, filterModel.getDescription());
-			filterDataMap.put(JournalFilterEnum.REFERENCE_NO, filterModel.getReferenceCode());
+			if (filterModel.getDescription() != null && !filterModel.getDescription().equals(" "))
+				filterDataMap.put(JournalFilterEnum.DESCRIPTION, filterModel.getDescription());
+			filterDataMap.put(JournalFilterEnum.REFERENCE_NO, filterModel.getJournalReferenceNo());
 			if (filterModel.getJournalDate() != null && !filterModel.getJournalDate().isEmpty()) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				LocalDateTime dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getJournalDate()).getTime())
@@ -73,7 +74,7 @@ public class JournalRestController {
 			}
 			filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
 			filterDataMap.put(JournalFilterEnum.ORDER_BY, "DESC");
-			PaginationResponseModel responseModel = journalService.getJornalList(filterDataMap,filterModel);
+			PaginationResponseModel responseModel = journalService.getJornalList(filterDataMap, filterModel);
 			if (responseModel == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}

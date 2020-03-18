@@ -13,7 +13,6 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import Select from 'react-select'
 import { Loader } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -22,7 +21,6 @@ import {
   CommonActions
 } from 'services/global'
 
-import { selectOptionsFactory } from 'utils'
 
 import * as ChartOfAccontActions from '../../actions'
 import * as CreateChartOfAccontActions from './actions'

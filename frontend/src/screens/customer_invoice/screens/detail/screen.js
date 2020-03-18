@@ -610,7 +610,7 @@ class DetailCustomerInvoice extends React.Component {
 			dialog
 		} = this.state
 
-		const { project_list,currency_list, customer_list } = this.props
+		const { project_list, currency_list, customer_list } = this.props
 		return (
 			<div className="detail-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -650,20 +650,20 @@ class DetailCustomerInvoice extends React.Component {
 																	.required("Invoice Number is Required"),
 																contactId: Yup.string()
 																	.required("Supplier is Required"),
-																	term: Yup.string()
+																term: Yup.string()
 																	.required('term is Required'),
 																invoiceDate: Yup.string()
 																	.required('Invoice Date is Required'),
 																invoiceDueDate: Yup.string()
 																	.required('Invoice Due Date is Required'),
-																	currency: Yup.string()
+																currency: Yup.string()
 																	.required("Currency is Required"),
 																lineItemsString: Yup.array()
 																	.required('Atleast one invoice sub detail is mandatory')
 																	.of(Yup.object().shape({
 																		description: Yup.string().required("Value is Required"),
 																		quantity: Yup.string().required("Value is Required")
-																		.test('quantity', 'Quantity Should be Greater than 1', value => {
+																			.test('quantity', 'Quantity Should be Greater than 1', value => {
 																				if (value > 0) {
 																					return true
 																				} else {
@@ -690,7 +690,7 @@ class DetailCustomerInvoice extends React.Component {
 																			});
 																			if (!value ||
 																				(value &&
-																				this.supported_format.includes(value.type))
+																					this.supported_format.includes(value.type))
 																			) {
 																				return true;
 																			} else {
@@ -722,6 +722,7 @@ class DetailCustomerInvoice extends React.Component {
 																				id="invoice_number"
 																				name="invoice_number"
 																				placeholder=""
+																				disabled
 																				value={props.values.invoice_number}
 																				onChange={(value) => {
 																					props.handleChange("invoice_number")(value)
@@ -882,10 +883,10 @@ class DetailCustomerInvoice extends React.Component {
 																				value={props.values.currency}
 																				onChange={option => props.handleChange('currency')(option)}
 																				className={`${props.errors.currency && props.touched.currency ? "is-invalid" : ""}`}
-																				/>
-																				{props.errors.currency && props.touched.currency && (
-																					<div className="invalid-feedback">{props.errors.currency}</div>
-																				)}
+																			/>
+																			{props.errors.currency && props.touched.currency && (
+																				<div className="invalid-feedback">{props.errors.currency}</div>
+																			)}
 																		</FormGroup>
 																	</Col>
 																	<Col lg={4}>
@@ -975,7 +976,8 @@ class DetailCustomerInvoice extends React.Component {
 																<hr />
 																<Row>
 																	<Col lg={12} className="mb-3">
-																		<Button color="primary" className="btn-square mr-3" onClick={this.addRow}
+																		<Button color="primary" className={`btn-square mr-3 ${this.checkedRow() ? `disabled-cursor` : ``} `} onClick={this.addRow}
+																			title={this.checkedRow() ? `Please add detail to add more` : ''}
 																			disabled={this.checkedRow() ? true : false}
 																		>
 																			<i className="fa fa-plus"></i> Add More

@@ -9,6 +9,9 @@ import com.simplevat.dao.AbstractDao;
 import com.simplevat.entity.Invoice;
 import java.util.ArrayList;
 import java.util.Map;
+
+import javax.persistence.TypedQuery;
+
 import org.springframework.transaction.annotation.Transactional;
 import com.simplevat.dao.InvoiceDao;
 import com.simplevat.rest.DropdownModel;
@@ -51,5 +54,14 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 				update(supplierInvoice);
 			}
 		}
+	}
+
+	 @Override
+	public Invoice getLastInvoice() {
+		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("lastInvoice", Invoice.class);
+		query.setMaxResults(1);
+		List<Invoice> invoiceList = query.getResultList();
+
+		return invoiceList != null && invoiceList.size() > 0 ? invoiceList.get(0) : null;
 	}
 }

@@ -305,8 +305,11 @@ class CreateReceipt extends React.Component {
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={
                                       () => {
-                                        this.setState({ createMore: true })
-                                        props.handleSubmit()
+                                        this.setState({
+                                          createMore: true
+                                        }, () => {
+                                          props.handleSubmit()
+                                        })
                                       }
                                     }
                                   >

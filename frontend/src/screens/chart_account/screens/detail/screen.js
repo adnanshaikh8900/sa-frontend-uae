@@ -14,15 +14,10 @@ import {
   Col
 } from 'reactstrap'
 import {  toast } from 'react-toastify'
-import Select from 'react-select'
 import _ from 'lodash'
 import { Loader, ConfirmDeleteModal } from 'components'
-
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
-
-import { selectOptionsFactory } from 'utils'
-
 import * as ChartOfAccontActions from '../../actions'
 import * as DetailChartOfAccontActions from './actions'
 

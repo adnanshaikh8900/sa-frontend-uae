@@ -52,6 +52,8 @@ class CustomerModal extends React.Component {
     this.formikRef = React.createRef();
     this.handleSubmit = this.handleSubmit.bind(this);
     this.displayMsg = this.displayMsg.bind(this);
+    this.regEx = /^[0-9\d]+$/;
+
   }
 
   // Create or Contact
@@ -98,10 +100,10 @@ class CustomerModal extends React.Component {
               this.handleSubmit(values, resetForm);
             }}
             validationSchema={Yup.object().shape({
-              firstName: Yup.string().required("FirstName is Required"),
-              lastName: Yup.string().required("LastName is Required"),
-              // middleName: Yup.string()
-              //   .required("MiddleName is Required"),
+              firstName: Yup.string().required("First Name is Required"),
+              lastName: Yup.string().required("Last Name is Required"),
+              middleName: Yup.string()
+                .required("Middle Name is Required"),
               // contactType: Yup.string()
               // .required("Please Select Contact Type"),
               //       organization: Yup.string()
@@ -111,27 +113,27 @@ class CustomerModal extends React.Component {
               email: Yup.string()
                 .required("Email is Required")
                 .email("Invalid Email"),
-              //     telephone: Yup.number()
-              //       .required("Telephone Number is Required"),
-              //     mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, {message: "Please enter valid number.", excludeEmptyString: false})
-              //       .required("Mobile Number is required"),
+                  telephone: Yup.number()
+                    .required("Telephone Number is Required"),
+                  mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, {message: "Please enter valid number.", excludeEmptyString: false})
+                    .required("Mobile Number is required"),
               //     addressLine1: Yup.string()
               //       .required("Address is required"),
-              countryId: Yup.string().required("Please Select Country")
-              // .nullable(),
+              countryId: Yup.string().required("Country is Required")
+              .nullable(),
               //     stateRegion: Yup.string()
               //       .required("State is Required"),
               //     city: Yup.string()
               //       .required("City is Required"),
-              //     postZipCode: Yup.number()
-              //       .required("Postal Code is Required"),
+                  postZipCode: Yup.number()
+                    .required("Postal Code is Required"),
               //     billingEmail: Yup.string()
               //       .required("Billing Email is Required")
               //       .email('Invalid Email'),
               //     contractPoNumber: Yup.number()
               //       .required("Contract PoNumber is Required"),
-              //       vatRegistrationNumber: Yup.number()
-              //       .required("Tax Registration Number is Required"),
+                    vatRegistrationNumber: Yup.number()
+                    .required("Tax Registration Number is Required"),
               //       currencyCode: Yup.string()
               //       .required("Please Select Currency")
               //       .nullable(),
@@ -218,7 +220,7 @@ class CustomerModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="firstName">
-                            First Name <span className="text-danger">*</span>
+                          <span className="text-danger">*</span>First Name
                           </Label>
                           <Input
                             type="text"
@@ -244,7 +246,7 @@ class CustomerModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="middleName">Middle Name</Label>
+                          <Label htmlFor="middleName"> <span className="text-danger">*</span>Middle Name</Label>
                           <Input
                             type="text"
                             id="middleName "
@@ -271,7 +273,7 @@ class CustomerModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="lastName">
-                            Last Name <span className="text-danger">*</span>
+                          <span className="text-danger">*</span>Last Name 
                           </Label>
                           <Input
                             type="text"
@@ -357,7 +359,7 @@ class CustomerModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="email">
-                            Email <span className="text-danger">*</span>
+                          <span className="text-danger">*</span>Email
                           </Label>
                           <Input
                             type="text"
@@ -382,14 +384,12 @@ class CustomerModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="telephone">Telephone</Label>
+                          <Label htmlFor="telephone"> <span className="text-danger">*</span>Telephone</Label>
                           <Input
                             type="text"
                             id="telephone"
                             name="telephone"
-                            onChange={value => {
-                              props.handleChange("telephone")(value);
-                            }}
+                            onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('telephone')(option) }}
                             value={props.values.telephone}
                             className={
                               props.errors.telephone && props.touched.telephone
@@ -407,14 +407,13 @@ class CustomerModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="mobileNumber">Mobile Number</Label>
+                          <Label htmlFor="mobileNumber"> <span className="text-danger">*</span>Mobile Number</Label>
                           <Input
                             type="text"
                             id="mobileNumber"
                             name="mobileNumber"
-                            onChange={value => {
-                              props.handleChange("mobileNumber")(value);
-                            }}
+                            onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('mobileNumber')(option) }}
+
                             value={props.values.mobileNumber}
                             className={
                               props.errors.mobileNumber &&
@@ -490,7 +489,7 @@ class CustomerModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="countryId">
-                            Country <span className="text-danger">*</span>
+                          <span className="text-danger">*</span>Country 
                           </Label>
                           <Select
                             className="select-default-width"
@@ -587,7 +586,7 @@ class CustomerModal extends React.Component {
                     <Row className="row-wrapper">
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="postZipCode">Post Zip Code</Label>
+                          <Label htmlFor="postZipCode"><span className="text-danger">*</span>Post Zip Code</Label>
                           <Input
                             type="text"
                             id="postZipCode"
@@ -674,7 +673,7 @@ class CustomerModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="vatRegistrationNumber">
-                            Tax Registration Number
+                          <span className="text-danger">*</span>Tax Registration Number
                           </Label>
                           <Input
                             type="text"

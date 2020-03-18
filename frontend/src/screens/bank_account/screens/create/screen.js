@@ -63,7 +63,7 @@ class CreateBankAccount extends React.Component {
       },
       currentData: {}
     }
-
+    this.regExAlpha = /^[a-zA-Z]+$/
     this.regEx = /^[0-9\d]+$/;
     this.account_for = [
       { label: 'Personal', value: 'Personal' },
@@ -200,7 +200,8 @@ class CreateBankAccount extends React.Component {
                                       name="account_name"
                                       placeholder="Enter Account Name"
                                       value={props.values.account_name}
-                                      onChange={props.handleChange}
+                                      onChange={(option) => { 
+                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('account_name')(option) }}
                                       className={
                                         props.errors.account_name && props.touched.account_name
                                           ? 'is-invalid'
@@ -248,7 +249,8 @@ class CreateBankAccount extends React.Component {
                                       name="opening_balance"
                                       placeholder="Your Opening Balance"
                                       value={props.values.opening_balance}
-                                      onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('opening_balance')(option) }}
+                                      onChange={(option) => { 
+                                        if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('opening_balance')(option) }}
                                       className={
                                         props.errors.opening_balance && props.touched.opening_balance
                                           ? 'is-invalid'
@@ -301,7 +303,8 @@ class CreateBankAccount extends React.Component {
                                       name="bank_name"
                                       placeholder="Enter Bank Name"
                                       value={props.values.bank_name}
-                                      onChange={props.handleChange}
+                                      onChange={(option) => { 
+                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('bank_name')(option) }}
                                       className={
                                         props.errors.bank_name && props.touched.bank_name
                                           ? 'is-invalid'
@@ -322,7 +325,8 @@ class CreateBankAccount extends React.Component {
                                       name="account_number"
                                       placeholder="Enter Account Number"
                                       value={props.values.account_number}
-                                      onChange={props.handleChange}
+                                      onChange={(option) => { 
+                                        if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('account_number')(option) }}
                                       className={
                                         props.errors.account_number && props.touched.account_number
                                           ? 'is-invalid'

@@ -288,6 +288,15 @@ class CreateSupplierInvoice extends React.Component {
   }
 
   getInitialData = () => {
+    this.props.supplierInvoiceCreateActions.getInvoiceNo().then(res => {
+      if(res.status === 200) {
+        this.setState({
+          initValue: {
+            invoice_number: res.data
+          }
+        })
+      }
+    });
     this.props.supplierInvoiceActions.getProjectList();
     this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
     this.props.supplierInvoiceActions.getCurrencyList();
@@ -950,10 +959,11 @@ class CreateSupplierInvoice extends React.Component {
                             <hr />
                             <Row>
                               <Col lg={12} className="mb-3">
-                                <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
-                                  disabled={this.checkedRow() ? true : false}
-                                >
-                                  <i className="fa fa-plus"></i> Add More
+                              <Button color="primary" className={`btn-square mr-3 ${this.checkedRow() ?  `disabled-cursor` : ``} `} onClick={this.addRow}
+																title={this.checkedRow() ? `Please add detail to add more`: ''}
+																	disabled={this.checkedRow() ? true : false}
+																>
+																	<i className="fa fa-plus"></i> Add More
                             </Button>
                               </Col>
                             </Row>

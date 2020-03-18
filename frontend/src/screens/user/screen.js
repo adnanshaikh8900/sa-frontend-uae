@@ -58,7 +58,7 @@ class User extends React.Component {
       filterData: {
         name: '',
         dob: '',
-        active: 'true',
+        active: '1',
         // companyId: '',
         roleId: ''
       },
@@ -67,8 +67,8 @@ class User extends React.Component {
 
     this.statusOption = [
       { label: 'Select Status', value: '' },
-      { label: 'Active', value: 'true' },
-      { label: 'InActive', value: 'false' },
+      { label: 'Active', value: '1' },
+      { label: 'InActive', value: '0' },
     ]
 
     this.initializeData = this.initializeData.bind(this)
@@ -239,7 +239,7 @@ class User extends React.Component {
   }
 
   renderStatus(cell, row) {
-    return (row['active'] !== '') ? (row['active'] === true ? 'Active' : 'InActive') : ''
+    return (row['active'] !== '') ? (row['active'] === 1 ? 'Active' : 'InActive') : ''
   }
 
   handleChange(val, name) {
@@ -371,8 +371,8 @@ class User extends React.Component {
                                   this.handleChange(option.value, 'active')
                                   this.setState({ selectedStatus: option.value })
                                 } else {
-                                  this.handleChange('true', 'active')
-                                  this.setState({ selectedStatus: 'true' })
+                                  this.handleChange('1', 'active')
+                                  this.setState({ selectedStatus: '1' })
                                 }
                               }}
                             />

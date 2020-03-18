@@ -300,6 +300,15 @@ class CreateCustomerInvoice extends React.Component {
 	}
 
 	getInitialData = () => {
+		this.props.customerInvoiceCreateActions.getInvoiceNo().then(res => {
+      if(res.status === 200) {
+        this.setState({
+          initValue: {
+            invoice_number: res.data
+          }
+        })
+      }
+    });
 		this.props.customerInvoiceActions.getProjectList();
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCurrencyList();
@@ -948,7 +957,8 @@ class CreateCustomerInvoice extends React.Component {
 														<hr />
 														<Row>
 															<Col lg={12} className="mb-3">
-																<Button color="primary" className="btn-square mr-3" onClick={this.addRow}
+																<Button color="primary" className={`btn-square mr-3 ${this.checkedRow() ?  `disabled-cursor` : ``} `} onClick={this.addRow}
+																title={this.checkedRow() ? `Please add detail to add more`: ''}
 																	disabled={this.checkedRow() ? true : false}
 																>
 																	<i className="fa fa-plus"></i> Add More

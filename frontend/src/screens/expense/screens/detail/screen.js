@@ -110,7 +110,7 @@ class DetailExpense extends React.Component {
 
           this.setState({
             loading: false,
-            current_expense_id: this.props.location.state,
+            current_expense_id: this.props.location.state.expenseId,
             initValue: {
               payee: res.data.payee,
               expenseDate: res.data.expenseDate ? moment(res.data.expenseDate).utc().format('YYYY-MM-DD') : '',
@@ -158,7 +158,7 @@ class DetailExpense extends React.Component {
     } = data
 
     let formData = new FormData();
-    formData.append("expenseId", current_expense_id.expenseId);
+    formData.append("expenseId", current_expense_id);
     formData.append("payee", payee);
     formData.append("expenseDate", expenseDate !== null ? moment(expenseDate).utc().toDate() : "");
     formData.append("expenseDescription", expenseDescription);

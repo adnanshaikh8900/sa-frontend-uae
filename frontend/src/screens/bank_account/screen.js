@@ -461,6 +461,7 @@ class BankAccount extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
+                            onClick={() => this.table.handleExportCSV()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -547,37 +548,41 @@ class BankAccount extends React.Component {
                           // totalSize={bank_account_list ? bank_account_list.length : 0}
                           pagination = {bank_account_list && bank_account_list.data && bank_account_list.data.length > 0 ? true : false}
                           remote
+                          keyField="bankAccountId"
                           fetchInfo={{ dataTotalSize: bank_account_list && bank_account_list.count ? bank_account_list.count : 0 }}
                           className="bank-account-table"
+                          csvFileName="bank_account_list.csv"
+                          ref={node => {
+                            this.table = node
+                          }}
                         >
-                          <TableHeaderColumn
-                            isKey
-                            dataField="bankAccountId"
-                            width="0"
-                          >
-                          </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="name"
                             dataSort
+                            width="10%"
                           >
                             Bank
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataFormat={this.renderAccountType}
+                            dataField="bankAccountTypeName"
                             dataSort
+                            width="15%"
                           >
                             Account Type
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="accounName"
                             dataSort
+                            width="15%"
                           >
                             Account Name
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                            dataField="accountNumber"
+                            dataField="bankAccountNo"
                             dataFormat={this.renderAccountNumber}
                             dataSort
+                            width="15%"
                           >
                             Account Number
                           </TableHeaderColumn>
@@ -585,25 +590,31 @@ class BankAccount extends React.Component {
                           <TableHeaderColumn
                             dataFormat={this.renderCurrency}
                             dataSort
+                            dataField="currancyName"
+                            width="10%"
                           >
                             Currency
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="openingBalance"
                             dataSort
+                            width="15%"
                           >
                             Book Balance
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="swift_code"
+                            export={false}
                             dataFormat={this.renderLastReconciled}
+                            width="20%"
                           >
                             Last Reconciled
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             className="text-right"
                             columnClassName="text-right"
-                            width="55"
+                            width="5%"
+                            export={false}
                             dataFormat={this.renderActions}
                           >
                           </TableHeaderColumn>

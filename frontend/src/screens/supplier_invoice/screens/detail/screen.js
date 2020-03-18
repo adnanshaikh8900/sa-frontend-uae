@@ -719,6 +719,7 @@ class DetailSupplierInvoice extends React.Component {
                                         id="invoice_number"
                                         name="invoice_number"
                                         placeholder=""
+                                        disabled
                                         value={props.values.invoice_number}
                                         onChange={(value) => {
                                           props.handleChange("invoice_number")(value)

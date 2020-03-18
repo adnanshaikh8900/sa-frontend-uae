@@ -58,7 +58,7 @@ class User extends React.Component {
       filterData: {
         name: '',
         dob: '',
-        active: '1',
+        active: '',
         // companyId: '',
         roleId: ''
       },
@@ -239,7 +239,7 @@ class User extends React.Component {
   }
 
   renderStatus(cell, row) {
-    return (row['active'] !== '') ? (row['active'] === 1 ? 'Active' : 'InActive') : ''
+    return (row['active'] !== '') ? (row['active'] === true ? 'Active' : 'InActive') : ''
   }
 
   handleChange(val, name) {

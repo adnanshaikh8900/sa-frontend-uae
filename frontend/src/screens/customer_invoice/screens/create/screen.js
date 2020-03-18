@@ -300,15 +300,7 @@ class CreateCustomerInvoice extends React.Component {
 	}
 
 	getInitialData = () => {
-		this.props.customerInvoiceCreateActions.getInvoiceNo().then(res => {
-      if(res.status === 200) {
-        this.setState({
-          initValue: {
-            invoice_number: res.data
-          }
-        })
-      }
-    });
+		this.getInvoiceNo();
 		this.props.customerInvoiceActions.getProjectList();
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCurrencyList();
@@ -447,7 +439,7 @@ class CreateCustomerInvoice extends React.Component {
 			total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
 			total_vat = +((total_vat + val));
 			total = (total_vat + total_net);
-			
+
 			return obj
 		})
 
@@ -504,7 +496,7 @@ class CreateCustomerInvoice extends React.Component {
 		formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
 		//formData.append("invoiceDate", invoiceDate ? invoiceDate : null);
 		formData.append("invoiceDueDate", invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null);
-		formData.append("invoiceDate", invoiceDate ? moment((moment(invoiceDate).format('DD/MM/YYYY')),'DD/MM/YYYY').toDate() : null);	formData.append("invoiceDate", invoiceDate ? moment((moment(invoiceDate).format('DD/MM/YYYY')),'DD/MM/YYYY').toDate() : null);
+		formData.append("invoiceDate", invoiceDate ? moment((moment(invoiceDate).format('DD/MM/YYYY')), 'DD/MM/YYYY').toDate() : null); formData.append("invoiceDate", invoiceDate ? moment((moment(invoiceDate).format('DD/MM/YYYY')), 'DD/MM/YYYY').toDate() : null);
 		formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
 		formData.append("contactPoNumber", contact_po_number !== null ? contact_po_number : "");
 		formData.append("receiptAttachmentDescription", receiptAttachmentDescription !== null ? receiptAttachmentDescription : "");
@@ -559,6 +551,7 @@ class CreateCustomerInvoice extends React.Component {
 					}
 				}, () => {
 					resetForm(this.state.initValue)
+					this.getInvoiceNo();
 					this.formRef.current.setFieldValue('lineItemsString', this.state.data, false)
 				})
 			} else {
@@ -601,6 +594,20 @@ class CreateCustomerInvoice extends React.Component {
 		this.setState({ openInvoicePreviewModal: false })
 	}
 
+	getInvoiceNo = () => {
+		this.props.customerInvoiceCreateActions.getInvoiceNo().then(res => {
+			if (res.status === 200) {
+				this.setState({
+					initValue: {
+						... this.state.initValue, ...{
+							invoice_number: res.data
+						}
+					}
+				}, () => { console.log(this.state.initValue) })
+				this.formRef.current.setFieldValue('invoice_number', res.data, true)
+			}
+		});
+	}
 	render() {
 		const {
 			data,
@@ -608,7 +615,7 @@ class CreateCustomerInvoice extends React.Component {
 			initValue,
 		} = this.state
 
-		const { project_list , currency_list, customer_list } = this.props
+		const { project_list, currency_list, customer_list } = this.props
 		return (
 			<div className="create-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -641,9 +648,9 @@ class CreateCustomerInvoice extends React.Component {
 															.required("Invoice Number is Required"),
 														contactId: Yup.string()
 															.required("Customer is Required"),
-															term: Yup.string()
+														term: Yup.string()
 															.required('Term is Required'),
-															currency: Yup.string()
+														currency: Yup.string()
 															.required('Currency is Required'),
 														invoiceDate: Yup.string()
 															.required('Invoice Date is Required'),
@@ -654,7 +661,7 @@ class CreateCustomerInvoice extends React.Component {
 															.of(Yup.object().shape({
 																description: Yup.string().required("Value is Required"),
 																quantity: Yup.string().required("Value is Required")
-																.test('quantity', 'Quantity Should be Greater than 1', value => {
+																	.test('quantity', 'Quantity Should be Greater than 1', value => {
 																		if (value > 0) {
 																			return true
 																		} else {
@@ -681,7 +688,7 @@ class CreateCustomerInvoice extends React.Component {
 																	});
 																	if (
 																		!value || (value &&
-																		this.supported_format.includes(value.type))
+																			this.supported_format.includes(value.type))
 																	) {
 																		return true;
 																	} else {
@@ -704,6 +711,7 @@ class CreateCustomerInvoice extends React.Component {
 											>
 												{props => (
 													<Form onSubmit={props.handleSubmit}>
+														{console.log("invoice no" + props.values.invoice_number)}
 														<Row>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
@@ -800,10 +808,10 @@ class CreateCustomerInvoice extends React.Component {
 																			}
 																		}}
 																		className={`${props.errors.term && props.touched.term ? "is-invalid" : ""}`}
-																		/>
-																		{props.errors.term && props.touched.term && (
-																			<div className="invalid-feedback">{props.errors.term}</div>
-																		)}
+																	/>
+																	{props.errors.term && props.touched.term && (
+																		<div className="invalid-feedback">{props.errors.term}</div>
+																	)}
 																</FormGroup>
 															</Col>
 															<Col lg={4}>
@@ -848,7 +856,7 @@ class CreateCustomerInvoice extends React.Component {
 																			onChange={(value) => {
 																				props.handleChange("invoiceDueDate")(value)
 																			}}
-																			// className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}
+																		// className={`form-control ${props.errors.invoiceDueDate && props.touched.invoiceDueDate ? "is-invalid" : ""}`}
 																		/>
 																		{/* {props.errors.invoiceDueDate && props.touched.invoiceDueDate && (
 																			<div className="invalid-feedback">{props.errors.invoiceDueDate}</div>
@@ -869,10 +877,10 @@ class CreateCustomerInvoice extends React.Component {
 																		value={props.values.currency}
 																		onChange={option => props.handleChange('currency')(option)}
 																		className={`${props.errors.currency && props.touched.currency ? "is-invalid" : ""}`}
-																		/>
-																		{props.errors.currency && props.touched.currency && (
-																			<div className="invalid-feedback">{props.errors.currency}</div>
-																		)}
+																	/>
+																	{props.errors.currency && props.touched.currency && (
+																		<div className="invalid-feedback">{props.errors.currency}</div>
+																	)}
 																</FormGroup>
 															</Col>
 															<Col lg={4}>
@@ -958,8 +966,8 @@ class CreateCustomerInvoice extends React.Component {
 														<hr />
 														<Row>
 															<Col lg={12} className="mb-3">
-																<Button color="primary" className={`btn-square mr-3 ${this.checkedRow() ?  `disabled-cursor` : ``} `} onClick={this.addRow}
-																title={this.checkedRow() ? `Please add detail to add more`: ''}
+																<Button color="primary" className={`btn-square mr-3 ${this.checkedRow() ? `disabled-cursor` : ``} `} onClick={this.addRow}
+																	title={this.checkedRow() ? `Please add detail to add more` : ''}
 																	disabled={this.checkedRow() ? true : false}
 																>
 																	<i className="fa fa-plus"></i> Add More
@@ -1136,7 +1144,7 @@ class CreateCustomerInvoice extends React.Component {
 																						<h5 className="mb-0 text-right">Total Net</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
-																						<label className="mb-0">{(initValue.total_net.toFixed(2))}</label>
+																						<label className="mb-0">{(initValue.total_net && initValue.total_net.toFixed(2))}</label>
 																					</Col>
 																				</Row>
 																			</div>
@@ -1146,7 +1154,7 @@ class CreateCustomerInvoice extends React.Component {
 																						<h5 className="mb-0 text-right">Total Vat</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
-																						<label className="mb-0">{(initValue.invoiceVATAmount).toFixed(2)}</label>
+																						<label className="mb-0">{initValue.invoiceVATAmount && (initValue.invoiceVATAmount).toFixed(2)}</label>
 																					</Col>
 																				</Row>
 																			</div>

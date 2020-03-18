@@ -158,7 +158,7 @@ public class JournalRestHelper {
 		JournalModel model = new JournalModel();
 		model.setJournalId(journal.getId());
 		model.setDescription(journal.getDescription());
-		model.setJournalReferenceNo(isManual ? journal.getJournlReferencenNo() : String.valueOf(journal.getId()));
+		model.setJournalReferenceNo(isManual ? journal.getJournlReferencenNo() :"-");// String.valueOf(journal.getId()));
 
 		BigDecimal totalCreditAmount = getTotalCreditAmount(journal.getJournalLineItems());
 		BigDecimal totalDebitAmount = getTotalDebitAmount(journal.getJournalLineItems());

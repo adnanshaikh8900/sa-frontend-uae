@@ -5,9 +5,10 @@ import lombok.Data;
 
 @Data
 public class JournalRequestFilterModel extends PaginationModel {
-    // TODO : added required param
+	// TODO : added required param
 
-    private String journalDate;
-    private String referenceCode;
-    private String description;
+	private String journalDate;
+	// private String referenceCode;
+	private String journalReferenceNo;
+	private String description;
 }

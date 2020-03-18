@@ -493,8 +493,9 @@ class CreateCustomerInvoice extends React.Component {
 		const formData = new FormData()
 
 		formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
-		formData.append("invoiceDate", invoiceDate ? invoiceDate : null);
+		//formData.append("invoiceDate", invoiceDate ? invoiceDate : null);
 		formData.append("invoiceDueDate", invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null);
+		formData.append("invoiceDate", invoiceDate ? moment((moment(invoiceDate).format('DD/MM/YYYY')),'DD/MM/YYYY').toDate() : null);	formData.append("invoiceDate", invoiceDate ? moment((moment(invoiceDate).format('DD/MM/YYYY')),'DD/MM/YYYY').toDate() : null);
 		formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
 		formData.append("contactPoNumber", contact_po_number !== null ? contact_po_number : "");
 		formData.append("receiptAttachmentDescription", receiptAttachmentDescription !== null ? receiptAttachmentDescription : "");

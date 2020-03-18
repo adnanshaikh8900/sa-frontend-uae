@@ -13,7 +13,7 @@ public class UserRequestFilterModel extends PaginationModel{
 	private String name;
 	private String dob;
 	private Integer roleId;
-	private boolean active;
+	private Integer active;
 	private Integer companyId;
 	//company to discussed
 	

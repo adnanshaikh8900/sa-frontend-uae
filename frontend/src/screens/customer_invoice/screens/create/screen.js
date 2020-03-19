@@ -496,7 +496,7 @@ class CreateCustomerInvoice extends React.Component {
 		formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
 		//formData.append("invoiceDate", invoiceDate ? invoiceDate : null);
 		formData.append("invoiceDueDate", invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null);
-		formData.append("invoiceDate", invoiceDate ? moment((moment(invoiceDate).format('DD/MM/YYYY')), 'DD/MM/YYYY').toDate() : null); formData.append("invoiceDate", invoiceDate ? moment((moment(invoiceDate).format('DD/MM/YYYY')), 'DD/MM/YYYY').toDate() : null);
+		formData.append("invoiceDate", invoiceDate ? moment((moment(invoiceDate).format('DD/MM/YYYY')), 'DD/MM/YYYY').toDate() : null);
 		formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
 		formData.append("contactPoNumber", contact_po_number !== null ? contact_po_number : "");
 		formData.append("receiptAttachmentDescription", receiptAttachmentDescription !== null ? receiptAttachmentDescription : "");
@@ -603,7 +603,7 @@ class CreateCustomerInvoice extends React.Component {
 							invoice_number: res.data
 						}
 					}
-				}, () => { console.log(this.state.initValue) })
+				})
 				this.formRef.current.setFieldValue('invoice_number', res.data, true)
 			}
 		});
@@ -711,7 +711,6 @@ class CreateCustomerInvoice extends React.Component {
 											>
 												{props => (
 													<Form onSubmit={props.handleSubmit}>
-														{console.log("invoice no" + props.values.invoice_number)}
 														<Row>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
@@ -868,7 +867,7 @@ class CreateCustomerInvoice extends React.Component {
 														<Row>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="currency">Currency</Label>
+																	<Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
 																	<Select
 																		className="select-default-width"
 																		options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
@@ -1144,7 +1143,7 @@ class CreateCustomerInvoice extends React.Component {
 																						<h5 className="mb-0 text-right">Total Net</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
-																						<label className="mb-0">{(initValue.total_net && initValue.total_net.toFixed(2))}</label>
+																						<label className="mb-0">{(initValue.total_net.toFixed(2))}</label>
 																					</Col>
 																				</Row>
 																			</div>
@@ -1154,7 +1153,7 @@ class CreateCustomerInvoice extends React.Component {
 																						<h5 className="mb-0 text-right">Total Vat</h5>
 																					</Col>
 																					<Col lg={6} className="text-right">
-																						<label className="mb-0">{initValue.invoiceVATAmount && (initValue.invoiceVATAmount).toFixed(2)}</label>
+																						<label className="mb-0">{(initValue.invoiceVATAmount).toFixed(2)}</label>
 																					</Col>
 																				</Row>
 																			</div>

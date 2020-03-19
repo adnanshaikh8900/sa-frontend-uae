@@ -36,7 +36,6 @@ class ViewBankAccount extends React.Component {
     const {
       initialVals
     } = this.props
-    console.log(this.props.initialVals)
     return (
           <Card>
             <CardHeader>

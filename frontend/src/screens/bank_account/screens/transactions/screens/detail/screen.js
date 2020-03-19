@@ -188,7 +188,6 @@ class DetailBankTransaction extends React.Component {
   render() {
     const { project_list, transaction_category_list, transaction_type_list } = this.props
     const { initValue, loading } = this.state
-    // console.log(initValue)
     return (
       <div className="detail-bank-transaction-screen">
         <div className="animated fadeIn">

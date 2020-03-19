@@ -874,7 +874,7 @@ class DetailCustomerInvoice extends React.Component {
 																<Row>
 																	<Col lg={4}>
 																		<FormGroup className="mb-3">
-																			<Label htmlFor="currency">Currency</Label>
+																			<Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
 																			<Select
 																				className="select-default-width"
 																				options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}

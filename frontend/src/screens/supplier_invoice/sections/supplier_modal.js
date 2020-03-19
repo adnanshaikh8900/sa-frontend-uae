@@ -56,7 +56,8 @@ class SupplierModal extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.displayMsg = this.displayMsg.bind(this)
     this.regEx = /^[0-9\d]+$/;
-
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
   // Create or Contact
@@ -120,14 +121,14 @@ class SupplierModal extends React.Component {
                 //       .required("State is Required"),
                 //     city: Yup.string()
                 //       .required("City is Required"),
-                postZipCode: Yup.number()
+                postZipCode: Yup.string()
                   .required("Postal Code is Required"),
                 //     billingEmail: Yup.string()
                 //       .required("Billing Email is Required")
                 //       .email('Invalid Email'),
                 //     contractPoNumber: Yup.number()
                 //       .required("Contract PoNumber is Required"),
-                vatRegistrationNumber: Yup.number()
+                vatRegistrationNumber: Yup.string()
                   .required("Tax Registration Number is Required"),
                 //       currencyCode: Yup.string()
                 //       .required("Please Select Currency")
@@ -220,9 +221,8 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="firstName"
                             name="firstName"
-                            onChange={value => {
-                              props.handleChange("firstName")(value);
-                            }}
+                            onChange={(option) => { 
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option) }}
                             value={props.values.firstName}
                             className={
                               props.errors.firstName && props.touched.firstName
@@ -245,9 +245,8 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="middleName "
                             name="middleName "
-                            onChange={value => {
-                              props.handleChange("middleName")(value);
-                            }}
+                            onChange={(option) => { 
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option) }}
                             value={props.values.middleName}
                             className={
                               props.errors.middleName &&
@@ -273,9 +272,8 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="lastName"
                             name="lastName"
-                            onChange={value => {
-                              props.handleChange("lastName")(value);
-                            }}
+                            onChange={(option) => { 
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option) }}
                             value={props.values.lastName}
                             className={
                               props.errors.lastName && props.touched.lastName
@@ -585,9 +583,8 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="postZipCode"
                             name="postZipCode"
-                            onChange={value => {
-                              props.handleChange("postZipCode")(value);
-                            }}
+                            onChange={(option) => { 
+                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('postZipCode')(option) }}
                             value={props.values.postZipCode}
                             className={
                               props.errors.postZipCode &&
@@ -673,11 +670,8 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="vatRegistrationNumber"
                             name="vatRegistrationNumber"
-                            onChange={value => {
-                              props.handleChange("vatRegistrationNumber")(
-                                value
-                              );
-                            }}
+                            onChange={(option) => { 
+                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option) }}
                             value={props.values.vatRegistrationNumber}
                             className={
                               props.errors.vatRegistrationNumber &&

@@ -20,7 +20,12 @@ authFileUploadApi.interceptors.response.use(
     return response
   },
   error => {
-    return Promise.reject(error.response)
+    if(error.response && error.response.status && error.response.status === 401) {
+      window.localStorage.clear()
+        window.location = '/login'
+      } else {
+      return Promise.reject(error.response)
+      }
   },
 )
 

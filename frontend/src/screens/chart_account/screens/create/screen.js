@@ -211,7 +211,6 @@ class CreateChartAccount extends React.Component {
                                 value={props.values.chartOfAccount}
                                 // size="1"
                                 onChange={(e)=>{
-                                  console.log(e.target.value)
                                   props.handleChange('chartOfAccount')(e.target.value)
                                 }}
                               >

@@ -57,7 +57,7 @@ public class BankHelper {
 		bankAccount.setBankAccountName(bankModel.getBankAccountName());
 		bankAccount.setBankName(bankModel.getBankName());
 		bankAccount.setDeleteFlag(Boolean.FALSE);
-		bankAccount.setIbanNumber(bankModel.getIbanNumber());
+		bankAccount.setIfscCode(bankModel.getIfscCode());
 		bankAccount.setIsprimaryAccountFlag(bankModel.getIsprimaryAccountFlag());
 		bankAccount.setOpeningBalance(bankModel.getOpeningBalance());
 		bankAccount.setPersonalCorporateAccountInd(bankModel.getPersonalCorporateAccountInd().charAt(0));
@@ -102,7 +102,7 @@ public class BankHelper {
 			bankAccount.setBankAccountName(bankModel.getBankAccountName());
 			bankAccount.setBankName(bankModel.getBankName());
 			bankAccount.setDeleteFlag(Boolean.FALSE);
-			bankAccount.setIbanNumber(bankModel.getIbanNumber());
+			bankAccount.setIfscCode(bankModel.getIfscCode());
 			bankAccount.setIsprimaryAccountFlag(bankModel.getIsprimaryAccountFlag());
 			bankAccount.setOpeningBalance(bankModel.getOpeningBalance());
 			bankAccount.setPersonalCorporateAccountInd(bankModel.getPersonalCorporateAccountInd().charAt(0));

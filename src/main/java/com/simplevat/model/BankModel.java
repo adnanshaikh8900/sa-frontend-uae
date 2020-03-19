@@ -32,7 +32,7 @@ public class BankModel implements Serializable {
 
     private String accountNumber;
 
-    private String ibanNumber;
+    private String ifscCode;
 
     private String swiftCode;
 

@@ -72,7 +72,6 @@ class DetailChartAccount extends React.Component {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
       this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then(res => {
-        console.log(res.data)
         if (res.status === 200) {
           this.props.chartOfAccontActions.getSubTransactionTypes();
           this.setState({

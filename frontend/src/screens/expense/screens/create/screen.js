@@ -563,7 +563,6 @@ class CreateExpense extends React.Component {
                                     }
                                     value={props.values.payMode}
                                     onChange={option => {
-                                      console.log(option)
                                       props.handleChange("payMode")(option.value)
                                       if (option && option.value) {
                                         this.setState({

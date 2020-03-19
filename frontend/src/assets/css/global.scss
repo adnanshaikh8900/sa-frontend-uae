@@ -327,3 +327,13 @@ th {
 .btn.disabled, .btn:disabled{
   opacity: 1!important;
 }
+
+
+//responsive 
+
+@media screen and (max-width: 767px){
+  .react-bs-table table {
+    table-layout: auto;
+    width: 1200px;
+  }
+}

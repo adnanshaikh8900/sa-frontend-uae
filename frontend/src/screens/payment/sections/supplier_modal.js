@@ -36,6 +36,8 @@ class SupplierModal extends React.Component {
     this.formikRef = React.createRef()
     this.handleSubmit = this.handleSubmit.bind(this)
     this.displayMsg = this.displayMsg.bind(this)
+
+    this.regExAlpha = /^[a-zA-Z]+$/
   }
 
   // Create or Contact
@@ -97,8 +99,9 @@ class SupplierModal extends React.Component {
                           type="text"
                           id="firstName"
                           name="firstName"
-                          onChange={props.handleChange}
-                          placeholder="Enter FirstName "
+                          onChange={(option) => { 
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option) }}
+                          placeholder="Enter First Name "
                           value={props.values.firstName}
                           className={
                             props.errors.firstName && props.touched.firstName
@@ -120,7 +123,8 @@ class SupplierModal extends React.Component {
                           type="text"
                           id="middleName"
                           name="middleName"
-                          onChange={props.handleChange}
+                          onChange={(option) => { 
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option) }}
                           placeholder="Enter Middle Name "
                           value={props.values.middleName}
                           className={
@@ -143,7 +147,8 @@ class SupplierModal extends React.Component {
                           type="text"
                           id="lastName"
                           name="lastName"
-                          onChange={props.handleChange}
+                          onChange={(option) => { 
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option) }}
                           placeholder="Enter Last Name "
                           value={props.values.lastName}
                           className={

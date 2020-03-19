@@ -598,7 +598,7 @@ class CreateSupplierInvoice extends React.Component {
               invoice_number: res.data
             }
           }
-        }, () => { console.log(this.state.initValue) })
+        })
         this.formRef.current.setFieldValue('invoice_number', res.data, true)
       }
     });
@@ -658,6 +658,8 @@ class CreateSupplierInvoice extends React.Component {
                               .required('Term is Required'),
                             invoiceDate: Yup.string()
                               .required('Invoice Date is Required'),
+                              currency: Yup.string()
+															.required('Currency is Required'),
                             lineItemsString: Yup.array()
                               .required('Atleast one invoice sub detail is mandatory')
                               .of(Yup.object().shape({
@@ -874,7 +876,7 @@ class CreateSupplierInvoice extends React.Component {
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="currency">Currency</Label>
+                                  <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                   <Select
                                     className="select-default-width"
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
@@ -882,7 +884,11 @@ class CreateSupplierInvoice extends React.Component {
                                     name="currency"
                                     value={props.values.currency}
                                     onChange={option => props.handleChange('currency')(option)}
-                                  />
+                                    className={`${props.errors.currency && props.touched.currency ? "is-invalid" : ""}`}
+                                    />
+                                    {props.errors.currency && props.touched.currency && (
+                                      <div className="invalid-feedback">{props.errors.currency}</div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col lg={4}>

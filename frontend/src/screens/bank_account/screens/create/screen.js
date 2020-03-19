@@ -56,7 +56,7 @@ class CreateBankAccount extends React.Component {
         account_type: '',
         bank_name: '',
         account_number: '',
-        iban_number: '',
+        ifsc_code: '',
         swift_code: '',
         country: '',
         account_is_for: ''
@@ -65,6 +65,8 @@ class CreateBankAccount extends React.Component {
     }
     this.regExAlpha = /^[a-zA-Z]+$/
     this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+
     this.account_for = [
       { label: 'Personal', value: 'Personal' },
       { label: 'Corporate', value: 'Corporate' }
@@ -100,7 +102,7 @@ class CreateBankAccount extends React.Component {
       account_type,
       bank_name,
       account_number,
-      iban_number,
+      ifsc_code,
       swift_code,
       country,
       account_is_for
@@ -112,7 +114,7 @@ class CreateBankAccount extends React.Component {
       bankAccountType: account_type,
       bankName: bank_name,
       accountNumber: account_number,
-      ibanNumber: iban_number,
+      ifscCode: ifsc_code,
       swiftCode: swift_code,
       bankCountry: country,
       personalCorporateAccountInd: account_is_for
@@ -185,6 +187,7 @@ class CreateBankAccount extends React.Component {
                           account_is_for: Yup.string().required(
                             "Account for is required"
                           ),
+                          swift_code: Yup.string().matches(/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/, {message: "Please enter valid Swift Code.", excludeEmptyString: false})
                         })}
                       >
                         {
@@ -342,16 +345,17 @@ class CreateBankAccount extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="iban_number">IBAN Number</Label>
+                                    <Label htmlFor="ifsc_code">IFSC Code</Label>
                                     <Input
                                       type="text"
-                                      id="iban_number"
-                                      name="iban_number"
-                                      placeholder="Enter IBAN Number"
-                                      value={props.values.iban_number}
-                                      onChange={props.handleChange}
+                                      id="ifsc_code"
+                                      name="ifsc_code"
+                                      placeholder="Enter IFSC Code"
+                                      value={props.values.ifsc_code}
+                                      onChange={(option) => { 
+                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('ifsc_code')(option) }}
                                       className={
-                                        props.errors.iban_number && props.touched.iban_number
+                                        props.errors.ifsc_code && props.touched.ifsc_code
                                           ? 'is-invalid'
                                           : ''
                                       }
@@ -374,6 +378,9 @@ class CreateBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
+                                      {props.errors.swift_code && props.touched.swift_code && (
+                                      <div className="invalid-feedback">{props.errors.swift_code}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={4}>

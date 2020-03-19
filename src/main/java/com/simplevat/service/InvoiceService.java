@@ -11,10 +11,12 @@ import java.util.Map;
 
 public abstract class InvoiceService extends SimpleVatService<Integer, Invoice> {
 
-    public abstract PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> map,PaginationModel paginationModel);
+	public abstract PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> map,
+			PaginationModel paginationModel);
 
-    public abstract List<DropdownModel> getInvoicesForDropdown();
+	public abstract List<DropdownModel> getInvoicesForDropdown();
 
-    public abstract void deleteByIds(List<Integer> ids);
+	public abstract void deleteByIds(List<Integer> ids);
 
+	public abstract Integer getLastInvoiceNo();
 }

@@ -2,6 +2,8 @@ package com.simplevat.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.simplevat.constant.ExpenseStatusEnum;
+import com.simplevat.constant.PayMode;
+import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
@@ -100,6 +102,19 @@ public class Expense implements Serializable {
 	@Basic
 	@Column(name = "STATUS", columnDefinition = "int default 1")
 	private Integer status;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "VAT_ID")
+	private VatCategory vatCategory;
+
+	@Column(name = "PAY_MODE", columnDefinition = "varchar(32) default 'CASH'")
+	@Enumerated(value = EnumType.STRING)
+
+	private PayMode payMode;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "BANK_ACCOUNT_ID")
+	private BankAccount bankAccount;
 
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdateBy;

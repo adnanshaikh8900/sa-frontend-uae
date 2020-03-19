@@ -17,26 +17,41 @@ import com.simplevat.rest.PaginationResponseModel;
 @Service("SupplierInvoiceService")
 public class InvoiceServiceImpl extends InvoiceService {
 
-    @Autowired
-    private InvoiceDao supplierInvoiceDao;
+	@Autowired
+	private InvoiceDao supplierInvoiceDao;
 
-    @Override
-    protected Dao<Integer, Invoice> getDao() {
-        return supplierInvoiceDao;
-    }
+	@Override
+	protected Dao<Integer, Invoice> getDao() {
+		return supplierInvoiceDao;
+	}
 
-    @Override
-    public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> map,PaginationModel paginationModel ) {
-        return supplierInvoiceDao.getInvoiceList(map,paginationModel);
-    }
+	@Override
+	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> map, PaginationModel paginationModel) {
+		return supplierInvoiceDao.getInvoiceList(map, paginationModel);
+	}
 
-    @Override
-    public void deleteByIds(List<Integer> ids) {
-       supplierInvoiceDao.deleteByIds(ids);
-    }
+	@Override
+	public void deleteByIds(List<Integer> ids) {
+		supplierInvoiceDao.deleteByIds(ids);
+	}
 
-    @Override
-    public List<DropdownModel> getInvoicesForDropdown() {
-        return supplierInvoiceDao.getInvoicesForDropdown();
-    }
+	@Override
+	public List<DropdownModel> getInvoicesForDropdown() {
+		return supplierInvoiceDao.getInvoicesForDropdown();
+	}
+
+	@Override
+	public Integer getLastInvoiceNo() {
+
+		Invoice invoice = supplierInvoiceDao.getLastInvoice();
+		if (invoice != null) {
+			try {
+				return new Integer(invoice.getReferenceNumber()) + 1;
+			} catch (Exception e) {
+				// TODO: handle exception
+				return 0;
+			}
+		}
+		return 0;
+	}
 }

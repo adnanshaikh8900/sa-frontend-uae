@@ -38,7 +38,7 @@ const mapStateToProps = state => {
     vat_list: state.expense.vat_list,
     expense_categories_list: state.expense.expense_categories_list,
     bank_list: state.expense.bank_list,
-
+    pay_mode_list: state.expense.pay_mode_list
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -65,10 +65,14 @@ class CreateExpense extends React.Component {
         expenseDescription: "",
         receiptNumber: "",
         attachmentFile: '',
-        receiptAttachmentDescription: ""
+        receiptAttachmentDescription: "",
+        vatCategoryId: '',
+        payMode: '',
+        bankAccountId: ''
       },
       currentData: {},
-      fileName: ""
+      fileName: "",
+      payMode: '',
     };
 
     this.initializeData = this.initializeData.bind(this);
@@ -88,10 +92,11 @@ class CreateExpense extends React.Component {
       "application/vnd.ms-excel",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
-    this.paymentMode= [{
-      label: 'Cash',value: 'cash' },
-     { label: 'Bank',value: 'bank'
-    }]
+
+    this.payMode = [
+      {label:'CASH',value: 'CASH'},
+      {label:'BANK',value: 'BANK'}
+    ]
   }
 
   componentDidMount() {
@@ -105,7 +110,7 @@ class CreateExpense extends React.Component {
     this.props.expenseActions.getProjectList();
     this.props.expenseActions.getEmployeeList();
     this.props.expenseActions.getBankList();
-
+    this.props.expenseActions.getPaymentMode();
   }
 
   handleSubmit(data, resetForm) {
@@ -119,13 +124,17 @@ class CreateExpense extends React.Component {
       employee,
       expenseDescription,
       receiptNumber,
-      receiptAttachmentDescription
+      receiptAttachmentDescription,
+      vatCategoryId,
+      payMode,
+      bankAccountId
     } = data;
     let formData = new FormData();
     formData.append("payee", payee);
     formData.append("expenseDate", expenseDate !== null ? expenseDate : "");
     formData.append("expenseDescription", expenseDescription);
     formData.append("receiptNumber", receiptNumber);
+    formData.append("payMode", payMode);
     formData.append(
       "receiptAttachmentDescription",
       receiptAttachmentDescription
@@ -139,6 +148,12 @@ class CreateExpense extends React.Component {
     }
     if (currency && currency.value) {
       formData.append("currencyCode", currency.value);
+    }
+    if (vatCategoryId && vatCategoryId.value) {
+      formData.append("vatCategoryId", vatCategoryId.value);
+    }
+    if (bankAccountId && bankAccountId.value && payMode === 'BANK') {
+      formData.append("bankAccountId", bankAccountId.value);
     }
     if (project && project.value) {
       formData.append("projectId", project.value);
@@ -189,19 +204,20 @@ class CreateExpense extends React.Component {
     if (file) {
       reader.onloadend = () => { };
       reader.readAsDataURL(file);
-      props.setFieldValue("attachmentFile", file,true);
+      props.setFieldValue("attachmentFile", file, true);
     }
   }
 
   render() {
-    const { initValue } = this.state;
+    const { initValue, payMode } = this.state;
     const {
       currency_list,
       project_list,
       expense_categories_list,
       employee_list,
       vat_list,
-      bank_list
+      bank_list,
+      pay_mode_list
     } = this.props;
 
     return (
@@ -250,17 +266,25 @@ class CreateExpense extends React.Component {
                           expenseAmount: Yup.string()
                             .required("Amount is Required")
                             .matches(/^[0-9]*$/, "Enter a Valid Amount"),
+                           payMode: Yup.string()
+                           .required('Pay Through is Required'), 
+                             bankAccountId: Yup.string()
+                             .when('payMode', {
+                               is: (val) => val === 'BANK' ? true : false,
+                               then: Yup.string()
+                                 .required('Bank Account is Required')
+                             }),
                           attachmentFile: Yup.mixed()
                             .test(
                               "fileType",
                               "*Unsupported File Format",
                               value => {
-                                 value && this.setState({
+                                value && this.setState({
                                   fileName: value.name
                                 });
                                 if (!value ||
-                                 ( value &&
-                                  this.supported_format.includes(value.type))
+                                  (value &&
+                                    this.supported_format.includes(value.type))
                                 ) {
                                   return true;
                                 } else {
@@ -287,7 +311,7 @@ class CreateExpense extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="expenseCategoryId">
-                                  <span className="text-danger">*</span>Expense Category
+                                    <span className="text-danger">*</span>Expense Category
                                   </Label>
                                   <Select
                                     id="expenseCategory"
@@ -352,7 +376,7 @@ class CreateExpense extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="expense_date">
-                                  <span className="text-danger">*</span>Expense Date
+                                    <span className="text-danger">*</span>Expense Date
                                   </Label>
                                   <DatePicker
                                     id="date"
@@ -410,9 +434,9 @@ class CreateExpense extends React.Component {
                                         props.touched.currency
                                         ? "is-invalid"
                                         : ""
-                                      }
+                                    }
                                   />
-                                    {props.errors.currency &&
+                                  {props.errors.currency &&
                                     props.touched.currency && (
                                       <div className="invalid-feedback">
                                         {props.errors.currency}
@@ -498,11 +522,11 @@ class CreateExpense extends React.Component {
                               </Col>
                               <Col lg={2}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="vat">Tax</Label>
+                                  <Label htmlFor="vatCategoryId">Tax</Label>
                                   <Select
                                     className="select-default-width"
-                                    id="vat"
-                                    name="vat"
+                                    id="vatCategoryId"
+                                    name="vatCategoryId"
                                     options={
                                       vat_list
                                         ? selectOptionsFactory.renderOptions(
@@ -513,9 +537,9 @@ class CreateExpense extends React.Component {
                                         )
                                         : []
                                     }
-                                    value={props.values.project}
+                                    value={props.values.vatCategoryId}
                                     onChange={option =>
-                                      props.handleChange("project")(option)
+                                      props.handleChange("vatCategoryId")(option)
                                     }
                                   />
                                 </FormGroup>
@@ -523,50 +547,74 @@ class CreateExpense extends React.Component {
 
                               <Col lg={2}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="pay_through">Pay Through</Label>
+                                  <Label htmlFor="payMode"><span className="text-danger">*</span>Pay Through</Label>
                                   <Select
                                     className="select-default-width"
-                                    id="pay_through"
-                                    name="pay_through"
+                                    id="payMode"
+                                    name="payMode"
                                     options={
-                                      this.paymentMode
-                                        ? selectOptionsFactory.renderOptions(
-                                          "label",
-                                          "value",
-                                          this.paymentMode,
-                                          ""
-                                        )
+                                      pay_mode_list ? selectOptionsFactory.renderOptions(
+                                        "label",
+                                        "value",
+                                        pay_mode_list,
+                                        ""
+                                      )
                                         : []
                                     }
-                                    value={props.values.project}
-                                    onChange={option =>
-                                      props.handleChange("project")(option)
+                                    value={props.values.payMode}
+                                    onChange={option => {
+                                      console.log(option)
+                                      props.handleChange("payMode")(option.value)
+                                      if (option && option.value) {
+                                        this.setState({
+                                          payMode: option.value
+                                        })
+                                      } else {
+                                        this.setState({ payMode: '' })
+                                      }
+                                    }}
+                                    className={
+                                      props.errors.payMode && props.touched.payMode
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
+                                  {props.errors.payMode &&
+                                    props.touched.payMode && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.payMode}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
-
-                              <Col lg={4}>
-                                      <FormGroup className="mb-3">
-                                        <Label htmlFor="bank">Bank</Label>
-                                        <Select
-                                          className="select-default-width"
-                                          id="bank"
-                                          name="bank"
-                                          options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}
-                                          value={props.values.bank}
-                                          onChange={option => props.handleChange('bank')(option)}
-                                          className={
-                                            props.errors.bank && props.touched.bank
-                                              ? 'is-invalid'
-                                              : ''
-                                          }
-                                        />
-                                      </FormGroup>
-                                    </Col>
+                              {payMode === 'BANK' && (<Col lg={4}>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="bankAccountId"><span className="text-danger">*</span>Bank</Label>
+                                  <Select
+                                    className="select-default-width"
+                                    id="bankAccountId"
+                                    name="bankAccountId"
+                                    options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}
+                                    value={props.values.bankAccountId}
+                                    onChange={option => props.handleChange('bankAccountId')(option)}
+                                    className={
+                                      props.errors.bankAccountId && props.touched.bankAccountId
+                                        ? 'is-invalid'
+                                        : ''
+                                    }
+                                  />
+                                  {props.errors.bankAccountId &&
+                                    props.touched.bankAccountId && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.bankAccountId}
+                                      </div>
+                                    )}
+                                </FormGroup>
+                              </Col>)}
                             </Row>
+
                             <Row>
-                            <Col lg={8}>
+                              <Col lg={8}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="expenseDescription">
                                     Description
@@ -674,7 +722,7 @@ class CreateExpense extends React.Component {
                                           </div>
                                         )}
                                       />
-                                      {props.errors.attachmentFile  && props.touched.attachmentFile && (
+                                      {props.errors.attachmentFile && props.touched.attachmentFile && (
                                         <div className="invalid-file">
                                           {props.errors.attachmentFile}
                                         </div>

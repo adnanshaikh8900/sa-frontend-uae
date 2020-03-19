@@ -13,7 +13,6 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import Select from 'react-select'
 import { Loader } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
@@ -22,7 +21,6 @@ import {
   CommonActions
 } from 'services/global'
 
-import { selectOptionsFactory } from 'utils'
 
 import * as ChartOfAccontActions from '../../actions'
 import * as CreateChartOfAccontActions from './actions'
@@ -34,7 +32,7 @@ import * as Yup from "yup";
 
 const mapStateToProps = (state) => {
   return ({
-    transaction_type_list: state.chart_account.transaction_type_list
+    sub_transaction_type_list: state.chart_account.sub_transaction_type_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -61,6 +59,7 @@ class CreateChartAccount extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
     // this.success = this.success.bind(this)
+
   }
 
   componentDidMount() {
@@ -68,7 +67,7 @@ class CreateChartAccount extends React.Component {
   }
 
   initializeData() {
-    this.props.ChartOfAccontActions.getTransactionTypes();
+    this.props.ChartOfAccontActions.getSubTransactionTypes();
   }
   // Show Success Toast
   // success() {
@@ -78,7 +77,7 @@ class CreateChartAccount extends React.Component {
   // }
 
   // Create or Edit Vat
-  handleSubmit(data,resetForm) {
+  handleSubmit(data, resetForm) {
     this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Chart of Account Created Successfully')
@@ -96,9 +95,19 @@ class CreateChartAccount extends React.Component {
     })
   }
 
+  renderOptions = options => {
+    return options.map(option => {
+      return (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      );
+    });
+  };
+
   render() {
     const { loading } = this.state
-    const { transaction_type_list } = this.props
+    const { sub_transaction_type_list } = this.props
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
@@ -118,7 +127,7 @@ class CreateChartAccount extends React.Component {
                       <Formik
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values,resetForm)
+                          this.handleSubmit(values, resetForm)
                         }}
                         validationSchema={
                           Yup.object().shape({
@@ -172,7 +181,7 @@ class CreateChartAccount extends React.Component {
                             </FormGroup>
                             <FormGroup>
                               <Label htmlFor="name"><span className="text-danger">*</span>Type</Label>
-                              <Select
+                              {/* <Select
                                 className="select-default-width"
                                 options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : ''}
                                 value={props.values.chartOfAccount}
@@ -194,14 +203,35 @@ class CreateChartAccount extends React.Component {
                               />
                               {props.errors.chartOfAccount && props.touched.chartOfAccount && (
                                 <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
+                              )} */}
+                              <select
+                                id='chartOfAccount'
+                                className="form-control select-coa"
+                                name='chartOfAccount'
+                                value={props.values.chartOfAccount}
+                                // size="1"
+                                onChange={(e)=>{
+                                  console.log(e.target.value)
+                                  props.handleChange('chartOfAccount')(e.target.value)
+                                }}
+                              >
+                                {Object.keys(sub_transaction_type_list).map((group, index) => {
+                                  return (
+                                    <optgroup key={index} label={group}>
+                                      {this.renderOptions(sub_transaction_type_list[group])}
+                                    </optgroup>
+                                  );
+                                })}
+                              </select>
+                              {props.errors.chartOfAccount && props.touched.chartOfAccount && (
+                                <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                               )}
                             </FormGroup>
-
                             <FormGroup className="text-right mt-5">
-                              <Button type="button" name="submit" color="primary" className="btn-square mr-3"  onClick={() => {
-                                  this.setState({ createMore: false })
-                                  props.handleSubmit()
-                                }}>
+                              <Button type="button" name="submit" color="primary" className="btn-square mr-3" onClick={() => {
+                                this.setState({ createMore: false })
+                                props.handleSubmit()
+                              }}>
                                 <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
                               <Button name="button" color="primary" className="btn-square mr-3"

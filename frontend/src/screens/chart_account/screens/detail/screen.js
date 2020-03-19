@@ -14,15 +14,10 @@ import {
   Col
 } from 'reactstrap'
 import {  toast } from 'react-toastify'
-import Select from 'react-select'
 import _ from 'lodash'
 import { Loader, ConfirmDeleteModal } from 'components'
-
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
-
-import { selectOptionsFactory } from 'utils'
-
 import * as ChartOfAccontActions from '../../actions'
 import * as DetailChartOfAccontActions from './actions'
 
@@ -36,7 +31,7 @@ import {
 
 const mapStateToProps = (state) => {
   return ({
-    transaction_type_list: state.chart_account.transaction_type_list
+    sub_transaction_type_list: state.chart_account.sub_transaction_type_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -66,6 +61,7 @@ class DetailChartAccount extends React.Component {
     this.deleteChartAccount = this.deleteChartAccount.bind(this)
     this.removeChartAccount = this.removeChartAccount.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
+
   }
 
   componentDidMount() {
@@ -76,8 +72,9 @@ class DetailChartAccount extends React.Component {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
       this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then(res => {
+        console.log(res.data)
         if (res.status === 200) {
-          this.props.chartOfAccontActions.getTransactionTypes();
+          this.props.chartOfAccontActions.getSubTransactionTypes();
           this.setState({
             loading: false,
             initValue: {
@@ -156,9 +153,20 @@ class DetailChartAccount extends React.Component {
     })
   }
 
+  renderOptions = options => {
+    return options.map(option => {
+      return (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      );
+    });
+  };
+
+
   render() {
     const { loading, dialog } = this.state
-    const { transaction_type_list } = this.props
+    const { sub_transaction_type_list } = this.props
 
     return (
       <div className="chart-account-screen">
@@ -237,9 +245,9 @@ class DetailChartAccount extends React.Component {
                                 </FormGroup>
                                 <FormGroup>
                                   <Label htmlFor="chartOfAccount"><span className="text-danger">*</span>Type</Label>
-                                  <Select
+                                  {/* <Select
                                     className="select-default-width"
-                                    options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : []}
+                                    options={sub_transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', sub_transaction_type_list,'Type') : []}
                                     value={props.values.chartOfAccount}
                                     onChange={option => {
                                       if(option && option.value) {
@@ -256,7 +264,25 @@ class DetailChartAccount extends React.Component {
                                         ? "is-invalid"
                                         : ""
                                     }
-                                  />
+                                  /> */}
+                                   <select
+                                id='chartOfAccount'
+                                className="form-control select-coa"
+                                name='chartOfAccount'
+                                value={props.values.chartOfAccount}
+                                // size="1"
+                                onChange={(e)=>{
+                                  props.handleChange('chartOfAccount')(e.target.value)
+                                }}
+                              >
+                                {sub_transaction_type_list && Object.keys(sub_transaction_type_list).map((group, index) => {
+                                  return (
+                                    <optgroup key={index} label={group}>
+                                      {this.renderOptions(sub_transaction_type_list[group])}
+                                    </optgroup>
+                                  );
+                                })}
+                              </select>
                                   {props.errors.chartOfAccount && props.touched.chartOfAccount && (
                                     <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                                   )}

@@ -10,8 +10,10 @@ import com.simplevat.entity.Currency;
 import com.simplevat.entity.IndustryType;
 import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
+import com.simplevat.constant.PayMode;
 import com.simplevat.constant.dbfilter.CurrencyFilterEnum;
 import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
@@ -20,11 +22,13 @@ import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
 import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
 import io.swagger.annotations.ApiOperation;
@@ -70,6 +74,9 @@ public class DataListController implements Serializable {
 
 	@Autowired
 	private VatCategoryRestHelper vatCategoryRestHelper;
+
+	@Autowired
+	private TranscationCategoryHelper transcationCategoryHelper;
 
 	@GetMapping(value = "/getcountry")
 	public ResponseEntity getCountry() {
@@ -201,4 +208,41 @@ public class DataListController implements Serializable {
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+	@ApiOperation(value = "get Pay mode (expense)")
+	@GetMapping(value = "/payMode")
+	public ResponseEntity getPayMode() {
+		try {
+			List<PayMode> payModes = Arrays.asList(PayMode.values());
+			if (payModes != null && !payModes.isEmpty()) {
+				List<EnumDropdownModel> modelList = new ArrayList<>();
+				for (PayMode payMode : payModes)
+					modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
+				return new ResponseEntity<>(modelList, HttpStatus.OK);
+			} else {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ApiOperation(value = "All subChartofAccount")
+	@GetMapping(value = "/getsubChartofAccount")
+	public ResponseEntity getsubChartofAccount() {
+		try {
+			List<ChartOfAccount> transactionTypes = transactionTypeService.findAll();
+			if (transactionTypes != null && !transactionTypes.isEmpty()) {
+				return new ResponseEntity<>(transcationCategoryHelper.getDropDownModelList(transactionTypes),
+						HttpStatus.OK);
+			} else {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 }

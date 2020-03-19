@@ -104,7 +104,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 			responseModel.setData(invoiceRestHelper.getListModel(responseModel.getData()));
-			return new ResponseEntity(responseModel,HttpStatus.OK);
+			return new ResponseEntity(responseModel, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -194,6 +194,20 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
+	}
 
+	@ApiOperation(value = "Next invoice No")
+	@GetMapping(value = "/getNextInvoiceNo")
+	public ResponseEntity getNextInvoiceNo(HttpServletRequest request) {
+		try {
+			Integer nxtInvoiceNo = invoiceService.getLastInvoiceNo();
+			if (nxtInvoiceNo == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity(nxtInvoiceNo, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }

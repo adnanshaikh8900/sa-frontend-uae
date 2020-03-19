@@ -94,7 +94,7 @@ public class TransactionCategoryRestController implements Serializable {
 					chartOfAccountService.findByPK(filterModel.getChartOfAccountId()));
 		}
 		filterDataMap.put(TransactionCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
-		
+
 		PaginationResponseModel response = transactionCategoryService.getTransactionCategoryList(filterDataMap,
 				filterModel);
 		if (response == null) {
@@ -169,12 +169,14 @@ public class TransactionCategoryRestController implements Serializable {
 			TransactionCategory selectedTransactionCategory = transactionCategoryService
 					.findByPK(transactionCategoryBean.getTransactionCategoryId());
 			selectedTransactionCategory
-					.setTransactionCategoryCode(transactionCategoryBean.getTransactionCategoryCode());
-			selectedTransactionCategory
 					.setTransactionCategoryName(transactionCategoryBean.getTransactionCategoryName());
-			if (transactionCategoryBean.getChartOfAccount() != null) {
-				selectedTransactionCategory
-						.setChartOfAccount(chartOfAccountService.findByPK(transactionCategoryBean.getChartOfAccount()));
+			if (!transactionCategoryBean.getChartOfAccount()
+					.equals(selectedTransactionCategory.getChartOfAccount().getChartOfAccountId())) {
+				ChartOfAccount chartOfAccount = chartOfAccountService
+						.findByPK(transactionCategoryBean.getChartOfAccount());
+				selectedTransactionCategory.setChartOfAccount(chartOfAccount);
+				selectedTransactionCategory.setTransactionCategoryCode(
+						transactionCategoryService.getNxtTransactionCatCodeByChartOfAccount(chartOfAccount));
 			}
 			selectedTransactionCategory.setLastUpdateBy(user.getUserId());
 			selectedTransactionCategory.setLastUpdateDate(LocalDateTime.now());

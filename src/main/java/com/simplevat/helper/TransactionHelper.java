@@ -7,7 +7,6 @@ package com.simplevat.helper;
 
 import com.simplevat.constant.ChartOfAccountConstant;
 import com.simplevat.constant.PostingReferenceTypeEnum;
-import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Project;
@@ -25,7 +24,6 @@ import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.FileHelper;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;

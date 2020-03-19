@@ -96,12 +96,14 @@ public class InvoiceRestHelper {
 		}
 		if (invoiceModel.getInvoiceDate() != null) {
 			LocalDateTime invoiceDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDate().getTime())
-					.atZone(ZoneId.systemDefault()).toLocalDateTime();
+					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+					.toLocalDateTime();
 			invoice.setInvoiceDate(invoiceDate);
 		}
 		if (invoiceModel.getInvoiceDueDate() != null) {
 			LocalDateTime invoiceDueDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDueDate().getTime())
-					.atZone(ZoneId.systemDefault()).toLocalDateTime();
+					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+					.toLocalDateTime();
 			invoice.setInvoiceDueDate(invoiceDueDate);
 		}
 		if (invoiceModel.getCurrencyCode() != null) {

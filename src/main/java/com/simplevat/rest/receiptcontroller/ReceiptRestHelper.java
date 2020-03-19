@@ -74,7 +74,8 @@ public class ReceiptRestHelper {
 		receipt.setReferenceCode(receiptRequestModel.getReferenceCode());
 		if (receiptRequestModel.getReceiptDate() != null) {
 			LocalDateTime date = Instant.ofEpochMilli(receiptRequestModel.getReceiptDate().getTime())
-					.atZone(ZoneId.systemDefault()).toLocalDateTime();
+					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+					.toLocalDateTime();
 			receipt.setReceiptDate(date);
 		}
 		return receipt;
@@ -94,7 +95,8 @@ public class ReceiptRestHelper {
 			model.setInvoiceId(receipt.getInvoice().getId());
 		}
 		if (receipt.getReceiptDate() != null) {
-			Date date = Date.from(receipt.getReceiptDate().atZone(ZoneId.systemDefault()).toInstant());
+			Date date = Date.from(receipt.getReceiptDate().atZone(ZoneId.systemDefault()).withHour(0).withMinute(0)
+					.withSecond(0).withNano(0).toInstant());
 			model.setReceiptDate(date);
 		}
 		model.setReferenceCode(receipt.getReferenceCode());

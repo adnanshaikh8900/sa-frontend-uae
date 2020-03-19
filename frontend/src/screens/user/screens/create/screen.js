@@ -229,6 +229,8 @@ class CreateUser extends React.Component {
                                         type="text"
                                         id="firstName"
                                         name="firstName"
+                                        value={props.values.firstName}
+                                        placeholder="First Name"
                                         onChange={(value) => { props.handleChange('firstName')(value) }}
                                         className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                       />
@@ -244,6 +246,8 @@ class CreateUser extends React.Component {
                                         type="text"
                                         id="lastName"
                                         name="lastName"
+                                        placeholder ="Last Name"
+                                        value={props.values.lastName}
                                         onChange={(value) => { props.handleChange('lastName')(value) }}
                                         className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                       />
@@ -262,6 +266,7 @@ class CreateUser extends React.Component {
                                         id="email"
                                         name="email"
                                         placeholder="Enter Email ID"
+                                        value={props.values.email}
                                         onChange={(value) => {
                                           props.handleChange("email")(value)
                                         }}
@@ -395,6 +400,7 @@ class CreateUser extends React.Component {
                                         type="password"
                                         id="password"
                                         name="password"
+                                        value={props.values.password}
                                         onChange={(value) => { props.handleChange('password')(value) }}
                                         className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                       />
@@ -410,6 +416,7 @@ class CreateUser extends React.Component {
                                         type="password"
                                         id="confirmPassword"
                                         name="confirmPassword"
+                                        value={props.values.confirmPassword}
                                         onChange={(value) => { props.handleChange('confirmPassword')(value) }}
                                         className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
                                       />

@@ -58,7 +58,7 @@ public class BankAccountRestHelper {
 				bankModel.setAccountNumber(bank.getAccountNumber());
 				bankModel.setBankAccountName(bank.getBankAccountName());
 				bankModel.setBankName(bank.getBankName());
-				bankModel.setIbanNumber(bank.getIbanNumber());
+				bankModel.setIfscCode(bank.getIfscCode());
 				bankModel.setIsprimaryAccountFlag(bank.getIsprimaryAccountFlag());
 				bankModel.setOpeningBalance(bank.getOpeningBalance());
 				bankModel.setPersonalCorporateAccountInd(bank.getPersonalCorporateAccountInd().toString());

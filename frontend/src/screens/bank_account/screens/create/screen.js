@@ -65,6 +65,8 @@ class CreateBankAccount extends React.Component {
     }
     this.regExAlpha = /^[a-zA-Z]+$/
     this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+
     this.account_for = [
       { label: 'Personal', value: 'Personal' },
       { label: 'Corporate', value: 'Corporate' }
@@ -350,7 +352,8 @@ class CreateBankAccount extends React.Component {
                                       name="ifsc_code"
                                       placeholder="Enter IFSC Code"
                                       value={props.values.ifsc_code}
-                                      onChange={props.handleChange}
+                                      onChange={(option) => { 
+                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('ifsc_code')(option) }}
                                       className={
                                         props.errors.ifsc_code && props.touched.ifsc_code
                                           ? 'is-invalid'

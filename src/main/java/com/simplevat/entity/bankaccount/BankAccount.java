@@ -66,8 +66,8 @@ public class BankAccount implements Serializable{
     private String accountNumber;
     
     @Basic
-    @Column(name = "IBAN_NUMBER")
-    private String ibanNumber;
+    @Column(name = "IFSC_CODE")
+    private String ifscCode;
     @Basic
     @Column(name = "SWIFT_CODE")
     private String swiftCode;

@@ -42,8 +42,6 @@ class FilterComponent extends Component {
 	render() {
 		const { initValue } = this.state
 		const {chart_of_account_list} = this.props
-
-		console.log(chart_of_account_list)
 		return (
 			<div>
 				<Card>

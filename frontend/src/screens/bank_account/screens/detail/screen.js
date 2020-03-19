@@ -92,7 +92,7 @@ class DetailBankAccount extends React.Component {
               account_type: res.bankAccountType ? res.bankAccountType : '',
               bank_name: res.bankName,
               account_number: res.accountNumber,
-              iban_number: res.ibanNumber,
+              ifsc_code: res.ifscCode,
               swift_code: res.swiftCode,
               country: res.bankCountry ? res.bankCountry : '',
               account_is_for: res.personalCorporateAccountInd ? res.personalCorporateAccountInd : ''
@@ -132,7 +132,7 @@ class DetailBankAccount extends React.Component {
       personalCorporateAccountInd: data.account_is_for,
       bankName: data.bank_name,
       accountNumber: data.account_number,
-      ibanNumber: data.iban_number,
+      ifscCode: data.ifsc_code,
       swiftCode: data.swift_code,
       openingBalance: data.opening_balance,
       bankCountry: data.country,
@@ -230,7 +230,8 @@ class DetailBankAccount extends React.Component {
                             .required('Bank Name is Required'),
                           account_number: Yup.string()
                             .required('Account Number is Required'),
-                          account_is_for: Yup.string().required('Account is for is Required')
+                          account_is_for: Yup.string().required('Account is for is Required'),
+                          swift_code: Yup.string().matches(/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/, {message: "Please enter valid Swift Code.", excludeEmptyString: false})
                         })}
                       >
                         {
@@ -390,16 +391,16 @@ class DetailBankAccount extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="iban_number">IBAN Number</Label>
+                                    <Label htmlFor="ifsc_code">IFSC Code</Label>
                                     <Input
                                       type="text"
-                                      id="iban_number"
-                                      name="iban_number"
-                                      placeholder="Enter IBAN Number"
-                                      value={props.values.iban_number}
+                                      id="ifsc_code"
+                                      name="ifsc_code"
+                                      placeholder="Enter IFSC Code"
+                                      value={props.values.ifsc_code}
                                       onChange={props.handleChange}
                                       className={
-                                        props.errors.iban_number && props.touched.iban_number
+                                        props.errors.ifsc_code && props.touched.ifsc_code
                                           ? 'is-invalid'
                                           : ''
                                       }
@@ -422,6 +423,9 @@ class DetailBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
+                                      {props.errors.swift_code && props.touched.swift_code && (
+                                      <div className="invalid-feedback">{props.errors.swift_code}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={4}>

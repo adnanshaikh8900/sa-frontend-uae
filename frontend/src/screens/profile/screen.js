@@ -479,7 +479,7 @@ class Profile extends React.Component {
                                 {props => (
                                   <Form onSubmit={props.handleSubmit} encType="multipart/form-data">
                                     <Row>
-                                      <Col xs="4" md="4" lg={2}>
+                                      <Col xs="12" md="4" lg={2}>
                                         <FormGroup className="mb-3 text-center">
                                           {/* <ImagesUploader
                                           // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"

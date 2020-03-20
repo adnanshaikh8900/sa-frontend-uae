@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Button,
@@ -22,11 +22,14 @@ import {
   Message
 } from 'components'
 
+import ForgotPasswordModal from './sections/forgot_password_modal'
+
 import {
   AuthActions
 } from 'services/global'
 
 import './style.scss'
+import logo from 'assets/images/brand/logo.png'
 
 const mapStateToProps = (state) => {
   return ({
@@ -40,26 +43,27 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class LogIn extends React.Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
       username: 'admin123@gmail.com',
       password: 'admin',
-      alert: null
+      alert: null,
+      openForgotPasswordModal: false
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.logInHandler = this.logInHandler.bind(this)
   }
 
-  handleChange (key, val) {
+  handleChange(key, val) {
     this.setState({
       [key]: val
     })
   }
 
-  logInHandler (e) {
+  logInHandler(e) {
     e.preventDefault()
     const { username, password } = this.state
     let obj = {
@@ -84,6 +88,14 @@ class LogIn extends React.Component {
     })
   }
 
+  openForgotPasswordModal = () => {
+    this.setState({ openForgotPasswordModal: true })
+  }
+
+  closeForgotPasswordModal = (res) => {
+    this.setState({ openForgotPasswordModal: false })
+  }
+
   render() {
 
     const { version } = this.props
@@ -95,16 +107,19 @@ class LogIn extends React.Component {
             <Container>
               <Row className="justify-content-center">
                 <Col md="8">
-                  { this.state.alert }
+                  {this.state.alert}
                 </Col>
               </Row>
               <Row className="justify-content-center">
-                <Col md="8">
+                <Col md="6">
                   <CardGroup>
                     <Card className="p-4">
                       <CardBody>
+                        <div className="logo-container">
+                          <img src={logo} alt="logo" />
+                        </div>
                         <Form onSubmit={this.logInHandler}>
-                          <h1>Log In</h1>
+                          {/* <h1>Log In</h1> */}
                           <p className="text-muted">Log In to your account</p>
                           <InputGroup className="mb-3">
                             <InputGroupAddon addonType="prepend">
@@ -149,19 +164,19 @@ class LogIn extends React.Component {
                               </Button>
                             </Col>
                             <Col xs="6" className="text-right">
-                              <Button type="button" color="link" className="px-0">Forgot password?</Button>
+                              <Button type="button" color="link" className="px-0" onClick={this.openForgotPasswordModal}>Forgot password?</Button>
                             </Col>
                           </Row>
                         </Form>
                       </CardBody>
                     </Card>
-                    <Card className="text-white bg-primary d-md-down-none">
+                    {/* <Card className="text-white bg-primary d-md-down-none">
                       <CardHeader className="bg-primary">
                         <div className="text-right">
                           {
                             version !== '' ?
                               <label className="text-white mb-0">v. {version} </label>
-                            :
+                              :
                               ''
                           }
                         </div>
@@ -180,16 +195,20 @@ class LogIn extends React.Component {
                             >
                               <i className="fa fa-user"/> Register Now!
                             </Button>
-                          </Link>
+                          </Link> 
                         </div>
                       </CardBody>
-                    </Card>
+                    </Card> */}
                   </CardGroup>
                 </Col>
               </Row>
             </Container>
           </div>
         </div>
+        <ForgotPasswordModal
+          openForgotPasswordModal={this.state.openForgotPasswordModal}
+          closeForgotPasswordModal={(e) => { this.closeForgotPasswordModal(e) }}
+        />
       </div>
     )
   }

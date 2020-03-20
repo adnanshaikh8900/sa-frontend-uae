@@ -829,7 +829,7 @@ class CreateJournal extends React.Component {
                             <Row>
 
                               <Col lg={12} className="mt-5">
-                                <FormGroup className="text-right">
+                                <FormGroup className="text-right form-action-btn">
                                   <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
                                     // () => {
                                     this.setState({ createMore: false, submitJournal: true }, () => {

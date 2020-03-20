@@ -400,6 +400,7 @@ class CreateUser extends React.Component {
                                         type="password"
                                         id="password"
                                         name="password"
+                                        autoComplete="new-password"
                                         value={props.values.password}
                                         onChange={(value) => { props.handleChange('password')(value) }}
                                         className={props.errors.password && props.touched.password ? "is-invalid" : ""}

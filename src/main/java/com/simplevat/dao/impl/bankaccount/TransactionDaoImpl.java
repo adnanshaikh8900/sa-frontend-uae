@@ -53,18 +53,22 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	}
 
 	@Override
-	public List<Object[]> getCashInData(Date startDate, Date endDate) {
+	public List<Object[]> getCashInData(Date startDate, Date endDate, Integer bankId) {
 		List<Object[]> cashInData = new ArrayList<>(0);
 		try {
 			String queryString = "select "
-					+ "sum(transactionAmount) as total, CONCAT(MONTH(transactionDate),'-' , Year(transactionDate)) as month "
-					+ "from Transaction "
-					+ "where debitCreditFlag = 'c' and transactionDate BETWEEN :startDate AND :endDate "
-					+ "group by CONCAT(MONTH(transactionDate),'-' , Year(transactionDate))";
+					+ "sum(t.transactionAmount) as total, CONCAT(MONTH(t.transactionDate),'-' , Year(t.transactionDate)) as month "
+					+ "from Transaction t "
+					+ "where t.debitCreditFlag = 'c' and t.transactionDate BETWEEN :startDate AND :endDate "
+					+ (bankId != null ? " and t.bankAccount.bankAccountId =:bankId " : " ")
+					+ "group by CONCAT(MONTH(t.transactionDate),'-' , Year(t.transactionDate))";
 
 			Query query = getEntityManager().createQuery(queryString)
 					.setParameter("startDate", dateUtils.get(startDate))
 					.setParameter("endDate", dateUtils.get(endDate));
+			if (bankId != null) {
+				query.setParameter("bankId", bankId);
+			}
 			cashInData = query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,17 +77,21 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	}
 
 	@Override
-	public List<Object[]> getCashOutData(Date startDate, Date endDate) {
+	public List<Object[]> getCashOutData(Date startDate, Date endDate, Integer bankId) {
 		List<Object[]> cashOutData = new ArrayList<>(0);
 		try {
 			String queryString = "select "
-					+ "sum(transactionAmount) as total, CONCAT(MONTH(transactionDate),'-' , Year(transactionDate)) as month "
-					+ "from Transaction "
-					+ "where debitCreditFlag = 'd' and transactionDate BETWEEN :startDate AND :endDate "
-					+ "group by CONCAT(MONTH(transactionDate),'-' , Year(transactionDate))";
+					+ "sum(t.transactionAmount) as total, CONCAT(MONTH(t.transactionDate),'-' , Year(t.transactionDate)) as month "
+					+ "from Transaction t "
+					+ "where t.debitCreditFlag = 'd' and t.transactionDate BETWEEN :startDate AND :endDate "
+					+ (bankId != null ? " and t.bankAccount.bankAccountId =:bankId " : " ")
+					+ "group by CONCAT(MONTH(t.transactionDate),'-' , Year(t.transactionDate))";
 			Query query = getEntityManager().createQuery(queryString)
 					.setParameter("startDate", dateUtils.get(startDate))
 					.setParameter("endDate", dateUtils.get(endDate));
+			if (bankId != null) {
+				query.setParameter("bankId", bankId);
+			}
 			cashOutData = query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();

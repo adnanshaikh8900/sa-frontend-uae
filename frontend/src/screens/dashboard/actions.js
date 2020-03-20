@@ -84,19 +84,20 @@ export const getBankAccountTypes = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getList'
+      url: '/rest/bank/list'
     }
 
     return authApi(data).then(res => {
       dispatch({
         type: DASHBOARD.BANK_ACCOUNT_TYPE,
-        payload: [
-          {id: '1', name: 'Account1'},
-          {id: '2', name: 'Account2'},
-          {id: '3', name: 'Account3'},
-        ]
+        payload: res.data.data 
+        // [
+        //   {id: '1', name: 'Account1'},
+        //   {id: '2', name: 'Account2'},
+        //   {id: '3', name: 'Account3'},
+        // ]
       })
-      return '1'
+      return res;
     }).catch(err => {
       throw err
     })
@@ -105,29 +106,17 @@ export const getBankAccountTypes = () => {
 
 export const getBankAccountGraphData = (account, daterange) => {
   return (dispatch) => {
-    // let data = {
-    //   method: 'GET',
-    //   url: '/rest/vat/getList'
-    // }
-    // return authApi(data).then(res => {
-    //   dispatch({
-    //     type: DASHBOARD.BANK_ACCOUNT_GRAPH,
-    //     payload: res
-    //   })
-    // }).catch(err => {
-    //   throw err
-    // })
-
-    dispatch({
-      type: DASHBOARD.BANK_ACCOUNT_GRAPH,
-      payload: {
-        labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'].slice(0, daterange),
-        data:[65, 23, 100, 2, 23,12, 40, 50, 60, 80, 90],
-        balance: 2000,
-        account_name: account,
-        all_accounts: 3000,
-        updated_date: '01/20/2019'
-      }
+    let data = {
+      method: 'GET',
+      url: '/rest/bank/getBankChart?bankId='+account+'&monthCount='+daterange
+    }
+    return authApi(data).then(res => {
+      dispatch({
+        type: DASHBOARD.BANK_ACCOUNT_GRAPH,
+        payload: res.data
+      })
+    }).catch(err => {
+      throw err
     })
   }
 }

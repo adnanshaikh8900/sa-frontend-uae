@@ -21,9 +21,9 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
 
     Transaction updateOrCreateTransaction(Transaction transaction);
 
-    public List<Object[]> getCashInData(Date startDate, Date endDate);
+    public List<Object[]> getCashInData(Date startDate, Date endDate,Integer bankId);
 
-    public List<Object[]> getCashOutData(Date startDate, Date endDate);
+    public List<Object[]> getCashOutData(Date startDate, Date endDate,Integer bankId);
 
     public Transaction getBeforeTransaction(Transaction transaction);
 

@@ -243,8 +243,8 @@ public class TransactionController implements Serializable {
 	@GetMapping(value = "/getCashFlow")
 	public ResponseEntity getCashFlow(@RequestParam int monthNo) {
 		try {
-			Object obj = chartUtil.getCashFlow(transactionService.getCashInData(monthNo),
-					transactionService.getCashOutData(monthNo));
+			Object obj = chartUtil.getCashFlow(transactionService.getCashInData(monthNo, null),
+					transactionService.getCashOutData(monthNo, null));
 			return new ResponseEntity<>(obj, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

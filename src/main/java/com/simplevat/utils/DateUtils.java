@@ -54,4 +54,8 @@ public class DateUtils {
 		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).withHour(0).withMinute(0)
 				.withSecond(0).withNano(0).toLocalDateTime();
 	}
+
+	public Date get(LocalDateTime date) {
+		return Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
+	}
 }

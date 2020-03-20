@@ -19,7 +19,9 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.mysql.fabric.xmlrpc.base.Array;
+import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.model.ChartData;
+import com.simplevat.model.DashBoardBankDataModel;
 import com.simplevat.service.report.model.BankAccountTransactionReportModel;
 
 import net.bytebuddy.asm.Advice.Return;
@@ -30,9 +32,9 @@ public class ChartUtil {
 
 	public Map<Object, Number> getCashMap(List<Object[]> rows, Integer count) {
 		Map<Object, Number> cashMap = new LinkedHashMap<>(0);
-		if (rows == null || rows.size() == 0) {
-			return cashMap;
-		}
+//		if (rows == null || rows.size() == 0) {
+//			return cashMap;
+//		}
 		List<ChartData> chartDatas = convert(rows);
 		Collections.sort(chartDatas);
 
@@ -44,7 +46,7 @@ public class ChartUtil {
 		return cashMap;
 	}
 
-	private List<ChartData> convert(List<Object[]> rows) {
+	public List<ChartData> convert(List<Object[]> rows) {
 		List<ChartData> chartDatas = new ArrayList<ChartData>();
 		for (Object[] row : rows) {
 			String[] transactionDate = ((String) row[1]).split("-");
@@ -82,7 +84,7 @@ public class ChartUtil {
 		return amount;
 	}
 
-	private List<ChartData> populateForAlltheMonths(List<ChartData> chartDatas, Integer count) {
+	public List<ChartData> populateForAlltheMonths(List<ChartData> chartDatas, Integer count) {
 		List<ChartData> emptyChartDatas = getEmptyChartData(count);
 		if (chartDatas == null || chartDatas.size() == 0) {
 			return emptyChartDatas;
@@ -161,10 +163,6 @@ public class ChartUtil {
 	}
 
 	public Object getCashFlow(Map<Object, Number> inflow, Map<Object, Number> outFlow) {
-		Map<Object, Number> cashMap = new LinkedHashMap<>(0);
-		if (inflow == null || inflow.size() == 0) {
-			return cashMap;
-		}
 
 		List<Object> months = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -191,5 +189,4 @@ public class ChartUtil {
 		map.put("labels", months);
 		return (map);
 	}
-
 }

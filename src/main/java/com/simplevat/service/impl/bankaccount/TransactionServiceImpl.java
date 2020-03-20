@@ -66,18 +66,18 @@ public class TransactionServiceImpl extends TransactionService {
 	}
 
 	@Override
-	public Map<Object, Number> getCashOutData(Integer monthNo) {
+	public Map<Object, Number> getCashOutData(Integer monthNo, Integer bankId) {
 		List<Object[]> rows = transactionDao
 				.getCashOutData(monthNo != null ? util.getStartDate(Calendar.MONTH, -monthNo).getTime()
-						: util.getStartDate(Calendar.YEAR, -1).getTime(), util.getEndDate().getTime());
+						: util.getStartDate(Calendar.YEAR, -1).getTime(), util.getEndDate().getTime(), bankId);
 		return util.getCashMap(rows, monthNo);
 	}
 
 	@Override
-	public Map<Object, Number> getCashInData(Integer monthNo) {
+	public Map<Object, Number> getCashInData(Integer monthNo, Integer bankId) {
 		List<Object[]> rows = transactionDao
 				.getCashInData(monthNo != null ? util.getStartDate(Calendar.MONTH, -monthNo).getTime()
-						: util.getStartDate(Calendar.YEAR, -1).getTime(), util.getEndDate().getTime());
+						: util.getStartDate(Calendar.YEAR, -1).getTime(), util.getEndDate().getTime(), bankId);
 		return util.getCashMap(rows, monthNo);
 	}
 

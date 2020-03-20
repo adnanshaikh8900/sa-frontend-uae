@@ -117,11 +117,12 @@
 			<version>3.5</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-			<version>4.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.apache.commons</groupId>-->
+<!--			<artifactId>commons-collections4</artifactId>-->
+<!--			<version>4.0</version>-->
+<!--		</dependency>-->
+
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -233,7 +234,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin> 
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

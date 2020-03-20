@@ -295,7 +295,7 @@ render() {
                 </div>
                 {loading ? <Loader /> : (
                   <div className="table-wrapper">
-                    <Table>
+                    <Table responsive>
                       <tr className="header-row">
                         {this.columnHeader.map((column, index) => {
                           return <th key={index} style={{ fontWeight: '600' }} className={column.align ? 'text-right' : ''}

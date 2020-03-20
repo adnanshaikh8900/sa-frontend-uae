@@ -311,7 +311,6 @@ class Receipt extends React.Component {
                             <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'receiptReferenceCode') }} />
                           </Col>
                           <Col lg={3} className="mb-1">
-                            <FormGroup className="mb-3">
                               <Select
                                 options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
                                 className="select-default-width"
@@ -326,10 +325,8 @@ class Receipt extends React.Component {
                                   }
                                 }}
                               />
-                            </FormGroup>
                           </Col>
                           <Col lg={3} className="mb-1">
-                            <FormGroup className="mb-3">
                               <Select
                                 options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer') : []}
                                 className="select-default-width"
@@ -344,7 +341,6 @@ class Receipt extends React.Component {
                                   }
                                 }}
                               />
-                            </FormGroup>
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>

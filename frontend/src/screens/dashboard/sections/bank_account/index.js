@@ -65,8 +65,11 @@ class BankAccount extends Component {
   }
 
   componentDidMount(){
-    this.props.DashboardActions.getBankAccountTypes().then(firstAccount => {
-      this.getBankAccountGraphData(firstAccount, 12)
+    this.props.DashboardActions.getBankAccountTypes().then(res => {
+      if(res.status === 200) {
+        let val = res.data && res.data.data ? res.data.data[0].bankAccountId : ''
+        this.getBankAccountGraphData(val, 12)
+      }
     })
   }
 
@@ -152,10 +155,10 @@ class BankAccount extends Component {
                       <select className="form-control bank-type-select" ref={this.bankAccountSelect} onChange={(e) => this.handleChange(e)}>
                         {
                           this.props.bank_account_type.map((account, index) => 
-                              <option key={index} value={account.name}>{account.name}</option>)
+                              <option key={index} value={account.bankAccountId}>{account.name}</option>)
                         }
                       </select>
-                      <p style={{fontWeight: 500, textIndent: 5}}>Last updated on 01/20/2019</p>
+                      <p style={{fontWeight: 500, textIndent: 5}}>Last updated on {this.props.bank_account_graph.updatedDate}</p>
                     </div>
                   </div>
                   </div>
@@ -163,7 +166,7 @@ class BankAccount extends Component {
                   <div className="data-info">
                     <div className="data-item">
                       <div>
-                        <h3>$12,640</h3>
+                        <h3>${this.props.bank_account_graph.balance}</h3>
                         <p>BALANCE</p>
                       </div>
                     </div>

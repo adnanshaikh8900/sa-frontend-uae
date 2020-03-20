@@ -16,25 +16,25 @@ export const getCashFlowGraphData = (daterange) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getList'
+      url: '/rest/transaction/getCashFlow?monthNo='+daterange
     }
 
     return authApi(data).then(res => {
       dispatch({
         type: DASHBOARD.CASH_FLOW_GRAPH,
-        payload: {
-          labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'].slice(0, daterange),
-          inflow: {
-            label: 'inflow',
-            data: [3000, 5000, 7000, 2000, 5000, 5000, 2000, 1000, 5000, 2000, 6000, 3000, 1000, 2000],
-            sum: 184000
-          },
-          outflow: {
-            label: 'Outflow',
-            data: [2500, 6000, 4000, 4000, 1000, 2500, 5300, 1100, 4530, 2000, 4000, 4000, 4000, 3000 ],
-            sum: 3000
-          }
-        }
+         payload: res.data//{
+        //   labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'].slice(0, daterange),
+        //   inflow: {
+        //     label: 'inflow',
+        //     data: [3000, 5000, 7000, 2000, 5000, 5000, 2000, 1000, 5000, 2000, 6000, 3000, 1000, 2000],
+        //     sum: 184000
+        //   },
+        //   outflow: {
+        //     label: 'Outflow',
+        //     data: [2500, 6000, 4000, 4000, 1000, 2500, 5300, 1100, 4530, 2000, 4000, 4000, 4000, 3000],
+        //     sum: 3000
+        //   }
+        // }
       })
     }).catch(err => {
       throw err

@@ -24,9 +24,9 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
 
     public abstract Transaction updateOrCreateTransaction(Transaction transaction);
 
-    public abstract Map<Object, Number> getCashOutData();
+    public abstract Map<Object, Number> getCashOutData(Integer monthNo);
 
-    public abstract Map<Object, Number> getCashInData();
+    public abstract Map<Object, Number> getCashInData(Integer monthNo);
 
     public abstract int getMaxTransactionValue(Map<Object, Number> cashInMap, Map<Object, Number> cashOutMap);
 
@@ -86,5 +86,10 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
 
 	public abstract PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,
 			PaginationModel paginationModel) ;
+
+	public void getForDashBoardCashFlow() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

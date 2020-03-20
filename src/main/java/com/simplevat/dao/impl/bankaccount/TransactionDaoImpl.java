@@ -44,6 +44,9 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	@Autowired
 	private BankAccountDao bankAccountDao;
 
+	@Autowired
+	private DateUtils dateUtils;
+
 	@Override
 	public Transaction updateOrCreateTransaction(Transaction transaction) {
 		return this.update(transaction);
@@ -60,8 +63,8 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 					+ "group by CONCAT(MONTH(transactionDate),'-' , Year(transactionDate))";
 
 			Query query = getEntityManager().createQuery(queryString)
-					.setParameter("startDate", startDate, TemporalType.DATE)
-					.setParameter("endDate", endDate, TemporalType.DATE);
+					.setParameter("startDate", dateUtils.get(startDate))
+					.setParameter("endDate", dateUtils.get(endDate));
 			cashInData = query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -79,8 +82,8 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 					+ "where debitCreditFlag = 'd' and transactionDate BETWEEN :startDate AND :endDate "
 					+ "group by CONCAT(MONTH(transactionDate),'-' , Year(transactionDate))";
 			Query query = getEntityManager().createQuery(queryString)
-					.setParameter("startDate", startDate, TemporalType.DATE)
-					.setParameter("endDate", endDate, TemporalType.DATE);
+					.setParameter("startDate", dateUtils.get(startDate))
+					.setParameter("endDate", dateUtils.get(endDate));
 			cashOutData = query.getResultList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -496,4 +499,12 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				this.executeQuery(dbFilters, paginationModel));
 	}
 
+	@Override
+	public Transaction getForDashBoardCashFlow() {
+		// List<Object> transactions =
+		// getEntityManager().createNamedQuery("getForDashBoardCashFlow").getResultList();
+
+		return null;// transactions != null && !transactions.isEmpty() ? transactions.get(0) : null;
+
+	}
 }

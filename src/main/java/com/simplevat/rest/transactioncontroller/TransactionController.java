@@ -10,6 +10,7 @@ import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
+import com.simplevat.entity.Currency;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.bankaccount.Transaction;
@@ -21,6 +22,7 @@ import com.simplevat.service.BankAccountService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
+import com.simplevat.util.ChartUtil;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.FileHelper;
@@ -39,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,6 +86,9 @@ public class TransactionController implements Serializable {
 
 	@Autowired
 	private FileHelper fileHelper;
+
+	@Autowired
+	private ChartUtil chartUtil;
 
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
@@ -232,4 +239,16 @@ public class TransactionController implements Serializable {
 //        }
 //        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 //    }
+
+	@GetMapping(value = "/getCashFlow")
+	public ResponseEntity getCashFlow(@RequestParam int monthNo) {
+		try {
+			Object obj = chartUtil.getCashFlow(transactionService.getCashInData(monthNo),
+					transactionService.getCashOutData(monthNo));
+			return new ResponseEntity<>(obj, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

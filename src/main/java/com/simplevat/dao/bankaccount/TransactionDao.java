@@ -72,4 +72,6 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,
 			PaginationModel paginationModel);
 
+	public Transaction getForDashBoardCashFlow();
+
 }

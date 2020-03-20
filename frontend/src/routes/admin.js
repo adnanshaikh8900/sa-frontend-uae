@@ -565,7 +565,7 @@ const adminRoutes = [
   {
     redirect: true,
     path: '/admin/settings',
-    pathTo: '/admin/settings',
+    pathTo: '/admin/settings/user',
     name: 'Settings'
   },
 

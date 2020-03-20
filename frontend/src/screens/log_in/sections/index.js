@@ -1,5 +1,7 @@
 import Temp from './temp'
+import ForgotPasswordModal from './ForgotPasswordModal'
 
 export {
-  Temp
+  Temp,
+  ForgotPasswordModal
 }

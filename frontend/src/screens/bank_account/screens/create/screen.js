@@ -439,7 +439,7 @@ class CreateBankAccount extends React.Component {
                               </Row>
                               <Row>
                                 <Col lg={12}>
-                                  <FormGroup className="text-right mt-5">
+                                  <FormGroup className="text-right mt-5 form-action-btn">
                                     <Button type="submit" name="submit" color="primary" className="btn-square mr-3">
                                       <i className="fa fa-dot-circle-o"></i> Create
                                     </Button>

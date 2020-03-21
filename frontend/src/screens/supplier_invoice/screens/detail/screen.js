@@ -1228,6 +1228,8 @@ class DetailSupplierInvoice extends React.Component {
           createSupplier={this.props.supplierInvoiceActions.createSupplier}
           currency_list={this.props.currency_list}
           country_list={this.props.country_list}
+					getStateList={this.props.supplierInvoiceActions.getStateList}
+
         />
       </div>
     )

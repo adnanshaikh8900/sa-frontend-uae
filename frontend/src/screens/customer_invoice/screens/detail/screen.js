@@ -1223,7 +1223,9 @@ class DetailCustomerInvoice extends React.Component {
 					createCustomer={this.props.customerInvoiceActions.createCustomer}
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}
-				/>
+					getStateList={this.props.customerInvoiceActions.getStateList}
+			
+			/>
 			</div>
 		)
 	}

@@ -95,3 +95,22 @@ export const getContactTypeList = () => {
     })
   }
 }
+
+export const getStateList = (countryCode) => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/datalist/getstate?countryCode=' + countryCode
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: CONTACT.STATE_LIST,
+          payload: res.data
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}

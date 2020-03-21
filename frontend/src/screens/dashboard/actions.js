@@ -155,3 +155,17 @@ export const getRevenuesGraphData = () => {
     })
   }
 }
+
+export const getTotalBalance = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/bank/getTotalBalance`
+    }
+    return authApi(data).then(res => {
+      return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}

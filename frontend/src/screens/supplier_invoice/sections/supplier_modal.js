@@ -19,8 +19,9 @@ import * as Yup from "yup";
 
 import { selectOptionsFactory } from 'utils'
 import { toast } from 'react-toastify'
-
-
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+import { isValidPhoneNumber } from 'react-phone-number-input'
 
 class SupplierModal extends React.Component {
 
@@ -122,9 +123,16 @@ class SupplierModal extends React.Component {
                   .email("Invalid Email"),
                 telephone: Yup.number()
                   .required("Telephone Number is Required"),
-                mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, { message: "Please enter valid number.", excludeEmptyString: false })
-                  .required("Mobile Number is required"),
-                //     addressLine1: Yup.string()
+                  mobileNumber: Yup.string()
+                  .required("Mobile Number is required")
+                  .test('quantity', 'Invalid Mobile Number', value => {
+                    if (isValidPhoneNumber(value)) {
+                      return true
+                    } else {
+                      return false
+                    }
+                  }),
+                 //     addressLine1: Yup.string()
                 //       .required("Address is required"),
                 countryId: Yup.string().required("Country is Required")
                   .nullable(),
@@ -418,7 +426,25 @@ class SupplierModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="mobileNumber"> <span className="text-danger">*</span>Mobile Number</Label>
-                          <Input
+                          <PhoneInput
+                            defaultCountry="AE"
+                            international
+                            value={props.values.mobileNumber}
+                            onChange={(option) => { props.handleChange('mobileNumber')(option) }}
+                            className={
+                              props.errors.mobileNumber &&
+                                props.touched.mobileNumber
+                                ? "is-invalid"
+                                : ""
+                            }
+                          />
+                          {props.errors.mobileNumber &&
+                            props.touched.mobileNumber && (
+                              <div className="invalid-feedback">
+                                {props.errors.mobileNumber}
+                              </div>
+                            )}
+                          {/* <Input
                             type="text"
                             id="mobileNumber"
                             name="mobileNumber"
@@ -437,7 +463,7 @@ class SupplierModal extends React.Component {
                               <div className="invalid-feedback">
                                 {props.errors.mobileNumber}
                               </div>
-                            )}
+                            )} */}
                         </FormGroup>
                       </Col>
                     </Row>

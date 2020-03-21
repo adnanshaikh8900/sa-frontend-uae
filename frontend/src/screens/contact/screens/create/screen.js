@@ -34,6 +34,7 @@ import { isValidPhoneNumber } from 'react-phone-number-input'
 const mapStateToProps = (state) => {
   return ({
     country_list: state.contact.country_list,
+    state_list: state.contact.state_list,
     currency_list: state.contact.currency_list,
     contact_type_list: state.contact.contact_type_list
   })
@@ -71,7 +72,7 @@ class CreateContact extends React.Component {
         organization: '',
         poBoxNumber: '',
         postZipCode: '',
-        stateRegion: '',
+        stateId: '',
         telephone: '',
         vatRegistrationNumber: '',
       },
@@ -109,8 +110,12 @@ class CreateContact extends React.Component {
     })
   }
 
+  getStateList(countryCode) {
+    this.props.contactActions.getStateList(countryCode);
+  }
+
   render() {
-    const { currency_list, country_list, contact_type_list } = this.props;
+    const { currency_list, country_list, contact_type_list, state_list } = this.props;
     const { initValue } = this.state;
     return (
       <div className="create-contact-screen">
@@ -167,10 +172,12 @@ class CreateContact extends React.Component {
                             //       .required("Address is required"),
                             countryId: Yup.string().required("Country is Required")
                               .nullable(),
-                            //     stateRegion: Yup.string()
-                            //       .required("State is Required"),
-                            //     city: Yup.string()
-                            //       .required("City is Required"),
+                            stateId: Yup.string()
+                              .when('countryId', {
+                                is: (val) => val ? true : false,
+                                then: Yup.string()
+                                  .required('State is Required')
+                              }),
                             postZipCode: Yup.string()
                               .required("Postal Code is Required"),
                             //     billingEmail: Yup.string()
@@ -473,10 +480,13 @@ class CreateContact extends React.Component {
                                     options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                     value={props.values.countryId}
                                     onChange={option => {
+                                      console.log(option.value)
                                       if (option && option.value) {
                                         props.handleChange('countryId')(option.value)
+                                        this.getStateList(option.value)
                                       } else {
                                         props.handleChange('countryId')('')
+                                        props.handleChange('stateId')('')
                                       }
                                     }}
                                     placeholder="Select Country"
@@ -496,22 +506,28 @@ class CreateContact extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="stateRegion">State Region</Label>
-                                  <Input
-                                    // options={stateRegion ? selectOptionsFactory.renderOptions('stateName', 'stateCode', stateRegion) : ''}
-                                    value={props.values.stateRegion}
-                                    onChange={option => props.handleChange('stateRegion')(option)}
-                                    placeholder=""
-                                    id="stateRegion"
-                                    name="stateRegion"
+                                  <Label htmlFor="stateId">State Region</Label>
+                                  <Select
+                                    options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
+                                    value={props.values.stateId}
+                                    onChange={option => {
+                                      if (option && option.value) {
+                                        props.handleChange('stateId')(option.value)
+                                      } else {
+                                        props.handleChange('stateId')('')
+                                      }
+                                    }}
+                                    placeholder="Select Country"
+                                    id="stateId"
+                                    name="stateId"
                                     className={
-                                      props.errors.stateRegion && props.touched.stateRegion
+                                      props.errors.stateId && props.touched.stateId
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.stateRegion && props.touched.stateRegion && (
-                                    <div className="invalid-feedback">{props.errors.stateRegion}</div>
+                                  {props.errors.stateId && props.touched.stateId && (
+                                    <div className="invalid-feedback">{props.errors.stateId}</div>
                                   )}
 
                                 </FormGroup>

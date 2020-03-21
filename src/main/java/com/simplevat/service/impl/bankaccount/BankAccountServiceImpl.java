@@ -1,5 +1,6 @@
 package com.simplevat.service.impl.bankaccount;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -118,5 +119,10 @@ public class BankAccountServiceImpl extends BankAccountService {
 		model.setAccount_name(bank.getBankAccountName());
 		return model;
 
+	}
+
+	@Override
+	public BigDecimal getAllBankAccountsTotalBalance() {
+		return bankAccountDao.getAllBankAccountsTotalBalance();
 	}
 }

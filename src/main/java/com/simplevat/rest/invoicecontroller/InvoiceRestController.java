@@ -15,6 +15,7 @@ import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.InvoiceService;
+import com.simplevat.util.ChartUtil;
 import com.simplevat.utils.FileHelper;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
@@ -66,6 +67,9 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 
 	@Autowired
 	private FileHelper fileHelper;
+
+	@Autowired
+	private ChartUtil chartUtil;
 
 	@ApiOperation(value = "Get Invoice List")
 	@GetMapping(value = "/getList")
@@ -198,13 +202,28 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 
 	@ApiOperation(value = "Next invoice No")
 	@GetMapping(value = "/getNextInvoiceNo")
-	public ResponseEntity getNextInvoiceNo(HttpServletRequest request) {
+	public ResponseEntity getNextInvoiceNo() {
 		try {
 			Integer nxtInvoiceNo = invoiceService.getLastInvoiceNo();
 			if (nxtInvoiceNo == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity(nxtInvoiceNo, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@ApiOperation(value = "Get chart data")
+	@GetMapping(value = "/getChartData")
+	public ResponseEntity getChartData(@RequestParam int monthCount) {
+		try {
+			List<Invoice> invList = invoiceService.getInvoiceList(monthCount);
+			if (invList == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity(chartUtil.getinvoiceData(invList, monthCount), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -104,7 +104,6 @@ class ContactModal extends React.Component {
                         <FormGroup>
                           <Label htmlFor="categoryCode"><span className="text-danger">*</span>Title</Label>
                           <Select
-                            className="select-default-width"
                             options={titleList? selectOptionsFactory.renderOptions('titleName', 'titleCode', titleList): []}
                             id="title"
                             onChange={(option) => {
@@ -117,7 +116,7 @@ class ContactModal extends React.Component {
                             value={this.state.selectedContactTitle}
                             name="title"
                             className={
-                              props.errors.title && props.touched.title
+                              props.errors.title && (props.touched.title)
                               ? "is-invalid"
                               : ""
                             }
@@ -307,7 +306,6 @@ class ContactModal extends React.Component {
                       <FormGroup>
                         <Label htmlFor="categoryName"><span className="text-danger">*</span>Country</Label>
                         <Select
-                        className="select-default-width"
                         options={countryList ? selectOptionsFactory.renderOptions('countryName', 'countryCode', countryList): []}
                         id="country"
                         onChange={(option) => {
@@ -341,9 +339,7 @@ class ContactModal extends React.Component {
                       <FormGroup>
                         <Label htmlFor="categoryName"><span className="text-danger">*</span>Currency Code</Label>
                         <Select
-                        className="select-default-width"
                         options={currencyList ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currencyList): []}
-
                         id="currency"
                         onChange={(option) => {
                           this.setState({

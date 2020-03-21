@@ -243,7 +243,7 @@ class DetailExpense extends React.Component {
 
   render() {
     const { currency_list, project_list, employee_list, bank_list, vat_list, expense_categories_list, pay_mode_list } = this.props
-    const { initValue, loading, dialog, payMode } = this.state
+    const { initValue, loading, dialog} = this.state
 
     return (
       <div className="detail-expense-screen">
@@ -394,7 +394,6 @@ class DetailExpense extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                       <Select
-                                        className="select-default-width"
                                         id="currencyCode"
                                         name="currencyCode"
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
@@ -490,7 +489,6 @@ class DetailExpense extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="pay_through">Pay Through</Label>
                                       <Select
-                                        className="select-default-width"
                                         id="pay_through"
                                         name="pay_through"
                                         options={
@@ -533,7 +531,6 @@ class DetailExpense extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="bankAccountId">bankAccountId</Label>
                                       <Select
-                                        className="select-default-width"
                                         id="bankAccountId"
                                         name="bankAccountId"
                                         options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}

@@ -412,7 +412,6 @@ class CreateExpense extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                   <Select
-                                    className="select-default-width"
                                     id="currencyCode"
                                     name="currencyCode"
                                     options={
@@ -549,7 +548,6 @@ class CreateExpense extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="payMode"><span className="text-danger">*</span>Pay Through</Label>
                                   <Select
-                                    className="select-default-width"
                                     id="payMode"
                                     name="payMode"
                                     options={
@@ -590,7 +588,6 @@ class CreateExpense extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="bankAccountId"><span className="text-danger">*</span>Bank</Label>
                                   <Select
-                                    className="select-default-width"
                                     id="bankAccountId"
                                     name="bankAccountId"
                                     options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}

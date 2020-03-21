@@ -9,7 +9,6 @@ import {
   Row,
   Col,
   ButtonGroup,
-  FormGroup,
   Input
 } from 'reactstrap'
 import Select from 'react-select'

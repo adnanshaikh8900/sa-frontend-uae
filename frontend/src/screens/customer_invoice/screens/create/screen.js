@@ -599,9 +599,7 @@ class CreateCustomerInvoice extends React.Component {
 			if (res.status === 200) {
 				this.setState({
 					initValue: {
-						... this.state.initValue, ...{
-							invoice_number: res.data
-						}
+						...this.state.initValue, ...{invoice_number: res.data}
 					}
 				})
 				this.formRef.current.setFieldValue('invoice_number', res.data, true)
@@ -786,7 +784,6 @@ class CreateCustomerInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term"><span className="text-danger">*</span>Terms <i className="fa fa-question-circle"></i></Label>
 																	<Select
-																		className="select-default-width"
 																		options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
 																		id="term"
 																		name="term"
@@ -869,7 +866,6 @@ class CreateCustomerInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
 																	<Select
-																		className="select-default-width"
 																		options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
 																		id="currency"
 																		name="currency"

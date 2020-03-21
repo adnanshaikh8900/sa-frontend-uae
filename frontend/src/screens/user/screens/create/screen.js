@@ -301,7 +301,6 @@ class CreateUser extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="roleId">Role</Label>
                                       <Select
-                                        className="select-default-width"
                                         options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                                         value={props.values.roleId}
                                         onChange={option => {

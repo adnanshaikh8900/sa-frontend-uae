@@ -261,7 +261,6 @@ class DetailBankTransaction extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="chartOfAccountId"><span className="text-danger">*</span>Transaction Type</Label>
                                       <Select
-                                        className="select-default-width"
                                         options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type') : ''}
                                         value={props.values.chartOfAccountId}
                                         onChange={option => {

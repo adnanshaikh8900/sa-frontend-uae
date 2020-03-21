@@ -9,7 +9,6 @@ import {
   Row,
   Col,
   ButtonGroup,
-  FormGroup,
   Input
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'

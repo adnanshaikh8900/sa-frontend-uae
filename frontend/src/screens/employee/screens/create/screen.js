@@ -402,7 +402,6 @@ class CreateEmployee extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="currencyCode">Currency Code</Label>
                                   <Select
-                                    className="select-default-width"
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currencyCode}
                                     onChange={option => {

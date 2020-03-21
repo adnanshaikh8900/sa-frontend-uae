@@ -793,7 +793,6 @@ class DetailCustomerInvoice extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="term"><span className="text-danger">*</span>Terms <i className="fa fa-question-circle"></i></Label>
 																			<Select
-																				className="select-default-width"
 																				options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
 																				id="term"
 																				name="term"
@@ -848,7 +847,6 @@ class DetailCustomerInvoice extends React.Component {
 																			<Label htmlFor="due_date">Invoice Due Date</Label>
 																			<div>
 																				<DatePicker
-																					className="form-control"
 																					id="invoiceDueDate"
 																					name="invoiceDueDate"
 																					placeholderText="Invoice Due Date"
@@ -876,7 +874,6 @@ class DetailCustomerInvoice extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
 																			<Select
-																				className="select-default-width"
 																				options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
 																				id="currency"
 																				name="currency"

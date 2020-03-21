@@ -1,11 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   CardGroup,
   Col,
@@ -97,9 +95,6 @@ class LogIn extends React.Component {
   }
 
   render() {
-
-    const { version } = this.props
-
     return (
       <div className="log-in-screen">
         <div className="animated fadeIn">

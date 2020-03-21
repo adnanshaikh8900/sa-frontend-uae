@@ -127,7 +127,7 @@ class VatTransactions extends React.Component {
   }
 
   getAction(cell, row) {
-    return(<a href="#">Detail</a>)
+    return(<button className="btn">Detail</button>)
   }
 
   render() {

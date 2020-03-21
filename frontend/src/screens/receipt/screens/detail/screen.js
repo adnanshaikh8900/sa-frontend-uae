@@ -279,7 +279,6 @@ class DetailReceipt extends React.Component {
                                       <Label htmlFor="customer_name"><span className="text-danger">*</span>Customer Name</Label>
                                       <Select
                                         options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer Name') : []}
-                                        className="select-default-width"
                                         placeholder="Customer Name"
                                         value={props.values.contactId}
                                         onChange={(option) => {
@@ -341,10 +340,8 @@ class DetailReceipt extends React.Component {
                                         id="amount"
                                         name="amount"
                                         placeholder="Amount"
-                                        value={props.values.amount}
                                         onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('amount')(option) }}
                                         value={props.values.amount}
-    
                                         className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
     
                                       />

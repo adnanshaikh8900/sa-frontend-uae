@@ -298,7 +298,6 @@ class ImportBankStatement extends React.Component {
                                     <label><span className="text-danger">*</span>Parsing Template</label>
                                     <FormGroup>
                                       <Select
-                                        className="select-default-width"
                                         options={templateList ? templateList : []}
                                         value={this.state.selectedTemplate}
                                         onChange={option => {

@@ -629,7 +629,6 @@ class CreateJournal extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="date"><span className="text-danger">*</span>Journal Date</Label>
                                   <DatePicker
-                                    className="form-control"
                                     id="journalDate"
                                     name="journalDate"
                                     placeholderText="Journal Date"

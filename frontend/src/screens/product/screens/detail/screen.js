@@ -321,7 +321,6 @@ class DetailProduct extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="vatCategoryId"><span className="text-danger">*</span>Vat Percentage</Label>
                                   <Select
-                                    className="select-default-width"
                                     options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list,'Vat') : []}
                                     id="vatCategoryId"
                                     name="vatCategoryId"

@@ -261,7 +261,6 @@ class CreateContact extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="countryId">Contact Type</Label>
                                   <Select
-                                    className="select-default-width"
                                     options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                     value={props.values.contactType}
                                     onChange={option => {
@@ -471,7 +470,6 @@ class CreateContact extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="countryId"><span className="text-danger">*</span>Country</Label>
                                   <Select
-                                    className="select-default-width"
                                     options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                     value={props.values.countryId}
                                     onChange={option => {
@@ -500,7 +498,6 @@ class CreateContact extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="stateRegion">State Region</Label>
                                   <Input
-                                    className="select-default-width"
                                     // options={stateRegion ? selectOptionsFactory.renderOptions('stateName', 'stateCode', stateRegion) : ''}
                                     value={props.values.stateRegion}
                                     onChange={option => props.handleChange('stateRegion')(option)}
@@ -523,7 +520,6 @@ class CreateContact extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="city">City</Label>
                                   <Input
-                                    className="select-default-width"
                                     // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                                     value={props.values.city}
                                     onChange={option => props.handleChange('city')(option)}
@@ -642,7 +638,6 @@ class CreateContact extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="currencyCode">Currency Code</Label>
                                   <Select
-                                    className="select-default-width"
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currencyCode}
                                     onChange={option => {

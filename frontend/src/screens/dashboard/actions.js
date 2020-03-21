@@ -119,44 +119,37 @@ export const getProfitAndLossData = (startDate, endDate) => {
 
 // Revenues and Expenses
 
-export const getExpensesGraphData = (startDate, endDate) => {
+export const getExpensesGraphData = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getList'
+      url: '/rest/expense/getList'
     }
 
     return authApi(data).then(res => {
+      console.log(res)
       dispatch({
         type: DASHBOARD.EXPENSE_GRAPH,
-        payload: {
-          'labels': ['Meals', 'Meals', 'Meals', 'Meals', 'Meals', 'Meals', 'Meals', 'Meals', 'Meals'],
-          'data': [300, 50, 100, 70, 40, 50, 50, 10, 60, 50]
-        }
+        payload: res.data.data
       })
-      return '1'
     }).catch(err => {
       throw err
     })
   }
 }
 
-export const getRevenuesGraphData = (startDate, endDate) => {
+export const getRevenuesGraphData = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/vat/getList'
+      url: '/rest/invoice/getList?type=2'
     }
 
     return authApi(data).then(res => {
       dispatch({
         type: DASHBOARD.REVENUE_GRAPH,
-        payload: {
-          'labels': ['Meals', 'Meals', 'Meals', 'Meals', 'Meals', 'Meals', 'Meals', 'Meals', 'Meals'],
-          'data': [300, 50, 100, 70, 40, 50, 50, 10, 60, 50]
-        }
+        payload: res.data.data
       })
-      return '1'
     }).catch(err => {
       throw err
     })

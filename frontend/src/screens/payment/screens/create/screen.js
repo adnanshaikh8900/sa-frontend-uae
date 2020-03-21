@@ -345,7 +345,6 @@ class CreatePayment extends React.Component {
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="invoiceId"><span className="text-danger">*</span>Invoice #</Label>
                                         <Select
-                                          className="select-default-width"
                                           id="invoiceId"
                                           name="invoiceId"
                                           options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
@@ -400,7 +399,6 @@ class CreatePayment extends React.Component {
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                         <Select
-                                          className="select-default-width"
                                           id="currency"
                                           name="currency"
                                           options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
@@ -423,7 +421,6 @@ class CreatePayment extends React.Component {
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="project">Project</Label>
                                         <Select
-                                          className="select-default-width"
                                           id="project"
                                           name="project"
                                           options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
@@ -467,7 +464,6 @@ class CreatePayment extends React.Component {
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="bank">Bank</Label>
                                         <Select
-                                          className="select-default-width"
                                           id="bank"
                                           name="bank"
                                           options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}

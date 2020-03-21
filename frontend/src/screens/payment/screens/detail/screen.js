@@ -325,7 +325,6 @@ class DetailPayment extends React.Component {
                                         Supplier Name
                                     </Label>
                                       <Select
-                                        className="select-default-width"
                                         id="supplier"
                                         name="supplier"
                                         options={
@@ -368,7 +367,6 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="invoiceId"><span className="text-danger">*</span>Invoice #</Label>
                                       <Select
-                                        className="select-default-width"
                                         id="invoiceId"
                                         name="invoiceId"
                                         options={
@@ -434,7 +432,6 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                       <Select
-                                        className="select-default-width"
                                         id="currency"
                                         name="currency"
                                         options={
@@ -470,7 +467,6 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="project">Project</Label>
                                       <Select
-                                        className="select-default-width"
                                         id="project"
                                         name="project"
                                         options={
@@ -531,7 +527,6 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="bank">Bank</Label>
                                       <Select
-                                        className="select-default-width"
                                         id="bank"
                                         name="bank"
                                         options={

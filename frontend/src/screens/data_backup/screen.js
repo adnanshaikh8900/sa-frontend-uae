@@ -94,14 +94,14 @@ class DataBackup extends React.Component {
                             <td>admin</td>
                             <td>CSV</td>
                             <td>Completed</td>
-                            <td><a href="#"><i className="cui-cloud-download icons mr-2" />Download</a></td>
+                            <td><button className="btn"><i className="cui-cloud-download icons mr-2" />Download</button></td>
                           </tr>
                           <tr>
                             <td>10/01/2019</td>
                             <td>admin</td>
                             <td>CSV</td>
                             <td>Completed</td>
-                            <td><a href="#"><i className="cui-cloud-download icons mr-2" />Download</a></td>
+                            <td><button className="btn"><i className="cui-cloud-download icons mr-2" />Download</button></td>
                           </tr>
                         </tbody>
                       </Table>

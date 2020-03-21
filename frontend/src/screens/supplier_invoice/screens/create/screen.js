@@ -1238,6 +1238,7 @@ class CreateSupplierInvoice extends React.Component {
           closeSupplierModal={(e) => { this.closeSupplierModal(e) }}
           getCurrentUser={e => this.getCurrentUser(e)}
           createSupplier={this.props.supplierInvoiceActions.createSupplier}
+          getStateList={this.props.supplierInvoiceActions.getStateList}
           currency_list={this.props.currency_list}
           country_list={this.props.country_list}
         />

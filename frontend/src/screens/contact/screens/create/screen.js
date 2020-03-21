@@ -110,7 +110,7 @@ class CreateContact extends React.Component {
     })
   }
 
-  getStateList(countryCode) {
+  getStateList = (countryCode) =>{
     this.props.contactActions.getStateList(countryCode);
   }
 
@@ -517,7 +517,7 @@ class CreateContact extends React.Component {
                                         props.handleChange('stateId')('')
                                       }
                                     }}
-                                    placeholder="Select Country"
+                                    placeholder="Select State"
                                     id="stateId"
                                     name="stateId"
                                     className={

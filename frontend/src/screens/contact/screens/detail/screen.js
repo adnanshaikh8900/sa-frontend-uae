@@ -585,7 +585,7 @@ class DetailContact extends React.Component {
                                             props.handleChange('stateId')('')
                                           }
                                         }}
-                                        placeholder="Select Country"
+                                        placeholder="Select State"
                                         id="stateId"
                                         name="stateId"
                                         className={

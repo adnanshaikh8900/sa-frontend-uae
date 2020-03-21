@@ -220,7 +220,6 @@ class CreateBankAccount extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                     <Select
-                                      className="select-default-width"
                                       id="currency"
                                       name="currency"
                                       options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
@@ -271,7 +270,7 @@ class CreateBankAccount extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="account_type"><span className="text-danger">*</span>Account Type</Label>
                                     <Select
-                                      className="select-default-width"
+                                      
                                       id="account_type"
                                       name="account_type"
                                       options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, "Account Type") : []}
@@ -387,7 +386,6 @@ class CreateBankAccount extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="country">Country</Label>
                                     <Select
-                                      className="select-default-width"
                                       id="country"
                                       name="country"
                                       options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
@@ -413,7 +411,6 @@ class CreateBankAccount extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="account_is_for"><span className="text-danger">*</span>Account is for</Label>
                                     <Select
-                                      className="select-default-width"
                                       id="account_is_for"
                                       name="account_is_for"
                                       options={this.account_for ? selectOptionsFactory.renderOptions('label', 'value', this.account_for, 'Account is for') : []}

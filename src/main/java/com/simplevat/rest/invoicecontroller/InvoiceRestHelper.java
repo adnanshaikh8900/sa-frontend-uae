@@ -314,8 +314,8 @@ public class InvoiceRestHelper {
 		if (contact.getCountry() != null && contact.getCountry().getCountryName() != null) {
 			sb.append(contact.getCountry().getCountryName()).append(", ");
 		}
-		if (contact.getState() != null && !contact.getState().isEmpty()) {
-			sb.append(contact.getState()).append(", ");
+		if (contact.getState() != null ) {
+			sb.append(contact.getState().getStateName()).append(", ");
 		}
 		if (contact.getCity() != null && !contact.getCity().isEmpty()) {
 			sb.append(contact.getCity()).append(", ");

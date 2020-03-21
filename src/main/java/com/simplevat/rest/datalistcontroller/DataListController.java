@@ -8,6 +8,7 @@ package com.simplevat.rest.datalistcontroller;
 import com.simplevat.entity.Country;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.IndustryType;
+import com.simplevat.entity.State;
 import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
@@ -17,6 +18,7 @@ import com.simplevat.constant.PayMode;
 import com.simplevat.constant.dbfilter.CurrencyFilterEnum;
 import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
+import com.simplevat.constant.dbfilter.StateFilterEnum;
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.EnumDropdownModel;
@@ -28,6 +30,7 @@ import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
+import com.simplevat.service.StateService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
@@ -44,6 +47,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -77,6 +81,9 @@ public class DataListController implements Serializable {
 
 	@Autowired
 	private TranscationCategoryHelper transcationCategoryHelper;
+
+	@Autowired
+	private StateService stateService;
 
 	@GetMapping(value = "/getcountry")
 	public ResponseEntity getCountry() {
@@ -238,6 +245,27 @@ public class DataListController implements Serializable {
 						HttpStatus.OK);
 			} else {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@GetMapping(value = "/getstate")
+	public ResponseEntity getState(@RequestParam Integer countryCode) {
+		try {
+
+			Map<StateFilterEnum, Object> filterMap = new HashMap<StateFilterEnum, Object>();
+			filterMap.put(StateFilterEnum.COUNTRY, countryService.getCountry(countryCode));
+			List<State> stateList = stateService.getstateList(filterMap);
+			List<DropdownModel> modelList = new ArrayList<DropdownModel>();
+			if (stateList != null && !stateList.isEmpty()) {
+				for (State state : stateList)
+					modelList.add(new DropdownModel(state.getId(), state.getStateName()));
+				return new ResponseEntity<>(modelList, HttpStatus.OK);
+			} else {
+				return new ResponseEntity(modelList, HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

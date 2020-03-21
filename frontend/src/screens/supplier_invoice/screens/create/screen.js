@@ -324,6 +324,7 @@ class CreateSupplierInvoice extends React.Component {
         obj[name] = e.target.value
         idx = index
       }
+      return obj
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
       form.setFieldValue(field.name, this.state.data[idx][name], true)
@@ -344,6 +345,7 @@ class CreateSupplierInvoice extends React.Component {
       if (obj.id === row.id) {
         idx = index
       }
+      return obj
     });
 
     return (
@@ -594,7 +596,7 @@ class CreateSupplierInvoice extends React.Component {
       if (res.status === 200) {
         this.setState({
           initValue: {
-            ... this.state.initValue, ...{
+            ...this.state.initValue, ...{
               invoice_number: res.data
             }
           }
@@ -791,7 +793,6 @@ class CreateSupplierInvoice extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="term"><span className="text-danger">*</span>Terms <i className="fa fa-question-circle"></i></Label>
                                   <Select
-                                    className="select-default-width"
                                     options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
                                     id="term"
                                     name="term"
@@ -851,7 +852,6 @@ class CreateSupplierInvoice extends React.Component {
                                   <Label htmlFor="due_date">Invoice Due Date</Label>
                                   <div>
                                     <DatePicker
-                                      className="form-control"
                                       id="invoiceDueDate"
                                       name="invoiceDueDate"
                                       placeholderText="Invoice Due Date"
@@ -878,7 +878,6 @@ class CreateSupplierInvoice extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                   <Select
-                                    className="select-default-width"
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     id="currency"
                                     name="currency"
@@ -1239,6 +1238,7 @@ class CreateSupplierInvoice extends React.Component {
           closeSupplierModal={(e) => { this.closeSupplierModal(e) }}
           getCurrentUser={e => this.getCurrentUser(e)}
           createSupplier={this.props.supplierInvoiceActions.createSupplier}
+          getStateList={this.props.supplierInvoiceActions.getStateList}
           currency_list={this.props.currency_list}
           country_list={this.props.country_list}
         />

@@ -1,5 +1,6 @@
 package com.simplevat.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +26,6 @@ public abstract class BankAccountService extends SimpleVatService<Integer, BankA
 
 	public abstract DashBoardBankDataModel getBankBalanceList(BankAccount bank, Map<Object, Number> inflow,
 			Map<Object, Number> outFlow);
+
+	public abstract BigDecimal getAllBankAccountsTotalBalance();
 }

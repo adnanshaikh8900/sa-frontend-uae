@@ -1,5 +1,6 @@
 package com.simplevat.dao.impl.bankaccount;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,8 @@ import com.simplevat.entity.Product;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
+
+import net.bytebuddy.utility.privilege.GetSystemPropertyAction;
 
 import javax.persistence.TypedQuery;
 
@@ -77,11 +80,25 @@ public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implem
 				.condition(filter.getCondition()).value(value).build()));
 		List<BankAccount> list = this.executeQuery(dbFilters, paginationModel);
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-	
+
 		PaginationResponseModel resposne = new PaginationResponseModel();
 		resposne.setCount(this.getResultCount(dbFilters));
 		resposne.setData(list);
 		return resposne;
 	}
 
+	@Override
+	public BigDecimal getAllBankAccountsTotalBalance() {
+		try {
+			TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("allBankAccountsTotalBalance",
+					BigDecimal.class);
+			List balanceList = query.getResultList();
+			return balanceList != null && !balanceList.isEmpty() ? (BigDecimal) balanceList.get(0)
+					: BigDecimal.valueOf(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 }

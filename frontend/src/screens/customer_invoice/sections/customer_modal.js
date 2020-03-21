@@ -11,7 +11,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  InputGroup, InputGroupAddon, InputGroupText,
 } from "reactstrap";
 import Select from "react-select";
 
@@ -48,10 +47,11 @@ class CustomerModal extends React.Component {
         organization: "",
         poBoxNumber: "",
         postZipCode: "",
-        stateRegion: "",
+        stateId: '',
         telephone: "",
         vatRegistrationNumber: ""
-      }
+      },
+      state_list: []
     };
     this.formikRef = React.createRef();
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -86,6 +86,16 @@ class CustomerModal extends React.Component {
     });
   }
 
+  getStateList = (countryCode) =>{
+    this.props.getStateList(countryCode).then(res => {
+      if(res.status === 200) {
+        this.setState({
+          state_list: res.data
+        })
+      }
+    })
+  }
+
   render() {
     const {
       openCustomerModal,
@@ -93,7 +103,7 @@ class CustomerModal extends React.Component {
       currency_list,
       country_list
     } = this.props;
-    const { initValue } = this.state;
+    const { initValue,state_list } = this.state;
     return (
       <div className="contact-modal-screen">
         <Modal
@@ -135,8 +145,12 @@ class CustomerModal extends React.Component {
               //       .required("Address is required"),
               countryId: Yup.string().required("Country is Required")
                 .nullable(),
-              //     stateRegion: Yup.string()
-              //       .required("State is Required"),
+                stateId: Yup.string()
+                .when('countryId', {
+                  is: (val) => val ? true : false,
+                  then: Yup.string()
+                    .required('State is Required')
+                }),
               //     city: Yup.string()
               //       .required("City is Required"),
               postZipCode: Yup.string()
@@ -580,7 +594,6 @@ class CustomerModal extends React.Component {
                             <span className="text-danger">*</span>Country
                           </Label>
                           <Select
-                            className="select-default-width"
                             options={
                               country_list
                                 ? selectOptionsFactory.renderOptions(
@@ -595,8 +608,10 @@ class CustomerModal extends React.Component {
                             onChange={option => {
                               if (option && option.value) {
                                 props.handleChange("countryId")(option.value);
+                                this.getStateList(option.value)
                               } else {
                                 props.handleChange("countryId")("");
+                                this.getStateList(option.value)
                               }
                             }}
                             placeholder="Select Country"
@@ -618,37 +633,35 @@ class CustomerModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="stateRegion">State Region</Label>
-                          <Input
-                            className="select-default-width"
-                            // options={stateRegion ? selectOptionsFactory.renderOptions('stateName', 'stateCode', stateRegion) : ''}
-                            value={props.values.stateRegion}
-                            onChange={option =>
-                              props.handleChange("stateRegion")(option)
-                            }
-                            placeholder=""
-                            id="stateRegion"
-                            name="stateRegion"
+                          <Label htmlFor="stateId">State Region</Label>
+                          <Select
+                            options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
+                            value={props.values.stateId}
+                            onChange={option => {
+                              if (option && option.value) {
+                                props.handleChange('stateId')(option.value)
+                              } else {
+                                props.handleChange('stateId')('')
+                              }
+                            }}
+                            placeholder="Select State"
+                            id="stateId"
+                            name="stateId"
                             className={
-                              props.errors.stateRegion &&
-                                props.touched.stateRegion
+                              props.errors.stateId && props.touched.stateId
                                 ? "is-invalid"
                                 : ""
                             }
                           />
-                          {props.errors.stateRegion &&
-                            props.touched.stateRegion && (
-                              <div className="invalid-feedback">
-                                {props.errors.stateRegion}
-                              </div>
-                            )}
+                          {props.errors.stateId && props.touched.stateId && (
+                            <div className="invalid-feedback">{props.errors.stateId}</div>
+                          )}
                         </FormGroup>
                       </Col>
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="city">City</Label>
                           <Input
-                            className="select-default-width"
                             // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                             value={props.values.city}
                             onChange={option =>
@@ -790,7 +803,6 @@ class CustomerModal extends React.Component {
                         <FormGroup>
                           <Label htmlFor="currencyCode">Currency Code</Label>
                           <Select
-                            className="select-default-width"
                             options={
                               currency_list
                                 ? selectOptionsFactory.renderOptions(

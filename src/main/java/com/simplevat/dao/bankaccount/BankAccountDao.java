@@ -1,5 +1,6 @@
 package com.simplevat.dao.bankaccount;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -21,4 +22,6 @@ public interface BankAccountDao extends Dao<Integer, BankAccount> {
 
 	PaginationResponseModel getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,
 			PaginationModel paginationModel);
+
+	BigDecimal getAllBankAccountsTotalBalance();
 }

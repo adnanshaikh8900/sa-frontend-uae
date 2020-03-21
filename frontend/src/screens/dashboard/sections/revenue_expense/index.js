@@ -10,8 +10,8 @@ import {
   Card,
   CardBody
 } from 'reactstrap'
-import { DateRangePicker2 } from 'components'
-import moment from 'moment'
+// import { DateRangePicker2 } from 'components'
+// import moment from 'moment'
 import './style.scss'
 
 const expenseOption = {
@@ -30,15 +30,15 @@ const expenseOption = {
   maintainAspectRatio: true
 }
 
-const ranges =  {
-  'Today': [moment(), moment()],
-  'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-  'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-  'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-  'This Week': [moment().startOf('week'), moment().endOf('week')],
-  'This Month': [moment().startOf('month'), moment().endOf('month')],
-  'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-}
+// const ranges =  {
+//   'Today': [moment(), moment()],
+//   'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+//   'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+//   'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+//   'This Week': [moment().startOf('week'), moment().endOf('week')],
+//   'This Month': [moment().startOf('month'), moment().endOf('month')],
+//   'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+// }
 
 class RevenueAndExpense extends Component {
 
@@ -62,15 +62,32 @@ class RevenueAndExpense extends Component {
   componentDidMount() {
     this.props.DashboardActions.getRevenuesGraphData('2019-01-01', '2019-05-01')
     this.props.DashboardActions.getExpensesGraphData('2019-01-01', '2019-05-01')
-    
   }
 
   render() {
+    let revenueLabelArr = [], revenueValueArr = [],expenseLabelArr = [], expenseValueArr = [],outstanding = 0;
+    if (this.props.revenue_graph) {
+      this.props.revenue_graph.map(item => {
+        revenueLabelArr.push(item['name'])
+        revenueValueArr.push(item['totalAmount'])
+        return item
+      })
+    }
+    if (this.props.expense_graph) {
+      this.props.expense_graph.map(item => {
+        expenseLabelArr.push(item['payee'])
+        expenseValueArr.push(item['expenseAmount'])
+        return item
+      })
+    }
+    if(revenueValueArr && expenseValueArr) {
+      outstanding = revenueValueArr.reduce((a, b) => a + b, 0) - expenseValueArr.reduce((a, b) => a + b, 0)
+    }
     const pie1 = {
-      labels: this.props.revenue_graph.labels || [],
+      labels: revenueLabelArr || [],
       datasets: [
         {
-        data: this.props.revenue_graph.data,
+        data: revenueValueArr,
         backgroundColor: [
           'rgba(32, 168, 216, 0.7)',
           'rgba(77, 189, 116, 0.7)',
@@ -99,10 +116,10 @@ class RevenueAndExpense extends Component {
     };
 
     const pie2 = {
-      labels: this.props.expense_graph.labels || [],
+      labels: expenseLabelArr || [],
       datasets: [
         {
-        data: this.props.expense_graph.data,
+        data: expenseValueArr,
         backgroundColor: [
           'rgba(32, 168, 216, 0.7)',
           'rgba(77, 189, 116, 0.7)',
@@ -154,9 +171,9 @@ class RevenueAndExpense extends Component {
                 </NavItem>
                 
               </Nav>
-              <div className="card-header-actions">
+              {/* <div className="card-header-actions">
                 <DateRangePicker2 ranges={ranges}/>
-              </div>
+              </div> */}
             </div>
             <TabContent activeTab={this.state.activeTab[0]}>
               <TabPane tabId="0">
@@ -167,7 +184,7 @@ class RevenueAndExpense extends Component {
                   <div className="data-info">
                   <div className="data-item">
                     <div>
-                    <h3>$12,640</h3>
+                    <h3>${(outstanding).toFixed(2)}</h3>
                     <p>OUTSTANDING</p>
                     </div>
                   </div>
@@ -180,14 +197,14 @@ class RevenueAndExpense extends Component {
               <TabPane tabId="1">
                 <div className="flex-wrapper" style={{paddingLeft: 20}}>
                   <div className="data-info" style={{border: 'none', marginBottom: 12}}>
-                  <button className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm">
+                  <button className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm" onClick={()=>this.props.history.push('/admin/expense/expense/create')}>
                     <i className="nav-icon icon-speech"></i><span>New Expense</span>
                   </button>
                   </div>
                   <div className="data-info">
                   <div className="data-item">
                     <div>
-                    <h3>$12,640</h3>
+                    <h3>${(outstanding).toFixed(2)}</h3>
                     <p>OUTSTANDING</p>
                     </div>
                   </div>

@@ -4,10 +4,12 @@ import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.entity.Invoice;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import javax.persistence.TypedQuery;
@@ -17,11 +19,16 @@ import com.simplevat.dao.InvoiceDao;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.utils.DateFormatUtil;
+import com.simplevat.utils.DateUtils;
 
 import net.bytebuddy.asm.Advice.This;
 
 @Repository
 public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements InvoiceDao {
+
+	@Autowired
+	private DateUtils dateUtil;
 
 	@Override
 	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,
@@ -56,12 +63,21 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		}
 	}
 
-	 @Override
+	@Override
 	public Invoice getLastInvoice() {
 		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("lastInvoice", Invoice.class);
 		query.setMaxResults(1);
 		List<Invoice> invoiceList = query.getResultList();
 
 		return invoiceList != null && invoiceList.size() > 0 ? invoiceList.get(0) : null;
+	}
+
+	@Override
+	public List<Invoice> getInvoiceList(Date startDate, Date endDate) {
+		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("activeInvoicesByDateRange", Invoice.class);
+		query.setParameter("startDate", dateUtil.get(startDate));
+		query.setParameter("endDate", dateUtil.get(endDate));
+		List<Invoice> invoiceList = query.getResultList();
+		return invoiceList != null && invoiceList.size() > 0 ? invoiceList : null;
 	}
 }

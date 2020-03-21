@@ -6,8 +6,8 @@ const initState = {
   cash_flow_graph: {},
   invoice_graph: {},
   proft_loss: {},
-  revenue_graph: {},
-  expense_graph: {}
+  revenue_graph: [],
+  expense_graph: []
 }
 
 const DashboardReducer = (state = initState, action) => {
@@ -57,13 +57,13 @@ const DashboardReducer = (state = initState, action) => {
     case DASHBOARD.REVENUE_GRAPH:
       return {
         ...state,
-        revenue_graph: Object.assign({}, payload)
+        revenue_graph: Object.assign([], payload)
       }
 
     case DASHBOARD.EXPENSE_GRAPH:
       return {
         ...state,
-        expense_graph: Object.assign({}, payload)
+        expense_graph: Object.assign([], payload)
       }
     
     default:

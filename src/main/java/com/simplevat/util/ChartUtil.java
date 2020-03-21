@@ -1,6 +1,7 @@
 package com.simplevat.util;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -10,25 +11,36 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.poi.ss.formula.functions.Count;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mysql.fabric.xmlrpc.base.Array;
+import com.simplevat.constant.InvoiceStatusEnum;
+import com.simplevat.entity.Invoice;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.model.ChartData;
 import com.simplevat.model.DashBoardBankDataModel;
+import com.simplevat.model.DashboardInvoiceDataModel;
+import com.simplevat.model.DashboardInvoiceDataModel.data;
 import com.simplevat.service.report.model.BankAccountTransactionReportModel;
+import com.simplevat.utils.DateFormatUtil;
 
 import net.bytebuddy.asm.Advice.Return;
 import springfox.documentation.spring.web.json.Json;
 
 @Component
 public class ChartUtil {
+
+	@Autowired
+	private DateFormatUtil dateFormatUtil;
 
 	public Map<Object, Number> getCashMap(List<Object[]> rows, Integer count) {
 		Map<Object, Number> cashMap = new LinkedHashMap<>(0);
@@ -189,4 +201,72 @@ public class ChartUtil {
 		map.put("labels", months);
 		return (map);
 	}
+
+	public Object getinvoiceData(List<Invoice> invList, int monthCount) {
+		List<Invoice> paid = new ArrayList<Invoice>();
+		List<Invoice> due = new ArrayList<Invoice>();
+		List<Invoice> overDue = new ArrayList<Invoice>();
+
+		for (Invoice invoice : invList) {
+			if (invoice.getStatus() > InvoiceStatusEnum.PAID.ordinal())
+				paid.add(invoice);
+			else if (invoice.getStatus() < InvoiceStatusEnum.PAID.ordinal()
+					&& LocalDateTime.now().isBefore(invoice.getInvoiceDueDate()))
+				due.add(invoice);
+			else
+				overDue.add(invoice);
+		}
+
+		Map<String, BigDecimal> paidMap = calculate(paid);
+		Map<String, BigDecimal> dueMap = calculate(due);
+		Map<String, BigDecimal> overDueMap = calculate(overDue);
+
+		List<Object> paidAmountList = new LinkedList<Object>();
+		List<Object> dueAmountList = new LinkedList<Object>();
+		List<Object> overDueAmountList = new LinkedList<Object>();
+
+		List<String> mntList = getEmptyInvoiceChartData(monthCount);
+
+		for (String mnt : mntList) {
+			paidAmountList.add(paidMap.containsKey(mnt) ? paidMap.get(mnt) : 0);
+			dueAmountList.add(dueMap.containsKey(mnt) ? dueMap.get(mnt) : 0);
+			overDueAmountList.add(overDueMap.containsKey(mnt) ? overDueMap.get(mnt) : 0);
+		}
+
+		DashboardInvoiceDataModel.data paidLabelData = new DashboardInvoiceDataModel.data("Paid", paidAmountList);
+		DashboardInvoiceDataModel.data dueLabeleData = new DashboardInvoiceDataModel.data("Due", dueAmountList);
+		DashboardInvoiceDataModel.data overDueLabelData = new DashboardInvoiceDataModel.data("OverDue",
+				overDueAmountList);
+
+		DashboardInvoiceDataModel model = new DashboardInvoiceDataModel(mntList, paidLabelData, dueLabeleData,
+				overDueLabelData);
+		return model;
+	}
+
+	private Map<String, BigDecimal> calculate(List<Invoice> invList) {
+
+		Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
+		for (Invoice inv : invList) {
+			String mnt = dateFormatUtil.getDateAsString(inv.getInvoiceDate(), "MMM yyyy");
+			if (map.containsKey(mnt)) {
+				BigDecimal totalAmt = map.get(mnt);
+				totalAmt.add(inv.getTotalAmount());
+				map.put(mnt, totalAmt);
+			} else {
+				map.put(mnt, inv.getTotalAmount());
+			}
+		}
+		return map;
+	}
+
+	private List<String> getEmptyInvoiceChartData(Integer count) {
+		List<String> emptyChartDatas = new ArrayList<>();
+		for (int i = 0; i < count; i++) {
+			Calendar calendar = getStartDate(Calendar.MONTH, -count);
+			calendar.add(Calendar.MONTH, i);
+			emptyChartDatas.add(new SimpleDateFormat("MMM yyyy").format(calendar.getTime()));
+		}
+		return emptyChartDatas;
+	}
+
 }

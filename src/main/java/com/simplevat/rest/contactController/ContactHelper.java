@@ -10,6 +10,7 @@ import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
+import com.simplevat.service.StateService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,9 @@ public class ContactHelper {
 
 	@Autowired
 	CurrencyService currencyService;
+
+	@Autowired
+	private StateService stateService;
 
 	public ContactListModel getModel(Contact contact) {
 		return ContactListModel.builder().id(contact.getContactId()).contactType(contact.getContactType())
@@ -70,7 +74,9 @@ public class ContactHelper {
 		contact.setOrganization(contactPersistModel.getOrganization());
 		contact.setPoBoxNumber(contactPersistModel.getPoBoxNumber());
 		contact.setBillingEmail(contactPersistModel.getBillingEmail());
-		contact.setState(contactPersistModel.getState());
+		contact.setState(
+				contactPersistModel.getStateId() != null ? stateService.findByPK(contactPersistModel.getStateId())
+						: null);
 		contact.setCity(contactPersistModel.getCity());
 		contact.setPostZipCode(contactPersistModel.getPostZipCode());
 		contact.setTelephone(contactPersistModel.getTelephone());
@@ -85,7 +91,8 @@ public class ContactHelper {
 				.firstName(contact.getFirstName()).middleName(contact.getMiddleName()).lastName(contact.getLastName())
 				.mobileNumber(contact.getMobileNumber()).organization(contact.getOrganization())
 				.poBoxNumber(contact.getPoBoxNumber()).postZipCode(contact.getPostZipCode())
-				.billingEmail(contact.getBillingEmail()).state(contact.getState()).city(contact.getCity())
+				.billingEmail(contact.getBillingEmail())
+				.stateId(contact.getState() != null ? contact.getState().getId() : null).city(contact.getCity())
 				.addressLine1(contact.getAddressLine1()).addressLine2(contact.getAddressLine2())
 				.addressLine3(contact.getAddressLine3()).telephone(contact.getTelephone())
 				.vatRegistrationNumber(contact.getVatRegistrationNumber());

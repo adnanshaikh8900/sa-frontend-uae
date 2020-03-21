@@ -35,7 +35,7 @@ const ContactReducer = (state = initState, action) => {
           case CONTACT.STATE_LIST:
             return {
               ...state,
-              currency_list: Object.assign([], payload)
+              state_list: Object.assign([], payload)
             }
 
             case CONTACT.CITY_LIST:

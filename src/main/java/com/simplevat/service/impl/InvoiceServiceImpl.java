@@ -1,6 +1,9 @@
 package com.simplevat.service.impl;
 
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +11,12 @@ import org.springframework.stereotype.Service;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.Invoice;
 import com.simplevat.service.InvoiceService;
+import com.simplevat.util.ChartUtil;
+
 import java.util.Map;
+
+import javax.persistence.TypedQuery;
+
 import com.simplevat.dao.InvoiceDao;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
@@ -19,6 +27,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 
 	@Autowired
 	private InvoiceDao supplierInvoiceDao;
+
+	@Autowired
+	ChartUtil util;
 
 	@Override
 	protected Dao<Integer, Invoice> getDao() {
@@ -53,5 +64,12 @@ public class InvoiceServiceImpl extends InvoiceService {
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public List<Invoice> getInvoiceList(int mounthCount) {
+		return supplierInvoiceDao.getInvoiceList(util.getStartDate(Calendar.MONTH, -mounthCount).getTime(),
+				util.getEndDate().getTime());
+
 	}
 }

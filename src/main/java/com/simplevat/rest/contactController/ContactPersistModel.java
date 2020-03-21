@@ -51,7 +51,7 @@ public class ContactPersistModel implements Serializable {
 
     private String billingEmail;
 
-    private String state;
+    private Integer stateId;
 
     private String city;
 

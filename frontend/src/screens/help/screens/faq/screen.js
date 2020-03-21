@@ -38,16 +38,16 @@ class Faq extends React.Component {
                   <input type="search" className="form-control" placeholder="Search question ..."></input>
                   <ul className="question-list">
                     <li>
-                      <a href="">1. How to create bank account?</a>
+                      <button className="btn">1. How to create bank account?</button>
                     </li>
                     <li>
-                      <a href="">2. How to create bank account?</a>
+                      <button className="btn">2. How to create bank account?</button>
                     </li>
                     <li>
-                      <a href="">3. How to create bank account?</a>
+                      <button className="btn">3. How to create bank account?</button>
                     </li>
                     <li>
-                      <a href="">4. How to create bank account?</a>
+                      <button className="btn">4. How to create bank account?</button>
                     </li>
                   </ul>
                 </CardBody>

@@ -11,6 +11,7 @@ import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,5 +29,7 @@ public interface InvoiceDao extends Dao<Integer, Invoice> {
 	public void deleteByIds(List<Integer> ids);
 
 	public Invoice getLastInvoice();
+
+	public List<Invoice> getInvoiceList(Date startDate, Date endDate);
 
 }

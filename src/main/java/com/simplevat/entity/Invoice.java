@@ -6,7 +6,10 @@ import com.simplevat.constant.DiscountType;
 import com.simplevat.constant.InvoiceDuePeriodEnum;
 
 import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -22,12 +25,16 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "INVOICE")
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
+@NoArgsConstructor
+@AllArgsConstructor
 @NamedQueries({
 		@NamedQuery(name = "allInvoices", query = "from Invoice i where i.deleteFlag = false order by i.lastUpdateDate desc"),
 		@NamedQuery(name = "invoiceForDropdown", query = "SELECT new " + CommonConstant.DROPDOWN_MODEL_PACKAGE
 				+ "(i.id , i.referenceNumber )" + " FROM Invoice i where i.deleteFlag = FALSE order by i.invoiceDate "),
 		@NamedQuery(name = "updateStatus", query = "Update Invoice i set i.status = :status where id = :id "),
-		@NamedQuery(name = "lastInvoice", query = "from Invoice i order by i.id desc")
+		@NamedQuery(name = "lastInvoice", query = "from Invoice i order by i.id desc"),
+		@NamedQuery(name = "activeInvoicesByDateRange", query = "from Invoice i where i.invoiceDate between :startDate and :endDate and i.deleteFlag = false")
+		//select com.simplevat.entity.Invoice(i.invoiceDate,i.invoiceDueDate,i.totalAmount,i.type) 
 
 })
 public class Invoice implements Serializable {
@@ -169,6 +176,14 @@ public class Invoice implements Serializable {
 	@PreUpdate
 	public void updateLastUpdatedDate() {
 		lastUpdateDate = LocalDateTime.now();
+	}
+
+	public Invoice(LocalDateTime invoiceDate, LocalDateTime invoiceDueDate, BigDecimal totalAmount, Integer type) {
+		super();
+		this.invoiceDate = invoiceDate;
+		this.invoiceDueDate = invoiceDueDate;
+		this.totalAmount = totalAmount;
+		this.type = type;
 	}
 
 }

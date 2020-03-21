@@ -9,7 +9,6 @@ import {
   Row,
   Col,
   ButtonGroup,
-  FormGroup,
   Input
 } from 'reactstrap'
 import Select from 'react-select'
@@ -290,12 +289,11 @@ class Contact extends React.Component {
                               <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                             </Col>
 
-                            <Col lg={3} className="mb-2">
+                            <Col lg={3} className="mb-1">
                               <Input type="text" placeholder="Email" onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
                             </Col>
 
                             <Col lg={3} className="mb-1">
-                              <FormGroup className="mb-3">
                                 <Select
                                   options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                   onChange={(val) => {
@@ -311,7 +309,6 @@ class Contact extends React.Component {
                                   placeholder="Contact Type"
                                   value={this.state.selectedContactType}
                                 />
-                              </FormGroup>
                             </Col>
 
                             <Col lg={2} className="mb-1">

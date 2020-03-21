@@ -26,11 +26,14 @@ import com.simplevat.service.UserService;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.BankAccountStatusService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
+import com.simplevat.util.ChartUtil;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
+import com.simplevat.service.bankaccount.TransactionService;
 
 import io.swagger.annotations.ApiOperation;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -97,6 +100,12 @@ public class BankAccountController implements Serializable {
 	@Autowired
 	private BankHelper bankRestHelper;
 
+	@Autowired
+	private ChartUtil chartUtil;
+
+	@Autowired
+	private TransactionService transactionService;
+
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
 	public ResponseEntity getBankAccountList(BankAccountFilterModel filterModel) {
@@ -120,7 +129,7 @@ public class BankAccountController implements Serializable {
 			filterDataMap.put(BankAccounrFilterEnum.CURRENCY_CODE,
 					currencyService.findByPK(filterModel.getCurrencyCode()));
 		}
-		
+
 		filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
 
 		PaginationResponseModel paginatinResponseModel = bankAccountService.getBankAccounts(filterDataMap, filterModel);
@@ -239,11 +248,11 @@ public class BankAccountController implements Serializable {
 	public ResponseEntity getById(@RequestParam("id") Integer id) {
 		try {
 			BankAccount bankAccount = bankAccountService.findByPK(id);
-			
-			if(bankAccount == null) {
+
+			if (bankAccount == null) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
-			
+
 			return new ResponseEntity<>(bankAccountRestHelper.getModel(bankAccount), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -273,6 +282,29 @@ public class BankAccountController implements Serializable {
 			} else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@GetMapping(value = "/getBankChart")
+	public ResponseEntity getCurrency(@RequestParam Integer bankId, Integer monthCount) {
+		try {
+			return new ResponseEntity<>(bankAccountService.getBankBalanceList(bankAccountService.findByPK(bankId),
+					transactionService.getCashInData(monthCount, bankId),
+					transactionService.getCashOutData(monthCount, bankId)), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@GetMapping(value = "/getTotalBalance")
+	public ResponseEntity getTotalBalance() {
+		try {
+			BigDecimal totalBalance = bankAccountService.getAllBankAccountsTotalBalance();
+			return new ResponseEntity<>(totalBalance != null ? totalBalance : 0, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -66,17 +66,19 @@ public class TransactionServiceImpl extends TransactionService {
 	}
 
 	@Override
-	public Map<Object, Number> getCashOutData() {
-		List<Object[]> rows = transactionDao.getCashOutData(util.getStartDate(Calendar.YEAR, -1).getTime(),
-				util.getEndDate().getTime());
-		return util.getCashMap(rows);
+	public Map<Object, Number> getCashOutData(Integer monthNo, Integer bankId) {
+		List<Object[]> rows = transactionDao
+				.getCashOutData(monthNo != null ? util.getStartDate(Calendar.MONTH, -monthNo).getTime()
+						: util.getStartDate(Calendar.YEAR, -1).getTime(), util.getEndDate().getTime(), bankId);
+		return util.getCashMap(rows, monthNo);
 	}
 
 	@Override
-	public Map<Object, Number> getCashInData() {
-		List<Object[]> rows = transactionDao.getCashInData(util.getStartDate(Calendar.YEAR, -1).getTime(),
-				util.getEndDate().getTime());
-		return util.getCashMap(rows);
+	public Map<Object, Number> getCashInData(Integer monthNo, Integer bankId) {
+		List<Object[]> rows = transactionDao
+				.getCashInData(monthNo != null ? util.getStartDate(Calendar.MONTH, -monthNo).getTime()
+						: util.getStartDate(Calendar.YEAR, -1).getTime(), util.getEndDate().getTime(), bankId);
+		return util.getCashMap(rows, monthNo);
 	}
 
 	public int getMaxTransactionValue(Map<Object, Number> cashInMap, Map<Object, Number> cashOutMap) {
@@ -364,4 +366,10 @@ public class TransactionServiceImpl extends TransactionService {
 			PaginationModel paginationModel) {
 		return transactionDao.getAllTransactionList(filterModel, paginationModel);
 	}
+
+	@Override
+	public void getForDashBoardCashFlow() {
+		transactionDao.getForDashBoardCashFlow();
+	}
+
 }

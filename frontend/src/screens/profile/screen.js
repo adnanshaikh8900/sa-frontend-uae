@@ -479,7 +479,7 @@ class Profile extends React.Component {
                                 {props => (
                                   <Form onSubmit={props.handleSubmit} encType="multipart/form-data">
                                     <Row>
-                                      <Col xs="4" md="4" lg={2}>
+                                      <Col xs="12" md="4" lg={2}>
                                         <FormGroup className="mb-3 text-center">
                                           {/* <ImagesUploader
                                           // url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -593,7 +593,6 @@ class Profile extends React.Component {
                                             <FormGroup>
                                               <Label htmlFor="roleId">Role</Label>
                                               <Select
-                                                className="select-default-width"
                                                 options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                                                 value={props.values.roleId}
                                                 onChange={option => {
@@ -899,7 +898,6 @@ class Profile extends React.Component {
                                             <FormGroup>
                                               <Label htmlFor="companyId">Company Type Code</Label>
                                               <Select
-                                                className="select-default-width"
                                                 options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list, 'Company Type Code') : []}
                                                 value={props.values.companyTypeCode}
                                                 onChange={option => {
@@ -928,7 +926,6 @@ class Profile extends React.Component {
                                             <FormGroup>
                                               <Label htmlFor="industryTypeCode">Industry Type Code</Label>
                                               <Select
-                                                className="select-default-width"
                                                 options={industry_type_list ? selectOptionsFactory.renderOptions('label', 'value', industry_type_list, 'Industry Type') : []}
                                                 value={props.values.industryTypeCode}
                                                 onChange={option => {
@@ -957,10 +954,8 @@ class Profile extends React.Component {
                                             <FormGroup>
                                               <Label htmlFor="currencyCode">Currency Code</Label>
                                               <Select
-                                                className="select-default-width"
                                                 options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                                 value={props.values.currencyCode}
-
                                                 onChange={option => {
                                                   if (option && option.value) {
                                                     props.handleChange('currencyCode')(option.value)
@@ -1191,7 +1186,6 @@ class Profile extends React.Component {
                                         <FormGroup>
                                           <Label htmlFor="invoicingCountryCode">Country Code</Label>
                                           <Select
-                                            className="select-default-width"
                                             options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                             value={props.values.invoicingCountryCode}
                                             onChange={option => {
@@ -1412,7 +1406,6 @@ class Profile extends React.Component {
                                         <FormGroup>
                                           <Label htmlFor="companyCountryCode">Country Code</Label>
                                           <Select
-                                            className="select-default-width"
                                             options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                             value={isSame ? this.state.companyAddress.companyCountryCode : props.values.companyCountryCode}
                                             onChange={option => {

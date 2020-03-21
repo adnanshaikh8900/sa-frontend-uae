@@ -26,12 +26,15 @@ import {
 } from 'services/global'
 import * as ContactActions from '../../actions'
 import * as CreateContactActions from './actions'
-
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+import { isValidPhoneNumber } from 'react-phone-number-input'
 
 
 const mapStateToProps = (state) => {
   return ({
     country_list: state.contact.country_list,
+    state_list: state.contact.state_list,
     currency_list: state.contact.currency_list,
     contact_type_list: state.contact.contact_type_list
   })
@@ -69,7 +72,7 @@ class CreateContact extends React.Component {
         organization: '',
         poBoxNumber: '',
         postZipCode: '',
-        stateRegion: '',
+        stateId: '',
         telephone: '',
         vatRegistrationNumber: '',
       },
@@ -88,10 +91,10 @@ class CreateContact extends React.Component {
     this.props.contactActions.getContactTypeList();
     this.props.contactActions.getCountryList();
     this.props.contactActions.getCurrencyList();
-    
+
   }
 
-  handleSubmit(data,resetForm) {
+  handleSubmit(data, resetForm) {
     this.props.createContactActions.createContact(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Contact Created Successfully')
@@ -107,8 +110,12 @@ class CreateContact extends React.Component {
     })
   }
 
+  getStateList = (countryCode) =>{
+    this.props.contactActions.getStateList(countryCode);
+  }
+
   render() {
-    const { currency_list, country_list,contact_type_list} = this.props;
+    const { currency_list, country_list, contact_type_list, state_list } = this.props;
     const { initValue } = this.state;
     return (
       <div className="create-contact-screen">
@@ -133,50 +140,56 @@ class CreateContact extends React.Component {
                       <Formik
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values,resetForm)
+                          this.handleSubmit(values, resetForm)
                         }}
                         validationSchema={
                           Yup.object().shape({
-                            firstName: Yup.string()
-                              .required("First Name is Required"),
-                            lastName: Yup.string()
-                              .required("Last Name is Required"),
-                            // middleName: Yup.string()
-                            //   .required("Middle Name is Required"),
-                              // contactType: Yup.string()
-                              // .required("Please Select Contact Type"),
-                        //       organization: Yup.string()
-                        //       .required("Organization Name is Required"),
-                        //     poBoxNumber: Yup.number()
-                        //       .required("PO Box Number is Required"),
+                            firstName: Yup.string().required("First Name is Required"),
+                            lastName: Yup.string().required("Last Name is Required"),
+                            middleName: Yup.string()
+                              .required("Middle Name is Required"),
+                            // contactType: Yup.string()
+                            // .required("Please Select Contact Type"),
+                            //       organization: Yup.string()
+                            //       .required("Organization Name is Required"),
+                            //     poBoxNumber: Yup.number()
+                            //       .required("PO Box Number is Required"),
                             email: Yup.string()
                               .required("Email is Required")
-                              .email('Invalid Email'),
-                        //     telephone: Yup.number()
-                        //       .required("Telephone Number is Required"),
-                        //     mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, {message: "Please enter valid number.", excludeEmptyString: false})
-                        //       .required("Mobile Number is required"),
-                        //     addressLine1: Yup.string()
-                        //       .required("Address is required"),
-                            countryId: Yup.string()
-                              .required("Please Select Country")
-                              // .nullable(),
-                        //     stateRegion: Yup.string()
-                        //       .required("State is Required"),
-                        //     city: Yup.string()
-                        //       .required("City is Required"),
-                        //     postZipCode: Yup.number()
-                        //       .required("Postal Code is Required"),
-                        //     billingEmail: Yup.string()
-                        //       .required("Billing Email is Required")
-                        //       .email('Invalid Email'),
-                        //     contractPoNumber: Yup.number()
-                        //       .required("Contract PoNumber is Required"),
-                        //       vatRegistrationNumber: Yup.number()
-                        //       .required("Tax Registration Number is Required"),
-                        //       currencyCode: Yup.string()
-                        //       .required("Please Select Currency")
-                        //       .nullable(),
+                              .email("Invalid Email"),
+                            telephone: Yup.number()
+                              .required("Telephone Number is Required"),
+                            mobileNumber: Yup.string()
+                              .required("Mobile Number is required")
+                              .test('quantity', 'Invalid Mobile Number', value => {
+                                if (isValidPhoneNumber(value)) {
+                                  return true
+                                } else {
+                                  return false
+                                }
+                              }),
+                            //     addressLine1: Yup.string()
+                            //       .required("Address is required"),
+                            countryId: Yup.string().required("Country is Required")
+                              .nullable(),
+                            stateId: Yup.string()
+                              .when('countryId', {
+                                is: (val) => val ? true : false,
+                                then: Yup.string()
+                                  .required('State is Required')
+                              }),
+                            postZipCode: Yup.string()
+                              .required("Postal Code is Required"),
+                            //     billingEmail: Yup.string()
+                            //       .required("Billing Email is Required")
+                            //       .email('Invalid Email'),
+                            //     contractPoNumber: Yup.number()
+                            //       .required("Contract PoNumber is Required"),
+                            vatRegistrationNumber: Yup.string()
+                              .required("Tax Registration Number is Required"),
+                            //       currencyCode: Yup.string()
+                            //       .required("Please Select Currency")
+                            //       .nullable(),
                           })
                         }
                       >
@@ -191,7 +204,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="firstName"
                                     name="firstName"
-                                    
+
                                     onChange={(value) => { props.handleChange("firstName")(value) }}
                                     value={props.values.firstName}
                                     className={
@@ -207,12 +220,12 @@ class CreateContact extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="middleName ">Middle Name</Label>
+                                  <Label htmlFor="middleName "><span className="text-danger">*</span>Middle Name</Label>
                                   <Input
                                     type="text"
                                     id="middleName "
                                     name="middleName "
-                                    
+
                                     onChange={(value) => { props.handleChange("middleName")(value) }}
                                     value={props.values.middleName}
                                     className={
@@ -233,7 +246,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="lastName"
                                     name="lastName"
-                                    
+
                                     onChange={(value) => { props.handleChange("lastName")(value) }}
                                     value={props.values.lastName}
                                     className={
@@ -255,11 +268,10 @@ class CreateContact extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="countryId">Contact Type</Label>
                                   <Select
-                                    className="select-default-width"
-                                    options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list,'Contact Type') : []}
+                                    options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                     value={props.values.contactType}
                                     onChange={option => {
-                                      if(option && option.value) {
+                                      if (option && option.value) {
                                         props.handleChange('contactType')(option.value)
                                       } else {
                                         props.handleChange('contactType')('')
@@ -277,7 +289,7 @@ class CreateContact extends React.Component {
                                   {props.errors.contactType && props.touched.contactType && (
                                     <div className="invalid-feedback">{props.errors.contactType}</div>
                                   )}
-                
+
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -287,7 +299,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="organization"
                                     name="organization"
-                                    
+
                                     onChange={(value) => { props.handleChange("organization")(value) }}
                                     value={props.values.organization}
                                     className={
@@ -299,7 +311,7 @@ class CreateContact extends React.Component {
                                   {props.errors.organization && props.touched.organization && (
                                     <div className="invalid-feedback">{props.errors.organization}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -309,7 +321,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="poBoxNumber"
                                     name="poBoxNumber"
-                                    
+
                                     onChange={(value) => { props.handleChange("poBoxNumber")(value) }}
                                     value={props.values.poBoxNumber}
                                     className={
@@ -321,7 +333,7 @@ class CreateContact extends React.Component {
                                   {props.errors.poBoxNumber && props.touched.poBoxNumber && (
                                     <div className="invalid-feedback">{props.errors.poBoxNumber}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -333,7 +345,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="email"
                                     name="email"
-                                    
+
                                     onChange={(value) => { props.handleChange("email")(value) }}
                                     value={props.values.email}
                                     className={
@@ -345,17 +357,17 @@ class CreateContact extends React.Component {
                                   {props.errors.email && props.touched.email && (
                                     <div className="invalid-feedback">{props.errors.email}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="telephone">Telephone</Label>
+                                  <Label htmlFor="telephone"><span className="text-danger">*</span>Telephone</Label>
                                   <Input
                                     type="text"
                                     id="telephone"
                                     name="telephone"
-                                    
+
                                     onChange={(value) => { props.handleChange("telephone")(value) }}
                                     value={props.values.telephone}
                                     className={
@@ -367,13 +379,13 @@ class CreateContact extends React.Component {
                                   {props.errors.telephone && props.touched.telephone && (
                                     <div className="invalid-feedback">{props.errors.telephone}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="mobileNumber">Mobile Number</Label>
-                                  <Input
+                                  <Label htmlFor="mobileNumber"><span className="text-danger">*</span>Mobile Number</Label>
+                                  {/* <Input
                                     type="text"
                                     id="mobileNumber"
                                     name="mobileNumber"
@@ -388,8 +400,25 @@ class CreateContact extends React.Component {
                                   />
                                   {props.errors.mobileNumber && props.touched.mobileNumber && (
                                     <div className="invalid-feedback">{props.errors.mobileNumber}</div>
-                                  )}
-                                  
+                                  )} */}
+                                  <PhoneInput
+                                    defaultCountry="AE"
+                                    international
+                                    value={props.values.mobileNumber}
+                                    onChange={(option) => { props.handleChange('mobileNumber')(option) }}
+                                    className={
+                                      props.errors.mobileNumber &&
+                                        props.touched.mobileNumber
+                                        ? "is-invalid"
+                                        : ""
+                                    }
+                                  />
+                                  {props.errors.mobileNumber &&
+                                    props.touched.mobileNumber && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.mobileNumber}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -401,7 +430,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="addressLine1"
                                     name="addressLine1"
-                                    
+
                                     onChange={(value) => { props.handleChange("addressLine1")(value) }}
                                     value={props.values.addressLine1}
                                     className={
@@ -413,7 +442,7 @@ class CreateContact extends React.Component {
                                   {props.errors.addressLine1 && props.touched.addressLine1 && (
                                     <div className="invalid-feedback">{props.errors.addressLine1}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -423,7 +452,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="addressLine2"
                                     name="addressLine2"
-                                    
+
                                     onChange={(value) => { props.handleChange("addressLine2")(value) }}
 
                                   />
@@ -436,7 +465,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="addressLine3"
                                     name="addressLine3"
-                                    
+
                                     onChange={(value) => { props.handleChange("addressLine3")(value) }}
 
                                   />
@@ -448,14 +477,16 @@ class CreateContact extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="countryId"><span className="text-danger">*</span>Country</Label>
                                   <Select
-                                    className="select-default-width"
                                     options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                     value={props.values.countryId}
                                     onChange={option => {
-                                      if(option && option.value) {
+                                      console.log(option.value)
+                                      if (option && option.value) {
                                         props.handleChange('countryId')(option.value)
+                                        this.getStateList(option.value)
                                       } else {
                                         props.handleChange('countryId')('')
+                                        props.handleChange('stateId')('')
                                       }
                                     }}
                                     placeholder="Select Country"
@@ -470,37 +501,41 @@ class CreateContact extends React.Component {
                                   {props.errors.countryId && props.touched.countryId && (
                                     <div className="invalid-feedback">{props.errors.countryId}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="stateRegion">State Region</Label>
-                                  <Input
-                                    className="select-default-width"
-                                    // options={stateRegion ? selectOptionsFactory.renderOptions('stateName', 'stateCode', stateRegion) : ''}
-                                    value={props.values.stateRegion}
-                                    onChange={option => props.handleChange('stateRegion')(option)}
-                                    placeholder=""
-                                    id="stateRegion"
-                                    name="stateRegion"
+                                  <Label htmlFor="stateId">State Region</Label>
+                                  <Select
+                                    options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
+                                    value={props.values.stateId}
+                                    onChange={option => {
+                                      if (option && option.value) {
+                                        props.handleChange('stateId')(option.value)
+                                      } else {
+                                        props.handleChange('stateId')('')
+                                      }
+                                    }}
+                                    placeholder="Select State"
+                                    id="stateId"
+                                    name="stateId"
                                     className={
-                                      props.errors.stateRegion && props.touched.stateRegion
+                                      props.errors.stateId && props.touched.stateId
                                         ? "is-invalid"
                                         : ""
                                     }
                                   />
-                                  {props.errors.stateRegion && props.touched.stateRegion && (
-                                    <div className="invalid-feedback">{props.errors.stateRegion}</div>
+                                  {props.errors.stateId && props.touched.stateId && (
+                                    <div className="invalid-feedback">{props.errors.stateId}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
                                   <Label htmlFor="city">City</Label>
                                   <Input
-                                    className="select-default-width"
                                     // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                                     value={props.values.city}
                                     onChange={option => props.handleChange('city')(option)}
@@ -516,19 +551,19 @@ class CreateContact extends React.Component {
                                   {props.errors.city && props.touched.city && (
                                     <div className="invalid-feedback">{props.errors.city}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                             </Row>
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="postZipCode">Post Zip Code</Label>
+                                  <Label htmlFor="postZipCode"><span className="text-danger">*</span>Post Zip Code</Label>
                                   <Input
                                     type="text"
                                     id="postZipCode"
                                     name="postZipCode"
-                                    
+
                                     onChange={(value) => { props.handleChange("postZipCode")(value) }}
                                     value={props.values.postZipCode}
                                     className={
@@ -540,7 +575,7 @@ class CreateContact extends React.Component {
                                   {props.errors.postZipCode && props.touched.postZipCode && (
                                     <div className="invalid-feedback">{props.errors.postZipCode}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -555,15 +590,15 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="billingEmail"
                                     name="billingEmail"
-                                    
+
                                     onChange={(value) => { props.handleChange("billingEmail")(value) }}
                                     value={props.values.billingEmail}
                                     className={
                                       props.errors.billingEmail && props.touched.billingEmail
                                         ? "is-invalid"
                                         : ""
-                                    }                           
-                                    />
+                                    }
+                                  />
                                   {props.billingEmail && props.touched.billingEmail && (
                                     <div className="invalid-feedback">{props.errors.billingEmail}</div>
                                   )}
@@ -576,7 +611,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="contractPoNumber"
                                     name="contractPoNumber"
-                                    
+
                                     onChange={(value) => { props.handleChange("contractPoNumber")(value) }}
                                     value={props.values.contractPoNumber}
                                     className={
@@ -588,19 +623,19 @@ class CreateContact extends React.Component {
                                   {props.errors.contractPoNumber && props.touched.contractPoNumber && (
                                     <div className="invalid-feedback">{props.errors.contractPoNumber}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                             </Row>
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="vatRegistrationNumber">Tax Registration Number</Label>
+                                  <Label htmlFor="vatRegistrationNumber"><span className="text-danger">*</span>Tax Registration Number</Label>
                                   <Input
                                     type="text"
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
-                                    
+
                                     onChange={(value) => { props.handleChange("vatRegistrationNumber")(value) }}
                                     value={props.values.vatRegistrationNumber}
                                     className={
@@ -612,18 +647,17 @@ class CreateContact extends React.Component {
                                   {props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber && (
                                     <div className="invalid-feedback">{props.errors.vatRegistrationNumber}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
                                   <Label htmlFor="currencyCode">Currency Code</Label>
                                   <Select
-                                    className="select-default-width"
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currencyCode}
                                     onChange={option => {
-                                      if(option && option.value) {
+                                      if (option && option.value) {
                                         props.handleChange('currencyCode')(option.value)
                                       } else {
                                         props.handleChange('currencyCode')('')
@@ -641,23 +675,23 @@ class CreateContact extends React.Component {
                                   {props.errors.currencyCode && props.touched.currencyCode && (
                                     <div className="invalid-feedback">{props.errors.currencyCode}</div>
                                   )}
-                                  
+
                                 </FormGroup>
                               </Col>
                             </Row>
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="button" color="primary" className="btn-square mr-3"  onClick={() => {
-                                      this.setState({ createMore: false },()=>{
-                                        props.handleSubmit();
-                                      })
-                                    }}>
+                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+                                    this.setState({ createMore: false }, () => {
+                                      props.handleSubmit();
+                                    })
+                                  }}>
                                     <i className="fa fa-dot-circle-o"></i> Create
                                 </Button>
                                   <Button type="button" color="primary" className="btn-square mr-3"
                                     onClick={() => {
-                                      this.setState({ createMore: true },()=>{
+                                      this.setState({ createMore: true }, () => {
                                         props.handleSubmit();
                                       })
                                     }}>

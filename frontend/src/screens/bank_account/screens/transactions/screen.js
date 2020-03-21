@@ -9,7 +9,6 @@ import {
   Row,
   Col,
   ButtonGroup,
-  FormGroup,
   ButtonDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -375,8 +374,6 @@ class BankTransactions extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <FormGroup className="mb-3">
-
                               <Select
                                 options={transaction_type_list  ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Transaction Type') : []}
                                 onChange={(val) => {
@@ -392,7 +389,6 @@ class BankTransactions extends React.Component {
                                 placeholder="Transaction Type"
                                 value={this.state.selectedTransactionType}
                               />
-                            </FormGroup>
                           </Col>
                           <Col lg={2} className="mb-1">
                             <DatePicker

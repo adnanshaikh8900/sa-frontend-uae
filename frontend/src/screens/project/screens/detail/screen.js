@@ -359,7 +359,6 @@ class DetailProject extends React.Component {
                                     <span className="text-danger">*</span>currencyCode
                                       </Label>
                                   <Select
-                                    className="select-default-width"
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     onChange={(option) => {
                                       this.setState({
@@ -437,7 +436,6 @@ class DetailProject extends React.Component {
                                     <span className="text-danger"></span>Invoice Language(TBD)
                                       </Label>
                                   <Select
-                                    className="select-default-width"
                                     options={INVOICE_LANGUAGE_OPTIONS}
                                     id="invoiceLanguageCode"
                                     onChange={(option) => {

@@ -22,7 +22,7 @@ export const checkAuthStatus = () => {
             data: res.data
           }
         })
-        // window.localStorage.setItem('profilePic', res.data.profileImageBinary);
+        // window.sessionStorage.setItem('profilePic', res.data.profileImageBinary);
         cryptoService.encryptService('userId',res.data.userId)
 
       } else {
@@ -45,8 +45,8 @@ export const logIn = (obj) => {
       dispatch({
         type: AUTH.SIGNED_IN
       })
-      window.localStorage.setItem('accessToken', res.data.token);
-      // window.localStorage.setItem('userId', res.data.userId);
+      window.sessionStorage.setItem('accessToken', res.data.token);
+      // window.sessionStorage.setItem('userId', res.data.userId);
 
       return res
     }).catch(err => {
@@ -57,7 +57,7 @@ export const logIn = (obj) => {
 
 export const logOut = () => {
   return (dispatch) => {
-    window.localStorage.clear()
+    window.sessionStorage.clear()
 
     dispatch({
       type: AUTH.SIGNED_OUT

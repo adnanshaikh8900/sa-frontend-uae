@@ -222,7 +222,7 @@ class Organization extends React.Component {
                                   maxFileSize={1048576}
                                   withPreview={true}
                                   singleImage={true}
-                                  withIcon={false}
+                                  // withIcon={false}
                                   label="'Max file size: 1mb"
                                 // fileContainerStyle = {{
                                 //   display: 'none'
@@ -254,7 +254,6 @@ class Organization extends React.Component {
                               </Col>
                               <Col xs="12" md="5">
                                 <Select
-                                  className="select-default-width"
                                   options={industry_type_list ? selectOptionsFactory.renderOptions('label', 'value', industry_type_list) : []}
                                   value={props.values.industryTypeCode}
                                   onChange={option => {
@@ -307,7 +306,6 @@ class Organization extends React.Component {
                                 <Row>
                                   <Col xs="12" md="3">
                                     <Select
-                                      className="select-default-width"
                                       options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                       value={props.values.countryCode}
                                       onChange={option => {

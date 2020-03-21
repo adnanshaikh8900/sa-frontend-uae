@@ -17,7 +17,7 @@ import Select from 'react-select'
 import { selectOptionsFactory } from 'utils'
 import { Loader, ConfirmDeleteModal } from 'components'
 
-import {  toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 
 import './style.scss'
@@ -29,7 +29,9 @@ import {
 } from 'services/global'
 import * as ContactActions from '../../actions'
 import * as DetailContactActions from './actions'
-
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+import { isValidPhoneNumber } from 'react-phone-number-input'
 
 
 const mapStateToProps = (state) => {
@@ -37,6 +39,7 @@ const mapStateToProps = (state) => {
     country_list: state.contact.country_list,
     currency_list: state.contact.currency_list,
     contact_type_list: state.contact.contact_type_list,
+    state_list: state.contact.state_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -76,6 +79,7 @@ class DetailContact extends React.Component {
       this.props.contactActions.getContactTypeList();
       this.props.contactActions.getCountryList();
       this.props.contactActions.getCurrencyList();
+
       this.props.detailContactActions.getContactById(this.props.location.state.id).then(res => {
         this.setState({
           current_contact_id: this.props.location.state.id,
@@ -99,11 +103,12 @@ class DetailContact extends React.Component {
             organization: res.data.organization && res.data.organization !== null ? res.data.organization : '',
             poBoxNumber: res.data.poBoxNumber && res.data.poBoxNumber !== null ? res.data.poBoxNumber : '',
             postZipCode: res.data.postZipCode && res.data.postZipCode !== null ? res.data.postZipCode : '',
-            state: res.data.state && res.data.state !== null ? res.data.state : '',
+            stateId: res.data.stateId && res.data.stateId !== null ? res.data.stateId : '',
             telephone: res.data.telephone && res.data.telephone !== null ? res.data.telephone : '',
             vatRegistrationNumber: res.data.vatRegistrationNumber && res.data.vatRegistrationNumber !== null ? res.data.vatRegistrationNumber : ''
           }
-        })
+        }, () => { this.props.contactActions.getStateList(this.state.initValue.countryId) })
+
       }).catch(err => {
         this.setState({ loading: false })
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
@@ -113,10 +118,10 @@ class DetailContact extends React.Component {
     }
   }
 
-  handleSubmit(data,resetForm) {
+  handleSubmit(data, resetForm) {
     const { current_contact_id } = this.state
-    
-    const postData = {...data, ...{ contactId: current_contact_id } }
+
+    const postData = { ...data, ...{ contactId: current_contact_id } }
 
     this.props.detailContactActions.updateContact(postData).then(res => {
       if (res.status === 200) {
@@ -146,7 +151,7 @@ class DetailContact extends React.Component {
   }
 
   removeContact() {
-    const {current_contact_id} = this.state
+    const { current_contact_id } = this.state
     this.props.detailContactActions.deleteContact(current_contact_id).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Contact Deleted Successfully')
@@ -163,8 +168,12 @@ class DetailContact extends React.Component {
     })
   }
 
+  getStateList(countryCode) {
+    this.props.contactActions.getStateList(countryCode);
+  }
+
   render() {
-    const { currency_list, country_list, contact_type_list } = this.props;
+    const { currency_list, country_list, contact_type_list, state_list } = this.props;
     const { initValue, loading, dialog } = this.state;
     return (
       <div className="create-contact-screen">
@@ -194,51 +203,61 @@ class DetailContact extends React.Component {
                           <Formik
                             initialValues={initValue}
                             onSubmit={(values, { resetForm }) => {
-                              this.handleSubmit(values,resetForm)
+                              this.handleSubmit(values, resetForm)
                             }}
 
                             validationSchema={
                               Yup.object().shape({
-                                firstName: Yup.string()
-                                  .required("First Name is Required"),
-                                lastName: Yup.string()
-                                  .required("Last Name is Required"),
-                                // middleName: Yup.string()
-                                //   .required("Middle Name is Required"),
-                                  // contactType: Yup.string()
-                                  // .required("Please Select Contact Type"),
-                            //       organization: Yup.string()
-                            //       .required("Organization Name is Required"),
-                            //     poBoxNumber: Yup.number()
-                            //       .required("PO Box Number is Required"),
+                                firstName: Yup.string().required("First Name is Required"),
+                                lastName: Yup.string().required("Last Name is Required"),
+                                middleName: Yup.string()
+                                  .required("Middle Name is Required"),
+                                // contactType: Yup.string()
+                                // .required("Please Select Contact Type"),
+                                //       organization: Yup.string()
+                                //       .required("Organization Name is Required"),
+                                //     poBoxNumber: Yup.number()
+                                //       .required("PO Box Number is Required"),
                                 email: Yup.string()
                                   .required("Email is Required")
-                                  .email('Invalid Email'),
-                            //     telephone: Yup.number()
-                            //       .required("Telephone Number is Required"),
-                            //     mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, {message: "Please enter valid number.", excludeEmptyString: false})
-                            //       .required("Mobile Number is required"),
-                            //     addressLine1: Yup.string()
-                            //       .required("Address is required"),
-                                countryId: Yup.string()
-                                  .required("Please Select Country")
-                                  // .nullable(),
-                            //     stateRegion: Yup.string()
-                            //       .required("State is Required"),
-                            //     city: Yup.string()
-                            //       .required("City is Required"),
-                            //     postZipCode: Yup.number()
-                            //       .required("Postal Code is Required"),
-                            //     billingEmail: Yup.string()
-                            //       .required("Billing Email is Required")
-                            //       .email('Invalid Email'),
-                            //     contractPoNumber: Yup.number()
-                            //       .required("Contract PoNumber is Required"),
-                            //       vatRegistrationNumber: Yup.number()
-                            //       .required("Tax Registration Number is Required"),
-                            //       currencyCode: Yup.string()
-                            //       .required("Please Select Currency")
-                            //       .nullable(),
+                                  .email("Invalid Email"),
+                                telephone: Yup.number()
+                                  .required("Telephone Number is Required"),
+                                mobileNumber: Yup.string()
+                                  .required("Mobile Number is required")
+                                  .test('quantity', 'Invalid Mobile Number', value => {
+                                    if (isValidPhoneNumber(value)) {
+                                      return true
+                                    } else {
+                                      return false
+                                    }
+                                  }),
+                                //     addressLine1: Yup.string()
+                                //       .required("Address is required"),
+                                countryId: Yup.string().required("Country is Required")
+                                  .nullable(),
+                                stateId: Yup.string()
+                                  .when('countryId', {
+                                    is: (val) => val ? true : false,
+                                    then: Yup.string()
+                                      .required('State is Required')
+                                  }),
+                                //     stateRegion: Yup.string()
+                                //       .required("State is Required"),
+                                //     city: Yup.string()
+                                //       .required("City is Required"),
+                                postZipCode: Yup.string()
+                                  .required("Postal Code is Required"),
+                                //     billingEmail: Yup.string()
+                                //       .required("Billing Email is Required")
+                                //       .email('Invalid Email'),
+                                //     contractPoNumber: Yup.number()
+                                //       .required("Contract PoNumber is Required"),
+                                vatRegistrationNumber: Yup.string()
+                                  .required("Tax Registration Number is Required"),
+                                //       currencyCode: Yup.string()
+                                //       .required("Please Select Currency")
+                                //       .nullable(),
                               })
                             }
                           >
@@ -269,7 +288,7 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="middleName ">Middle Name</Label>
+                                      <Label htmlFor="middleName "><span className="text-danger">*</span>Middle Name</Label>
                                       <Input
                                         type="text"
                                         id="middleName "
@@ -317,11 +336,10 @@ class DetailContact extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="contactType">Contact Type</Label>
                                       <Select
-                                        className="select-default-width"
-                                        options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list,'Contact Type') : []}
+                                        options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                         value={props.values.contactType}
                                         onChange={option => {
-                                          if(option && option.value) {
+                                          if (option && option.value) {
                                             props.handleChange('contactType')(option.value)
                                           } else {
                                             props.handleChange('contactType')('')
@@ -412,7 +430,7 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="telephone">Telephone</Label>
+                                      <Label htmlFor="telephone"><span className="text-danger">*</span>Telephone</Label>
                                       <Input
                                         type="text"
                                         id="telephone"
@@ -435,7 +453,7 @@ class DetailContact extends React.Component {
                                   <Col md="4">
                                     <FormGroup>
                                       <Label htmlFor="mobileNumber"><span className="text-danger">*</span>Mobile Number</Label>
-                                      <Input
+                                      {/* <Input
                                         type="text"
                                         id="mobileNumber"
                                         name="mobileNumber"
@@ -450,8 +468,25 @@ class DetailContact extends React.Component {
                                       />
                                       {props.errors.mobileNumber && props.touched.mobileNumber && (
                                         <div className="invalid-feedback">{props.errors.mobileNumber}</div>
-                                      )}
-
+                                      )} */}
+                                      <PhoneInput
+                                        defaultCountry="AE"
+                                        international
+                                        value={props.values.mobileNumber}
+                                        onChange={(option) => { props.handleChange('mobileNumber')(option) }}
+                                        className={
+                                          props.errors.mobileNumber &&
+                                            props.touched.mobileNumber
+                                            ? "is-invalid"
+                                            : ""
+                                        }
+                                      />
+                                      {props.errors.mobileNumber &&
+                                        props.touched.mobileNumber && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.mobileNumber}
+                                          </div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                 </Row>
@@ -510,14 +545,15 @@ class DetailContact extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="countryId"><span className="text-danger">*</span>Country</Label>
                                       <Select
-                                        className="select-default-width"
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                         value={props.values.countryId}
                                         onChange={option => {
-                                          if(option && option.value) {
+                                          if (option && option.value) {
                                             props.handleChange('countryId')(option.value)
+                                            this.getStateList(option.value)
                                           } else {
                                             props.handleChange('countryId')('')
+                                            props.handleChange('stateId')('')
 
                                           }
                                         }}
@@ -538,23 +574,28 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="state">State Region</Label>
-                                      <Input
-                                        className="select-default-width"
-                                        // options={state ? selectOptionsFactory.renderOptions('stateName', 'stateCode', state) : ''}
-                                        defaultValue={props.values.state}
-                                        onChange={option => props.handleChange('state')(option)}
-                                        placeholder=""
-                                        id="state"
-                                        name="state"
+                                      <Label htmlFor="stateId">State Region</Label>
+                                      <Select
+                                        options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
+                                        value={props.values.stateId}
+                                        onChange={option => {
+                                          if (option && option.value) {
+                                            props.handleChange('stateId')(option.value)
+                                          } else {
+                                            props.handleChange('stateId')('')
+                                          }
+                                        }}
+                                        placeholder="Select State"
+                                        id="stateId"
+                                        name="stateId"
                                         className={
-                                          props.errors.state && props.touched.state
+                                          props.errors.stateId && props.touched.stateId
                                             ? "is-invalid"
                                             : ""
                                         }
                                       />
-                                      {props.errors.state && props.touched.state && (
-                                        <div className="invalid-feedback">{props.errors.state}</div>
+                                      {props.errors.stateId && props.touched.stateId && (
+                                        <div className="invalid-feedback">{props.errors.stateId}</div>
                                       )}
 
                                     </FormGroup>
@@ -563,7 +604,6 @@ class DetailContact extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="city">City</Label>
                                       <Input
-                                        className="select-default-width"
                                         // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                                         defaultValue={props.values.city}
                                         onChange={option => props.handleChange('city')(option)}
@@ -586,7 +626,7 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="postZipCode">Post Zip Code</Label>
+                                      <Label htmlFor="postZipCode"><span className="text-danger">*</span>Post Zip Code</Label>
                                       <Input
                                         type="text"
                                         id="postZipCode"
@@ -658,7 +698,7 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="vatRegistrationNumber">Tax Registration Number</Label>
+                                      <Label htmlFor="vatRegistrationNumber"><span className="text-danger">*</span>Tax Registration Number</Label>
                                       <Input
                                         type="text"
                                         id="vatRegistrationNumber"
@@ -682,11 +722,10 @@ class DetailContact extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="currencyCode">Currency Code</Label>
                                       <Select
-                                        className="select-default-width"
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currencyCode}
                                         onChange={option => {
-                                          if(option && option.value) {
+                                          if (option && option.value) {
                                             props.handleChange('currencyCode')(option.value)
                                           } else {
                                             props.handleChange('currencyCode')('')

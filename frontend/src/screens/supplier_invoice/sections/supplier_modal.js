@@ -19,8 +19,9 @@ import * as Yup from "yup";
 
 import { selectOptionsFactory } from 'utils'
 import { toast } from 'react-toastify'
-
-
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+import { isValidPhoneNumber } from 'react-phone-number-input'
 
 class SupplierModal extends React.Component {
 
@@ -47,10 +48,11 @@ class SupplierModal extends React.Component {
         organization: '',
         poBoxNumber: '',
         postZipCode: '',
-        stateRegion: '',
+        stateId: '',
         telephone: '',
         vatRegistrationNumber: '',
       },
+      state_list: []
     }
     this.formikRef = React.createRef()
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -80,9 +82,19 @@ class SupplierModal extends React.Component {
     })
   }
 
+  getStateList = (countryCode) =>{
+    this.props.getStateList(countryCode).then(res => {
+      if(res.status === 200) {
+        this.setState({
+          state_list: res.data
+        })
+      }
+    })
+  }
+
   render() {
     const { openSupplierModal, closeSupplierModal, currency_list, country_list } = this.props
-    const { initValue } = this.state
+    const { initValue,state_list } = this.state
     return (
       <div className="contact-modal-screen">
         <Modal isOpen={openSupplierModal}
@@ -111,14 +123,25 @@ class SupplierModal extends React.Component {
                   .email("Invalid Email"),
                 telephone: Yup.number()
                   .required("Telephone Number is Required"),
-                mobileNumber: Yup.string().matches(/^[6-9]\d{9}$/, { message: "Please enter valid number.", excludeEmptyString: false })
-                  .required("Mobile Number is required"),
-                //     addressLine1: Yup.string()
+                  mobileNumber: Yup.string()
+                  .required("Mobile Number is required")
+                  .test('quantity', 'Invalid Mobile Number', value => {
+                    if (isValidPhoneNumber(value)) {
+                      return true
+                    } else {
+                      return false
+                    }
+                  }),
+                 //     addressLine1: Yup.string()
                 //       .required("Address is required"),
                 countryId: Yup.string().required("Country is Required")
                   .nullable(),
-                //     stateRegion: Yup.string()
-                //       .required("State is Required"),
+                  stateId: Yup.string()
+                  .when('countryId', {
+                    is: (val) => val ? true : false,
+                    then: Yup.string()
+                      .required('State is Required')
+                  }),
                 //     city: Yup.string()
                 //       .required("City is Required"),
                 postZipCode: Yup.string()
@@ -221,8 +244,9 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="firstName"
                             name="firstName"
-                            onChange={(option) => { 
-                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option) }}
+                            onChange={(option) => {
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                            }}
                             value={props.values.firstName}
                             className={
                               props.errors.firstName && props.touched.firstName
@@ -245,8 +269,9 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="middleName "
                             name="middleName "
-                            onChange={(option) => { 
-                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option) }}
+                            onChange={(option) => {
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option)
+                            }}
                             value={props.values.middleName}
                             className={
                               props.errors.middleName &&
@@ -272,8 +297,9 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="lastName"
                             name="lastName"
-                            onChange={(option) => { 
-                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option) }}
+                            onChange={(option) => {
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                            }}
                             value={props.values.lastName}
                             className={
                               props.errors.lastName && props.touched.lastName
@@ -400,7 +426,25 @@ class SupplierModal extends React.Component {
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="mobileNumber"> <span className="text-danger">*</span>Mobile Number</Label>
-                          <Input
+                          <PhoneInput
+                            defaultCountry="AE"
+                            international
+                            value={props.values.mobileNumber}
+                            onChange={(option) => { props.handleChange('mobileNumber')(option) }}
+                            className={
+                              props.errors.mobileNumber &&
+                                props.touched.mobileNumber
+                                ? "is-invalid"
+                                : ""
+                            }
+                          />
+                          {props.errors.mobileNumber &&
+                            props.touched.mobileNumber && (
+                              <div className="invalid-feedback">
+                                {props.errors.mobileNumber}
+                              </div>
+                            )}
+                          {/* <Input
                             type="text"
                             id="mobileNumber"
                             name="mobileNumber"
@@ -419,7 +463,7 @@ class SupplierModal extends React.Component {
                               <div className="invalid-feedback">
                                 {props.errors.mobileNumber}
                               </div>
-                            )}
+                            )} */}
                         </FormGroup>
                       </Col>
                     </Row>
@@ -484,7 +528,6 @@ class SupplierModal extends React.Component {
                             <span className="text-danger">*</span>Country
                           </Label>
                           <Select
-                            className="select-default-width"
                             options={
                               country_list
                                 ? selectOptionsFactory.renderOptions(
@@ -499,8 +542,10 @@ class SupplierModal extends React.Component {
                             onChange={option => {
                               if (option && option.value) {
                                 props.handleChange("countryId")(option.value);
+                                this.getStateList(option.value)
                               } else {
                                 props.handleChange("countryId")("");
+                                this.getStateList(option.value)
                               }
                             }}
                             placeholder="Select Country"
@@ -522,37 +567,35 @@ class SupplierModal extends React.Component {
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label htmlFor="stateRegion">State Region</Label>
-                          <Input
-                            className="select-default-width"
-                            // options={stateRegion ? selectOptionsFactory.renderOptions('stateName', 'stateCode', stateRegion) : ''}
-                            value={props.values.stateRegion}
-                            onChange={option =>
-                              props.handleChange("stateRegion")(option)
-                            }
-                            placeholder=""
-                            id="stateRegion"
-                            name="stateRegion"
+                          <Label htmlFor="stateId">State Region</Label>
+                          <Select
+                            options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
+                            value={props.values.stateId}
+                            onChange={option => {
+                              if (option && option.value) {
+                                props.handleChange('stateId')(option.value)
+                              } else {
+                                props.handleChange('stateId')('')
+                              }
+                            }}
+                            placeholder="Select State"
+                            id="stateId"
+                            name="stateId"
                             className={
-                              props.errors.stateRegion &&
-                                props.touched.stateRegion
+                              props.errors.stateId && props.touched.stateId
                                 ? "is-invalid"
                                 : ""
                             }
                           />
-                          {props.errors.stateRegion &&
-                            props.touched.stateRegion && (
-                              <div className="invalid-feedback">
-                                {props.errors.stateRegion}
-                              </div>
-                            )}
+                          {props.errors.stateId && props.touched.stateId && (
+                            <div className="invalid-feedback">{props.errors.stateId}</div>
+                          )}
                         </FormGroup>
                       </Col>
                       <Col md="4">
                         <FormGroup>
                           <Label htmlFor="city">City</Label>
                           <Input
-                            className="select-default-width"
                             // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                             value={props.values.city}
                             onChange={option =>
@@ -583,8 +626,9 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="postZipCode"
                             name="postZipCode"
-                            onChange={(option) => { 
-                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('postZipCode')(option) }}
+                            onChange={(option) => {
+                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('postZipCode')(option)
+                            }}
                             value={props.values.postZipCode}
                             className={
                               props.errors.postZipCode &&
@@ -670,8 +714,9 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="vatRegistrationNumber"
                             name="vatRegistrationNumber"
-                            onChange={(option) => { 
-                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option) }}
+                            onChange={(option) => {
+                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                            }}
                             value={props.values.vatRegistrationNumber}
                             className={
                               props.errors.vatRegistrationNumber &&
@@ -692,7 +737,6 @@ class SupplierModal extends React.Component {
                         <FormGroup>
                           <Label htmlFor="currencyCode">Currency Code</Label>
                           <Select
-                            className="select-default-width"
                             options={
                               currency_list
                                 ? selectOptionsFactory.renderOptions(

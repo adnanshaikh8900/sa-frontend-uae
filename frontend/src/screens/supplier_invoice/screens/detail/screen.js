@@ -498,8 +498,8 @@ class DetailSupplierInvoice extends React.Component {
     formData.append("type", 1);
     formData.append("invoiceId", current_supplier_id);
     formData.append("referenceNumber", invoice_number ? invoice_number : "");
-    formData.append("invoiceDate", typeof invoiceDate === "date" ? invoiceDate : moment(invoiceDate, 'DD/MM/YYYY').toDate());
-    formData.append("invoiceDueDate", typeof invoiceDueDate === "date" ? invoiceDueDate : moment(invoiceDueDate, 'DD/MM/YYYY').toDate())
+    formData.append("invoiceDate", typeof invoiceDate === "string" ? moment(invoiceDate, 'DD/MM/YYYY').toDate() : invoiceDate)
+		formData.append("invoiceDueDate", typeof invoiceDueDate === "string" ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : invoiceDueDate)
     formData.append("receiptNumber", receiptNumber ? receiptNumber : "");
     formData.append("contactPoNumber", contact_po_number ? contact_po_number : "");
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription ? receiptAttachmentDescription : "");
@@ -670,7 +670,7 @@ class DetailSupplierInvoice extends React.Component {
                                 invoiceDueDate: Yup.string()
                                   .required('Invoice Due Date is Required'),
                                   currency: Yup.string()
-                                  .required('Currency is Required'),
+                                  .required('Currency is Requsired'),
                                 lineItemsString: Yup.array()
                                   .required('Atleast one invoice sub detail is mandatory')
                                   .of(Yup.object().shape({
@@ -791,7 +791,6 @@ class DetailSupplierInvoice extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="term"><span className="text-danger">*</span>Terms <i className="fa fa-question-circle"></i></Label>
                                       <Select
-                                        className="select-default-width"
                                         options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
                                         id="term"
                                         name="term"
@@ -850,7 +849,6 @@ class DetailSupplierInvoice extends React.Component {
                                       <Label htmlFor="due_date">Invoice Due Date</Label>
                                       <div>
                                         <DatePicker
-                                          className="form-control"
                                           id="invoiceDueDate"
                                           name="invoiceDueDate"
                                           placeholderText="Invoice Due Date"
@@ -877,7 +875,6 @@ class DetailSupplierInvoice extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                       <Select
-                                        className="select-default-width"
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         id="currency"
                                         name="currency"
@@ -1231,6 +1228,8 @@ class DetailSupplierInvoice extends React.Component {
           createSupplier={this.props.supplierInvoiceActions.createSupplier}
           currency_list={this.props.currency_list}
           country_list={this.props.country_list}
+					getStateList={this.props.supplierInvoiceActions.getStateList}
+
         />
       </div>
     )

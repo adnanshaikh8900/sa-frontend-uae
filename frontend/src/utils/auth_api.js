@@ -10,7 +10,7 @@ const authApi = axios.create({
 
 authApi.interceptors.request.use(
   config => {
-    config.headers.Authorization = `Bearer ${window.localStorage.getItem('accessToken')}`
+    config.headers.Authorization = `Bearer ${window.sessionStorage.getItem('accessToken')}`
     return config
   },
   error => {
@@ -24,7 +24,7 @@ authApi.interceptors.response.use(
   },
   error => {
     if(error.response && error.response.status === 401) {
-      window.localStorage.clear()
+      window.sessionStorage.clear()
         window.location = '/login'
       } else {
       return Promise.reject(error.response)

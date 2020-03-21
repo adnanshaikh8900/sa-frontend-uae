@@ -301,7 +301,6 @@ class CreateUser extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="roleId">Role</Label>
                                       <Select
-                                        className="select-default-width"
                                         options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                                         value={props.values.roleId}
                                         onChange={option => {
@@ -400,6 +399,7 @@ class CreateUser extends React.Component {
                                         type="password"
                                         id="password"
                                         name="password"
+                                        autoComplete="new-password"
                                         value={props.values.password}
                                         onChange={(value) => { props.handleChange('password')(value) }}
                                         className={props.errors.password && props.touched.password ? "is-invalid" : ""}

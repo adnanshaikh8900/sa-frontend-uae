@@ -6,8 +6,8 @@ import moment from 'moment'
 
 
 export const getJournalList = (obj) => {
-  const { journalDate , journalReferenceNo , description,pageNo,pageSize} = obj
-  let url = `/rest/journal/getList?journalReferenceNo=${journalReferenceNo}&description=${description}&pageNo=${pageNo}&pageSize=${pageSize}`
+  const { journalDate , journalReferenceNo , description,pageNo,pageSize,order,sortingCol} = obj
+  let url = `/rest/journal/getList?journalReferenceNo=${journalReferenceNo}&description=${description}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingColumn=${sortingCol}`
   if(journalDate) {
     let date = moment(journalDate).format('DD-MM-YYYY')
     url = url + `&journalDate=${date}`

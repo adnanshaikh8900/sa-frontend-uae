@@ -94,7 +94,7 @@ class Expense extends React.Component {
 
 
     this.options = {
-      // onRowClick: this.goToDetail,
+       onRowClick: this.goToDetail,
       paginationPosition: 'top',
       page: 1,
       sizePerPage: 10,
@@ -277,6 +277,10 @@ class Expense extends React.Component {
     )
   }
 
+  renderAmount(cell,row){
+    return row.expenseAmount ? (row.expenseAmount).toFixed(2) : ''
+  }
+
   handleSearch() {
     this.initializeData()
   }
@@ -337,6 +341,8 @@ class Expense extends React.Component {
       this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
     }
   }
+
+  
 
   removeBulkExpenses() {
     this.removeDialog()
@@ -558,6 +564,8 @@ class Expense extends React.Component {
                       <TableHeaderColumn
                         dataField="expenseAmount"
                         dataSort
+                        dataFormat={this.renderAmount}
+                        dataAlign="right"
                       >
                         Expense Amount
                           </TableHeaderColumn>

@@ -8,7 +8,7 @@ import moment from 'moment'
 
 export const getReceiptList = (obj) => {
   let receiptDate = obj.receiptDate;
-  let url = `/rest/receipt/getList?referenceCode=${obj.receiptReferenceCode}&contactId=${obj.contactId}&invoiceId=${obj.invoiceId}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`;
+  let url = `/rest/receipt/getList?referenceCode=${obj.receiptReferenceCode}&contactId=${obj.contactId}&invoiceId=${obj.invoiceId}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}&order=${obj.order}&sortingColumn=${obj.sortingCol}`;
   if (receiptDate) {
     let date = moment(receiptDate).format('DD-MM-YYYY')
     url = url + `&receiptDate=${date}`

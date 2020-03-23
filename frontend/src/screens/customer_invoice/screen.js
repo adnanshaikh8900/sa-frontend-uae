@@ -101,6 +101,8 @@ class CustomerInvoice extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
     }
 
     this.selectRowProp = {
@@ -122,8 +124,12 @@ class CustomerInvoice extends React.Component {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    filterData = { ...filterData, ...paginationData }
-    this.props.customerInvoiceActions.getCustomerInvoiceList(filterData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData , ...sortingData}
+    this.props.customerInvoiceActions.getCustomerInvoiceList(postData).then(res => {
       if (res.status === 200) {
         this.props.customerInvoiceActions.getStatusList()
         this.props.customerInvoiceActions.getCurrencyList()
@@ -159,6 +165,12 @@ class CustomerInvoice extends React.Component {
       this.initializeData()
     }
   }
+
+  sortColumn = (sortName,sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
+}
 
   postInvoice(row) {
     this.setState({
@@ -226,7 +238,13 @@ class CustomerInvoice extends React.Component {
   }
 
 
+  renderInvoiceAmount(cell,row){
+    return row.invoiceAmount ? (row.invoiceAmount).toFixed(2) : ''
+  }
 
+  renderVatAmount(cell,row){
+    return row.vatAmount ? (row.vatAmount).toFixed(2) : ''
+  }
 
 
   renderActions(cell, row) {
@@ -638,12 +656,16 @@ class CustomerInvoice extends React.Component {
                       <TableHeaderColumn
                         dataField="invoiceAmount"
                         dataSort
+                        dataFormat={this.renderInvoiceAmount}
+                        dataAlign="right"
                       >
                         Invoice Amount
                           </TableHeaderColumn>
                       <TableHeaderColumn
                         dataField="vatAmount"
-                        dataSort
+                        dataSort  
+                        dataFormat={this.renderVatAmount}
+                        dataAlign="right"
                       >
                         VAT Amount
                           </TableHeaderColumn>

@@ -42,6 +42,13 @@ public class DatatableSortingFilterConstant {
 	private final List<String> invoiceColNameList = Arrays.asList(new String[] { "status", "contact.firstName",
 			"referenceNumber", "invoiceDate", "invoiceDueDate", "totalAmount", "totalVatAmount" });
 
+	public final String RECEIPT = "RECEIPT";
+	public final String RECEIPT_DEFAULT = "id";
+	private final List<String> receiptColLabelList = Arrays.asList(
+			new String[] { "receiptDate", "referenceCode", "customerName", "invoiceNumber", "amount", "unusedAmount" });
+	private final List<String> receiptColNameList = Arrays.asList(new String[] { "receiptDate", "referenceCode",
+			"contact.firstName", "invoice.referenceNumber", "amount", "unusedAmount", });
+
 	private Map<String, String> getMap(List<String> colLabelList, List<String> colNameList) {
 		dataMap = new HashMap<String, String>();
 		for (String colName : colLabelList) {
@@ -89,6 +96,14 @@ public class DatatableSortingFilterConstant {
 				returnDbName = map.get(label);
 			} else {
 				returnDbName = INVOICE_DEFAULT;
+			}
+			break;
+		case RECEIPT:
+			map = getMap(receiptColLabelList, receiptColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = RECEIPT_DEFAULT;
 			}
 			break;
 		}

@@ -21,6 +21,27 @@ public class DatatableSortingFilterConstant {
 			.asList(new String[] { "payee", "status", "expenseDescription", "receiptNumber", "expenseAmount",
 					"transactionCategory.transactionCategoryName", "expenseDate" });
 
+	public final String JOURNAL = "JOURNAL";
+	public final String JOURNAL_DEFAULT = "bankAccountId";
+	private final List<String> journalColLabelList = Arrays
+			.asList(new String[] { "journalDate", "journalReferenceNo", "postingReferenceType", "description" });
+	private final List<String> journalColNameList = Arrays
+			.asList(new String[] { "journalDate", "journalReferenceNo", "postingReferenceType", "description" });
+
+	public final String BANK_ACCOUNT = "BANK_ACCOUNT";
+	public final String BANK_ACCOUNT_DEFAULT = "id";
+	private final List<String> bankAccountColLabelList = Arrays.asList(new String[] { "name", "bankAccountTypeName",
+			"bankAccountNo", "accounName", "currancyName", "openingBalance" });
+	private final List<String> bankAccountColNameList = Arrays.asList(new String[] { "bankName", "bankAccountType.name",
+			"accountNumber", "bankAccountName", "bankAccountCurrency.currencyName", "openingBalance" });
+
+	public final String INVOICE = "INVOICE";
+	public final String INVOICE_DEFAULT = "id";
+	private final List<String> invoiceColLabelList = Arrays.asList(new String[] { "status", "name", "referenceNumber",
+			"invoiceDate", "invoiceDueDate", "totalAmount", "totalVatAmount" });
+	private final List<String> invoiceColNameList = Arrays.asList(new String[] { "status", "contact.firstName",
+			"referenceNumber", "invoiceDate", "invoiceDueDate", "totalAmount", "totalVatAmount" });
+
 	private Map<String, String> getMap(List<String> colLabelList, List<String> colNameList) {
 		dataMap = new HashMap<String, String>();
 		for (String colName : colLabelList) {
@@ -41,6 +62,33 @@ public class DatatableSortingFilterConstant {
 				returnDbName = map.get(label);
 			} else {
 				returnDbName = EXEPENSE_DEFAULT;
+			}
+			break;
+
+		case JOURNAL:
+			map = getMap(journalColLabelList, journalColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = JOURNAL_DEFAULT;
+			}
+			break;
+
+		case BANK_ACCOUNT:
+			map = getMap(bankAccountColLabelList, bankAccountColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = BANK_ACCOUNT_DEFAULT;
+			}
+			break;
+
+		case INVOICE:
+			map = getMap(invoiceColLabelList, invoiceColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = INVOICE_DEFAULT;
 			}
 			break;
 		}

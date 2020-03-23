@@ -5,9 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.dao.AbstractDao;
@@ -18,6 +20,10 @@ import com.simplevat.rest.PaginationResponseModel;
 
 @Repository
 public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements JournalDao {
+
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
+
 	@Override
 	@Transactional
 	public void deleteByIds(List<Integer> ids) {
@@ -38,11 +44,11 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		List<Journal> journals = this.executeQuery(dbFilters, paginationModel);
-
+		paginationModel
+				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), dataTableUtil.JOURNAL));
 		PaginationResponseModel resposne = new PaginationResponseModel();
 		resposne.setCount(this.getResultCount(dbFilters));
-		resposne.setData(journals);
+		resposne.setData(this.executeQuery(dbFilters, paginationModel));
 		return resposne;
 	}
 

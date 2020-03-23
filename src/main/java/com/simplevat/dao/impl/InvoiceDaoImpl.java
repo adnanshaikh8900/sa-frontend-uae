@@ -1,5 +1,6 @@
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import java.util.List;
@@ -30,6 +31,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	@Autowired
 	private DateUtils dateUtil;
 
+	@Autowired
+	private DatatableSortingFilterConstant datatableUtil;
+
 	@Override
 	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
@@ -37,7 +41,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-
+		paginationModel.setSortingCol(datatableUtil.getColName(paginationModel.getSortingCol(), datatableUtil.INVOICE));
 		PaginationResponseModel response = new PaginationResponseModel();
 		response.setCount(this.getResultCount(dbFilters));
 		response.setData(this.executeQuery(dbFilters, paginationModel));

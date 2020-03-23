@@ -10,52 +10,40 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatatableSortingFilterConstant {
 
-	Map<Integer, String> dataMap;
+	Map<String, String> dataMap;
+	public final static String DEFAULT_SORTING_ORDER = "DESC";
 
 	public final String EXEPENSE = "EXPENSE";
 	public final String EXEPENSE_DEFAULT = "expenseId";
+	private final List<String> expenseColLabelList = Arrays.asList(new String[] { "payee", "expenseStatus",
+			"expenseDescription", "receiptNumber", "expenseAmount", "transactionCategoryName", "expenseDate" });
 	private final List<String> expenseColNameList = Arrays
 			.asList(new String[] { "payee", "status", "expenseDescription", "receiptNumber", "expenseAmount",
 					"transactionCategory.transactionCategoryName", "expenseDate" });
 
-	public final String JOURNL = "JOURNAL";
-	public final String JOURNAL_DEFAULT = "id";
-	private final List<String> journalColNameList = Arrays
-			.asList(new String[] { "payee", "status", "expenseDescription", "receiptNumber", "expenseAmount",
-					"transactionCategory.transactionCategoryName", "expenseDate" });
-
-	private Map<Integer, String> getMap(List<String> colNameList) {
-		dataMap = new HashMap<Integer, String>();
+	private Map<String, String> getMap(List<String> colNameList) {
+		dataMap = new HashMap<String, String>();
 		for (String colName : colNameList) {
-			dataMap.put(colNameList.indexOf(colName), colName);
-			System.out.println(colNameList.indexOf(colName) + " = " + colName);
+			int index = colNameList.indexOf(colName);
+			dataMap.put(expenseColLabelList.get(index), expenseColNameList.get(index));
+			System.out.println(expenseColLabelList.get(index) + " = " + expenseColNameList.get(index));
 		}
 		return dataMap;
 	}
 
-	public String getColName(int index, String tableName) {
+	public String getColName(String label, String tableName) {
 
 		String returnDbName = null;
-		Map<Integer, String> map = null;
+		Map<String, String> map = null;
 		switch (tableName) {
 		case EXEPENSE:
 			map = getMap(expenseColNameList);
-			if (map.containsKey(index)) {
-				returnDbName = map.get(index);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
 			} else {
 				returnDbName = EXEPENSE_DEFAULT;
 			}
 			break;
-
-		case JOURNL:
-			map = getMap(journalColNameList);
-			if (map.containsKey(index)) {
-				returnDbName = map.get(index);
-			} else {
-				returnDbName = JOURNAL_DEFAULT;
-			}
-			break;
-
 		}
 		return returnDbName;
 	}

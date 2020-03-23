@@ -135,8 +135,8 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		paginationModel.setSortingCol(
-				dataTableUtil.getColName(Integer.valueOf(paginationModel.getSortingCol()), dataTableUtil.EXEPENSE));
+		paginationModel
+				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), dataTableUtil.EXEPENSE));
 		PaginationResponseModel request = new PaginationResponseModel();
 		request.setData(this.executeQuery(dbFilters, paginationModel));
 		request.setCount(this.getResultCount(dbFilters));

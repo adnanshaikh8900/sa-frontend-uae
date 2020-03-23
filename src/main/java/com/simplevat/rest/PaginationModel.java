@@ -5,6 +5,8 @@
  */
 package com.simplevat.rest;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
+
 import lombok.Data;
 
 /**
@@ -17,6 +19,20 @@ public class PaginationModel {
 	private Integer pageSize;
 	private String order;
 	private String sortingCol;
+
+	public String getOrder() {
+		if (order == null || (order != null && order.isEmpty())) {
+			order = DatatableSortingFilterConstant.DEFAULT_SORTING_ORDER;
+		}
+		return order;
+	}
+
+	public String getSortingCol() {
+		if (sortingCol == null || (sortingCol != null && sortingCol.isEmpty())) {
+			sortingCol = "-1";
+		}
+		return sortingCol;
+	}
 
 	public Integer getPageNo() {
 		if (pageNo == null) {

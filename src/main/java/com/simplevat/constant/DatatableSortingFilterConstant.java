@@ -22,7 +22,7 @@ public class DatatableSortingFilterConstant {
 					"transactionCategory.transactionCategoryName", "expenseDate" });
 
 	public final String JOURNAL = "JOURNAL";
-	public final String JOURNAL_DEFAULT = "bankAccountId";
+	public final String JOURNAL_DEFAULT = "id";
 	private final List<String> journalColLabelList = Arrays
 			.asList(new String[] { "journalDate", "journalReferenceNo", "postingReferenceType", "description" });
 	private final List<String> journalColNameList = Arrays

@@ -21,12 +21,11 @@ public class DatatableSortingFilterConstant {
 			.asList(new String[] { "payee", "status", "expenseDescription", "receiptNumber", "expenseAmount",
 					"transactionCategory.transactionCategoryName", "expenseDate" });
 
-	private Map<String, String> getMap(List<String> colNameList) {
+	private Map<String, String> getMap(List<String> colLabelList, List<String> colNameList) {
 		dataMap = new HashMap<String, String>();
-		for (String colName : colNameList) {
-			int index = colNameList.indexOf(colName);
-			dataMap.put(expenseColLabelList.get(index), expenseColNameList.get(index));
-			System.out.println(expenseColLabelList.get(index) + " = " + expenseColNameList.get(index));
+		for (String colName : colLabelList) {
+			int index = colLabelList.indexOf(colName);
+			dataMap.put(colLabelList.get(index), colNameList.get(index));
 		}
 		return dataMap;
 	}
@@ -37,7 +36,7 @@ public class DatatableSortingFilterConstant {
 		Map<String, String> map = null;
 		switch (tableName) {
 		case EXEPENSE:
-			map = getMap(expenseColNameList);
+			map = getMap(expenseColLabelList, expenseColNameList);
 			if (map.containsKey(label)) {
 				returnDbName = map.get(label);
 			} else {

@@ -100,9 +100,9 @@ export const getProjectList = () => {
 }
 
 export const getPaymentList = (paymentData) => {
-  const { supplierId, paymentDate, invoiceAmount, pageNo, pageSize } = paymentData;
+  const { supplierId, paymentDate, invoiceAmount, pageNo, pageSize, order,sortingCol } = paymentData;
   return (dispatch) => {
-    let param = `rest/payment/getlist?supplierId=${supplierId ? supplierId : ''}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}`
+    let param = `rest/payment/getlist?supplierId=${supplierId ? supplierId : ''}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`
     if (paymentDate) {
       let date = moment(paymentDate).format('DD-MM-YYYY')
       param = param + `&paymentDate=${date}`

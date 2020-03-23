@@ -187,6 +187,8 @@ class CreateBankAccount extends React.Component {
                           account_is_for: Yup.string().required(
                             "Account for is required"
                           ),
+                          ifsc_code: Yup.string()
+                            .required('IFSC Code is Required'),
                           swift_code: Yup.string().matches(/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/, {message: "Please enter valid Swift Code.", excludeEmptyString: false})
                         })}
                       >
@@ -353,12 +355,16 @@ class CreateBankAccount extends React.Component {
                                       value={props.values.ifsc_code}
                                       onChange={(option) => { 
                                         if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('ifsc_code')(option) }}
-                                      className={
+                                         className={
                                         props.errors.ifsc_code && props.touched.ifsc_code
                                           ? 'is-invalid'
                                           : ''
                                       }
                                     />
+                                      {props.errors.ifsc_code && props.touched.ifsc_code && (
+                                      <div className="invalid-feedback">{props.errors.ifsc_code}</div>
+                                    )}
+                                   
                                   </FormGroup>
                                 </Col>
                                 <Col lg={4}>

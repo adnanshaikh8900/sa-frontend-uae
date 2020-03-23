@@ -201,6 +201,16 @@ class BankTransactions extends React.Component {
     )
   }
 
+  renderDepositAmount(cell,row){
+    return row.depositeAmount >= 0 ? (row.depositeAmount).toFixed(2) : ''
+  }
+  renderWithdrawalAmount(cell,row){
+    return  row.withdrawalAmount >= 0 ? (row.withdrawalAmount).toFixed(2) : ''
+  }
+  renderRunningAmount(cell,row){
+    return row.runningAmount >= 0 ? (row.runningAmount).toFixed(2) : ''
+  }
+
   renderActions(cell, row) {
     return (
       <div>
@@ -455,18 +465,26 @@ class BankTransactions extends React.Component {
                           <TableHeaderColumn
                             dataField="depositeAmount"
                             dataSort
+                            dataFormat={this.renderDepositAmount}
+                            dataAlign="right"
                           >
                             Deposit
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="withdrawalAmount"
                             dataSort
+                            dataFormat={this.renderWithdrawalAmount}
+                            dataAlign="right"
+
                           >
                             Withdrawal
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="runningAmount"
                             dataSort
+                            dataFormat={this.renderRunningAmount}
+                            dataAlign="right"
+
                           >
                             Running Balance
                           </TableHeaderColumn>

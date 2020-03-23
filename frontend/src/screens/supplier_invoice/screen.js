@@ -172,6 +172,15 @@ class SupplierInvoice extends React.Component {
     )
   }
 
+  renderInvoiceAmount(cell,row){
+    return row.invoiceAmount ? (row.invoiceAmount).toFixed(2) : ''
+  }
+
+  renderVatAmount(cell,row){
+    return row.vatAmount ? (row.vatAmount).toFixed(2) : ''
+  }
+
+
   toggleActionButton(index) {
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
@@ -647,12 +656,16 @@ class SupplierInvoice extends React.Component {
                       <TableHeaderColumn
                         dataField="invoiceAmount"
                         dataSort
+                        dataFormat={this.renderInvoiceAmount}
+                        dataAlign="right"
                       >
                         Invoice Amount
                           </TableHeaderColumn>
                       <TableHeaderColumn
                         dataField="vatAmount"
                         dataSort
+                        dataFormat={this.renderVatAmount}
+                        dataAlign="right"
                       >
                         VAT Amount
                           </TableHeaderColumn>

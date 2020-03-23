@@ -75,7 +75,9 @@ class BankAccount extends React.Component {
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
-      onPageChange: this.onPageChange,
+      onPageChange: this.onPageChange, 
+      sortName: '',
+      sortOrder: '',
     }
 
     this.selectRowProp = {
@@ -95,12 +97,17 @@ class BankAccount extends React.Component {
 
   initializeData = () => {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    filterData = { ...filterData, ...data }
-    this.props.bankAccountActions.getBankAccountList(filterData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData , ...sortingData}
+
+    this.props.bankAccountActions.getBankAccountList(postData).then(res => {
       if (res.status === 200) {
         this.props.bankAccountActions.getAccountTypeList()
         this.props.bankAccountActions.getCurrencyList()
@@ -245,12 +252,36 @@ class BankAccount extends React.Component {
     }
   }
 
+  renderCurrency = (cell, row) => {
+    if (
+      row.currancyName
+    ) {
+      return (
+        <label className="badge badge-primary mb-0">{row.currancyName}</label>
+      )
+    } else {
+      return (
+        <label className="badge badge-danger mb-0">No Specified</label>
+      )
+    }
+  }
+
+  sortColumn = (sortName,sortOrder) => {
+    this.options.sortName = sortName
+    this.options.sortOrder = sortOrder
+    this.initializeData()
+}
+
+  renderBalance(cell,row){
+    return row.openingBalance ? (row.openingBalance).toFixed(2) : ''
+  }
+
   renderActions = (cell, row) => {
     return (
       <div>
         <ButtonDropdown
           isOpen={this.state.actionButtons[row.bankAccountId]}
-          toggle={() => this.toggleActionButton(row.bankAccountId)}
+          toggle={(e) => {e.preventDefault(); this.toggleActionButton(row.bankAccountId)}}
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
@@ -544,11 +575,11 @@ class BankAccount extends React.Component {
                           data={bank_account_list && bank_account_list.data ? bank_account_list.data : []}
                           version="4"
                           hover
-                          transaction_category_list
                           // totalSize={bank_account_list ? bank_account_list.length : 0}
                           pagination = {bank_account_list && bank_account_list.data && bank_account_list.data.length > 0 ? true : false}
                           remote
                           keyField="bankAccountId"
+                          multiColumnSort
                           fetchInfo={{ dataTotalSize: bank_account_list && bank_account_list.count ? bank_account_list.count : 0 }}
                           className="bank-account-table"
                           csvFileName="bank_account_list.csv"
@@ -599,12 +630,15 @@ class BankAccount extends React.Component {
                             dataField="openingBalance"
                             dataSort
                             width="15%"
+                            dataFormat={this.renderBalance}
+                            dataAlign="right"
                           >
                             Book Balance
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="swift_code"
                             export={false}
+                            dataSort={false}
                             dataFormat={this.renderLastReconciled}
                             width="20%"
                           >
@@ -614,6 +648,7 @@ class BankAccount extends React.Component {
                             className="text-right"
                             columnClassName="text-right"
                             width="5%"
+                            dataSort={false}
                             export={false}
                             dataFormat={this.renderActions}
                           >

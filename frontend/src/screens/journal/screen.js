@@ -57,8 +57,6 @@ class Journal extends React.Component {
         journalReferenceNo: '',
         description: ''
       },
-      sortName: undefined,
-      sortOrder: undefined
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -88,8 +86,8 @@ class Journal extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
-      sortName: this.state.sortName,
-      sortOrder: this.state.sortOrder,
+      sortName: '',
+      sortOrder: '',
       onSortChange: this.sortColumn
     }
 
@@ -119,7 +117,12 @@ class Journal extends React.Component {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData , ...sortingData}
+
     this.props.journalActions.getJournalList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
@@ -131,10 +134,9 @@ class Journal extends React.Component {
   }
 
   sortColumn(sortName, sortOrder) {
-    this.setState({
-      sortName,
-      sortOrder
-    });
+    this.options.sortName = sortName
+    this.options.sortOrder = sortOrder
+    this.initializeData()
   }
 
   // renderStatus (cell, row) {
@@ -255,7 +257,7 @@ class Journal extends React.Component {
 
   renderCreditAmount(cell, rows) {
     const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['creditAmount']}) : []
-    const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>)
+    const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number.toFixed(2)}</li>)
   );
   return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
 
@@ -263,7 +265,7 @@ class Journal extends React.Component {
 
   renderDebitAmount(cell, rows) {
     const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['debitAmount']}) : []
-    const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>)
+    const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number.toFixed(2)}</li>)
   );
     return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
     }
@@ -467,7 +469,7 @@ class Journal extends React.Component {
                           <TableHeaderColumn
                             dataField="journalReferenceNo"
                             dataSort={true}
-                            width="12%"
+                            width="18%"
                           >
                             JOURNAL REFERENCE NO.
                           </TableHeaderColumn>
@@ -505,6 +507,7 @@ class Journal extends React.Component {
                              dataField="journalLineItems"
                              dataFormat={this.renderCreditAmount}
                              dataAlign="right"
+                             width="14%"
                           >
                             CREDIT AMOUNT
                           </TableHeaderColumn>

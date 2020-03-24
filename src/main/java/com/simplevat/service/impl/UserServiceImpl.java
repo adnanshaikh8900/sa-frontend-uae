@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.simplevat.constant.EmailConstant;
@@ -27,6 +28,9 @@ import com.simplevat.dao.UserDao;
 
 @Service("userService")
 public class UserServiceImpl extends UserService implements Serializable {
+
+	@Value("${simplevat.basepath}")
+	private String baseConextPath;
 
 	@Autowired
 	@Qualifier(value = "userDao")
@@ -87,8 +91,7 @@ public class UserServiceImpl extends UserService implements Serializable {
 		String token = randomString.getAlphaNumericString(30);
 		try {
 			emailSender.send(user.getUserEmail(), "Rset Password",
-					emailSender.resetPassword.replace("LINK", token),
-					//" <a href='" + token + "' target='_blank'>Click to open in a different tab</a>",
+					emailSender.resetPassword.replace("LINK", baseConextPath + "/reset-password?token=" + token),
 					EmailConstant.ADMIN_SUPPORT_EMAIL, true);
 		} catch (MessagingException e) {
 			e.printStackTrace();

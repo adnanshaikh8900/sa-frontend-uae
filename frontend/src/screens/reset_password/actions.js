@@ -9,7 +9,7 @@ export const sendVerificationEmail = (obj) => {
     let data = {
       method: 'post',
       url: '/public/forgotPassword',
-      data: obj
+      data: { "username": obj }
     }
     return api(data).then(res => {
       return res

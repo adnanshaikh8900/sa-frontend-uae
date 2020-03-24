@@ -45,12 +45,22 @@ class ResetPassword extends React.Component {
     this.displayMsg = this.displayMsg.bind(this);
   }
 
+  componentDidMount() {
+    if (this.props && this.props.location && this.props.location.search) {
+      const query = new URLSearchParams(this.props.location.search);
+      const token = query.get('token')
+      this.setState({
+        token: token
+      })
+    }
+  }
+
   // Create or Contact
   handleSubmit(obj, setSubmitting) {
     let data = {
       method: 'post',
       url: '/public/forgotPassword',
-      data: obj.username
+      data: { "username": obj.username }
     }
     api(data).then(res => {
       this.setState({
@@ -80,10 +90,11 @@ class ResetPassword extends React.Component {
     const {
       match
     } = this.props;
-    const { initValue } = this.state;
+    const { initValue, token } = this.state;
+
     return (
       <div className="reset-password-screen">
-        {false? (
+        {!token ? (
           <div className="animated fadeIn">
             <div className="app flex-row align-items-center">
               <Container>
@@ -151,7 +162,7 @@ class ResetPassword extends React.Component {
                                       color="primary"
                                       type="button"
                                       className="btn-square w-100 submit-btn"
-                                      disabled={isSubmitting}
+                                  //    disabled={isSubmitting}
                                       onClick={() => { props.handleSubmit() }}
                                     >
                                       Send Verification Email
@@ -181,7 +192,7 @@ class ResetPassword extends React.Component {
               </Container>
             </div>
           </div>) : (
-            <ResetNewPassword />)
+            <ResetNewPassword token={token} />)
         }
       </div>
     );

@@ -80,6 +80,7 @@ class CreateBankTransaction extends React.Component {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
     this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
 
     this.formRef = React.createRef()
 
@@ -358,7 +359,7 @@ class CreateBankTransaction extends React.Component {
                                         id="receiptNumber"
                                         name="receiptNumber"
                                         placeholder="Reciept Number"
-                                        onChange={option => props.handleChange('receiptNumber')(option)}
+                                        onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option) }}
                                         value={props.values.receiptNumber}
                                       />
                                     </FormGroup>

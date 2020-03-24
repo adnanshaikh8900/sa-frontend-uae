@@ -94,7 +94,7 @@ class Expense extends React.Component {
 
 
     this.options = {
-       onRowClick: this.goToDetail,
+      //  onRowClick: this.goToDetail,
       paginationPosition: 'top',
       page: 1,
       sizePerPage: 10,

@@ -71,8 +71,9 @@ class DetailProduct extends React.Component {
     this.removeProduct = this.removeProduct.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
 
-		this.regEx = /^[0-9\b]+$/;
-
+	  this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
   componentDidMount() {
@@ -250,7 +251,9 @@ class DetailProduct extends React.Component {
                                     type="text"
                                     id="productName"
                                     name="productName"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('productName')(option)
+                                    }}
                                     value={props.values.productName ||  ''}
                                     placeholder="Enter Product Name"
                                     className={
@@ -272,9 +275,11 @@ class DetailProduct extends React.Component {
                                     type="text"
                                     id="productCode"
                                     name="productCode"
-                                    onChange={props.handleChange}
                                     value={props.values.productCode ||  ''}
                                     placeholder="Enter Product Code"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCode')(option)
+                                    }}
                                   />
                                 </FormGroup>
                               </Col>

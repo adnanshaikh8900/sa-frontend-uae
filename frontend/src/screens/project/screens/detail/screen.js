@@ -85,6 +85,10 @@ class DetailProject extends React.Component {
     this.deleteProject = this.deleteProject.bind(this)
     this.removeProject = this.removeProject.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
+
+    this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
   // Show Invite User Modal
@@ -258,7 +262,9 @@ class DetailProject extends React.Component {
                                     type="text"
                                     id="name"
                                     name="projectName"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('projectName')(option)
+                                    }}
                                     placeholder="Enter Project Name"
                                     defaultValue={props.values.projectName}
                                     className={
@@ -317,8 +323,9 @@ class DetailProject extends React.Component {
                                     type="text"
                                     id="contractPoNumber"
                                     name="contractPoNumber"
-                                    onChange={props.handleChange}
-
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contractPoNumber')(option)
+                                    }}
                                     placeholder="Enter Contract PO Number"
                                     defaultValue={props.values.contractPoNumber}
                                     className={
@@ -339,7 +346,9 @@ class DetailProject extends React.Component {
                                     type="text"
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                                    }}
                                     placeholder="Enter VAT Registration Number"
                                     defaultValue={props.values.vatRegistrationNumber}
                                     className={
@@ -394,8 +403,9 @@ class DetailProject extends React.Component {
                                     type="number"
                                     id="expenseBudget"
                                     name="expenseBudget"
-                                    onChange={props.handleChange}
-
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regex.test(option.target.value)) props.handleChange('expenseBudget')(option)
+                                    }}
                                     placeholder="Enter Expense Budgets"
                                     defaultValue={props.values.expenseBudget}
                                     className={
@@ -416,7 +426,9 @@ class DetailProject extends React.Component {
                                     type="number"
                                     id="revenueBudget"
                                     name="revenueBudget"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regex.test(option.target.value)) props.handleChange('revenueBudget')(option)
+                                    }}
                                     placeholder="Enter VAT Revenue Budget"
                                     defaultValue={props.values.revenueBudget}
                                     className={

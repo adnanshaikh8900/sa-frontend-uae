@@ -63,6 +63,7 @@ class CreateReceipt extends React.Component {
     }
 
     this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.initializeData = this.initializeData.bind(this)
@@ -149,8 +150,8 @@ class CreateReceipt extends React.Component {
                                     name="receiptNo"
                                     placeholder="Receipt Number"
                                     value={props.values.receiptNo}
-                                    onChange={(value) => {
-                                      props.handleChange("receiptNo")(value)
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNo')(option)
                                     }}
                                   />
                                 </FormGroup>
@@ -189,7 +190,9 @@ class CreateReceipt extends React.Component {
                                     id="referenceCode"
                                     name="referenceCode"
                                     placeholder="Reference Number"
-                                    onChange={option => { props.handleChange('referenceCode')(option) }}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('referenceCode')(option)
+                                    }}
                                     value={props.values.referenceCode}
                                     className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
                                   />

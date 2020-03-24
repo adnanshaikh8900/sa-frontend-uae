@@ -1,6 +1,6 @@
 import {
   LogIn,
-  Register
+  ResetPassword
 } from 'screens'
 
 const initialRoutes = [
@@ -10,9 +10,9 @@ const initialRoutes = [
     component: LogIn.screen
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: Register.screen
+    path: '/reset-password',
+    name: 'Reset Password',
+    component: ResetPassword.screen
   },
   {
     redirect: true,

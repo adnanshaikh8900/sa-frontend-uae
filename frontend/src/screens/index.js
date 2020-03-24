@@ -1,6 +1,7 @@
 
 import LogIn from './log_in'
 import Register from './register'
+import ResetPassword from './reset_password'
 
 
 
@@ -128,7 +129,7 @@ import Faq from './help/screens/faq'
 export {
   LogIn,
   Register,
-
+  ResetPassword,
 
 
 

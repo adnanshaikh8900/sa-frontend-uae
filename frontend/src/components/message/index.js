@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert } from 'reactstrap'
+import { Alert, NavLink } from 'reactstrap'
 
 import './style.scss'
 
@@ -17,7 +17,8 @@ class Message extends React.Component {
     const {
       type,
       title,
-      content
+      content,
+      link
     } = this.props
 
     return (
@@ -27,6 +28,7 @@ class Message extends React.Component {
           <p>
             { content }
           </p>
+          {link && <a href={link}>Send Again</a> }
         </Alert>
       </div>
     )

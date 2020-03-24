@@ -15,7 +15,7 @@ export const getCustomerInvoiceList = (postObj) => {
   
   const { pageNo, pageSize,order,sortingCol} = postObj
   return (dispatch) => {
-    let param = `rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingColumn=${sortingCol}`
+    let param = `rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`
     if(invoiceDate) {
       let date = moment(invoiceDate).format('DD-MM-YYYY')
       param = param +`&invoiceDate=${date}`

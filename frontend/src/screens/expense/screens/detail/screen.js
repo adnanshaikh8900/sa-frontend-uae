@@ -81,6 +81,8 @@ class DetailExpense extends React.Component {
 
     this.file_size = 1024000;
     this.regEx = /^[0-9\b]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/
+    this.regExBoth = /[a-zA-Z0-9]+$/;
 
     this.supported_format = [
       "",
@@ -354,7 +356,8 @@ class DetailExpense extends React.Component {
                                         id="payee"
                                         rows="5"
                                         placeholder="Payee"
-                                        onChange={(value) => { props.handleChange("payee")(value) }}
+                                        onChange={(option) => { 
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('payee')(option) }}
                                         defaultValue={props.values.payee}
                                         className={props.errors.payee && props.touched.payee ? "is-invalid" : ""}
                                       />

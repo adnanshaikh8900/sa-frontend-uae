@@ -59,7 +59,7 @@ class CreateChartAccount extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
     // this.success = this.success.bind(this)
-
+    this.regExAlpha = /^[a-zA-Z]+$/
   }
 
   componentDidMount() {
@@ -167,7 +167,8 @@ class CreateChartAccount extends React.Component {
                                 id="transactionCategoryName"
                                 name="transactionCategoryName"
                                 placeholder="Enter Name"
-                                onChange={(value) => { props.handleChange('transactionCategoryName')(value) }}
+                                onChange={(option) => { 
+                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('transactionCategoryName')(option) }}
                                 value={props.values.transactionCategoryName}
                                 className={
                                   props.errors.transactionCategoryName && props.touched.transactionCategoryName

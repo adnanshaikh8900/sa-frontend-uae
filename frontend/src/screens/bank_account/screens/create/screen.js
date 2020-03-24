@@ -346,7 +346,7 @@ class CreateBankAccount extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="ifsc_code">IFSC Code</Label>
+                                    <Label htmlFor="ifsc_code"><span className="text-danger">*</span>IFSC Code</Label>
                                     <Input
                                       type="text"
                                       id="ifsc_code"

@@ -59,6 +59,10 @@ class CreateVatCode extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.success = this.success.bind(this)
+
+    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regEx = /^[0-9\d]+$/;
+
   }
 
   componentDidMount() {
@@ -163,7 +167,9 @@ class CreateVatCode extends React.Component {
                                 id="name"
                                 name="name"
                                 placeholder="Enter Vat Code Name"
-                                onChange={props.handleChange}
+                                onChange={(option) => {
+                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('name')(option)
+                                }}
                                 // validate={this.validateCode}
                                 value={props.values.name}
                                 className={
@@ -179,11 +185,13 @@ class CreateVatCode extends React.Component {
                             <FormGroup>
                               <Label htmlFor="name"><span className="text-danger">*</span>Percentage</Label>
                               <Input
-                                type="number"
-                                id="name"
+                                type="text"
+                                id="vat"
                                 name="vat"
                                 placeholder="Enter Percentage"
-                                onChange={props.handleChange}
+                                onChange={(option) => {
+                                  if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('vat')(option)
+                                }}
                                 value={props.values.vat}
                                 className={
                                   props.errors.vat && props.touched.vat

@@ -67,6 +67,8 @@ class DetailReceipt extends React.Component {
     this.removeDialog = this.removeDialog.bind(this)
 
     this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+
   }
 
 
@@ -226,8 +228,8 @@ class DetailReceipt extends React.Component {
                                         id="receiptNo"
                                         name="receiptNo"
                                         placeholder="Receipt Number"
-                                        onChange={(value) => {
-                                          props.handleChange("receiptNo")(value)
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNo')(option)
                                         }}
                                         value={props.values.receiptNo}
                                       />
@@ -266,7 +268,9 @@ class DetailReceipt extends React.Component {
                                         name="referenceCode"
                                         placeholder="Reference Number"
                                         value={props.values.referenceCode}
-                                        onChange={option => { props.handleChange('referenceCode')(option) }}
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('referenceCode')(option)
+                                        }}
                                         className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
                                         />
                                         {props.errors.referenceCode && props.touched.referenceCode && (

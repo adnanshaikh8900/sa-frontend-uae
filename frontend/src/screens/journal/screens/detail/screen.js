@@ -86,6 +86,8 @@ class DetailJournal extends React.Component {
     this.removeDialog = this.removeDialog.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.checkedRow = this.checkedRow.bind(this);
+
+    this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
   componentDidMount() {
@@ -772,10 +774,8 @@ class DetailJournal extends React.Component {
                                         disabled={props.values.postingReferenceType === "MANUAL" ? false : true}
                                         placeholder="Reference Number"
                                         value={props.values.journalReferenceNo}
-                                        onChange={value => {
-                                          props.handleChange("journalReferenceNo")(
-                                            value
-                                          );
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('journalReferenceNo')(option)
                                         }}
                                       />
                                     </FormGroup>

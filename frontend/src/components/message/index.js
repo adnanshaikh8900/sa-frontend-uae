@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, NavLink } from 'reactstrap'
+import { Alert } from 'reactstrap'
 
 import './style.scss'
 

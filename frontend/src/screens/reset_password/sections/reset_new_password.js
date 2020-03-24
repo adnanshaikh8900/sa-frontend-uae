@@ -4,16 +4,12 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardGroup,
   Col,
   Container,
   Form,
   Input,
   FormGroup,
   Label,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
   Row
 } from 'reactstrap'
 import {
@@ -46,7 +42,7 @@ class ResetNewPassword extends React.Component {
 
   }
 
-  handleSubmit(val, setSubmitting) {
+  handleSubmit(val) {
    let obj = {
       password: val.password,
       token: this.props.token
@@ -63,13 +59,17 @@ class ResetNewPassword extends React.Component {
             type="success"
             content="Password Reset Successfully."
           />
+        },()=>{
+          setTimeout(()=>{
+            this.props.history.push('/login')
+          },1500)
         })
       }
     }).catch(err => {
       this.setState({
         alert: <Message
           type="danger"
-          content="Email Verification Link Is Expired. Please enter your email address and we'll send another  verification link."
+          content="Email Verification Link Is Expired. Please enter your email address and we'll send another verification link."
           link="/reset-password"
         />
       })
@@ -105,7 +105,7 @@ class ResetNewPassword extends React.Component {
                       <Formik
                         ref={this.formikRef}
                         initialValues={initValue}
-                        onSubmit={(values, { resetForm, setSubmitting }) => {
+                        onSubmit={(values, { resetForm }) => {
                           this.handleSubmit(values, resetForm);
                         }}
                         validationSchema={Yup.object().shape({
@@ -122,7 +122,6 @@ class ResetNewPassword extends React.Component {
                         })}
                       >
                         {props => {
-                          const { isSubmitting } = props;
                           return (
                             <Form >
                               <Row>

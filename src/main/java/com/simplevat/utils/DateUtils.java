@@ -58,4 +58,12 @@ public class DateUtils {
 	public Date get(LocalDateTime date) {
 		return Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
 	}
+
+	public LocalDateTime add(LocalDateTime date, int num) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(get(date));
+		calendar.set(Calendar.DATE, date.getDayOfMonth() + num);
+		return get(calendar.getTime());
+	}
+
 }

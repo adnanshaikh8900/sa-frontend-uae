@@ -49,7 +49,7 @@ class ResetNewPassword extends React.Component {
   handleSubmit(val, setSubmitting) {
    let obj = {
       password: val.password,
-      token: 'token'
+      token: this.props.token
     }
       let data = {
         method: 'post',
@@ -166,7 +166,7 @@ class ResetNewPassword extends React.Component {
                                     color="primary"
                                     type="button"
                                     className="btn-square w-100 submit-btn"
-                                    disabled={isSubmitting}
+                                 //   disabled={isSubmitting}
                                     onClick={() => { props.handleSubmit() }}
                                   >
                                    Reset Password

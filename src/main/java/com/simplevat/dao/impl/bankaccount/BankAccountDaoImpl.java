@@ -8,9 +8,11 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.dao.AbstractDao;
@@ -27,6 +29,9 @@ import javax.persistence.TypedQuery;
 @Repository
 @Transactional
 public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implements BankAccountDao {
+
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<BankAccount> getBankAccounts() {
@@ -78,12 +83,12 @@ public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implem
 		List<DbFilter> dbFilters = new ArrayList();
 		filterDataMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));
-		List<BankAccount> list = this.executeQuery(dbFilters, paginationModel);
-		Map<String, Object> dataMap = new HashMap<String, Object>();
+		paginationModel
+				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), dataTableUtil.BANK_ACCOUNT));
 
 		PaginationResponseModel resposne = new PaginationResponseModel();
 		resposne.setCount(this.getResultCount(dbFilters));
-		resposne.setData(list);
+		resposne.setData(this.executeQuery(dbFilters, paginationModel));
 		return resposne;
 	}
 

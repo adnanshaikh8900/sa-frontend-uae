@@ -101,13 +101,13 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 				// java.util.ConcurrentModificationException: dbFilters.remove(orderByFilter);
 			}
 		}
-		if (orderByFilter != null) {
-			queryBuilder.append(" Order by " + orderByFilter.getDbCoulmnName()).append(" " + orderByFilter.getValue());
-		}
-//		if (paginationModel != null && paginationModel.getSortingCol() != null
-//				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ")) {
-//			queryBuilder.append(" order by " + paginationModel.getSortingCol() + " " + paginationModel.getOrder());
+//		if (orderByFilter != null) {
+//			queryBuilder.append(" Order by " + orderByFilter.getDbCoulmnName()).append(" " + orderByFilter.getValue());
 //		}
+		if (paginationModel != null && paginationModel.getSortingCol() != null
+				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ")) {
+			queryBuilder.append(" order by " + paginationModel.getSortingCol() + " " + paginationModel.getOrder());
+		}
 
 		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
 		for (DbFilter dbFilter : dbFilters) {
@@ -148,8 +148,8 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 				// java.util.ConcurrentModificationException: dbFilters.remove(orderByFilter);
 			}
 		}
-		if (orderByFilter != null)
-			queryBuilder.append(" Order by " + orderByFilter.getDbCoulmnName()).append(" " + orderByFilter.getValue());
+//		if (orderByFilter != null)
+//			queryBuilder.append(" Order by " + orderByFilter.getDbCoulmnName()).append(" " + orderByFilter.getValue());
 
 //		if (paginationModel != null && paginationModel.getSortingCol() != null
 //				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ")) {

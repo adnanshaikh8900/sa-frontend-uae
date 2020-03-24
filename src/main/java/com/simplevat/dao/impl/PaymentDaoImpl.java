@@ -5,6 +5,7 @@
  */
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.PaymentFilterEnum;
 import com.simplevat.dao.AbstractDao;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 import javax.persistence.TypedQuery;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository(value = "paymentDao")
 public class PaymentDaoImpl extends AbstractDao<Integer, Payment> implements PaymentDao {
 
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
+
 	@Override
 	public PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
@@ -37,6 +42,7 @@ public class PaymentDaoImpl extends AbstractDao<Integer, Payment> implements Pay
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
+		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.PAYMENT));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}

@@ -73,7 +73,7 @@ public class JournalRestController {
 				filterDataMap.put(JournalFilterEnum.JOURNAL_DATE, dateTime);
 			}
 			filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
-			filterDataMap.put(JournalFilterEnum.ORDER_BY, "DESC");
+			//filterDataMap.put(JournalFilterEnum.ORDER_BY, "DESC");
 			PaginationResponseModel responseModel = journalService.getJornalList(filterDataMap, filterModel);
 			if (responseModel == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);

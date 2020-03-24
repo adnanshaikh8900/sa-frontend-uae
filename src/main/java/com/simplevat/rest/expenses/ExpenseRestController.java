@@ -96,8 +96,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 			}
 			filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
 			filterDataMap.put(ExpenseFIlterEnum.DELETE_FLAG, false);
-			filterDataMap.put(ExpenseFIlterEnum.ORDER_BY, ORDERBYENUM.DESC); 
-			
+			//filterDataMap.put(ExpenseFIlterEnum.ORDER_BY, ORDERBYENUM.DESC); 
 			PaginationResponseModel response = expenseService.getExpensesList(filterDataMap,expenseRequestFilterModel);
 			if (response == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);

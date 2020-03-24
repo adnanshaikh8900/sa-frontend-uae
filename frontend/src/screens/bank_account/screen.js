@@ -78,6 +78,7 @@ class BankAccount extends React.Component {
       onPageChange: this.onPageChange, 
       sortName: '',
       sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {

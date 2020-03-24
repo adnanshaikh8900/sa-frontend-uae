@@ -127,6 +127,7 @@ class CreateJournal extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.checkedRow = this.checkedRow.bind(this)
 
+    this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
   componentDidMount() {
@@ -658,7 +659,9 @@ class CreateJournal extends React.Component {
                                     name="journalReferenceNo"
                                     placeholder="Reference Number"
                                     value={props.values.journalReferenceNo || ''}
-                                    onChange={(value) => { props.handleChange("journalReferenceNo")(value) }}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('journalReferenceNo')(option)
+                                    }}
                                   />
                                 </FormGroup>
                               </Col>

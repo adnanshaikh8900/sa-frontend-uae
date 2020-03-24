@@ -134,6 +134,7 @@ class CreateCustomerInvoice extends React.Component {
 			{ label: "Due on Receipt", value: "DUE_ON_RECEIPT" },
 		]
 		this.regEx = /^[0-9\b]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
 
 
 		this.renderActions = this.renderActions.bind(this)
@@ -887,7 +888,9 @@ class CreateCustomerInvoice extends React.Component {
 																		name="contact_po_number"
 																		value={props.values.contact_po_number}
 																		placeholder="Contact PO Number"
-																		onChange={(value) => { props.handleChange("contact_po_number")(value) }}
+																		onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contact_po_number')(option)
+                                    }}
 																	/>
 																</FormGroup>
 															</Col>
@@ -905,7 +908,9 @@ class CreateCustomerInvoice extends React.Component {
 																				id="receiptNumber"
 																				name="receiptNumber"
 																				placeholder="Reciept Number"
-																				onChange={option => props.handleChange('receiptNumber')(option)}
+																				onChange={(option) => {
+																					if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option)
+																				}}
 																				value={props.values.receiptNumber}
 																			/>
 																		</FormGroup>

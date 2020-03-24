@@ -72,7 +72,9 @@ class CreateProduct extends React.Component {
     this.closeWarehouseModal = this.closeWarehouseModal.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this);
 
-		this.regEx = /^[0-9\b]+$/;
+    this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
 
   }
 
@@ -199,7 +201,9 @@ class CreateProduct extends React.Component {
                                       type="text"
                                       id="productName"
                                       name="productName"
-                                      onChange={(value) => {props.handleChange("productName")(value)}}
+                                      onChange={(option) => {
+                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('productName')(option)
+                                      }}
                                       value={props.values.productName}
                                       placeholder="Enter Product Name"
                                       className={
@@ -221,10 +225,11 @@ class CreateProduct extends React.Component {
                                       type="text"
                                       id="productCode"
                                       name="productCode"
-                                      onChange={(value) => {props.handleChange("productCode")(value)}}
-
-                                      value={props.values.productCode}
                                       placeholder="Enter Product Code"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCode')(option)
+                                        }}
+                                      value={props.values.productCode}
                                     />
                                   </FormGroup>
                                 </Col>
@@ -310,7 +315,6 @@ class CreateProduct extends React.Component {
                                       id="vatIncluded"
                                       name="vatIncluded"
                                       onChange={(value) => {props.handleChange("vatIncluded")(value)}}
-
                                       value={props.values.vatIncluded || false}
                                     />
                                     <Label className="form-check-label" check htmlFor="vatIncluded">Vat Include</Label>
@@ -363,7 +367,6 @@ class CreateProduct extends React.Component {
                                       rows="6"
                                       placeholder="Description..."
                                       onChange={(value) => {props.handleChange('productDescription')(value)}}
-
                                       value={props.values.productDescription}
                                     />
                                   </FormGroup>

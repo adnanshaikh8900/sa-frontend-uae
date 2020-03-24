@@ -138,6 +138,7 @@ class CreateSupplierInvoice extends React.Component {
     ]
 
     this.regEx = /^[0-9\b]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
 
     this.renderActions = this.renderActions.bind(this)
     this.renderProductName = this.renderProductName.bind(this)
@@ -898,7 +899,10 @@ class CreateSupplierInvoice extends React.Component {
                                     id="contact_po_number"
                                     name="contact_po_number"
                                     placeholder="Contact PO Number"
-                                    onChange={(value) => { props.handleChange("contact_po_number")(value) }}
+                                    value={props.values.contact_po_number}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contact_po_number')(option)
+                                    }}
                                   />
                                 </FormGroup>
                               </Col>
@@ -916,9 +920,10 @@ class CreateSupplierInvoice extends React.Component {
                                         id="receiptNumber"
                                         name="receiptNumber"
                                         placeholder="Reciept Number"
-                                        onChange={option => props.handleChange('receiptNumber')(option)}
+                                        onChange={(option) => {
+																					if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option)
+																				}}
                                         value={props.values.receiptNumber}
-
                                       />
                                     </FormGroup>
                                   </Col>

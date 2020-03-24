@@ -61,6 +61,10 @@ class DetailEmployee extends React.Component {
     this.deleteEmployee = this.deleteEmployee.bind(this)
     this.removeEmployee = this.removeEmployee.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
+
+    this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
   // changeBirthday(date){
@@ -230,7 +234,10 @@ class DetailEmployee extends React.Component {
                                         id="referenceCode"
                                         name="referenceCode"
                                         value={props.values.referenceCode}
-                                        onChange={(value) => { props.handleChange('referenceCode')(value) }}
+                                        placeholder="Enter Reference Code"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('referenceCode')(option)
+                                        }}
                                       />
                                     </FormGroup>
                                   </Col>
@@ -242,7 +249,10 @@ class DetailEmployee extends React.Component {
                                         id="title"
                                         name="title"
                                         value={props.values.title}
-                                        onChange={(value) => { props.handleChange('title')(value) }}
+                                        placeholder="Enter Title"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('title')(option)
+                                        }}
                                       />
                                     </FormGroup>
                                   </Col>
@@ -253,6 +263,7 @@ class DetailEmployee extends React.Component {
                                         type="email"
                                         id="email"
                                         name="email"
+                                        placeholder="Enter Email Address"
                                         value={props.values.email}
                                         onChange={(value) => { props.handleChange('email')(value) }}
                                       />
@@ -268,7 +279,10 @@ class DetailEmployee extends React.Component {
                                         id="firstName"
                                         name="firstName"
                                         value={props.values.firstName}
-                                        onChange={(value) => { props.handleChange('firstName')(value) }}
+                                        placeholder="Enter First Name"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                                        }}
                                         className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                       />
                                       {props.errors.firstName && props.touched.firstName && (
@@ -284,7 +298,10 @@ class DetailEmployee extends React.Component {
                                         id="middleName"
                                         name="middleName"
                                         value={props.values.middleName}
-                                        onChange={(value) => { props.handleChange('middleName')(value) }}
+                                        placeholder="Enter Middle Name"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option)
+                                        }}
                                         className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
                                       />
                                       {props.errors.middleName && props.touched.middleName && (
@@ -300,7 +317,10 @@ class DetailEmployee extends React.Component {
                                         id="lastName"
                                         name="lastName"
                                         value={props.values.lastName}
-                                        onChange={(value) => { props.handleChange('lastName')(value) }}
+                                        placeholder="Enter Last Name"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                                        }}
                                         className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                       />
                                       {props.errors.lastName && props.touched.lastName && (
@@ -317,6 +337,7 @@ class DetailEmployee extends React.Component {
                                         type="password"
                                         id="password"
                                         name="password"
+                                        placeholder="Enter Password"
                                         value={props.values.password}
                                         onChange={(value) => { props.handleChange('password')(value) }}
                                         className={props.errors.password && props.touched.password ? "is-invalid" : ""}
@@ -338,6 +359,7 @@ class DetailEmployee extends React.Component {
                                         id="confirmPassword"
                                         name="confirmPassword"
                                         value={props.values.confirmPassword}
+                                        placeholder="Enter Confirm Password"
                                         onChange={(value) => { props.handleChange('confirmPassword')(value) }}
                                         className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
                                       />
@@ -357,7 +379,7 @@ class DetailEmployee extends React.Component {
                                         showYearDropdown
                                         dateFormat="dd/MM/yyyy"
                                         dropdownMode="select"
-                                        placeholderText="Enter Birth Date"
+                                        placeholderText="Select Date of Birth"
                                         value={moment(props.values.dob).format('DD-MM-YYYY')}
                                         onChange={(value) => {
                                           props.handleChange("dob")(value)
@@ -380,6 +402,7 @@ class DetailEmployee extends React.Component {
                                         id="billingEmail"
                                         name="billingEmail"
                                         value={props.values.billingEmail}
+                                        placeholder="Enter Billing Email Address"
                                         onChange={(value) => { props.handleChange("billingEmail")(value) }}
                                         className={
                                           props.errors.billingEmail && props.touched.billingEmail
@@ -399,8 +422,10 @@ class DetailEmployee extends React.Component {
                                         type="text"
                                         id="poBoxNumber"
                                         name="poBoxNumber"
-
-                                        onChange={(value) => { props.handleChange("poBoxNumber")(value) }}
+                                        placeholder="Enter Contract PO Number"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('poBoxNumber')(option)
+                                        }}
                                         value={props.values.poBoxNumber}
                                         className={
                                           props.errors.poBoxNumber && props.touched.poBoxNumber
@@ -423,7 +448,10 @@ class DetailEmployee extends React.Component {
                                         type="text"
                                         id="vatRegestationNo"
                                         name="vatRegestationNo"
-                                        onChange={(value) => { props.handleChange("vatRegestationNo")(value) }}
+                                        placeholder="Enter Tax Registration Number"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegestationNo')(option)
+                                        }}
                                         value={props.values.vatRegestationNo}
                                         className={
                                           props.errors.vatRegestationNo && props.touched.vatRegestationNo

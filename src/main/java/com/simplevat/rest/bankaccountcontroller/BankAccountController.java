@@ -130,7 +130,7 @@ public class BankAccountController implements Serializable {
 					currencyService.findByPK(filterModel.getCurrencyCode()));
 		}
 
-		filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
+		//filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
 
 		PaginationResponseModel paginatinResponseModel = bankAccountService.getBankAccounts(filterDataMap, filterModel);
 		if (paginatinResponseModel != null) {

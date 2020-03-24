@@ -16,7 +16,7 @@ public class ReceiptModel {
 	private Integer contactId;
 	private BigDecimal amount;
 	private BigDecimal unusedAmount;
-        private String invoiceNumber;
-        private Integer invoiceId;
+	private String invoiceNumber;
+	private Integer invoiceId;
 
 }

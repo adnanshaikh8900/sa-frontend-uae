@@ -108,7 +108,7 @@ public class PaymentController implements Serializable {
 			}
 			filterDataMap.put(PaymentFilterEnum.USER_ID, userId);
 			filterDataMap.put(PaymentFilterEnum.DELETE_FLAG, false);
-			filterDataMap.put(PaymentFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
+			//filterDataMap.put(PaymentFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 			PaginationResponseModel response = paymentService.getPayments(filterDataMap, filterModel);
 
 			List<PaymentViewModel> paymentModels = new ArrayList<>();

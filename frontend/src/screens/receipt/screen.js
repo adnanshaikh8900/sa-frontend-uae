@@ -81,6 +81,9 @@ class Receipt extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -99,11 +102,16 @@ class Receipt extends React.Component {
 
   initializeData() {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...data };
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData , ...sortingData}
+
     this.props.receiptActions.getContactList();
     this.props.receiptActions.getInvoiceList();
     this.props.receiptActions.getReceiptList(postData).then(res => {
@@ -130,6 +138,14 @@ class Receipt extends React.Component {
     return rows['receiptDate'] !== null ? moment(rows['receiptDate']).format('DD/MM/YYYY') : ''
   }
 
+  renderAmount(cell,row){
+    return row.amount ? (row.amount).toFixed(2) : ''
+  }  
+  
+  renderUnusedAmount(cell,row){
+    return row.unusedAmount ? (row.unusedAmount).toFixed(2) : ''
+  }
+
   onSizePerPageList = (sizePerPage) => {
     if (this.options.sizePerPage !== sizePerPage) {
       this.options.sizePerPage = sizePerPage
@@ -143,6 +159,12 @@ class Receipt extends React.Component {
       this.initializeData()
     }
   }
+
+  sortColumn = (sortName,sortOrder) => {
+    this.options.sortName = sortName
+    this.options.sortOrder = sortOrder
+    this.initializeData()
+}
 
   onRowSelect(row, isSelected, e) {
     let temp_list = []
@@ -400,12 +422,16 @@ class Receipt extends React.Component {
                           <TableHeaderColumn
                             dataField="amount"
                             dataSort
+                            dataAlign="right"
+                            dataFormat={this.renderAmount}
                           >
                             Amount
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="unusedAmount"
                             dataSort
+                            dataAlign="right"
+                            dataFormat={this.renderUnusedAmount}
                           >
                             Unused Amount
                           </TableHeaderColumn>

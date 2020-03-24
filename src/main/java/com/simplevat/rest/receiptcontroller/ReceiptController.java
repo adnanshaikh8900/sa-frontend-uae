@@ -73,7 +73,7 @@ public class ReceiptController {
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 				filterDataMap.put(ReceiptFilterEnum.RECEIPT_DATE, dateTime);
 			}
-			filterDataMap.put(ReceiptFilterEnum.ORDER_BY, "DESC");
+		//	filterDataMap.put(ReceiptFilterEnum.ORDER_BY, "DESC");
 
 			PaginationResponseModel response = receiptService.getReceiptList(filterDataMap, filterModel);
 			if (response == null) {

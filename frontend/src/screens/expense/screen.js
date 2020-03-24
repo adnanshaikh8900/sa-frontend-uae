@@ -68,7 +68,9 @@ class Expense extends React.Component {
       filterData: {
         expenseDate: '',
         transactionCategoryId: '',
-        payee: ''
+        payee: '',
+        sortName: '',
+        sortOrder: ''
       }
     }
 
@@ -92,12 +94,15 @@ class Expense extends React.Component {
 
 
     this.options = {
-      // onRowClick: this.goToDetail,
+       onRowClick: this.goToDetail,
       paginationPosition: 'top',
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: this.state.sortName,
+      sortOrder: this.state.sortOrder,
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -126,7 +131,12 @@ class Expense extends React.Component {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
+    const sortingData = {
+      order: this.state.sortOrder ? this.state.sortOrder : '',
+      sortingCol: this.state.sortName ? this.state.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+  
     this.props.expenseActions.getExpenseList(postData).then(res => {
       if (res.status === 200) {
         this.props.expenseActions.getExpenseCategoriesList();
@@ -138,6 +148,14 @@ class Expense extends React.Component {
     })
   }
 
+  sortColumn = (sortName, sortOrder) => {
+    this.setState({
+      sortName,
+      sortOrder
+    }, () => {
+      this.initializeData()
+    });
+  }
   goToDetail(row) {
     this.props.history.push('/admin/expense/expense/detail', { expenseId: row['expenseId'] })
   }
@@ -200,9 +218,9 @@ class Expense extends React.Component {
             {row.expenseStatus !== 'Post' && (
               <DropdownItem onClick={() => { this.postExpense(row) }}>
                 <i className="fas fa-heart" /> Post
-                        </DropdownItem>
+              </DropdownItem>
             )}
-             {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.expenseId)}}>
+            {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.expenseId)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
@@ -214,9 +232,9 @@ class Expense extends React.Component {
             <DropdownItem>
               <i className="fas fa-times" /> Cancel
             </DropdownItem>  */}
-            <DropdownItem onClick={()=>{this.closeExpense(row.expenseId)}}>
+            <DropdownItem onClick={() => { this.closeExpense(row.expenseId) }}>
               <i className="fa fa-trash-o" /> Delete
-            </DropdownItem> 
+            </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
       </div>
@@ -255,8 +273,12 @@ class Expense extends React.Component {
       classname = 'badge-primary'
     }
     return (
-      <span className={`badge ${classname} mb-0`} style={{color: 'white'}}>{row.expenseStatus}</span>
+      <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>{row.expenseStatus}</span>
     )
+  }
+
+  renderAmount(cell,row){
+    return row.expenseAmount ? (row.expenseAmount).toFixed(2) : ''
   }
 
   handleSearch() {
@@ -319,6 +341,8 @@ class Expense extends React.Component {
       this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
     }
   }
+
+  
 
   removeBulkExpenses() {
     this.removeDialog()
@@ -505,6 +529,7 @@ class Expense extends React.Component {
                       pagination={expense_list && expense_list.data && expense_list.data.length > 0 ? true : false}
                       remote
                       fetchInfo={{ dataTotalSize: expense_list.count ? expense_list.count : 0 }}
+                      multiColumnSort
                       className="expense-table"
                       trClassName="cursor-pointer"
                       ref={node => this.table = node}
@@ -539,6 +564,8 @@ class Expense extends React.Component {
                       <TableHeaderColumn
                         dataField="expenseAmount"
                         dataSort
+                        dataFormat={this.renderAmount}
+                        dataAlign="right"
                       >
                         Expense Amount
                           </TableHeaderColumn>

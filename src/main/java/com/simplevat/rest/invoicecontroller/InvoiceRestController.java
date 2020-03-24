@@ -101,7 +101,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 			filterDataMap.put(InvoiceFilterEnum.USER_ID, userId);
 			filterDataMap.put(InvoiceFilterEnum.DELETE_FLAG, false);
 			filterDataMap.put(InvoiceFilterEnum.TYPE, filterModel.getType());
-			filterDataMap.put(InvoiceFilterEnum.ORDER_BY, "DESC");
+		//	filterDataMap.put(InvoiceFilterEnum.ORDER_BY, "DESC");
 
 			PaginationResponseModel responseModel = invoiceService.getInvoiceList(filterDataMap, filterModel);
 			if (responseModel == null) {

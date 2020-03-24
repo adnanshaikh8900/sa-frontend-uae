@@ -82,6 +82,9 @@ class Payment extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
 
@@ -105,7 +108,12 @@ class Payment extends React.Component {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData , ...sortingData}
+
     this.props.paymentActions.getPaymentList(postData).then(res => {
       if (res.status === 200) {
         this.props.paymentActions.getSupplierContactList(this.state.contactType);
@@ -203,6 +211,10 @@ class Payment extends React.Component {
     return rows['paymentDate'] !== null ? moment(rows['paymentDate']).format('DD/MM/YYYY') : ''
   }
 
+  renderAmount(cell,row){
+    return row.invoiceAmount ? (row.invoiceAmount).toFixed(2) : ''
+  }  
+
   handleChange(val, name) {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
@@ -227,6 +239,12 @@ class Payment extends React.Component {
       this.options.page = page
       this.initializeData()
     }
+  }
+
+  sortColumn = (sortName,sortOrder) => {
+      this.options.sortName = sortName
+      this.options.sortOrder = sortOrder
+      this.initializeData()
   }
 
   render() {
@@ -378,6 +396,9 @@ class Payment extends React.Component {
                           <TableHeaderColumn
                             dataField="invoiceAmount"
                             dataSort
+                            dataFormat={this.renderAmount}
+                            dataAlign="right"
+                            width="10%"
                           >
                             Amount
                           </TableHeaderColumn>
@@ -386,6 +407,7 @@ class Payment extends React.Component {
                             dataField="paymentDate"
                             dataSort
                             dataFormat={this.renderDate}
+                            dataAlign="center"
                           >
                             Date
                           </TableHeaderColumn>

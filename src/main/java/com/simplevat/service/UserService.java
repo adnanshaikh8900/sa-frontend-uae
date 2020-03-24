@@ -24,4 +24,7 @@ public abstract class UserService extends SimpleVatService<Integer, User> {
 	public abstract void deleteByIds(List<Integer> ids);
 
 	public abstract PaginationResponseModel getUserList(Map<UserFilterEnum, Object> filterMap,PaginationModel paginationModel);
+
+	public abstract boolean updateForgotPasswordToken(User user);
+	
 }

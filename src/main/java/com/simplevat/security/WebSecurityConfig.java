@@ -54,6 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// dont authenticate this particular request
 				.authorizeRequests().// all other requests need to be authenticated
 			//antMatchers("/config/getreleasenumber").permitAll().
+				antMatchers("/public/**").permitAll().
 				antMatchers("/rest/**").authenticated().and().
 				// make sure we use stateless session; session won't be used to
 				// store user's state.

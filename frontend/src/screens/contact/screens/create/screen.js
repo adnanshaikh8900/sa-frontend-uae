@@ -80,6 +80,10 @@ class CreateContact extends React.Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.initializeData = this.initializeData.bind(this)
+
+    this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
 
@@ -204,8 +208,10 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="firstName"
                                     name="firstName"
-
-                                    onChange={(value) => { props.handleChange("firstName")(value) }}
+                                    placeholder="Enter First Name"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                                    }}
                                     value={props.values.firstName}
                                     className={
                                       props.errors.firstName && props.touched.firstName
@@ -225,8 +231,10 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="middleName "
                                     name="middleName "
-
-                                    onChange={(value) => { props.handleChange("middleName")(value) }}
+                                    placeholder="Enter Middle Name"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option)
+                                    }}
                                     value={props.values.middleName}
                                     className={
                                       props.errors.middleName && props.touched.middleName
@@ -246,8 +254,10 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="lastName"
                                     name="lastName"
-
-                                    onChange={(value) => { props.handleChange("lastName")(value) }}
+                                    placeholder="Enter Last Name"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                                    }}
                                     value={props.values.lastName}
                                     className={
                                       props.errors.lastName && props.touched.lastName
@@ -299,8 +309,10 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="organization"
                                     name="organization"
-
-                                    onChange={(value) => { props.handleChange("organization")(value) }}
+                                    placeholder="Enter Organization Name"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('organization')(option)
+                                    }}
                                     value={props.values.organization}
                                     className={
                                       props.errors.organization && props.touched.organization
@@ -321,8 +333,10 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="poBoxNumber"
                                     name="poBoxNumber"
-
-                                    onChange={(value) => { props.handleChange("poBoxNumber")(value) }}
+                                    placeholder="Enter PO Box Number"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('poBoxNumber')(option)
+                                    }}
                                     value={props.values.poBoxNumber}
                                     className={
                                       props.errors.poBoxNumber && props.touched.poBoxNumber
@@ -345,7 +359,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="email"
                                     name="email"
-
+                                    placeholder="Enter Email Address"
                                     onChange={(value) => { props.handleChange("email")(value) }}
                                     value={props.values.email}
                                     className={
@@ -367,8 +381,8 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="telephone"
                                     name="telephone"
-
-                                    onChange={(value) => { props.handleChange("telephone")(value) }}
+                                    placeholder="Enter Telephone Number"
+                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('telephone')(option) }}
                                     value={props.values.telephone}
                                     className={
                                       props.errors.telephone && props.touched.telephone
@@ -405,6 +419,7 @@ class CreateContact extends React.Component {
                                     defaultCountry="AE"
                                     international
                                     value={props.values.mobileNumber}
+                                    placeholder="Enter Mobile Number"
                                     onChange={(option) => { props.handleChange('mobileNumber')(option) }}
                                     className={
                                       props.errors.mobileNumber &&
@@ -430,7 +445,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="addressLine1"
                                     name="addressLine1"
-
+                                    placeholder="Enter Address Line1"
                                     onChange={(value) => { props.handleChange("addressLine1")(value) }}
                                     value={props.values.addressLine1}
                                     className={
@@ -452,7 +467,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="addressLine2"
                                     name="addressLine2"
-
+                                    placeholder="Enter Address Line2"
                                     onChange={(value) => { props.handleChange("addressLine2")(value) }}
 
                                   />
@@ -465,7 +480,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="addressLine3"
                                     name="addressLine3"
-
+                                    placeholder="Enter Address Line3"
                                     onChange={(value) => { props.handleChange("addressLine3")(value) }}
 
                                   />
@@ -538,8 +553,10 @@ class CreateContact extends React.Component {
                                   <Input
                                     // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                                     value={props.values.city}
-                                    onChange={option => props.handleChange('city')(option)}
-                                    placeholder=""
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('city')(option)
+                                    }}
+                                    placeholder="Enter City"
                                     id="city"
                                     name="city"
                                     className={
@@ -563,8 +580,10 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="postZipCode"
                                     name="postZipCode"
-
-                                    onChange={(value) => { props.handleChange("postZipCode")(value) }}
+                                    placeholder="Enter Postal Zip Code"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('postZipCode')(option)
+                                    }}
                                     value={props.values.postZipCode}
                                     className={
                                       props.errors.postZipCode && props.touched.postZipCode
@@ -590,7 +609,7 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="billingEmail"
                                     name="billingEmail"
-
+                                    placeholder="Enter Billing Email Address"
                                     onChange={(value) => { props.handleChange("billingEmail")(value) }}
                                     value={props.values.billingEmail}
                                     className={
@@ -611,8 +630,10 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="contractPoNumber"
                                     name="contractPoNumber"
-
-                                    onChange={(value) => { props.handleChange("contractPoNumber")(value) }}
+                                    placeholder="Enter Contract PO Number"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contractPoNumber')(option)
+                                    }}
                                     value={props.values.contractPoNumber}
                                     className={
                                       props.errors.contractPoNumber && props.touched.contractPoNumber
@@ -635,8 +656,10 @@ class CreateContact extends React.Component {
                                     type="text"
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
-
-                                    onChange={(value) => { props.handleChange("vatRegistrationNumber")(value) }}
+                                    placeholder="Enter Tax Registration Number"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                                    }}
                                     value={props.values.vatRegistrationNumber}
                                     className={
                                       props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber

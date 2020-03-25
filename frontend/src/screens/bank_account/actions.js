@@ -56,7 +56,7 @@ export const getBankAccountList = (obj) => {
     order,
     sortingCol
   } = obj
-  let param = `/rest/bank/list?bankName=${bankName}&bankAccountTypeId=${bankAccountTypeId}&bankAccountName=${bankAccountName}&accountNumber=${accountNumber}&currencyCode=${currencyCode}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingColumn=${sortingCol}`
+  let param = `/rest/bank/list?bankName=${bankName}&bankAccountTypeId=${bankAccountTypeId}&bankAccountName=${bankAccountName}&accountNumber=${accountNumber}&currencyCode=${currencyCode}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`
 
   return (dispatch) => {
     let data = {

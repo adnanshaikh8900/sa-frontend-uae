@@ -20,8 +20,6 @@ import {
   Message
 } from 'components'
 
-import ForgotPasswordModal from './sections/forgot_password_modal'
-
 import {
   AuthActions
 } from 'services/global'
@@ -81,8 +79,6 @@ class LogIn extends React.Component {
           content="Log in failed. Please try again later"
         />
       })
-      // this.props.history.push('/admin')
-
     })
   }
 
@@ -149,61 +145,28 @@ class LogIn extends React.Component {
                             />
                           </InputGroup>
                           <Row>
-                            <Col xs="6">
+                            <Col xs="12" lg="5">
                               <Button
                                 color="primary"
                                 type="submit"
-                                className="px-4 btn-square"
+                                className="px-4 btn-square w-100"
                               >
                                 <i className="fa fa-sign-in" /> Log In
                               </Button>
                             </Col>
-                            <Col xs="6" className="text-right">
-                              <Button type="button" color="link" className="px-0" onClick={this.openForgotPasswordModal}>Forgot password?</Button>
+                            <Col xs="12" lg="7" className="text-right">
+                              <Button type="button" color="link" className="px-0" onClick={()=>{this.props.history.push('/reset-password')}}>Forgot password?</Button>
                             </Col>
                           </Row>
                         </Form>
                       </CardBody>
                     </Card>
-                    {/* <Card className="text-white bg-primary d-md-down-none">
-                      <CardHeader className="bg-primary">
-                        <div className="text-right">
-                          {
-                            version !== '' ?
-                              <label className="text-white mb-0">v. {version} </label>
-                              :
-                              ''
-                          }
-                        </div>
-                      </CardHeader>
-                      <CardBody className="text-center">
-                        <div>
-                          <h2>Sign up</h2>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua.</p>
-                          <Link to="/register">
-                            <Button
-                              color="primary"
-                              className="mt-3 btn-square"
-                              active
-                              tabIndex={-1}
-                            >
-                              <i className="fa fa-user"/> Register Now!
-                            </Button>
-                          </Link> 
-                        </div>
-                      </CardBody>
-                    </Card> */}
                   </CardGroup>
                 </Col>
               </Row>
             </Container>
           </div>
         </div>
-        <ForgotPasswordModal
-          openForgotPasswordModal={this.state.openForgotPasswordModal}
-          closeForgotPasswordModal={(e) => { this.closeForgotPasswordModal(e) }}
-        />
       </div>
     )
   }

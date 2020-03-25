@@ -102,6 +102,9 @@ class SupplierInvoice extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
     this.selectRowProp = {
       mode: 'checkbox',
@@ -122,7 +125,11 @@ class SupplierInvoice extends React.Component {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData , ...sortingData}
     this.props.supplierInvoiceActions.getSupplierInvoiceList(postData).then(res => {
       if (res.status === 200) {
         this.props.supplierInvoiceActions.getStatusList()
@@ -171,7 +178,12 @@ class SupplierInvoice extends React.Component {
       <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>{row.status}</span>
     )
   }
-
+  
+  sortColumn = (sortName,sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
+}
   renderInvoiceAmount(cell,row){
     return row.invoiceAmount ? (row.invoiceAmount).toFixed(2) : ''
   }

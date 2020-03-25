@@ -65,6 +65,7 @@ class CreateExpense extends React.Component {
         expenseDescription: "",
         receiptNumber: "",
         attachmentFile: '',
+        employee: '',
         receiptAttachmentDescription: "",
         vatCategoryId: '',
         payMode: '',
@@ -83,6 +84,9 @@ class CreateExpense extends React.Component {
       paginationPosition: "top"
     };
     this.regEx = /^[0-9\b]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+
     this.file_size = 1024000;
     this.supported_format = [
       "",
@@ -354,11 +358,9 @@ class CreateExpense extends React.Component {
                                     type="text"
                                     name="payee"
                                     id="payee"
-                                    rows="5"
-                                    placeholder="Payee"
-                                    onChange={value => {
-                                      props.handleChange("payee")(value);
-                                    }}
+                                    placeholder="Enter Payee"
+                                    value={props.values.payee}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('payee')(option) }}
                                     className={
                                       props.errors.payee && props.touched.payee
                                         ? "is-invalid"
@@ -645,11 +647,7 @@ class CreateExpense extends React.Component {
                                         id="receiptNumber"
                                         name="receiptNumber"
                                         placeholder="Enter Reciept Number"
-                                        onChange={option =>
-                                          props.handleChange("receiptNumber")(
-                                            option
-                                          )
-                                        }
+                                        onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option) }}
                                         value={props.values.receiptNumber}
                                       />
                                     </FormGroup>

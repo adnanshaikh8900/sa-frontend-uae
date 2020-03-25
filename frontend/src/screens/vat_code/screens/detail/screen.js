@@ -56,6 +56,9 @@ class DetailVatCode extends React.Component {
     this.deleteVat = this.deleteVat.bind(this)
     this.removeVat = this.removeVat.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
+
+    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regEx = /^[0-9\d]+$/;
   }
 
   componentDidMount() {
@@ -159,7 +162,9 @@ class DetailVatCode extends React.Component {
                                     id="name"
                                     name="name"
                                     placeholder="Enter Vat Code Name"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('name')(option)
+                                    }}
                                     value={props.values.name}
                                     className={
                                       props.errors.name && props.touched.name
@@ -174,11 +179,13 @@ class DetailVatCode extends React.Component {
                                 <FormGroup>
                                   <Label htmlFor="name"><span className="text-danger">*</span>Percentage</Label>
                                   <Input
-                                    type="number"
-                                    id="name"
+                                    type="text"
+                                    id="vat"
                                     name="vat"
                                     placeholder="Enter Percentage"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('vat')(option)
+                                    }}
                                     value={props.values.vat}
                                     className={
                                       props.errors.vat && props.touched.vat

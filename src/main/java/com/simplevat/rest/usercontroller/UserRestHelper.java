@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.entity.User;
+import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.RoleService;
 import com.simplevat.service.UserService;
 import com.simplevat.utils.DateFormatUtil;
@@ -29,6 +30,9 @@ public class UserRestHelper {
 
 	@Autowired
 	private DateFormatUtil dateUtil;
+	
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
 
 	public List<UserModel> getModelList(Object userList) {
 
@@ -130,5 +134,4 @@ public class UserRestHelper {
 
 		return null;
 	}
-
 }

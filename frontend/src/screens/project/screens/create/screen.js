@@ -87,6 +87,10 @@ class CreateProject extends React.Component {
 
     this.projectHandleSubmit = this.projectHandleSubmit.bind(this)
     this.success = this.success.bind(this)
+
+    this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
 
@@ -211,7 +215,9 @@ class CreateProject extends React.Component {
                                     type="text"
                                     id="name"
                                     name="projectName"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('projectName')(option)
+                                    }}
                                     placeholder="Enter Project Name"
                                     value={props.values.projectName}
                                     className={
@@ -270,7 +276,9 @@ class CreateProject extends React.Component {
                                     type="text"
                                     id="contractPoNumber"
                                     name="contractPoNumber"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contractPoNumber')(option)
+                                    }}
                                     placeholder="Enter Contract PO Number"
                                     value={props.values.contractPoNumber}
                                     className={
@@ -291,7 +299,9 @@ class CreateProject extends React.Component {
                                     type="text"
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                                    }}
                                     placeholder="Enter VAT Registration Number"
                                     value={props.values.vatRegistrationNumber}
                                     className={
@@ -346,7 +356,9 @@ class CreateProject extends React.Component {
                                     type="number"
                                     id="expenseBudget"
                                     name="expenseBudget"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regex.test(option.target.value)) props.handleChange('expenseBudget')(option)
+                                    }}
                                     placeholder="Enter Expense Budgets"
                                     value={props.values.expenseBudget}
                                     className={
@@ -367,7 +379,9 @@ class CreateProject extends React.Component {
                                     type="number"
                                     id="revenueBudget"
                                     name="revenueBudget"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regex.test(option.target.value)) props.handleChange('revenueBudget')(option)
+                                    }}
                                     placeholder="Enter VAT Revenue Budget"
                                     value={props.values.revenueBudget}
                                     className={

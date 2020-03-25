@@ -495,7 +495,6 @@ class CreateContact extends React.Component {
                                     options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                     value={props.values.countryId}
                                     onChange={option => {
-                                      console.log(option.value)
                                       if (option && option.value) {
                                         props.handleChange('countryId')(option.value)
                                         this.getStateList(option.value)

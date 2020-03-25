@@ -4,16 +4,12 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardGroup,
   Col,
   Container,
   Form,
   Input,
   FormGroup,
   Label,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
   Row
 } from 'reactstrap'
 
@@ -56,7 +52,7 @@ class ResetPassword extends React.Component {
   }
 
   // Create or Contact
-  handleSubmit(obj, setSubmitting) {
+  handleSubmit = (obj,) => {
     let data = {
       method: 'post',
       url: '/public/forgotPassword',
@@ -68,8 +64,13 @@ class ResetPassword extends React.Component {
           type="success"
           content="We Have Sent You a Verification Email. Please Check Your Mail Box."
         />
+      },()=>{
+          setTimeout(() => {
+            this.props.history.push('/login')
+        }, 1500);
       })
     }).catch(err => {
+      console.log(err)
       this.setState({
         alert: <Message
           type="danger"
@@ -87,9 +88,6 @@ class ResetPassword extends React.Component {
   }
 
   render() {
-    const {
-      match
-    } = this.props;
     const { initValue, token } = this.state;
 
     return (
@@ -113,7 +111,7 @@ class ResetPassword extends React.Component {
                         <Formik
                           ref={this.formikRef}
                           initialValues={initValue}
-                          onSubmit={(values, { resetForm, setSubmitting }) => {
+                          onSubmit={(values, { resetForm }) => {
                             this.handleSubmit(values, resetForm);
                           }}
                           validationSchema={Yup.object().shape({
@@ -123,7 +121,6 @@ class ResetPassword extends React.Component {
                           })}
                         >
                           {props => {
-                            const { isSubmitting } = props;
                             return (
                               <Form >
                                 <Row>
@@ -192,7 +189,7 @@ class ResetPassword extends React.Component {
               </Container>
             </div>
           </div>) : (
-            <ResetNewPassword token={token} />)
+            <ResetNewPassword token={token} {...this.props}/>)
         }
       </div>
     );

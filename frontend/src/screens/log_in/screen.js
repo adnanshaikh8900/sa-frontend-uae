@@ -145,16 +145,16 @@ class LogIn extends React.Component {
                             />
                           </InputGroup>
                           <Row>
-                            <Col xs="6">
+                            <Col xs="12" lg="5">
                               <Button
                                 color="primary"
                                 type="submit"
-                                className="px-4 btn-square"
+                                className="px-4 btn-square w-100"
                               >
                                 <i className="fa fa-sign-in" /> Log In
                               </Button>
                             </Col>
-                            <Col xs="6" className="text-right">
+                            <Col xs="12" lg="7" className="text-right">
                               <Button type="button" color="link" className="px-0" onClick={()=>{this.props.history.push('/reset-password')}}>Forgot password?</Button>
                             </Col>
                           </Row>

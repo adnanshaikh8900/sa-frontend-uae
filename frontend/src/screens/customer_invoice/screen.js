@@ -655,7 +655,7 @@ class CustomerInvoice extends React.Component {
                         Due Date
                           </TableHeaderColumn>
                       <TableHeaderColumn
-                        dataField="invoiceAmount"
+                        dataField="totalAmount"
                         dataSort
                         dataFormat={this.renderInvoiceAmount}
                         dataAlign="right"
@@ -663,7 +663,7 @@ class CustomerInvoice extends React.Component {
                         Invoice Amount
                           </TableHeaderColumn>
                       <TableHeaderColumn
-                        dataField="vatAmount"
+                        dataField="totalVatAmount"
                         dataSort  
                         dataFormat={this.renderVatAmount}
                         dataAlign="right"

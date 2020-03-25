@@ -158,11 +158,11 @@ export default {
           url: '/admin/master/product-category',
           icon: 'fas fa-money',
         },
-        {
-          name: 'Currencies',
-          url: '/admin/master/currency',
-          icon: 'fas fa-money',
-        },
+        // {
+        //   name: 'Currencies',
+        //   url: '/admin/master/currency',
+        //   icon: 'fas fa-money',
+        // },
       ]
     },
     // {

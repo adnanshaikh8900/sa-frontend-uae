@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 // import { bindActionCreators } from 'redux'
 import {
@@ -79,9 +79,6 @@ class Header extends Component {
         <Nav className="d-md-down-none" navbar>
           <NavItem className="px-3">
             <NavLink to="/admin/dashboard" className="nav-link" >Dashboard</NavLink>
-          </NavItem>
-          <NavItem className="px-3">
-            <Link to="/admin/settings/user" className="nav-link">Users</Link>
           </NavItem>
           {/* <NavItem className="px-3">
             <NavLink to="/admin/settings" className="nav-link">Settings</NavLink>

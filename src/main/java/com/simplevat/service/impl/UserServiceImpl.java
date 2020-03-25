@@ -29,8 +29,8 @@ import com.simplevat.dao.UserDao;
 @Service("userService")
 public class UserServiceImpl extends UserService implements Serializable {
 
-	@Value("${simplevat.basepath}")
-	private String baseConextPath;
+	@Value("${simplevat.baseUrl}")
+	private String baseUrl;
 
 	@Autowired
 	@Qualifier(value = "userDao")
@@ -91,7 +91,7 @@ public class UserServiceImpl extends UserService implements Serializable {
 		String token = randomString.getAlphaNumericString(30);
 		try {
 			emailSender.send(user.getUserEmail(), "Rset Password",
-					emailSender.resetPassword.replace("LINK", baseConextPath + "/reset-password?token=" + token),
+					emailSender.resetPassword.replace("LINK", baseUrl + "/reset-password?token=" + token),
 					EmailConstant.ADMIN_SUPPORT_EMAIL, true);
 		} catch (MessagingException e) {
 			e.printStackTrace();

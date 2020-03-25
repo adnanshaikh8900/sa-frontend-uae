@@ -54,7 +54,7 @@ public class DatatableSortingFilterConstant {
 	private final List<String> paymentColLabelList = Arrays
 			.asList(new String[] { "supplierName", "invoiceReferenceNo", "invoiceAmount", "paymentDate" });
 	private final List<String> paymentColNameList = Arrays.asList(
-			new String[] { "supplier.firstName", "invoice.referenceNumber", "invoice.totalAmount", "paymentDate" });
+			new String[] { "supplier.firstName", "invoice.referenceNumber", "invoiceAmount", "paymentDate" });
 
 	private Map<String, String> getMap(List<String> colLabelList, List<String> colNameList) {
 		dataMap = new HashMap<String, String>();

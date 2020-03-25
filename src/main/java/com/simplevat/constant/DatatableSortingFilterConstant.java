@@ -26,7 +26,7 @@ public class DatatableSortingFilterConstant {
 	private final List<String> journalColLabelList = Arrays
 			.asList(new String[] { "journalDate", "journalReferenceNo", "postingReferenceType", "description" });
 	private final List<String> journalColNameList = Arrays
-			.asList(new String[] { "journalDate", "journalReferenceNo", "postingReferenceType", "description" });
+			.asList(new String[] { "journalDate", "journlReferencenNo", "postingReferenceType", "description" });
 
 	public final String BANK_ACCOUNT = "BANK_ACCOUNT";
 	public final String BANK_ACCOUNT_DEFAULT = "id";

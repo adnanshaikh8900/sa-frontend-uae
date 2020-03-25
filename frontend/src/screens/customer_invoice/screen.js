@@ -629,7 +629,6 @@ class CustomerInvoice extends React.Component {
                         Status
                           </TableHeaderColumn>
                       <TableHeaderColumn
-
                         dataField="customerName"
                         dataSort
                       >

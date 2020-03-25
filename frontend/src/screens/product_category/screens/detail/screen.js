@@ -52,6 +52,9 @@ class DetailProductCategory extends React.Component {
     this.deleteProductCategory = this.deleteProductCategory.bind(this)
     this.removeProductCategory = this.removeProductCategory.bind(this)
     this.removeDialog = this.removeDialog.bind(this)
+
+    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
   componentDidMount() {
@@ -167,7 +170,7 @@ class DetailProductCategory extends React.Component {
                                     id="productCategoryCode"
                                     name="productCategoryCode"
                                     placeholder="Enter Product Category Code"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCategoryCode')(option) }}
                                     value={props.values.productCategoryCode}
                                     className={
                                       props.errors.productCategoryCode && props.touched.productCategoryCode
@@ -186,7 +189,7 @@ class DetailProductCategory extends React.Component {
                                     id="productCategoryName"
                                     name="productCategoryName"
                                     placeholder="Enter Product Category Name"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCategoryName')(option) }}
                                     value={props.values.productCategoryName}
                                     className={
                                       props.errors.productCategoryName && props.touched.productCategoryName

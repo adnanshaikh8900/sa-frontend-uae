@@ -259,7 +259,7 @@ class Employee extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-                            disabled={employee_list.length === 0}
+                            //disabled={employee_list.length === 0}
 
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />

@@ -42,6 +42,8 @@ import java.util.logging.Logger;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +64,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/rest/user")
 public class UserController implements Serializable {
+
+	private static Log LOGGER = LogFactory.getLog(UserController.class);
 
 	@Autowired
 	private UserService userService;
@@ -118,6 +122,7 @@ public class UserController implements Serializable {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOGGER.error(e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -129,7 +134,6 @@ public class UserController implements Serializable {
 		try {
 			if (user == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
-
 			} else {
 				user.setDeleteFlag(true);
 				userService.update(user);
@@ -138,7 +142,7 @@ public class UserController implements Serializable {
 			return new ResponseEntity(HttpStatus.OK);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -153,31 +157,32 @@ public class UserController implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		LOGGER.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Save New User")
 	@PostMapping(value = "/save")
 	public ResponseEntity save(@ModelAttribute UserModel selectedUser, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-
-		boolean isUserNew = true;
-		User creatingUser = userService.findByPK(userId);
-		String password = selectedUser.getPassword();
-		if (selectedUser.getId() != null) {
-			User user = userService.getUserEmail(selectedUser.getEmail());
-			isUserNew = user == null || !user.getUserId().equals(selectedUser.getId());
-		}
-		if (isUserNew) {
-			Optional<User> userOptional = userService.getUserByEmail(selectedUser.getEmail());
-			if (userOptional.isPresent()) {
-				isEmailPresent = true;
-				return new ResponseEntity<>("Email Id already Exist", HttpStatus.FORBIDDEN);
+			boolean isUserNew = true;
+			User creatingUser = userService.findByPK(userId);
+			String password = selectedUser.getPassword();
+			if (selectedUser.getId() != null) {
+				User user = userService.getUserEmail(selectedUser.getEmail());
+				isUserNew = user == null || !user.getUserId().equals(selectedUser.getId());
 			}
-		}
-		if (!isEmailPresent) {
-			try {
+			if (isUserNew) {
+				Optional<User> userOptional = userService.getUserByEmail(selectedUser.getEmail());
+				if (userOptional.isPresent()) {
+					isEmailPresent = true;
+					return new ResponseEntity<>("Email Id already Exist", HttpStatus.FORBIDDEN);
+				}
+			}
+			if (!isEmailPresent) {
+
 				if (password != null && !password.trim().isEmpty()) {
 					BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 					String encodedPassword = passwordEncoder.encode(password);
@@ -195,10 +200,12 @@ public class UserController implements Serializable {
 					userService.update(user, user.getUserId());
 					return new ResponseEntity("User Profile updated successfully", HttpStatus.OK);
 				}
-			} catch (Exception ex) {
-				Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
 			}
+		} catch (Exception ex) {
+			LOGGER.error(ex);
+			Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		LOGGER.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -220,6 +227,7 @@ public class UserController implements Serializable {
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOGGER.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

@@ -158,6 +158,7 @@ class CustomerReport extends React.Component {
                         <Button
                           color="success"
                           className="btn-square"
+                          onClick={() => this.table.handleExportCSV()}
                         >
                           <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                           Export to CSV
@@ -237,7 +238,12 @@ class CustomerReport extends React.Component {
                 <BootstrapTable 
                   data={customerInvoice} 
                   hover
-                  pagination
+                  pagination={customerInvoice && customerInvoice.length > 0 ? true : false}
+                  fetchInfo={{ dataTotalSize: customerInvoice.count ? customerInvoice.count : 0 }}
+                  csvFileName="customerInvoice.csv"
+                  ref={node => {
+                    this.table = node
+                  }}
                   filter = {true}
                   responsive={true}
                   version="4"

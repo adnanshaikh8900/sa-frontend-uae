@@ -15,6 +15,7 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
  import 'react-select/dist/react-select.css'
  import './style.scss'
+import {BootstrapTable} from "react-bootstrap-table";
 
 const mapStateToProps = (state) => {
   return ({
@@ -520,6 +521,7 @@ class BalanceSheet extends React.Component {
                     <Button
                       color="success"
                       className="btn-square"
+                      onClick={() => this.table.handleExportCSV()}
                     >
                       <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                       Export to CSV
@@ -538,6 +540,8 @@ class BalanceSheet extends React.Component {
             </Form>
           </div>
           <div className="table-wrapper">
+
+
             <Table responsive>
               <thead>
                 <tr>

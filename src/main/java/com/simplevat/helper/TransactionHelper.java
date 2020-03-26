@@ -148,6 +148,7 @@ public class TransactionHelper {
 				transactionModel.setTransactionTypeName(transaction.getChartOfAccount() != null
 						? transaction.getChartOfAccount().getChartOfAccountName()
 						: "-");
+				transactionModel.setDebitCreditFlag(transaction.getDebitCreditFlag());
 				transactionModelList.add(transactionModel);
 			}
 		}

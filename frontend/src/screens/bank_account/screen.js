@@ -305,9 +305,6 @@ class BankAccount extends React.Component {
             }}>
               <i className="fas fa-eye" /> View Transactions
             </DropdownItem>
-            <DropdownItem>
-              <i className="fa fa-connectdevelop" /> Reconcile
-            </DropdownItem>
             <DropdownItem onClick={() => this.closeBankAccount(row.bankAccountId)}>
               <i className="fa fa-trash" /> Close
             </DropdownItem>

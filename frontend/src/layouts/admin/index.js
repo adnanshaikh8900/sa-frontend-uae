@@ -117,7 +117,9 @@ class AdminLayout extends React.Component {
               <AppSidebarMinimizer />
             </AppSidebar>
             <main className="main">
+              <div className="breadcrumb-container">
               <AppBreadcrumb appRoutes={adminRoutes} />
+              </div>
               <Container fluid>
                 <Suspense fallback={Loading()}>
                   <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />

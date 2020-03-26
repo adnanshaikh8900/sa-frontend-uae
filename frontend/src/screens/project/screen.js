@@ -255,7 +255,7 @@ class Project extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-                            disabled={project_list.length === 0}
+
 
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />

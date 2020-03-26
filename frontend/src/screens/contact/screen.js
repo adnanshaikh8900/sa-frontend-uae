@@ -256,7 +256,6 @@ class Contact extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-                            disabled={contact_list && contact_list.data && contact_list.data.length === 0 ? true : false}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV

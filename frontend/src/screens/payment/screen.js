@@ -286,7 +286,7 @@ class Payment extends React.Component {
                             color="success"
                             className="btn-square"
                             onClick={() => this.table.handleExportCSV()}
-                            disabled={payment_list.length === 0}
+                            disabled={payment_list && payment_list.data && payment_list.data.length === 0 ? true : false}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                             Export to CSV
@@ -376,7 +376,7 @@ class Payment extends React.Component {
                           fetchInfo={{ dataTotalSize: payment_list.count ? payment_list.count : 0 }}
                           className="payment-table"
                           trClassName="cursor-pointer"
-                          csvFileName="payment.csv"
+                          csvFileName="payment_list.csv"
                           ref={node => {
                             this.table = node
                           }}

@@ -183,7 +183,7 @@ class BankTransactions extends React.Component {
       if (res.status === 200) {
         res.data.map(x => {
           x['name'] = x.label
-          x['label'] = `${x['label']}(${x['amount']} ${x['date']})`
+          x['label'] = `${x['label']} (${x['amount']} - ${moment(x['date']).format('DD/MM/YYYY')})`
           return x
         })
         this.setState({

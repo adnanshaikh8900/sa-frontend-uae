@@ -188,7 +188,6 @@ onSort = (column) => {
     }
     return obj
   })
-
   const temp = sortedData.sort((a, b) => {
     const nameA = a['value'] ? a['value'].toUpperCase() : '';
     const nameB = b['value'] ? b['value'].toUpperCase() : '';
@@ -296,6 +295,7 @@ render() {
                 {loading ? <Loader /> : (
                   <div className="table-wrapper">
                     <Table responsive>
+                      <thead>
                       <tr className="header-row">
                         {this.columnHeader.map((column, index) => {
                           return <th key={index} style={{ fontWeight: '600' }} className={column.align ? 'text-right' : ''}
@@ -304,11 +304,12 @@ render() {
                           </th>
                         })}
                       </tr>
+                      </thead>
                       <tbody className="data-column">
                         {this.state.detailedGeneralLedgerList && this.state.detailedGeneralLedgerList.length > 0 ? this.state.detailedGeneralLedgerList.map((item, index) => {
                           return (
                             <>
-                              <tr style={{ background: '#f7f7f7' }}><td colSpan="9"><b style={{ fontWeight: '600' }}>{item[0]['transactionTypeName']}</b></td></tr>
+                              <tr style={{ background: '#f7f7f7' }} key={index}><td colSpan="9"><b style={{ fontWeight: '600' }}>{item[0]['transactionTypeName']}</b></td></tr>
                               {/* <tr>
                               <td>As On 01/01/2020 </td>
                               <td colSpan="5">Opening Balance</td>

@@ -7,14 +7,17 @@ package com.simplevat.rest.transactioncontroller;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
+import com.simplevat.constant.ReconsileCategoriesEnumConstant;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
+import com.simplevat.entity.bankaccount.ReconcileCategory;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.helper.TransactionHelper;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
@@ -251,5 +254,4 @@ public class TransactionController implements Serializable {
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
 }

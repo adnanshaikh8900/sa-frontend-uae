@@ -85,15 +85,14 @@ class BankTransactions extends React.Component {
       sidebarOpen: false,
       transaction_type_list_reconcile: [],
       categoryList: [],
-      reConcileData: {
+      reconcileData: {
         transaction_type: '',
         category_type: '',
+        transaction_id: ''
       },
-      categoryDetails: {
-        name: 'a',
-        date: 'Thu Mar 26 2020 18:59:30 GMT+0530',
-        amount: 32000
-      }
+      categoryDetails: {},
+      selectedReconcileTransactionType: '',
+      selectedReconcileCategoryType: ''
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -162,44 +161,56 @@ class BankTransactions extends React.Component {
   //   })
   // }
   onSetSidebarOpen = (open, data) => {
-    this.setState({ sidebarOpen: open, selectedRowData: data });
-    console.log(data)
+    this.setState({ sidebarOpen: open, reconcileData: {transaction_id: data.id} });
     this.getTransactionListForReconcile(data.debitCreditFlag)
   }
 
   getTransactionListForReconcile(type) {
+    // let element = document.querySelector('body');
+    // element.className = element.className + '' + ' sidebar-minimized brand-minimized'
+   
+
     this.props.transactionsActions.getTransactionListForReconcile(type).then(res => {
       if(res.status === 200) {
         this.setState({
           transaction_type_list_reconcile: res.data
-        })
-      }
-    })
-  }
+      })
+    }})
+}
 
   getCategoryList(val) {
     this.props.transactionsActions.getCategoryListForReconcile(val).then(res => {
       if (res.status === 200) {
+        res.data.map(x => {
+          x['name'] = x.label
+          x['label'] = `${x['label']}(${x['amount']} ${x['date']})`
+          return x
+        })
         this.setState({
           categoryList: res.data
         })
-      }
-    })
-  }
+  }})
+}
 
-  getDetail(id) {
-    const { transaction_type } = this.state
-    this.props.transactionsActions.getDetail(transaction_type, id).then(res => {
-      if (res.status === 200) {
-        this.setState({
-          categoryDetails: res.Data
-        })
-      }
+  getDetail(val) {
+    const data = this.state.categoryList.filter(x => x.id === val)
+    this.setState({
+          categoryDetails: {
+            name: data[0].name,
+            date: data[0].date,
+            amount: data[0].amount
+          }
     })
   }
 
   handleSubmit = () => {
-    this.props.transactionsActions.getDetail().then(res => {
+    const { reconcileData} = this.state
+    const postData= {
+     reconcileCategoryCode: reconcileData.transaction_type,
+     reconcileRrefId:  reconcileData.category_type,
+     transactionId:  reconcileData.transaction_id
+    }
+    this.props.transactionsActions.reconcileTransaction(postData).then(res => {
       if (res.status === 200) {
         this.setState({
           sidebarOpen: false
@@ -208,21 +219,23 @@ class BankTransactions extends React.Component {
     })
   }
 
+  closeSideBar = () => {
+    this.setState({ sidebarOpen: false, selectedRowData: '' })
+    // let element = document.querySelector('body');
+    // element.className = element.className.replace('sidebar-minimized brand-minimized','')
+  }
+
   getSideBarContent = () => {
-    const { transaction_type_list_reconcile, categoryList, reConcileData } = this.state
+    const { transaction_type_list_reconcile, categoryList, reconcileData } = this.state
     const { date, amount, name } = this.state.categoryDetails
     return (
       <div className="sidebar-content">
         <div className="header text">
-          <i className="fa fa-close" onClick={() => this.setState({ sidebarOpen: false, selectedRowData: '' })}></i>
+          <h2>Reconcile</h2>
+          <i className="fa fa-close" onClick={() => this.closeSideBar()}></i>
         </div>
         {
-          // id?
           <div>
-            {/* <div className="content p-3">
-              <span style={type === 'cr' ? { color: '#549d06' } : { color: 'red' }}>{`${getStorageData('currencyValue')} ${amount ? amount : 0}`}</span>
-              <div className="date">{`on ${new moment(transactionDate).format("L")}`}</div>
-            </div> */}
             <div className="content-details p-3">
               <form>
                 <div className="mb-3">
@@ -232,31 +245,31 @@ class BankTransactions extends React.Component {
                     onChange={(val) => {
                       if (val && val.value) {
                         this.getCategoryList(val.value)
-                        this.handleChange(val.value, 'transaction_type')
+                        this.handleChange(val.value, 'transaction_type',true)
                       } else {
-                        this.handleChange('', 'transaction_type')
+                        this.handleChange('', 'transaction_type',true)
                       }
                     }}
                     className="select-default-width"
                     placeholder="Transaction Type"
-                    value={this.state.selectedTransactionType}
+                    value={reconcileData.transaction_type}
                   />
                 </div>
-                {reConcileData.transaction_type && <div>
+                {reconcileData.transaction_type && <div className="mb-3">
                   <Label className="label">Category</Label>
                   <Select
-                    options={categoryList ? selectOptionsFactory.renderOptions('label', 'value', categoryList, 'Category') : []}
+                    options={categoryList ? selectOptionsFactory.renderOptions('label', 'id', categoryList, 'Category') : []}
                     onChange={(val) => {
                       if (val && val.value) {
                         this.getDetail(val.value)
-                        this.handleChange(val.value, 'category_type')
+                        this.handleChange(val.value, 'category_type',true)
                       } else {
                         this.handleChange('', 'category_type')
                       }
                     }}
                     className="select-default-width"
                     placeholder="Transaction Type"
-                    value={this.state.selectedTransactionType}
+                    value={reconcileData.category_type}
                   />
                 </div>}
                 {name ?
@@ -277,7 +290,7 @@ class BankTransactions extends React.Component {
                     <label className="value">{moment(date).format('DD/MM/YYYY')}</label>
                   </> : ''
                 }
-                <Row>
+              {name && <Row>
                   <Col lg={12} className="mt-5">
                     <FormGroup className="text-right">
                       <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {this.handleSubmit()}}>
@@ -286,7 +299,7 @@ class BankTransactions extends React.Component {
 
                     </FormGroup>
                   </Col>
-                </Row>
+                </Row> }
               </form>
             </div>
           </div>
@@ -422,7 +435,7 @@ class BankTransactions extends React.Component {
       })
     } else {
       this.setState({
-        reConcileData: Object.assign(this.state.reConcileData, {
+        reconcileData: Object.assign(this.state.reconcileData, {
           [name]: val
         })
       })

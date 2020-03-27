@@ -108,7 +108,7 @@ export const getTransactionTypeListForReconcile = (type) => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: `http://localhost:70/rest/datalist/reconsileCategories?debitCreditFlag=${type}`
+      url: `/rest/datalist/reconsileCategories?debitCreditFlag=${type}`
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
@@ -120,11 +120,11 @@ export const getTransactionTypeListForReconcile = (type) => {
   }
 }
 
-export const getCategoryListForReconcile = (type) => {
+export const getCategoryListForReconcile = (code) => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: `/rest/transactioncategory/getList?type=${type}`
+      url: `/rest/reconsile/getByReconcilationCatCode?reconcilationCatCode=${code}`
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
@@ -136,11 +136,12 @@ export const getCategoryListForReconcile = (type) => {
   }
 }
 
-export const getDetails = (val,id) => {
+export const reconcileTransaction = (obj) => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: `/rest/transactioncategory/getList?type=${val}&id=${id}`
+      url: `/rest/reconsile/reconcile`,
+      data: obj
     }
     return authApi(data).then(res => {
       if (res.status === 200) {

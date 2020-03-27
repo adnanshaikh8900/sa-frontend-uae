@@ -34,6 +34,7 @@ import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.rest.ReconsileRequestModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
+import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
@@ -56,6 +57,9 @@ public class ReconsilationController {
 
 	@Autowired
 	private ReconsilationRestHelper reconsilationRestHelper;
+
+	@Autowired
+	private InvoiceService invoiceService;
 
 	@Autowired
 	private ExpenseService expenseService;
@@ -86,6 +90,10 @@ public class ReconsilationController {
 			switch (cat) {
 			case EXPENSE:
 				journal = expenseReconsile(reconsileRequestModel, userId);
+				break;
+
+			case Supplier_Invoice:
+				journal = invoiceReconsile(reconsileRequestModel, userId);
 				break;
 
 			default:
@@ -139,4 +147,41 @@ public class ReconsilationController {
 		journal.setJournalDate(LocalDateTime.now());
 		return journal;
 	}
+
+	private Journal invoiceReconsile(ReconsileRequestModel reconsileRequestModel, Integer userId) {
+		List<JournalLineItem> journalLineItemList = new ArrayList();
+
+		Invoice invoice = invoiceService.findByPK(reconsileRequestModel.getReconcileRrefId());
+
+		Journal journal = new Journal();
+		JournalLineItem journalLineItem1 = new JournalLineItem();
+		TransactionCategory transactionCategory = transactionCategoryService
+				.findTransactionCategoryByTransactionCategoryCode(
+						TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
+		journalLineItem1.setTransactionCategory(transactionCategory);
+		journalLineItem1.setCreditAmount(invoice.getTotalAmount());
+		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.INVOICE);
+		journalLineItem1.setReferenceId(invoice.getId());
+		journalLineItem1.setCreatedBy(userId);
+		journalLineItem1.setJournal(journal);
+		journalLineItemList.add(journalLineItem1);
+
+		JournalLineItem journalLineItem2 = new JournalLineItem();
+		TransactionCategory saleTransactionCategory = transactionCategoryService
+				.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.SALE.getCode());
+		journalLineItem2.setTransactionCategory(saleTransactionCategory);
+		journalLineItem2.setDebitAmount(invoice.getTotalAmount());
+		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.INVOICE);
+		journalLineItem2.setReferenceId(invoice.getId());
+		journalLineItem2.setCreatedBy(userId);
+		journalLineItem2.setJournal(journal);
+		journalLineItemList.add(journalLineItem2);
+		journal.setJournalLineItems(journalLineItemList);
+		
+		journal.setCreatedBy(userId);
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.INVOICE);
+		journal.setJournalDate(LocalDateTime.now());
+		return journal;
+	}
+
 }

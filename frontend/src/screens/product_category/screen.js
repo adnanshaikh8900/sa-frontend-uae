@@ -228,7 +228,7 @@ class ProductCategory extends React.Component {
   // showConfirmModal() {
   //   this.setState({ openDeleteModal: true })
   // }
-  // // Close Confirm Modal
+  // // Delete Confirm Modal
   // closeConfirmModal() {
   //   this.setState({ openDeleteModal: false })
   // }

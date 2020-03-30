@@ -189,8 +189,9 @@ export const CHART_ACCOUNT = {
 }
 
 
-export const BEGINING_BALANCE = {
-
+export const OPENING_BALANCE = {
+  BANK_ACCOUNT_LIST: 'BANK_ACCOUNT_LIST',
+  CURRENCY_LIST: 'CURRENCY_LIST'
 }
 
 

@@ -16,8 +16,8 @@ export default {
           icon: 'fa fa-diamond',
         },
         {
-          name: 'Begining Balances',
-          url: '/admin/accountant/begining-balance',
+          name: 'Opening Balance',
+          url: '/admin/accountant/opening-balance',
           icon: 'fas fa-balance-scale',
         }
       ]
@@ -40,7 +40,7 @@ export default {
       ]
     },
     {
-      name: 'Revenue',
+      name: 'Income',
       url: '/admin/revenue',
       icon: 'far fa-address-book',
       children: [
@@ -50,7 +50,7 @@ export default {
           icon: 'far fa-address-card',
         },
         {
-          name: 'Receipts',
+          name: 'Income Receipts',
           url: '/admin/revenue/receipt',
           icon: 'fa fa-file-o',
         }
@@ -67,12 +67,12 @@ export default {
           icon: 'far fa-address-card',
         },
         {
-          name: 'Expense',
+          name: 'Expenses',
           url: '/admin/expense/expense',
           icon: 'fab fa-stack-exchange',
         },
         {
-          name: 'Payments',
+          name: 'Payment Receipts',
           url: '/admin/expense/payment',
           icon: 'fas fa-money-check',
         }
@@ -89,7 +89,7 @@ export default {
           icon: 'fas fa-exchange-alt',
         },
         {
-          name: 'Reports Filing',
+          name: 'VAT Filings',
           url: '/admin/taxes/reports-filing',
           icon: 'fas fa-file-text',
         },
@@ -149,7 +149,7 @@ export default {
           icon: 'fas fa-project-diagram',
         },
         {
-          name: 'VAT Codes',
+          name: 'VAT Category',
           url: '/admin/master/vat-code',
           icon: 'icon-briefcase',
         },

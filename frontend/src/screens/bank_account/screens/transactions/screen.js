@@ -162,13 +162,13 @@ class BankTransactions extends React.Component {
   //   })
   // }
   onSetSidebarOpen = (open, data) => {
-    this.setState({ sidebarOpen: open, reconcileData: {transaction_id: data.id} });
+    this.setState({ sidebarOpen: open, reconcileData: {transaction_id: data.id},categoryDetails:{} });
     this.getTransactionListForReconcile(data.debitCreditFlag)
   }
 
   getTransactionListForReconcile(type) {
-    // let element = document.querySelector('body');
-    // element.className = element.className + '' + ' sidebar-minimized brand-minimized'
+    let element = document.querySelector('body');
+    element.className = element.className + '' + ' sidebar-minimized brand-minimized'
    
 
     this.props.transactionsActions.getTransactionListForReconcile(type).then(res => {
@@ -223,8 +223,8 @@ class BankTransactions extends React.Component {
 
   closeSideBar = () => {
     this.setState({ sidebarOpen: false, selectedRowData: '' })
-    // let element = document.querySelector('body');
-    // element.className = element.className.replace('sidebar-minimized brand-minimized','')
+    let element = document.querySelector('body');
+    element.className = element.className.replace('sidebar-minimized brand-minimized','')
   }
 
   getSideBarContent = () => {
@@ -233,7 +233,7 @@ class BankTransactions extends React.Component {
     return (
       <div className="sidebar-content">
         <div className="header text">
-          <h2>Reconcile</h2>
+          <h2>Explain</h2>
           <i className="fa fa-close" onClick={() => this.closeSideBar()}></i>
         </div>
         {
@@ -417,10 +417,10 @@ class BankTransactions extends React.Component {
               <i className="fas fa-wrench" /> Archive
             </DropdownItem>
             <DropdownItem onClick={() => { this.onSetSidebarOpen(true, row) }}>
-              <i className="fa fa-connectdevelop" /> Reconcile
+              <i className="fa fa-connectdevelop" /> Explain
             </DropdownItem>
             <DropdownItem onClick={() => this.closeTransaction(row.id)}>
-              <i className="fa fa-trash" /> Close
+              <i className="fa fa-trash" /> Delete
             </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>

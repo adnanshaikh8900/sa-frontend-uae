@@ -14,7 +14,7 @@ import Dashboard from './dashboard'
 import Journal from './journal'
 import CreateJournal from './journal/screens/create'
 import DetailJournal from './journal/screens/detail'
-import BeginingBalance from './begining_balance'
+import OpeningBalance from './opening_balance'
 
 
 
@@ -139,7 +139,7 @@ export {
   Journal,
   CreateJournal,
   DetailJournal,
-  BeginingBalance,
+  OpeningBalance,
 
 
   BankAccount,

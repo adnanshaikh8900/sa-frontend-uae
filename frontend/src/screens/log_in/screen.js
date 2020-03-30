@@ -97,7 +97,7 @@ class LogIn extends React.Component {
           <div className="app flex-row align-items-center">
             <Container>
               <Row className="justify-content-center">
-                <Col md="8">
+                <Col md="6">
                   {this.state.alert}
                 </Col>
               </Row>

@@ -24,6 +24,7 @@ import { Formik, Field } from 'formik'
 import * as Yup from 'yup'
 
 import { Loader, ConfirmDeleteModal } from 'components'
+import { ViewExpenseDetails } from './sections' 
 
 import { selectOptionsFactory } from 'utils'
 
@@ -69,6 +70,7 @@ class DetailExpense extends React.Component {
       current_expense_id: null,
       fileName: '',
       payMode: '',
+      view: false
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -99,7 +101,9 @@ class DetailExpense extends React.Component {
   }
 
   initializeData() {
+    
     if (this.props.location.state && this.props.location.state.expenseId) {
+      console.log(this.props.location.state)
       this.props.expenseActions.getVatList();
       this.props.expenseDetailActions.getExpenseDetail(this.props.location.state.expenseId).then(res => {
         if (res.status === 200) {
@@ -131,6 +135,13 @@ class DetailExpense extends React.Component {
               fileName: res.data.fileName ? res.data.fileName : '',
               filePath: res.data.receiptAttachmentPath ? res.data.receiptAttachmentPath : '',
             },
+            view: this.props.location.state && this.props.location.state.view ? true : false
+          },() => {
+            if (this.props.location.state && this.props.location.state.view) {
+              this.setState({ loading: false })
+            } else {
+              this.setState({ loading: false })
+            }
           })
         }
       }).catch(err => {
@@ -230,6 +241,12 @@ class DetailExpense extends React.Component {
     })
   }
 
+  editDetails = () => {
+    this.setState({
+      view: false
+    })
+  }
+
   handleFileChange(e, props) {
     e.preventDefault();
     let reader = new FileReader();
@@ -251,10 +268,8 @@ class DetailExpense extends React.Component {
       <div className="detail-expense-screen">
         <div className="animated fadeIn">
           {dialog}
-          {loading ? (
-            <Loader />
-          )
-            :
+          {loading ? <Loader /> : this.state.view ? <ViewExpenseDetails initialVals={initValue} editDetails={() => { this.editDetails() }} />
+           :
             (
               <Row>
                 <Col lg={12} className="mx-auto">
@@ -532,7 +547,7 @@ class DetailExpense extends React.Component {
 
                                   {props.values.payMode === 'BANK' && (<Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="bankAccountId">bankAccountId</Label>
+                                      <Label htmlFor="bankAccountId">Bank</Label>
                                       <Select
                                         id="bankAccountId"
                                         name="bankAccountId"

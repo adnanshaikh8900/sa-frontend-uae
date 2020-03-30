@@ -280,15 +280,15 @@ class CustomerInvoice extends React.Component {
             <DropdownItem onClick={() => this.props.history.push('/admin/revenue/customer-invoice/view', { id: row.id })}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
-            <DropdownItem>
+            {/* <DropdownItem>
               <i className="fas fa-adjust" /> Adjust
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem>
               <i className="fas fa-upload" /> Send
             </DropdownItem>
-            <DropdownItem>
+            {/* <DropdownItem>
               <i className="fas fa-times" /> Cancel
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem onClick={() => { this.closeInvoice(row.id) }}>
               <i className="fa fa-trash-o" /> Delete
             </DropdownItem>

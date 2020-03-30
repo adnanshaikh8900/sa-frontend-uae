@@ -22,7 +22,7 @@ public interface Dao<PK, ENTITY> {
 
 	public void delete(ENTITY entity);
 
-	public List<ENTITY> findByAttributes(Map<String, String> attributes);
+	public List<ENTITY> findByAttributes(Map<String, Object> attributes);
 
 	public List<ENTITY> filter(AbstractFilter<ENTITY> filter);
 

@@ -24,7 +24,7 @@ public class DatatableSortingFilterConstant {
 	public final String JOURNAL = "JOURNAL";
 	public final String JOURNAL_DEFAULT = "id";
 	private final List<String> journalColLabelList = Arrays
-			.asList(new String[] { "journalDate", "journalReferenceNo", "postingReferenceType", "description" });
+			.asList(new String[] { "journalDate", "journalReferenceNo", "postingReferenceTypeDisplayName", "description" });
 	private final List<String> journalColNameList = Arrays
 			.asList(new String[] { "journalDate", "journlReferencenNo", "postingReferenceType", "description" });
 

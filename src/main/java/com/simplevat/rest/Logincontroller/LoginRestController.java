@@ -34,7 +34,7 @@ public class LoginRestController {
 	@PostMapping(value = "/forgotPassword")
 	public ResponseEntity forgotPassword(@RequestBody JwtRequest jwtRequest) {
 
-		Map<String, String> attribute = new HashMap<String, String>();
+		Map<String, Object> attribute = new HashMap<String, Object>();
 		attribute.put("userEmail", jwtRequest.getUsername());
 		List<User> userList = userService.findByAttributes(attribute);
 		if (userList == null || (userList != null && userList.isEmpty()))
@@ -50,7 +50,7 @@ public class LoginRestController {
 	@PostMapping(value = "/resetPassword")
 	public ResponseEntity resetPassword(@RequestBody ResetPasswordModel resetPasswordModel) {
 
-		Map<String, String> attribute = new HashMap<String, String>();
+		Map<String, Object> attribute = new HashMap<String, Object>();
 		attribute.put("forgotPasswordToken", resetPasswordModel.getToken());
 		List<User> userList = userService.findByAttributes(attribute);
 		if (userList == null || (userList != null && userList.isEmpty()) || (userList != null && !userList.isEmpty()

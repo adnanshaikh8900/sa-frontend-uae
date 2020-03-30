@@ -104,7 +104,7 @@ export const deleteTransactionById = (id) => {
   }
 }
 
-export const getTransactionTypeListForReconcile = (type) => {
+export const getTransactionListForReconcile = (type) => {
   return (dispatch) => {
     let data ={
       method: 'get',
@@ -139,7 +139,7 @@ export const getCategoryListForReconcile = (code) => {
 export const reconcileTransaction = (obj) => {
   return (dispatch) => {
     let data ={
-      method: 'get',
+      method: 'POST',
       url: `/rest/reconsile/reconcile`,
       data: obj
     }

@@ -83,6 +83,11 @@
       .Select{
         font-size: 0.75rem!important;
       }
+      .details-container{
+        height: 320px;
+        padding-right: 10px;
+        overflow-y: auto;
+      }
     }
     .sidebar-main-data{
       padding: 1rem;

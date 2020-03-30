@@ -92,7 +92,8 @@ class BankTransactions extends React.Component {
       },
       categoryDetails: {},
       selectedReconcileTransactionType: '',
-      selectedReconcileCategoryType: ''
+      selectedReconcileCategoryType: '',
+      category_label: '',
     }
 
     this.initializeData = this.initializeData.bind(this)
@@ -183,7 +184,7 @@ class BankTransactions extends React.Component {
       if (res.status === 200) {
         res.data.map(x => {
           x['name'] = x.label
-          x['label'] = `${x['label']}(${x['amount']} ${x['date']})`
+          x['label'] = `${x['label']} (${x['amount']} ${x['currencySymbol']})`
           return x
         })
         this.setState({
@@ -198,7 +199,8 @@ class BankTransactions extends React.Component {
           categoryDetails: {
             name: data[0].name,
             date: data[0].date,
-            amount: data[0].amount
+            amount: `${data[0].currencySymbol} ${(data[0].amount).toFixed(2)}`,
+            due_date: data[0].dueDate,
           }
     })
   }
@@ -226,8 +228,8 @@ class BankTransactions extends React.Component {
   }
 
   getSideBarContent = () => {
-    const { transaction_type_list_reconcile, categoryList, reconcileData } = this.state
-    const { date, amount, name } = this.state.categoryDetails
+    const { transaction_type_list_reconcile, categoryList, reconcileData, category_label } = this.state
+    const { date, amount, name, due_date } = this.state.categoryDetails
     return (
       <div className="sidebar-content">
         <div className="header text">
@@ -237,70 +239,89 @@ class BankTransactions extends React.Component {
         {
           <div>
             <div className="content-details p-3">
-              <form>
-                <div className="mb-3">
-                  <Label className="label">Transaction Type</Label>
-                  <Select
-                    options={transaction_type_list_reconcile ? selectOptionsFactory.renderOptions('label', 'value', transaction_type_list_reconcile, 'Transaction Type') : []}
-                    onChange={(val) => {
-                      if (val && val.value) {
-                        this.getCategoryList(val.value)
-                        this.handleChange(val.value, 'transaction_type',true)
-                      } else {
-                        this.handleChange('', 'transaction_type',true)
-                      }
-                    }}
-                    className="select-default-width"
-                    placeholder="Transaction Type"
-                    value={reconcileData.transaction_type}
-                  />
+            <form>
+                <div className="details-container">
+                  <div className="mb-3">
+                    <Label className="label">Transaction Type</Label>
+                    <Select
+                      options={transaction_type_list_reconcile ? selectOptionsFactory.renderOptions('label', 'value', transaction_type_list_reconcile, 'Transaction Type') : []}
+                      onChange={(val) => {
+                        if (val && val.value) {
+                          this.setState({
+                            category_label: val.label
+                          }, () => {
+                            this.getCategoryList(val.value)
+                            this.handleChange(val.value, 'transaction_type', true)
+                          })
+                        } else {
+                          this.handleChange('', 'transaction_type', true)
+                        }
+                        this.handleChange('', 'category_type', true)
+                        this.setState({
+                          categoryDetails: {}
+                        })
+                      }}
+                      className="select-default-width"
+                      placeholder="Transaction Type"
+                      value={reconcileData.transaction_type}
+                    />
+                  </div>
+                  {reconcileData.transaction_type && <div className="mb-3">
+                    <Label className="label">{category_label}</Label>
+                    <Select
+                      options={categoryList ? selectOptionsFactory.renderOptions('label', 'id', categoryList, category_label) : []}
+                      onChange={(val) => {
+                        if (val && val.value) {
+                          this.getDetail(val.value)
+                          this.handleChange(val.value, 'category_type', true)
+                        } else {
+                          this.handleChange('', 'category_type', true)
+                          this.setState({
+                            categoryDetails: {}
+                          })
+                        }
+                      }}
+                      className="select-default-width"
+                      value={reconcileData.category_type}
+                    />
+                  </div>}
+                  {name ?
+                    <>
+                      <label className="label">Name</label>
+                      <label className="value">{name}</label>
+                    </> : ''
+                  }
+                  {amount ?
+                    <>
+                      <label className="label">Amount</label>
+                      <label className="value">{amount}</label>
+                    </> : ''
+                  }
+                  {date ?
+                    <>
+                      <label className="label">Date</label>
+                      <label className="value">{moment(date).format('DD/MM/YYYY')}</label>
+                    </> : ''
+                  }
+                  {due_date ?
+                    <>
+                      <label className="label">Due Date</label>
+                      <label className="value">{moment(due_date).format('DD/MM/YYYY')}</label>
+                    </> : ''
+                  }
                 </div>
-                {reconcileData.transaction_type && <div className="mb-3">
-                  <Label className="label">Category</Label>
-                  <Select
-                    options={categoryList ? selectOptionsFactory.renderOptions('label', 'id', categoryList, 'Category') : []}
-                    onChange={(val) => {
-                      if (val && val.value) {
-                        this.getDetail(val.value)
-                        this.handleChange(val.value, 'category_type',true)
-                      } else {
-                        this.handleChange('', 'category_type')
-                      }
-                    }}
-                    className="select-default-width"
-                    placeholder="Transaction Type"
-                    value={reconcileData.category_type}
-                  />
-                </div>}
-                {name ?
-                  <>
-                    <label className="label">Name</label>
-                    <label className="value">{name}</label>
-                  </> : ''
-                }
-                {amount ?
-                  <>
-                    <label className="label">Amount</label>
-                    <label className="value">{amount.toFixed(2)}</label>
-                  </> : ''
-                }
-                {date ?
-                  <>
-                    <label className="label">Date</label>
-                    <label className="value">{moment(date).format('DD/MM/YYYY')}</label>
-                  </> : ''
-                }
-              {name && <Row>
+                <Row>
                   <Col lg={12} className="mt-5">
                     <FormGroup className="text-right">
-                      <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {this.handleSubmit()}}>
+                      <Button type="button" color="primary" className="btn-square mr-3" onClick={() => { this.handleSubmit() }}
+                        disabled={Object.keys(this.state.categoryDetails).length > 0 ? false : true}
+                      >
                         <i className="fa fa-dot-circle-o"></i> Reconcile
                         </Button>
-
                     </FormGroup>
                   </Col>
-                </Row> }
-              </form>
+                </Row>
+              </form>                 
             </div>
           </div>
           // :

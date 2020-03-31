@@ -26,24 +26,20 @@ public class EmployeeDaoImpl extends AbstractDao<Integer, Employee> implements E
 
 	@Override
 	public List<DropdownModel> getEmployeesForDropdown() {
-		List<DropdownModel> empSelectItemModels = getEntityManager()
-				.createNamedQuery("employeesForDropdown", DropdownModel.class).getResultList();
-		return empSelectItemModels;
+		return getEntityManager().createNamedQuery("employeesForDropdown", DropdownModel.class).getResultList();
 	}
 
 	@Override
 	public List<Employee> getEmployees(String searchQuery, Integer pageNo, Integer pageSize) {
-		List<Employee> employees = getEntityManager().createNamedQuery("employeesByName", Employee.class)
+		return getEntityManager().createNamedQuery("employeesByName", Employee.class)
 				.setParameter("name", "%" + searchQuery + "%").setMaxResults(pageSize).setFirstResult(pageNo * pageSize)
 				.getResultList();
-		return employees;
 	}
 
 	@Override
 	public List<Employee> getEmployees(Integer pageNo, Integer pageSize) {
-		List<Employee> employees = getEntityManager().createNamedQuery("allEmployees", Employee.class)
-				.setMaxResults(pageSize).setFirstResult(pageNo * pageSize).getResultList();
-		return employees;
+		return getEntityManager().createNamedQuery("allEmployees", Employee.class).setMaxResults(pageSize)
+				.setFirstResult(pageNo * pageSize).getResultList();
 	}
 
 	@Override
@@ -70,7 +66,7 @@ public class EmployeeDaoImpl extends AbstractDao<Integer, Employee> implements E
 	}
 
 	@Override
-	public void deleteByIds(ArrayList<Integer> ids) {
+	public void deleteByIds(List<Integer> ids) {
 		if (ids != null && !ids.isEmpty()) {
 			for (Integer id : ids) {
 				Employee employee = findByPK(id);

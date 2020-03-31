@@ -26,7 +26,7 @@ public interface ContactDao extends Dao<Integer, Contact> {
 
     public List<Contact> getContacts(Integer contactType, final String searchQuery, Integer pageNo, Integer pageSize);
 
-    public Optional<Contact> getContactByEmail(String Email);
+    public Optional<Contact> getContactByEmail(String email);
 
     public void deleteByIds(List<Integer> ids);
 }

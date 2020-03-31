@@ -11,6 +11,10 @@ package com.simplevat.constant;
  */
 public abstract class DefaultTypeConstant {
 
-    public static final char YES = 'Y';
-    public static final char NO = 'N';
+	public static final char YES = 'Y';
+	public static final char NO = 'N';
+
+	private DefaultTypeConstant() {
+		// CREATED TO REMOVE SONAR ERROR
+	}
 }

@@ -20,10 +20,7 @@ import com.simplevat.dao.InvoiceDao;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.DateUtils;
-
-import net.bytebuddy.asm.Advice.This;
 
 @Repository
 public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements InvoiceDao {
@@ -50,9 +47,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 
 	@Override
 	public List<DropdownModel> getInvoicesForDropdown() {
-		List<DropdownModel> empSelectItemModels = getEntityManager()
-				.createNamedQuery("invoiceForDropdown", DropdownModel.class).getResultList();
-		return empSelectItemModels;
+		return getEntityManager().createNamedQuery("invoiceForDropdown", DropdownModel.class).getResultList();
 	}
 
 	@Override
@@ -73,7 +68,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setMaxResults(1);
 		List<Invoice> invoiceList = query.getResultList();
 
-		return invoiceList != null && invoiceList.size() > 0 ? invoiceList.get(0) : null;
+		return invoiceList != null && invoiceList.isEmpty() ? invoiceList.get(0) : null;
 	}
 
 	@Override
@@ -82,6 +77,6 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter("startDate", dateUtil.get(startDate));
 		query.setParameter("endDate", dateUtil.get(endDate));
 		List<Invoice> invoiceList = query.getResultList();
-		return invoiceList != null && invoiceList.size() > 0 ? invoiceList : null;
+		return invoiceList != null && invoiceList.isEmpty() ? invoiceList : null;
 	}
 }

@@ -16,10 +16,6 @@ public enum ExpenseFIlterEnum {
 	    @Getter
 	    String condition;
 
-	    private ExpenseFIlterEnum(String dbColumnName) {
-	        this.dbColumnName = dbColumnName;
-	    }
-
 	    private ExpenseFIlterEnum(String dbColumnName, String condition) {
 	        this.dbColumnName = dbColumnName;
 	        this.condition = condition;

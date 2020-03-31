@@ -26,6 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 
+	private final String andClause = " and ";
+	private final String whereClause = " where ";
+
 	protected Class<ENTITY> entityClass;
 
 	@PersistenceContext
@@ -47,8 +50,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 
 	@Override
 	public List<ENTITY> executeNamedQuery(String namedQuery) {
-		List<ENTITY> result = entityManager.createNamedQuery(namedQuery, entityClass).getResultList();
-		return result;
+		return entityManager.createNamedQuery(namedQuery, entityClass).getResultList();
 	}
 
 	@Override
@@ -58,9 +60,9 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		for (DbFilter dbFilter : dbFilters) {
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()) {
 				if (i > 0) {
-					queryBuilder.append(" and ");
+					queryBuilder.append(andClause);
 				} else {
-					queryBuilder.append(" where ");
+					queryBuilder.append(whereClause);
 				}
 				queryBuilder.append("o.").append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
 				i++;
@@ -74,36 +76,28 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 			}
 		}
 
-		List<ENTITY> result = typedQuery.getResultList();
-		return result;
+		return typedQuery.getResultList();
 	}
 
-	// for testing
 	@Override
 	public List<ENTITY> executeQuery(List<DbFilter> dbFilters, PaginationModel paginationModel) {
-		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());// .append(" o ");
+		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());
 		int i = 0;
 		DbFilter orderByFilter = null;
 		for (DbFilter dbFilter : dbFilters) {
 			boolean orderBy = isOrderBy(dbFilter);
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
 				if (i > 0) {
-					queryBuilder.append(" and ");
+					queryBuilder.append(andClause);
 				} else {
-					queryBuilder.append(" where ");
+					queryBuilder.append(whereClause);
 				}
-				queryBuilder.
-				// append("o.").
-						append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
+				queryBuilder.append(dbFilter.getDbCoulmnName()).append(dbFilter.getCondition());
 				i++;
 			} else if (orderBy) {
 				orderByFilter = dbFilter;
-				// java.util.ConcurrentModificationException: dbFilters.remove(orderByFilter);
 			}
 		}
-//		if (orderByFilter != null) {
-//			queryBuilder.append(" Order by " + orderByFilter.getDbCoulmnName()).append(" " + orderByFilter.getValue());
-//		}
 		if (paginationModel != null && paginationModel.getSortingCol() != null
 				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ")) {
 			queryBuilder.append(" order by " + paginationModel.getSortingCol() + " " + paginationModel.getOrder());
@@ -121,23 +115,22 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 			typedQuery.setMaxResults(paginationModel.getPageSize());
 		}
 
-		List<ENTITY> result = typedQuery.getResultList();
-		return result;
+		return typedQuery.getResultList();
 	}
 
 	@Override
 	public Integer getResultCount(List<DbFilter> dbFilters) {
 
-		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());// .append(" o ");
+		StringBuilder queryBuilder = new StringBuilder("FROM ").append(entityClass.getName());
 		int i = 0;
 		DbFilter orderByFilter = null;
 		for (DbFilter dbFilter : dbFilters) {
 			boolean orderBy = isOrderBy(dbFilter);
 			if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty() && !orderBy) {
 				if (i > 0) {
-					queryBuilder.append(" and ");
+					queryBuilder.append(andClause);
 				} else {
-					queryBuilder.append(" where ");
+					queryBuilder.append(whereClause);
 				}
 				queryBuilder.
 				// append("o.").
@@ -148,13 +141,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 				// java.util.ConcurrentModificationException: dbFilters.remove(orderByFilter);
 			}
 		}
-//		if (orderByFilter != null)
-//			queryBuilder.append(" Order by " + orderByFilter.getDbCoulmnName()).append(" " + orderByFilter.getValue());
-
-//		if (paginationModel != null && paginationModel.getSortingCol() != null
-//				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ")) {
-//			queryBuilder.append(" order by " + paginationModel.getSortingCol() + " " + paginationModel.getOrder());
-//		}
 
 		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
 		for (DbFilter dbFilter : dbFilters) {
@@ -200,7 +186,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		CriteriaQuery<ENTITY> cq = cb.createQuery(entityClass);
 		Root<ENTITY> foo = cq.from(entityClass);
 
-		List<Predicate> predicates = new ArrayList<Predicate>();
+		List<Predicate> predicates = new ArrayList<>();
 		for (String s : attributes.keySet()) {
 			if (foo.get(s) != null) {
 				if (attributes.get(s) instanceof String)
@@ -225,11 +211,11 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		filter.buildPredicates(root, cb);
 		filter.addOrderCriteria(root, cb);
 		List<Predicate> predicates = filter.getPredicates();
-		if (predicates != null && predicates.size() > 0) {
+		if (predicates != null && predicates.isEmpty()) {
 			criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
 		}
 		List<Order> orders = filter.getOrders();
-		if (orders != null && orders.size() > 0) {
+		if (orders != null && orders.isEmpty()) {
 			criteriaQuery.orderBy(orders);
 		}
 		TypedQuery<ENTITY> query = getEntityManager().createQuery(criteriaQuery);
@@ -283,12 +269,8 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	}
 
 	private boolean isOrderBy(DbFilter dbFilter) {
-		if (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()
+		return (dbFilter.getValue() != null && !dbFilter.getValue().toString().isEmpty()
 				&& (dbFilter.getValue().toString().equalsIgnoreCase(ORDERBYENUM.ASC.toString())
-						|| dbFilter.getValue().toString().equalsIgnoreCase(ORDERBYENUM.DESC.toString()))) {
-
-			return true;
-		}
-		return false;
+						|| dbFilter.getValue().toString().equalsIgnoreCase(ORDERBYENUM.DESC.toString())));
 	}
 }

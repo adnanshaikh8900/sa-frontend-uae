@@ -15,10 +15,6 @@ public enum EmployeeFilterEnum {
 	    @Getter
 	    String condition;
 
-	    private EmployeeFilterEnum(String dbColumnName) {
-	        this.dbColumnName = dbColumnName;
-	    }
-
 	    private EmployeeFilterEnum(String dbColumnName, String condition) {
 	        this.dbColumnName = dbColumnName;
 	        this.condition = condition;

@@ -54,7 +54,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
 			return query.getResultList();
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
 			return query.getResultList();
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -90,7 +90,8 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
 			return query.getResultList();
 		}
-		return null;
+		return new ArrayList<>();
+
 	}
 
 	@Override

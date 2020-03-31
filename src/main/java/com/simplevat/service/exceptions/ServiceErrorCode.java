@@ -3,7 +3,8 @@ package com.simplevat.service.exceptions;
 public enum ServiceErrorCode {
 	
 	
-	RecordAlreadyExists("Record Already Exists", true), RecordDoesntExists("Record does not Exists", true);
+	RecordAlreadyExists("Record Already Exists", true), 
+	RecordDoesntExists("Record does not Exists", true);
 
 	
 	ServiceErrorCode(String errorDescription_,boolean businessException_) {

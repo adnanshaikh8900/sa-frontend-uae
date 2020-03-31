@@ -16,10 +16,6 @@ public enum VatCategoryFilterEnum {
 	    @Getter
 	    String condition;
 
-	    private VatCategoryFilterEnum(String dbColumnName) {
-	        this.dbColumnName = dbColumnName;
-	    }
-
 	    private VatCategoryFilterEnum(String dbColumnName, String condition) {
 	        this.dbColumnName = dbColumnName;
 	        this.condition = condition;

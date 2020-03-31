@@ -14,40 +14,39 @@ import java.util.Map;
  */
 public enum ContactTypeEnum {
 
-    SUPPLIER("Supplier", 1),
-    CUSTOMER("Customer", 2),
-    BOTH("Both", 3);
+	SUPPLIER("Supplier", 1), CUSTOMER("Customer", 2), BOTH("Both", 3);
 
-    private String desc;
-    private Integer value;
+	private String desc;
+	private Integer value;
 
-    private ContactTypeEnum(String desc, Integer value) {
-        this.desc = desc;
-        this.value = value;
-    }
+	private ContactTypeEnum(String desc, Integer value) {
+		this.desc = desc;
+		this.value = value;
+	}
 
-    public String toString() {
-        return name();
-    }
+	@Override
+	public String toString() {
+		return name();
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public Integer getValue() {
-        return value;
-    }
+	public Integer getValue() {
+		return value;
+	}
 
-    public static Map<Integer,ContactTypeEnum> map() {
-        Map<Integer,ContactTypeEnum> contactTypes = new HashMap<>();
-        for (ContactTypeEnum contactType : values()) {
-            contactTypes.put(contactType.getValue(), contactType);
-        }
-        return contactTypes;
-    }
-    
-    public static String getContactTypeByValue(Integer value){
-        return map().get(value).getDesc();
-    }
+	public static Map<Integer, ContactTypeEnum> map() {
+		Map<Integer, ContactTypeEnum> contactTypes = new HashMap<>();
+		for (ContactTypeEnum contactType : values()) {
+			contactTypes.put(contactType.getValue(), contactType);
+		}
+		return contactTypes;
+	}
+
+	public static String getContactTypeByValue(Integer value) {
+		return map().get(value).getDesc();
+	}
 
 }

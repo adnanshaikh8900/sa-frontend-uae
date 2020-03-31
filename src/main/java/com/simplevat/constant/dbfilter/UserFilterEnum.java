@@ -18,10 +18,6 @@ public enum UserFilterEnum {
     @Getter
     String condition;
 
-    private UserFilterEnum(String dbColumnName) {
-        this.dbColumnName = dbColumnName;
-    }
-
     private UserFilterEnum(String dbColumnName, String condition) {
         this.dbColumnName = dbColumnName;
         this.condition = condition;

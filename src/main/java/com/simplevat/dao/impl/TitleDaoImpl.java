@@ -14,10 +14,8 @@ import com.simplevat.dao.AbstractDao;
 @Repository
 public class TitleDaoImpl extends AbstractDao<Integer, Title> implements TitleDao {
 
-    
-    @Override
-    public List<Title> getTitles() {
-        List<Title> titles = this.executeNamedQuery("allTitles");
-        return titles;
-    }
+	@Override
+	public List<Title> getTitles() {
+		return this.executeNamedQuery("allTitles");
+	}
 }

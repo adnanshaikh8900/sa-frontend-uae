@@ -9,8 +9,12 @@ package com.simplevat.constant;
  *
  * @author admin
  */
-final public class TransactionCreditDebitConstant {
+public final class TransactionCreditDebitConstant {
 
-    public static final char CREDIT = 'C';
-    public static final char DEBIT = 'D';
+	public static final char CREDIT = 'C';
+	public static final char DEBIT = 'D';
+
+	private TransactionCreditDebitConstant() {
+		// CREATED TO REMOVE SONAR ERROR
+	}
 }

@@ -24,11 +24,7 @@ public enum ContactFilterEnum {
 
     @Getter
     String condition;
-
-    private ContactFilterEnum(String dbColumnName) {
-        this.dbColumnName = dbColumnName;
-    }
-
+    
     private ContactFilterEnum(String dbColumnName, String condition) {
         this.dbColumnName = dbColumnName;
         this.condition = condition;

@@ -1,5 +1,7 @@
 package com.simplevat.dao.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -7,10 +9,8 @@ import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.JournalLineItemDao;
 import com.simplevat.entity.JournalLineItem;
-import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.utils.DateFormatUtil;
-import com.simplevat.utils.DateUtils;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem> implements JournalLineItemDao {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(JournalLineItemDaoImpl.class);
 
 	@Autowired
 	private DateFormatUtil dateUtil;
@@ -42,12 +44,12 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		try {
 			fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), "dd/MM/yyyy");
 		} catch (Exception e) {
-
+			LOGGER.error("Error is ", e);
 		}
 		try {
 			toDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), "dd/MM/yyyy");
 		} catch (Exception e) {
-
+			LOGGER.error("Error is ", e);
 		}
 
 		String queryStr = "select jn from JournalLineItem jn INNER join Journal j on j.id = jn.journal.id where j.journalDate BETWEEN :startDate and :endDate ";
@@ -81,11 +83,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 					Arrays.asList(new Integer[] { TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
 							TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode() }));
 		}
-//		if (paginationModel != null && paginationModel.getPageNo() != null) {
-//			query.setMaxResults(paginationModel.getPageSize());
-//			query.setFirstResult(paginationModel.getPageNo());
-//		}
 		List<JournalLineItem> list = query.getResultList();
-		return list != null && list.size() > 0 ? list : null;
+		return list != null && list.isEmpty() ? list : null;
 	}
 }

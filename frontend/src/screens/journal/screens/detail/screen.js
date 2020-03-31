@@ -745,6 +745,7 @@ class DetailJournal extends React.Component {
                                         showYearDropdown
                                         dateFormat="dd/MM/yyyy"
                                         dropdownMode="select"
+                                        autoComplete="off"
                                         value={
                                           props.values.journalDate
                                             ? moment(

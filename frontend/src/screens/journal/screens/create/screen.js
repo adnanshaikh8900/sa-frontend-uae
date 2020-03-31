@@ -641,6 +641,7 @@ class CreateJournal extends React.Component {
                                     onChange={(value) => {
                                       props.handleChange("journalDate")(value)
                                     }}
+                                    autoComplete="off"
                                     className={`form-control ${props.errors.journalDate && props.touched.journalDate ? "is-invalid" : ""}`}
                                   />
                                   {props.errors.journalDate && props.touched.journalDate ? (

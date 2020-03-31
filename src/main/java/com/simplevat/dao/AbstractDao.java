@@ -193,7 +193,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 	}
 
 	@Override
-	public List<ENTITY> findByAttributes(Map<String, String> attributes) {
+	public List<ENTITY> findByAttributes(Map<String, Object> attributes) {
 		List<ENTITY> results;
 		// set up the Criteria query
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -203,7 +203,11 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		List<Predicate> predicates = new ArrayList<Predicate>();
 		for (String s : attributes.keySet()) {
 			if (foo.get(s) != null) {
-				predicates.add(cb.like(foo.get(s), "%" + attributes.get(s) + "%"));
+				if (attributes.get(s) instanceof String)
+					predicates.add(cb.like(foo.get(s), "%" + attributes.get(s) + "%"));
+
+				if (!(attributes.get(s) instanceof String))
+					predicates.add(cb.equal(foo.get(s), attributes.get(s)));
 			}
 		}
 		cq.where(predicates.toArray(new Predicate[] {}));

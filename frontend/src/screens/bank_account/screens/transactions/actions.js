@@ -104,6 +104,55 @@ export const deleteTransactionById = (id) => {
   }
 }
 
+export const getTransactionListForReconcile = (type) => {
+  return (dispatch) => {
+    let data ={
+      method: 'get',
+      url: `/rest/datalist/reconsileCategories?debitCreditFlag=${type}`
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+      return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getCategoryListForReconcile = (code) => {
+  return (dispatch) => {
+    let data ={
+      method: 'get',
+      url: `/rest/reconsile/getByReconcilationCatCode?reconcilationCatCode=${code}`
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+      return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const reconcileTransaction = (obj) => {
+  return (dispatch) => {
+    let data ={
+      method: 'POST',
+      url: `/rest/reconsile/reconcile`,
+      data: obj
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+      return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
 // data: [{
 //   transaction_type: 'Debit',
 //   amount: 3453246,

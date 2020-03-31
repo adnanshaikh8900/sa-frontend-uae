@@ -32,12 +32,11 @@ const mapDispatchToProps = (dispatch) => {
 
 class ViewBankAccount extends React.Component {
   render() {
-
     const {
-      initialVals
-    } = this.props
+      chartOfAccountId,transactionDate,transactionAmount,transactionCategoryId,projectId,description,receiptNumber,attachementDescription,fileName,filePath
+    } = this.props.initialVals
     return (
-          <Card>
+      <Card className="view_details">
             <CardHeader>
               <Row>
                 <Col lg={11}>
@@ -61,64 +60,63 @@ class ViewBankAccount extends React.Component {
                     <Row>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label htmlFor="account_name"><strong>Transaction Type</strong> : {initialVals.chartOfAccountId}</Label>
+                          <Label className="label" htmlFor="account_name">Transaction Type </Label>
+                          <p> {chartOfAccountId}</p>
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label htmlFor="currency"><strong>Transaction Date</strong> : {moment(initialVals.transactionDate).format('DD/MM/YYYY')}</Label>
+                          <Label className="label" htmlFor="currency">Transaction Date </Label>
+                          <p>{moment(transactionDate).format('DD/MM/YYYY')}</p> 
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label htmlFor="opening_balance">Total Amount</Label>
-                          <p>{initialVals.transactionAmount}</p>
+                          <Label className="label" htmlFor="opening_balance">Total Amount</Label>
+                          <p>{(transactionAmount).toFixed(2)}</p>
                         </FormGroup>
                       </Col>
                     </Row>
                     <Row>
                       <Col lg={4}>
                         <FormGroup className="">
-                          <Label htmlFor="account_type">
+                          <Label className="label" htmlFor="account_type">Category</Label>
+                          <p>{transactionCategoryId}</p>
+                        </FormGroup>
+                      </Col>
+                      <Col lg={4}>
+                        <FormGroup className="mb-3">
+                          <Label className="label" htmlFor="account_number">Project</Label>
+                          <p>{projectId}</p>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col lg={4}>
+                        <FormGroup className="mb-3">
+                          <Label className="label" htmlFor="bank_name">Description</Label>
+                          <p>{description}</p>
+                        </FormGroup>
+                      </Col>
 
-                          Category
-                                    </Label>
-                          <p>{initialVals.transactionCategoryId}</p>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <hr />
-                    <Row>
-                      <Col lg={4}>
-                        <FormGroup className="mb-3">
-                          <Label htmlFor="bank_name">Description</Label>
-                          <p>{initialVals.description}</p>
-                        </FormGroup>
-                      </Col>
-                      <Col lg={4}>
-                        <FormGroup className="mb-3">
-                          <Label htmlFor="account_number">Project</Label>
-                          <p>{initialVals.projectId}</p>
-                        </FormGroup>
-                      </Col>
                     </Row>
                     <Row>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label htmlFor="iban_number">Reciept Number</Label>
-                          <p>{initialVals.receiptNumber}</p>
+                          <Label className="label" htmlFor="iban_number">Reciept Number</Label>
+                          <p>{receiptNumber}</p>
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label htmlFor="swift_code">Attachment Description</Label>
-                          <p>{initialVals.attachementDescription}</p>
+                          <Label className="label" htmlFor="swift_code">Attachment Description</Label>
+                          <p>{attachementDescription}</p>
                         </FormGroup>
                       </Col>
                       <Col lg={4}>
                         <FormGroup className="mb-3">
-                          <Label htmlFor="country">Reciept Attachment</Label>
-                          <NavLink download={initialVals.fileName} href={`${API_ROOT_URL.API_ROOT_URL}${initialVals.filePath}`} style={{ fontSize: '0.875rem' }} target="_blank" >{initialVals.fileName}</NavLink>
+                          <Label className="label" htmlFor="country">Reciept Attachment</Label>
+                          <NavLink download={fileName} href={`${API_ROOT_URL.API_ROOT_URL}${filePath}`} style={{ fontSize: '0.875rem' }} target="_blank" >{fileName}</NavLink>
                         </FormGroup>
                       </Col>
                     </Row>

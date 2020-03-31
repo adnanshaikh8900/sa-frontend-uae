@@ -11,6 +11,7 @@ import com.simplevat.entity.IndustryType;
 import com.simplevat.entity.State;
 import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
+import com.simplevat.entity.bankaccount.ReconcileCategory;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
@@ -30,6 +31,7 @@ import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
+import com.simplevat.service.ReconcileCategoryService;
 import com.simplevat.service.StateService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
@@ -84,6 +86,9 @@ public class DataListController implements Serializable {
 
 	@Autowired
 	private StateService stateService;
+
+	@Autowired
+	private ReconcileCategoryService reconcileCategoryService;
 
 	@GetMapping(value = "/getcountry")
 	public ResponseEntity getCountry() {
@@ -273,4 +278,26 @@ public class DataListController implements Serializable {
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@ApiOperation(value = "reconsileCategories")
+	@GetMapping(value = "/reconsileCategories")
+	public ResponseEntity getReconsilteCategories(@RequestParam("debitCreditFlag") String debitCreditFlag) {
+		try {
+			List<ReconcileCategory> reconcileCategoryList = reconcileCategoryService
+					.findByType(debitCreditFlag.equals("C") ? "1" : "2");
+			if (reconcileCategoryList != null && !reconcileCategoryList.isEmpty()) {
+				List<DropdownModel> modelList = new ArrayList<DropdownModel>();
+				for (ReconcileCategory reconcileCategory : reconcileCategoryList)
+					modelList.add(new DropdownModel(Integer.valueOf(reconcileCategory.getReconcileCategoryCode()),
+							reconcileCategory.getReconcileCategoryName()));
+				return new ResponseEntity<>(modelList, HttpStatus.OK);
+			} else {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	
 }

@@ -306,10 +306,10 @@ class BankAccount extends React.Component {
               <i className="fas fa-eye" /> View Transactions
             </DropdownItem>
             <DropdownItem>
-              <i className="fa fa-connectdevelop" /> Reconcile
+              <i className="fas fa-sync" /> Synch
             </DropdownItem>
             <DropdownItem onClick={() => this.closeBankAccount(row.bankAccountId)}>
-              <i className="fa fa-trash" /> Close
+              <i className="fa fa-trash" /> Delete
             </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
@@ -357,7 +357,7 @@ class BankAccount extends React.Component {
     return (
       <div>
         <div>
-          <label className="font-weight-bold mr-2">Balance : </label>
+          <label className="font-weight-bold mr-2">Book Balance : </label>
           <label className="badge badge-success mb-0">2034234</label>
         </div>
         <div>
@@ -634,7 +634,7 @@ class BankAccount extends React.Component {
                             dataFormat={this.renderBalance}
                             dataAlign="right"
                           >
-                            Book Balance
+                            Bank Balance
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="swift_code"

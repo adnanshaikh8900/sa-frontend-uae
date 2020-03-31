@@ -240,12 +240,12 @@ class SupplierInvoice extends React.Component {
             <DropdownItem>
               <i className="fas fa-upload" /> Send
             </DropdownItem>
-            <DropdownItem>
+            {/* <DropdownItem>
               <i className="fas fa-print" /> Print
-            </DropdownItem>
-            <DropdownItem>
+            </DropdownItem> */}
+            {/* <DropdownItem>
               <i className="fas fa-times" /> Cancel
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem onClick={() => { this.closeInvoice(row.id) }}>
               <i className="fa fa-trash-o" /> Delete
             </DropdownItem>

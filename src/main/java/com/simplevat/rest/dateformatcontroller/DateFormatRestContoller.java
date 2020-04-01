@@ -1,15 +1,15 @@
 package com.simplevat.rest.dateformatcontroller;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,30 +23,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.DateFormatFilterEnum;
-import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.DateFormat;
-import com.simplevat.entity.Product;
-import com.simplevat.entity.ProductWarehouse;
-import com.simplevat.entity.VatCategory;
-import com.simplevat.rest.productcontroller.ProductModelHelper;
-import com.simplevat.rest.productcontroller.ProductRequestFilterModel;
-import com.simplevat.rest.productcontroller.ProductRequestModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.DateFormatService;
-import com.simplevat.service.ProductService;
-import com.simplevat.service.ProductWarehouseService;
-import com.simplevat.service.VatCategoryService;
-
 import io.swagger.annotations.ApiOperation;
 
 @Controller
 @RequestMapping("/rest/dateFormat")
 public class DateFormatRestContoller implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DateFormatRestContoller.class);
 
 	@Autowired
 	private DateFormatService dateFormatService;
@@ -70,10 +58,9 @@ public class DateFormatRestContoller implements Serializable {
 		try {
 			if (dateFormatList == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
-
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error = ", e);
 		}
 		return new ResponseEntity(dateFormatRestHelper.getModelList(dateFormatList), HttpStatus.OK);
 	}
@@ -117,7 +104,7 @@ public class DateFormatRestContoller implements Serializable {
 			dateFormatService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error = ", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -125,14 +112,14 @@ public class DateFormatRestContoller implements Serializable {
 
 	@ApiOperation(value = "Update DateFormat")
 	@PostMapping(value = "/update")
-	private ResponseEntity<DateFormatResponseModel> update(@RequestParam(value = "id") Integer id,
+	private ResponseEntity<DateFormatResponseModel> update(DateFormatRequestModel dateFormatRequestModel,
 			HttpServletRequest request) {
-		DateFormat dateFormat = dateFormatService.findByPK(id);
+		DateFormat dateFormat = dateFormatService.findByPK(dateFormatRequestModel.getId());
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-
+		dateFormat = dateFormatRestHelper.getEntity(dateFormatRequestModel);
 		dateFormat.setLastUpdatedBy(userId);
 		dateFormat.setLastUpdateDate(LocalDateTime.now());
-
+		dateFormat = dateFormatService.update(dateFormat);
 		if (dateFormat == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		} else {
@@ -151,7 +138,7 @@ public class DateFormatRestContoller implements Serializable {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error = ", e);
 		}
 		return new ResponseEntity(dateFormatRestHelper.getModel(dateFormat), HttpStatus.OK);
 	}

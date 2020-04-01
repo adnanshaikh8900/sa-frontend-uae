@@ -20,25 +20,7 @@ import org.springframework.core.io.InputStreamSource;
 public class MailIntegration {
 
     private static final String UTF_8 = "UTF-8";
-//
-//    private final JavaMailSender mailSender;
-//
-//    @Autowired
-//    public MailIntegration(JavaMailSender mailSender) {
-//        this.mailSender = mailSender;
-//    }
 
-//    private void sendEmail(final Mail mail, boolean html) throws Exception {
-//
-//        MimeMessagePreparator preparator = mimeMessage -> {
-//            MimeMessageHelper mimeMessagePreparator = new MimeMessageHelper(mimeMessage, true, UTF_8);
-//            mimeMessagePreparator.setTo(mail.getTo());
-//            mimeMessagePreparator.setFrom(new InternetAddress(mail.getFrom(), mail.getFromName()));
-//            mimeMessagePreparator.setText(mail.getBody(), html);
-//            mimeMessagePreparator.setSubject(mail.getSubject());
-//        };
-//        mailSender.send(preparator);
-//    }
     private void sendEmail(final Mail mail, List<MailAttachment> mailAttachmentList, JavaMailSender javaMailSender, boolean html) throws Exception {
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper mimeMessagePreparator = new MimeMessageHelper(mimeMessage, true, UTF_8);

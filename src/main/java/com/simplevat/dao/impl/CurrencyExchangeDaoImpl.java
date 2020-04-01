@@ -54,7 +54,7 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
                     currencyConversion.setCurrencyCode(baseCurrency.getCurrencyCode());
                     currencyConversion.setCurrencyCodeConvertedTo(currency.getCurrencyCode());
                     currencyConversion.setCreatedDate(LocalDateTime.now());
-                    currencyConversion.setExchangeRate(new BigDecimal(value));
+                    currencyConversion.setExchangeRate( BigDecimal.valueOf(value));
                     persist(currencyConversion);
                 } catch (Exception e) {
                     CurrencyConversion currencyConversion = new CurrencyConversion();

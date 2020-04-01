@@ -39,6 +39,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExpenseRestHelper implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	private final static Logger LOGGER = LoggerFactory.getLogger(ExpenseRestHelper.class);
 
 	@Autowired
@@ -58,13 +60,14 @@ public class ExpenseRestHelper implements Serializable {
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
+	
 	@Autowired
 	private BankAccountService bankAccountService;
 
 	@Autowired
 	private FileHelper fileHelper;
 
-	public Expense getExpenseEntity(ExpenseModel model, User user) throws Exception {
+	public Expense getExpenseEntity(ExpenseModel model) {
 		Expense expense = new Expense();
 		expense.setStatus(ExpenseStatusEnum.SAVED.getValue());
 		if (model.getExpenseId() != null) {
@@ -154,7 +157,7 @@ public class ExpenseRestHelper implements Serializable {
 
 			return expenseModel;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error = ", e);
 		}
 		return null;
 	}
@@ -163,7 +166,7 @@ public class ExpenseRestHelper implements Serializable {
 
 		if (expenseList != null) {
 
-			List<ExpenseListModel> expenseDtoList = new ArrayList<ExpenseListModel>();
+			List<ExpenseListModel> expenseDtoList = new ArrayList<>();
 
 			for (Expense expense : (List<Expense>) expenseList) {
 
@@ -188,16 +191,7 @@ public class ExpenseRestHelper implements Serializable {
 			}
 			return expenseDtoList;
 		}
-		return null;
+		return new ArrayList<>();
 
 	}
-	// private void updateSubTotal(@NonNull final ExpenseItemModel expenseItemModel)
-	// {
-//        final BigDecimal unitPrice = expenseItemModel.getUnitPrice();
-//        VatCategory vatCategory = vatCategoryService.findByPK(expenseItemModel.getVatCategoryId());
-//        if (null != unitPrice) {
-//            final BigDecimal amountWithoutTax = unitPrice.add(unitPrice.multiply(vatCategory.getVat()).divide(new BigDecimal(100)));
-//            expenseItemModel.setSubTotal(amountWithoutTax);
-//        }
-//    }
 }

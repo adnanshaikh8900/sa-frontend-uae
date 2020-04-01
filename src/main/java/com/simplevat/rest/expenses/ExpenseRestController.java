@@ -96,8 +96,8 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 			}
 			filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
 			filterDataMap.put(ExpenseFIlterEnum.DELETE_FLAG, false);
-			//filterDataMap.put(ExpenseFIlterEnum.ORDER_BY, ORDERBYENUM.DESC); 
-			PaginationResponseModel response = expenseService.getExpensesList(filterDataMap,expenseRequestFilterModel);
+			// filterDataMap.put(ExpenseFIlterEnum.ORDER_BY, ORDERBYENUM.DESC);
+			PaginationResponseModel response = expenseService.getExpensesList(filterDataMap, expenseRequestFilterModel);
 			if (response == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
@@ -114,8 +114,8 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 	public ResponseEntity save(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			User loggedInUser = userServiceNew.findByPK(userId);
-			Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
+
+			Expense expense = expenseRestHelper.getExpenseEntity(expenseModel);
 			expense.setCreatedBy(userId);
 			expense.setCreatedDate(LocalDateTime.now());
 			if (expenseModel.getAttachmentFile() != null && !expenseModel.getAttachmentFile().isEmpty()) {
@@ -136,9 +136,9 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 	public ResponseEntity update(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			User loggedInUser = userServiceNew.findByPK(userId);
+			
 			if (expenseModel.getExpenseId() != null) {
-				Expense expense = expenseRestHelper.getExpenseEntity(expenseModel, loggedInUser);
+				Expense expense = expenseRestHelper.getExpenseEntity(expenseModel);
 				if (expenseModel.getAttachmentFile() != null && !expenseModel.getAttachmentFile().isEmpty()) {
 					String fileName = fileHelper.saveFile(expenseModel.getAttachmentFile(), FileTypeEnum.EXPENSE);
 					expense.setReceiptAttachmentFileName(expenseModel.getAttachmentFile().getOriginalFilename());

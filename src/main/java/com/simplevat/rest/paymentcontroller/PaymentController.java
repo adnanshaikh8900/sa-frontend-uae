@@ -108,18 +108,18 @@ public class PaymentController implements Serializable {
 			}
 			filterDataMap.put(PaymentFilterEnum.USER_ID, userId);
 			filterDataMap.put(PaymentFilterEnum.DELETE_FLAG, false);
-			//filterDataMap.put(PaymentFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
+			// filterDataMap.put(PaymentFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 			PaginationResponseModel response = paymentService.getPayments(filterDataMap, filterModel);
 
 			List<PaymentViewModel> paymentModels = new ArrayList<>();
-			if (response.getData() != null) {
+			if (response != null && response.getData() != null) {
 				for (Payment payment : (List<Payment>) response.getData()) {
 					PaymentViewModel paymentModel = paymentModelHelper.convertToPaymentViewModel(payment);
 					paymentModels.add(paymentModel);
 				}
 				response.setData(paymentModels);
 			}
-			if (response != null) {
+			if (response != null && response.getData() != null) {
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -91,6 +91,7 @@ public class FileHelper {
 	}
 
 	public String saveFile(MultipartFile multipartFile, FileTypeEnum fileTypeEnum) throws IOException {
+		String filePath = "";
 		String storagePath = fileLocation;
 		createFolderIfNotExist(storagePath);
 		Map<String, String> map = getFileName(multipartFile, fileTypeEnum);
@@ -101,9 +102,9 @@ public class FileHelper {
 			}
 			File file = new File(storagePath + entry.getValue());
 			multipartFile.transferTo(file);
-			return entry.getValue();
+			filePath = entry.getValue();
 		}
-		return "";
+		return filePath;
 	}
 
 	public void createFolderIfNotExist(String filePath) {

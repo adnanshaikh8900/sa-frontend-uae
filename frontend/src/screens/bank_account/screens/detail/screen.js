@@ -492,7 +492,7 @@ class DetailBankAccount extends React.Component {
                                     <Button type="button" name="button" color="danger" className="btn-square"
                                       onClick={this.closeBankAccount}
                                     >
-                                      <i className="fa fa-trash"></i> Close
+                                      <i className="fa fa-trash"></i> Delete
                                     </Button>
                                   </FormGroup>
                                   <FormGroup className="text-right">

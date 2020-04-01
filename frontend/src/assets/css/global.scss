@@ -331,6 +331,20 @@ th {
   padding: 0 !important;
 }
 
+.sidebar-minimized {
+  .sidebar-nav {
+    overflow: visible !important;
+  }
+      .sidebar .ps-container .nav-dropdown-items .nav-item .nav-link{
+        padding-left: 0 !important;
+      }
+  .main-table-panel{
+    width: 79.5%!important;
+    transition: width 3s;
+   }
+}
+
+
 //responsive 
 
 @media screen and (max-width: 767px){

@@ -5,7 +5,7 @@ import {
   Journal,
   CreateJournal,
   DetailJournal,
-  BeginingBalance,
+  OpeningBalance,
 
 
 
@@ -129,9 +129,9 @@ const adminRoutes = [
     component: Journal.screen
   },
   {
-    path: '/admin/accountant/begining-balance',
-    name: 'Begining Balance',
-    component: BeginingBalance.screen
+    path: '/admin/accountant/opening-balance',
+    name: 'Opening Balance',
+    component: OpeningBalance.screen
   },
   {
     redirect: true,

@@ -68,7 +68,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setMaxResults(1);
 		List<Invoice> invoiceList = query.getResultList();
 
-		return invoiceList != null && invoiceList.isEmpty() ? invoiceList.get(0) : null;
+		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList.get(0) : null;
 	}
 
 	@Override
@@ -77,6 +77,6 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter("startDate", dateUtil.get(startDate));
 		query.setParameter("endDate", dateUtil.get(endDate));
 		List<Invoice> invoiceList = query.getResultList();
-		return invoiceList != null && invoiceList.isEmpty() ? invoiceList : null;
+		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList : null;
 	}
 }

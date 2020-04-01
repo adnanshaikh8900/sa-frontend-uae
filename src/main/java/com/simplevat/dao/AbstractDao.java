@@ -211,11 +211,11 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		filter.buildPredicates(root, cb);
 		filter.addOrderCriteria(root, cb);
 		List<Predicate> predicates = filter.getPredicates();
-		if (predicates != null && predicates.isEmpty()) {
+		if (predicates != null && !predicates.isEmpty()) {
 			criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
 		}
 		List<Order> orders = filter.getOrders();
-		if (orders != null && orders.isEmpty()) {
+		if (orders != null && !orders.isEmpty()) {
 			criteriaQuery.orderBy(orders);
 		}
 		TypedQuery<ENTITY> query = getEntityManager().createQuery(criteriaQuery);

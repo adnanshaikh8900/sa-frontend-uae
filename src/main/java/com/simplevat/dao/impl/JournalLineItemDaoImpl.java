@@ -84,6 +84,6 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 							TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode() }));
 		}
 		List<JournalLineItem> list = query.getResultList();
-		return list != null && list.isEmpty() ? list : null;
+		return list != null && !list.isEmpty() ? list : null;
 	}
 }

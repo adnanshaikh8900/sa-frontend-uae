@@ -10,7 +10,7 @@ export const getProjectList = (obj) => {
   let vatRegistrationNumber = obj.vatRegistrationNumber ? obj.vatRegistrationNumber : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
 
   return (dispatch) => {
     let data = {

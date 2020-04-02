@@ -13,7 +13,7 @@ export const getUserList = (obj) => {
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';
   let sortingCol = obj.sortingCol ? obj.sortingCol : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
 
   let url = `/rest/user/getList?name=${name}&roleId=${roleId}&active=${active}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
   if(obj.dob) {

@@ -15,7 +15,7 @@ export const getReceiptList = (obj) => {
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';
   let sortingCol = obj.sortingCol ? obj.sortingCol : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
 
   let url = `/rest/receipt/getList?referenceCode=${receiptReferenceCode}&contactId=${contactId}&invoiceId=${invoiceId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
   if (receiptDate) {

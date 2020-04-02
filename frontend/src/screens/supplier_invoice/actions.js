@@ -12,14 +12,15 @@ export const getSupplierInvoiceList = (postObj) => {
   let invoiceDueDate = postObj.invoiceDueDate ?   postObj.invoiceDueDate : ''
   let amount =  postObj.amount ? postObj.amount : ''
   let status =  postObj.status ? postObj.status : ''
-  let contactType = postObj.contactType ? postObj.contactType : ''  
+  let contactType = 1;//postObj.contactType ? postObj.contactType : ''  
   let pageNo = postObj.pageNo ? postObj.pageNo : '';
   let pageSize = postObj.pageSize ? postObj.pageSize : '';
   let order = postObj.order ? postObj.order : '';
   let sortingCol = postObj.sortingCol ? postObj.sortingCol : '';
+  let paginationDisable = postObj.paginationDisable ? postObj.paginationDisable : false
 
   return (dispatch) => {
-    let param = `rest/invoice/getList?contact=${supplierId}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`
+    let param = `rest/invoice/getList?contact=${supplierId}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     if (invoiceDate) {
       let date = moment(invoiceDate).format('DD-MM-YYYY')
       param = param + `&invoiceDate=${date}`

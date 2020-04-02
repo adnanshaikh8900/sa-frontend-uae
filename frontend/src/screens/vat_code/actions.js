@@ -11,7 +11,7 @@ export const getVatList = (obj) => {
   let vatPercentage = obj.vatPercentage ? obj.vatPercentage : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
 
   let url;
   if(obj) {

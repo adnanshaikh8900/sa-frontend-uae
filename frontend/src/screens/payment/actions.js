@@ -107,7 +107,7 @@ export const getPaymentList = (obj) => {
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';
   let sortingCol = obj.sortingCol ? obj.sortingCol : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
   
   return (dispatch) => {
     let param = `rest/payment/getlist?supplierId=${supplierId}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`

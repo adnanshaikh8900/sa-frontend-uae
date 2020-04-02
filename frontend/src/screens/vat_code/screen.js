@@ -260,7 +260,7 @@ class VatCode extends React.Component {
                           </Button>
                            {view && <CSVLink
                             data={csvData}
-                            filename={'bank_account_list.csv'}
+                            filename={'VatCode.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"

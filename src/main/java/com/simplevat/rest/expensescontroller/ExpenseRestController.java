@@ -62,7 +62,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	private TransactionCategoryService transactionCategoryService;
 
 	@ApiOperation(value = "Get Expense List")
-	@PostMapping(value = "/getList")
+	@GetMapping(value = "/getList")
 	public ResponseEntity getExpenseList(ExpenseRequestFilterModel expenseRequestFilterModel) {
 		try {
 

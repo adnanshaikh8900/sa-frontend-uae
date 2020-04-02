@@ -11,7 +11,7 @@ export const getProductCategoryList = (obj) => {
   let productCategoryName = obj.productCategoryName ? obj.productCategoryName : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
 
   let url;
 

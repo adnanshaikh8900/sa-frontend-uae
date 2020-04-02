@@ -16,10 +16,12 @@ export const getEmployeeList = (obj) => {
       url: `/rest/employee/getList?name=${name}&email=${email}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
     }
     return authApi(data).then(res => {
-      dispatch({
-        type: EMPLOYEE.EMPLOYEE_LIST,
-        payload: res.data
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: EMPLOYEE.EMPLOYEE_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

@@ -18,10 +18,12 @@ export const getContactList = (obj) => {
     }
 
     return authApi(data).then(res => {
-      dispatch({
-        type: CONTACT.CONTACT_LIST,
-        payload: res.data
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: CONTACT.CONTACT_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

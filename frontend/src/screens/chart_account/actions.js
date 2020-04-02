@@ -54,10 +54,8 @@ export const getTransactionCategoryList = (obj) => {
       method: 'GET',
       url: `/rest/transactioncategory/getList?transactionCategoryCode=${transactionCategoryCode}&transactionCategoryName=${transactionCategoryName}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`,
     }
-
     return authApi(data).then(res => {
-   
-   if(!obj.paginationDisable){
+     if(!obj.paginationDisable){
         dispatch({
         type: CHART_ACCOUNT.TRANSACTION_CATEGORY_LIST,
         payload: res.data

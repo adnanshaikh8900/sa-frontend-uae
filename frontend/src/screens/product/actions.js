@@ -18,10 +18,12 @@ export const getProductList = (obj) => {
       url: `/rest/product/getList?name=${name}&productCode=${productCode}&vatPercentage=${vatPercentage}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
     }
     return authApi(data).then(res => {
-      dispatch({
-        type: PRODUCT.PRODUCT_LIST,
-        payload: res.data
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: PRODUCT.PRODUCT_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

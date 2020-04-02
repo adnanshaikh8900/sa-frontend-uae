@@ -268,7 +268,7 @@ class Contact extends React.Component {
                           </Button>
                            {view && <CSVLink
                             data={csvData}
-                            filename={'contact.csv'}
+                            filename={'Contact.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"

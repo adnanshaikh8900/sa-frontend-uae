@@ -19,10 +19,12 @@ export const getProjectList = (obj) => {
     }
 
     return authApi(data).then(res => {
-      dispatch({
-        type: PROJECT.PROJECT_LIST,
-        payload: res.data
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: PROJECT.PROJECT_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

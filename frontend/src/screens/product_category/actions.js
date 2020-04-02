@@ -27,10 +27,12 @@ export const getProductCategoryList = (obj) => {
     }
 
     return authApi(data).then(res => {
-      dispatch({
-        type: PRODUCT_CATEGORY.PRODUCT_CATEGORY_LIST,
-        payload: res.data
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: PRODUCT_CATEGORY.PRODUCT_CATEGORY_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

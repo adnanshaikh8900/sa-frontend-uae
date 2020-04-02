@@ -28,10 +28,12 @@ export const getReceiptList = (obj) => {
       url: url
     }
     return authApi(data).then(res => {
-      dispatch({
-        type: RECEIPT.RECEIPT_LIST,
-        payload: res.data
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: RECEIPT.RECEIPT_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

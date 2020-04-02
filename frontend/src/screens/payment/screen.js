@@ -300,7 +300,7 @@ class Payment extends React.Component {
                           </Button>
                            {view && <CSVLink
                             data={csvData}
-                            filename={'payment.csv'}
+                            filename={'Payment.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"

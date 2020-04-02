@@ -283,7 +283,7 @@ class ChartAccount extends React.Component {
                           </Button>
                           {view && <CSVLink
                             data={csvData}
-                            filename={'Chart_Of_Account.csv'}
+                            filename={'ChartOfAccount.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"

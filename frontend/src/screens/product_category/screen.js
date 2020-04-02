@@ -282,7 +282,7 @@ class ProductCategory extends React.Component {
                           </Button>
                            {view && <CSVLink
                             data={csvData}
-                            filename={'product_category.csv'}
+                            filename={'ProductCategory.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"

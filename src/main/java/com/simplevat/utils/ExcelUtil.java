@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -43,9 +42,7 @@ public class ExcelUtil {
 			Map<String, List<String>> excelDateMap = new LinkedHashMap<String, List<String>>();
 
 			// Creating a Workbook from an Excel file (.xls or .xlsx)
-			try {
-				Workbook workbook = WorkbookFactory.create(file);
-
+			try (Workbook workbook = WorkbookFactory.create(file)) {
 				// Create a DataFormatter to format and get each cell's value as String
 				DataFormatter dataFormatter = new DataFormatter();
 
@@ -78,7 +75,6 @@ public class ExcelUtil {
 				for (Integer key : indexHeaderMap.keySet()) {
 					excelDateMap.put(indexHeaderMap.get(key), indexDateMap.get(key));
 				}
-				workbook.close();
 
 				if (file != null)
 					file.deleteOnExit();

@@ -2,6 +2,7 @@ package com.simplevat.rest.dateformatcontroller;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,9 +31,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Controller
 @RequestMapping("/rest/dateFormat")
-public class DateFormatRestContoller implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class DateFormatRestContoller {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DateFormatRestContoller.class);
 
@@ -47,44 +46,33 @@ public class DateFormatRestContoller implements Serializable {
 
 	@ApiOperation(value = "Get list of DateFormat")
 	@GetMapping(value = "/getList")
-	private ResponseEntity<List<DateFormatResponseModel>> getDateFormat() {
-
-		Map<DateFormatFilterEnum, Object> filterDataMap = new HashMap();
-
+	public ResponseEntity<List<DateFormatResponseModel>> getDateFormat() {
+		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
 		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
-
 		List<DateFormat> dateFormatList = dateFormatService.getDateFormatList(filterDataMap);
-
-		try {
-			if (dateFormatList == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
-			}
-		} catch (Exception e) {
-			LOGGER.error("Error = ", e);
+		if (dateFormatList == null) {
+			LOGGER.error("Error = ", "NO DATA AVALIBALE FOR DATE FORMAT");
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity(dateFormatRestHelper.getModelList(dateFormatList), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Save Datformat")
 	@PostMapping(value = "/save")
-	private ResponseEntity save(DateFormatRequestModel requestModel, HttpServletRequest request) {
-
+	public ResponseEntity save(DateFormatRequestModel requestModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-
 		DateFormat dateFormat = dateFormatRestHelper.getEntity(requestModel);
 		if (dateFormat != null) {
 			dateFormat.setCreatedBy(userId);
 			dateFormat.setCreatedDate(LocalDateTime.now());
 			dateFormatService.update(dateFormat, dateFormat.getId());
-
 		}
 		return new ResponseEntity(HttpStatus.OK);
-
 	}
 
 	@ApiOperation(value = "Delete DateFormat By Id")
 	@DeleteMapping(value = "/delete")
-	private ResponseEntity delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
+	public ResponseEntity delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
 		DateFormat dateFormat = dateFormatService.findByPK(id);
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
@@ -112,8 +100,7 @@ public class DateFormatRestContoller implements Serializable {
 
 	@ApiOperation(value = "Update DateFormat")
 	@PostMapping(value = "/update")
-	private ResponseEntity<DateFormatResponseModel> update(DateFormatRequestModel dateFormatRequestModel,
-			HttpServletRequest request) {
+	public ResponseEntity update(DateFormatRequestModel dateFormatRequestModel, HttpServletRequest request) {
 		DateFormat dateFormat = dateFormatService.findByPK(dateFormatRequestModel.getId());
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		dateFormat = dateFormatRestHelper.getEntity(dateFormatRequestModel);
@@ -129,18 +116,15 @@ public class DateFormatRestContoller implements Serializable {
 
 	@ApiOperation(value = "update DateFormat By Id")
 	@GetMapping(value = "/getById")
-	private ResponseEntity<DateFormatResponseModel> getById(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<DateFormatResponseModel> getById(@RequestParam(value = "id") Integer id) {
 
 		DateFormat dateFormat = dateFormatService.findByPK(id);
-		try {
-			if (dateFormat == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
 
-			}
-		} catch (Exception e) {
-			LOGGER.error("Error = ", e);
+		if (dateFormat == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		} else {
+			LOGGER.error("Error = NOT FOUND dateFormtter ID" + id);
 		}
 		return new ResponseEntity(dateFormatRestHelper.getModel(dateFormat), HttpStatus.OK);
 	}
-
 }

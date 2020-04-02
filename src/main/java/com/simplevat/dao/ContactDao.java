@@ -5,7 +5,7 @@ import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.contactController.ContactRequestFilterModel;
+import com.simplevat.rest.contactcontroller.ContactRequestFilterModel;
 
 import java.util.List;
 import java.util.Map;

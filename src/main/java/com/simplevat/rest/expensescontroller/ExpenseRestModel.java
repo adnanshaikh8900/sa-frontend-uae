@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.simplevat.rest.expenses;
+package com.simplevat.rest.expensescontroller;
 
 import com.simplevat.model.ExpenseItemModel;
 import com.simplevat.entity.Contact;
@@ -42,7 +42,6 @@ public class ExpenseRestModel {
     private MultipartFile attachmentFile;
     private String receiptAttachmentName;
     private String receiptAttachmentContentType;
-//    private StreamedContent attachmentFileContent;
     private Integer versionNumber;
     private Integer paymentMode;
     private byte[] receiptAttachmentBinary;

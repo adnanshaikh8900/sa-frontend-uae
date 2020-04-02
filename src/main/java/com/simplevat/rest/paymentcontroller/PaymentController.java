@@ -1,40 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.simplevat.rest.paymentcontroller;
 
-import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
-import com.simplevat.constant.dbfilter.PaymentFilterEnum;
-import com.simplevat.entity.Payment;
-import com.simplevat.entity.User;
-import com.simplevat.helper.PaymentModelHelper;
-import com.simplevat.rest.PaginationModel;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.ContactService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.InvoiceService;
-import com.simplevat.service.PaymentService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.UserService;
-
-import io.swagger.annotations.ApiOperation;
-
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,53 +25,66 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.dbfilter.PaymentFilterEnum;
+import com.simplevat.entity.Payment;
+import com.simplevat.entity.User;
+import com.simplevat.helper.PaymentModelHelper;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.BankAccountService;
+import com.simplevat.service.ContactService;
+import com.simplevat.service.CurrencyService;
+import com.simplevat.service.InvoiceService;
+import com.simplevat.service.PaymentService;
+import com.simplevat.service.ProjectService;
+import com.simplevat.service.UserService;
+
+import io.swagger.annotations.ApiOperation;
+
 /**
  *
  * @author Ashish
  */
 @RestController
 @RequestMapping(value = "/rest/payment")
-public class PaymentController implements Serializable {
+public class PaymentController {
 
-	private final PaymentService paymentService;
-
-	private final ContactService contactService;
-
-	private final InvoiceService invoiceService;
-
-	private final CurrencyService currencyService;
-
-	private final ProjectService projectService;
-
-	private final BankAccountService bankAccountService;
-
-	private final PaymentModelHelper paymentModelHelper;
-
-	private final UserService userServiceNew;
-
-	private final JwtTokenUtil jwtTokenUtil;
+	private final Logger LOGGER = LoggerFactory.getLogger(PaymentController.class);
 
 	@Autowired
-	public PaymentController(PaymentService paymentService, ContactService contactService,
-			InvoiceService invoiceService, CurrencyService currencyService, ProjectService projectService,
-			BankAccountService bankAccountService, JwtTokenUtil jwtTokenUtil, UserService userServiceNew) {
-		this.paymentService = paymentService;
-		this.contactService = contactService;
-		this.invoiceService = invoiceService;
-		this.currencyService = currencyService;
-		this.projectService = projectService;
-		this.bankAccountService = bankAccountService;
-		this.jwtTokenUtil = jwtTokenUtil;
-		this.userServiceNew = userServiceNew;
-		this.paymentModelHelper = new PaymentModelHelper();
-	}
+	private PaymentService paymentService;
+
+	@Autowired
+	private ContactService contactService;
+
+	@Autowired
+	private InvoiceService invoiceService;
+
+	@Autowired
+	private CurrencyService currencyService;
+
+	@Autowired
+	private ProjectService projectService;
+
+	@Autowired
+	private BankAccountService bankAccountService;
+
+	@Autowired
+	private PaymentModelHelper paymentModelHelper;
+
+	@Autowired
+	private UserService userServiceNew;
+
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
 
 	@ApiOperation(value = "Get All Payments")
 	@GetMapping(value = "/getlist")
 	public ResponseEntity getPaymentList(PaymentRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			Map<PaymentFilterEnum, Object> filterDataMap = new HashMap();
+			Map<PaymentFilterEnum, Object> filterDataMap = new EnumMap<>(PaymentFilterEnum.class);
 			if (filterModel.getSupplierId() != null) {
 				filterDataMap.put(PaymentFilterEnum.SUPPLIER, contactService.findByPK(filterModel.getSupplierId()));
 			}
@@ -125,7 +116,8 @@ public class PaymentController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
+			;
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -141,7 +133,7 @@ public class PaymentController implements Serializable {
 			}
 			return new ResponseEntity<>(paymentModel, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -173,7 +165,7 @@ public class PaymentController implements Serializable {
 			paymentService.persist(payment);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -214,7 +206,7 @@ public class PaymentController implements Serializable {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

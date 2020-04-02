@@ -1,43 +1,36 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.simplevat.rest.expenses;
+package com.simplevat.rest.expensescontroller;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
-import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.entity.Expense;
-import com.simplevat.entity.Product;
-import com.simplevat.entity.User;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.UserService;
 import com.simplevat.utils.FileHelper;
 import io.swagger.annotations.ApiOperation;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.EnumMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,18 +43,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rest/expense")
-public class ExpenseRestController extends AbstractDoubleEntryRestController implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7383668014992304509L;
+public class ExpenseRestController extends AbstractDoubleEntryRestController {
+	private final Logger LOGGER = LoggerFactory.getLogger(ExpenseRestController.class);
 
 	@Autowired
 	private ExpenseService expenseService;
-
-	@Autowired
-	private UserService userServiceNew;
 
 	@Autowired
 	private ExpenseRestHelper expenseRestHelper;
@@ -76,11 +62,11 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 	private TransactionCategoryService transactionCategoryService;
 
 	@ApiOperation(value = "Get Expense List")
-	@RequestMapping(method = RequestMethod.GET, value = "/getList")
+	@PostMapping(value = "/getList")
 	public ResponseEntity getExpenseList(ExpenseRequestFilterModel expenseRequestFilterModel) {
 		try {
 
-			Map<ExpenseFIlterEnum, Object> filterDataMap = new HashMap<ExpenseFIlterEnum, Object>();
+			Map<ExpenseFIlterEnum, Object> filterDataMap = new EnumMap<>(ExpenseFIlterEnum.class);
 			filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
 			if (expenseRequestFilterModel.getExpenseDate() != null
 					&& !expenseRequestFilterModel.getExpenseDate().isEmpty()) {
@@ -96,7 +82,6 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 			}
 			filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
 			filterDataMap.put(ExpenseFIlterEnum.DELETE_FLAG, false);
-			// filterDataMap.put(ExpenseFIlterEnum.ORDER_BY, ORDERBYENUM.DESC);
 			PaginationResponseModel response = expenseService.getExpensesList(filterDataMap, expenseRequestFilterModel);
 			if (response == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -104,13 +89,13 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 			response.setData(expenseRestHelper.getExpenseList(response.getData()));
 			return new ResponseEntity(response, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
 	@ApiOperation(value = "Add New Expense")
-	@RequestMapping(method = RequestMethod.POST, value = "/save")
+	@PostMapping(value = "/save")
 	public ResponseEntity save(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -126,17 +111,17 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 			expenseService.persist(expense);
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
 	@ApiOperation(value = "Update Expense")
-	@RequestMapping(method = RequestMethod.POST, value = "/update")
+	@PostMapping(value = "/update")
 	public ResponseEntity update(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			
+
 			if (expenseModel.getExpenseId() != null) {
 				Expense expense = expenseRestHelper.getExpenseEntity(expenseModel);
 				if (expenseModel.getAttachmentFile() != null && !expenseModel.getAttachmentFile().isEmpty()) {
@@ -150,25 +135,25 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 			}
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
 	@ApiOperation(value = "Get Expense Detail by Expanse Id")
-	@RequestMapping(method = RequestMethod.GET, value = "/getExpenseById")
+	@GetMapping(value = "/getExpenseById")
 	public ResponseEntity getExpenseById(@RequestParam("expenseId") Integer expenseId) {
 		try {
 			Expense expense = expenseService.findByPK(expenseId);
 			ExpenseModel expenseModel = expenseRestHelper.getExpenseModel(expense);
 			return new ResponseEntity(expenseModel, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "/delete")
+	@DeleteMapping(value = "/delete")
 	public ResponseEntity delete(@RequestParam("expenseId") Integer expenseId) {
 		try {
 			Expense expense = expenseService.findByPK(expenseId);
@@ -176,7 +161,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 			expenseService.update(expense);
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -187,20 +172,8 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController imp
 			expenseService.deleteByIds(expenseIds.getIds());
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
-//
-//    @RequestMapping(method = RequestMethod.GET, value = "/categories")
-//    public ResponseEntity getCategorys(@RequestParam("categoryName") String queryString) {
-//        try {
-//            System.out.println("queryString=" + queryString);
-//            List<TransactionCategory> transactionCategoryList = transactionCategoryService.findAllTransactionCategoryByTransactionType(TransactionTypeConstant.TRANSACTION_TYPE_EXPENSE, queryString);
-//            return new ResponseEntity(expenseRestHelper.completeCategory(transactionCategoryList), HttpStatus.OK);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
 }

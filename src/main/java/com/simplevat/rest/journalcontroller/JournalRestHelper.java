@@ -1,13 +1,16 @@
 package com.simplevat.rest.journalcontroller;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +26,12 @@ import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
-import java.util.Collection;
-import java.util.Date;
+
+import io.jsonwebtoken.lang.Collections;
 
 @Component
 public class JournalRestHelper {
+	private final Logger LOGGER = LoggerFactory.getLogger(JournalRestHelper.class);
 
 	@Autowired
 	private CurrencyService currencyService;
@@ -81,11 +85,12 @@ public class JournalRestHelper {
 		if (journalRequestModel.getTotalDebitAmount() != null) {
 			journal.setTotalDebitAmount(journalRequestModel.getTotalDebitAmount());
 		}
-		List<JournalLineItemRequestModel> itemModels = new ArrayList<>();
+
 		if (journalRequestModel.getJournalLineItems() != null && !journalRequestModel.getJournalLineItems().isEmpty()) {
-			itemModels = journalRequestModel.getJournalLineItems();
-			if (itemModels.size() > 0) {
-				journal.setJournalLineItems(getLineItems(itemModels, journal, userId));
+			List<JournalLineItemRequestModel> itemModels = journalRequestModel.getJournalLineItems();
+			if (!itemModels.isEmpty()) {
+				List<JournalLineItem> lineItems = getLineItems(itemModels, journal, userId);
+				journal.setJournalLineItems(!lineItems.isEmpty() ? lineItems : null);
 			}
 		}
 		return journal;
@@ -129,8 +134,8 @@ public class JournalRestHelper {
 
 				lineItems.add(lineItem);
 			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
+				LOGGER.error("Error", e);
+				return new ArrayList<>();
 			}
 		}
 		return lineItems;
@@ -140,7 +145,7 @@ public class JournalRestHelper {
 
 		if (responseModel != null) {
 
-			List<JournalModel> journalModelList = new ArrayList<JournalModel>();
+			List<JournalModel> journalModelList = new ArrayList<>();
 			if (responseModel.getData() != null) {
 				for (Journal journal : (List<Journal>) responseModel.getData()) {
 					journalModelList.add(getModel(journal, true));
@@ -159,14 +164,12 @@ public class JournalRestHelper {
 		JournalModel model = new JournalModel();
 		model.setJournalId(journal.getId());
 		model.setDescription(journal.getDescription());
-		model.setJournalReferenceNo(isManual ? journal.getJournlReferencenNo() : " ");// String.valueOf(journal.getId()));
+		model.setJournalReferenceNo(isManual ? journal.getJournlReferencenNo() : " ");
 
 		BigDecimal totalCreditAmount = getTotalCreditAmount(journal.getJournalLineItems());
 		BigDecimal totalDebitAmount = getTotalDebitAmount(journal.getJournalLineItems());
 
-		// model.setSubTotalCreditAmount(journal.getSubTotalCreditAmount());
 		model.setSubTotalCreditAmount(isManual ? journal.getSubTotalCreditAmount() : totalCreditAmount);
-		// model.setSubTotalDebitAmount(journal.getSubTotalDebitAmount());
 		model.setSubTotalDebitAmount(isManual ? journal.getSubTotalDebitAmount() : totalDebitAmount);
 		model.setTotalCreditAmount(isManual ? journal.getTotalCreditAmount() : totalCreditAmount);
 		model.setTotalDebitAmount(isManual ? journal.getTotalDebitAmount() : totalDebitAmount);
@@ -211,13 +214,11 @@ public class JournalRestHelper {
 
 		if (lineItem.getVatCategory() != null) {
 			requestModel.setVatCategoryId(lineItem.getVatCategory().getId());
-			if (list) {
-				if (!lineItem.getVatCategory().getVat().equals(BigDecimal.valueOf(0))) {
-					creditVatAmt = lineItem.getVatCategory().getVat().divide(BigDecimal.valueOf(100))
-							.multiply(lineItem.getCreditAmount());
-					debitVatAmt = lineItem.getVatCategory().getVat().divide(BigDecimal.valueOf(100))
-							.multiply(lineItem.getDebitAmount());
-				}
+			if (list && !lineItem.getVatCategory().getVat().equals(BigDecimal.valueOf(0))) {
+				creditVatAmt = lineItem.getVatCategory().getVat().divide(BigDecimal.valueOf(100))
+						.multiply(lineItem.getCreditAmount());
+				debitVatAmt = lineItem.getVatCategory().getVat().divide(BigDecimal.valueOf(100))
+						.multiply(lineItem.getDebitAmount());
 			}
 		}
 		requestModel.setDescription(lineItem.getDescription());
@@ -231,15 +232,10 @@ public class JournalRestHelper {
 	}
 
 	public Collection<JournalLineItem> setReferenceId(Collection<JournalLineItem> journalLineItemList, Integer id) {
-
-		if (journalLineItemList != null && journalLineItemList.size() > 0) {
-
-			for (JournalLineItem journalLineItem : journalLineItemList) {
-				journalLineItem.setReferenceId(id);
-			}
-			return journalLineItemList;
+		for (JournalLineItem journalLineItem : journalLineItemList) {
+			journalLineItem.setReferenceId(id);
 		}
-		return null;
+		return journalLineItemList;
 	}
 
 	public BigDecimal getTotalDebitAmount(Collection<JournalLineItem> lineItem) {

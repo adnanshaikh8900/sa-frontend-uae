@@ -19,7 +19,7 @@ public class TransactionParsingSettingDaoImpl extends AbstractDao<Long, Transact
 	@Override
 	public List<TransactionParsingSetting> getTransactionList(
 			Map<TransactionParsingSettingFilterEnum, Object> filterMap) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));
 		return this.executeQuery(dbFilters);
@@ -30,7 +30,7 @@ public class TransactionParsingSettingDaoImpl extends AbstractDao<Long, Transact
 		List<String> list = getEntityManager().createNamedQuery("getDateFormatIdTemplateId", String.class)
 				.setParameter("id", templateId).getResultList();
 
-		return list != null && list.isEmpty() ? list.get(0) : null;
+		return list != null && !list.isEmpty() ? list.get(0) : null;
 	}
 
 }

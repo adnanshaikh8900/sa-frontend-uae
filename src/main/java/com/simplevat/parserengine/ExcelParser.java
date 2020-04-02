@@ -30,11 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.simplevat.criteria.enums.TransactionEnum;
 import com.simplevat.dao.DateFormatDao;
 import com.simplevat.entity.DateFormat;
-import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
 import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSettingPersistModel;
-import com.simplevat.service.BankAccountService;
 
 @Component
 public class ExcelParser implements TransactionFileParser {
@@ -42,17 +40,12 @@ public class ExcelParser implements TransactionFileParser {
 	private final Logger LOGGER = LoggerFactory.getLogger(ExcelParser.class);
 
 	@Autowired
-	private BankAccountService bankAccountService;
-
-	@Autowired
 	private DateFormatDao dateformatDao;
-
-	private Integer firstRowIndex = 0;
 
 	@Override
 	public List<Map<String, String>> parseSmaple(TransactionParsingSettingPersistModel model) {
 
-		firstRowIndex = model.getHeaderRowNo() != null ? model.getHeaderRowNo() - 1 : 0;
+		final Integer firstRowIndex = model.getHeaderRowNo() != null ? model.getHeaderRowNo() - 1 : 0;
 
 		if (model.getFile() != null) {
 
@@ -61,9 +54,7 @@ public class ExcelParser implements TransactionFileParser {
 			List<Map<String, String>> list = new ArrayList<>();
 
 			// Creating a Workbook from an Excel file (.xls or .xlsx)
-			try {
-				Workbook workbook = WorkbookFactory.create(model.getFile().getInputStream());
-
+			try (Workbook workbook = WorkbookFactory.create(model.getFile().getInputStream());) {
 				// Create a DataFormatter to format and get each cell's value as String
 				DataFormatter dataFormatter = new DataFormatter();
 
@@ -83,7 +74,6 @@ public class ExcelParser implements TransactionFileParser {
 					});
 				});
 
-				workbook.close();
 				return list;
 			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
 				LOGGER.error("ERROR = ", e);
@@ -97,7 +87,7 @@ public class ExcelParser implements TransactionFileParser {
 	// consider for singel page in sheet
 	public Map parseImportData(TransactionParsingSettingDetailModel model, MultipartFile file) {
 
-		firstRowIndex = model.getHeaderRowNo() != null ? model.getHeaderRowNo() - 1 : 0;
+		Integer firstRowIndex = model.getHeaderRowNo() != null ? model.getHeaderRowNo() - 1 : 0;
 
 		if (file != null) {
 			Map<Integer, Set<Integer>> errorRowCellIndexMap = new HashMap<>();
@@ -109,11 +99,9 @@ public class ExcelParser implements TransactionFileParser {
 			List<Map<String, String>> list = new ArrayList<>();
 
 			// Creating a Workbook from an Excel file (.xls or .xlsx)
-			try {
-				Workbook workbook = WorkbookFactory.create(file.getInputStream());
+			try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
 
 				// Create a DataFormatter to format and get each cell's value as String
-
 				DateFormat format = dateformatDao.findByPK(model.getDateFormatId());
 
 				DataFormatter dataFormatter = new DataFormatter();
@@ -178,8 +166,6 @@ public class ExcelParser implements TransactionFileParser {
 					}
 				}
 
-				workbook.close();
-
 				Map responseMap = new LinkedHashMap<>();
 				responseMap.put("data", list);
 				responseMap.put("error", errorList);// errorRowCellIndexMap.isEmpty() ? null : errorRowCellIndexMap);
@@ -198,7 +184,7 @@ public class ExcelParser implements TransactionFileParser {
 	public List<com.simplevat.entity.bankaccount.Transaction> getModelListFromFile(
 			TransactionParsingSettingDetailModel model, MultipartFile file, Integer bankId) {
 
-		firstRowIndex = model.getHeaderRowNo() != null ? model.getHeaderRowNo() - 1 : 0;
+		Integer firstRowIndex = model.getHeaderRowNo() != null ? model.getHeaderRowNo() - 1 : 0;
 
 		if (file != null) {
 
@@ -207,9 +193,7 @@ public class ExcelParser implements TransactionFileParser {
 			List<Transaction> list = new ArrayList<>();
 
 			// Creating a Workbook from an Excel file (.xls or .xlsx)
-			try {
-				Workbook workbook = WorkbookFactory.create(file.getInputStream());
-
+			try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
 				// Create a DataFormatter to format and get each cell's value as String
 				workbook.forEach(sheet -> {
 					sheet.forEach(row -> {
@@ -223,8 +207,6 @@ public class ExcelParser implements TransactionFileParser {
 
 					});
 				});
-
-				workbook.close();
 				return list;
 			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
 				LOGGER.error("ERROR = ", e);

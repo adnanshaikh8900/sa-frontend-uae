@@ -5,39 +5,19 @@
  */
 package com.simplevat.rest.currencycontroller;
 
-import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.helper.BankHelper;
-import com.simplevat.security.JwtAuthenticationController;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.model.BankModel;
-import com.simplevat.entity.Country;
 import com.simplevat.entity.Currency;
-import com.simplevat.entity.User;
-import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.bankaccount.BankAccountStatus;
-import com.simplevat.entity.bankaccount.BankAccountType;
-import com.simplevat.exceptions.ServiceException;
-import com.simplevat.service.BankAccountTypeService;
-import com.simplevat.service.CountryService;
+
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.UserService;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.BankAccountStatusService;
-import com.simplevat.service.bankaccount.TransactionStatusService;
 
-import io.jsonwebtoken.JwtException;
 import io.swagger.annotations.ApiOperation;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/rest/currency")
-public class CurrencyController implements Serializable {
+public class CurrencyController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(CurrencyController.class);
 

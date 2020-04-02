@@ -1,43 +1,39 @@
 package com.simplevat.rest.invoicecontroller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.Currency;
-import com.simplevat.entity.Project;
-import com.simplevat.entity.Invoice;
-import com.simplevat.entity.InvoiceLineItem;
-import com.simplevat.constant.InvoiceStatusEnum;
-import com.simplevat.invoice.model.InvoiceItemModel;
-import com.simplevat.rest.contactController.ContactHelper;
-import com.simplevat.service.ContactService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.InvoiceLineItemService;
-import com.simplevat.service.InvoiceService;
-import com.simplevat.service.PaymentService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.utils.FileHelper;
-
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simplevat.constant.InvoiceStatusEnum;
+import com.simplevat.entity.Contact;
+import com.simplevat.entity.Currency;
+import com.simplevat.entity.Invoice;
+import com.simplevat.entity.InvoiceLineItem;
+import com.simplevat.entity.Project;
+import com.simplevat.rest.contactcontroller.ContactHelper;
+import com.simplevat.service.ContactService;
+import com.simplevat.service.CurrencyService;
+import com.simplevat.service.InvoiceLineItemService;
+import com.simplevat.service.InvoiceService;
+import com.simplevat.service.PaymentService;
+import com.simplevat.service.ProjectService;
+import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.FileHelper;
+
 @Service
 public class InvoiceRestHelper {
-
+	private final Logger LOGGER = LoggerFactory.getLogger(InvoiceRestHelper.class);
 	@Autowired
 	VatCategoryService vatCategoryService;
 
@@ -61,9 +57,6 @@ public class InvoiceRestHelper {
 
 	@Autowired
 	private PaymentService paymentService;
-
-	@Autowired
-	private ContactHelper contactHelper;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -118,11 +111,11 @@ public class InvoiceRestHelper {
 						new TypeReference<List<InvoiceLineItemModel>>() {
 						});
 			} catch (IOException ex) {
-				Logger.getLogger(InvoiceRestHelper.class.getName()).log(Level.SEVERE, null, ex);
+				LOGGER.error("Error", ex);
 			}
-			if (itemModels.size() > 0) {
-				List<InvoiceLineItem> InvoiceLineItemList = getLineItems(itemModels, invoice, userId);
-				invoice.setInvoiceLineItems(InvoiceLineItemList);
+			if (!itemModels.isEmpty()) {
+				List<InvoiceLineItem> invoiceLineItemList = getLineItems(itemModels, invoice, userId);
+				invoice.setInvoiceLineItems(invoiceLineItemList);
 			}
 		}
 		if (invoiceModel.getTaxIdentificationNumber() != null) {
@@ -142,7 +135,6 @@ public class InvoiceRestHelper {
 
 	public List<InvoiceLineItem> getLineItems(List<InvoiceLineItemModel> itemModels, Invoice invoice, Integer userId) {
 		List<InvoiceLineItem> lineItems = new ArrayList<>();
-		int i = 0;
 		for (InvoiceLineItemModel model : itemModels) {
 			try {
 				InvoiceLineItem lineItem = new InvoiceLineItem();
@@ -158,10 +150,9 @@ public class InvoiceRestHelper {
 				}
 				lineItem.setInvoice(invoice);
 				lineItems.add(lineItem);
-				i++;
 			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
+				LOGGER.error("Error", e);
+				return new ArrayList<>();
 			}
 		}
 		return lineItems;
@@ -314,7 +305,7 @@ public class InvoiceRestHelper {
 		if (contact.getCountry() != null && contact.getCountry().getCountryName() != null) {
 			sb.append(contact.getCountry().getCountryName()).append(", ");
 		}
-		if (contact.getState() != null ) {
+		if (contact.getState() != null) {
 			sb.append(contact.getState().getStateName()).append(", ");
 		}
 		if (contact.getCity() != null && !contact.getCity().isEmpty()) {

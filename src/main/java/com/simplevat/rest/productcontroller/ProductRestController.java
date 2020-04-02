@@ -1,31 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.simplevat.rest.productcontroller;
 
-import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
-import com.simplevat.constant.dbfilter.ProductFilterEnum;
-import com.simplevat.model.TransactionRestModel;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.entity.Product;
-import com.simplevat.entity.VatCategory;
-import com.simplevat.service.ProductService;
-import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.VatCategoryService;
-import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +23,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
+import com.simplevat.constant.dbfilter.ProductFilterEnum;
+import com.simplevat.entity.Product;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.ProductService;
+import com.simplevat.service.VatCategoryService;
+
+import io.swagger.annotations.ApiOperation;
+
 /**
  *
  * @author Sonu
@@ -43,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/rest/product")
 public class ProductRestController implements Serializable {
-
+	private final Logger LOGGER = LoggerFactory.getLogger(ProductRestController.class);
 	@Autowired
 	private ProductService productService;
 
@@ -60,7 +58,7 @@ public class ProductRestController implements Serializable {
 	@GetMapping(value = "/getList")
 	public ResponseEntity getProductList(ProductRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
-			Map<ProductFilterEnum, Object> filterDataMap = new HashMap();
+			Map<ProductFilterEnum, Object> filterDataMap = new EnumMap<>(ProductFilterEnum.class);
 			filterDataMap.put(ProductFilterEnum.PRODUCT_NAME, filterModel.getName());
 			filterDataMap.put(ProductFilterEnum.PRODUCT_CODE, filterModel.getProductCode());
 			filterDataMap.put(ProductFilterEnum.DELETE_FLAG, false);
@@ -84,7 +82,7 @@ public class ProductRestController implements Serializable {
 			}
 			return new ResponseEntity(response, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -100,7 +98,7 @@ public class ProductRestController implements Serializable {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -112,7 +110,7 @@ public class ProductRestController implements Serializable {
 			productService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -124,12 +122,12 @@ public class ProductRestController implements Serializable {
 		try {
 			Product product = productService.findByPK(id);
 			if (product == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			} else {
 				return new ResponseEntity<>(productRestHelper.getListModel(product), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -146,7 +144,7 @@ public class ProductRestController implements Serializable {
 			productService.persist(product);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -162,7 +160,7 @@ public class ProductRestController implements Serializable {
 			productService.update(product);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

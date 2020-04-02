@@ -34,8 +34,7 @@ class InvoiceTemplate extends Component {
 
   render() {
     const { invoiceData, currencyData, totalNet, companyData } = this.props
-    if(invoiceData && invoiceData.discount){
-    console.log((invoiceData.discount).toFixed(2));}
+   
     return (
       <div>
         <Card id="singlePage" className="box">

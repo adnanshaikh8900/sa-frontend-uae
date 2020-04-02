@@ -224,7 +224,10 @@ class ChartAccount extends React.Component {
 
   getCsvData = () => {
     if (this.state.csvData.length === 0) {
-      this.props.chartOfAccountActions.getTransactionCategoryList({}).then(res => {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.chartOfAccountActions.getTransactionCategoryList(obj).then(res => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {

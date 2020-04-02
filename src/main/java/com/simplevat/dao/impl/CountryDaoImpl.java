@@ -15,21 +15,20 @@ import com.simplevat.dao.AbstractDao;
 @Repository
 public class CountryDaoImpl extends AbstractDao<Integer, Country> implements CountryDao {
 
-    @Override
-    public List<Country> getCountries() {
-        List<Country> countries = this.executeNamedQuery("allCountries");
-        return countries;
-    }
+	@Override
+	public List<Country> getCountries() {
+		return this.executeNamedQuery("allCountries");
+	}
 
-    @Override
-    public Country getCountry(Integer countryId) {
-        return this.findByPK(countryId);
-    }
+	@Override
+	public Country getCountry(Integer countryId) {
+		return this.findByPK(countryId);
+	}
 
 	@Override
 	public Country getDefaultCountry() {
 		List<Country> countries = getCountries();
-		if(CollectionUtils.isNotEmpty(countries)){
+		if (CollectionUtils.isNotEmpty(countries)) {
 			return countries.get(0);
 		}
 		return null;

@@ -314,7 +314,7 @@ class User extends React.Component {
                           </Button>
                            {view && <CSVLink
                             data={csvData}
-                            filename={'bank_account_list.csv'}
+                            filename={'User.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"

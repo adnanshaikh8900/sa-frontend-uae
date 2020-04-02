@@ -14,7 +14,7 @@ public class DashboardInvoiceDataModel {
 	private List<String> labels;
 	private data paid;
 	private data due;
-	private data overdue;;
+	private data overdue;
 
 	@Data
 	@AllArgsConstructor

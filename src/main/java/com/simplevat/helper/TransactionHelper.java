@@ -90,7 +90,7 @@ public class TransactionHelper {
 					|| (chartOfAccount.getParentChartOfAccount() != null
 							&& chartOfAccount.getParentChartOfAccount().getChartOfAccountId() != null
 							&& chartOfAccount.getParentChartOfAccount().getChartOfAccountId()
-									.equals(ChartOfAccountConstant.MONEY_IN)) ? true : false;
+									.equals(ChartOfAccountConstant.MONEY_IN)) ? Boolean.TRUE : Boolean.FALSE;
 
 			transaction.setCurrentBalance(isdebitFromBank ? currentBal.subtract(transactionModel.getTransactionAmount())
 					: currentBal.add(transactionModel.getTransactionAmount()));
@@ -121,37 +121,36 @@ public class TransactionHelper {
 
 	public List<TransactionViewModel> getModelList(Object trasactionList) {
 
-		List<TransactionViewModel> transactionModelList = new ArrayList<TransactionViewModel>();
-		if (trasactionList != null) {
-			for (Transaction transaction : (List<Transaction>) trasactionList) {
-				TransactionViewModel transactionModel = new TransactionViewModel();
+		List<TransactionViewModel> transactionModelList = new ArrayList<>();
+		for (Transaction transaction : (List<Transaction>) trasactionList) {
+			TransactionViewModel transactionModel = new TransactionViewModel();
 
-				transactionModel.setId(transaction.getTransactionId());
-				transactionModel.setTransactionDate(transaction.getTransactionDate() != null
-						? dateUtil.getDateAsString(transaction.getTransactionDate(), "dd-MM-yyyy")
-						: "-");
-				transactionModel.setReferenceNo(transaction.getReceiptNumber());
-				transactionModel.setRunningAmount(
-						transaction.getCurrentBalance() != null ? transaction.getCurrentBalance().doubleValue() : 0.0);
+			transactionModel.setId(transaction.getTransactionId());
+			transactionModel.setTransactionDate(transaction.getTransactionDate() != null
+					? dateUtil.getDateAsString(transaction.getTransactionDate(), "dd-MM-yyyy")
+					: "-");
+			transactionModel.setReferenceNo(transaction.getReceiptNumber());
+			transactionModel.setRunningAmount(
+					transaction.getCurrentBalance() != null ? transaction.getCurrentBalance().doubleValue() : 0.0);
 
-				if (transaction.getDebitCreditFlag().equals('D')) {
-					transactionModel.setWithdrawalAmount(transaction.getTransactionAmount() != null
-							? transaction.getTransactionAmount().doubleValue()
-							: 0.0);
-					transactionModel.setDepositeAmount(0.0);
-				} else {
-					transactionModel.setDepositeAmount(transaction.getTransactionAmount() != null
-							? transaction.getTransactionAmount().doubleValue()
-							: 0.0);
-					transactionModel.setWithdrawalAmount(0.0);
-				}
-				transactionModel.setTransactionTypeName(transaction.getChartOfAccount() != null
-						? transaction.getChartOfAccount().getChartOfAccountName()
-						: "-");
-				transactionModel.setDebitCreditFlag(transaction.getDebitCreditFlag());
-				transactionModelList.add(transactionModel);
+			if (transaction.getDebitCreditFlag().equals('D')) {
+				transactionModel.setWithdrawalAmount(
+						transaction.getTransactionAmount() != null ? transaction.getTransactionAmount().doubleValue()
+								: 0.0);
+				transactionModel.setDepositeAmount(0.0);
+			} else {
+				transactionModel.setDepositeAmount(
+						transaction.getTransactionAmount() != null ? transaction.getTransactionAmount().doubleValue()
+								: 0.0);
+				transactionModel.setWithdrawalAmount(0.0);
 			}
+			transactionModel.setTransactionTypeName(
+					transaction.getChartOfAccount() != null ? transaction.getChartOfAccount().getChartOfAccountName()
+							: "-");
+			transactionModel.setDebitCreditFlag(transaction.getDebitCreditFlag());
+			transactionModelList.add(transactionModel);
 		}
+
 		return transactionModelList;
 	}
 
@@ -162,7 +161,6 @@ public class TransactionHelper {
 		}
 		if (transaction.getChartOfAccount() != null) {
 			transactionModel.setChartOfAccountId(transaction.getChartOfAccount().getChartOfAccountId());
-			// transactionModel.set(transaction.getTransactionType().getDebitCreditFlag());
 		}
 
 		if (transaction.getTransactionDate() != null) {
@@ -201,7 +199,7 @@ public class TransactionHelper {
 				|| (transactionType.getParentChartOfAccount() != null
 						&& transactionType.getParentChartOfAccount().getChartOfAccountId() != null
 						&& transactionType.getParentChartOfAccount().getChartOfAccountId()
-								.equals(ChartOfAccountConstant.MONEY_IN)) ? true : false;
+								.equals(ChartOfAccountConstant.MONEY_IN)) ? Boolean.TRUE : Boolean.FALSE;
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();

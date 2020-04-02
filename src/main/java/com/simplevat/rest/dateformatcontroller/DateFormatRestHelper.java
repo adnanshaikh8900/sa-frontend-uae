@@ -14,41 +14,34 @@ public class DateFormatRestHelper {
 
 	@Autowired
 	private DateFormatService dateFormatService;
-	
+
 	public List<DateFormatListModel> getModelList(List<DateFormat> dateFormatList) {
-
-		List<DateFormatListModel> modelList = new ArrayList<DateFormatListModel>();
-
-		if (dateFormatList != null && dateFormatList.size() > 0) {
-
+		List<DateFormatListModel> modelList = new ArrayList<>();
+		if (dateFormatList != null && !dateFormatList.isEmpty()) {
 			for (DateFormat dateFormat : dateFormatList) {
-				DateFormatListModel DateFormatModel = new DateFormatListModel();
-
-				DateFormatModel.setId(dateFormat.getId());
-				DateFormatModel.setFormat(dateFormat.getFormat());
-
-				modelList.add(DateFormatModel);
+				DateFormatListModel dateFormatModel = new DateFormatListModel();
+				dateFormatModel.setId(dateFormat.getId());
+				dateFormatModel.setFormat(dateFormat.getFormat());
+				modelList.add(dateFormatModel);
 			}
 		}
-
 		return modelList;
 	}
 
 	public DateFormatResponseModel getModel(DateFormat dateFormat) {
-		DateFormatResponseModel DateFormatModel = new DateFormatResponseModel();
-		DateFormatModel.setId(dateFormat.getId());
-		DateFormatModel.setFormat(dateFormat.getFormat());
-		return DateFormatModel;
+		DateFormatResponseModel dateFormatModel = new DateFormatResponseModel();
+		dateFormatModel.setId(dateFormat.getId());
+		dateFormatModel.setFormat(dateFormat.getFormat());
+		return dateFormatModel;
 	}
 
 	public DateFormat getEntity(DateFormatRequestModel requestModel) {
-		
 		DateFormat dateFormat = new DateFormat();
-		if(dateFormat.getId() != null) {
-			dateFormat = dateFormatService.findByPK(requestModel.getId()); 
+		if (dateFormat.getId() != null) {
+			dateFormat = dateFormatService.findByPK(requestModel.getId());
 		}
 		dateFormat.setFormat(requestModel.getFormat());
-		
+
 		return dateFormat;
 	}
 }

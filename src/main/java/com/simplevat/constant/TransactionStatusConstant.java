@@ -24,4 +24,8 @@ public final class TransactionStatusConstant {
     public static final String CREDIT_AMOUNT = "Credit Amount";
     public static final String INVALID="invalid";
     public static final String VALID="valid";
+    
+    private TransactionStatusConstant() {
+		// CREATED TO REMOVE SONAR ERROR
+    }
 }

@@ -5,7 +5,7 @@
  */
 package com.simplevat.constant;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,29 +14,25 @@ import java.util.List;
  */
 public enum DiscountType {
 
-    FIXED("Fixed"),
-    PERCENTAGE("Percentage");
+	FIXED("Fixed"), PERCENTAGE("Percentage");
 
-    private String desc;
+	private String desc;
 
-    DiscountType(String desc) {
-        this.desc = desc;
-    }
+	DiscountType(String desc) {
+		this.desc = desc;
+	}
 
-    public String toString() {
-        return name();
-    }
+	@Override
+	public String toString() {
+		return name();
+	}
 
-    public String getDesc() {
-        return desc;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public static List<DiscountType> contactTypeList() {
-        List<DiscountType> discountTypes = new ArrayList<DiscountType>();
-        for (DiscountType discountType : values()) {
-            discountTypes.add(discountType);
-        }
-        return discountTypes;
-    }
+	public static List<DiscountType> contactTypeList() {
+		return Arrays.asList(values());
+	}
 
 }

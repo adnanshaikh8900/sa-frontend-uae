@@ -17,10 +17,7 @@ public enum TransactionFilterEnum {
     @Getter
     String condition;
 
-    private TransactionFilterEnum(String dbColumnName) {
-        this.dbColumnName = dbColumnName;
-    }
-
+   
     private TransactionFilterEnum(String dbColumnName, String condition) {
         this.dbColumnName = dbColumnName;
         this.condition = condition;

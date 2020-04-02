@@ -11,9 +11,12 @@ package com.simplevat.constant;
  */
 public abstract class RecurringConstant {
 
-    public static final int DAILY = 1;
-    public static final int WEEKLY = 2;
-    public static final int MONTHLY = 3;
-    public static final int YEARLY = 4;
+	public static final int DAILY = 1;
+	public static final int WEEKLY = 2;
+	public static final int MONTHLY = 3;
+	public static final int YEARLY = 4;
 
+	private RecurringConstant() {
+		// CREATED TO REMOVE SONAR ERROR
+	}
 }

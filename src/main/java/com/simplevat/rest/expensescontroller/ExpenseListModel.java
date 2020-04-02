@@ -1,4 +1,4 @@
-package com.simplevat.rest.expenses;
+package com.simplevat.rest.expensescontroller;
 
 import java.math.BigDecimal;
 import java.util.Date;

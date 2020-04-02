@@ -58,10 +58,10 @@ public class ProjectFilter extends AbstractFilter<Project> {
 		   Long start = projectCriteria.getStart();
 		   Long limit = projectCriteria.getLimit();
 		   if (query != null) {
-	            long _start = (start == null || start < START) ? START : start;
-	            long _limit = (limit == null || limit < 1) ? DEFAULT_MAX_SIZE : (limit > MAX_RESULTS) ? MAX_RESULTS : limit;
-	            query.setMaxResults((int) _limit);
-	            query.setFirstResult((int) _start);
+	            long newStart = (start == null || start < START) ? START : start;
+	            long newLimit = (limit == null || limit < 1) ? DEFAULT_MAX_SIZE : (limit > MAX_RESULTS) ? MAX_RESULTS : limit;
+	            query.setMaxResults((int) newLimit);
+	            query.setFirstResult((int) newStart);
 	        }
 	}
 	private Order addOrderCriteria(CriteriaBuilder criteriaBuilder, Path path, SortOrder sortOrder,

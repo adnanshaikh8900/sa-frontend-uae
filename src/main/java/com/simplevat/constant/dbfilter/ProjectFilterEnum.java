@@ -25,10 +25,6 @@ public enum ProjectFilterEnum {
     @Getter
     String condition;
 
-    private ProjectFilterEnum(String dbColumnName) {
-        this.dbColumnName = dbColumnName;
-    }
-
     private ProjectFilterEnum(String dbColumnName, String condition) {
         this.dbColumnName = dbColumnName;
         this.condition = condition;

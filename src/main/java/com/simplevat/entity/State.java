@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -22,7 +23,7 @@ import lombok.Data;
 @Entity
 @Table(name = "STATE")
 @Data
-public class State {
+public class State implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@Column(name = "STATE_ID")

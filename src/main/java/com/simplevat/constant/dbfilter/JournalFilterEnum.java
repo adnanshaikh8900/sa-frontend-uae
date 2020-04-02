@@ -17,11 +17,7 @@ public enum JournalFilterEnum {
 
     @Getter
     String condition;
-
-    private JournalFilterEnum(String dbColumnName) {
-        this.dbColumnName = dbColumnName;
-    }
-
+    
     private JournalFilterEnum(String dbColumnName, String condition) {
         this.dbColumnName = dbColumnName;
         this.condition = condition;

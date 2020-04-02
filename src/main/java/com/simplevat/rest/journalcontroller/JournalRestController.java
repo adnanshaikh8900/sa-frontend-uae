@@ -1,18 +1,23 @@
 package com.simplevat.rest.journalcontroller;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,11 +35,6 @@ import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.JournalService;
 
 import io.swagger.annotations.ApiOperation;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  *
@@ -43,7 +43,7 @@ import java.util.Collection;
 @RestController
 @RequestMapping(value = "/rest/journal")
 public class JournalRestController {
-
+	private final Logger LOGGER = LoggerFactory.getLogger(JournalRestController.class);
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -61,7 +61,7 @@ public class JournalRestController {
 	public ResponseEntity getList(JournalRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			Map<JournalFilterEnum, Object> filterDataMap = new HashMap();
+			Map<JournalFilterEnum, Object> filterDataMap = new EnumMap<>(JournalFilterEnum.class);
 			filterDataMap.put(JournalFilterEnum.USER_ID, userId);
 			if (filterModel.getDescription() != null && !filterModel.getDescription().equals(" "))
 				filterDataMap.put(JournalFilterEnum.DESCRIPTION, filterModel.getDescription());
@@ -73,14 +73,14 @@ public class JournalRestController {
 				filterDataMap.put(JournalFilterEnum.JOURNAL_DATE, dateTime);
 			}
 			filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
-			//filterDataMap.put(JournalFilterEnum.ORDER_BY, "DESC");
+			// filterDataMap.put(JournalFilterEnum.ORDER_BY, "DESC");
 			PaginationResponseModel responseModel = journalService.getJornalList(filterDataMap, filterModel);
 			if (responseModel == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity(journalRestHelper.getListModel(responseModel), HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -112,7 +112,7 @@ public class JournalRestController {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -142,9 +142,11 @@ public class JournalRestController {
 			journalService.persist(journal);
 
 			// add reference by in line item
-			Collection<JournalLineItem> journalLineItems = journalRestHelper
-					.setReferenceId(journal.getJournalLineItems(), journal.getId());
-			journal.setJournalLineItems(journalLineItems);
+			if (!journal.getJournalLineItems().isEmpty()) {
+				Collection<JournalLineItem> journalLineItems = journalRestHelper
+						.setReferenceId(journal.getJournalLineItems(), journal.getId());
+				journal.setJournalLineItems(journalLineItems);
+			}
 			journalService.update(journal);
 
 			return new ResponseEntity(HttpStatus.OK);
@@ -165,7 +167,7 @@ public class JournalRestController {
 			journalService.update(journal);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

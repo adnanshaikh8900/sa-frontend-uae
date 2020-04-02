@@ -3,24 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.simplevat.rest.contactController;
+package com.simplevat.rest.contactcontroller;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.ContactFilterEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.entity.Contact;
-import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.security.JwtTokenUtil;
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.EnumMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rest/contact")
 public class ContactController implements Serializable {
 
+	private final Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
+
 	@Autowired
 	private ContactService contactService;
 
@@ -50,11 +51,10 @@ public class ContactController implements Serializable {
 	private JwtTokenUtil jwtTokenUtil;
 
 	@GetMapping(value = "/getContactList")
-	public ResponseEntity getContactList(ContactRequestFilterModel filterModel, HttpServletRequest request)
-			throws IOException {
+	public ResponseEntity getContactList(ContactRequestFilterModel filterModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		try {
-			Map<ContactFilterEnum, Object> filterDataMap = new HashMap();
+			Map<ContactFilterEnum, Object> filterDataMap = new EnumMap<>(ContactFilterEnum.class);
 			filterDataMap.put(ContactFilterEnum.CONTACT_TYPE, filterModel.getContactType());
 			filterDataMap.put(ContactFilterEnum.NAME, filterModel.getName());
 			filterDataMap.put(ContactFilterEnum.EMAIL, filterModel.getEmail());
@@ -71,19 +71,19 @@ public class ContactController implements Serializable {
 			}
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
+			LOGGER.error("Error =", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@GetMapping(value = "/getContactsForDropdown")
 	public ResponseEntity getContactsForDropdown(
-			@RequestParam(name = "contactType", required = false) Integer contactType) throws IOException {
-		List<DropdownModel> dropdownModels = contactService.getContactForDropdown(contactType);
-		return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+			@RequestParam(name = "contactType", required = false) Integer contactType) {
+		return new ResponseEntity<>(contactService.getContactForDropdown(contactType), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/getContactById")
-	public ResponseEntity getContactById(@RequestParam("contactId") Integer contactId) throws IOException {
+	public ResponseEntity getContactById(@RequestParam("contactId") Integer contactId) {
 		ContactPersistModel contactPersistModel = contactHelper
 				.getContactPersistModel(contactService.findByPK(contactId));
 		return new ResponseEntity<>(contactPersistModel, HttpStatus.OK);
@@ -101,7 +101,7 @@ public class ContactController implements Serializable {
 			contactService.persist(contact);
 			return new ResponseEntity<>(contact, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error =", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -120,7 +120,7 @@ public class ContactController implements Serializable {
 			}
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error =", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -149,7 +149,7 @@ public class ContactController implements Serializable {
 			contactService.deleleByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error =", e);
 		}
 
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

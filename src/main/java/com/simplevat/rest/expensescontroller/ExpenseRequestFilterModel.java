@@ -1,4 +1,4 @@
-package com.simplevat.rest.expenses;
+package com.simplevat.rest.expensescontroller;
 
 import com.simplevat.rest.PaginationModel;
 

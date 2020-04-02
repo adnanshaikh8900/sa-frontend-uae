@@ -30,7 +30,7 @@ public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory
 
     public void deleteByIds(List<Integer> ids);
 
-	public PaginationResponseModel getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap,PaginationModel PaginationModel);
+	public PaginationResponseModel getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap,PaginationModel paginationModel);
 
 	public String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount);
 }

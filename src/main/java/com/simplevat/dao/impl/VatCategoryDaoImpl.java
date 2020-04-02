@@ -10,7 +10,6 @@ import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.VatCategoryDao;
-import com.simplevat.entity.Journal;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
@@ -23,8 +22,7 @@ public class VatCategoryDaoImpl extends AbstractDao<Integer, VatCategory> implem
 
 	@Override
 	public List<VatCategory> getVatCategoryList() {
-		List<VatCategory> vatCategoryList = this.executeNamedQuery("allVatCategory");
-		return vatCategoryList;
+		return this.executeNamedQuery("allVatCategory");
 	}
 
 	@Override
@@ -37,7 +35,7 @@ public class VatCategoryDaoImpl extends AbstractDao<Integer, VatCategory> implem
 		if (vatCategorys != null && !vatCategorys.isEmpty()) {
 			return vatCategorys;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override

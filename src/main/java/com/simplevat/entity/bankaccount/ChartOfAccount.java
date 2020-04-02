@@ -1,6 +1,5 @@
 package com.simplevat.entity.bankaccount;
 
-import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 
 import lombok.Data;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import java.time.LocalDateTime;
 import org.hibernate.annotations.ColumnDefault;
 
 /**

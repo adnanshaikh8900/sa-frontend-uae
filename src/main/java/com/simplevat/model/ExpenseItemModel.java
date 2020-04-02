@@ -5,7 +5,6 @@
  */
 package com.simplevat.model;
 
-import com.simplevat.entity.Expense;
 import java.math.BigDecimal;
 import lombok.Data;
 

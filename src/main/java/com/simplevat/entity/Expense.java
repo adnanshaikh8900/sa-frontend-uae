@@ -1,7 +1,6 @@
 package com.simplevat.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.simplevat.constant.ExpenseStatusEnum;
 import com.simplevat.constant.PayMode;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;

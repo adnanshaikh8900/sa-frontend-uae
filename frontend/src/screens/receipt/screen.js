@@ -249,6 +249,7 @@ class Receipt extends React.Component {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
               this.csvLink.current.link.click()
+              this.initializeData();
             }, 0)
           });
         }

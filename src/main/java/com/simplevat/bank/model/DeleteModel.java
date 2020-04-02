@@ -16,5 +16,10 @@ import lombok.Data;
 @Data
 public class DeleteModel implements Serializable {
 
-    ArrayList<Integer> ids;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private ArrayList<Integer> ids;
 }

@@ -421,11 +421,16 @@ class SupplierInvoice extends React.Component {
 
   getCsvData = () => {
     if (this.state.csvData.length === 0) {
-      this.props.supplierInvoiceActions.getSupplierInvoiceList({}).then(res => {
+      let obj = {
+        paginationDisable: true
+
+      }
+      this.props.supplierInvoiceActions.getSupplierInvoiceList(obj).then(res => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
               this.csvLink.current.link.click()
+              this.initializeData();
             }, 0)
           });
         }

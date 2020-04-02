@@ -2,14 +2,10 @@ package com.simplevat.rest.bankaccountcontroller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.simplevat.entity.Currency;
 import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.bankaccount.BankAccountStatus;
-import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.model.BankModel;
 import com.simplevat.rest.PaginationResponseModel;
 
@@ -18,30 +14,26 @@ public class BankAccountRestHelper {
 
 	public PaginationResponseModel getListModel(PaginationResponseModel pagiantionResponseModel) {
 
-		List<BankAccountListModel> modelList = new ArrayList<BankAccountListModel>();
+		List<BankAccountListModel> modelList = new ArrayList<>();
 
-		if (pagiantionResponseModel != null) {
+		if (pagiantionResponseModel != null && pagiantionResponseModel.getData() != null) {
+			List<BankAccount> bankAccounts = (List<BankAccount>) pagiantionResponseModel.getData();
+			for (BankAccount acc : bankAccounts) {
+				BankAccountListModel model = new BankAccountListModel();
+				model.setBankAccountId(acc.getBankAccountId());
+				model.setAccounName(acc.getBankAccountName());
+				model.setBankAccountNo(acc.getAccountNumber());
+				model.setBankAccountTypeName(
+						acc.getBankAccountType() != null ? acc.getBankAccountType().getName() : "-");
+				model.setCurrancyName(
+						acc.getBankAccountCurrency() != null ? acc.getBankAccountCurrency().getCurrencyIsoCode() : "-");
+				model.setName(acc.getBankName());
+				model.setOpeningBalance(acc.getOpeningBalance() != null ? acc.getOpeningBalance().doubleValue() : 0);
 
-			if (pagiantionResponseModel.getData() != null) {
-				List<BankAccount> bankAccounts = (List<BankAccount>) pagiantionResponseModel.getData();
-				for (BankAccount acc : bankAccounts) {
-					BankAccountListModel model = new BankAccountListModel();
-					model.setBankAccountId(acc.getBankAccountId());
-					model.setAccounName(acc.getBankAccountName());
-					model.setBankAccountNo(acc.getAccountNumber());
-					model.setBankAccountTypeName(
-							acc.getBankAccountType() != null ? acc.getBankAccountType().getName() : "-");
-					model.setCurrancyName(
-							acc.getBankAccountCurrency() != null ? acc.getBankAccountCurrency().getCurrencyIsoCode()
-									: "-");
-					model.setName(acc.getBankName());
-					model.setOpeningBalance(
-							acc.getOpeningBalance() != null ? acc.getOpeningBalance().doubleValue() : 0);
-
-					modelList.add(model);
-				}
-				pagiantionResponseModel.setData(modelList);
+				modelList.add(model);
 			}
+			pagiantionResponseModel.setData(modelList);
+
 		}
 		return pagiantionResponseModel;
 	}

@@ -91,6 +91,6 @@ public class TransactionParsingSetting implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "TRANSACTION_DATA_COL_MAPPING_ID")
-	List<TransactionDataColMapping> TransactionDtaColMapping;
+	List<TransactionDataColMapping> transactionDtaColMapping;
 
 }

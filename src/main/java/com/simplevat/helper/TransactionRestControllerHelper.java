@@ -8,7 +8,6 @@ import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Purchase;
 import com.simplevat.entity.bankaccount.BankAccount;
-import java.io.InputStream;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
@@ -16,7 +15,6 @@ import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.PurchaseService;
-import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -126,12 +124,6 @@ public class TransactionRestControllerHelper {
 				transactionModel.setRefObject(purchase);
 				transactionModel.setReferenceName("Purchase : " + purchase.getReceiptNumber());
 			}
-		}
-
-		byte[] attachmentPath = entity.getExplainedTransactionAttachement();
-		if (attachmentPath != null) {
-			InputStream inputStream = new ByteArrayInputStream(attachmentPath);
-//            transactionModel.setAttachmentFileContent(new DefaultStreamedContent(inputStream));
 		}
 
 		return transactionModel;
@@ -317,18 +309,17 @@ public class TransactionRestControllerHelper {
 			remainingUnExplainedAmount = remainingUnExplainedAmount
 					.subtract(childTransactionViewModel.getTransactionAmount());
 		}
-		if (remainingUnExplainedAmount.doubleValue() > 0.00) {
-			if (transactionViewModel.getChildTransactionList() != null
-					&& !transactionViewModel.getChildTransactionList().isEmpty()) {
-				TransactionViewRestModel remainingUnExplainedTransactionModel = new TransactionViewRestModel();
-				remainingUnExplainedTransactionModel.setTransactionId(0);
-				remainingUnExplainedTransactionModel.setDebitCreditFlag(transactionView.getDebitCreditFlag());
-				remainingUnExplainedTransactionModel.setExplanationStatusCode(TransactionStatusConstant.UNEXPLAINED);
-				remainingUnExplainedTransactionModel.setExplanationStatusName("UNEXPLAINED");
-				remainingUnExplainedTransactionModel.setTransactionAmount(remainingUnExplainedAmount);
-				remainingUnExplainedTransactionModel.setParentTransaction(transactionView.getTransactionId());
-				transactionViewModel.getChildTransactionList().add(remainingUnExplainedTransactionModel);
-			}
+		if (remainingUnExplainedAmount.doubleValue() > 0.00 && (transactionViewModel.getChildTransactionList() != null
+				&& !transactionViewModel.getChildTransactionList().isEmpty())) {
+			TransactionViewRestModel remainingUnExplainedTransactionModel = new TransactionViewRestModel();
+			remainingUnExplainedTransactionModel.setTransactionId(0);
+			remainingUnExplainedTransactionModel.setDebitCreditFlag(transactionView.getDebitCreditFlag());
+			remainingUnExplainedTransactionModel.setExplanationStatusCode(TransactionStatusConstant.UNEXPLAINED);
+			remainingUnExplainedTransactionModel.setExplanationStatusName("UNEXPLAINED");
+			remainingUnExplainedTransactionModel.setTransactionAmount(remainingUnExplainedAmount);
+			remainingUnExplainedTransactionModel.setParentTransaction(transactionView.getTransactionId());
+			transactionViewModel.getChildTransactionList().add(remainingUnExplainedTransactionModel);
+
 		}
 		return transactionViewModel;
 	}
@@ -337,10 +328,10 @@ public class TransactionRestControllerHelper {
 			Collection<TransactionViewRestModel> childTransactionList, Integer parentTransactionViewModelId) {
 		List<TransactionViewRestModel> transactionModelList = new ArrayList<>();
 		if (childTransactionList != null && !childTransactionList.isEmpty()) {
-			childTransactionList.stream().filter((transactionViewModel) -> (transactionViewModel.getParentTransaction()
-					.equals(parentTransactionViewModelId))).forEachOrdered((transactionViewModel) -> {
-						transactionModelList.add(transactionViewModel);
-					});
+			childTransactionList.stream()
+					.filter(transactionViewModel -> (transactionViewModel.getParentTransaction()
+							.equals(parentTransactionViewModelId)))
+					.forEachOrdered(transactionViewModel -> transactionModelList.add(transactionViewModel));
 		}
 		return transactionModelList;
 	}

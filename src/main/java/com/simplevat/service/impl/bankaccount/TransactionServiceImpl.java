@@ -25,7 +25,6 @@ import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.util.ChartUtil;
 import java.math.BigDecimal;
@@ -365,11 +364,6 @@ public class TransactionServiceImpl extends TransactionService {
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,
 			PaginationModel paginationModel) {
 		return transactionDao.getAllTransactionList(filterModel, paginationModel);
-	}
-
-	@Override
-	public void getForDashBoardCashFlow() {
-		transactionDao.getForDashBoardCashFlow();
 	}
 
 }

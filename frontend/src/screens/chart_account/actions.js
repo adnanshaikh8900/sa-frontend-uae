@@ -47,8 +47,7 @@ export const getTransactionCategoryList = (obj) => {
   let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
-
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false;
 
   return (dispatch) => {
     let data = {
@@ -57,10 +56,13 @@ export const getTransactionCategoryList = (obj) => {
     }
 
     return authApi(data).then(res => {
-      dispatch({
+   
+   if(!obj.paginationDisable){
+        dispatch({
         type: CHART_ACCOUNT.TRANSACTION_CATEGORY_LIST,
         payload: res.data
       })
+    }
       return res
     }).catch(err => {
       throw err

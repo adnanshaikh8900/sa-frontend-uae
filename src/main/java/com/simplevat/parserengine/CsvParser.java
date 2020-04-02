@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +32,8 @@ import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSetting
 @Component
 public class CsvParser implements TransactionFileParser {
 
+	private final Logger LOGGER = LoggerFactory.getLogger(CsvParser.class);
+
 	@Autowired
 	private DateFormatDao dateformatDao;
 
@@ -36,13 +41,13 @@ public class CsvParser implements TransactionFileParser {
 	public List<Map<String, String>> parseSmaple(TransactionParsingSettingPersistModel model) {
 		String line = "";
 		String cvsSplitBy = ",";
-		Map<Integer, String> indexHeaderMap = new HashMap<Integer, String>();
-		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		Map<Integer, String> indexHeaderMap = new HashMap<>();
+		List<Map<String, String>> list = new ArrayList<>();
 		BufferedReader br = null;
 
 		try {
 
-			br = new BufferedReader(new InputStreamReader(model.getFile().getInputStream(), "UTF-8"));
+			br = new BufferedReader(new InputStreamReader(model.getFile().getInputStream(), StandardCharsets.UTF_8));
 			int rowCount = 0;
 			while ((line = br.readLine()) != null) {
 
@@ -73,13 +78,13 @@ public class CsvParser implements TransactionFileParser {
 			}
 			return list;
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Error =", e);
 		} finally {
 			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					LOGGER.error("Error =", e);
 				}
 			}
 		}
@@ -89,7 +94,6 @@ public class CsvParser implements TransactionFileParser {
 	@Override
 	public List<Transaction> getModelListFromFile(TransactionParsingSettingDetailModel model, MultipartFile file,
 			Integer bankId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -97,21 +101,21 @@ public class CsvParser implements TransactionFileParser {
 		String line = "";
 		String cvsSplitBy = ",";
 
-		List<Map<String, String>> list = new LinkedList<Map<String, String>>();
-		Map<Integer, Set<Integer>> errorRowCellIndexMap = new HashMap<Integer, Set<Integer>>();
+		List<Map<String, String>> list = new LinkedList<>();
+		Map<Integer, Set<Integer>> errorRowCellIndexMap = new HashMap<>();
 		List<String> errorList = new ArrayList<String>();
 
 		BufferedReader br = null;
 
 		try {
 
-			Map<Integer, TransactionEnum> headerIndexMap = new LinkedHashMap<Integer, TransactionEnum>();
+			Map<Integer, TransactionEnum> headerIndexMap = new LinkedHashMap<>();
 
 			for (TransactionEnum transactionEnum : model.getIndexMap().keySet()) {
 				headerIndexMap.put(model.getIndexMap().get(transactionEnum), transactionEnum);
 			}
 
-			br = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+			br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
 			int rowCount = 0;
 			while ((line = br.readLine()) != null) {
 
@@ -157,8 +161,6 @@ public class CsvParser implements TransactionFileParser {
 								try {
 									new BigDecimal(data);
 								} catch (Exception e) {
-									// errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
-									// cellCount);
 									errorList.add(rowCount + "," + cellCount);
 								}
 							}
@@ -169,8 +171,6 @@ public class CsvParser implements TransactionFileParser {
 						for (TransactionEnum transactionEnum : model.getIndexMap().keySet()) {
 							if (!dataMap.containsKey(transactionEnum.getDisplayName())) {
 								dataMap.put(transactionEnum.getDisplayName(), "-");
-//								//errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
-//										model.getIndexMap().get(transactionEnum));
 								errorList.add(rowCount + "," + cellCount);
 							}
 						}

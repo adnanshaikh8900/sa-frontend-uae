@@ -29,6 +29,8 @@ import org.hibernate.annotations.ColumnDefault;
 @TableGenerator(name = "INCREMENT_INITIAL_VALUE", initialValue = 1000)
 public class BankAccount implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name = "BANK_ACCOUNT_ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "INCREMENT_INITIAL_VALUE")

@@ -13,43 +13,42 @@ import javax.persistence.TypedQuery;
 @Repository
 public class ChartOfAccountDaoImpl extends AbstractDao<Integer, ChartOfAccount> implements ChartOfAccountDao {
 
-    @Override
-    public ChartOfAccount updateOrCreateTransaction(
-            ChartOfAccount ChartOfAccount) {
-        return this.update(ChartOfAccount);
-    }
+	@Override
+	public ChartOfAccount updateOrCreateTransaction(ChartOfAccount ChartOfAccount) {
+		return this.update(ChartOfAccount);
+	}
 
-    @Override
-    public ChartOfAccount getChartOfAccount(Integer id) {
-        return this.findByPK(id);
-    }
+	@Override
+	public ChartOfAccount getChartOfAccount(Integer id) {
+		return this.findByPK(id);
+	}
 
-    @Override
-    public List<ChartOfAccount> findAll() {
-        List<ChartOfAccount> result = this.executeNamedQuery("findAllChartOfAccount");
-        return result;
-    }
+	@Override
+	public List<ChartOfAccount> findAll() {
+		return this.executeNamedQuery("findAllChartOfAccount");
+	}
 
-    @Override
-    public List<ChartOfAccount> findByText(String transactionTxt) {
-        TypedQuery<ChartOfAccount> query = getEntityManager().createQuery("SELECT c FROM ChartOfAccount c WHERE c.deleteFlag=false AND c.chartOfAccountName LIKE '%'||:searchToken||'%' ORDER BY c.defaltFlag DESC , c.orderSequence,c.chartOfAccounteName ASC", ChartOfAccount.class);
-        query.setParameter("searchToken", transactionTxt);
-        return query.getResultList();
-    }
+	@Override
+	public List<ChartOfAccount> findByText(String transactionTxt) {
+		TypedQuery<ChartOfAccount> query = getEntityManager().createQuery(
+				"SELECT c FROM ChartOfAccount c WHERE c.deleteFlag=false AND c.chartOfAccountName LIKE '%'||:searchToken||'%' ORDER BY c.defaltFlag DESC , c.orderSequence,c.chartOfAccounteName ASC",
+				ChartOfAccount.class);
+		query.setParameter("searchToken", transactionTxt);
+		return query.getResultList();
+	}
 
-    @Override
-    public ChartOfAccount getDefaultChartOfAccount() {
-        List<ChartOfAccount> transactoinTypes = findAll();
-        if (CollectionUtils.isNotEmpty(transactoinTypes)) {
-            return transactoinTypes.get(0);
-        }
-        return null;
-    }
+	@Override
+	public ChartOfAccount getDefaultChartOfAccount() {
+		List<ChartOfAccount> transactoinTypes = findAll();
+		if (CollectionUtils.isNotEmpty(transactoinTypes)) {
+			return transactoinTypes.get(0);
+		}
+		return null;
+	}
 
-    @Override
-    public List<ChartOfAccount> findAllChild() {
-        List<ChartOfAccount> result = this.executeNamedQuery("findAllChildChartOfAccount");
-        return result;
-    }
+	@Override
+	public List<ChartOfAccount> findAllChild() {
+		return this.executeNamedQuery("findAllChildChartOfAccount");
+	}
 
 }

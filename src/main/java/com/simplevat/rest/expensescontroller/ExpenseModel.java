@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.simplevat.rest.expenses;
+package com.simplevat.rest.expensescontroller;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

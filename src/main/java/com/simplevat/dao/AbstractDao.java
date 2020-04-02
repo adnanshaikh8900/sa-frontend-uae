@@ -110,7 +110,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 			}
 		}
 
-		if (paginationModel != null) {
+		if (paginationModel != null && !paginationModel.isPaginationDisable()) {
 			typedQuery.setFirstResult(paginationModel.getPageNo());
 			typedQuery.setMaxResults(paginationModel.getPageSize());
 		}

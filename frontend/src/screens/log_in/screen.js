@@ -48,18 +48,15 @@ class LogIn extends React.Component {
       alert: null,
       openForgotPasswordModal: false
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.logInHandler = this.logInHandler.bind(this)
   }
 
-  handleChange(key, val) {
+  handleChange = (key, val) => {
     this.setState({
       [key]: val
     })
   }
 
-  logInHandler(e) {
+  logInHandler = (e) => {
     e.preventDefault()
     const { username, password } = this.state
     let obj = {

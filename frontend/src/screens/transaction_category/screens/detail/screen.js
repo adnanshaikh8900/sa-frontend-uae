@@ -52,31 +52,10 @@ class DetailTransactionCategory extends React.Component {
       },
       loading: false
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.success = this.success.bind(this)
-
-    
-    this.getSuggestions = this.getSuggestions.bind(this)
-    this.getSuggestionValue = this.getSuggestionValue.bind(this)
-    this.onChangeTransactionType = this.onChangeTransactionType.bind(this)
-    this.renderSuggestion = this.renderSuggestion.bind(this)
-    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this)
-    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this)
-    this.getParentCategoryCodeListData = this.getParentCategoryCodeListData.bind(this)
-
-    this.getParentSuggestions = this.getParentSuggestions.bind(this)
-    this.getParentSuggestionValue = this.getParentSuggestionValue.bind(this)
-    this.renderParentSuggestion = this.renderParentSuggestion.bind(this)
-    this.onParentChange = this.onParentChange.bind(this)
-    this.onParentSuggestionsFetchRequested = this.onParentSuggestionsFetchRequested.bind(this)
-    this.onParentSuggestionsClearRequested = this.onParentSuggestionsClearRequested.bind(this)
-
     this.id = new URLSearchParams(props.location.search).get('id')
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.getTransactionTypes()
     this.getTransactionVatCategories()
     
@@ -120,7 +99,7 @@ class DetailTransactionCategory extends React.Component {
   // Transaction Type Suggestion Callbacks
   //---------------------------------------
 
-  getSuggestions(value) {
+  getSuggestions = (value) => {
     const inputValue = value.trim().toLowerCase()
     const inputLength = inputValue.length
 
@@ -134,37 +113,37 @@ class DetailTransactionCategory extends React.Component {
       )
   }
 
-  onSuggestionsFetchRequested({ value }) {
+  onSuggestionsFetchRequested = ({ value }) => {
     this.setState({
       suggestions: this.getSuggestions(value)
     })
   }
 
   // Autosuggest will call this function every time you need to clear suggestions.
-  onSuggestionsClearRequested() {
+  onSuggestionsClearRequested = () => {
     this.setState({
       suggestions: []
     })
   }
 
   // Get Transaction Type on  Suggestion Field
-  getSuggestionValue(suggestion) {
+  getSuggestionValue = (suggestion) => {
     return(suggestion.transactionTypeName)
   }
 
   // Use your imagination to render suggestions.
-  renderSuggestion(suggestion){
+  renderSuggestion = (suggestion) => {
     return(<div>{suggestion.transactionTypeName}</div>)
   }
 
   // Change the Transaction Type
-  onChangeTransactionType(event, { newValue }){
+  onChangeTransactionType = (event, { newValue }) => {
     this.setState({
       value: newValue
     })
   }
 
-  getParentCategoryCodeListData(val) {
+  getParentCategoryCodeListData = (val) => {
     const code = this.state.selectedTransactionCategory.transactionTypeCode
     this.props.transactionActions.getParentCategoryCodeListData(code, val).then(res => {
       if (res.status === 200)
@@ -180,7 +159,7 @@ class DetailTransactionCategory extends React.Component {
   // Parent Transaction Type Suggestion Callbacks
   //-----------------------------------------------
 
-  getParentSuggestions(value) {
+  getParentSuggestions = (value) => {
     const inputValue = value.trim().toLowerCase()
     const inputLength = inputValue.length
     this.getParentCategoryCodeListData(inputValue)
@@ -194,34 +173,34 @@ class DetailTransactionCategory extends React.Component {
       )
   }
 
-  getParentSuggestionValue(suggestion) {
+  getParentSuggestionValue = (suggestion) => {
     return(suggestion.transactionCategoryName)
   }
 
-  renderParentSuggestion(suggestion) {
+  renderParentSuggestion = (suggestion) => {
     return(<div>{suggestion.transactionCategoryName}</div>)
   }
 
-  onParentChange(event, { newValue }) {
+  onParentChange = (event, { newValue }) => {
     this.setState({
       parentValue: newValue
     })
   }
 
-  onParentSuggestionsFetchRequested({ value }) {
+  onParentSuggestionsFetchRequested = ({ value }) => {
     this.setState({
       parentSuggestions: this.getParentSuggestions(value)
     })
   }
 
-  onParentSuggestionsClearRequested() {
+  onParentSuggestionsClearRequested = () => {
     this.setState({
       parentSuggestions: []
     })
   }
 
   // Get All Transaction Types
-  getTransactionTypes() {
+  getTransactionTypes = () => {
     this.setState({ loading: true })
     this.props.transactionActions.getTransactionTypes().then(res => {
       if (res.status === 200)
@@ -233,7 +212,7 @@ class DetailTransactionCategory extends React.Component {
   }
 
   // Get All Transaction Vat Categories
-  getTransactionVatCategories() {
+  getTransactionVatCategories = () => {
     this.setState({ loading: true })
     this.props.transactionActions.getTransactionVatCategories().then(res => {
       if (res.status === 200)
@@ -246,14 +225,14 @@ class DetailTransactionCategory extends React.Component {
 
 
   // Show Success Message
-  success() {
+  success = () => {
     return toast.success('Transaction Category Updated successfully... ', {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
   // Set State by detecting the change Event on input fields
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       transactionData: _.set(
         { ...this.state.transactionData },
@@ -264,7 +243,7 @@ class DetailTransactionCategory extends React.Component {
   }
 
   // Create or Update Transaction
-  handleSubmit(e, status) {
+  handleSubmit = (e, status) => {
     e.preventDefault()
     
     const {
@@ -312,7 +291,7 @@ class DetailTransactionCategory extends React.Component {
   }
 
 
-  render() {
+  render = () => {
     const { loading, selectedTransactionCategory, transactionData } = this.state
     const {
       transactionTypeName,

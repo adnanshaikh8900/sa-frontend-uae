@@ -59,22 +59,14 @@ class DetailUser extends React.Component {
       imageState: true,
       current_user_id: null
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.deleteUser = this.deleteUser.bind(this)
-    this.removeUser = this.removeUser.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.uploadImage = this.uploadImage.bind(this);
-
     this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     // this.setState({
     //   loading: false,
     //   userPhoto: this.state.userPhoto.concat(`https://i.picsum.photos/id/1/5616/3744.jpg`),
@@ -110,7 +102,7 @@ class DetailUser extends React.Component {
     }
   }
 
-  uploadImage(picture, file) {
+  uploadImage = (picture, file) => {
     if (this.state.userPhoto[0] && this.state.userPhoto[0].indexOf('data') < 0) {
       this.setState({ imageState: true })
     } else {
@@ -122,7 +114,7 @@ class DetailUser extends React.Component {
     });
   }
 
-  deleteUser() {
+  deleteUser = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -132,7 +124,7 @@ class DetailUser extends React.Component {
     })
   }
 
-  removeUser() {
+  removeUser = () => {
     const { current_user_id } = this.state;
     this.props.userDetailActions.deleteUser(current_user_id).then(res => {
       if (res.status === 200) {
@@ -145,13 +137,13 @@ class DetailUser extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     const {
       firstName,
       lastName,

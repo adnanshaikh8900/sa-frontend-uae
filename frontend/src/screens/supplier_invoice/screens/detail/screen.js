@@ -88,29 +88,6 @@ class DetailSupplierInvoice extends React.Component {
     //   paginationPosition: 'top'
     // }
     this.formRef = React.createRef()
-    this.initializeData = this.initializeData.bind(this)
-    this.renderActions = this.renderActions.bind(this)
-    this.renderDescription = this.renderDescription.bind(this)
-    this.renderQuantity = this.renderQuantity.bind(this)
-    this.renderUnitPrice = this.renderUnitPrice.bind(this)
-    this.renderVat = this.renderVat.bind(this)
-    this.renderSubTotal = this.renderSubTotal.bind(this)
-    this.updateAmount = this.updateAmount.bind(this)
-    this.selectItem = this.selectItem.bind(this)
-    this.addRow = this.addRow.bind(this)
-    this.deleteRow = this.deleteRow.bind(this)
-    this.calTotalNet = this.calTotalNet.bind(this)
-
-    this.closeSupplierModal = this.closeSupplierModal.bind(this)
-    this.openSupplierModal = this.openSupplierModal.bind(this)
-    this.getCurrentUser = this.getCurrentUser.bind(this)
-    this.deleteInvoice = this.deleteInvoice.bind(this)
-    this.removeInvoice = this.removeInvoice.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    this.checkedRow = this.checkedRow.bind(this)
-    this.handleFileChange = this.handleFileChange.bind(this)
-
-
     this.termList = [
       { label: "Net 7", value: "NET_7" },
       { label: "Net 10", value: "NET_10" },
@@ -131,7 +108,7 @@ class DetailSupplierInvoice extends React.Component {
 
   }
 
-  // renderActions (cell, row) {
+  // renderActions  = (cell, row) => {
   //   return (
   //     <Button
   //       size="sm"
@@ -143,11 +120,11 @@ class DetailSupplierInvoice extends React.Component {
   //   )
   // }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.supplierInvoiceDetailActions.getInvoiceById(this.props.location.state.id).then(res => {
         if (res.status === 200) {
@@ -210,7 +187,7 @@ class DetailSupplierInvoice extends React.Component {
     }
   }
 
-  calTotalNet(data) {
+  calTotalNet = (data) => {
     let total_net = 0
     data.map(obj => {
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
@@ -222,7 +199,7 @@ class DetailSupplierInvoice extends React.Component {
   }
 
 
-  renderDescription(cell, row, props) {
+  renderDescription = (cell, row, props) => {
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -254,7 +231,7 @@ class DetailSupplierInvoice extends React.Component {
     )
   }
 
-  renderQuantity(cell, row, props) {
+  renderQuantity = (cell, row, props) => {
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -286,7 +263,7 @@ class DetailSupplierInvoice extends React.Component {
     )
   }
 
-  renderUnitPrice(cell, row, props) {
+  renderUnitPrice = (cell, row, props) => {
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -316,14 +293,14 @@ class DetailSupplierInvoice extends React.Component {
   }
 
 
-  renderSubTotal(cell, row) {
+  renderSubTotal = (cell, row) => {
     return (
       <label className="mb-0">{row.subTotal.toFixed(2)}</label>
     )
   }
 
 
-  addRow() {
+  addRow = () => {
     const data = [...this.state.data]
     this.setState({
       data: data.concat({
@@ -339,7 +316,7 @@ class DetailSupplierInvoice extends React.Component {
     })
   }
 
-  selectItem(e, row, name, form, field, props) {
+  selectItem = (e, row, name, form, field, props) => {
     e.preventDefault();
     let data = this.state.data
     let idx
@@ -361,7 +338,7 @@ class DetailSupplierInvoice extends React.Component {
 
   }
 
-  renderVat(cell, row, props) {
+  renderVat = (cell, row, props) => {
     const { vat_list } = this.props;
     let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
     let idx
@@ -400,7 +377,7 @@ class DetailSupplierInvoice extends React.Component {
   }
 
 
-  deleteRow(e, row, props) {
+  deleteRow = (e, row, props) => {
     const id = row['id'];
     let newData = []
     e.preventDefault();
@@ -410,7 +387,7 @@ class DetailSupplierInvoice extends React.Component {
     this.updateAmount(newData, props)
   }
 
-  renderActions(cell, rows, props) {
+  renderActions = (cell, rows, props) => {
     return (
       <Button
         size="sm"
@@ -423,7 +400,7 @@ class DetailSupplierInvoice extends React.Component {
     )
   }
 
-  checkedRow() {
+  checkedRow = () => {
     if (this.state.data.length > 0) {
       let length = this.state.data.length - 1
       let temp = Object.values(this.state.data[length]).indexOf('');
@@ -438,7 +415,7 @@ class DetailSupplierInvoice extends React.Component {
   }
 
 
-  updateAmount(data, props) {
+  updateAmount = (data, props) => {
     const { vat_list } = this.props;
     let total_net = 0;
     let total = 0;
@@ -476,7 +453,7 @@ class DetailSupplierInvoice extends React.Component {
     })
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     const { current_supplier_id, term } = this.state;
     const {
       receiptAttachmentDescription,
@@ -535,7 +512,7 @@ class DetailSupplierInvoice extends React.Component {
     })
   }
 
-  deleteInvoice() {
+  deleteInvoice = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -545,7 +522,7 @@ class DetailSupplierInvoice extends React.Component {
     })
   }
 
-  removeInvoice() {
+  removeInvoice = () => {
     const { current_supplier_id } = this.state;
     this.props.supplierInvoiceDetailActions.deleteInvoice(current_supplier_id).then(res => {
       if (res.status === 200) {
@@ -557,14 +534,14 @@ class DetailSupplierInvoice extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
 
-  openSupplierModal(e) {
+  openSupplierModal = (e) => {
     e.preventDefault()
     this.setState({ openSupplierModal: true })
   }
@@ -580,7 +557,7 @@ class DetailSupplierInvoice extends React.Component {
     }
   }
 
-  getCurrentUser(data) {
+  getCurrentUser = (data) => {
     let option
     if (data && (data.label || data.value)) {
       option = data
@@ -594,14 +571,14 @@ class DetailSupplierInvoice extends React.Component {
 
   }
 
-  closeSupplierModal(res) {
+  closeSupplierModal = (res) => {
     if (res) {
       this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
     }
     this.setState({ openSupplierModal: false })
   }
 
-  handleFileChange(e, props) {
+  handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];

@@ -63,24 +63,13 @@ class DetailPayment extends React.Component {
     };
 
     this.regEx = /^[0-9\d]+$/;
-
-
-    this.initializeData = this.initializeData.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleChange = this.handleChange.bind(this)
-    this.deletePayment = this.deletePayment.bind(this);
-    this.removePayment = this.removePayment.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-    this.closeSupplierModal = this.closeSupplierModal.bind(this);
-    this.openSupplierModal = this.openSupplierModal.bind(this);
-    this.getCurrentUser = this.getCurrentUser.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.detailPaymentActions
         .getPaymentById(this.props.location.state.id)
@@ -122,7 +111,7 @@ class DetailPayment extends React.Component {
     }
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     const {
       bank,
       supplier,
@@ -166,12 +155,12 @@ class DetailPayment extends React.Component {
       });
   }
 
-  openSupplierModal(e) {
+  openSupplierModal = (e) => {
     e.preventDefault();
     this.setState({ openSupplierModal: true });
   }
 
-  getCurrentUser(data) {
+  getCurrentUser = (data) => {
     let option;
     if (data.label || data.value) {
       option = data;
@@ -186,14 +175,14 @@ class DetailPayment extends React.Component {
     });
   }
 
-  closeSupplierModal(res) {
+  closeSupplierModal = (res) => {
     if (res) {
       this.props.paymentActions.getSupplierContactList(this.state.contactType);
     }
     this.setState({ openSupplierModal: false });
   }
 
-  deletePayment() {
+  deletePayment = () => {
     this.setState({
       dialog: (
         <ConfirmDeleteModal
@@ -205,7 +194,7 @@ class DetailPayment extends React.Component {
     });
   }
 
-  removePayment() {
+  removePayment = () => {
     const { current_payment_id } = this.state;
     this.props.detailPaymentActions
       .deletePayment(current_payment_id)
@@ -226,13 +215,13 @@ class DetailPayment extends React.Component {
       });
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate = (prevProps) => {
     if (prevProps.supplier_list !== this.props.supplier_list) {
       const { selectedSupplier } = this.state;
       prevProps.supplier_list.map(item =>

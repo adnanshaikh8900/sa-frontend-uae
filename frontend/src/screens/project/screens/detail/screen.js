@@ -76,31 +76,21 @@ class DetailProject extends React.Component {
       current_project_id: null,
       initValue: {},
     }
-
-    this.showContactModal = this.showContactModal.bind(this)
-    this.closeContactModal = this.closeContactModal.bind(this)
-
-    this.projectHandleSubmit = this.projectHandleSubmit.bind(this)
-    this.success = this.success.bind(this)
-    this.deleteProject = this.deleteProject.bind(this)
-    this.removeProject = this.removeProject.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
   // Show Invite User Modal
-  showContactModal() {
+  showContactModal = () => {
     this.setState({ openContactModal: true })
   }
   // Cloase Confirm Modal
-  closeContactModal() {
+  closeContactModal = () => {
     this.setState({ openContactModal: false })
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.detailProjectActions.getProjectById(this.props.location.state.id).then(res => {
         this.props.projectActions.getContactList()
@@ -137,14 +127,14 @@ class DetailProject extends React.Component {
 
   
   // Show Success Toast
-  success(msg) {
+  success = (msg) => {
     toast.success(msg, {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
   // Create or Edit Vat
-  projectHandleSubmit(data) {
+  projectHandleSubmit = (data) => {
 
     const {current_project_id} = this.state;
     const {
@@ -180,7 +170,7 @@ class DetailProject extends React.Component {
     })
   }
 
-  deleteProject() {
+  deleteProject = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -190,7 +180,7 @@ class DetailProject extends React.Component {
     })
   }
 
-  removeProject() {
+  removeProject = () => {
     const { current_project_id }= this.state;
     this.props.detailProjectActions.deleteProject(current_project_id).then(res=>{
       if(res.status === 200) {
@@ -202,7 +192,7 @@ class DetailProject extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })

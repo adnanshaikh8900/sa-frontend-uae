@@ -69,16 +69,9 @@ class DetailBankAccount extends React.Component {
       { label: 'Personal', value: 'P' },
       { label: 'Corporate', value: 'C' }
     ]
-    this.initializeData = this.initializeData.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.closeBankAccount = this.closeBankAccount.bind(this)
-    this.removeBankAccount = this.removeBankAccount.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.initializeData()
       this.setState({
@@ -110,13 +103,13 @@ class DetailBankAccount extends React.Component {
     }
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.detailBankAccountActions.getAccountTypeList()
     this.props.detailBankAccountActions.getCurrencyList()
     this.props.detailBankAccountActions.getCountryList()
   }
 
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -126,7 +119,7 @@ class DetailBankAccount extends React.Component {
     })
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     let obj = {
       bankAccountId: this.state.current_bank_account_id,
       bankAccountName: data.account_name,
@@ -150,7 +143,7 @@ class DetailBankAccount extends React.Component {
     })
   }
 
-  closeBankAccount() {
+  closeBankAccount = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -160,7 +153,7 @@ class DetailBankAccount extends React.Component {
     })
   }
 
-  removeBankAccount() {
+  removeBankAccount = () => {
     let {
       current_bank_account_id
     } = this.state
@@ -173,7 +166,7 @@ class DetailBankAccount extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })

@@ -80,28 +80,14 @@ class CreatePayment extends React.Component {
     }
 
     this.regEx = /^[0-9\d]+$/;
-
-
-    this.initializeData = this.initializeData.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.renderActions = this.renderActions.bind(this)
-    this.renderProductName = this.renderProductName.bind(this)
-    this.renderQuantity = this.renderQuantity.bind(this)
-    this.renderUnitPrice = this.renderUnitPrice.bind(this)
-    this.renderVat = this.renderVat.bind(this)
-    this.renderSubTotal = this.renderSubTotal.bind(this)
-    this.closeSupplierModal = this.closeSupplierModal.bind(this)
-    this.openSupplierModal = this.openSupplierModal.bind(this)
-    this.getCurrentUser = this.getCurrentUser.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
 
-  initializeData() {
+  initializeData = () => {
     this.props.paymentActions.getCurrencyList()
     this.props.paymentActions.getBankList()
     this.props.paymentActions.getSupplierContactList(this.state.contactType)
@@ -110,14 +96,14 @@ class CreatePayment extends React.Component {
 
   }
 
-  renderActions(cell, row) {
+  renderActions = (cell, row) => {
     return (
       <Button size="sm" className="btn-twitter btn-brand icon"><i className="fas fa-trash"></i></Button>
     )
   }
 
 
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -127,7 +113,7 @@ class CreatePayment extends React.Component {
     })
   }
 
-  handleSubmit(data,resetForm) {
+  handleSubmit = (data,resetForm) => {
     const {
       bank,
       supplier,
@@ -164,7 +150,7 @@ class CreatePayment extends React.Component {
     })
   }
 
-  renderProductName(cell, row) {
+  renderProductName = (cell, row) => {
     return (
       <div className="d-flex align-items-center">
         <Select
@@ -182,7 +168,7 @@ class CreatePayment extends React.Component {
     )
   }
 
-  renderQuantity(cell, row) {
+  renderQuantity = (cell, row) => {
     return (
       <Input
         type="text"
@@ -191,7 +177,7 @@ class CreatePayment extends React.Component {
     )
   }
 
-  renderUnitPrice(cell, row) {
+  renderUnitPrice = (cell, row) => {
     return (
       <Input
         type="text"
@@ -200,7 +186,7 @@ class CreatePayment extends React.Component {
     )
   }
 
-  renderVat(cell, row) {
+  renderVat = (cell, row) => {
     return (
       <Select
         className="select-default-width"
@@ -211,16 +197,16 @@ class CreatePayment extends React.Component {
     )
   }
 
-  renderSubTotal(cell, row) {
+  renderSubTotal = (cell, row) => {
 
   }
 
-  openSupplierModal(e) {
+  openSupplierModal = (e) => {
     e.preventDefault()
     this.setState({ openSupplierModal: true })
   }
 
-  getCurrentUser(data) {
+  getCurrentUser = (data) => {
     let option
     if (data.label || data.value) {
       option = data
@@ -235,7 +221,7 @@ class CreatePayment extends React.Component {
     })
   }
 
-  closeSupplierModal(res) {
+  closeSupplierModal = (res) => {
     if (res) {
       this.props.paymentActions.getSupplierContactList(this.state.contactType);
     }

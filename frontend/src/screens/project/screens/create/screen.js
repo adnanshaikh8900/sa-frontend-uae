@@ -81,13 +81,6 @@ class CreateProject extends React.Component {
         currency: '',
       },
     }
-
-    this.showContactModal = this.showContactModal.bind(this)
-    this.closeContactModal = this.closeContactModal.bind(this)
-
-    this.projectHandleSubmit = this.projectHandleSubmit.bind(this)
-    this.success = this.success.bind(this)
-
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
@@ -95,18 +88,18 @@ class CreateProject extends React.Component {
 
 
   // Show Invite User Modal
-  showContactModal() {
+  showContactModal = () => {
     this.setState({ openContactModal: true })
   }
   // Cloase Confirm Modal
-  closeContactModal(res) {
+  closeContactModal = (res) => {
     if (res) {
       this.props.projectActions.getContactList();
     }
     this.setState({ openContactModal: false })
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.projectActions.getCurrencyList();
     this.props.projectActions.getContactList();
     this.props.projectActions.getCountryList();
@@ -114,15 +107,9 @@ class CreateProject extends React.Component {
 
   }
 
-  // Show Success Toast
-  success() {
-    // toast.success('Vat Code Updated successfully... ', {
-    //   position: toast.POSITION.TOP_RIGHT
-    // })
-  }
 
   // Create or Edit Project
-  projectHandleSubmit(data,resetForm) {
+  projectHandleSubmit = (data,resetForm) => {
     const {
       projectName,
       invoiceLanguageCode,

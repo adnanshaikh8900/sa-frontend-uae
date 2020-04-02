@@ -19,6 +19,7 @@ import {
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
+import { CSVLink } from "react-csv";
 
 
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -76,24 +77,9 @@ class CustomerInvoice extends React.Component {
       selectedRows: [],
       selectedId: '',
       openInvoicePreviewModal: false,
-
+      csvData: [],
+      view: false
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.renderInvoiceNumber = this.renderInvoiceNumber.bind(this)
-    this.renderInvoiceStatus = this.renderInvoiceStatus.bind(this)
-    this.renderActions = this.renderActions.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.toggleActionButton = this.toggleActionButton.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.bulkDelete = this.bulkDelete.bind(this);
-    this.removeBulk = this.removeBulk.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-    this.postInvoice = this.postInvoice.bind(this)
-    this.closeInvoicePreviewModal = this.closeInvoicePreviewModal.bind(this)
-    this.openInvoicePreviewModal = this.openInvoicePreviewModal.bind(this)
 
     this.options = {
       paginationPosition: 'top',
@@ -113,13 +99,19 @@ class CustomerInvoice extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
+
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
+    let { filterData } = this.state
+    this.props.customerInvoiceActions.getStatusList()
+    this.props.customerInvoiceActions.getCurrencyList()
+    this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -129,12 +121,9 @@ class CustomerInvoice extends React.Component {
       order: this.options.sortOrder ? this.options.sortOrder : '',
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
-    const postData = { ...filterData, ...paginationData , ...sortingData}
+    const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.customerInvoiceActions.getCustomerInvoiceList(postData).then(res => {
       if (res.status === 200) {
-        this.props.customerInvoiceActions.getStatusList()
-        this.props.customerInvoiceActions.getCurrencyList()
-        this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
         this.setState({ loading: false }, () => {
           if (this.props.location.state && this.props.location.state.id) {
             this.openInvoicePreviewModal(this.props.location.state.id)
@@ -147,7 +136,7 @@ class CustomerInvoice extends React.Component {
     })
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     this.setState({
       selectedRows: []
     })
@@ -167,13 +156,13 @@ class CustomerInvoice extends React.Component {
     }
   }
 
-  sortColumn = (sortName,sortOrder) => {
+  sortColumn = (sortName, sortOrder) => {
     this.options.sortName = sortName;
     this.options.sortOrder = sortOrder;
     this.initializeData()
-}
+  }
 
-  postInvoice(row) {
+  postInvoice = (row) => {
     this.setState({
       loading: true
     })
@@ -199,7 +188,7 @@ class CustomerInvoice extends React.Component {
   }
 
 
-  renderInvoiceNumber(cell, row) {
+  renderInvoiceNumber = (cell, row) => {
     return (
       <label
         className="mb-0 my-link"
@@ -210,7 +199,7 @@ class CustomerInvoice extends React.Component {
     )
   }
 
-  renderInvoiceStatus(cell, row) {
+  renderInvoiceStatus = (cell, row) => {
     let classname = ''
     if (row.status === 'Post') {
       classname = 'badge-success'
@@ -226,7 +215,7 @@ class CustomerInvoice extends React.Component {
     )
   }
 
-  toggleActionButton(index) {
+  toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -239,16 +228,16 @@ class CustomerInvoice extends React.Component {
   }
 
 
-  renderInvoiceAmount(cell,row){
+  renderInvoiceAmount = (cell, row) => {
     return row.invoiceAmount ? (row.invoiceAmount).toFixed(2) : ''
   }
 
-  renderVatAmount(cell,row){
+  renderVatAmount = (cell, row) => {
     return row.vatAmount ? (row.vatAmount).toFixed(2) : ''
   }
 
 
-  renderActions(cell, row) {
+  renderActions = (cell, row) => {
     return (
       <div>
         <ButtonDropdown
@@ -272,7 +261,7 @@ class CustomerInvoice extends React.Component {
             {row.status !== 'Post' && (
               <DropdownItem onClick={() => { this.postInvoice(row) }}>
                 <i className="fas fa-heart" /> Post
-                        </DropdownItem>
+              </DropdownItem>
             )}
             {/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
               <i className="fas fa-eye" /> View
@@ -298,7 +287,7 @@ class CustomerInvoice extends React.Component {
     )
   }
 
-  onRowSelect(row, isSelected, e) {
+  onRowSelect = (row, isSelected, e) => {
     let temp_list = []
     if (isSelected) {
       temp_list = Object.assign([], this.state.selectedRows)
@@ -315,7 +304,7 @@ class CustomerInvoice extends React.Component {
       selectedRows: temp_list
     })
   }
-  onSelectAll(isSelected, rows) {
+  onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
       rows.map(item => {
@@ -329,7 +318,7 @@ class CustomerInvoice extends React.Component {
   }
 
 
-  bulkDelete() {
+  bulkDelete = () => {
     const {
       selectedRows
     } = this.state
@@ -346,7 +335,7 @@ class CustomerInvoice extends React.Component {
     }
   }
 
-  removeBulk() {
+  removeBulk = () => {
     this.removeDialog()
     let { selectedRows, } = this.state;
     const { customer_invoice_list } = this.props
@@ -368,13 +357,13 @@ class CustomerInvoice extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -382,11 +371,11 @@ class CustomerInvoice extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData()
   }
 
-  openInvoicePreviewModal(id) {
+  openInvoicePreviewModal = (id) => {
     this.setState({
       selectedId: id
     }, () => {
@@ -416,12 +405,28 @@ class CustomerInvoice extends React.Component {
     })
   }
 
-  closeInvoicePreviewModal(res) {
+  closeInvoicePreviewModal = (res) => {
     this.setState({ openInvoicePreviewModal: false })
   }
 
+  getCsvData = () => {
+    if (this.state.csvData.length === 0) {
+      this.props.customerInvoiceActions.getCustomerInvoiceList({}).then(res => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
   render() {
-    const { loading, filterData, dialog, selectedRows } = this.state
+    const { loading, filterData, dialog, selectedRows, csvData, view } = this.state
     const { status_list, customer_list, customer_invoice_list } = this.props
 
     const customer_invoice_data = this.props.customer_invoice_list && this.props.customer_invoice_list.data ? this.props.customer_invoice_list.data.map(customer =>
@@ -493,12 +498,17 @@ class CustomerInvoice extends React.Component {
                       <Button
                         color="success"
                         className="btn-square"
-                        onClick={() => this.table.handleExportCSV()}
-                      // disabled={customer_invoice_list.length === 0}
+                        onClick={() => this.getCsvData()}
                       >
-                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                        Export to CSV
+                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                      {view && <CSVLink
+                        data={csvData}
+                        filename={'Customer_Invoice.csv'}
+                        className="hidden"
+                        ref={this.csvLink}
+                        target="_blank"
+                      />}
                       <Button
                         color="primary"
                         className="btn-square"
@@ -663,7 +673,7 @@ class CustomerInvoice extends React.Component {
                           </TableHeaderColumn>
                       <TableHeaderColumn
                         dataField="totalVatAmount"
-                        dataSort  
+                        dataSort
                         dataFormat={this.renderVatAmount}
                         dataAlign="right"
                       >

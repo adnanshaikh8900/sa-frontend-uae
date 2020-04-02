@@ -53,20 +53,16 @@ class CreateProductCategory extends React.Component {
       loading: false,
       createMore: false
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    // this.success = this.success.bind(this)
     this.regExAlpha = /^[a-zA-Z]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.productCategoryActions.getProductCategoryList()
   }
 
   // Save Updated Field's Value to State
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       vatData: _.set(
         { ...this.state.vatData },
@@ -84,7 +80,7 @@ class CreateProductCategory extends React.Component {
   // }
 
   // Create or Edit Vat
-  handleSubmit(data,resetForm) {
+  handleSubmit = (data,resetForm) => {
     this.props.createProductCategoryActions.createProductCategory(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Product Category is Created Successfully!')

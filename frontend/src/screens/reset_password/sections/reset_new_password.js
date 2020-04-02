@@ -37,12 +37,9 @@ class ResetNewPassword extends React.Component {
       alert: null
     };
     this.formikRef = React.createRef();
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.displayMsg = this.displayMsg.bind(this);
-
   }
 
-  handleSubmit(val) {
+  handleSubmit = (val) => {
    let obj = {
       password: val.password,
       token: this.props.token
@@ -76,8 +73,7 @@ class ResetNewPassword extends React.Component {
   })
 }
 
-  displayMsg(msg) {
-    console.log(msg)
+  displayMsg = (msg) => {
     toast.error(msg, {
       position: toast.POSITION.TOP_RIGHT
     });

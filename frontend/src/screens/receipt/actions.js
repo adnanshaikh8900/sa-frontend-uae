@@ -7,8 +7,17 @@ import {
 import moment from 'moment'
 
 export const getReceiptList = (obj) => {
-  let receiptDate = obj.receiptDate;
-  let url = `/rest/receipt/getList?referenceCode=${obj.receiptReferenceCode}&contactId=${obj.contactId}&invoiceId=${obj.invoiceId}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}&order=${obj.order}&sortingCol=${obj.sortingCol}`;
+  let receiptDate = obj.receiptDate ? obj.receiptDate : '';
+  let receiptReferenceCode = obj.receiptReferenceCode ? obj.receiptReferenceCode : '';
+  let contactId = obj.contactId ? obj.contactId : '';
+  let invoiceId = obj.invoiceId ? obj.invoiceId : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+
+  let url = `/rest/receipt/getList?referenceCode=${receiptReferenceCode}&contactId=${contactId}&invoiceId=${invoiceId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
   if (receiptDate) {
     let date = moment(receiptDate).format('DD-MM-YYYY')
     url = url + `&receiptDate=${date}`

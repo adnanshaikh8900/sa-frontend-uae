@@ -4,10 +4,16 @@ import {
 } from 'utils'
 
 export const getEmployeeList = (obj) => {
+  let name = obj.name ? obj.name : '';
+  let email = obj.email ? obj.email : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/employee/getList?name=${obj.name}&email=${obj.email}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+      url: `/rest/employee/getList?name=${name}&email=${email}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
     }
     return authApi(data).then(res => {
       dispatch({

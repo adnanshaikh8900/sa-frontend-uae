@@ -7,9 +7,16 @@ import {
 
 // Get Vat List
 export const getProductCategoryList = (obj) => {
+  let productCategoryCode = obj.productCategoryCode ? obj.productCategoryCode : '';
+  let productCategoryName = obj.productCategoryName ? obj.productCategoryName : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+
   let url;
+
   if(obj) {
-    url = `/rest/productcategory/getList?productCategoryCode=${obj.productCategoryCode}&productCategoryName=${obj.productCategoryName}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+    url = `/rest/productcategory/getList?productCategoryCode=${productCategoryCode}&productCategoryName=${productCategoryName}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
   } else {
     url=`/rest/productcategory/getList`
   }

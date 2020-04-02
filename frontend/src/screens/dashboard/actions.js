@@ -5,7 +5,7 @@ import {
 
 export const initialData = (obj) => {
   return (dispatch) => {
-    
+
   }
 }
 
@@ -16,13 +16,13 @@ export const getCashFlowGraphData = (daterange) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/transaction/getCashFlow?monthNo='+daterange
+      url: '/rest/transaction/getCashFlow?monthNo=' + daterange
     }
 
     return authApi(data).then(res => {
       dispatch({
         type: DASHBOARD.CASH_FLOW_GRAPH,
-         payload: res.data
+        payload: res.data
       })
     }).catch(err => {
       throw err
@@ -37,7 +37,7 @@ export const getInvoiceGraphData = (daterange) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: 'rest/invoice/getChartData?monthCount='+daterange
+      url: 'rest/invoice/getChartData?monthCount=' + daterange
     }
 
     return authApi(data).then(res => {
@@ -63,10 +63,12 @@ export const getBankAccountTypes = () => {
     }
 
     return authApi(data).then(res => {
-      dispatch({
-        type: DASHBOARD.BANK_ACCOUNT_TYPE,
-        payload: res.data.data 
-      })
+      if(res.status === 200) {
+        dispatch({
+          type: DASHBOARD.BANK_ACCOUNT_TYPE,
+          payload: res.data.data
+        })
+      }
       return res;
     }).catch(err => {
       throw err
@@ -78,13 +80,15 @@ export const getBankAccountGraphData = (account, daterange) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/bank/getBankChart?bankId='+account+'&monthCount='+daterange
+      url: '/rest/bank/getBankChart?bankId=' + account + '&monthCount=' + daterange
     }
     return authApi(data).then(res => {
-      dispatch({
-        type: DASHBOARD.BANK_ACCOUNT_GRAPH,
-        payload: res.data
-      })
+      if(res.status === 200) {
+        dispatch({
+          type: DASHBOARD.BANK_ACCOUNT_GRAPH,
+          payload: res.data
+        })
+      }
     }).catch(err => {
       throw err
     })
@@ -127,11 +131,12 @@ export const getExpensesGraphData = () => {
     }
 
     return authApi(data).then(res => {
-      console.log(res)
-      dispatch({
-        type: DASHBOARD.EXPENSE_GRAPH,
-        payload: res.data.data
-      })
+      if (res.status === 200) {
+        dispatch({
+          type: DASHBOARD.EXPENSE_GRAPH,
+          payload: res.data.data
+        })
+      }
     }).catch(err => {
       throw err
     })
@@ -146,10 +151,12 @@ export const getRevenuesGraphData = () => {
     }
 
     return authApi(data).then(res => {
-      dispatch({
-        type: DASHBOARD.REVENUE_GRAPH,
-        payload: res.data.data
-      })
+      if (res.status === 200) {
+        dispatch({
+          type: DASHBOARD.REVENUE_GRAPH,
+          payload: res.data.data
+        })
+      }
     }).catch(err => {
       throw err
     })

@@ -74,7 +74,7 @@ class CreateBankAccount extends React.Component {
 
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 

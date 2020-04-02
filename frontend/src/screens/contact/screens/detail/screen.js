@@ -62,23 +62,16 @@ class DetailContact extends React.Component {
       dialog: null,
       current_contact_id: null
     }
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.initializeData = this.initializeData.bind(this)
-    this.success = this.success.bind(this)
-    this.removeContact = this.removeContact.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-    this.deleteContact = this.deleteContact.bind(this)
-
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.contactActions.getContactTypeList();
       this.props.contactActions.getCountryList();
@@ -122,7 +115,7 @@ class DetailContact extends React.Component {
     }
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const { current_contact_id } = this.state
 
     const postData = { ...data, ...{ contactId: current_contact_id } }
@@ -138,13 +131,13 @@ class DetailContact extends React.Component {
       this.props.history.push('/admin/master/contact');
     })
   }
-  success(msg) {
+  success = (msg) => {
     toast.success(msg, {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
-  deleteContact() {
+  deleteContact = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -154,7 +147,7 @@ class DetailContact extends React.Component {
     })
   }
 
-  removeContact() {
+  removeContact = () => {
     const { current_contact_id } = this.state
     this.props.detailContactActions.deleteContact(current_contact_id).then(res => {
       if (res.status === 200) {
@@ -166,13 +159,13 @@ class DetailContact extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  getStateList(countryCode) {
+  getStateList = (countryCode) => {
     this.props.contactActions.getStateList(countryCode);
   }
 

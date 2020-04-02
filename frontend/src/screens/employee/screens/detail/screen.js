@@ -56,44 +56,16 @@ class DetailEmployee extends React.Component {
       dialog: false,
     }
 
-    this.initializeData = this.initializeData.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.deleteEmployee = this.deleteEmployee.bind(this)
-    this.removeEmployee = this.removeEmployee.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
-  // changeBirthday(date){
-  //   this.setState({
-  //     birthday: date
-  //   })
-  // }
-
-  // handleChange = (name, e) => {
-  //    this.setState({
-  //     currentData: _.set(
-  //       { ...this.state.currentData },
-  //       e.target.name && e.target.name !== '' ? e.target.name : name,
-  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //     )
-  //   })
-  // this.setState({
-  //   currentData: _.set(
-  //     { ...this.state.currentData },
-  //     e.target.name && e.target.name !== '' ? e.target.name : name,
-  //     e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //   )
-  // })
-
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.employeeActions.getCurrencyList()
       this.props.employeeDetailActions.getEmployeeDetail(this.props.location.state.id).then(res => {
@@ -127,7 +99,7 @@ class DetailEmployee extends React.Component {
     }
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     this.props.employeeDetailActions.updateEmployee(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully')
@@ -138,7 +110,7 @@ class DetailEmployee extends React.Component {
     })
   }
 
-  deleteEmployee() {
+  deleteEmployee = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -148,7 +120,7 @@ class DetailEmployee extends React.Component {
     })
   }
 
-  removeEmployee() {
+  removeEmployee = () => {
     const { current_employee_id } = this.state;
     this.props.employeeDetailActions.deleteEmployee(current_employee_id).then(res => {
       if (res.status === 200) {
@@ -160,11 +132,12 @@ class DetailEmployee extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
+  
   render() {
 
     const { currency_list } = this.props

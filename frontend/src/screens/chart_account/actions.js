@@ -42,10 +42,18 @@ export const getTransactionTypes = () => {
 }
 
 export const getTransactionCategoryList = (obj) => {
+  let transactionCategoryCode = obj.transactionCategoryCode ? obj.transactionCategoryCode : '';
+  let transactionCategoryName = obj.transactionCategoryName ? obj.transactionCategoryName : '';
+  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+
+
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/transactioncategory/getList?transactionCategoryCode=${obj.transactionCategoryCode}&transactionCategoryName=${obj.transactionCategoryName}&chartOfAccountId=${obj.chartOfAccountId}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`,
+      url: `/rest/transactioncategory/getList?transactionCategoryCode=${transactionCategoryCode}&transactionCategoryName=${transactionCategoryName}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`,
     }
 
     return authApi(data).then(res => {

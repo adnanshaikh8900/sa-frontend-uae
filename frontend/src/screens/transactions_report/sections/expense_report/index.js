@@ -95,12 +95,10 @@ class ExpenseReport extends React.Component {
     this.state = {
       selectedOption: '',
     }
-
-    this.handleChange = this.handleChange.bind(this)
   }
 
 
-  handleChange(selectedOption) {
+  handleChange = (selectedOption) => {
     this.setState({ selectedOption })
   }
 

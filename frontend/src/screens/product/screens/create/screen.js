@@ -67,11 +67,6 @@ class CreateProduct extends React.Component {
       },
       createMore: false
     }
-
-    this.showWarehouseModal = this.showWarehouseModal.bind(this)
-    this.closeWarehouseModal = this.closeWarehouseModal.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this);
-
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
@@ -79,7 +74,7 @@ class CreateProduct extends React.Component {
   }
 
 
-  componentDidMount(){
+  componentDidMount = () =>{
     this.props.productActions.getProductVatCategoryList()
     this.props.productActions.getProductCategoryList()
     this.props.productActions.getProductWareHouseList()
@@ -87,18 +82,18 @@ class CreateProduct extends React.Component {
 
 
   // Show Invite User Modal
-  showWarehouseModal() {
+  showWarehouseModal = () => {
     this.setState({ openWarehouseModal: true })
   }
   // Cloase Confirm Modal
-  closeWarehouseModal() {
+  closeWarehouseModal = () => {
     this.setState({ openWarehouseModal: false });
     this.props.productActions.getProductWareHouseList()
   }
 
 
   // Create or Edit Product
-  handleSubmit(data,resetForm) {
+  handleSubmit = (data,resetForm) => {
     const {
       productName, 
       productDescription,
@@ -137,12 +132,6 @@ class CreateProduct extends React.Component {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
-
-  // displayMessage(msg) {
-  //   toast.success(msg, {
-  //     position: toast.POSITION.TOP_RIGHT
-  //   })
-  // }
 
   render() {
 

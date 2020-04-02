@@ -9,8 +9,6 @@ import {
   Button,
   Row,
   Col,
-  ButtonGroup,
-  FormGroup,
   Input,
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
@@ -54,7 +52,7 @@ class OpeningBalance extends React.Component {
 
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.openingBalanceActions.getCurrencyList()
     this.props.openingBalanceActions.getBankList()
   }
@@ -74,11 +72,11 @@ class OpeningBalance extends React.Component {
 
   renderAccount = (cell, row) => {
     const { bank_account_list } = this.props
-    let idx;
+    // let idx = ''
     bank_account_list.push({bankAccountId: '',accounName: 'Select Account'})
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
-        idx = index
+        // idx = index
       }
       return obj
     });
@@ -98,10 +96,10 @@ class OpeningBalance extends React.Component {
   }
 
   renderOpeningBalance = (cell, row, props) => {
-    let idx
+    // let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
-        idx = index
+        // idx = index
       }
       return obj
     });
@@ -119,10 +117,10 @@ class OpeningBalance extends React.Component {
   }
 
   renderCurrency = (cell, row, props) => {
-    let idx
+    // let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
-        idx = index
+        // idx = index
       }
       return obj
     });

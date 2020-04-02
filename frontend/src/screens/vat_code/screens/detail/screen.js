@@ -51,17 +51,11 @@ class DetailVatCode extends React.Component {
     }
 
     this.saveAndContinue = false;
-
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.deleteVat = this.deleteVat.bind(this)
-    this.removeVat = this.removeVat.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-
     this.regExAlpha = /^[a-zA-Z]+$/;
     this.regEx = /^[0-9\d]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.setState({ loading: true });
       this.props.vatDetailActions.getVatByID(this.props.location.state.id).then(res => {
@@ -80,7 +74,7 @@ class DetailVatCode extends React.Component {
   }
 
   // Create or Edit Vat
-  handleSubmit(data){
+  handleSubmit = (data) => {
     this.props.vatDetailActions.updateVat(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Vat code Updated Successfully!')
@@ -91,7 +85,7 @@ class DetailVatCode extends React.Component {
     })
   }
 
-  deleteVat() {
+  deleteVat = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -101,7 +95,7 @@ class DetailVatCode extends React.Component {
     })
   }
 
-  removeVat() {
+  removeVat = () => {
     const {current_vat_id} = this.state
     this.props.vatDetailActions.deleteVat(current_vat_id).then(res => {
       if (res.status === 200) {
@@ -114,7 +108,7 @@ class DetailVatCode extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })

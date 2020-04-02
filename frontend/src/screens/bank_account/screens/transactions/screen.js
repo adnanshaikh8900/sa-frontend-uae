@@ -96,20 +96,6 @@ class BankTransactions extends React.Component {
       category_label: '',
     }
 
-    this.initializeData = this.initializeData.bind(this)
-    // this.toggleDangerModal = this.toggleDangerModal.bind(this)
-    this.renderAccountNumber = this.renderAccountNumber.bind(this)
-    this.renderTransactionStatus = this.renderTransactionStatus.bind(this)
-    this.renderTransactionType = this.renderTransactionType.bind(this)
-    this.renderActions = this.renderActions.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.toggleActionButton = this.toggleActionButton.bind(this)
-    this.onPageChange = this.onPageChange.bind(this);
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-
     this.options = {
       paginationPosition: 'top',
       page: 1,
@@ -128,11 +114,11 @@ class BankTransactions extends React.Component {
 
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     let { filterData } = this.state
     const data = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -166,10 +152,11 @@ class BankTransactions extends React.Component {
     this.getTransactionListForReconcile(data.debitCreditFlag)
   }
 
-  getTransactionListForReconcile(type) {
+  getTransactionListForReconcile = (type) => {
     let element = document.querySelector('body');
-    element.className = element.className + '' + ' sidebar-minimized brand-minimized'
-   
+   if(!element.className.includes('sidebar-minimized')) {
+    element.className = element.className + ' sidebar-minimized brand-minimized'
+   }
 
     this.props.transactionsActions.getTransactionListForReconcile(type).then(res => {
       if(res.status === 200) {
@@ -179,7 +166,7 @@ class BankTransactions extends React.Component {
     }})
 }
 
-  getCategoryList(val) {
+  getCategoryList = (val) => {
     this.props.transactionsActions.getCategoryListForReconcile(val).then(res => {
       if (res.status === 200) {
         res.data.map(x => {
@@ -193,7 +180,7 @@ class BankTransactions extends React.Component {
   }})
 }
 
-  getDetail(val) {
+  getDetail = (val) => {
     const data = this.state.categoryList.filter(x => x.id === val)
     this.setState({
           categoryDetails: {
@@ -329,7 +316,8 @@ class BankTransactions extends React.Component {
         }
       </div >)
   }
-  toggleActionButton(index) {
+
+  toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -341,7 +329,7 @@ class BankTransactions extends React.Component {
     })
   }
 
-  renderAccountNumber(cell, row) {
+  renderAccountNumber = (cell, row) => {
     return (
       <label
         className="mb-0 my-link"
@@ -352,7 +340,7 @@ class BankTransactions extends React.Component {
     )
   }
 
-  renderTransactionStatus(cell, row) {
+  renderTransactionStatus = (cell, row) => {
     let classname = ''
     if (row.status === 'Explained') {
       classname = 'badge-success'
@@ -366,7 +354,7 @@ class BankTransactions extends React.Component {
     )
   }
 
-  renderTransactionType(cell, row) {
+  renderTransactionType = (cell, row) => {
     let classname = ''
     let value = ''
     if (row.status === 'Explained') {
@@ -384,17 +372,17 @@ class BankTransactions extends React.Component {
     )
   }
 
-  renderDepositAmount(cell, row) {
+  renderDepositAmount = (cell, row) => {
     return row.depositeAmount >= 0 ? (row.depositeAmount).toFixed(2) : ''
   }
-  renderWithdrawalAmount(cell, row) {
+  renderWithdrawalAmount = (cell, row) => {
     return row.withdrawalAmount >= 0 ? (row.withdrawalAmount).toFixed(2) : ''
   }
-  renderRunningAmount(cell, row) {
+  renderRunningAmount = (cell, row) => {
     return row.runningAmount >= 0 ? (row.runningAmount).toFixed(2) : ''
   }
 
-  renderActions(cell, row) {
+  renderActions = (cell, row) => {
     return (
       <div>
         <ButtonDropdown
@@ -428,9 +416,9 @@ class BankTransactions extends React.Component {
     )
   }
 
-  onRowSelect(row, isSelected, e) {
+  onRowSelect = (row, isSelected, e) => {
   }
-  onSelectAll(isSelected, rows) {
+  onSelectAll = (isSelected, rows) => {
   }
 
   onSizePerPageList = (sizePerPage) => {
@@ -447,7 +435,7 @@ class BankTransactions extends React.Component {
     }
   }
 
-  handleChange(val, name, reconcile) {
+  handleChange = (val, name, reconcile) => {
     if (!reconcile) {
       this.setState({
         filterData: Object.assign(this.state.filterData, {
@@ -463,7 +451,7 @@ class BankTransactions extends React.Component {
     }
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData();
   }
 

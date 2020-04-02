@@ -4,10 +4,18 @@ import {
 } from 'utils'
 import moment from 'moment'
 
-export const getExpenseList = (expenseData) => {
-  const { expenseDate, payee, transactionCategoryId, pageNo, pageSize, order,sortingCol} = expenseData;
+export const getExpenseList = (obj) => {
+  let payee = obj.payee ? obj.payee : ''
+  let expenseDate =  obj.expenseDate ? obj.expenseDate : ''
+  let transactionCategoryId = obj.transactionCategoryId ?  obj.transactionCategoryId : '' 
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+
   return (dispatch) => {
-    let param = `rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`
+    let param = `rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     if (expenseDate) {
       let date = moment(expenseDate).format('DD-MM-YYYY')
       param = param + `&expenseDate=${date}`

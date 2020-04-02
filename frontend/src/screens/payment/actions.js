@@ -99,10 +99,18 @@ export const getProjectList = () => {
   }
 }
 
-export const getPaymentList = (paymentData) => {
-  const { supplierId, paymentDate, invoiceAmount, pageNo, pageSize, order,sortingCol } = paymentData;
+export const getPaymentList = (obj) => {
+  let supplierId = obj.supplierId ? obj.supplierId : ''
+  let paymentDate = obj.paymentDate ?  obj.paymentDate : ''
+  let invoiceAmount =  obj.invoiceAmount ? obj.invoiceAmount : ''
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+  
   return (dispatch) => {
-    let param = `rest/payment/getlist?supplierId=${supplierId ? supplierId : ''}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`
+    let param = `rest/payment/getlist?supplierId=${supplierId}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     if (paymentDate) {
       let date = moment(paymentDate).format('DD-MM-YYYY')
       param = param + `&paymentDate=${date}`
@@ -110,7 +118,7 @@ export const getPaymentList = (paymentData) => {
     let data = {
       method: 'get',
       url: param
-      // data: postObj
+      // data: obj
     }
 
     return authApi(data).then(res => {

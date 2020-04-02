@@ -121,20 +121,12 @@ class Profile extends React.Component {
       }
     }
 
-    this.toggle = this.toggle.bind(this)
-    this.getUserData = this.getUserData.bind(this)
-    this.getCompanyData = this.getCompanyData.bind(this)
-    this.uploadUserImage = this.uploadUserImage.bind(this)
-    this.uploadCompanyImage = this.uploadCompanyImage.bind(this)
-    this.handleUserSubmit = this.handleUserSubmit.bind(this)
-    this.stopLoading = this.stopLoading.bind(this)
-
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
-  toggle(tabPane, tab) {
+  toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
     newArray[tabPane] = tab
     this.setState({
@@ -151,18 +143,19 @@ class Profile extends React.Component {
       this.getCompanyData()
     }
   }
-  componentDidMount() {
+  componentDidMount = () => {
     this.getUserData()
   }
 
-  uploadUserImage(picture, file) {
+  uploadUserImage = (picture, file) => {
     this.setState({
       userPhoto: picture,
       userPhotoFile: file,
       imageState: false
     })
   }
-  uploadCompanyImage(picture, file) {
+
+  uploadCompanyImage = (picture, file) => {
     this.setState({
       companyLogo: picture,
       companyLogoFile: file,
@@ -170,11 +163,11 @@ class Profile extends React.Component {
     })
   }
 
-  stopLoading() {
+  stopLoading = () => {
     this.setState({ loading: false })
   }
 
-  getUserData() {
+  getUserData = () => {
     const userId = cryptoService.decryptService('userId')
     this.setState({
       loading: true
@@ -218,7 +211,7 @@ class Profile extends React.Component {
     this.props.profileActions.getStateList(countryCode,type);
   }
 
-  handleUserSubmit(data) {
+  handleUserSubmit = (data) => {
     const {
       firstName,
       lastName,
@@ -264,7 +257,7 @@ class Profile extends React.Component {
     })
   }
 
-  getCompanyData() {
+  getCompanyData = () => {
     // const {companyId} = this.state;
     this.props.profileActions.getCompanyById().then(res => {
       if (res.status === 200) {
@@ -346,7 +339,7 @@ class Profile extends React.Component {
       })
     })
   }
-  handleCompanySubmit(data) {
+  handleCompanySubmit = (data) => {
     const {
       companyName,
       companyRegistrationNumber,

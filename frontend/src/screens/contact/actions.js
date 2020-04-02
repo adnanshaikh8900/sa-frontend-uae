@@ -4,10 +4,17 @@ import {
 } from 'utils'
 
 export const getContactList = (obj) => {
+  let name = obj.name ? obj.name : '';
+  let email = obj.email ? obj.email : '';
+  let contactType = obj.contactType ? obj.contactType : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : ''
+  
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/contact/getContactList?name=${obj.name}&email=${obj.email}&contactType=${obj.contactType}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+      url: `/rest/contact/getContactList?name=${name}&email=${email}&contactType=${contactType}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
     }
 
     return authApi(data).then(res => {

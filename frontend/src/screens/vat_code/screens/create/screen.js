@@ -55,22 +55,16 @@ class CreateVatCode extends React.Component {
       loading: false,
       createMore: false
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.success = this.success.bind(this)
-
     this.regExAlpha = /^[a-zA-Z]+$/;
     this.regEx = /^[0-9\d]+$/;
-
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.vatActions.getVatList()
   }
 
   // Save Updated Field's Value to State
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       vatData: _.set(
         { ...this.state.vatData },
@@ -81,14 +75,14 @@ class CreateVatCode extends React.Component {
   }
 
   // Show Success Toast
-  success() {
+  success = () => {
     toast.success('Vat Code Updated successfully... ', {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
   // Create or Edit Vat
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     this.props.vatCreateActions.createVat(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New vat code Created Successfully!')

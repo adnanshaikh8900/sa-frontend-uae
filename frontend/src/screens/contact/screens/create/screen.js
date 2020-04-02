@@ -78,27 +78,24 @@ class CreateContact extends React.Component {
       },
       createMore: false
     }
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.initializeData = this.initializeData.bind(this)
-
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.contactActions.getContactTypeList();
     this.props.contactActions.getCountryList();
     this.props.contactActions.getCurrencyList();
 
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     this.props.createContactActions.createContact(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Contact Created Successfully')

@@ -76,10 +76,6 @@ class CreateExpense extends React.Component {
       payMode: '',
     };
 
-    this.initializeData = this.initializeData.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleFileChange = this.handleFileChange.bind(this);
-
     this.options = {
       paginationPosition: "top"
     };
@@ -103,11 +99,11 @@ class CreateExpense extends React.Component {
     ]
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.expenseActions.getVatList();
     this.props.expenseActions.getExpenseCategoriesList();
     this.props.expenseActions.getCurrencyList();
@@ -117,7 +113,7 @@ class CreateExpense extends React.Component {
     this.props.expenseActions.getPaymentMode();
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const {
       payee,
       expenseDate,
@@ -191,17 +187,7 @@ class CreateExpense extends React.Component {
       });
   }
 
-  // handleChange(e, name) {
-  //   this.setState({
-  //     currentData: _.set(
-  //       { ...this.state.currentData },
-  //       e.target.name && e.target.name !== '' ? e.target.name : name,
-  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //     )
-  //   })
-  // }
-
-  handleFileChange(e, props) {
+  handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];

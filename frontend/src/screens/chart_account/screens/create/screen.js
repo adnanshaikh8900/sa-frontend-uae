@@ -55,18 +55,14 @@ class CreateChartAccount extends React.Component {
       loading: false,
       createMore: false
     }
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.initializeData = this.initializeData.bind(this)
-    // this.success = this.success.bind(this)
     this.regExAlpha = /^[a-zA-Z]+$/
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.ChartOfAccontActions.getSubTransactionTypes();
   }
   // Show Success Toast
@@ -77,7 +73,7 @@ class CreateChartAccount extends React.Component {
   // }
 
   // Create or Edit Vat
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Chart of Account Created Successfully')
@@ -95,7 +91,7 @@ class CreateChartAccount extends React.Component {
     })
   }
 
-  renderOptions = options => {
+  renderOptions = (options) => {
     return options.map(option => {
       return (
         <option key={option.value} value={option.value}>

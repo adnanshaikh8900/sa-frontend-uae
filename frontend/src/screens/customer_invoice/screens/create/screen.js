@@ -135,28 +135,6 @@ class CreateCustomerInvoice extends React.Component {
 		]
 		this.regEx = /^[0-9\b]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-
-
-		this.renderActions = this.renderActions.bind(this)
-		this.renderProductName = this.renderProductName.bind(this)
-		this.renderDescription = this.renderDescription.bind(this)
-		this.renderQuantity = this.renderQuantity.bind(this)
-		this.renderUnitPrice = this.renderUnitPrice.bind(this)
-		this.renderVat = this.renderVat.bind(this)
-		this.renderSubTotal = this.renderSubTotal.bind(this)
-		this.updateAmount = this.updateAmount.bind(this)
-		this.selectItem = this.selectItem.bind(this)
-		this.addRow = this.addRow.bind(this)
-		this.deleteRow = this.deleteRow.bind(this)
-
-		this.closeCustomerModal = this.closeCustomerModal.bind(this)
-		this.openCustomerModal = this.openCustomerModal.bind(this)
-
-
-
-		this.getCurrentUser = this.getCurrentUser.bind(this)
-		this.checkedRow = this.checkedRow.bind(this)
-		this.handleFileChange = this.handleFileChange.bind(this)
 	}
 
 	// renderActions (cell, row) {
@@ -171,7 +149,7 @@ class CreateCustomerInvoice extends React.Component {
 	//   )
 	// }
 
-	renderProductName(cell, row) {
+	renderProductName = (cell, row) => {
 		return (
 			<div className="d-flex align-items-center">
 				<Input type="hidden" className="mr-1">
@@ -182,7 +160,7 @@ class CreateCustomerInvoice extends React.Component {
 		)
 	}
 
-	renderDescription(cell, row, props) {
+	renderDescription = (cell, row, props) => {
 		let idx
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -214,7 +192,7 @@ class CreateCustomerInvoice extends React.Component {
 		)
 	}
 
-	renderQuantity(cell, row, props) {
+	renderQuantity = (cell, row, props) => {
 		let idx
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -246,7 +224,7 @@ class CreateCustomerInvoice extends React.Component {
 		)
 	}
 
-	renderUnitPrice(cell, row, props) {
+	renderUnitPrice = (cell, row, props) => {
 		let idx
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -277,13 +255,11 @@ class CreateCustomerInvoice extends React.Component {
 
 
 
-	renderSubTotal(cell, row) {
+	renderSubTotal = (cell, row) => {
 		return (
 			<label className="mb-0">{row.subTotal}</label>
 		)
 	}
-
-
 
 	setDate = (props, value) => {
 		const { term } = this.state
@@ -296,7 +272,7 @@ class CreateCustomerInvoice extends React.Component {
 		}
 	}
 
-	componentDidMount() {
+	componentDidMount = () => {
 		this.getInitialData();
 	}
 
@@ -307,10 +283,9 @@ class CreateCustomerInvoice extends React.Component {
 		this.props.customerInvoiceActions.getCurrencyList();
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getVatList();
-
 	}
 
-	addRow() {
+	addRow = () => {
 		const data = [...this.state.data]
 		this.setState({
 			data: data.concat({
@@ -324,11 +299,10 @@ class CreateCustomerInvoice extends React.Component {
 		}, () => {
 			this.formRef.current.setFieldValue('lineItemsString', this.state.data, true)
 			this.formRef.current.setFieldTouched(`lineItemsString[${this.state.data.length - 1}]`, false, true)
-
 		})
 	}
 
-	selectItem(e, row, name, form, field, props) {
+	selectItem = (e, row, name, form, field, props) => {
 		e.preventDefault();
 		let data = this.state.data
 		let idx
@@ -350,7 +324,7 @@ class CreateCustomerInvoice extends React.Component {
 
 	}
 
-	renderVat(cell, row, props) {
+	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
 		let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
 		let idx
@@ -362,7 +336,6 @@ class CreateCustomerInvoice extends React.Component {
 		});
 
 		return (
-
 			<Field name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Input type="select" onChange={(e) => {
@@ -381,7 +354,6 @@ class CreateCustomerInvoice extends React.Component {
 							return <option value={obj.id} key={obj.id}>{obj.vat}</option>
 						}) : ''}
 					</Input>
-
 				)}
 			/>
 		)
@@ -491,11 +463,8 @@ class CreateCustomerInvoice extends React.Component {
 			notes
 		} = data
 		const { term } = this.state
-
 		const formData = new FormData()
-
 		formData.append("referenceNumber", invoice_number !== null ? invoice_number : "");
-		//formData.append("invoiceDate", invoiceDate ? invoiceDate : null);
 		formData.append("invoiceDueDate", invoiceDueDate ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : null);
 		formData.append("invoiceDate", invoiceDate ? moment((moment(invoiceDate).format('DD/MM/YYYY')), 'DD/MM/YYYY').toDate() : null);
 		formData.append("receiptNumber", receiptNumber !== null ? receiptNumber : "");
@@ -563,15 +532,15 @@ class CreateCustomerInvoice extends React.Component {
 		})
 	}
 
-	openCustomerModal(props) {
+	openCustomerModal = (props) => {
 		this.setState({ openCustomerModal: true })
 	}
 
-	openInvoicePreviewModal(props) {
+	openInvoicePreviewModal = (props) => {
 		this.setState({ openInvoicePreviewModal: true })
 	}
 
-	getCurrentUser(data) {
+	getCurrentUser = (data) => {
 		let option
 		if (data.label || data.value) {
 			option = data
@@ -584,14 +553,14 @@ class CreateCustomerInvoice extends React.Component {
 		this.formRef.current.setFieldValue('contactId', option.value, true)
 	}
 
-	closeCustomerModal(res) {
+	closeCustomerModal = (res) => {
 		if (res) {
 			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		}
 		this.setState({ openCustomerModal: false })
 	}
 
-	closeInvoicePreviewModal(res) {
+	closeInvoicePreviewModal = (res) => {
 		this.setState({ openInvoicePreviewModal: false })
 	}
 
@@ -607,6 +576,7 @@ class CreateCustomerInvoice extends React.Component {
 			}
 		});
 	}
+
 	render() {
 		const {
 			data,

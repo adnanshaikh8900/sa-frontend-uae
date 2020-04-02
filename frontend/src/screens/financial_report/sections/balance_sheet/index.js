@@ -15,7 +15,6 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
  import 'react-select/dist/react-select.css'
  import './style.scss'
-import {BootstrapTable} from "react-bootstrap-table";
 
 const mapStateToProps = (state) => {
   return ({
@@ -492,17 +491,14 @@ class BalanceSheet extends React.Component {
       selectedType: '',
       selectedCategory: ''
     }
-
-    this.changeType = this.changeType.bind(this)
-    this.changeCategory = this.changeCategory.bind(this)
   }
 
 
-  changeType(selectedType) {
+  changeType = (selectedType) => {
     this.setState({ selectedType })
   }
 
-  changeCategory(selectedCategory) {
+  changeCategory = (selectedCategory) => {
     this.setState({ selectedCategory })
   }
 

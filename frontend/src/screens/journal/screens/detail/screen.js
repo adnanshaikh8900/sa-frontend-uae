@@ -67,34 +67,14 @@ class DetailJournal extends React.Component {
     //   paginationPosition: 'top'
     // }
     this.formRef = React.createRef();
-
-    this.initializeData = this.initializeData.bind(this);
-    this.renderActions = this.renderActions.bind(this);
-    this.renderAccount = this.renderAccount.bind(this);
-    this.renderDescription = this.renderDescription.bind(this);
-    this.renderContact = this.renderContact.bind(this);
-    this.renderVatCode = this.renderVatCode.bind(this);
-    this.renderDebits = this.renderDebits.bind(this);
-    this.renderCredits = this.renderCredits.bind(this);
-
-    this.updateAmount = this.updateAmount.bind(this);
-    this.selectItem = this.selectItem.bind(this);
-    this.addRow = this.addRow.bind(this);
-    this.deleteRow = this.deleteRow.bind(this);
-    this.deleteJournal = this.deleteJournal.bind(this);
-    this.removeJournal = this.removeJournal.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.checkedRow = this.checkedRow.bind(this);
-
     this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.journalDetailActions
         .getJournalById(this.props.location.state.id)
@@ -149,7 +129,7 @@ class DetailJournal extends React.Component {
     }
   }
 
-  renderActions(cell, rows, props) {
+  renderActions = (cell, rows, props) => {
     return (
       <Button
         size="sm"
@@ -164,7 +144,7 @@ class DetailJournal extends React.Component {
     );
   }
 
-  checkedRow() {
+  checkedRow = () => {
     // if(this.state.data.length > 0) {
     if (this.state.data.length > 0) {
       let length = this.state.data.length - 1;
@@ -179,7 +159,7 @@ class DetailJournal extends React.Component {
     }
   }
 
-  renderAccount(cell, row, props) {
+  renderAccount = (cell, row, props) => {
     const { transaction_category_list } = this.props;
     let transactionCategoryList = transaction_category_list && transaction_category_list.data && transaction_category_list.data.length
       ? [
@@ -240,7 +220,7 @@ class DetailJournal extends React.Component {
     );
   }
 
-  renderDescription(cell, row, props) {
+  renderDescription = (cell, row, props) => {
     let idx;
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -279,7 +259,7 @@ class DetailJournal extends React.Component {
     );
   }
 
-  renderContact(cell, row, props) {
+  renderContact = (cell, row, props) => {
     const { contact_list } = this.props;
     let contactList = contact_list.length
       ? [{ value: "", label: "Select Contact" }, ...contact_list]
@@ -345,7 +325,7 @@ class DetailJournal extends React.Component {
     // )
   }
 
-  renderVatCode(cell, row, props) {
+  renderVatCode = (cell, row, props) => {
     const { vat_list } = this.props;
     let vatList = vat_list.length
       ? [{ id: "", vat: "Select Vat" }, ...vat_list]
@@ -399,7 +379,7 @@ class DetailJournal extends React.Component {
     );
   }
 
-  renderDebits(cell, row, props) {
+  renderDebits = (cell, row, props) => {
     let idx;
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -438,7 +418,7 @@ class DetailJournal extends React.Component {
     );
   }
 
-  renderCredits(cell, row, props) {
+  renderCredits = (cell, row, props) => {
     let idx;
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -477,7 +457,7 @@ class DetailJournal extends React.Component {
     );
   }
 
-  addRow() {
+  addRow = () => {
     const data = [...this.state.data];
     this.setState(
       {
@@ -498,7 +478,7 @@ class DetailJournal extends React.Component {
     );
   }
 
-  selectItem(e, row, name, form, field) {
+  selectItem = (e, row, name, form, field) => {
     e.preventDefault();
     let idx;
     const data = this.state.data
@@ -529,7 +509,7 @@ class DetailJournal extends React.Component {
     }
   }
 
-  deleteRow(e, row, props) {
+  deleteRow = (e, row, props) => {
     const id = row["id"];
     let newData = [];
     e.preventDefault();
@@ -539,7 +519,7 @@ class DetailJournal extends React.Component {
     this.updateAmount(newData);
   }
 
-  updateAmount(data) {
+  updateAmount = (data) => {
     const { vat_list } = this.props;
     let subTotalDebitAmount = 0;
     let subTotalCreditAmount = 0;
@@ -581,7 +561,7 @@ class DetailJournal extends React.Component {
     });
   }
 
-  deleteJournal() {
+  deleteJournal = () => {
     this.setState({
       dialog: (
         <ConfirmDeleteModal
@@ -593,7 +573,7 @@ class DetailJournal extends React.Component {
     });
   }
 
-  removeJournal() {
+  removeJournal = () => {
     const { current_journal_id } = this.state;
     this.props.journalDetailActions
       .deleteJournal(current_journal_id)
@@ -615,13 +595,13 @@ class DetailJournal extends React.Component {
       });
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     });
   }
 
-  handleSubmit(values) {
+  handleSubmit = (values) => {
     const { data, initValue } = this.state;
 
     // const postData = { ...values, ...calData, ...{ journalLineItems: this.state.data } }

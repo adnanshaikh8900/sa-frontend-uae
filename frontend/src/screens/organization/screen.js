@@ -80,28 +80,24 @@ class Organization extends React.Component {
       },
       pictures: []
     }
-
-    this.uploadImage = this.uploadImage.bind(this);
-    this.initializeData = this.initializeData.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.organizationActions.getCountryList()
     this.props.organizationActions.getIndustryTypeList()
   }
 
-  uploadImage(picture) {
+  uploadImage = (picture) =>  {
     this.setState({
       pictures: picture,
     });
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     const {
       name,
       industryTypeCode,
@@ -148,6 +144,7 @@ class Organization extends React.Component {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
     })
   }
+  
   render() {
     const { loading } = this.state;
     const { country_list, industry_type_list } = this.props

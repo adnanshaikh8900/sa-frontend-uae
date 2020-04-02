@@ -126,7 +126,7 @@ public class ReconsilationController {
 						TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode());
 		journalLineItem1.setTransactionCategory(transactionCategory);
 		journalLineItem1.setCreditAmount(expence.getExpenseAmount());
-		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_INVOICE);
 		journalLineItem1.setReferenceId(reconsileRequestModel.getReconcileRrefId());
 		journalLineItem1.setCreatedBy(userId);
 		journalLineItem1.setJournal(journal);
@@ -135,7 +135,7 @@ public class ReconsilationController {
 		JournalLineItem journalLineItem2 = new JournalLineItem();
 		journalLineItem2.setTransactionCategory(expence.getTransactionCategory());
 		journalLineItem2.setDebitAmount(expence.getExpenseAmount());
-		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_INVOICE);
 		journalLineItem2.setReferenceId(reconsileRequestModel.getReconcileRrefId());
 		journalLineItem2.setCreatedBy(userId);
 		journalLineItem2.setJournal(journal);
@@ -143,7 +143,7 @@ public class ReconsilationController {
 
 		journal.setJournalLineItems(journalLineItemList);
 		journal.setCreatedBy(userId);
-		journal.setPostingReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_INVOICE);
 		journal.setJournalDate(LocalDateTime.now());
 		return journal;
 	}
@@ -171,15 +171,15 @@ public class ReconsilationController {
 				.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.SALE.getCode());
 		journalLineItem2.setTransactionCategory(saleTransactionCategory);
 		journalLineItem2.setDebitAmount(invoice.getTotalAmount());
-		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.INVOICE);
+		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_EXPENSE);
 		journalLineItem2.setReferenceId(invoice.getId());
 		journalLineItem2.setCreatedBy(userId);
 		journalLineItem2.setJournal(journal);
 		journalLineItemList.add(journalLineItem2);
 		journal.setJournalLineItems(journalLineItemList);
-		
+
 		journal.setCreatedBy(userId);
-		journal.setPostingReferenceType(PostingReferenceTypeEnum.INVOICE);
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_EXPENSE);
 		journal.setJournalDate(LocalDateTime.now());
 		return journal;
 	}

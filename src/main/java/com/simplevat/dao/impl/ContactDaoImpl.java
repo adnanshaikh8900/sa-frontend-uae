@@ -1,6 +1,7 @@
 package com.simplevat.dao.impl;
 
 import com.simplevat.constant.CommonConstant;
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.ContactFilterEnum;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.dao.AbstractDao;
@@ -13,6 +14,7 @@ import com.simplevat.rest.contactcontroller.ContactRequestFilterModel;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,6 +30,9 @@ import org.apache.commons.collections4.CollectionUtils;
  */
 @Repository(value = "contactDao")
 public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements ContactDao {
+
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<DropdownModel> getContactForDropdown(Integer contactType) {
@@ -69,6 +74,7 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
 		filterDataMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
+		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.CONTACT));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}

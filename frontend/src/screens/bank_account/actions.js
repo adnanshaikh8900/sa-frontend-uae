@@ -66,12 +66,14 @@ export const getBankAccountList = (obj) => {
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
-        dispatch({
-          type: BANK_ACCOUNT.BANK_ACCOUNT_LIST,
-          payload: {
-            data: Object.assign([], res.data)
-          }
-        })
+        if(!obj.paginationDisable) {
+          dispatch({
+            type: BANK_ACCOUNT.BANK_ACCOUNT_LIST,
+            payload: {
+              data: Object.assign([], res.data)
+            }
+          })
+        }
       }
       return res
     }).catch(err => {

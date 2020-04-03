@@ -11,11 +11,13 @@ export const getVatList = (obj) => {
   let vatPercentage = obj.vatPercentage ? obj.vatPercentage : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
   let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
 
   let url;
   if(obj) {
-    url = `/rest/vat/getList?name=${name}&vatPercentage=${vatPercentage}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
+    url = `/rest/vat/getList?name=${name}&vatPercentage=${vatPercentage}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
   } else {
     url=`/rest/vat/getList`
   }
@@ -26,10 +28,12 @@ export const getVatList = (obj) => {
     }
 
     return authApi(data).then(res => {
-      dispatch({
-        type: VAT.VAT_LIST,
-        payload: res.data
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: VAT.VAT_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

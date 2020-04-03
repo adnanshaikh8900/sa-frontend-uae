@@ -430,7 +430,6 @@ class SupplierInvoice extends React.Component {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
               this.csvLink.current.link.click()
-              this.initializeData();
             }, 0)
           });
         }
@@ -521,7 +520,7 @@ class SupplierInvoice extends React.Component {
                           </Button>
                       {view && <CSVLink
                         data={csvData}
-                        filename={'supplier_invoice.csv'}
+                        filename={'SupplierInvoice.csv'}
                         className="hidden"
                         ref={this.csvLink}
                         target="_blank"

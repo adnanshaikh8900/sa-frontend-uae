@@ -35,12 +35,14 @@ export const getCustomerInvoiceList = (postObj) => {
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
-        dispatch({
-          type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
-          payload: {
-            data: res.data
-          }
-        })
+        if(!postObj.paginationDisable) {
+          dispatch({
+            type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
+            payload: {
+              data: res.data
+            }
+          })
+        }
         return res
       }
     }).catch(err => {

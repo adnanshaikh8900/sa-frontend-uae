@@ -26,12 +26,13 @@ export const getUserList = (obj) => {
       url: url
     }
 
-    return authApi(data).then(res => {
-
-      dispatch({
-        type: USER.USER_LIST,
-        payload: res.data
-      })
+    return authApi(data).then(res => {  
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: USER.USER_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

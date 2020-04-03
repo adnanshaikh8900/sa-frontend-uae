@@ -122,10 +122,12 @@ export const getPaymentList = (obj) => {
     }
 
     return authApi(data).then(res => {
-      dispatch({
-        type: PAYMENT.PAYMENT_LIST,
-        payload: res
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: PAYMENT.PAYMENT_LIST,
+          payload: res
+        })
+      }
       return res
     }).catch(err => {
       throw err

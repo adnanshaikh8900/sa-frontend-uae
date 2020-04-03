@@ -36,12 +36,14 @@ export const getSupplierInvoiceList = (postObj) => {
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
-        dispatch({
-          type: SUPPLIER_INVOICE.SUPPLIER_INVOICE_LIST,
-          payload: {
-            data: res.data
-          }
-        })
+        if(!postObj.paginationDisable) {
+          dispatch({
+            type: SUPPLIER_INVOICE.SUPPLIER_INVOICE_LIST,
+            payload: {
+              data: res.data
+            }
+          })
+        }
         return res
       }
     }).catch(err => {

@@ -70,6 +70,9 @@ class Product extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -99,7 +102,11 @@ class Product extends React.Component {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.productActions.getProductList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
@@ -112,6 +119,12 @@ class Product extends React.Component {
 
   goToDetail = (row) => {
     this.props.history.push('/admin/master/product/detail', { id: row.id })
+  }
+
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
   }
 
   onRowSelect = (row, isSelected, e) => {
@@ -279,7 +292,7 @@ class Product extends React.Component {
                           </Button>
                            {view && <CSVLink
                             data={csvData}
-                            filename={'product.csv'}
+                            filename={'Product.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"

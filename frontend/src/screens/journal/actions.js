@@ -27,10 +27,12 @@ export const getJournalList = (obj) => {
     }
 
     return authApi(data).then(res => {
-      dispatch({
-        type: JOURNAL.JOURNAL_LIST,
-        payload: res
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: JOURNAL.JOURNAL_LIST,
+          payload: res
+        })
+      }
       return res
     }).catch(err => {
       throw err

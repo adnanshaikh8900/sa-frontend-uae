@@ -73,14 +73,6 @@ class DetailExpense extends React.Component {
       view: false
     }
 
-    this.initializeData = this.initializeData.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.deleteExpense = this.deleteExpense.bind(this)
-    this.removeExpense = this.removeExpense.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    this.handleFileChange = this.handleFileChange.bind(this)
-
-
     this.file_size = 1024000;
     this.regEx = /^[0-9\b]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/
@@ -96,14 +88,13 @@ class DetailExpense extends React.Component {
     ];
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     
     if (this.props.location.state && this.props.location.state.expenseId) {
-      console.log(this.props.location.state)
       this.props.expenseActions.getVatList();
       this.props.expenseDetailActions.getExpenseDetail(this.props.location.state.expenseId).then(res => {
         if (res.status === 200) {
@@ -152,7 +143,7 @@ class DetailExpense extends React.Component {
     }
   }
 
-  handleSubmit(data, resetValue) {
+  handleSubmit = (data, resetValue) => {
     const { current_expense_id } = this.state
     const {
       payee,
@@ -212,7 +203,7 @@ class DetailExpense extends React.Component {
   }
 
 
-  deleteExpense() {
+  deleteExpense = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -222,7 +213,7 @@ class DetailExpense extends React.Component {
     })
   }
 
-  removeExpense() {
+  removeExpense = () => {
     const { current_expense_id } = this.state
     this.props.expenseDetailActions.deleteExpense(current_expense_id).then(res => {
       if (res.status === 200) {
@@ -235,7 +226,7 @@ class DetailExpense extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
@@ -247,7 +238,7 @@ class DetailExpense extends React.Component {
     })
   }
 
-  handleFileChange(e, props) {
+  handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];

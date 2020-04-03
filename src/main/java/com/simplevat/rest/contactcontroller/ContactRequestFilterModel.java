@@ -1,4 +1,4 @@
-package com.simplevat.rest.contactController;
+package com.simplevat.rest.contactcontroller;
 
 import com.simplevat.rest.PaginationModel;
 import lombok.Data;

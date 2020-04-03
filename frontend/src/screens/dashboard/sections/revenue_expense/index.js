@@ -44,14 +44,12 @@ class RevenueAndExpense extends Component {
 
   constructor(props) {
     super(props);
-
-    this.toggle = this.toggle.bind(this);
     this.state = {
       activeTab: new Array(4).fill('0'),
     };
   }
 
-  toggle(tabPane, tab) {
+  toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
     newArray[tabPane] = tab
     this.setState({
@@ -59,7 +57,7 @@ class RevenueAndExpense extends Component {
     });
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.DashboardActions.getRevenuesGraphData('2019-01-01', '2019-05-01')
     this.props.DashboardActions.getExpensesGraphData('2019-01-01', '2019-05-01')
   }

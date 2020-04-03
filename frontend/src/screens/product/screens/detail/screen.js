@@ -62,25 +62,16 @@ class DetailProduct extends React.Component {
       current_product_id: null
     }
 
-    this.initializeData = this.initializeData.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.showWarehouseModal = this.showWarehouseModal.bind(this)
-    this.closeWarehouseModal = this.closeWarehouseModal.bind(this)
-    this.deleteProduct = this.deleteProduct.bind(this)
-    this.removeProduct = this.removeProduct.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-
 	  this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.productActions.getProductCategoryList();
       this.props.productActions.getProductVatCategoryList();
@@ -111,7 +102,7 @@ class DetailProduct extends React.Component {
     }
   }
 
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -121,7 +112,7 @@ class DetailProduct extends React.Component {
     })
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     const { current_product_id } = this.state
     const { 
       productName , 
@@ -154,16 +145,16 @@ class DetailProduct extends React.Component {
     })
   }
 
-  showWarehouseModal() {
+  showWarehouseModal = () => {
     this.setState({ openWarehouseModal: true })
   }
   // Cloase Confirm Modal
-  closeWarehouseModal() {
+  closeWarehouseModal = () => {
     this.setState({ openWarehouseModal: false });
     this.props.productActions.getProductWareHouseList()
   }
 
-  deleteProduct() {
+  deleteProduct = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -173,7 +164,7 @@ class DetailProduct extends React.Component {
     })
   }
 
-  removeProduct() {
+  removeProduct = () => {
     const {current_product_id} = this.state
     this.props.detailProductActions.deleteProduct(current_product_id).then(res=>{
       if(res.status === 200) {
@@ -184,7 +175,7 @@ class DetailProduct extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })

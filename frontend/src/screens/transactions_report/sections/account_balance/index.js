@@ -77,14 +77,10 @@ class AccountBalances extends React.Component {
       filter_account : '',
       startDate : '',
       endDate : ''
-
     }
-
-    this.changeType = this.changeType.bind(this)
-    this.changeCategory = this.changeCategory.bind(this)
   }
 
-  componentDidMount(){
+  componentDidMount = () =>{
     this.getAccountBalanceData()
     
   }
@@ -97,11 +93,11 @@ class AccountBalances extends React.Component {
   }
 
 
-  changeType(selectedType) {
+  changeType = (selectedType) => {
     this.setState({ selectedType })
   }
 
-  changeCategory(selectedCategory) {
+  changeCategory = (selectedCategory) => {
     this.setState({ selectedCategory })
   }
 
@@ -124,11 +120,6 @@ class AccountBalances extends React.Component {
   }
 
   render() {
-
-
-  
-
-
     const account_balance_table = this.props.account_balance_report ?
     this.props.account_balance_report.map(account => ({
       account : account.bankAccount,

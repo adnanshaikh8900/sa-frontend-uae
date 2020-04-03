@@ -1,6 +1,5 @@
 package com.simplevat.entity;
 
-import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.time.LocalDateTime;

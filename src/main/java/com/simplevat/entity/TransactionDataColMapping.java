@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Basic;
@@ -22,7 +23,13 @@ import lombok.Data;
 @Entity
 @Table(name = "TRANSACTION_DATA_COL_MAPPING")
 @Data
-public class TransactionDataColMapping {
+public class TransactionDataColMapping implements Serializable{
+
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,10 +12,6 @@ public enum CurrencyFilterEnum {
 	@Getter
 	String condition;
 
-	private CurrencyFilterEnum(String dbColumnName) {
-		this.dbColumnName = dbColumnName;
-	}
-
 	private CurrencyFilterEnum(String dbColumnName, String condition) {
 		this.dbColumnName = dbColumnName;
 		this.condition = condition;

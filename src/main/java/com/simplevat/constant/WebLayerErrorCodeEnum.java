@@ -2,17 +2,18 @@ package com.simplevat.constant;
 
 public enum WebLayerErrorCodeEnum {
 
-	TEST1("Some Test 1",false), TEST2("Some Test2", true);
-	WebLayerErrorCodeEnum(String errorDescription_,boolean businessException_) {
-		this.errorDescription = errorDescription_;
-		this.businessException = businessException_;
+	TEST1("Some Test 1", false), TEST2("Some Test2", true);
+
+	WebLayerErrorCodeEnum(String errorDescription, boolean businessException) {
+		this.errorDescription = errorDescription;
+		this.businessException = businessException;
 	}
 
 	public String getErrorDescription() {
 		return errorDescription;
 	}
 
-	public void setErrorDescription(String errorDescription) {
+	void setErrorDescription(String errorDescription) {
 		this.errorDescription = errorDescription;
 	}
 
@@ -20,7 +21,7 @@ public enum WebLayerErrorCodeEnum {
 		return businessException;
 	}
 
-	public void setBusinessException(boolean businessException) {
+	void setBusinessException(boolean businessException) {
 		this.businessException = businessException;
 	}
 

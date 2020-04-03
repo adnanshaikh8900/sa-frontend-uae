@@ -55,12 +55,6 @@ class UsersRoles extends React.Component {
         {name: 'user', email: 'user@user.com', avatar: 'assets/images/avatars/6.jpg', role: 'Employee', status: 'active'}
       ]
     }
-
-    this.closeInviteUserModal = this.closeInviteUserModal.bind(this)
-    this.showInviteUserModal = this.showInviteUserModal.bind(this)
-    this.getUserName = this.getUserName.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
-
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top'
@@ -74,24 +68,24 @@ class UsersRoles extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
   }
 
   // Show Invite User Modal
-  showInviteUserModal() {
+  showInviteUserModal = () => {
     this.setState({ openInviteUserModal: true })
   }
   // Cloase Confirm Modal
-  closeInviteUserModal() {
+  closeInviteUserModal = () => {
     this.setState({ openInviteUserModal: false })
   }
 
-  goToDetail(row) {
+  goToDetail = (row) => {
     this.showInviteUserModal()
   }
 
 
-  getUserName(cell, row) {
+  getUserName = (cell, row) => {
     const avatar = require('assets/images/avatars/6.jpg')
 
     return(<div className="d-flex">

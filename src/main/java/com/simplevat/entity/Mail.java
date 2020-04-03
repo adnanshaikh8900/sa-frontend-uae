@@ -22,12 +22,12 @@ import java.util.Date;
 
 @Data
 public class Mail implements Serializable {
-    public String from;
-    public String fromName;
-    public String[] to;
-    public String[] bcc;
-    public String[] cc;
-    public String subject;
-    public String body;
-    public Date date;
+    private String from;
+    private String fromName;
+    private String[] to;
+    private String[] bcc;
+    private String[] cc;
+    private String subject;
+    private String body;
+    private Date date;
 }

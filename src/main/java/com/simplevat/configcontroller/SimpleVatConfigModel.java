@@ -1,4 +1,4 @@
-package com.simplevat.configController;
+package com.simplevat.configcontroller;
 
 import lombok.Data;
 

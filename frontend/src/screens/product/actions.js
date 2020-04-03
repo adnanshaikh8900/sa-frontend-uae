@@ -4,10 +4,18 @@ import {
 } from 'utils'
 
 export const getProductList = (obj) => {
+  let name = obj.name ? obj.name : '';
+  let productCode = obj.productCode ? obj.productCode : '';
+  let vatPercentage = obj.vatPercentage ? obj.vatPercentage : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+
+
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/product/getList?name=${obj.name}&productCode=${obj.productCode}&vatPercentage=${obj.vatPercentage}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+      url: `/rest/product/getList?name=${name}&productCode=${productCode}&vatPercentage=${vatPercentage}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
     }
     return authApi(data).then(res => {
       dispatch({

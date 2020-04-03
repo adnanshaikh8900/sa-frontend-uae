@@ -21,9 +21,6 @@ import lombok.Setter;
 @Setter
 public class BankAccountRestModel {
 
-//    public BankAccountModel() {
-//        this.bankAccountId = 0;
-//    }
     private Integer bankAccountId;
 
     private String bankAccountName;

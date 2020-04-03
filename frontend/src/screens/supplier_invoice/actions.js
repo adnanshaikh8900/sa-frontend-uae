@@ -6,18 +6,30 @@ import moment from 'moment'
 
 
 export const getSupplierInvoiceList = (postObj) => {
-    const { supplierId, contactType , referenceNumber , amount, status , pageNo , pageSize , invoiceDate, invoiceDueDate,order,sortingCol} = postObj
+  let supplierId = postObj.supplierId ? postObj.supplierId : ''
+  let referenceNumber =  postObj.referenceNumber ? postObj.referenceNumber : ''
+  let invoiceDate = postObj.invoiceDate ?  postObj.invoiceDate : ''
+  let invoiceDueDate = postObj.invoiceDueDate ?   postObj.invoiceDueDate : ''
+  let amount =  postObj.amount ? postObj.amount : ''
+  let status =  postObj.status ? postObj.status : ''
+  let contactType = 1;//postObj.contactType ? postObj.contactType : ''  
+  let pageNo = postObj.pageNo ? postObj.pageNo : '';
+  let pageSize = postObj.pageSize ? postObj.pageSize : '';
+  let order = postObj.order ? postObj.order : '';
+  let sortingCol = postObj.sortingCol ? postObj.sortingCol : '';
+  let paginationDisable = postObj.paginationDisable ? postObj.paginationDisable : false
+
   return (dispatch) => {
-    let param = `rest/invoice/getList?contact=${supplierId}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}`
-    if(invoiceDate) {
+    let param = `rest/invoice/getList?contact=${supplierId}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
+    if (invoiceDate) {
       let date = moment(invoiceDate).format('DD-MM-YYYY')
-      param = param +`&invoiceDate=${date}`
+      param = param + `&invoiceDate=${date}`
     }
-    if(invoiceDueDate) {
+    if (invoiceDueDate) {
       let date = moment(invoiceDueDate).format('DD-MM-YYYY')
       param = param + `&invoiceDueDate=${date}`
     }
-    let data ={
+    let data = {
       method: 'get',
       url: param
       // data: postObj
@@ -49,7 +61,7 @@ export const getProjectList = () => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.PROJECT_LIST,
-          payload:  {
+          payload: {
             data: res.data
           }
         })
@@ -59,20 +71,20 @@ export const getProjectList = () => {
     })
   }
 }
- 
+
 
 export const getContactList = (nameCode) => {
   let contactType = nameCode ? nameCode : ""
   return (dispatch) => {
     let data = {
-      method: 'get', 
+      method: 'get',
       url: `rest/contact/getContactsForDropdown?contactType=${contactType}`
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.CONTACT_LIST,
-          payload:  {
+          payload: {
             data: res.data
           }
         })
@@ -114,7 +126,7 @@ export const getCurrencyList = () => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.CURRENCY_LIST,
-          payload:  {
+          payload: {
             data: res.data
           }
         })
@@ -137,7 +149,7 @@ export const getVatList = () => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.VAT_LIST,
-          payload:  {
+          payload: {
             data: res.data
           }
         })

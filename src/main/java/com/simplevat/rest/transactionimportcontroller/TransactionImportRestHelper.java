@@ -303,7 +303,7 @@ public class TransactionImportRestHelper {
 					case CR_AMOUNT:
 					case DR_AMOUNT:
 					case AMOUNT:
-					
+
 						MathContext mc = new MathContext(4); // 2 precision
 
 						// need to create enum
@@ -321,8 +321,8 @@ public class TransactionImportRestHelper {
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
 								if (!data.equals("-")) {
-									BigDecimal debitAmt = new BigDecimal(Float.valueOf(data));
-									if (debitAmt.compareTo(BigDecimal.valueOf(0)) == 1) {
+									BigDecimal debitAmt = BigDecimal.valueOf((Float.valueOf(data)));
+									if (debitAmt.compareTo(BigDecimal.ZERO) == 1) {
 										trnx.setTransactionAmount(debitAmt);
 										currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
 										trnx.setDebitCreditFlag('D');
@@ -332,8 +332,8 @@ public class TransactionImportRestHelper {
 							if (dbColEnum.equals(TransactionEnum.CR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.CR_AMOUNT.getDisplayName());
 								if (!data.equals("-")) {
-									BigDecimal creditAmt = new BigDecimal(Float.valueOf(data));
-									if (creditAmt.compareTo(BigDecimal.valueOf(0)) == 1) {
+									BigDecimal creditAmt = BigDecimal.valueOf(Float.valueOf(data));
+									if (creditAmt.compareTo(BigDecimal.ZERO) == 1) {
 										trnx.setTransactionAmount(creditAmt);
 										currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
 										trnx.setDebitCreditFlag('C');

@@ -118,21 +118,18 @@ class ReportsFiling extends React.Component {
       selectedVat: '',
       selectedStatus: ''
     }
-
-    this.changeVat = this.changeVat.bind(this)
-    this.changeStatus = this.changeStatus.bind(this)
   }
 
 
-  changeVat(selectedVat) {
+  changeVat = (selectedVat) => {
     this.setState({ selectedVat })
   }
 
-  changeStatus(selectedStatus) {
+  changeStatus = (selectedStatus) => {
     this.setState({ selectedStatus })
   }
 
-  getAction(cell, row) {
+  getAction = (cell, row) => {
     return (<button className="btn">Detail</button>)
   }
 

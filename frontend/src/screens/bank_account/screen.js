@@ -18,6 +18,7 @@ import {
 import Select from 'react-select'
 
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import { CSVLink } from "react-csv";
 
 import {
   Loader,
@@ -67,17 +68,19 @@ class BankAccount extends React.Component {
         transactionDate: '',
         accountNumber: '',
         currencyCode: '',
-      }
+      },
+      csvData: [],
+      view: false
     }
 
     this.options = {
       paginationPosition: 'top',
       page: 1,
       sizePerPage: 10,
-      onSizePerPageList: this.onSizePerPageList,
-      onPageChange: this.onPageChange, 
       sortName: '',
       sortOrder: '',
+      onSizePerPageList: this.onSizePerPageList,
+      onPageChange: this.onPageChange,
       onSortChange: this.sortColumn
     }
 
@@ -88,11 +91,13 @@ class BankAccount extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
 
-  componentDidMount() {
+  componentDidMount = () => {
+    this.props.bankAccountActions.getAccountTypeList()
+    this.props.bankAccountActions.getCurrencyList()
     this.initializeData()
   }
 
@@ -106,12 +111,10 @@ class BankAccount extends React.Component {
       order: this.options.sortOrder ? this.options.sortOrder : '',
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
-    const postData = { ...filterData, ...paginationData , ...sortingData}
+    const postData = { ...filterData, ...paginationData, ...sortingData }
 
     this.props.bankAccountActions.getBankAccountList(postData).then(res => {
       if (res.status === 200) {
-        this.props.bankAccountActions.getAccountTypeList()
-        this.props.bankAccountActions.getCurrencyList()
         this.setState({ loading: false });
       }
     }).catch(err => {
@@ -120,6 +123,7 @@ class BankAccount extends React.Component {
     })
 
   }
+
 
   inputHandler = (name, val) => {
     this.setState({
@@ -175,20 +179,20 @@ class BankAccount extends React.Component {
   //   return data
   // }
 
-  renderAccountType  = (cell, row) => {
+  renderAccountType = (cell, row) => {
     if (row.bankAccountTypeName) {
       let data = null
-      switch (row.bankAccountTypeName ) {
+      switch (row.bankAccountTypeName) {
         case 'Saving':
-        case 'saving':  
+        case 'saving':
           data = <label className="badge badge-primary text-white mb-0">{row.bankAccountTypeName}</label>
           break
         case 'Current':
-        case 'current':  
+        case 'current':
           data = <label className="badge badge-info text-white mb-0">{row.bankAccountTypeName}</label>
           break
         case 'Checking':
-        case 'checking':  
+        case 'checking':
           data = <label className="badge badge-warning text-white mb-0">{row.bankAccountTypeName}</label>
           break
         case 'Credit Card':
@@ -253,27 +257,13 @@ class BankAccount extends React.Component {
     }
   }
 
-  renderCurrency = (cell, row) => {
-    if (
-      row.currancyName
-    ) {
-      return (
-        <label className="badge badge-primary mb-0">{row.currancyName}</label>
-      )
-    } else {
-      return (
-        <label className="badge badge-danger mb-0">No Specified</label>
-      )
-    }
-  }
-
-  sortColumn = (sortName,sortOrder) => {
+  sortColumn = (sortName, sortOrder) => {
     this.options.sortName = sortName
     this.options.sortOrder = sortOrder
     this.initializeData()
-}
+  }
 
-  renderBalance(cell,row){
+  renderBalance(cell, row) {
     return row.openingBalance ? (row.openingBalance).toFixed(2) : ''
   }
 
@@ -282,7 +272,7 @@ class BankAccount extends React.Component {
       <div>
         <ButtonDropdown
           isOpen={this.state.actionButtons[row.bankAccountId]}
-          toggle={(e) => {e.preventDefault(); this.toggleActionButton(row.bankAccountId)}}
+          toggle={(e) => { e.preventDefault(); this.toggleActionButton(row.bankAccountId) }}
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
@@ -385,6 +375,7 @@ class BankAccount extends React.Component {
       selected_id_list: temp_list
     })
   }
+
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
@@ -449,12 +440,33 @@ class BankAccount extends React.Component {
     }
   }
 
+  getCsvData = () => {
+       if(this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.bankAccountActions.getBankAccountList(obj).then(res => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
   render() {
 
     const {
       loading,
       filterData,
-      dialog
+      dialog,
+      csvData,
+      view
     } = this.state
     const {
       account_type_list,
@@ -493,11 +505,17 @@ class BankAccount extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                           {view && <CSVLink
+                            data={csvData}
+                            filename={'BankAccount.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -577,7 +595,7 @@ class BankAccount extends React.Component {
                           version="4"
                           hover
                           // totalSize={bank_account_list ? bank_account_list.length : 0}
-                          pagination = {bank_account_list && bank_account_list.data && bank_account_list.data.length > 0 ? true : false}
+                          pagination={bank_account_list && bank_account_list.data && bank_account_list.data.length > 0 ? true : false}
                           remote
                           keyField="bankAccountId"
                           multiColumnSort

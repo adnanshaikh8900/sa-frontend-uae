@@ -8,13 +8,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.utils.OSValidator;
 
 @Configuration
 public class StaticResourceConfiguration implements WebMvcConfigurer {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(ExpenseRestHelper.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(StaticResourceConfiguration.class);
 
 	@Value("${simplevat.filelocation}")
 	private String fileLocationWindows;

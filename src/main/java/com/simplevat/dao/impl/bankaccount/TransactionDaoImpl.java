@@ -11,26 +11,21 @@ import java.util.List;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.simplevat.dao.AbstractDao;
-import com.simplevat.dao.bankaccount.BankAccountDao;
 import com.simplevat.dao.bankaccount.TransactionDao;
-import com.simplevat.dao.bankaccount.ChartOfAccountDao;
-import com.simplevat.entity.Invoice;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionView;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.utils.CommonUtil;
 import com.simplevat.utils.DateUtils;
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
 import javax.persistence.TypedQuery;
@@ -38,12 +33,7 @@ import javax.persistence.TypedQuery;
 @Repository
 public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implements TransactionDao {
 
-	@Autowired
-	private ChartOfAccountDao transactionTypeDao;
-
-	@Autowired
-	private BankAccountDao bankAccountDao;
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionDaoImpl.class);
 	@Autowired
 	private DateUtils dateUtils;
 
@@ -71,7 +61,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			}
 			cashInData = query.getResultList();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Erroe is ", e);
 		}
 		return cashInData;
 	}
@@ -94,7 +84,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			}
 			cashOutData = query.getResultList();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Erroe is ", e);
 		}
 		return cashOutData;
 	}
@@ -125,7 +115,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -210,7 +200,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -223,7 +213,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -237,7 +227,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -250,7 +240,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -263,7 +253,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -275,7 +265,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -288,7 +278,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionViewList != null && !transactionViewList.isEmpty()) {
 			return transactionViewList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -301,13 +291,12 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionViewList != null && !transactionViewList.isEmpty()) {
 			return transactionViewList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
 	public List<TransactionView> getTransactionViewList(int pageSize, Integer bankAccountId, int rowCount,
 			Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder) {
-		System.out.println("sortOrder==" + sortOrder);
 		StringBuilder builder = new StringBuilder("");
 		StringBuilder filterBuilder = new StringBuilder("");
 		for (String filedName : filters.keySet()) {
@@ -428,7 +417,6 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	@Override
 	public List<Transaction> getParentTransactionListByRangeAndBankAccountId(int pageSize, Integer bankAccountId,
 			int rowCount, Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder) {
-		System.out.println("sortOrder==" + sortOrder);
 		StringBuilder builder = new StringBuilder("");
 		StringBuilder filterBuilder = new StringBuilder("");
 		if (transactionStatus != null) {
@@ -460,7 +448,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -475,7 +463,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -505,14 +493,5 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				.condition(filter.getCondition()).value(value).build()));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
-	}
-
-	@Override
-	public Transaction getForDashBoardCashFlow() {
-		// List<Object> transactions =
-		// getEntityManager().createNamedQuery("getForDashBoardCashFlow").getResultList();
-
-		return null;// transactions != null && !transactions.isEmpty() ? transactions.get(0) : null;
-
 	}
 }

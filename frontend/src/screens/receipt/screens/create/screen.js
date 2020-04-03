@@ -64,21 +64,18 @@ class CreateReceipt extends React.Component {
 
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.initializeData = this.initializeData.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.receiptActions.getContactList();
     this.props.receiptActions.getInvoiceList();
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     this.props.receiptCreateActions.createReceipt(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Receipt Created Successfully!')

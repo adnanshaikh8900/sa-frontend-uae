@@ -64,17 +64,10 @@ class CustomerReport extends React.Component {
       currentData : {},
       currentDate : {}
     }
-
-    this.handleChange = this.handleChange.bind(this)
   }
-
-
-
-  componentDidMount(){
-    this.getCustomerInvoice()
-    
+  componentDidMount = () =>{
+    this.getCustomerInvoice() 
   }
-
   getCustomerInvoice = () => {
     this.props.customerReportData.getCustomerInvoiceReport();
     this.props.customerReportData.getContactNameList();
@@ -84,7 +77,7 @@ class CustomerReport extends React.Component {
   //   this.setState({ selectedOption })
   // }
 
-  getInvoiceStatus(cell, row) {
+  getInvoiceStatus = (cell, row) => {
     return(<Badge color={cell === 'Paid'?'success':'danger'}>{cell}</Badge>)
   }
 
@@ -111,12 +104,7 @@ class CustomerReport extends React.Component {
     // alert(picker.minDate, picker.maxDate)
   }
 
-
-
-
-
-
-  handleChange(e,picker) {
+  handleChange = (e,picker) => {
     let startingDate = picker ? moment(picker.startDate._d).format('L') : ''
     let endingDate = picker ? moment(picker.endDate._d).format('L') : ''
     this.setState({ startDate : startingDate ,endDate : endingDate })

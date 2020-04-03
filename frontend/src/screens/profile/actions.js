@@ -163,7 +163,6 @@ export const getRoleList = (obj) => {
 }
 
 export const getStateList = (countryCode,type) => {
-  console.log(type)
   let types = type === 'invoicing' ? 'INVOICING_STATE_LIST' : 'COMPANY_STATE_LIST'
   return (dispatch) => {
     let data = {

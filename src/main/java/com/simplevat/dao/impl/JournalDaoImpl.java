@@ -1,7 +1,6 @@
 package com.simplevat.dao.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -50,11 +49,5 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 		resposne.setCount(this.getResultCount(dbFilters));
 		resposne.setData(this.executeQuery(dbFilters, paginationModel));
 		return resposne;
-	}
-
-	@Override
-	public List<Journal> getJornalList(Date startDate, Date endDate, PaginationModel paginationModel) {
-
-		return null;
 	}
 }

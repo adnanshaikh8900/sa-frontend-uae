@@ -53,24 +53,14 @@ class DetailChartAccount extends React.Component {
       dialog: false,
       currentData: {}
     }
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this)
-    this.initializeData = this.initializeData.bind(this)
-    this.success = this.success.bind(this)
-    this.deleteChartAccount = this.deleteChartAccount.bind(this)
-    this.removeChartAccount = this.removeChartAccount.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-
     this.regExAlpha = /^[a-zA-Z]+$/
-
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
       this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then(res => {
@@ -95,7 +85,7 @@ class DetailChartAccount extends React.Component {
     }
   }
 
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -105,13 +95,13 @@ class DetailChartAccount extends React.Component {
     })
   }
   // Show Success Toast
-  success(msg) {
+  success = (msg) => {
     toast.success(msg, {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
-  deleteChartAccount() {
+  deleteChartAccount = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -121,7 +111,7 @@ class DetailChartAccount extends React.Component {
     })
   }
 
-  removeChartAccount() {
+  removeChartAccount = () => {
     const id = this.props.location.state.id;
     this.props.detailChartOfAccontActions.deleteChartAccount(id).then(res => {
       if (res.status === 200) {
@@ -133,14 +123,14 @@ class DetailChartAccount extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
   // Create or Edit Vat
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const id = this.props.location.state.id
     const postData = Object.assign(data, { transactionCategoryId: id })
     this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then(res => {
@@ -154,7 +144,7 @@ class DetailChartAccount extends React.Component {
     })
   }
 
-  renderOptions = options => {
+  renderOptions = (options) => {
     return options.map(option => {
       return (
         <option key={option.value} value={option.value}>

@@ -69,30 +69,27 @@ class CreateUser extends React.Component {
       userPhotoFile: [],
       showIcon: false,
     }
-    this.uploadImage = this.uploadImage.bind(this);
-    this.initializeData = this.initializeData.bind(this)
-
     this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.userActions.getRoleList()
     this.props.userActions.getCompanyTypeList()
     this.setState({ showIcon: false })
   }
 
-  uploadImage(picture, file) {
+  uploadImage = (picture, file) => {
     this.setState({
       userPhoto: picture,
       userPhotoFile: file
     });
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const {
       firstName,
       lastName,

@@ -13,7 +13,6 @@ import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 
 import java.util.Map;
 
@@ -71,7 +70,5 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
 
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,
 			PaginationModel paginationModel);
-
-	public Transaction getForDashBoardCashFlow();
 
 }

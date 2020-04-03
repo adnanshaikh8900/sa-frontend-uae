@@ -1,7 +1,6 @@
 package com.simplevat.dao.impl;
 
 import com.simplevat.dao.ProjectDao;
-import com.simplevat.entity.Product;
 import com.simplevat.entity.Project;
 
 import org.springframework.stereotype.Repository;
@@ -38,9 +37,7 @@ public class ProjectDaoImpl extends AbstractDao<Integer, Project> implements Pro
 
 	@Override
 	public List<DropdownModel> getProjectsForDropdown() {
-		List<DropdownModel> empSelectItemModels = getEntityManager()
-				.createNamedQuery("projectsForDropdown", DropdownModel.class).getResultList();
-		return empSelectItemModels;
+		return getEntityManager().createNamedQuery("projectsForDropdown", DropdownModel.class).getResultList();
 	}
 
 	@Override

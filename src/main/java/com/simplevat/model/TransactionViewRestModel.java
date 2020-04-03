@@ -19,35 +19,38 @@ import lombok.Data;
 @Data
 public class TransactionViewRestModel implements Serializable {
 
-    private int transactionId;
-    private BigDecimal currentBalance;
-    private Character debitCreditFlag;
-    private Integer entryType;
-    private Integer referenceId;
-    private Integer referenceType;
-    private BigDecimal transactionAmount;
-    private Date transactionDate;
-    private String transactionDescription;
-    private Integer bankAccountId;
-    private Integer parentTransaction;
-    private String transactionCategoryName;
-    private String transactionTypeName;
-    private Integer explanationStatusCode;
-    private String explanationStatusName;
-    private String referenceName;
-    private BigDecimal dueAmount;
-    private String currencySymbol;
-    private String contactName;
-    private Date dueOn;
-    private List<TransactionViewRestModel> childTransactionList = new ArrayList<>();
-    private boolean expandIcon;
-    private String suggestedTransactionString;
+	private static final long serialVersionUID = 1L;
 
-    public TransactionViewRestModel() {
-    }
+	private int transactionId;
+	private BigDecimal currentBalance;
+	private Character debitCreditFlag;
+	private Integer entryType;
+	private Integer referenceId;
+	private Integer referenceType;
+	private BigDecimal transactionAmount;
+	private Date transactionDate;
+	private String transactionDescription;
+	private Integer bankAccountId;
+	private Integer parentTransaction;
+	private String transactionCategoryName;
+	private String transactionTypeName;
+	private Integer explanationStatusCode;
+	private String explanationStatusName;
+	private String referenceName;
+	private BigDecimal dueAmount;
+	private String currencySymbol;
+	private String contactName;
+	private Date dueOn;
+	private List<TransactionViewRestModel> childTransactionList = new ArrayList<>();
+	private boolean expandIcon;
+	private String suggestedTransactionString;
 
-    public boolean isParent() {
-        return parentTransaction == null;
-    }
+	public TransactionViewRestModel() {
+		// For removing sonar error
+	}
+
+	public boolean isParent() {
+		return parentTransaction == null;
+	}
 
 }

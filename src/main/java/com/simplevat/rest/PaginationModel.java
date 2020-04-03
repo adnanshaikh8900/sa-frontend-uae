@@ -19,6 +19,7 @@ public class PaginationModel {
 	private Integer pageSize;
 	private String order;
 	private String sortingCol;
+	private boolean paginationDisable;
 
 	public String getOrder() {
 		if (order == null || (order != null && order.isEmpty())) {

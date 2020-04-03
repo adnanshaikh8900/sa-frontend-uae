@@ -19,10 +19,6 @@ public enum BankAccounrFilterEnum {
 	@Getter
 	String condition;
 
-	private BankAccounrFilterEnum(String dbColumnName) {
-		this.dbColumnName = dbColumnName;
-	}
-
 	private BankAccounrFilterEnum(String dbColumnName, String condition) {
 		this.dbColumnName = dbColumnName;
 		this.condition = condition;

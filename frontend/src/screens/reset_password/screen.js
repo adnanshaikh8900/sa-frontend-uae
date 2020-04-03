@@ -37,11 +37,9 @@ class ResetPassword extends React.Component {
       alert: null
     };
     this.formikRef = React.createRef();
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.displayMsg = this.displayMsg.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     if (this.props && this.props.location && this.props.location.search) {
       const query = new URLSearchParams(this.props.location.search);
       const token = query.get('token')
@@ -52,7 +50,7 @@ class ResetPassword extends React.Component {
   }
 
   // Create or Contact
-  handleSubmit = (obj,) => {
+  handleSubmit = (obj) => {
     let data = {
       method: 'post',
       url: '/public/forgotPassword',
@@ -70,7 +68,6 @@ class ResetPassword extends React.Component {
         }, 1500);
       })
     }).catch(err => {
-      console.log(err)
       this.setState({
         alert: <Message
           type="danger"
@@ -80,8 +77,7 @@ class ResetPassword extends React.Component {
     })
   }
 
-  displayMsg(msg) {
-    console.log(msg)
+  displayMsg = (msg) => {
     toast.error(msg, {
       position: toast.POSITION.TOP_RIGHT
     });
@@ -149,7 +145,6 @@ class ResetPassword extends React.Component {
                                           {props.errors.username}
                                         </div>
                                       )}
-                                      {console.log(props.errors)}
                                     </FormGroup>
                                   </Col>
                                 </Row>

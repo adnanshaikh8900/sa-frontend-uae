@@ -4,11 +4,18 @@ import {
 } from 'utils'
 
 export const getProjectList = (obj) => {
+  let projectName = obj.projectName ? obj.projectName : '';
+  let expenseBudget = obj.expenseBudget ? obj.expenseBudget : '';
+  let revenueBudget = obj.revenueBudget ? obj.revenueBudget : '';
+  let vatRegistrationNumber = obj.vatRegistrationNumber ? obj.vatRegistrationNumber : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
 
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/project/getList?projectName=${obj.projectName}&expenseBudget=${obj.expenseBudget}&revenueBudget=${obj.revenueBudget}&vatRegistrationNumber=${obj.vatRegistrationNumber}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+      url: `/rest/project/getList?projectName=${projectName}&expenseBudget=${expenseBudget}&revenueBudget=${revenueBudget}&vatRegistrationNumber=${vatRegistrationNumber}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
     }
 
     return authApi(data).then(res => {

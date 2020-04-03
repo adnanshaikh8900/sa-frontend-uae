@@ -70,36 +70,13 @@ class CreateEmployee extends React.Component {
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
-    // this.changeBirthday = this.changeBirthday.bind(this)
   }
 
-  // changeBirthday(date){
-  //   this.setState({
-  //     birthday: date
-  //   })
-  // }
-
-  // handleChange = (name, e) => {
-  //    this.setState({
-  //     currentData: _.set(
-  //       { ...this.state.currentData },
-  //       e.target.name && e.target.name !== '' ? e.target.name : name,
-  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //     )
-  //   })
-  // this.setState({
-  //   currentData: _.set(
-  //     { ...this.state.currentData },
-  //     e.target.name && e.target.name !== '' ? e.target.name : name,
-  //     e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //   )
-  // })
-
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.employeeActions.getCurrencyList()
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     this.props.employeeCreateActions.createEmployee(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Employee Created Successfully')
@@ -116,6 +93,7 @@ class CreateEmployee extends React.Component {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
     })
   }
+  
   render() {
 
     const { currency_list } = this.props

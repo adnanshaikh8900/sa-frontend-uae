@@ -12,8 +12,8 @@ public class TransactionCategoryFilter extends AbstractFilter<TransactionCategor
 	private TransactionCategory transactionCategory;
 	int start;
 	int limit;
-	public TransactionCategoryFilter(TransactionCategory transactionCategory_,int start, int limit) {
-		this.transactionCategory = transactionCategory_;
+	public TransactionCategoryFilter(TransactionCategory transactionCategory,int start, int limit) {
+		this.transactionCategory = transactionCategory;
 		this.start = start;
 		this.limit = limit;
 	}

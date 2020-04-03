@@ -72,11 +72,9 @@ class DetailedGeneralLedgerReport extends React.Component {
       { label: 'Credit', value: 'creditAmount', sort: false, align: 'right' },
       { label: 'Amount', value: 'amount', sort: false, align: 'right' },
     ]
-
-    this.toggle = this.toggle.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
     this.props.detailGeneralLedgerActions.getTransactionCategoryList().then(res => {
       if(res.status === 200) {
@@ -87,7 +85,7 @@ class DetailedGeneralLedgerReport extends React.Component {
     })
   }
 
-  initializeData() {
+  initializeData = () => {
     const { initValue } = this.state
     const postData = {
       startDate: initValue.startDate,

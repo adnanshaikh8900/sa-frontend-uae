@@ -1,23 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.simplevat.rest.datalistcontroller;
 
 import com.simplevat.entity.Country;
-import com.simplevat.entity.Currency;
 import com.simplevat.entity.IndustryType;
 import com.simplevat.entity.State;
-import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.ReconcileCategory;
-import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PayMode;
 import com.simplevat.constant.dbfilter.CurrencyFilterEnum;
-import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.StateFilterEnum;
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
@@ -27,23 +18,23 @@ import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
-import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
 import com.simplevat.service.ReconcileCategoryService;
 import com.simplevat.service.StateService;
-import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
 import io.swagger.annotations.ApiOperation;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,16 +49,15 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/rest/datalist")
-public class DataListController implements Serializable {
+public class DataListController {
+
+	private final Logger LOGGER = LoggerFactory.getLogger(DataListController.class);
 
 	@Autowired
 	private CountryService countryService;
 
 	@Autowired
 	private CurrencyService currencyService;
-
-	@Autowired
-	private BankAccountTypeService bankAccountTypeService;
 
 	@Autowired
 	private ChartOfAccountService transactionTypeService;
@@ -101,16 +91,16 @@ public class DataListController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@Deprecated
+//	@Deprecated
 	@GetMapping(value = "/getcurrenncy")
 	public ResponseEntity getCurrency(PaginationModel paginationModel) {
 		try {
-			Map<CurrencyFilterEnum, Object> filterDataMap = new HashMap<CurrencyFilterEnum, Object>();
+			Map<CurrencyFilterEnum, Object> filterDataMap = new EnumMap<>(CurrencyFilterEnum.class);
 			filterDataMap.put(CurrencyFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 			filterDataMap.put(CurrencyFilterEnum.DELETE_FLAG, false);
 
@@ -121,7 +111,7 @@ public class DataListController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -137,7 +127,7 @@ public class DataListController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -157,7 +147,7 @@ public class DataListController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -177,7 +167,7 @@ public class DataListController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -197,7 +187,7 @@ public class DataListController implements Serializable {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -216,7 +206,7 @@ public class DataListController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -235,7 +225,7 @@ public class DataListController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -252,7 +242,7 @@ public class DataListController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -261,10 +251,10 @@ public class DataListController implements Serializable {
 	public ResponseEntity getState(@RequestParam Integer countryCode) {
 		try {
 
-			Map<StateFilterEnum, Object> filterMap = new HashMap<StateFilterEnum, Object>();
+			Map<StateFilterEnum, Object> filterMap = new EnumMap<>(StateFilterEnum.class);
 			filterMap.put(StateFilterEnum.COUNTRY, countryService.getCountry(countryCode));
 			List<State> stateList = stateService.getstateList(filterMap);
-			List<DropdownModel> modelList = new ArrayList<DropdownModel>();
+			List<DropdownModel> modelList = new ArrayList<>();
 			if (stateList != null && !stateList.isEmpty()) {
 				for (State state : stateList)
 					modelList.add(new DropdownModel(state.getId(), state.getStateName()));
@@ -273,7 +263,7 @@ public class DataListController implements Serializable {
 				return new ResponseEntity(modelList, HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -294,10 +284,9 @@ public class DataListController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	
 }

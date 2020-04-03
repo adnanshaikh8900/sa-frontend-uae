@@ -37,11 +37,9 @@ class GeneralSettings extends React.Component {
     this.state = {
       editorState: EditorState.createEmpty()
     }
-
-    this.onEditorStateChange = this.onEditorStateChange.bind(this)
   }
 
-  onEditorStateChange(editorState) {
+  onEditorStateChange = (editorState) => {
     this.setState({
       editorState,
     })

@@ -31,12 +31,10 @@ class WareHouseModal extends React.Component {
         warehouseName: '',
       },
     }
-
-    this.wareHouseHandleSubmit = this.wareHouseHandleSubmit.bind(this)
   }
 
   // Create or Contact
-  wareHouseHandleSubmit(data) {
+  wareHouseHandleSubmit = (data) => {
     ProductActions.createWarehouse(data).then(res => {
       if (res.status === 200) {
       // this.success()

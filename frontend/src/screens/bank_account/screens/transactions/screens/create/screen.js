@@ -83,17 +83,13 @@ class CreateBankTransaction extends React.Component {
     this.regExBoth = /[a-zA-Z0-9]+$/;
 
     this.formRef = React.createRef()
-
-    this.initializeData = this.initializeData.bind(this)
-    this.handleFileChange = this.handleFileChange.bind(this)
-
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
       if(this.props.location.state && this.props.location.state.bankAccountId) {
         this.setState({
           id: this.props.location.state.bankAccountId
@@ -104,7 +100,7 @@ class CreateBankTransaction extends React.Component {
       }
   }
 
-  handleFileChange(e, props) {
+  handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -117,7 +113,7 @@ class CreateBankTransaction extends React.Component {
   }
 
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) =>  {
     let bankAccountId = this.props.location.state && this.props.location.state.bankAccountId ? this.props.location.state.bankAccountId : ''
     const {
       transactionDate,

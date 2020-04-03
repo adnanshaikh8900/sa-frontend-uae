@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.simplevat.rest.contactController;
+package com.simplevat.rest.contactcontroller;
 
 import com.simplevat.entity.Contact;
 import com.simplevat.constant.ContactTypeEnum;
@@ -108,7 +108,7 @@ public class ContactHelper {
 
 	public List<ContactListModel> getModelList(Object conctactList) {
 
-		List<ContactListModel> modelList = new ArrayList<ContactListModel>();
+		List<ContactListModel> modelList = new ArrayList<>();
 
 		if (conctactList != null) {
 			for (Contact contact : (List<Contact>) conctactList) {

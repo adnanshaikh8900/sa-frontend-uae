@@ -55,15 +55,13 @@ class SupplierModal extends React.Component {
       state_list: []
     }
     this.formikRef = React.createRef()
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.displayMsg = this.displayMsg.bind(this)
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
   // Create or Contact
-  handleSubmit(data, resetForm, setSubmitting) {
+  handleSubmit = (data, resetForm, setSubmitting) => {
     this.props.createSupplier(data).then(res => {
       if (res.status === 200) {
         resetForm();
@@ -76,7 +74,7 @@ class SupplierModal extends React.Component {
     })
   }
 
-  displayMsg() {
+  displayMsg = () => {
     toast.error('Something Went Wrong... ', {
       position: toast.POSITION.TOP_RIGHT
     })

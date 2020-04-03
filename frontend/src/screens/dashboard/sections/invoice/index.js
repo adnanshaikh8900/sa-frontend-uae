@@ -54,11 +54,9 @@ class Invoice extends Component {
     this.state = {
       activeTab: new Array(4).fill('1')
     }
-
-    this.toggle = this.toggle.bind(this)
   }
 
-  toggle(tabPane, tab) {
+  toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
     newArray[tabPane] = tab
     this.setState({
@@ -66,11 +64,11 @@ class Invoice extends Component {
     })
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.DashboardActions.getInvoiceGraphData(12)
   }
 
-  handleChange(e) {
+  handleChange = (e) => {
     e.preventDefault()
     this.props.DashboardActions.getInvoiceGraphData(e.currentTarget.value)
   }

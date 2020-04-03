@@ -12,8 +12,11 @@ import lombok.Getter;
 
 public enum TransactionEnum {
 
-	TRANSACTION_DATE("TRANSACTION_DATE", "Transaction Date"), DESCRIPTION("DESCRIPTION", "Description"),
-	AMOUNT("AMOUNT", "Amount"), DR_AMOUNT("DR_AMOUNT", "Debit Amount"), CR_AMOUNT("CR_AMOUNT", "Credit Amount"),
+	TRANSACTION_DATE("TRANSACTION_DATE", "Transaction Date"), 
+	DESCRIPTION("DESCRIPTION", "Description"),
+	AMOUNT("AMOUNT", "Amount"), 
+	DR_AMOUNT("DR_AMOUNT", "Debit Amount"), 
+	CR_AMOUNT("CR_AMOUNT", "Credit Amount"),
 	CREDIT_DEBIT_FLAG("CREDIT_DEBIT_FLAG", "Credit Debit Flag");
 
 	@Getter
@@ -35,7 +38,7 @@ public enum TransactionEnum {
 	}
 
 	public static Map<String, TransactionEnum> getMap() {
-		Map<String, TransactionEnum> enumMap = new HashMap<String, TransactionEnum>();
+		Map<String, TransactionEnum> enumMap = new HashMap<>();
 
 		Stream.of(TransactionEnum.values())
 				.forEach(transactionEnum -> enumMap.put(transactionEnum.displayName, transactionEnum));

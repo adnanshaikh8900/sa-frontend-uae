@@ -1,6 +1,6 @@
 package com.simplevat.constant;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +40,7 @@ public enum InvoiceStatusEnum {
 	}
 
 	public static List<InvoiceStatusEnum> getInvoiceStatusList() {
-		List<InvoiceStatusEnum> statusEnums = new ArrayList<InvoiceStatusEnum>();
-		for (InvoiceStatusEnum statusEnum : values()) {
-			statusEnums.add(statusEnum);
-		}
-		return statusEnums;
+		return Arrays.asList(values());
 	}
 
 	public static Map<Integer, InvoiceStatusEnum> map() {

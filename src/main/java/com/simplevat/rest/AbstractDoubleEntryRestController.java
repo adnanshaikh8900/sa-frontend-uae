@@ -6,7 +6,6 @@
 package com.simplevat.rest;
 
 import com.simplevat.constant.ExpenseStatusEnum;
-import com.simplevat.constant.InvoicePurchaseStatusConstant;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
@@ -24,7 +23,6 @@ import io.swagger.annotations.ApiOperation;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

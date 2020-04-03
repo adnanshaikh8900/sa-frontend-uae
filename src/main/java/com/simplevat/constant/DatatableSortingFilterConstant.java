@@ -23,8 +23,8 @@ public class DatatableSortingFilterConstant {
 
 	public final String JOURNAL = "JOURNAL";
 	public final String JOURNAL_DEFAULT = "id";
-	private final List<String> journalColLabelList = Arrays
-			.asList(new String[] { "journalDate", "journalReferenceNo", "postingReferenceTypeDisplayName", "description" });
+	private final List<String> journalColLabelList = Arrays.asList(
+			new String[] { "journalDate", "journalReferenceNo", "postingReferenceTypeDisplayName", "description" });
 	private final List<String> journalColNameList = Arrays
 			.asList(new String[] { "journalDate", "journlReferencenNo", "postingReferenceType", "description" });
 
@@ -62,6 +62,13 @@ public class DatatableSortingFilterConstant {
 			.asList(new String[] { "firstName", "dob", "roleName", "active" });
 	private final List<String> userColNameList = Arrays
 			.asList(new String[] { "firstName", "dateOfBirth", "role.roleName", "isActive" });
+
+	public final String CHART_OF_ACCOUNT = "CHART_OF_ACCOUNT";
+	public final String CHART_OF_ACCOUNT_DEFAULT = "transactionCategoryId";
+	private final List<String> chartOfAccountColLabelList = Arrays
+			.asList(new String[] { "transactionCategoryCode", "transactionCategoryName", "transactionTypeName" });
+	private final List<String> chartOfAccountColNameList = Arrays.asList(
+			new String[] { "transactionCategoryCode", "transactionCategoryName", "chartOfAccount.chartOfAccountName" });
 
 	private Map<String, String> getMap(List<String> colLabelList, List<String> colNameList) {
 		dataMap = new HashMap<String, String>();
@@ -135,6 +142,14 @@ public class DatatableSortingFilterConstant {
 				returnDbName = map.get(label);
 			} else {
 				returnDbName = USER_DEFAULT;
+			}
+			break;
+		case CHART_OF_ACCOUNT:
+			map = getMap(chartOfAccountColLabelList, chartOfAccountColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = CHART_OF_ACCOUNT_DEFAULT;
 			}
 			break;
 		}

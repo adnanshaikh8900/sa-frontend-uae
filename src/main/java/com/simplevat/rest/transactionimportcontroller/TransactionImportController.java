@@ -5,31 +5,6 @@
  */
 package com.simplevat.rest.transactionimportcontroller;
 
-import com.simplevat.utils.DateFormatUtil;
-import com.simplevat.utils.FileHelper;
-
-import io.swagger.annotations.ApiOperation;
-
-import com.simplevat.model.TransactionModel;
-import com.simplevat.model.FileModel;
-import com.simplevat.constant.TransactionCreditDebitConstant;
-import com.simplevat.constant.TransactionEntryTypeConstant;
-import com.simplevat.constant.TransactionStatusConstant;
-import com.simplevat.entity.TransactionParsingSetting;
-import com.simplevat.entity.User;
-import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.parserengine.CsvParser;
-import com.simplevat.parserengine.ExcelParser;
-import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
-import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
-import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSettingRestHelper;
-import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.UserService;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.TransactionParsingSettingService;
-import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.service.bankaccount.TransactionStatusService;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
 import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -42,6 +17,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +30,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.simplevat.constant.TransactionCreditDebitConstant;
+import com.simplevat.constant.TransactionEntryTypeConstant;
+import com.simplevat.constant.TransactionStatusConstant;
+import com.simplevat.entity.TransactionParsingSetting;
+import com.simplevat.entity.User;
+import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.model.FileModel;
+import com.simplevat.model.TransactionModel;
+import com.simplevat.parserengine.CsvParser;
+import com.simplevat.parserengine.ExcelParser;
+import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSettingDetailModel;
+import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSettingRestHelper;
+import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.BankAccountService;
+import com.simplevat.service.TransactionParsingSettingService;
+import com.simplevat.service.UserService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
+import com.simplevat.service.bankaccount.TransactionService;
+import com.simplevat.service.bankaccount.TransactionStatusService;
+import com.simplevat.utils.DateFormatUtil;
+import com.simplevat.utils.FileHelper;
+
+import io.swagger.annotations.ApiOperation;
+
 /**
  *
  * @author Sonu
@@ -60,7 +61,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(value = "/rest/transactionimport")
 public class TransactionImportController implements Serializable {
-
+	private final Logger LOGGER = LoggerFactory.getLogger(TransactionImportController.class);
 	@Autowired
 	private CsvParser csvParser;
 
@@ -75,9 +76,6 @@ public class TransactionImportController implements Serializable {
 
 	@Autowired
 	private TransactionService transactionService;
-
-	@Autowired
-	private ChartOfAccountService transactionTypeService;
 
 	@Autowired
 	private TransactionStatusService transactionStatusService;
@@ -173,7 +171,7 @@ public class TransactionImportController implements Serializable {
 			transaction1.setTransactionStatus(transactionStatusService.findByPK(TransactionStatusConstant.UNEXPLAINED));
 			transactionService.persist(transaction1);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 	}
 

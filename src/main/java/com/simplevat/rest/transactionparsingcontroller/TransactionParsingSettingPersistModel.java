@@ -1,6 +1,5 @@
 package com.simplevat.rest.transactionparsingcontroller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +11,7 @@ import lombok.Data;
 @Data
 public class TransactionParsingSettingPersistModel {
 
-	public Long id;
+	private Long id;
 	private String name;
 	private String delimiter;
 	private Integer skipRows;
@@ -21,5 +20,5 @@ public class TransactionParsingSettingPersistModel {
 	private Integer dateFormatId;
 	private Map<TransactionEnum, Integer> indexMap;
 	private String otherDilimiterStr;
-	private MultipartFile file;	
+	private MultipartFile file;
 }

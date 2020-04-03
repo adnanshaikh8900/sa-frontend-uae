@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/product")
-public class ProductRestController implements Serializable {
+public class ProductRestController {
 	private final Logger LOGGER = LoggerFactory.getLogger(ProductRestController.class);
 	@Autowired
 	private ProductService productService;

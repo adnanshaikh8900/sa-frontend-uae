@@ -9,12 +9,14 @@ export const getContactList = (obj) => {
   let contactType = obj.contactType ? obj.contactType : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
   let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
   
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/contact/getContactList?name=${name}&email=${email}&contactType=${contactType}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
+      url: `/rest/contact/getContactList?name=${name}&email=${email}&contactType=${contactType}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     }
 
     return authApi(data).then(res => {

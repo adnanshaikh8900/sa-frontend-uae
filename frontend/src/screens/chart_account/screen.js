@@ -68,6 +68,9 @@ class ChartAccount extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -93,12 +96,16 @@ class ChartAccount extends React.Component {
 
   initializeData = () => {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    filterData = { ...filterData, ...data }
-    this.props.chartOfAccountActions.getTransactionCategoryList(filterData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+    this.props.chartOfAccountActions.getTransactionCategoryList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false });
       }
@@ -107,6 +114,12 @@ class ChartAccount extends React.Component {
       this.setState({ loading: false })
     })
 
+  }
+
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
   }
 
   goToDetailPage = (row) => {

@@ -10,12 +10,14 @@ export const getProjectList = (obj) => {
   let vatRegistrationNumber = obj.vatRegistrationNumber ? obj.vatRegistrationNumber : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
   let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
 
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/project/getList?projectName=${projectName}&expenseBudget=${expenseBudget}&revenueBudget=${revenueBudget}&vatRegistrationNumber=${vatRegistrationNumber}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
+      url: `/rest/project/getList?projectName=${projectName}&expenseBudget=${expenseBudget}&revenueBudget=${revenueBudget}&vatRegistrationNumber=${vatRegistrationNumber}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     }
 
     return authApi(data).then(res => {

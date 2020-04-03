@@ -62,6 +62,9 @@ class VatCode extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -80,12 +83,16 @@ class VatCode extends React.Component {
 
   initializeData = () => {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
     }
-    filterData = { ...filterData, ...data }
-    this.props.vatActions.getVatList(filterData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+    this.props.vatActions.getVatList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -95,6 +102,13 @@ class VatCode extends React.Component {
       })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
+  }
+
+
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
   }
 
   onRowSelect = (row, isSelected) => {

@@ -11,12 +11,14 @@ export const getProductCategoryList = (obj) => {
   let productCategoryName = obj.productCategoryName ? obj.productCategoryName : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
   let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
 
   let url;
 
   if(obj) {
-    url = `/rest/productcategory/getList?productCategoryCode=${productCategoryCode}&productCategoryName=${productCategoryName}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
+    url = `/rest/productcategory/getList?productCategoryCode=${productCategoryCode}&productCategoryName=${productCategoryName}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
   } else {
     url=`/rest/productcategory/getList`
   }

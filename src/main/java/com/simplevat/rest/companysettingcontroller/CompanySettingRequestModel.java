@@ -7,7 +7,7 @@ public class CompanySettingRequestModel {
 
 	private Integer id;
 
-	private String invoicingRefrencePattern;
+	private String invoicingReferencePattern;
 
 	private String mailingHost;
 
@@ -15,7 +15,7 @@ public class CompanySettingRequestModel {
 
 	private String mailingUserName;
 
-	private String mailingPASSWORD;
+	private String mailingPassword;
 
 	private boolean mailingSmtpAuthorization;
 

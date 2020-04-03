@@ -19,6 +19,9 @@ import {
 } from "reactstrap"
 import { Formik } from "formik";
 import * as Yup from "yup";
+
+import { Loader } from 'components'
+
 import {
   CommonActions
 } from 'services/global'
@@ -50,12 +53,11 @@ class GeneralSettings extends React.Component {
         invoiceMailingSubject: '',
         invoicingReferencePattern: '',
         mailingHost: '',
-        mailingPASSWORD: '',
+        mailingPassword: '',
         mailingPort: '',
-        mailingSmtpAuthorization: true,
-        mailingSmtpStarttlsEnable: true,
         mailingUserName: ''
       },
+      loading: true,
       message: '',
       contentState: {},
       selected_smtp_auth: false,
@@ -81,13 +83,15 @@ class GeneralSettings extends React.Component {
     this.props.generalSettingActions.getGeneralSettingDetail().then(res => {
       if (res.status === 200) {
         this.setState({
+          loading: false,
           initValue: {
+            id: res.data.id,
             invoiceMailingSubject: res.data.invoiceMailingSubject ? res.data.invoiceMailingSubject : '',
             invoicingReferencePattern: res.data.invoicingReferencePattern ? res.data.invoicingReferencePattern : '',
             mailingHost: res.data.mailingHost ? res.data.mailingHost : '',
             mailingPort: res.data.mailingPort ? res.data.mailingPort : '',
             mailingUserName: res.data.mailingUserName ? res.data.mailingUserName : '',
-            mailingPASSWORD:  '',
+            mailingPassword:  res.data.mailingPassword ? res.data.mailingPassword : '',
           },
           message: res.data.invoiceMailingBody ? res.data.invoiceMailingBody : '',
           selected_smtp_auth: res.data.mailingSmtpAuthorization ? res.data.mailingSmtpAuthorization : '',
@@ -100,6 +104,9 @@ class GeneralSettings extends React.Component {
         })
       }
     }).catch(err => {
+      this.setState({
+        loading: false,
+      })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null);
       this.props.history.push('/admin')
     })
@@ -113,13 +120,13 @@ handleSubmit = (data) => {
     invoiceMailingSubject: data.invoiceMailingSubject,
     invoicingReferencePattern: data.invoicingReferencePattern,
     mailingHost: data.mailingHost,
-    mailingPASSWORD: data.mailingPASSWORD,
+    mailingPassword: data.mailingPassword,
     mailingPort: data.mailingPort,
     mailingSmtpAuthorization: selected_smtp_auth,
     mailingSmtpStarttlsEnable: selected_smtp_enable,
     mailingUserName: data.mailingUserName
   }
-  this.props.createContactActions.createContact(postData).then(res => {
+  this.props.generalSettingActions.updateGeneralSettings(postData).then(res => {
     if (res.status === 200) {
       this.props.commonActions.tostifyAlert('success', 'General Setting Updated Successfully')
       this.props.history.push('/admin');
@@ -140,7 +147,7 @@ onContentStateChange = (contentState) => {
 }
 
 render() {
-  const { initValue, contentState } = this.state
+  const { initValue, contentState ,loading} = this.state
 
   return (
     <div className="general-settings-screen">
@@ -155,6 +162,7 @@ render() {
                 </div>
               </CardHeader>
               <CardBody>
+                { loading ? <Loader /> : (
                 <Row>
                   <Col>
                     <Formik
@@ -168,7 +176,7 @@ render() {
                           mailingHost: Yup.string().required("Mailing Host is Required"),
                           mailingPort: Yup.string().required("Mailing Port is Required"),
                           mailingUserName: Yup.string().required("Mailing Username is Required"),
-                          mailingPASSWORD: Yup.string().required("Mailing Password is Required"),
+                          mailingPassword: Yup.string().required("Mailing Password is Required"),
                         })
                       }
                     >
@@ -276,23 +284,23 @@ render() {
                             </Col>
                             <Col sm='6'>
                               <FormGroup>
-                                <Label htmlFor="mailingPASSWORD">Mailing Password</Label>
+                                <Label htmlFor="mailingPassword">Mailing Password</Label>
                                 <Input
                                   type="password"
-                                  id="mailingPASSWORD"
-                                  name="mailingPASSWORD"
+                                  id="mailingPassword"
+                                  name="mailingPassword"
                                   placeholder="Enter Password"
                                   autoComplete="new-password"
-                                  value={props.values.mailingPASSWORD}
-                                  onChange={(option) => { props.handleChange('mailingPASSWORD')(option) }}
+                                  value={props.values.mailingPassword}
+                                  onChange={(option) => { props.handleChange('mailingPassword')(option) }}
                                   className={
-                                    props.errors.mailingPASSWORD && props.touched.mailingPASSWORD
+                                    props.errors.mailingPassword && props.touched.mailingPassword
                                       ? "is-invalid"
                                       : ""
                                   }
                                 />
-                                {props.errors.mailingPASSWORD && props.touched.mailingPASSWORD && (
-                                  <div className="invalid-feedback">{props.errors.mailingPASSWORD}</div>
+                                {props.errors.mailingPassword && props.touched.mailingPassword && (
+                                  <div className="invalid-feedback">{props.errors.mailingPassword}</div>
                                 )}
                               </FormGroup>
                             </Col>
@@ -489,7 +497,8 @@ render() {
                     </Formik>
                   </Col>
                 </Row>
-
+                )
+                        }
               </CardBody>
             </Card>
           </Col>

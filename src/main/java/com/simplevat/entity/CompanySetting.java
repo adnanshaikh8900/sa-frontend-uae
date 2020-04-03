@@ -32,9 +32,9 @@ public class CompanySetting {
 	@Column(name = "COMPANY_SETTING_ID")
 	private Integer id;
 
-	@Basic
+	@Basic          
 	@Column(name = "INVOICING_REFERENCE_PATTERN")
-	private String invoicingRefrencePattern;
+	private String invoicingReferencePattern;
 
 	@Basic
 	@Column(name = "MAILING_HOST")
@@ -50,7 +50,7 @@ public class CompanySetting {
 
 	@Basic
 	@Column(name = "MAILING_PASSWORD")
-	private String mailingPASSWORD;
+	private String mailingPassword;
 
 	@Basic
 	@Column(name = "MAILING_SMTP_AUTH")

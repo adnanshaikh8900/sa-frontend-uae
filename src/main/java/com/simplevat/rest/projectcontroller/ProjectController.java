@@ -83,7 +83,6 @@ public class ProjectController implements Serializable {
 		filterDataMap.put(ProjectFilterEnum.REVENUE_BUDGET, filterModel.getRevenueBudget());
 		filterDataMap.put(ProjectFilterEnum.EXPENSE_BUDGET, filterModel.getExpenseBudget());
 		filterDataMap.put(ProjectFilterEnum.DELETE_FLAG, filterModel.isDeleteFlag());
-		filterDataMap.put(ProjectFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
 		PaginationResponseModel response = projectService.getProjectList(filterDataMap, filterModel);
 		if (response == null) {

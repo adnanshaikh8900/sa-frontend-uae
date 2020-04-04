@@ -1,9 +1,11 @@
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ProductDao;
@@ -17,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ProductDaoImpl extends AbstractDao<Integer, Product> implements ProductDao {
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public PaginationResponseModel getProductList(Map<ProductFilterEnum, Object> filterMap,
@@ -25,6 +29,7 @@ public class ProductDaoImpl extends AbstractDao<Integer, Product> implements Pro
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
+		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.CONTACT));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}

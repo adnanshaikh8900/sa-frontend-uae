@@ -54,7 +54,7 @@ public class ExcelParser implements TransactionFileParser {
 			List<Map<String, String>> list = new ArrayList<>();
 
 			// Creating a Workbook from an Excel file (.xls or .xlsx)
-			try (Workbook workbook = WorkbookFactory.create(model.getFile().getInputStream());) {
+			try (Workbook workbook = WorkbookFactory.create(model.getFile().getInputStream())) {
 				// Create a DataFormatter to format and get each cell's value as String
 				DataFormatter dataFormatter = new DataFormatter();
 

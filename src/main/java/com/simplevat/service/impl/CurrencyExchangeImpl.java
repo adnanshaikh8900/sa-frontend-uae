@@ -25,10 +25,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service("currencyExchangeImpl")
 public class CurrencyExchangeImpl extends CurrencyExchangeService {
-
+	private final Logger LOGGER = LoggerFactory.getLogger(CurrencyExchangeImpl.class);
     private static String ACCESSKEY = "c6267cc9e9bd2735a5a2637aa778d61a";
     @Autowired
     CurrencyExchangeDao currencyExchangeDao;
@@ -61,7 +63,7 @@ public class CurrencyExchangeImpl extends CurrencyExchangeService {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         try {
             String url = "https://us-central1-simplevat-web-app.cloudfunctions.net/getExchangeRate";
-//            
+          
             HttpPost httpPost = new HttpPost(url);
             httpPost.addHeader("Accept", "application/json");
             httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -70,7 +72,6 @@ public class CurrencyExchangeImpl extends CurrencyExchangeService {
             httpPost.setEntity(new UrlEncodedFormEntity(params));
             CloseableHttpResponse response = httpClient.execute(httpPost);
             String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-            System.out.println("=======responseString======" + responseString);
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
@@ -112,7 +113,7 @@ public class CurrencyExchangeImpl extends CurrencyExchangeService {
 //                    }
 //                }
         } catch (Exception e) {
-            e.printStackTrace();
+        	LOGGER.error("Error", e);
         }
     }
 

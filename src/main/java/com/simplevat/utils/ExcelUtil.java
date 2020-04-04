@@ -33,8 +33,8 @@ public class ExcelUtil {
 			try {
 				file = File.createTempFile(multipartFile.getName(), ".xlsx");
 				multipartFile.transferTo(file);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			} catch (IOException e) {
+				LOGGER.error("Error", e);
 			}
 
 			Map<Integer, String> indexHeaderMap = new HashMap<Integer, String>();
@@ -47,13 +47,11 @@ public class ExcelUtil {
 				DataFormatter dataFormatter = new DataFormatter();
 
 				workbook.forEach(sheet -> {
-					System.out.println("=> " + sheet.getSheetName());
 
 					sheet.forEach(row -> {
 						row.forEach(cell -> {
 							String cellValue = dataFormatter.formatCellValue(cell);
 							if (cell.getRow().getRowNum() == firstRowIndex) {
-								System.out.print(cellValue + "\t");
 								indexHeaderMap.put(cell.getColumnIndex(), cellValue);
 							} else {
 								List<String> dataList = new ArrayList<String>();
@@ -68,7 +66,6 @@ public class ExcelUtil {
 							}
 						});
 
-						System.out.println();
 					});
 				});
 

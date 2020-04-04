@@ -42,6 +42,7 @@ import com.simplevat.service.VatCategoryService;
 @RestController
 @RequestMapping(value = "/rest/product")
 public class ProductController implements Serializable {
+	
 	private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@Autowired

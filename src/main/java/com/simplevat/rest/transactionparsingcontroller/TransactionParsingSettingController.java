@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +39,8 @@ import io.swagger.annotations.ApiOperation;;
 @RequestMapping(value = "/rest/transactionParsing")
 public class TransactionParsingSettingController {
 
+	private final Logger LOGGER = LoggerFactory.getLogger(TransactionParsingSettingController.class);
+
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -57,7 +61,7 @@ public class TransactionParsingSettingController {
 
 	@ApiOperation("Parse excel file for Data")
 	@PostMapping(value = "/parse")
-	private ResponseEntity getDateFormat(@ModelAttribute TransactionParsingSettingPersistModel model) {
+	public ResponseEntity getDateFormat(@ModelAttribute TransactionParsingSettingPersistModel model) {
 
 		List<Map<String, String>> dataMap = null;
 		switch (fileHelper.getFileExtension(model.getFile().getOriginalFilename())) {
@@ -79,19 +83,19 @@ public class TransactionParsingSettingController {
 
 	@ApiOperation("Get databse column enum list")
 	@GetMapping(value = "/dbColEnum/list")
-	private ResponseEntity<List<EnumDropdownModel>> getDateFormatList() {
+	public ResponseEntity<List<EnumDropdownModel>> getDateFormatList() {
 		return new ResponseEntity<>(TransactionEnum.getDropdownList(), HttpStatus.OK);
 	}
 
 	@ApiOperation("Get delimiter enum list")
 	@GetMapping(value = "/delimiter/list")
-	private ResponseEntity<List<EnumDropdownModel>> getDelimiterList() {
+	public ResponseEntity<List<EnumDropdownModel>> getDelimiterList() {
 		return new ResponseEntity<>(ExcellDelimiterEnum.getDropdownList(), HttpStatus.OK);
 	}
 
 	@ApiOperation("Save  new Transaction Parsing setting")
 	@PostMapping(value = "/save")
-	private ResponseEntity save(@RequestBody TransactionParsingSettingPersistModel persistModel,
+	public ResponseEntity save(@RequestBody TransactionParsingSettingPersistModel persistModel,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -109,14 +113,14 @@ public class TransactionParsingSettingController {
 			responseMap.put("id", transactionParsigSetting.getId());
 			return new ResponseEntity(responseMap, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
 	@ApiOperation("Update  Transaction Parsing setting")
 	@PostMapping(value = "/update")
-	private ResponseEntity update(@RequestBody TransactionParsingSettingPersistModel persistModel,
+	public ResponseEntity update(@RequestBody TransactionParsingSettingPersistModel persistModel,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -131,14 +135,14 @@ public class TransactionParsingSettingController {
 			transactionParsingSettingService.persist(transactionParsigSetting);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
 	@ApiOperation("Getlist")
 	@GetMapping(value = "/list")
-	private ResponseEntity getTransactionParserSettigList(HttpServletRequest request) {
+	public ResponseEntity getTransactionParserSettigList(HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Map<TransactionParsingSettingFilterEnum, Object> filterDataMap = new HashMap();
@@ -152,7 +156,7 @@ public class TransactionParsingSettingController {
 					HttpStatus.OK);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -170,7 +174,7 @@ public class TransactionParsingSettingController {
 
 	@ApiOperation("Get by Id")
 	@GetMapping(value = "/getById")
-	private ResponseEntity getDateFormatList(@RequestParam(value = "id") Long id) {
+	public ResponseEntity getDateFormatList(@RequestParam(value = "id") Long id) {
 		try {
 			TransactionParsingSetting setting = transactionParsingSettingService.findByPK(id);
 			TransactionParsingSettingDetailModel model = transactionParsingRestHelper.getModel(setting);
@@ -180,14 +184,14 @@ public class TransactionParsingSettingController {
 			return new ResponseEntity(model, HttpStatus.OK);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation("Getlist")
 	@GetMapping(value = "/selectModelList")
-	private ResponseEntity getTransactionParserSettigSelectModelList(HttpServletRequest request) {
+	public ResponseEntity getTransactionParserSettigSelectModelList(HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Map<TransactionParsingSettingFilterEnum, Object> filterDataMap = new HashMap();
@@ -201,7 +205,7 @@ public class TransactionParsingSettingController {
 					HttpStatus.OK);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

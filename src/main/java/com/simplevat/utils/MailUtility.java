@@ -6,6 +6,9 @@ import com.simplevat.constant.ConfigurationConstants;
 import java.util.List;
 import java.util.Properties;
 import javax.mail.internet.MimeMultipart;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -14,8 +17,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
  * @author h
  */
 public class MailUtility {
-
-    public static void triggerEMailOnBackground(String subject, MimeMultipart mimeMultipart, String fromEmailId, String fromName, String[] toMailAddress, JavaMailSender javaMailSender) {
+	private final static Logger LOGGER = LoggerFactory.getLogger(MailUtility.class);
+  
+	public static void triggerEMailOnBackground(String subject, MimeMultipart mimeMultipart, String fromEmailId, String fromName, String[] toMailAddress, JavaMailSender javaMailSender) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -27,7 +31,7 @@ public class MailUtility {
                     mail.setSubject(subject);
                     //  MailIntegration.sendHtmlEmail(mimeMultipart, mail, javaMailSender);
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                	LOGGER.error("Error", ex);
                 }
             }
         });

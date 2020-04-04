@@ -354,6 +354,7 @@ class DetailEmployee extends React.Component {
                                         dropdownMode="select"
                                         placeholderText="Select Date of Birth"
                                         value={moment(props.values.dob).format('DD-MM-YYYY')}
+                                        maxDate={new Date()}
                                         onChange={(value) => {
                                           props.handleChange("dob")(value)
                                         }}

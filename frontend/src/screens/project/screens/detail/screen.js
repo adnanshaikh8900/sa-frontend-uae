@@ -86,7 +86,11 @@ class DetailProject extends React.Component {
     this.setState({ openContactModal: true })
   }
   // Cloase Confirm Modal
-  closeContactModal = () => {
+  closeContactModal = (res,data) => {
+    if (res) {
+      this.props.projectActions.getContactList();
+      this.formRef.current.setFieldValue('contactId', data.contactId, true)
+    }
     this.setState({ openContactModal: false })
   }
 
@@ -139,7 +143,7 @@ class DetailProject extends React.Component {
     const {current_project_id} = this.state;
     const {
       projectName,
-      invoiceLanguageCode,
+      // invoiceLanguageCode,
       contactId,
       contractPoNumber,
       vatRegistrationNumber,
@@ -151,7 +155,7 @@ class DetailProject extends React.Component {
     const postData = {
       projectId: current_project_id,
       projectName: projectName ? projectName: '',
-      invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
+      // invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
       contactId: contactId && contactId !== null ? contactId : '',
       contractPoNumber: contractPoNumber ? contractPoNumber : '',
       vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
@@ -200,7 +204,7 @@ class DetailProject extends React.Component {
 
 
   render() {
-    const { currency_list, country_list,contact_list,title_list} = this.props
+    const { currency_list, country_list,contact_list} = this.props
     const { initValue , loading , dialog} = this.state;
     return (
       <div className="create-product-screen">
@@ -394,7 +398,7 @@ class DetailProject extends React.Component {
                                     id="expenseBudget"
                                     name="expenseBudget"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regex.test(option.target.value)) props.handleChange('expenseBudget')(option)
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('expenseBudget')(option)
                                     }}
                                     placeholder="Enter Expense Budgets"
                                     defaultValue={props.values.expenseBudget}
@@ -417,7 +421,7 @@ class DetailProject extends React.Component {
                                     id="revenueBudget"
                                     name="revenueBudget"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regex.test(option.target.value)) props.handleChange('revenueBudget')(option)
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('revenueBudget')(option)
                                     }}
                                     placeholder="Enter VAT Revenue Budget"
                                     defaultValue={props.values.revenueBudget}
@@ -492,11 +496,12 @@ class DetailProject extends React.Component {
         </div>
         <ContactModal
           openContactModal={this.state.openContactModal}
-          closeContactModal={(val)=>{this.closeContactModal(val)}}
-          currencyList={currency_list}
-          countryList={country_list}
+          closeContactModal={(val,data) => { this.closeContactModal(val,data) }}
           createContact={this.props.projectActions.createProjectContact}
-          titleList={title_list}
+          // titleList={title_list}
+          currencyList={currency_list}
+					countryList={country_list}
+					getStateList={this.props.projectActions.getStateList}
         />
 
       </div>

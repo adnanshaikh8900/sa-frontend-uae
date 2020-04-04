@@ -315,7 +315,7 @@ class CreateEmployee extends React.Component {
                                     dateFormat="dd/MM/yyyy"
                                     dropdownMode="select"
                                     selected={props.values.dob}
-                                    
+                                    maxDate={new Date()}
                                     value={props.values.dob}
                                     onChange={(value) => {
                                       props.handleChange("dob")(value)

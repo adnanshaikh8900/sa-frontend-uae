@@ -124,7 +124,7 @@ class CreateProduct extends React.Component {
           this.setState({
             createMore: false
           })
-          resetForm({})
+          resetForm(this.state.initValue)
           // this.props.history.push('/admin/master/product/create')
         } else this.props.history.push('/admin/master/product')
       }

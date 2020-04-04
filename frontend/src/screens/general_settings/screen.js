@@ -312,7 +312,6 @@ render() {
                                         checked={this.state.selected_smtp_auth}
                                         value={true}
                                         onChange={e => {
-                                          console.log(e.target.value)
                                           if (e.target.value) {
                                             this.setState({ selected_smtp_auth: true })
                                           }

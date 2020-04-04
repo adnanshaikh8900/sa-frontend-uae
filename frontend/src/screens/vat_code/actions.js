@@ -7,13 +7,13 @@ import {
 
 // Get Vat List
 export const getVatList = (obj) => {
-  let name = obj.name ? obj.name : '';
-  let vatPercentage = obj.vatPercentage ? obj.vatPercentage : '';
-  let pageNo = obj.pageNo ? obj.pageNo : '';
-  let pageSize = obj.pageSize ? obj.pageSize : '';
-  let order = obj.order ? obj.order : '';
-  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+  let name = obj && obj.name ? obj.name : '';
+  let vatPercentage = obj &&  obj.vatPercentage ? obj.vatPercentage : '';
+  let pageNo = obj &&  obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj &&  obj.pageSize ? obj.pageSize : '';
+  let order = obj &&  obj.order ? obj.order : '';
+  let sortingCol = obj &&  obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj &&  obj.paginationDisable ? obj.paginationDisable : false
 
   let url;
   if(obj) {

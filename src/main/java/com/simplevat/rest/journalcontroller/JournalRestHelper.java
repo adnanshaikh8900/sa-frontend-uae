@@ -7,7 +7,11 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -276,13 +280,17 @@ public class JournalRestHelper {
 			if (responseModel.getData() != null) {
 
 				List<JournalLineItem> lineItemList = new ArrayList<>();
+				Map<Integer, Journal> journalMap = new HashMap<>();
 				for (Journal journal : (List<Journal>) responseModel.getData()) {
-					lineItemList.addAll(journal.getJournalLineItems());
+					for (JournalLineItem item : journal.getJournalLineItems()) {
+						lineItemList.add(item);
+						journalMap.put(item.getId(), journal);
+					}
 				}
 
 				for (JournalLineItem lineItem : lineItemList) {
 					JournalCsvModel model = new JournalCsvModel();
-					Journal journal = lineItem.getJournal();
+					Journal journal = journalMap.get(lineItem.getId());
 
 					boolean isManual = journal.getPostingReferenceType().equals(PostingReferenceTypeEnum.MANUAL);
 
@@ -299,8 +307,8 @@ public class JournalRestHelper {
 						model.setTransactionCategoryName(
 								lineItem.getTransactionCategory().getTransactionCategoryName());
 					}
-					BigDecimal creditVatAmt = BigDecimal.valueOf(0);
-					BigDecimal debitVatAmt = BigDecimal.valueOf(0);
+					BigDecimal creditVatAmt = BigDecimal.ZERO;
+					BigDecimal debitVatAmt = BigDecimal.ZERO;
 
 					if (lineItem.getVatCategory() != null) {
 						if (!lineItem.getVatCategory().getVat().equals(BigDecimal.valueOf(0))) {
@@ -322,7 +330,7 @@ public class JournalRestHelper {
 				}
 				responseModel.setData(journalModelList);
 			}
-			
+
 		}
 		return responseModel;
 	}

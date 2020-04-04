@@ -86,6 +86,9 @@ public class UserController implements Serializable {
 	@Autowired
 	private UserRestHelper userRestHelper;
 
+	@Autowired
+	private MailIntegration mailIntegration;
+
 	private boolean isEmailPresent = false;
 
 	@ApiOperation(value = "Get User List")
@@ -301,8 +304,8 @@ public class UserController implements Serializable {
 					mail.setFromName(EmailConstant.ADMIN_EMAIL_SENDER_NAME);
 					mail.setTo(senderMailAddress);
 					mail.setSubject(mailEnum.getSubject());
-					MailIntegration.sendHtmlEmail(mimeMultipart, mail,
-							MailUtility.getJavaMailSender(configurationService.getConfigurationList()));
+					mailIntegration.sendHtmlEmail(mimeMultipart, mail,
+							MailUtility.getJavaMailSender(configurationService.getConfigurationList()),false);
 				} catch (Exception ex) {
 					LOGGER.error("Error", ex);
 				}

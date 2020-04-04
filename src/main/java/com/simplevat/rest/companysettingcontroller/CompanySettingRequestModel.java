@@ -17,9 +17,9 @@ public class CompanySettingRequestModel {
 
 	private String mailingPassword;
 
-	private boolean mailingSmtpAuthorization;
+	private String mailingSmtpAuthorization;
 
-	private boolean mailingSmtpStarttlsEnable;
+	private String mailingSmtpStarttlsEnable;
 
 	private String invoiceMailingSubject;
 

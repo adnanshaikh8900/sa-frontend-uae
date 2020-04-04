@@ -220,4 +220,17 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@ApiOperation(value = "Send Invoice")
+	@PostMapping(value = "/send")
+	public ResponseEntity update(@RequestParam("id") Integer id, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			invoiceRestHelper.send(invoiceService.findByPK(id),userId);
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.error("Error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 }

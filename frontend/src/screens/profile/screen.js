@@ -297,7 +297,7 @@ class Profile extends React.Component {
             companyLogo: res.data.companyLogoByteArray ? this.state.companyLogo.concat(res.data.companyLogoByteArray) : [],
             loading: false,
             flag: false,
-            isSame: !res.data.isSame ? true : false 
+            isSame: res.data.isSame ? res.data.isSame : false 
           },()=>{
             if(res.data.invoicingCountryCode) this.getStateList(res.data.invoicingCountryCode,'invoicing')
             if(res.data.companyCountryCode) this.getStateList(res.data.companyCountryCode,'company')
@@ -401,6 +401,8 @@ class Profile extends React.Component {
     formData.append("companyPostZipCode", isSame ? companyAddress.companyPostZipCode : companyPostZipCode);
     formData.append("companyPoBoxNumber", isSame ? companyAddress.companyPoBoxNumber : companyPoBoxNumber);
     formData.append("companyCountryCode", isSame ? companyAddress.companyCountryCode : companyCountryCode);
+    formData.append("isSame", isSame);
+
     if (this.state.companyLogoFile.length > 0) {
       formData.append("companyLogo", this.state.companyLogoFile[0]);
     }

@@ -12,7 +12,6 @@ import {
   FormGroup,
   Input,
   Label,
-  FormText
 } from 'reactstrap'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
@@ -93,7 +92,7 @@ class CreateEmployee extends React.Component {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
     })
   }
-  
+
   render() {
 
     const { currency_list } = this.props
@@ -271,18 +270,15 @@ class CreateEmployee extends React.Component {
                                     type="password"
                                     id="password"
                                     name="password"
+                                    autoComplete="new-password"
                                     value={props.values.password}
                                     placeholder="Enter Password"
                                     onChange={(value) => { props.handleChange('password')(value) }}
                                     className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                   />
-                                  {!props.errors.password ?
-                                    (
-                                      <FormText style={{ color: '#20a8d8', fontSize: '14px' }}>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
-                                    ) : null}
-                                  {props.errors.password && props.touched.password && (
+                                  {props.errors.password && props.touched.password ? (
                                     <div className="invalid-feedback">{props.errors.password}</div>
-                                  )}
+                                  ) : (<span className="password-msg">Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character.</span>)}
                                 </FormGroup>
                               </Col>
                               <Col md="4">

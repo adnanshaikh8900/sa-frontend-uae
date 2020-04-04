@@ -297,3 +297,34 @@ export const getStateList = (countryCode) => {
     })
   }
 }
+
+export const checkMailConfiguration = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/datalist/getstate'
+    }
+    return authApi(data).then(res => {
+        return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const sendMail = (obj) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: '/rest/invoice/send',
+      data: obj
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}

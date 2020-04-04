@@ -494,7 +494,7 @@ class Journal extends React.Component {
                             dataSort
                             width="18%"
                           >
-                            DESCRIPTION
+                            Notes
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="journalLineItems"

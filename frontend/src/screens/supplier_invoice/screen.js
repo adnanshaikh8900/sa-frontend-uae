@@ -228,7 +228,7 @@ class SupplierInvoice extends React.Component {
             <DropdownItem onClick={() => this.props.history.push('/admin/expense/supplier-invoice/view', { id: row.id })}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem onClick={() => { this.sendEmail(row.id)}}>
               <i className="fas fa-upload" /> Send
             </DropdownItem>
             {/* <DropdownItem>
@@ -245,6 +245,23 @@ class SupplierInvoice extends React.Component {
       </div>
     )
   }
+
+  sendEmail = (id) => {
+    const postData = {
+      id
+    }
+    this.props.supplierInvoiceActions.checkMailConfiguration().then(res => {
+      if (res.status === 200) {
+          this.props.supplierInvoiceActions.sendEmail(postData).then(res => {
+            if(res.status === 200)  {
+               this.props.commonActions.tostifyAlert('success', 'Invoice Send Successfully');
+            }
+          })
+      }
+    }).catch(err => {
+        this.props.commonActions.tostifyAlert('error', 'Please First fill The Mail Configuration Detail');
+  })
+}
 
   onSizePerPageList = (sizePerPage) => {
     if (this.options.sizePerPage !== sizePerPage) {

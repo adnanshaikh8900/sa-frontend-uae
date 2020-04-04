@@ -28,7 +28,7 @@ export const getVatList = (obj) => {
     }
 
     return authApi(data).then(res => {
-      if(!obj.paginationDisable) {
+      if(obj && !obj.paginationDisable) {
         dispatch({
           type: VAT.VAT_LIST,
           payload: res.data

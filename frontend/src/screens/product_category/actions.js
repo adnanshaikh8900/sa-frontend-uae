@@ -7,13 +7,13 @@ import {
 
 // Get Vat List
 export const getProductCategoryList = (obj) => {
-  let productCategoryCode = obj.productCategoryCode ? obj.productCategoryCode : '';
-  let productCategoryName = obj.productCategoryName ? obj.productCategoryName : '';
-  let pageNo = obj.pageNo ? obj.pageNo : '';
-  let pageSize = obj.pageSize ? obj.pageSize : '';
-  let order = obj.order ? obj.order : '';
-  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+  let productCategoryCode = obj && obj.productCategoryCode ? obj.productCategoryCode : '';
+  let productCategoryName = obj && obj.productCategoryName ? obj.productCategoryName : '';
+  let pageNo = obj && obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj && obj.pageSize ? obj.pageSize : '';
+  let order = obj && obj.order ? obj.order : '';
+  let sortingCol = obj && obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj && obj.paginationDisable ? obj.paginationDisable : false
 
   let url;
 
@@ -29,7 +29,7 @@ export const getProductCategoryList = (obj) => {
     }
 
     return authApi(data).then(res => {
-      if(!obj.paginationDisable) {
+      if(obj && !obj.paginationDisable) {
         dispatch({
           type: PRODUCT_CATEGORY.PRODUCT_CATEGORY_LIST,
           payload: res.data

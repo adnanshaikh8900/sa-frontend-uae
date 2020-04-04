@@ -60,7 +60,7 @@ class CreateJournal extends React.Component {
         id: 0,
         description: '',
         transactionCategoryId: '',
-        vatCategoryId: '',
+        // vatCategoryId: '',
         contactId: '',
         debitAmount: 0,
         creditAmount: 0,
@@ -68,7 +68,7 @@ class CreateJournal extends React.Component {
         id: 1,
         description: '',
         transactionCategoryId: '',
-        vatCategoryId: '',
+        // vatCategoryId: '',
         contactId: '',
         debitAmount: 0,
         creditAmount: 0,
@@ -88,7 +88,7 @@ class CreateJournal extends React.Component {
           id: 0,
           description: '',
           transactionCategoryId: '',
-          vatCategoryId: '',
+          // vatCategoryId: '',
           contactId: '',
           debitAmount: 0,
           creditAmount: 0,
@@ -97,7 +97,7 @@ class CreateJournal extends React.Component {
           id: 1,
           description: '',
           transactionCategoryId: '',
-          vatCategoryId: '',
+          // vatCategoryId: '',
           contactId: '',
           debitAmount: 0,
           creditAmount: 0,
@@ -121,7 +121,7 @@ class CreateJournal extends React.Component {
     this.props.journalActions.getContactList();
     this.props.journalActions.getCurrencyList()
     this.props.journalActions.getTransactionCategoryList()
-    this.props.journalActions.getVatList()
+    // this.props.journalActions.getVatList()
   }
 
   renderActions = (cell, rows, props) => {
@@ -282,43 +282,43 @@ class CreateJournal extends React.Component {
     // )
   }
 
-  renderVatCode = (cell, row, props) => {
-    const { vat_list } = this.props;
-    let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
-    let idx
-    this.state.data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index
-      }
-      return obj
-    });
+  // renderVatCode = (cell, row, props) => {
+  //   const { vat_list } = this.props;
+  //   let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
+  //   let idx
+  //   this.state.data.map((obj, index) => {
+  //     if (obj.id === row.id) {
+  //       idx = index
+  //     }
+  //     return obj
+  //   });
 
-    return (
+  //   return (
 
-      <Field name={`journalLineItems.${idx}.vatCategoryId`}
-        render={({ field, form }) => (
+  //     <Field name={`journalLineItems.${idx}.vatCategoryId`}
+  //       render={({ field, form }) => (
 
-          <Input type="select" onChange={(e) => {
-            this.selectItem(e, row, 'vatCategoryId', form, field)
-            // this.formRef.current.props.handleChange(field.name)(e.value)
-          }} value={row.vatCategoryId}
-            className={`form-control 
-            ${props.errors.journalLineItems && props.errors.journalLineItems[idx] &&
-                props.errors.journalLineItems[idx].vatCategoryId &&
-                Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
-                props.touched.journalLineItems[idx] &&
-                props.touched.journalLineItems[idx].vatCategoryId ? "is-invalid" : ""}`}
-          >
-            {vatList ? vatList.map(obj => {
-              // obj.name = obj.name === 'default' ? '0' : obj.name
-              return <option value={obj.id} key={obj.id}>{obj.vat}</option>
-            }) : ''}
-          </Input>
+  //         <Input type="select" onChange={(e) => {
+  //           this.selectItem(e, row, 'vatCategoryId', form, field)
+  //           // this.formRef.current.props.handleChange(field.name)(e.value)
+  //         }} value={row.vatCategoryId}
+  //           className={`form-control 
+  //           ${props.errors.journalLineItems && props.errors.journalLineItems[idx] &&
+  //               props.errors.journalLineItems[idx].vatCategoryId &&
+  //               Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
+  //               props.touched.journalLineItems[idx] &&
+  //               props.touched.journalLineItems[idx].vatCategoryId ? "is-invalid" : ""}`}
+  //         >
+  //           {vatList ? vatList.map(obj => {
+  //             // obj.name = obj.name === 'default' ? '0' : obj.name
+  //             return <option value={obj.id} key={obj.id}>{obj.vat}</option>
+  //           }) : ''}
+  //         </Input>
 
-        )}
-      />
-    )
-  }
+  //       )}
+  //     />
+  //   )
+  // }
 
   renderDebits = (cell, row, props) => {
     let idx
@@ -394,7 +394,7 @@ class CreateJournal extends React.Component {
       data: data.concat({
         id: this.state.idCount + 1,
         description: '',
-        vatCategoryId: '',
+        // vatCategoryId: '',
         transactionCategoryId: '',
         contactId: '',
         debitAmount: 0,
@@ -427,9 +427,6 @@ class CreateJournal extends React.Component {
       form.setFieldValue(field.name, this.state.data[idx][name], true)
       form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
       this.updateAmount(data)
-    } else if (name === 'vatCategoryId') {
-      form.setFieldValue(field.name, this.state.data[idx][name], true)
-      this.updateAmount(data);
     } else {
       this.setState({ data: data }, () => {
         this.formRef.current.setFieldValue(field.name, this.state.data[idx][name], true)
@@ -453,20 +450,20 @@ class CreateJournal extends React.Component {
 
 
   updateAmount = (data) => {
-    const { vat_list } = this.props;
+    // const { vat_list } = this.props;
     let subTotalDebitAmount = 0;
     let subTotalCreditAmount = 0;
     // let totalDebitAmount = 0;
     // let totalCreditAmount = 0;
 
     data.map(obj => {
-      const index = obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
-      const vat = index !== '' ? vat_list[index].vat : ''
+      // const index = obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
+      // const vat = index !== '' ? vat_list[index].vat : ''
 
-      if ((vat !== '' && obj.debitAmount) || (vat !== '' && obj.creditAmount)) {
+      if ((obj.debitAmount) || (obj.creditAmount)) {
         // const val = (+obj.debitAmount) + (((+obj.debitAmount)*vat)/100)
-        subTotalDebitAmount = subTotalDebitAmount + (+obj.debitAmount) + (((+obj.debitAmount) * vat) / 100);
-        subTotalCreditAmount = subTotalCreditAmount + (+obj.creditAmount) + (((+obj.creditAmount) * vat) / 100);
+        subTotalDebitAmount = subTotalDebitAmount + (+obj.debitAmount);
+        subTotalCreditAmount = subTotalCreditAmount + (+obj.creditAmount);
       }
       return obj
     })
@@ -494,7 +491,7 @@ class CreateJournal extends React.Component {
       data.map(item => {
         delete item.id
         item.transactionCategoryId = item.transactionCategoryId ? item.transactionCategoryId : ''
-        item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
+        // item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
         item.contactId = item.contactId ? item.contactId : ''
 
         return item
@@ -522,7 +519,7 @@ class CreateJournal extends React.Component {
                 id: 0,
                 description: '',
                 transactionCategoryId: '',
-                vatCategoryId: '',
+                // vatCategoryId: '',
                 contactId: '',
                 debitAmount: 0,
                 creditAmount: 0,
@@ -533,7 +530,7 @@ class CreateJournal extends React.Component {
                     id: 0,
                     description: '',
                     transactionCategoryId: '',
-                    vatCategoryId: '',
+                    // vatCategoryId: '',
                     contactId: '',
                     debitAmount: 0,
                     creditAmount: 0,
@@ -595,7 +592,7 @@ class CreateJournal extends React.Component {
                             journalLineItems: Yup.array()
                               .of(
                                 Yup.object().shape({
-                                  vatCategoryId: Yup.string().required('Vat is required'),
+                                  // vatCategoryId: Yup.string().required('Vat is required'),
                                   transactionCategoryId: Yup.string().required('Account is required'),
                                   contactId: Yup.string().required('Contact is required'),
                                   debitAmount: Yup.number().required(),
@@ -653,7 +650,7 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={8}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="description">Description</Label>
+                                  <Label htmlFor="description">Notes</Label>
                                   <Input
                                     type="textarea"
                                     name="description"
@@ -742,13 +739,13 @@ class CreateJournal extends React.Component {
                                   >
                                     Contact
                               </TableHeaderColumn>
-                                  <TableHeaderColumn
+                                  {/* <TableHeaderColumn
                                     dataField="vatCategoryId"
                                     dataFormat={(cell, rows) => this.renderVatCode(cell, rows, props)}
 
                                   >
                                     Tax Code
-                              </TableHeaderColumn>
+                              </TableHeaderColumn> */}
                                   <TableHeaderColumn
                                     dataField="debitAmount"
                                     dataFormat={(cell, rows) => this.renderDebits(cell, rows, props)}

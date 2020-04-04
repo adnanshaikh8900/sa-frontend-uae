@@ -63,7 +63,6 @@ public class VatController implements Serializable {
 		if (filterModel.getVatPercentage() != null && !filterModel.getVatPercentage().contentEquals("")) {
 			filterDataMap.put(VatCategoryFilterEnum.VAT_RATE, new BigDecimal(filterModel.getVatPercentage()));
 		}
-		filterDataMap.put(VatCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 		filterDataMap.put(VatCategoryFilterEnum.DELETE_FLAG, false);
 
 		PaginationResponseModel respone = vatCategoryService.getVatCategoryList(filterDataMap, filterModel);

@@ -158,7 +158,7 @@ class ProductCategory extends React.Component {
     this.options.sortOrder = sortOrder;
     this.initializeData()
   }
-
+  
   // -------------------------
   // Actions
   //--------------------------

@@ -81,17 +81,17 @@ public class DatatableSortingFilterConstant {
 	private final List<String> employeeColLabelList = Arrays
 			.asList(new String[] { "firstName", "referenceCode", "email", "vatRegestationNo" });
 	private final List<String> employeeColNameList = Arrays
-			.asList(new String[] { "firstName", "referenceCode", "email", "vatRegestationNo" });
+			.asList(new String[] { "firstName", "referenceCode", "email", "vatRegistrationNo" });
 
 	public final String PRODUCT = "PRODUCT";
 	public final String PRODUCT_DEFALT = "productID";
 	private final List<String> productColLabelList = Arrays
 			.asList(new String[] { "name", "productCode", "description", "vatPercentage", "unitPrice" });
-	private final List<String> productColNameList = Arrays
-			.asList(new String[] { "productName", "productCode", "productDescription", "vatCategory.vatLabel" });
+	private final List<String> productColNameList = Arrays.asList(
+			new String[] { "productName", "productCode", "productDescription", "vatCategory.name", "unitPrice" });
 
 	public final String PROJECT = "PROJECT";
-	public final String PROJECT_DEFALT = "productID";
+	public final String PROJECT_DEFALT = "projectId";
 	private final List<String> projectColLabelList = Arrays
 			.asList(new String[] { "projectName", "expenseBudget", "revenueBudget", "vatRegistrationNumber" });
 	private final List<String> projectColNameList = Arrays

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.ConfigurationConstants;
-import com.simplevat.entity.CompanySetting;
 import com.simplevat.entity.Configuration;
 import com.simplevat.service.ConfigurationService;
 
@@ -17,11 +16,11 @@ public class CompanySettingRestHelper {
 	@Autowired
 	private ConfigurationService configurationService;
 
-	public CompanySettingModel getModel(CompanySetting companyStting) {
+	public CompanySettingModel getModel() {
 
 		List<Configuration> configurationList = configurationService.getConfigurationList();
 
-		if (companyStting != null) {
+		if (configurationList != null && !configurationList.isEmpty()) {
 			CompanySettingModel companySettingModel = new CompanySettingModel();
 
 			if (configurationList.stream()

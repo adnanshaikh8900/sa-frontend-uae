@@ -63,9 +63,6 @@ class DetailJournal extends React.Component {
       submitJournal: false
     };
 
-    // this.options = {
-    //   paginationPosition: 'top'
-    // }
     this.formRef = React.createRef();
     this.regExBoth = /[a-zA-Z0-9]+$/;
   }
@@ -82,7 +79,6 @@ class DetailJournal extends React.Component {
           if (res.status === 200) {
             this.props.journalActions.getCurrencyList();
             this.props.journalActions.getTransactionCategoryList();
-            // this.props.journalActions.getVatList();
             this.props.journalActions.getContactList();
             this.setState(
               {
@@ -145,7 +141,6 @@ class DetailJournal extends React.Component {
   }
 
   checkedRow = () => {
-    // if(this.state.data.length > 0) {
     if (this.state.data.length > 0) {
       let length = this.state.data.length - 1;
       let temp = Object.values(this.state.data[length]).indexOf("");
@@ -280,7 +275,6 @@ class DetailJournal extends React.Component {
             type="select"
             onChange={e => {
               this.selectItem(e, row, "contactId", form, field);
-              // this.formRef.current.props.handleChange(field.name)(e.value)
             }}
             disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
             value={row.contactId}
@@ -299,7 +293,6 @@ class DetailJournal extends React.Component {
           >
             {contactList
               ? contactList.map(obj => {
-                // obj.name = obj.name === 'default' ? '0' : obj.name
                 return (
                   <option value={obj.value} key={obj.value}>
                     {obj.label}
@@ -311,73 +304,7 @@ class DetailJournal extends React.Component {
         )}
       />
     );
-    // const { contact_list } = this.props;
-    // let contactList = contact_list.length ? [{ value: '', label: 'Select Contact' }, ...contact_list] : contact_list
-
-    // return (
-    //   <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'contactId') }} value={row.value}
-    //     className={row.error && row.error.contactId ? "is-invalid" : ""}
-    //   >
-    //     {contactList ? contactList.map(obj => {
-    //       return <option value={obj.value} key={obj.value}>{obj.label}</option>
-    //     }) : ''}
-    //   </Input>
-    // )
   }
-
-  // renderVatCode = (cell, row, props) => {
-  //   const { vat_list } = this.props;
-  //   let vatList = vat_list.length
-  //     ? [{ id: "", vat: "Select Vat" }, ...vat_list]
-  //     : vat_list;
-  //   let idx;
-  //   this.state.data.map((obj, index) => {
-  //     if (obj.id === row.id) {
-  //       idx = index;
-  //     }
-  //     return obj
-  //   });
-
-  //   return (
-  //     <Field
-  //       name={`journalLineItems.${idx}.vatCategoryId`}
-  //       render={({ field, form }) => (
-  //         <Input
-  //           type="select"
-  //           onChange={e => {
-  //             this.selectItem(e, row, "vatCategoryId", form, field);
-  //             // this.formRef.current.props.handleChange(field.name)(e.value)
-  //           }}
-  //           disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
-  //           value={row.vatCategoryId}
-  //           className={`form-control 
-  //           ${
-  //             props.errors.journalLineItems &&
-  //               props.errors.journalLineItems[idx] &&
-  //               props.errors.journalLineItems[idx].vatCategoryId &&
-  //               Object.keys(props.touched).length > 0 &&
-  //               props.touched.journalLineItems &&
-  //               props.touched.journalLineItems[idx] &&
-  //               props.touched.journalLineItems[idx].vatCategoryId
-  //               ? "is-invalid"
-  //               : ""
-  //             }`}
-  //         >
-  //           {vatList
-  //             ? vatList.map(obj => {
-  //               // obj.name = obj.name === 'default' ? '0' : obj.name
-  //               return (
-  //                 <option value={obj.id} key={obj.id}>
-  //                   {obj.vat}
-  //                 </option>
-  //               );
-  //             })
-  //             : ""}
-  //         </Input>
-  //       )}
-  //     />
-  //   );
-  // }
 
   renderDebits = (cell, row, props) => {
     let idx;
@@ -464,7 +391,6 @@ class DetailJournal extends React.Component {
         data: data.concat({
           id: this.state.idCount + 1,
           description: "",
-          // vatCategoryId: "",
           transactionCategoryId: "",
           contactId: "",
           debitAmount: 0,
@@ -517,24 +443,13 @@ class DetailJournal extends React.Component {
   }
 
   updateAmount = (data) => {
-    // const { vat_list } = this.props;
     let subTotalDebitAmount = 0;
     let subTotalCreditAmount = 0;
     // let totalDebitAmount = 0;
     // let totalCreditAmount = 0;
 
     data.map(obj => {
-      // const index =
-      //   obj.vatCategoryId !== ""
-      //     ? vat_list.findIndex(item => item.id === +obj.vatCategoryId)
-      //     : "";
-      // let vat;
-      // if (index !== "" && index !== -1) {
-      //   vat = vat_list[index].vat;
-      // }
-
       if (obj.debitAmount || obj.creditAmount) {
-        // const val = (+obj.debitAmount) + (((+obj.debitAmount)*vat)/100)
         subTotalDebitAmount = subTotalDebitAmount + (+obj.debitAmount);
         subTotalCreditAmount = subTotalCreditAmount + (+obj.creditAmount);
       }
@@ -573,7 +488,6 @@ class DetailJournal extends React.Component {
       .deleteJournal(current_journal_id)
       .then(res => {
         if (res.status === 200) {
-          // this.success('Chart Account Deleted Successfully');
           this.props.commonActions.tostifyAlert(
             "success",
             "Journal Deleted Successfully"
@@ -597,15 +511,12 @@ class DetailJournal extends React.Component {
 
   handleSubmit = (values) => {
     const { data, initValue } = this.state;
-
-    // const postData = { ...values, ...calData, ...{ journalLineItems: this.state.data } }
     if (initValue.totalCreditAmount === initValue.totalDebitAmount) {
       data.map(item => {
         delete item.id;
         item.transactionCategoryId = item.transactionCategoryId
           ? item.transactionCategoryId
           : "";
-        // item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : "";
         item.contactId = item.contactId ? item.contactId : "";
 
         return item
@@ -626,7 +537,6 @@ class DetailJournal extends React.Component {
         .updateJournal(postData)
         .then(res => {
           if (res.status === 200) {
-            // resetForm();
             this.props.commonActions.tostifyAlert("success", "Journal Updated Successfully");
             this.props.history.push("/admin/accountant/journal");
           }
@@ -672,13 +582,6 @@ class DetailJournal extends React.Component {
                             ref={this.formRef}
                             onSubmit={(values, { resetForm }) => {
                               this.handleSubmit(values);
-                              // this.setState({
-                              //   selectedCurrency: null,
-                              //   selectedProject: null,
-                              //   selectedBankAccount: null,
-                              //   selectedCustomer: null
-
-                              // })
                             }}
                             validationSchema={Yup.object().shape({
                               journalDate: Yup.date().required(
@@ -820,7 +723,6 @@ class DetailJournal extends React.Component {
                                       color="primary"
                                       className="btn-square mr-3"
                                       onClick={this.addRow}
-                                      // disabled={this.checkedRow() ? false : true}
                                     >
                                       <i className="fa fa-plus"></i> Add More
                                   </Button>
@@ -883,14 +785,6 @@ class DetailJournal extends React.Component {
                                       >
                                         Contact
                                     </TableHeaderColumn>
-                                      {/* <TableHeaderColumn
-                                        dataField="vatCategoryId"
-                                        dataFormat={(cell, rows) =>
-                                          this.renderVatCode(cell, rows, props)
-                                        }
-                                      >
-                                        Tax Code
-                                    </TableHeaderColumn> */}
                                       <TableHeaderColumn
                                         dataField="debitAmount"
                                         dataFormat={(cell, rows) =>

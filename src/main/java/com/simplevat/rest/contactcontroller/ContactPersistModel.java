@@ -16,7 +16,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-@AllArgsConstructor()
+@AllArgsConstructor
 public class ContactPersistModel implements Serializable {
 
     private Integer contactId;

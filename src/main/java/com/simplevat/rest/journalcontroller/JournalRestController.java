@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,7 +77,10 @@ public class JournalRestController {
 			if (responseModel == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity(journalRestHelper.getListModel(responseModel), HttpStatus.OK);
+			return new ResponseEntity(
+					filterModel.isPaginationDisable() ? journalRestHelper.getCsvListModel(responseModel)
+							: journalRestHelper.getListModel(responseModel),
+					HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -32,7 +32,7 @@ import io.jsonwebtoken.lang.Collections;
 @Component
 public class JournalRestHelper {
 	private final Logger LOGGER = LoggerFactory.getLogger(JournalRestHelper.class);
-
+	private final boolean isList = true;
 	@Autowired
 	private CurrencyService currencyService;
 
@@ -148,7 +148,7 @@ public class JournalRestHelper {
 			List<JournalModel> journalModelList = new ArrayList<>();
 			if (responseModel.getData() != null) {
 				for (Journal journal : (List<Journal>) responseModel.getData()) {
-					journalModelList.add(getModel(journal, true));
+					journalModelList.add(getModel(journal, isList));
 				}
 				responseModel.setData(journalModelList);
 				return responseModel;
@@ -266,5 +266,64 @@ public class JournalRestHelper {
 		}
 
 		return BigDecimal.valueOf(0);
+	}
+
+	public PaginationResponseModel getCsvListModel(PaginationResponseModel responseModel) {
+
+		if (responseModel != null) {
+
+			List<JournalCsvModel> journalModelList = new ArrayList<>();
+			if (responseModel.getData() != null) {
+
+				List<JournalLineItem> lineItemList = new ArrayList<>();
+				for (Journal journal : (List<Journal>) responseModel.getData()) {
+					lineItemList.addAll(journal.getJournalLineItems());
+				}
+
+				for (JournalLineItem lineItem : lineItemList) {
+					JournalCsvModel model = new JournalCsvModel();
+					Journal journal = lineItem.getJournal();
+
+					boolean isManual = journal.getPostingReferenceType().equals(PostingReferenceTypeEnum.MANUAL);
+
+					model.setJournalReferenceNo(isManual ? journal.getJournlReferencenNo() : " ");
+
+					if (journal.getJournalDate() != null) {
+						Date journalDate = Date
+								.from(journal.getJournalDate().atZone(ZoneId.systemDefault()).toInstant());
+						model.setJournalDate(journalDate);
+					}
+					model.setPostingReferenceTypeDisplayName(journal.getPostingReferenceType().getDisplayName());
+
+					if (lineItem.getTransactionCategory() != null) {
+						model.setTransactionCategoryName(
+								lineItem.getTransactionCategory().getTransactionCategoryName());
+					}
+					BigDecimal creditVatAmt = BigDecimal.valueOf(0);
+					BigDecimal debitVatAmt = BigDecimal.valueOf(0);
+
+					if (lineItem.getVatCategory() != null) {
+						if (!lineItem.getVatCategory().getVat().equals(BigDecimal.valueOf(0))) {
+							creditVatAmt = lineItem.getVatCategory().getVat().divide(BigDecimal.valueOf(100))
+									.multiply(lineItem.getCreditAmount());
+							debitVatAmt = lineItem.getVatCategory().getVat().divide(BigDecimal.valueOf(100))
+									.multiply(lineItem.getDebitAmount());
+						}
+					}
+					model.setDescription(lineItem.getDescription());
+
+					model.setCreditAmount(
+							lineItem.getCreditAmount() != null ? lineItem.getCreditAmount().add(creditVatAmt)
+									: BigDecimal.valueOf(0));
+					model.setDebitAmount(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount().add(debitVatAmt)
+							: BigDecimal.valueOf(0));
+					responseModel.setData(journalModelList);
+					journalModelList.add(model);
+				}
+				responseModel.setData(journalModelList);
+			}
+			
+		}
+		return responseModel;
 	}
 }

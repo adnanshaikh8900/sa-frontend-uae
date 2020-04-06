@@ -67,7 +67,6 @@ public class ProductCategoryRestController {
 		filterDataMap.put(ProductCategoryFilterEnum.PRODUCT_CATEGORY_NAME, filterModel.getProductCategoryName());
 		filterDataMap.put(ProductCategoryFilterEnum.USER_ID, filterModel.getUserId());
 		filterDataMap.put(ProductCategoryFilterEnum.DELETE_FLAG, false);
-		filterDataMap.put(ProductCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
 		PaginationResponseModel response = productCategoryService.getProductCategoryList(filterDataMap, filterModel);
 		if (response != null) {

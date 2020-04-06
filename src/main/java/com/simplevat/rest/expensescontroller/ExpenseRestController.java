@@ -59,7 +59,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	private FileHelper fileHelper;
 
 	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private TransactionCategoryService expenseTransactionCategoryService;
 
 	@ApiOperation(value = "Get Expense List")
 	@GetMapping(value = "/getList")
@@ -78,7 +78,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			}
 			if (expenseRequestFilterModel.getTransactionCategoryId() != null) {
 				filterDataMap.put(ExpenseFIlterEnum.TRANSACTION_CATEGORY,
-						transactionCategoryService.findByPK(expenseRequestFilterModel.getTransactionCategoryId()));
+						expenseTransactionCategoryService.findByPK(expenseRequestFilterModel.getTransactionCategoryId()));
 			}
 			filterDataMap.put(ExpenseFIlterEnum.PAYEE, expenseRequestFilterModel.getPayee());
 			filterDataMap.put(ExpenseFIlterEnum.DELETE_FLAG, false);

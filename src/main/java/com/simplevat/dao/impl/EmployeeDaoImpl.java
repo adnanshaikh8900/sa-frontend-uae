@@ -1,5 +1,6 @@
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.EmployeeFilterEnum;
 import com.simplevat.dao.AbstractDao;
@@ -9,6 +10,7 @@ import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ import org.apache.commons.collections4.CollectionUtils;
  */
 @Repository(value = "employeeDao")
 public class EmployeeDaoImpl extends AbstractDao<Integer, Employee> implements EmployeeDao {
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<DropdownModel> getEmployeesForDropdown() {
@@ -60,6 +64,7 @@ public class EmployeeDaoImpl extends AbstractDao<Integer, Employee> implements E
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
+		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.EMPLOYEE));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 

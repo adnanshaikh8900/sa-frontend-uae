@@ -4,7 +4,7 @@ package com.simplevat.exceptions;
 public abstract class BaseException extends RuntimeException {
 
 	private static final long serialVersionUID = 605231601334551397L;
-	private String errorMsg;
+	protected String errorMsg;
 	public BaseException(String errorMsg) {
 		super(errorMsg);
 		this.errorMsg = errorMsg;

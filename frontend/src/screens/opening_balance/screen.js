@@ -71,9 +71,9 @@ class OpeningBalance extends React.Component {
   }
 
   renderAccount = (cell, row) => {
-    const { bank_account_list } = this.props
+    let { bank_account_list } = this.props
     // let idx = ''
-    bank_account_list.push({bankAccountId: '',accounName: 'Select Account'})
+    bank_account_list = [...bank_account_list,...[{bankAccountId: '',accounName: 'Select Account'}]]
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
         // idx = index

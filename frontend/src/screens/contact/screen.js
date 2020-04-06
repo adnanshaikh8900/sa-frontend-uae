@@ -63,6 +63,9 @@ class Contact extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -92,8 +95,12 @@ class Contact extends React.Component {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    filterData = { ...filterData, ...paginationData }
-    this.props.contactActions.getContactList(filterData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+    this.props.contactActions.getContactList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false });
       }
@@ -116,6 +123,12 @@ class Contact extends React.Component {
       this.options.page = page
       this.initializeData()
     }
+  }
+
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
   }
 
   onRowSelect = (row, isSelected, e) => {
@@ -268,7 +281,7 @@ class Contact extends React.Component {
                           </Button>
                            {view && <CSVLink
                             data={csvData}
-                            filename={'contact.csv'}
+                            filename={'Contact.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"

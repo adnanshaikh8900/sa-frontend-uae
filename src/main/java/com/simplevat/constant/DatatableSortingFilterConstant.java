@@ -23,8 +23,8 @@ public class DatatableSortingFilterConstant {
 
 	public final String JOURNAL = "JOURNAL";
 	public final String JOURNAL_DEFAULT = "id";
-	private final List<String> journalColLabelList = Arrays
-			.asList(new String[] { "journalDate", "journalReferenceNo", "postingReferenceTypeDisplayName", "description" });
+	private final List<String> journalColLabelList = Arrays.asList(
+			new String[] { "journalDate", "journalReferenceNo", "postingReferenceTypeDisplayName", "description" });
 	private final List<String> journalColNameList = Arrays
 			.asList(new String[] { "journalDate", "journlReferencenNo", "postingReferenceType", "description" });
 
@@ -62,6 +62,52 @@ public class DatatableSortingFilterConstant {
 			.asList(new String[] { "firstName", "dob", "roleName", "active" });
 	private final List<String> userColNameList = Arrays
 			.asList(new String[] { "firstName", "dateOfBirth", "role.roleName", "isActive" });
+
+	public final String CHART_OF_ACCOUNT = "CHART_OF_ACCOUNT";
+	public final String CHART_OF_ACCOUNT_DEFAULT = "transactionCategoryId";
+	private final List<String> chartOfAccountColLabelList = Arrays
+			.asList(new String[] { "transactionCategoryCode", "transactionCategoryName", "transactionTypeName" });
+	private final List<String> chartOfAccountColNameList = Arrays.asList(
+			new String[] { "transactionCategoryCode", "transactionCategoryName", "chartOfAccount.chartOfAccountName" });
+
+	public final String CONTACT = "CONTACT";
+	public final String CONTACT_DEFALT = "contactId";
+	private final List<String> contactColLabelList = Arrays
+			.asList(new String[] { "firstName", "email", "contactTypeString" });
+	private final List<String> contactColNameList = Arrays.asList(new String[] { "firstName", "email", "contactType" });
+
+	public final String EMPLOYEE = "EMPLOYEE";
+	public final String EMPLOYEE_DEFALT = "id";
+	private final List<String> employeeColLabelList = Arrays
+			.asList(new String[] { "firstName", "referenceCode", "email", "vatRegestationNo" });
+	private final List<String> employeeColNameList = Arrays
+			.asList(new String[] { "firstName", "referenceCode", "email", "vatRegistrationNo" });
+
+	public final String PRODUCT = "PRODUCT";
+	public final String PRODUCT_DEFALT = "productID";
+	private final List<String> productColLabelList = Arrays
+			.asList(new String[] { "name", "productCode", "description", "vatPercentage", "unitPrice" });
+	private final List<String> productColNameList = Arrays.asList(
+			new String[] { "productName", "productCode", "productDescription", "vatCategory.name", "unitPrice" });
+
+	public final String PROJECT = "PROJECT";
+	public final String PROJECT_DEFALT = "projectId";
+	private final List<String> projectColLabelList = Arrays
+			.asList(new String[] { "projectName", "expenseBudget", "revenueBudget", "vatRegistrationNumber" });
+	private final List<String> projectColNameList = Arrays
+			.asList(new String[] { "projectName", "expenseBudget", "revenueBudget", "vatRegistrationNumber" });
+
+	public final String VAT_CATEGORY = "VAT_CATEGORY";
+	public final String VAT_CATEGORYT_DEFALT = "id";
+	private final List<String> vatCategoryColLabelList = Arrays.asList(new String[] { "name", "vat" });
+	private final List<String> vatCategoryColNameList = Arrays.asList(new String[] { "name", "vat" });
+
+	public final String PRODUCT_CATEGORY = "PRODUCT_CATEGORY";
+	public final String PRODUCT_CATEGORYT_DEFALT = "id";
+	private final List<String> productCategoryColLabelList = Arrays
+			.asList(new String[] { "productCategoryName", "productCategoryCode" });
+	private final List<String> productCategoryColNameList = Arrays
+			.asList(new String[] { "productCategoryName", "productCategoryCode" });
 
 	private Map<String, String> getMap(List<String> colLabelList, List<String> colNameList) {
 		dataMap = new HashMap<String, String>();
@@ -137,6 +183,70 @@ public class DatatableSortingFilterConstant {
 				returnDbName = USER_DEFAULT;
 			}
 			break;
+
+		case CHART_OF_ACCOUNT:
+			map = getMap(chartOfAccountColLabelList, chartOfAccountColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = CHART_OF_ACCOUNT_DEFAULT;
+			}
+			break;
+
+		case CONTACT:
+			map = getMap(contactColLabelList, contactColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = CONTACT_DEFALT;
+			}
+			break;
+
+		case EMPLOYEE:
+			map = getMap(employeeColLabelList, employeeColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = EMPLOYEE_DEFALT;
+			}
+			break;
+
+		case PRODUCT:
+			map = getMap(productColLabelList, productColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = PRODUCT_DEFALT;
+			}
+			break;
+
+		case PROJECT:
+			map = getMap(projectColLabelList, projectColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = PROJECT_DEFALT;
+			}
+			break;
+
+		case VAT_CATEGORY:
+			map = getMap(vatCategoryColLabelList, vatCategoryColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = VAT_CATEGORYT_DEFALT;
+			}
+			break;
+
+		case PRODUCT_CATEGORY:
+			map = getMap(productCategoryColLabelList, productCategoryColNameList);
+			if (map.containsKey(label)) {
+				returnDbName = map.get(label);
+			} else {
+				returnDbName = PRODUCT_CATEGORYT_DEFALT;
+			}
+			break;
+
 		}
 		return returnDbName;
 	}

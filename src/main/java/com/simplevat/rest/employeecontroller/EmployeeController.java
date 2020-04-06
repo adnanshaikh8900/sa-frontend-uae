@@ -63,7 +63,6 @@ public class EmployeeController {
 			filterDataMap.put(EmployeeFilterEnum.FIRST_NAME, filterModel.getName());
 			filterDataMap.put(EmployeeFilterEnum.EMAIL, filterModel.getEmail());
 			filterDataMap.put(EmployeeFilterEnum.DELETE_FLAG, false);
-			filterDataMap.put(EmployeeFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
 			PaginationResponseModel response = employeeService.getEmployeeList(filterDataMap, filterModel);
 			if (response == null) {

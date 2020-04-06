@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.dao.AbstractDao;
@@ -19,6 +21,8 @@ import javax.transaction.Transactional;
 
 @Repository
 public class VatCategoryDaoImpl extends AbstractDao<Integer, VatCategory> implements VatCategoryDao {
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<VatCategory> getVatCategoryList() {
@@ -69,6 +73,9 @@ public class VatCategoryDaoImpl extends AbstractDao<Integer, VatCategory> implem
 		filterDataMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
+		if (paginationModel != null && paginationModel.getSortingCol() != null)
+			paginationModel.setSortingCol(
+					dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.VAT_CATEGORY));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 

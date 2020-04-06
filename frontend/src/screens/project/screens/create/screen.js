@@ -84,6 +84,8 @@ class CreateProject extends React.Component {
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
+		this.formRef = React.createRef()
+
   }
 
 
@@ -92,9 +94,10 @@ class CreateProject extends React.Component {
     this.setState({ openContactModal: true })
   }
   // Cloase Confirm Modal
-  closeContactModal = (res) => {
+  closeContactModal = (res,data) => {
     if (res) {
       this.props.projectActions.getContactList();
+      this.formRef.current.setFieldValue('contactId', data.contactId, true)
     }
     this.setState({ openContactModal: false })
   }
@@ -112,7 +115,7 @@ class CreateProject extends React.Component {
   projectHandleSubmit = (data,resetForm) => {
     const {
       projectName,
-      invoiceLanguageCode,
+      // invoiceLanguageCode,
       contactId,
       contractPoNumber,
       vatRegistrationNumber,
@@ -123,7 +126,7 @@ class CreateProject extends React.Component {
 
     const postData = {
       projectName: projectName ? projectName : '',
-      invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
+      // invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
       contactId: contactId && contactId !== null ? contactId : '',
       contractPoNumber: contractPoNumber ? contractPoNumber : '',
       vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
@@ -170,6 +173,7 @@ class CreateProject extends React.Component {
                   <Row>
                     <Col lg={12}>
                       <Formik
+                      	ref={this.formRef}
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
                           this.projectHandleSubmit(values,resetForm)
@@ -340,11 +344,11 @@ class CreateProject extends React.Component {
                                 <FormGroup className="">
                                   <Label htmlFor="expenseBudget">Expense Budget</Label>
                                   <Input
-                                    type="number"
+                                    type="text"
                                     id="expenseBudget"
                                     name="expenseBudget"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regex.test(option.target.value)) props.handleChange('expenseBudget')(option)
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('expenseBudget')(option)
                                     }}
                                     placeholder="Enter Expense Budgets"
                                     value={props.values.expenseBudget}
@@ -363,11 +367,11 @@ class CreateProject extends React.Component {
                                 <FormGroup className="">
                                   <Label htmlFor="revenueBudget">Revenue Budget</Label>
                                   <Input
-                                    type="number"
+                                    type="text"
                                     id="revenueBudget"
                                     name="revenueBudget"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regex.test(option.target.value)) props.handleChange('revenueBudget')(option)
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('revenueBudget')(option)
                                     }}
                                     placeholder="Enter VAT Revenue Budget"
                                     value={props.values.revenueBudget}
@@ -449,11 +453,12 @@ class CreateProject extends React.Component {
 
         <ContactModal
           openContactModal={this.state.openContactModal}
-          closeContactModal={(val) => { this.closeContactModal(val) }}
-          currencyList={currency_list}
-          countryList={country_list}
+          closeContactModal={(val,data) => { this.closeContactModal(val,data) }}
           createContact={this.props.projectActions.createProjectContact}
           titleList={title_list}
+          currencyList={currency_list}
+					countryList={country_list}
+					getStateList={this.props.projectActions.getStateList}
         />
 
       </div>

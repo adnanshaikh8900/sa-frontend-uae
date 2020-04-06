@@ -42,6 +42,7 @@ import com.simplevat.service.VatCategoryService;
 @RestController
 @RequestMapping(value = "/rest/product")
 public class ProductController implements Serializable {
+	
 	private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@Autowired
@@ -63,7 +64,6 @@ public class ProductController implements Serializable {
 		filterDataMap.put(ProductFilterEnum.PRODUCT_NAME, filterModel.getName());
 		filterDataMap.put(ProductFilterEnum.PRODUCT_CODE, filterModel.getProductCode());
 		filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE, filterModel.getVatPercentage());
-		filterDataMap.put(ProductFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
 		PaginationResponseModel response = productService.getProductList(filterDataMap, filterModel);
 

@@ -25,10 +25,12 @@ export const getExpenseList = (obj) => {
       url: param
     }
     return authApi(data).then(res => {
-      dispatch({
-        type: EXPENSE.EXPENSE_LIST,
-        payload: res.data
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: EXPENSE.EXPENSE_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

@@ -33,6 +33,7 @@ import {
   CommonActions
 } from 'services/global'
 import { selectOptionsFactory } from 'utils'
+import { CSVLink } from "react-csv";
 
 
 import './style.scss'
@@ -42,7 +43,6 @@ const mapStateToProps = (state) => {
   return ({
     bank_transaction_list: state.bank_account.bank_transaction_list,
     transaction_type_list: state.bank_account.transaction_type_list,
-
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -94,6 +94,9 @@ class BankTransactions extends React.Component {
       selectedReconcileTransactionType: '',
       selectedReconcileCategoryType: '',
       category_label: '',
+      csvData: [],
+      view: false
+      
     }
 
     this.options = {
@@ -111,7 +114,7 @@ class BankTransactions extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
   componentDidMount = () => {
@@ -481,13 +484,35 @@ class BankTransactions extends React.Component {
     })
   }
 
+  getCsvData = () => {
+    if(this.state.csvData.length === 0) {
+   let obj = {
+     paginationDisable: true
+   }
+   this.props.transactionsActions.getTransactionList(obj).then(res => {
+     if (res.status === 200) {
+       this.setState({ csvData: res.data.data, view: true }, () => {
+         setTimeout(() => {
+           this.csvLink.current.link.click()
+         }, 0)
+       });
+     }
+   })
+ } else {
+   this.csvLink.current.link.click()
+ }
+}
+
+
   render() {
 
     const {
       loading,
       statusOptions,
       filterData,
-      dialog
+      dialog,
+      csvData,
+      view
     } = this.state
     const { bank_transaction_list, transaction_type_list } = this.props
 
@@ -524,6 +549,20 @@ class BankTransactions extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
+                        <Button
+                            color="success"
+                            className="btn-square"
+                            onClick={() => this.getCsvData()}
+                          >
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
+                          </Button>
+                           {view && <CSVLink
+                            data={csvData}
+                            filename={'Transaction.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="info"
                             className="btn-square"

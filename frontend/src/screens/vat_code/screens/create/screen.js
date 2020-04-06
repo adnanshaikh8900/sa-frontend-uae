@@ -60,7 +60,7 @@ class CreateVatCode extends React.Component {
   }
 
   componentDidMount = () => {
-    this.props.vatActions.getVatList()
+    // this.props.vatActions.getVatList()
   }
 
   // Save Updated Field's Value to State

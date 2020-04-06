@@ -228,7 +228,7 @@ class SupplierInvoice extends React.Component {
             <DropdownItem onClick={() => this.props.history.push('/admin/expense/supplier-invoice/view', { id: row.id })}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem onClick={() => { this.sendMail(row.id) }}>
               <i className="fas fa-upload" /> Send
             </DropdownItem>
             {/* <DropdownItem>
@@ -244,6 +244,16 @@ class SupplierInvoice extends React.Component {
         </ButtonDropdown>
       </div>
     )
+  }
+
+  sendMail = (id) => {
+    this.props.supplierInvoiceActions.sendMail(id).then(res => {
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'Invoice Send Successfully');
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', 'Please First fill The Mail Configuration Detail');
+    })
   }
 
   onSizePerPageList = (sizePerPage) => {
@@ -371,7 +381,7 @@ class SupplierInvoice extends React.Component {
     })
   }
 
-  openInvoicePreviewModal = (id) =>{
+  openInvoicePreviewModal = (id) => {
     this.setState({
       selectedId: id
     }, () => {
@@ -430,7 +440,6 @@ class SupplierInvoice extends React.Component {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
               this.csvLink.current.link.click()
-              this.initializeData();
             }, 0)
           });
         }
@@ -521,7 +530,7 @@ class SupplierInvoice extends React.Component {
                           </Button>
                       {view && <CSVLink
                         data={csvData}
-                        filename={'supplier_invoice.csv'}
+                        filename={'SupplierInvoice.csv'}
                         className="hidden"
                         ref={this.csvLink}
                         target="_blank"

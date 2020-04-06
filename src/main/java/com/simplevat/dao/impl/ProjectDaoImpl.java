@@ -3,8 +3,10 @@ package com.simplevat.dao.impl;
 import com.simplevat.dao.ProjectDao;
 import com.simplevat.entity.Project;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.ProjectFilterEnum;
 import com.simplevat.dao.AbstractDao;
@@ -23,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 public class ProjectDaoImpl extends AbstractDao<Integer, Project> implements ProjectDao {
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public PaginationResponseModel getProjectList(Map<ProjectFilterEnum, Object> filterMap,
@@ -31,6 +35,7 @@ public class ProjectDaoImpl extends AbstractDao<Integer, Project> implements Pro
 		filterMap.forEach(
 				(projectFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(projectFilter.getDbColumnName())
 						.condition(projectFilter.getCondition()).value(value).build()));
+		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.PROJECT));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}

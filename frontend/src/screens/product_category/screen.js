@@ -62,6 +62,9 @@ class ProductCategory extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -121,7 +124,11 @@ class ProductCategory extends React.Component {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.productCategoryActions.getProductCategoryList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
@@ -146,6 +153,12 @@ class ProductCategory extends React.Component {
     }
   }
 
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
+  }
+  
   // -------------------------
   // Actions
   //--------------------------
@@ -282,7 +295,7 @@ class ProductCategory extends React.Component {
                           </Button>
                            {view && <CSVLink
                             data={csvData}
-                            filename={'product_category.csv'}
+                            filename={'ProductCategory.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"

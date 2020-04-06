@@ -393,7 +393,7 @@ class Journal extends React.Component {
                           </Button>
                            {view && <CSVLink
                             data={csvData}
-                            filename={'journal.csv'}
+                            filename={'Journal.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"
@@ -494,7 +494,7 @@ class Journal extends React.Component {
                             dataSort
                             width="18%"
                           >
-                            DESCRIPTION
+                            Notes
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="journalLineItems"

@@ -10,7 +10,6 @@ import {
   Col,
   Form,
   FormGroup,
-  FormText,
   Input,
   Label
 } from 'reactstrap'
@@ -137,7 +136,7 @@ class DetailEmployee extends React.Component {
       dialog: null
     })
   }
-  
+
   render() {
 
     const { currency_list } = this.props
@@ -315,13 +314,9 @@ class DetailEmployee extends React.Component {
                                         onChange={(value) => { props.handleChange('password')(value) }}
                                         className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                       />
-                                      {!props.errors.password ?
-                                        (
-                                          <FormText style={{ color: '#20a8d8', fontSize: '14px' }}>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
-                                        ) : null}
-                                      {props.errors.password && props.touched.password && (
+                                      {props.errors.password && props.touched.password ? (
                                         <div className="invalid-feedback">{props.errors.password}</div>
-                                      )}
+                                      ) : (<span className="password-msg">Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character.</span>)}
                                     </FormGroup>
                                   </Col>
                                   <Col md="4">
@@ -354,6 +349,7 @@ class DetailEmployee extends React.Component {
                                         dropdownMode="select"
                                         placeholderText="Select Date of Birth"
                                         value={moment(props.values.dob).format('DD-MM-YYYY')}
+                                        maxDate={new Date()}
                                         onChange={(value) => {
                                           props.handleChange("dob")(value)
                                         }}

@@ -272,7 +272,7 @@ class CustomerInvoice extends React.Component {
             {/* <DropdownItem>
               <i className="fas fa-adjust" /> Adjust
             </DropdownItem> */}
-            <DropdownItem>
+            <DropdownItem onClick={() => { this.sendMail(row.id) }}>
               <i className="fas fa-upload" /> Send
             </DropdownItem>
             {/* <DropdownItem>
@@ -285,6 +285,16 @@ class CustomerInvoice extends React.Component {
         </ButtonDropdown>
       </div>
     )
+  }
+
+  sendMail = (id) => {
+    this.props.customerInvoiceActions.sendMail(id).then(res => {
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'Invoice Send Successfully');
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', 'Please First fill The Mail Configuration Detail');
+    })
   }
 
   onRowSelect = (row, isSelected, e) => {
@@ -419,7 +429,6 @@ class CustomerInvoice extends React.Component {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
               this.csvLink.current.link.click()
-              this.initializeData();
             }, 0)
           });
         }
@@ -508,7 +517,7 @@ class CustomerInvoice extends React.Component {
                           </Button>
                       {view && <CSVLink
                         data={csvData}
-                        filename={'Customer_Invoice.csv'}
+                        filename={'CustomerInvoice.csv'}
                         className="hidden"
                         ref={this.csvLink}
                         target="_blank"
@@ -526,7 +535,6 @@ class CustomerInvoice extends React.Component {
                         className="btn-square"
                         onClick={this.bulkDelete}
                         disabled={selectedRows.length === 0}
-
                       >
                         <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
                         Bulk Delete

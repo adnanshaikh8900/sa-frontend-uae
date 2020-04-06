@@ -113,12 +113,12 @@ class BankAccount extends React.Component {
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
 
-    this.props.bankAccountActions.getBankAccountList(postData).then(res => {
+    this.props.bankAccountActions.getBankAccountList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false });
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : '');
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({ loading: false })
     })
 
@@ -149,7 +149,7 @@ class BankAccount extends React.Component {
 
   //   data = filterFactory.filterDataList(filter_bank, 'bankName', 'contain', bank_account_list)
   //   let data_temp = []
-  //   data.map(item => {
+  //   data.map((item) => {
   //     let flag = true
   //     flag = filterFactory.compareString(
   //       filter_account_type ? filter_account_type.value : '',
@@ -164,7 +164,7 @@ class BankAccount extends React.Component {
   //   data = filterFactory.filterDataList(filter_account_name, 'bankAccountName', 'contain', data_temp)
   //   data_temp = filterFactory.filterDataList(filter_account_number, 'accountNumber', 'contain', data)
   //   data = []
-  //   data_temp.map(item => {
+  //   data_temp.map((item) => {
   //     let flag = true
   //     flag = filterFactory.compareString(
   //       filter_currency ? filter_currency.value : '',
@@ -323,7 +323,7 @@ class BankAccount extends React.Component {
       this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
       this.initializeData()
       let temp_List = []
-      this.state.selected_id_list.map(item => {
+      this.state.selected_id_list.map((item) => {
         if (item !== _id) {
           temp_List.push(item)
         }
@@ -332,7 +332,7 @@ class BankAccount extends React.Component {
       this.setState({
         selected_id_list: temp_List
       })
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -364,7 +364,7 @@ class BankAccount extends React.Component {
       temp_list = Object.assign([], this.state.selected_id_list)
       temp_list.push(row.bankAccountId)
     } else {
-      this.state.selected_id_list.map(item => {
+      this.state.selected_id_list.map((item) => {
         if (item !== row.bankAccountId) {
           temp_list.push(item)
         }
@@ -379,7 +379,7 @@ class BankAccount extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
+      rows.map((item) => {
         temp_list.push(item.bankAccountId)
         return item
       })
@@ -420,7 +420,7 @@ class BankAccount extends React.Component {
       this.setState({
         selected_id_list: []
       })
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -445,7 +445,7 @@ class BankAccount extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.bankAccountActions.getBankAccountList(obj).then(res => {
+      this.props.bankAccountActions.getBankAccountList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -550,7 +550,7 @@ class BankAccount extends React.Component {
                               className=""
                               options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, 'Account Type') : []}
                               value={filterData.bankAccountTypeId}
-                              onChange={option => this.inputHandler('bankAccountTypeId', option.value)}
+                              onChange={(option) => this.inputHandler('bankAccountTypeId', option.value)}
                               placeholder="Account Type"
                             />
                           </Col>
@@ -575,7 +575,7 @@ class BankAccount extends React.Component {
                               className=""
                               options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                               value={filterData.currencyCode}
-                              onChange={option => this.inputHandler('currencyCode', option.value)}
+                              onChange={(option) => this.inputHandler('currencyCode', option.value)}
                               placeholder="Currency"
                             />
                           </Col>
@@ -602,7 +602,7 @@ class BankAccount extends React.Component {
                           fetchInfo={{ dataTotalSize: bank_account_list && bank_account_list.count ? bank_account_list.count : 0 }}
                           className="bank-account-table"
                           csvFileName="bank_account_list.csv"
-                          ref={node => {
+                          ref={(node) => {
                             this.table = node
                           }}
                         >

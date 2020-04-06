@@ -13,14 +13,14 @@ export const getDateFormatList = () => {
       method: 'get',
       url: '/rest/dateFormat/getList'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: IMPORT_TRANSACTION.DATE_FORMAT_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -32,9 +32,9 @@ export const getDelimiterList = () => {
       method: 'get',
       url: '/rest/transactionParsing/delimiter/list',
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
         return res
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
   }
@@ -47,9 +47,9 @@ export const getTableHeaderList = (obj) => {
       url: '/rest/transactionParsing/dbColEnum/list',
       // data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
         return res
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
   }
@@ -62,9 +62,9 @@ export const getTableDataList = (obj) => {
       url: '/rest/transactionParsing/parse',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
         return res
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
   }
@@ -77,9 +77,9 @@ export const parseFile = (obj) => {
       url: '/rest/transactionParsing/parse',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
         return res
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
   }
@@ -91,9 +91,9 @@ export const getConfigurationList = () => {
       method: 'get',
       url: '/rest/transactionParsing/list',
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
         return res
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
   }
@@ -105,9 +105,9 @@ export const createConfiguration = (obj) => {
       url: '/rest/transactionParsing/save',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
         return res
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
   }

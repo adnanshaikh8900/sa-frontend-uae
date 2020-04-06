@@ -80,7 +80,7 @@ class CreateContact extends React.Component {
     }
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
 
@@ -96,7 +96,7 @@ class CreateContact extends React.Component {
   }
 
   handleSubmit = (data, resetForm) => {
-    this.props.createContactActions.createContact(data).then(res => {
+    this.props.createContactActions.createContact(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Contact Created Successfully')
         resetForm();
@@ -106,12 +106,12 @@ class CreateContact extends React.Component {
           this.props.history.push('/admin/master/contact');
         }
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
-  getStateList = (countryCode) =>{
+  getStateList = (countryCode) => {
     this.props.contactActions.getStateList(countryCode);
   }
 
@@ -194,7 +194,7 @@ class CreateContact extends React.Component {
                           })
                         }
                       >
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <h4 className="mb-4">Contact Name</h4>
                             <Row className="row-wrapper">
@@ -277,7 +277,7 @@ class CreateContact extends React.Component {
                                   <Select
                                     options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                     value={props.values.contactType}
-                                    onChange={option => {
+                                    onChange={(option) => {
                                       if (option && option.value) {
                                         props.handleChange('contactType')(option.value)
                                       } else {
@@ -491,7 +491,7 @@ class CreateContact extends React.Component {
                                   <Select
                                     options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                     value={props.values.countryId}
-                                    onChange={option => {
+                                    onChange={(option) => {
                                       if (option && option.value) {
                                         props.handleChange('countryId')(option.value)
                                         this.getStateList(option.value)
@@ -521,7 +521,7 @@ class CreateContact extends React.Component {
                                   <Select
                                     options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
                                     value={props.values.stateId}
-                                    onChange={option => {
+                                    onChange={(option) => {
                                       if (option && option.value) {
                                         props.handleChange('stateId')(option.value)
                                       } else {
@@ -675,7 +675,7 @@ class CreateContact extends React.Component {
                                   <Select
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currencyCode}
-                                    onChange={option => {
+                                    onChange={(option) => {
                                       if (option && option.value) {
                                         props.handleChange('currencyCode')(option.value)
                                       } else {

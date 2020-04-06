@@ -47,7 +47,7 @@ class TransactionsReport extends React.Component {
 
   toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
-    newArray[tabPane] = tab
+    newArray[parseInt(tabPane)] = tab
     this.setState({
       activeTab: newArray
     })

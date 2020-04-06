@@ -107,11 +107,11 @@ class Product extends React.Component {
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.productActions.getProductList(postData).then(res => {
+    this.props.productActions.getProductList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
@@ -133,7 +133,7 @@ class Product extends React.Component {
       temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.id);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.id) {
           temp_list.push(item)
         }
@@ -148,7 +148,7 @@ class Product extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => temp_list.push(item.id))
+      rows.map((item) => temp_list.push(item.id))
     }
     this.setState({
       selectedRows: temp_list
@@ -179,7 +179,7 @@ class Product extends React.Component {
     let obj = {
       ids: selectedRows
     }
-    this.props.productActions.removeBulk(obj).then(res => {
+    this.props.productActions.removeBulk(obj).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Product Deleted Successfully')
         this.initializeData();
@@ -189,7 +189,7 @@ class Product extends React.Component {
           })
         }
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -235,7 +235,7 @@ class Product extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.productActions.getProductList(obj).then(res => {
+      this.props.productActions.getProductList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -365,7 +365,7 @@ class Product extends React.Component {
                           className="product-table"
                           trClassName="cursor-pointer"
                           csvFileName="product_list.csv"
-                          ref={node => this.table = node}
+                          ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
                             isKey

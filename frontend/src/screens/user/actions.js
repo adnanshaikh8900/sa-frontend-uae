@@ -23,10 +23,10 @@ export const getUserList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: url
+      url
     }
 
-    return authApi(data).then(res => {  
+    return authApi(data).then((res) => {  
       if(!obj.paginationDisable) {
         dispatch({
           type: USER.USER_LIST,
@@ -34,7 +34,7 @@ export const getUserList = (obj) => {
         })
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -50,14 +50,14 @@ export const getRoleList = (obj) => {
       // ?projectName=${obj.projectName}&expenseBudget=${obj.expenseBudget}&revenueBudget=${obj.revenueBudget}&vatRegistrationNumber=${obj.vatRegistrationNumber}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
 
       dispatch({
         type: USER.ROLE_LIST,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -70,11 +70,11 @@ export const removeBulk = (obj) => {
       url: '/rest/user/deletes',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -86,14 +86,14 @@ export const getCompanyTypeList = () => {
       method: 'get',
       url: `/rest/company/getCompaniesForDropdown`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: USER.COMPANY_TYPE_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

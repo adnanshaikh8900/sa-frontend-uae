@@ -39,13 +39,13 @@ class SupplierModal extends React.Component {
 
   // Create or Contact
   handleSubmit = (data,resetForm,setSubmitting) => {
-    this.props.createSupplier(data).then(res => {
+    this.props.createSupplier(data).then((res) => {
       if (res.status === 200) {
         resetForm();
         this.props.closeSupplierModal(true)
         this.props.getCurrentUser(res.data)
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.displayMsg();
       this.formikRef.current.setSubmitting(false);
     })
@@ -82,7 +82,7 @@ class SupplierModal extends React.Component {
               })
             }
           >
-            {props => {
+            {(props) => {
                 const { isSubmitting } = props;
               return (
               <Form name="simpleForm" onSubmit={props.handleSubmit}>
@@ -164,7 +164,7 @@ class SupplierModal extends React.Component {
                 </ModalBody>
                 <ModalFooter>
                   <Button color="success" type="submit" className="btn-square" disabled={isSubmitting}>Save</Button>&nbsp;
-                    <Button color="secondary" className="btn-square" onClick={()=>{closeSupplierModal(false)}}>Cancel</Button>
+                    <Button color="secondary" className="btn-square" onClick={() => {closeSupplierModal(false)}}>Cancel</Button>
                 </ModalFooter>
               </Form>
             )}

@@ -121,7 +121,7 @@ class TaxReport extends React.Component {
     this.setState({ selectedVat })
   }
 
-  changeStatus = (selectedStatus) =>{
+  changeStatus = (selectedStatus) => {
     this.setState({ selectedStatus })
   }
 

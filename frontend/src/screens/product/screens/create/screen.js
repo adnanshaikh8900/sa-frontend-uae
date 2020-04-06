@@ -74,7 +74,7 @@ class CreateProduct extends React.Component {
   }
 
 
-  componentDidMount = () =>{
+  componentDidMount = () => {
     this.props.productActions.getProductVatCategoryList()
     this.props.productActions.getProductCategoryList()
     this.props.productActions.getProductWareHouseList()
@@ -94,30 +94,7 @@ class CreateProduct extends React.Component {
 
   // Create or Edit Product
   handleSubmit = (data,resetForm) => {
-    const {
-      productName, 
-      productDescription,
-      productCode,
-      vatCategoryId,
-      unitPrice ,
-      productCategoryId,
-      productWarehouseId,
-      vatIncluded,
-    } = data
-
-
-    const postData = {
-      productName:  productName,
-      productDescription: productDescription,
-      productCode: productCode,
-      vatCategoryId: vatCategoryId,
-      unitPrice: unitPrice,
-      productCategoryId: productCategoryId,
-      productWarehouseId: productWarehouseId,
-      vatIncluded: vatIncluded
-    }
-
-    this.props.productActions.createAndSaveProduct(postData).then(res => {
+    this.props.productActions.createAndSaveProduct(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Product created successfully!')
         if(this.state.createMore){
@@ -128,7 +105,7 @@ class CreateProduct extends React.Component {
           // this.props.history.push('/admin/master/product/create')
         } else this.props.history.push('/admin/master/product')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -178,7 +155,7 @@ class CreateProduct extends React.Component {
                             .nullable()
                         })}
                         >
-                          {props => (
+                          {(props) => (
                             <Form onSubmit={props.handleSubmit}>
                               <Row>
                                 <Col lg={4}>
@@ -304,7 +281,7 @@ class CreateProduct extends React.Component {
                                       id="vatIncluded"
                                       name="vatIncluded"
                                       onChange={(value) => {props.handleChange("vatIncluded")(value)}}
-                                      value={props.values.vatIncluded || false}
+                                      checked={props.values.vatIncluded}
                                     />
                                     <Label className="form-check-label" check htmlFor="vatIncluded">Vat Include</Label>
                                   </FormGroup>

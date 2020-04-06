@@ -121,7 +121,7 @@ class SupplierInvoice extends React.Component {
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.supplierInvoiceActions.getSupplierInvoiceList(postData).then(res => {
+    this.props.supplierInvoiceActions.getSupplierInvoiceList(postData).then((res) => {
       if (res.status === 200) {
 
         this.setState({ loading: false }, () => {
@@ -130,8 +130,8 @@ class SupplierInvoice extends React.Component {
           }
         });
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({ loading: false })
     })
 
@@ -222,7 +222,7 @@ class SupplierInvoice extends React.Component {
                 <i className="fas fa-heart" /> Post
               </DropdownItem>
             )}
-            {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.id)}}>
+            {/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem> */}
             <DropdownItem onClick={() => this.props.history.push('/admin/expense/supplier-invoice/view', { id: row.id })}>
@@ -247,11 +247,11 @@ class SupplierInvoice extends React.Component {
   }
 
   sendMail = (id) => {
-    this.props.supplierInvoiceActions.sendMail(id).then(res => {
+    this.props.supplierInvoiceActions.sendMail(id).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Invoice Send Successfully');
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', 'Please First fill The Mail Configuration Detail');
     })
   }
@@ -276,7 +276,7 @@ class SupplierInvoice extends React.Component {
       temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.id);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.id) {
           temp_list.push(item)
         }
@@ -290,7 +290,7 @@ class SupplierInvoice extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
+      rows.map((item) => {
         temp_list.push(item.id)
         return item
       })
@@ -333,7 +333,7 @@ class SupplierInvoice extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -365,7 +365,7 @@ class SupplierInvoice extends React.Component {
       postingRefId: row.id,
       postingRefType: 'INVOICE'
     }
-    this.props.supplierInvoiceActions.postInvoice(postingRequestModel).then(res => {
+    this.props.supplierInvoiceActions.postInvoice(postingRequestModel).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
         this.setState({
@@ -373,8 +373,8 @@ class SupplierInvoice extends React.Component {
         })
         this.initializeData()
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({
         loading: false
       })
@@ -424,7 +424,7 @@ class SupplierInvoice extends React.Component {
     this.props.supplierInvoiceActions.deleteInvoice(id).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
       this.initializeData()
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -435,7 +435,7 @@ class SupplierInvoice extends React.Component {
         paginationDisable: true
 
       }
-      this.props.supplierInvoiceActions.getSupplierInvoiceList(obj).then(res => {
+      this.props.supplierInvoiceActions.getSupplierInvoiceList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -617,7 +617,7 @@ class SupplierInvoice extends React.Component {
                       <Col lg={2} className="mb-1">
                         <Select
                           className=""
-                          // options={status_list ? status_list.map(item => {
+                          // options={status_list ? status_list.map((item) => {
                           //   return { label: item, value: item }
                           // }) : ''}
                           options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list, 'Status') : []}
@@ -652,7 +652,7 @@ class SupplierInvoice extends React.Component {
                       remote
                       fetchInfo={{ dataTotalSize: supplier_invoice_list.count ? supplier_invoice_list.count : 0 }}
                       className="supplier-invoice-table"
-                      ref={node => this.table = node}
+                      ref={(node) => this.table = node}
                     >
 
                       <TableHeaderColumn

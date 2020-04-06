@@ -100,12 +100,12 @@ class Contact extends React.Component {
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.contactActions.getContactList(postData).then(res => {
+    this.props.contactActions.getContactList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false });
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({ loading: false })
     })
   }
@@ -137,7 +137,7 @@ class Contact extends React.Component {
       temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.id);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.id) {
           temp_list.push(item)
         }
@@ -152,7 +152,7 @@ class Contact extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
-      rows.map(item =>  temp_list.push(item.id))
+      rows.map((item) =>  temp_list.push(item.id))
     }
     this.setState({
       selectedRows: temp_list
@@ -195,7 +195,7 @@ class Contact extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err !== null ? err.data.message : null)
       this.setState({ isLoading: false })
     })
@@ -224,7 +224,7 @@ class Contact extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.contactActions.getContactList(obj).then(res => {
+      this.props.contactActions.getContactList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -361,7 +361,7 @@ class Contact extends React.Component {
                               className="product-table"
                               trClassName="cursor-pointer"
                               csvFileName="Contact.csv"
-                              ref={node => {
+                              ref={(node) => {
                                 this.table = node
                               }}
                             >

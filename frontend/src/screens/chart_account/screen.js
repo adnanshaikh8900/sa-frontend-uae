@@ -105,12 +105,12 @@ class ChartAccount extends React.Component {
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.chartOfAccountActions.getTransactionCategoryList(postData).then(res => {
+    this.props.chartOfAccountActions.getTransactionCategoryList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false });
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err !== undefined ? err.data.message : '');
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({ loading: false })
     })
 
@@ -151,7 +151,7 @@ class ChartAccount extends React.Component {
       temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.transactionCategoryId);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.transactionCategoryId) {
           temp_list.push(item)
         }
@@ -165,7 +165,7 @@ class ChartAccount extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
+      rows.map((item) => {
         temp_list.push(item.transactionCategoryId)
         return item
       })
@@ -207,7 +207,7 @@ class ChartAccount extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -240,7 +240,7 @@ class ChartAccount extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.chartOfAccountActions.getTransactionCategoryList(obj).then(res => {
+      this.props.chartOfAccountActions.getTransactionCategoryList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -374,7 +374,7 @@ class ChartAccount extends React.Component {
                           trClassName="cursor-pointer"
                           csvFileName="Chart_Of_Account.csv"
                           keyField="transactionCategoryId"
-                          ref={node => this.table = node}
+                          ref={(node) => this.table = node}
 
                         >
                           <TableHeaderColumn

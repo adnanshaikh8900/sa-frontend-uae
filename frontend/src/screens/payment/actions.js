@@ -10,14 +10,14 @@ export const getCurrencyList = () => {
       method: 'get',
       url: 'rest/bank/getcurrenncy'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: PAYMENT.CURRENCY_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -29,14 +29,14 @@ export const getBankList = () => {
       method: 'get',
       url: '/rest/bank/list'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: PAYMENT.BANK_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -48,14 +48,14 @@ export const getSupplierContactList = (id) => {
       method: 'get',
       url: `/rest/contact/getContactsForDropdown?contactType=${id}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: PAYMENT.SUPPLIER_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -67,14 +67,14 @@ export const getSupplierInvoiceList = () => {
       method: 'get',
       url: '/rest/invoice/getInvoicesForDropdown'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: PAYMENT.INVOICE_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -86,14 +86,14 @@ export const getProjectList = () => {
       method: 'get',
       url: 'rest/project/getProjectsForDropdown'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: PAYMENT.PROJECT_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -121,7 +121,7 @@ export const getPaymentList = (obj) => {
       // data: obj
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if(!obj.paginationDisable) {
         dispatch({
           type: PAYMENT.PAYMENT_LIST,
@@ -129,7 +129,7 @@ export const getPaymentList = (obj) => {
         })
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -141,9 +141,9 @@ export const removeBulkPayments = (obj) => {
       url: 'rest/payment/deletes',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -156,9 +156,9 @@ export const createSupplier = (obj) => {
       url: 'rest/contact/save',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -170,11 +170,11 @@ export const getInvoiceById = (id) => {
       method: 'get',
       url: `/rest/invoice/getInvoiceById?id=${id}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
           return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

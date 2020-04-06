@@ -9,9 +9,9 @@ export const getTransactionCategoryById = (id) => {
       url: `rest/transactioncategory/getTransactionCategoryById?id=${id}`,
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -26,9 +26,9 @@ export const updateTransactionCategory = (obj) => {
       data: obj
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -41,9 +41,9 @@ export const deleteChartAccount = (id) => {
       url: `/rest/transactioncategory/deleteTransactionCategory?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

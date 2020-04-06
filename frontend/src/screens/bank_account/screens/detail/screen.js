@@ -77,7 +77,7 @@ class DetailBankAccount extends React.Component {
       this.setState({
         current_bank_account_id: this.props.location.state.bankAccountId
       }, () => {
-        this.props.detailBankAccountActions.getBankAccountByID(this.state.current_bank_account_id).then(res => {
+        this.props.detailBankAccountActions.getBankAccountByID(this.state.current_bank_account_id).then((res) => {
           this.setState({
             current_bank_account: res,
             initialVals: {
@@ -93,7 +93,7 @@ class DetailBankAccount extends React.Component {
               account_is_for: res.personalCorporateAccountInd ? res.personalCorporateAccountInd : ''
             }
           })
-        }).catch(err => {
+        }).catch((err) => {
           this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
           this.props.history.push('/admin/banking/bank-account')
         })
@@ -133,13 +133,13 @@ class DetailBankAccount extends React.Component {
       bankCountry: data.country,
       bankAccountType: data.account_type
     }
-    this.props.detailBankAccountActions.updateBankAccount(obj).then(res => {
+    this.props.detailBankAccountActions.updateBankAccount(obj).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Bank Account Details Updated Successfully')
         this.props.history.push('/admin/banking/bank-account')
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -161,7 +161,7 @@ class DetailBankAccount extends React.Component {
     this.props.detailBankAccountActions.removeBankAccountByID(current_bank_account_id).then(() => {
       this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
       this.props.history.push('/admin/banking/bank-account')
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -265,7 +265,7 @@ class DetailBankAccount extends React.Component {
                                       name="currency"
                                       options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                       value={props.values.currency}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('currency')(option.value)
                                         } else {
@@ -317,7 +317,7 @@ class DetailBankAccount extends React.Component {
                                       name="account_type"
                                       options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, 'Account Type') : []}
                                       value={props.values.account_type}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('account_type')(option.value)
                                         } else {
@@ -392,7 +392,7 @@ class DetailBankAccount extends React.Component {
                                       id="ifsc_code"
                                       name="ifsc_code"
                                       placeholder="Enter IFSC Code"
-                                      value={props.values.ifsc_code}
+                                      value={props.values.ifsc_code || '' }
                                       onChange={(option) => { 
                                         if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('ifsc_code')(option) }}
                                          className={
@@ -435,7 +435,7 @@ class DetailBankAccount extends React.Component {
                                       name="country"
                                       options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                       value={props.values.country}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('country')(option.value)
                                         } else {
@@ -460,7 +460,7 @@ class DetailBankAccount extends React.Component {
                                       name="account_is_for"
                                       options={currency_list ? selectOptionsFactory.renderOptions('label', 'value', this.account_for, 'Type') : []}
                                       value={props.values.account_is_for}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('account_is_for')(option.value)
                                         } else {

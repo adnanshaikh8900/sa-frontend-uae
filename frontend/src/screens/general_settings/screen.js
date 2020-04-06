@@ -71,7 +71,7 @@ class GeneralSettings extends React.Component {
   // onEditorStateChange = (editorState) => {
   //   this.setState({
   //     editorState
-  //   },()=>{
+  //   },() => {
   //     console.log(editorState.getCurrentContent())
   //   })
   // }
@@ -80,7 +80,7 @@ class GeneralSettings extends React.Component {
   }
 
   initializeData = () => {
-    this.props.generalSettingActions.getGeneralSettingDetail().then(res => {
+    this.props.generalSettingActions.getGeneralSettingDetail().then((res) => {
       if (res.status === 200) {
         this.setState({
           loading: false,
@@ -103,7 +103,7 @@ class GeneralSettings extends React.Component {
           })
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({
         loading: false,
       })
@@ -126,12 +126,12 @@ handleSubmit = (data) => {
     mailingSmtpStarttlsEnable: selected_smtp_enable,
     mailingUserName: data.mailingUserName
   }
-  this.props.generalSettingActions.updateGeneralSettings(postData).then(res => {
+  this.props.generalSettingActions.updateGeneralSettings(postData).then((res) => {
     if (res.status === 200) {
       this.props.commonActions.tostifyAlert('success', 'General Setting Updated Successfully')
       this.props.history.push('/admin');
     }
-  }).catch(err => {
+  }).catch((err) => {
     this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
   })
 }
@@ -180,7 +180,7 @@ render() {
                         })
                       }
                     >
-                      {props => (
+                      {(props) => (
                         <Form onSubmit={props.handleSubmit}>
                           <h4>General Details</h4>
                           <Row>
@@ -319,7 +319,7 @@ render() {
                                         name="mailingSmtpAuthorization"
                                         checked={this.state.selected_smtp_auth}
                                         value={true}
-                                        onChange={e => {
+                                        onChange={(e) => {
                                           if (e.target.value) {
                                             this.setState({ selected_smtp_auth: true })
                                           }
@@ -337,7 +337,7 @@ render() {
                                         name="mailingSmtpAuthorization"
                                         value={false}
                                         checked={!this.state.selected_smtp_auth}
-                                        onChange={e => {
+                                        onChange={(e) => {
                                           if (e.target.value) {
                                             this.setState({ selected_smtp_auth: false })
                                           }
@@ -362,7 +362,7 @@ render() {
                                         name="mailingSmtpStarttlsEnable"
                                         value={true}
                                         checked={this.state.selected_smtp_enable}
-                                        onChange={e => {
+                                        onChange={(e) => {
                                           if (e.target.value) {
                                             this.setState({ selected_smtp_enable: true })
                                           }
@@ -380,7 +380,7 @@ render() {
                                         name="mailingSmtpStarttlsEnable"
                                         value={false}
                                         checked={!this.state.selected_smtp_enable}
-                                        onChange={e => {
+                                        onChange={(e) => {
                                           if (e.target.value) {
                                             this.setState({ selected_smtp_enable: false })
                                           }

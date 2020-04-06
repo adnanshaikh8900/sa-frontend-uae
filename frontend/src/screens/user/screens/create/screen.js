@@ -69,7 +69,7 @@ class CreateUser extends React.Component {
       userPhotoFile: [],
       showIcon: false,
     }
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
   componentDidMount = () => {
@@ -114,7 +114,7 @@ class CreateUser extends React.Component {
     }
 
 
-    this.props.userCreateActions.createUser(formData).then(res => {
+    this.props.userCreateActions.createUser(formData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New User Created Successfully')
         if (this.state.createMore) {
@@ -126,8 +126,8 @@ class CreateUser extends React.Component {
           this.props.history.push('/admin/settings/user')
         }
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data : 'Internal Server Error')
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -188,7 +188,7 @@ class CreateUser extends React.Component {
                             .required('DOB is Required')
                         })}
                       >
-                        {props => (
+                        {(props) => (
 
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
@@ -203,7 +203,7 @@ class CreateUser extends React.Component {
                                         console.error(err);
                                       }
                                     }}
-                                    onChange={(e)=>{}}
+                                    onChange={(e) => {}}
                                   /> */}
                                   <ImageUploader
                                     // withIcon={true}
@@ -315,7 +315,7 @@ class CreateUser extends React.Component {
                                       <Select
                                         options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                                         value={props.values.roleId}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('roleId')(option.value)
                                           } else {
@@ -350,7 +350,7 @@ class CreateUser extends React.Component {
                                               name="active"
                                               checked={props.values.active === 'true'}
                                               value='true'
-                                              onChange={e => {
+                                              onChange={(e) => {
                                                 props.handleChange('active')(e.target.value)
                                               }}
                                             />
@@ -366,7 +366,7 @@ class CreateUser extends React.Component {
                                               name="active"
                                               checked={props.values.active === 'false'}
                                               value='false'
-                                              onChange={e => {
+                                              onChange={(e) => {
                                                 props.handleChange('active')(e.target.value)
                                               }}
                                             />
@@ -383,7 +383,7 @@ class CreateUser extends React.Component {
                                         className="select-default-width"
                                         options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list , 'Company') : []}
                                         value={props.values.companyId}
-                                        onChange={option => props.handleChange('companyId')(option.value)}
+                                        onChange={(option) => props.handleChange('companyId')(option.value)}
                                         placeholder="Select Company"
                                         id="companyId"
                                         name="companyId"

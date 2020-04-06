@@ -51,7 +51,7 @@ class RevenueAndExpense extends Component {
 
   toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
-    newArray[tabPane] = tab
+    newArray[parseInt(tabPane)] = tab
     this.setState({
       activeTab: newArray,
     });
@@ -65,14 +65,14 @@ class RevenueAndExpense extends Component {
   render() {
     let revenueLabelArr = [], revenueValueArr = [],expenseLabelArr = [], expenseValueArr = [],outstanding = 0;
     if (this.props.revenue_graph) {
-      this.props.revenue_graph.map(item => {
+      this.props.revenue_graph.map((item) => {
         revenueLabelArr.push(item['name'])
         revenueValueArr.push(item['totalAmount'])
         return item
       })
     }
     if (this.props.expense_graph) {
-      this.props.expense_graph.map(item => {
+      this.props.expense_graph.map((item) => {
         expenseLabelArr.push(item['payee'])
         expenseValueArr.push(item['expenseAmount'])
         return item
@@ -195,7 +195,7 @@ class RevenueAndExpense extends Component {
               <TabPane tabId="1">
                 <div className="flex-wrapper" style={{paddingLeft: 20}}>
                   <div className="data-info" style={{border: 'none', marginBottom: 12}}>
-                  <button className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm" onClick={()=>this.props.history.push('/admin/expense/expense/create')}>
+                  <button className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm" onClick={() => this.props.history.push('/admin/expense/expense/create')}>
                     <i className="nav-icon icon-speech"></i><span>New Expense</span>
                   </button>
                   </div>

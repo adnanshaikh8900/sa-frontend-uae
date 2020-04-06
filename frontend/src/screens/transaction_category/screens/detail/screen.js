@@ -62,7 +62,7 @@ class DetailTransactionCategory extends React.Component {
     if (this.id) {
       this.setState({ loading: true })
       this.setState({ loading: true })
-      this.props.transactionActions.getTransactionByID(this.id).then(res => {
+      this.props.transactionActions.getTransactionByID(this.id).then((res) => {
         if (res.status === 200){
           const {
             transactionCategoryId,
@@ -106,7 +106,7 @@ class DetailTransactionCategory extends React.Component {
     return inputLength === 0
       ? []
       : this.state.transactionCategoryList.filter(
-        transaction =>
+        (transaction) =>
           transaction.transactionTypeName
             .toLowerCase()
             .slice(0, inputLength) === inputValue
@@ -145,7 +145,7 @@ class DetailTransactionCategory extends React.Component {
 
   getParentCategoryCodeListData = (val) => {
     const code = this.state.selectedTransactionCategory.transactionTypeCode
-    this.props.transactionActions.getParentCategoryCodeListData(code, val).then(res => {
+    this.props.transactionActions.getParentCategoryCodeListData(code, val).then((res) => {
       if (res.status === 200)
         this.setState({ 
           loading: false,
@@ -166,7 +166,7 @@ class DetailTransactionCategory extends React.Component {
     return inputLength === 0
       ? []
       : this.state.parentCategoryCodeList.filter(
-        transaction =>
+        (transaction) =>
           transaction.transactionCategoryName
             .toLowerCase()
             .slice(0, inputLength) === inputValue
@@ -202,7 +202,7 @@ class DetailTransactionCategory extends React.Component {
   // Get All Transaction Types
   getTransactionTypes = () => {
     this.setState({ loading: true })
-    this.props.transactionActions.getTransactionTypes().then(res => {
+    this.props.transactionActions.getTransactionTypes().then((res) => {
       if (res.status === 200)
         this.setState({ 
           loading: false,
@@ -214,7 +214,7 @@ class DetailTransactionCategory extends React.Component {
   // Get All Transaction Vat Categories
   getTransactionVatCategories = () => {
     this.setState({ loading: true })
-    this.props.transactionActions.getTransactionVatCategories().then(res => {
+    this.props.transactionActions.getTransactionVatCategories().then((res) => {
       if (res.status === 200)
         this.setState({ 
           loading: false,
@@ -269,7 +269,7 @@ class DetailTransactionCategory extends React.Component {
         : ''
     }
 
-    this.props.transactionActions.createAndUpdateTransaction(postObj).then(res => {
+    this.props.transactionActions.createAndUpdateTransaction(postObj).then((res) => {
       if (res.status === 200) {
         this.success()
         if (status === 'addMore') {

@@ -9,9 +9,9 @@ export const getTemplateList = () => {
       method: 'get',
       url: '/rest/transactionParsing/selectModelList',
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
         return res
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
   }
@@ -24,9 +24,9 @@ export const parseFile = (obj) => {
       url: '/rest/transactionimport/parse',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
         return res
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
   }
@@ -39,9 +39,9 @@ export const importTransaction = (obj) => {
       url: '/rest/transactionimport/save',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
         return res
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
   }

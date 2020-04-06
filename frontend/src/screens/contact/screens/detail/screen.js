@@ -64,7 +64,7 @@ class DetailContact extends React.Component {
     }
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
   componentDidMount = () => {
@@ -77,7 +77,7 @@ class DetailContact extends React.Component {
       this.props.contactActions.getCountryList();
       this.props.contactActions.getCurrencyList();
 
-      this.props.detailContactActions.getContactById(this.props.location.state.id).then(res => {
+      this.props.detailContactActions.getContactById(this.props.location.state.id).then((res) => {
         this.setState({
           current_contact_id: this.props.location.state.id,
           loading: false,
@@ -106,7 +106,7 @@ class DetailContact extends React.Component {
           }
         }, () => { this.props.contactActions.getStateList(this.state.initValue.countryId) })
 
-      }).catch(err => {
+      }).catch((err) => {
         this.setState({ loading: false })
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
       })
@@ -120,14 +120,14 @@ class DetailContact extends React.Component {
 
     const postData = { ...data, ...{ contactId: current_contact_id } }
 
-    this.props.detailContactActions.updateContact(postData).then(res => {
+    this.props.detailContactActions.updateContact(postData).then((res) => {
       if (res.status === 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', ' Contact Updated Successfully')
         this.props.history.push('/admin/master/contact');
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err !== undefined && err.data ? err.data.message : null);
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.props.history.push('/admin/master/contact');
     })
   }
@@ -149,12 +149,12 @@ class DetailContact extends React.Component {
 
   removeContact = () => {
     const { current_contact_id } = this.state
-    this.props.detailContactActions.deleteContact(current_contact_id).then(res => {
+    this.props.detailContactActions.deleteContact(current_contact_id).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Contact Deleted Successfully')
         this.props.history.push('/admin/master/contact')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -258,7 +258,7 @@ class DetailContact extends React.Component {
                               })
                             }
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit}>
                                 <h4 className="mb-4">Contact Name</h4>
                                 <Row className="row-wrapper">
@@ -341,7 +341,7 @@ class DetailContact extends React.Component {
                                       <Select
                                         options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                         value={props.values.contactType}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('contactType')(option.value)
                                           } else {
@@ -556,7 +556,7 @@ class DetailContact extends React.Component {
                                       <Select
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                         value={props.values.countryId}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('countryId')(option.value)
                                             this.getStateList(option.value)
@@ -587,7 +587,7 @@ class DetailContact extends React.Component {
                                       <Select
                                         options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
                                         value={props.values.stateId}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('stateId')(option.value)
                                           } else {
@@ -741,7 +741,7 @@ class DetailContact extends React.Component {
                                       <Select
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currencyCode}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('currencyCode')(option.value)
                                           } else {

@@ -119,7 +119,7 @@ class CreateBankAccount extends React.Component {
       bankCountry: country,
       personalCorporateAccountInd: account_is_for
     }
-    this.props.createBankAccountActions.createBankAccount(obj).then(res => {
+    this.props.createBankAccountActions.createBankAccount(obj).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'New Bank Account Created Successfully.')
       if (this.state.createMore) {
         this.setState({
@@ -129,7 +129,7 @@ class CreateBankAccount extends React.Component {
       } else {
         this.props.history.push('/admin/banking/bank-account')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -226,7 +226,7 @@ class CreateBankAccount extends React.Component {
                                       name="currency"
                                       options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                       value={props.values.currency}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('currency')(option.value)
                                         } else {
@@ -277,7 +277,7 @@ class CreateBankAccount extends React.Component {
                                       name="account_type"
                                       options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, "Account Type") : []}
                                       value={props.values.account_type}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('account_type')(option.value)
                                         } else {
@@ -396,7 +396,7 @@ class CreateBankAccount extends React.Component {
                                       name="country"
                                       options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                       value={props.values.country}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('country')(option.value)
                                         } else {
@@ -421,7 +421,7 @@ class CreateBankAccount extends React.Component {
                                       name="account_is_for"
                                       options={this.account_for ? selectOptionsFactory.renderOptions('label', 'value', this.account_for, 'Account is for') : []}
                                       value={props.values.account_is_for}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('account_is_for')(option.value)
                                         } else {

@@ -117,13 +117,13 @@ class Expense extends React.Component {
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
     
-    this.props.expenseActions.getExpenseList(postData).then(res => {
+    this.props.expenseActions.getExpenseList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
   
@@ -151,7 +151,7 @@ class Expense extends React.Component {
       temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.expenseId);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.expenseId) {
           temp_list.push(item)
         }
@@ -166,7 +166,7 @@ class Expense extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
+      rows.map((item) => {
         temp_list.push(item.expenseId)
         return item
       })
@@ -206,7 +206,7 @@ class Expense extends React.Component {
                 <i className="fas fa-heart" /> Post
               </DropdownItem>
             )}
-            {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.expenseId)}}>
+            {/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.expenseId)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
@@ -295,7 +295,7 @@ class Expense extends React.Component {
       postingRefType: 'EXPENSE',
       postingChartOfAccountId: row.chartOfAccountId
     }
-    this.props.expenseActions.postExpense(postingRequestModel).then(res => {
+    this.props.expenseActions.postExpense(postingRequestModel).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Expense Posted Successfully');
         this.setState({
@@ -303,8 +303,8 @@ class Expense extends React.Component {
         })
         this.initializeData()
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({
         loading: false
       })
@@ -345,7 +345,7 @@ class Expense extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -365,7 +365,7 @@ class Expense extends React.Component {
     this.props.expenseActions.deleteExpense(id).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Expense Deleted Successfully')
       this.initializeData()
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -381,7 +381,7 @@ class Expense extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.expenseActions.getExpenseList(obj).then(res => {
+      this.props.expenseActions.getExpenseList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -544,7 +544,7 @@ class Expense extends React.Component {
                       multiColumnSort
                       className="expense-table"
                       trClassName="cursor-pointer"
-                      ref={node => this.table = node}
+                      ref={(node) => this.table = node}
                       csvFileName="expense_list.csv"
                     >
                       <TableHeaderColumn

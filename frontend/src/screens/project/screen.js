@@ -94,7 +94,7 @@ class Project extends React.Component {
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.projectActions.getProjectList(postData).then(res => {
+    this.props.projectActions.getProjectList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -136,7 +136,7 @@ class Project extends React.Component {
       temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.projectId);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.projectId) {
           temp_list.push(item)
         }
@@ -150,7 +150,7 @@ class Project extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
+      rows.map((item) => {
         temp_list.push(item.projectId)
         return item
       })
@@ -192,7 +192,7 @@ class Project extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -228,7 +228,7 @@ class Project extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.projectActions.getProjectList(obj).then(res => {
+      this.props.projectActions.getProjectList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -345,7 +345,7 @@ class Project extends React.Component {
                           className="product-table"
                           trClassName="cursor-pointer"
                           csvFileName="project.csv"
-                          ref={node => {
+                          ref={(node) => {
                             this.table = node
                           }}
                         >

@@ -139,7 +139,7 @@ class CreateBankTransaction extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attachment", this.uploadFile.files[0]);
     }
-    this.props.transactionCreateActions.createTransaction(formData).then(res => {
+    this.props.transactionCreateActions.createTransaction(formData).then((res) => {
       if (res.status === 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', 'New Transaction Created Successfully.')
@@ -151,7 +151,7 @@ class CreateBankTransaction extends React.Component {
           this.props.history.push('/admin/banking/bank-account/transaction',{'bankAccountId': bankAccountId})
         }
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -224,7 +224,7 @@ class CreateBankTransaction extends React.Component {
 															)
                           })}
                       >
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={4}>
@@ -233,7 +233,7 @@ class CreateBankTransaction extends React.Component {
                                   <Select
                                     options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type') : ''}
                                     value={props.values.chartOfAccountId}
-                                    onChange={option => {
+                                    onChange={(option) => {
                                       if (option && option.value) {
                                         props.handleChange('chartOfAccountId')(option.value)
                                       } else {
@@ -308,7 +308,7 @@ class CreateBankTransaction extends React.Component {
                                     options={transaction_category_list && transaction_category_list.data && transaction_category_list.data.length > 0? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list.data, 'Category') : []}
                                     id="transactionCategoryId"
                                     value={props.values.transactionCategoryId}
-                                    onChange={option => props.handleChange('transactionCategoryId')(option.value)}
+                                    onChange={(option) => props.handleChange('transactionCategoryId')(option.value)}
                                   />
                                 </FormGroup>
                               </Col>
@@ -323,7 +323,7 @@ class CreateBankTransaction extends React.Component {
                                     id="description"
                                     rows="6"
                                     placeholder="Description..."
-                                    onChange={option => props.handleChange('transactionDescription')(option)}
+                                    onChange={(option) => props.handleChange('transactionDescription')(option)}
                                     value={props.values.transactionDescription}
                                   />
                                 </FormGroup>
@@ -338,7 +338,7 @@ class CreateBankTransaction extends React.Component {
                                     options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                     id="projectId"
                                     name="projectId"
-                                    onChange={option => props.handleChange('projectId')(option.value)}
+                                    onChange={(option) => props.handleChange('projectId')(option.value)}
                                     value={props.values.projectId}
                                   />
                                 </FormGroup>
@@ -371,7 +371,7 @@ class CreateBankTransaction extends React.Component {
                                         id="receiptAttachmentDescription"
                                         rows="5"
                                         placeholder="1024 characters..."
-                                        onChange={option => props.handleChange('receiptAttachmentDescription')(option)}
+                                        onChange={(option) => props.handleChange('receiptAttachmentDescription')(option)}
                                         value={props.values.receiptAttachmentDescription}
                                       />
                                     </FormGroup>

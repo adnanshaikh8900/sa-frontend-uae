@@ -51,21 +51,21 @@ class DetailVatCode extends React.Component {
     }
 
     this.saveAndContinue = false;
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regEx = /^[0-9\d]+$/;
   }
 
   componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.setState({ loading: true });
-      this.props.vatDetailActions.getVatByID(this.props.location.state.id).then(res => {
+      this.props.vatDetailActions.getVatByID(this.props.location.state.id).then((res) => {
         if (res.status === 200)
           this.setState({ 
             current_vat_id: this.props.location.state.id,
             loading: false,
             vatData: res.data
           })
-      }).catch(err => {
+      }).catch((err) => {
         this.props.history.push('/admin/master/vat-code')
       })
     } else {
@@ -75,12 +75,12 @@ class DetailVatCode extends React.Component {
 
   // Create or Edit Vat
   handleSubmit = (data) => {
-    this.props.vatDetailActions.updateVat(data).then(res => {
+    this.props.vatDetailActions.updateVat(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Vat code Updated Successfully!')
         this.props.history.push('/admin/master/vat-code')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err.data.message)
     })
   }
@@ -97,13 +97,13 @@ class DetailVatCode extends React.Component {
 
   removeVat = () => {
     const {current_vat_id} = this.state
-    this.props.vatDetailActions.deleteVat(current_vat_id).then(res => {
+    this.props.vatDetailActions.deleteVat(current_vat_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
         this.props.commonActions.tostifyAlert('success', 'Vat Deleted Successfully')
         this.props.history.push('/admin/master/vat-code')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -138,7 +138,7 @@ class DetailVatCode extends React.Component {
                       <Col lg={6}>
                       <Formik
                           initialValues={this.state.vatData}
-                          onSubmit={values => {
+                          onSubmit={(values) => {
                             this.handleSubmit(values)
                           }}
                           validationSchema={Yup.object().shape({
@@ -147,7 +147,7 @@ class DetailVatCode extends React.Component {
                             vat: Yup.string()
                               .required("Vat Percentage is Required")
                           })}>
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <FormGroup>
                                   <Label htmlFor="name"><span className="text-danger">*</span>Vat Code Name</Label>

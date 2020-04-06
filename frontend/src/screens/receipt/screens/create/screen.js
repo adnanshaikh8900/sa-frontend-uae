@@ -76,7 +76,7 @@ class CreateReceipt extends React.Component {
   }
 
   handleSubmit = (data, resetForm) => {
-    this.props.receiptCreateActions.createReceipt(data).then(res => {
+    this.props.receiptCreateActions.createReceipt(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Receipt Created Successfully!')
         if (this.state.createMore) {
@@ -135,7 +135,7 @@ class CreateReceipt extends React.Component {
                               .matches(/^[0-9]+$/, { message: "Please enter valid Amount.", excludeEmptyString: false })
                           })}
                       >
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={4}>

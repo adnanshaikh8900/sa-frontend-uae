@@ -83,7 +83,7 @@ class CreateProject extends React.Component {
     }
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.formRef = React.createRef()
 
   }
@@ -135,7 +135,7 @@ class CreateProject extends React.Component {
       currencyCode: currency && currency !== null ? currency : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
-    this.props.createProjectActions.createAndSaveProject(postData).then(res => {
+    this.props.createProjectActions.createAndSaveProject(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Project Created Successfully!')
         if (this.state.createMore) {
@@ -196,7 +196,7 @@ class CreateProject extends React.Component {
                           // invoiceLanguageCode: Yup.string()
                           //   .required("Invoice Language is Required")
                         })}>
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={4}>

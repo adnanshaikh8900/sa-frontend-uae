@@ -127,7 +127,7 @@ class CreatePayment extends React.Component {
 
     let postData = {
       paymentDate: paymentDate !== null ? paymentDate : "",
-      description: description,
+      description,
       invoiceId: invoiceId && invoiceId.value ? invoiceId.value : '',
       invoiceAmount: amount,
       bankAccountId: bank && bank.value ? bank.value : '',
@@ -135,7 +135,7 @@ class CreatePayment extends React.Component {
       currencyCode: currency && currency.value ? currency.value : '',
       projectId: project && project.value ? project.value : '',
     }
-    this.props.createPaymentActions.createPayment(postData).then(res => {
+    this.props.createPaymentActions.createPayment(postData).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Payment Created Successfully.')
       if (this.state.createMore) {
         this.setState({
@@ -145,7 +145,7 @@ class CreatePayment extends React.Component {
       } else {
         this.props.history.push('/admin/expense/payment')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -307,7 +307,7 @@ class CreatePayment extends React.Component {
                                           name="supplier"
                                           options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list , 'Supplier Name') : []}
                                           value={selectedSupplier}
-                                          onChange={option => {
+                                          onChange={(option) => {
                                             props.handleChange('supplier')(option)
                                             this.getCurrentUser(option)
                                           }}
@@ -335,12 +335,12 @@ class CreatePayment extends React.Component {
                                           name="invoiceId"
                                           options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
                                           value={props.values.invoiceId}
-                                          onChange={option => {
+                                          onChange={(option) => {
                                             // this.props.paymentActions.getInvoiceById(+option.value).then((res) => {
                                               // if (res.status === 200) {
                                               // }
                                               // let data;
-                                              // data = invoice_list.filter(item => item.invoiceId === option.value);
+                                              // data = invoice_list.filter((item) => item.invoiceId === option.value);
                                               // props.handleChange('amount')(data[0]['invoiceAmount'])
                                             // }
                                             // )
@@ -389,7 +389,7 @@ class CreatePayment extends React.Component {
                                           name="currency"
                                           options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                           value={props.values.currency}
-                                          onChange={option =>
+                                          onChange={(option) =>
                                             props.handleChange('currency')(option)
                                           }
                                           className={
@@ -411,7 +411,7 @@ class CreatePayment extends React.Component {
                                           name="project"
                                           options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                           value={props.values.project}
-                                          onChange={option => props.handleChange('project')(option)}
+                                          onChange={(option) => props.handleChange('project')(option)}
                                           className={
                                             props.errors.project && props.touched.project
                                               ? 'is-invalid'
@@ -454,7 +454,7 @@ class CreatePayment extends React.Component {
                                           name="bank"
                                           options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}
                                           value={props.values.bank}
-                                          onChange={option => props.handleChange('bank')(option)}
+                                          onChange={(option) => props.handleChange('bank')(option)}
                                           className={
                                             props.errors.bank && props.touched.bank
                                               ? 'is-invalid'
@@ -472,7 +472,7 @@ class CreatePayment extends React.Component {
                                       name="referenceNo"
                                       placeholder="Enter Reference Number"
                                       required
-                                      onChange={option => props.handleChange('referenceNo')(option)}
+                                      onChange={(option) => props.handleChange('referenceNo')(option)}
                                       value={props.values.referenceNo}
                                       className={
                                         props.errors.referenceNo && props.touched.referenceNo
@@ -493,7 +493,7 @@ class CreatePayment extends React.Component {
                                           id="description"
                                           rows="6"
                                           placeholder="Description..."
-                                          onChange={option => props.handleChange('description')(option)}
+                                          onChange={(option) => props.handleChange('description')(option)}
                                         />
                                       </FormGroup>
                                     </Col>

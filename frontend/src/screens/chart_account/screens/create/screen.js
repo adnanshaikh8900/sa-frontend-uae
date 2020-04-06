@@ -74,7 +74,7 @@ class CreateChartAccount extends React.Component {
 
   // Create or Edit Vat
   handleSubmit = (data, resetForm) => {
-    this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
+    this.props.createChartOfAccontActions.createTransactionCategory(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Chart of Account Created Successfully')
         if (this.state.createMore) {
@@ -86,7 +86,7 @@ class CreateChartAccount extends React.Component {
           this.props.history.push('/admin/master/chart-account')
         }
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -135,7 +135,7 @@ class CreateChartAccount extends React.Component {
                               .required("Type is Required")
                           })}
                       >
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit} name="simpleForm">
                             {/* <FormGroup>
                               <Label htmlFor="transactionCategoryCode">Code</Label>
@@ -182,7 +182,7 @@ class CreateChartAccount extends React.Component {
                                 className="select-default-width"
                                 options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : ''}
                                 value={props.values.chartOfAccount}
-                                onChange={option => {
+                                onChange={(option) => {
                                   if(option && option.value) {
                                     props.handleChange('chartOfAccount')(option.value)
                                   } else {
@@ -207,7 +207,7 @@ class CreateChartAccount extends React.Component {
                                 name='chartOfAccount'
                                 value={props.values.chartOfAccount}
                                 // size="1"
-                                onChange={(e)=>{
+                                onChange={(e) => {
                                   props.handleChange('chartOfAccount')(e.target.value)
                                 }}
                               >

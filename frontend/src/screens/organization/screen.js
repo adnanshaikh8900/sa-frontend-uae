@@ -135,13 +135,13 @@ class Organization extends React.Component {
     }
 
 
-    this.props.organizationActions.createOrganization(formData).then(res => {
+    this.props.organizationActions.createOrganization(formData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Company Created Successfully')
         this.props.history.push('/admin/dashboard')
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
   
@@ -193,7 +193,7 @@ class Organization extends React.Component {
                         //     .required("Last Name is Required"),
                         // })}
                       >
-                        {props => (
+                        {(props) => (
 
                           <Form name="simpleForm" className="mt-3" onSubmit={props.handleSubmit}>
                             <FormGroup row>
@@ -239,7 +239,7 @@ class Organization extends React.Component {
                                   id="name"
                                   name="name"
                                   placeholder="Enter Company Name"
-                                  onChange={option => { props.handleChange('name')( option) }}
+                                  onChange={(option) => { props.handleChange('name')( option) }}
                                 />
                               </Col>
                             </FormGroup>
@@ -253,7 +253,7 @@ class Organization extends React.Component {
                                 <Select
                                   options={industry_type_list ? selectOptionsFactory.renderOptions('label', 'value', industry_type_list) : []}
                                   value={props.values.industryTypeCode}
-                                  onChange={option => {
+                                  onChange={(option) => {
                                     if(option && option.value) {
                                       props.handleChange('industryTypeCode')(option.value)
                                     }else {
@@ -288,7 +288,7 @@ class Organization extends React.Component {
                                     id="addressLine1"
                                     name="addressLine1"
                                     placeholder="Street1"
-                                    onChange={option => props.handleChange('addressLine1')(option)}
+                                    onChange={(option) => props.handleChange('addressLine1')(option)}
                                   />
                                 </FormGroup>
                                 <FormGroup>
@@ -297,7 +297,7 @@ class Organization extends React.Component {
                                     id="addressLine2"
                                     name="addressLine2"
                                     placeholder="Street2"
-                                    onChange={option => props.handleChange('addressLine2')(option)}
+                                    onChange={(option) => props.handleChange('addressLine2')(option)}
                                   />
                                 </FormGroup>
                                 <Row>
@@ -305,7 +305,7 @@ class Organization extends React.Component {
                                     <Select
                                       options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                       value={props.values.countryCode}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if(option.value) {
                                           props.handleChange('countryCode')(option.value)
                                         } else {
@@ -331,7 +331,7 @@ class Organization extends React.Component {
                                       id="city"
                                       name="city"
                                       placeholder="City"
-                                      onChange={option => props.handleChange('city')(option)}
+                                      onChange={(option) => props.handleChange('city')(option)}
                                     />
                                   </Col>
                                   <Col xs="12" md="3">
@@ -340,7 +340,7 @@ class Organization extends React.Component {
                                       id="state"
                                       name="state"
                                       placeholder="State/Province"
-                                      onChange={option => props.handleChange('state')(option)}
+                                      onChange={(option) => props.handleChange('state')(option)}
                                     />
                                   </Col>
                                   <Col xs="12" md="3">
@@ -349,7 +349,7 @@ class Organization extends React.Component {
                                       id="postZipCode"
                                       name="postZipCode"
                                       placeholder="Zip/Postal Code"
-                                      onChange={option => props.handleChange('postZipCode')(option)}
+                                      onChange={(option) => props.handleChange('postZipCode')(option)}
                                     />
                                   </Col>
                                 </Row>
@@ -367,7 +367,7 @@ class Organization extends React.Component {
                                   id="phoneNumber"
                                   name="phoneNumber"
                                   placeholder="Enter Phone Number"
-                                  onChange={option => props.handleChange('phoneNumber')(option)}
+                                  onChange={(option) => props.handleChange('phoneNumber')(option)}
                                 />
                               </Col>
                             </FormGroup>
@@ -383,7 +383,7 @@ class Organization extends React.Component {
                                       id="contactPersonName"
                                       name="contactPersonName"
                                       placeholder="Name"
-                                      onChange={option => props.handleChange('contactPersonName')(option)}
+                                      onChange={(option) => props.handleChange('contactPersonName')(option)}
                                     />
                                   </Col>
                                   <Col xs="12" md="4">
@@ -392,7 +392,7 @@ class Organization extends React.Component {
                                       id="contactEmailAddress"
                                       name="contactEmailAddress"
                                       placeholder="Email"
-                                      onChange={option => props.handleChange('contactEmailAddress')(option)}
+                                      onChange={(option) => props.handleChange('contactEmailAddress')(option)}
                                     />
                                   </Col>
                                   <Col xs="12" md="4">
@@ -401,7 +401,7 @@ class Organization extends React.Component {
                                       id="contactPhoneNumber"
                                       name="contactPhoneNumber"
                                       placeholder="Phone"
-                                      onChange={option => props.handleChange('contactPhoneNumber')(option)}
+                                      onChange={(option) => props.handleChange('contactPhoneNumber')(option)}
                                     />
                                   </Col>
                                 </Row>
@@ -417,7 +417,7 @@ class Organization extends React.Component {
                                   id="companyRegistrationId"
                                   name="companyRegistrationId"
                                   placeholder="Enter Company Id"
-                                  onChange={option => props.handleChange('companyRegistrationId')(option)}
+                                  onChange={(option) => props.handleChange('companyRegistrationId')(option)}
                                 />
                               </Col>
                             </FormGroup>
@@ -431,7 +431,7 @@ class Organization extends React.Component {
                                   id="vatNumber"
                                   name="vatNumber"
                                   placeholder="Enter Vat Number"
-                                  onChange={option => props.handleChange('vatNumber')(option)}
+                                  onChange={(option) => props.handleChange('vatNumber')(option)}
                                 />
                               </Col>
                             </FormGroup>

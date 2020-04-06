@@ -57,18 +57,18 @@ class SupplierModal extends React.Component {
     this.formikRef = React.createRef()
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
   // Create or Contact
   handleSubmit = (data, resetForm, setSubmitting) => {
-    this.props.createSupplier(data).then(res => {
+    this.props.createSupplier(data).then((res) => {
       if (res.status === 200) {
         resetForm();
         this.props.closeSupplierModal(true)
         this.props.getCurrentUser(res.data)
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.displayMsg();
       this.formikRef.current.setSubmitting(false);
     })
@@ -80,8 +80,8 @@ class SupplierModal extends React.Component {
     })
   }
 
-  getStateList = (countryCode) =>{
-    this.props.getStateList(countryCode).then(res => {
+  getStateList = (countryCode) => {
+    this.props.getStateList(countryCode).then((res) => {
       if(res.status === 200) {
         this.setState({
           state_list: res.data
@@ -157,7 +157,7 @@ class SupplierModal extends React.Component {
               })
             }
           >
-            {props => {
+            {(props) => {
               const { isSubmitting } = props;
               return (
                 <Form name="simpleForm" onSubmit={props.handleSubmit}>
@@ -325,7 +325,7 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="organization"
                             name="organization"
-                            onChange={value => {
+                            onChange={(value) => {
                               props.handleChange("organization")(value);
                             }}
                             value={props.values.organization}
@@ -351,7 +351,7 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="poBoxNumber"
                             name="poBoxNumber"
-                            onChange={value => {
+                            onChange={(value) => {
                               props.handleChange("poBoxNumber")(value);
                             }}
                             value={props.values.poBoxNumber}
@@ -381,7 +381,7 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="email"
                             name="email"
-                            onChange={value => {
+                            onChange={(value) => {
                               props.handleChange("email")(value);
                             }}
                             value={props.values.email}
@@ -473,7 +473,7 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="addressLine1"
                             name="addressLine1"
-                            onChange={value => {
+                            onChange={(value) => {
                               props.handleChange("addressLine1")(value);
                             }}
                             value={props.values.addressLine1}
@@ -499,7 +499,7 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="addressLine2"
                             name="addressLine2"
-                            onChange={value => {
+                            onChange={(value) => {
                               props.handleChange("addressLine2")(value);
                             }}
                           />
@@ -512,7 +512,7 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="addressLine3"
                             name="addressLine3"
-                            onChange={value => {
+                            onChange={(value) => {
                               props.handleChange("addressLine3")(value);
                             }}
                           />
@@ -537,7 +537,7 @@ class SupplierModal extends React.Component {
                                 : []
                             }
                             value={props.values.countryId}
-                            onChange={option => {
+                            onChange={(option) => {
                               if (option && option.value) {
                                 props.handleChange("countryId")(option.value);
                                 this.getStateList(option.value)
@@ -569,7 +569,7 @@ class SupplierModal extends React.Component {
                           <Select
                             options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
                             value={props.values.stateId}
-                            onChange={option => {
+                            onChange={(option) => {
                               if (option && option.value) {
                                 props.handleChange('stateId')(option.value)
                               } else {
@@ -596,7 +596,7 @@ class SupplierModal extends React.Component {
                           <Input
                             // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                             value={props.values.city}
-                            onChange={option =>
+                            onChange={(option) =>
                               props.handleChange("city")(option)
                             }
                             placeholder=""
@@ -655,7 +655,7 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="billingEmail"
                             name="billingEmail"
-                            onChange={value => {
+                            onChange={(value) => {
                               props.handleChange("billingEmail")(value);
                             }}
                             value={props.values.billingEmail}
@@ -682,7 +682,7 @@ class SupplierModal extends React.Component {
                             type="text"
                             id="contractPoNumber"
                             name="contractPoNumber"
-                            onChange={value => {
+                            onChange={(value) => {
                               props.handleChange("contractPoNumber")(value);
                             }}
                             value={props.values.contractPoNumber}
@@ -746,7 +746,7 @@ class SupplierModal extends React.Component {
                                 : []
                             }
                             value={props.values.currencyCode}
-                            onChange={option => {
+                            onChange={(option) => {
                               if (option && option.value) {
                                 props.handleChange("currencyCode")(
                                   option.value

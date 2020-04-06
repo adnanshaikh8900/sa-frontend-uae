@@ -129,15 +129,15 @@ class BankTransactions extends React.Component {
     }
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       const postData = { ...filterData, ...data, id: this.props.location.state.bankAccountId }
-      this.props.transactionsActions.getTransactionList(postData).then(res => {
+      this.props.transactionsActions.getTransactionList(postData).then((res) => {
         this.props.transactionsActions.getTransactionTypeList();
         if (res.status === 200) {
           this.setState({
             loading: false
           });
         }
-      }).catch(err => {
-        // this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : '');
+      }).catch((err) => {
+         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
         this.setState({ loading: false })
       })
     } else {
@@ -161,7 +161,7 @@ class BankTransactions extends React.Component {
     element.className = element.className + ' sidebar-minimized brand-minimized'
    }
 
-    this.props.transactionsActions.getTransactionListForReconcile(type).then(res => {
+    this.props.transactionsActions.getTransactionListForReconcile(type).then((res) => {
       if(res.status === 200) {
         this.setState({
           transaction_type_list_reconcile: res.data
@@ -170,7 +170,7 @@ class BankTransactions extends React.Component {
 }
 
   getCategoryList = (val) => {
-    this.props.transactionsActions.getCategoryListForReconcile(val).then(res => {
+    this.props.transactionsActions.getCategoryListForReconcile(val).then((res) => {
       if (res.status === 200) {
         res.data.map(x => {
           x['name'] = x.label
@@ -202,7 +202,7 @@ class BankTransactions extends React.Component {
      reconcileRrefId:  reconcileData.category_type,
      transactionId:  reconcileData.transaction_id
     }
-    this.props.transactionsActions.reconcileTransaction(postData).then(res => {
+    this.props.transactionsActions.reconcileTransaction(postData).then((res) => {
       if (res.status === 200) {
         this.setState({
           sidebarOpen: false
@@ -473,7 +473,7 @@ class BankTransactions extends React.Component {
     this.props.transactionsActions.deleteTransactionById(id).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Transaction Deleted Successfully')
       this.initializeData()
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -489,7 +489,7 @@ class BankTransactions extends React.Component {
    let obj = {
      paginationDisable: true
    }
-   this.props.transactionsActions.getTransactionList(obj).then(res => {
+   this.props.transactionsActions.getTransactionList(obj).then((res) => {
      if (res.status === 200) {
        this.setState({ csvData: res.data.data, view: true }, () => {
          setTimeout(() => {

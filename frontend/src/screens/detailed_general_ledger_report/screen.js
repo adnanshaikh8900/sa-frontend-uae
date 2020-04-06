@@ -13,8 +13,8 @@ import {
 
 import moment from 'moment'
 import { PDFExport } from "@progress/kendo-react-pdf";
-import * as FileSaver from 'file-saver'
-import * as XLSX from 'xlsx'
+import * as FileSaver from 'file-saver'
+import * as XLSX from 'xlsx'
 import { CSVLink } from "react-csv";
 import FilterComponent from './sections/filterComponent'
 import { Loader } from 'components'
@@ -76,8 +76,8 @@ class DetailedGeneralLedgerReport extends React.Component {
 
   componentDidMount = () => {
     this.initializeData()
-    this.props.detailGeneralLedgerActions.getTransactionCategoryList().then(res => {
-      if(res.status === 200) {
+    this.props.detailGeneralLedgerActions.getTransactionCategoryList().then((res) => {
+      if (res.status === 200) {
         this.setState({
           chart_of_account_list: res.data.data
         })
@@ -93,10 +93,10 @@ class DetailedGeneralLedgerReport extends React.Component {
       reportBasis: initValue.reportBasis,
       chartOfAccountId: initValue.chartOfAccountId
     }
-    this.props.detailGeneralLedgerActions.getDetailedGeneralLedgerList(postData).then(res => {
+    this.props.detailGeneralLedgerActions.getDetailedGeneralLedgerList(postData).then((res) => {
       const tempData = []
       if (res.status === 200) {
-        res.data.map(item => {
+        res.data.map((item) => {
           item.map(val => {
             tempData.push(val)
             return val
@@ -109,7 +109,7 @@ class DetailedGeneralLedgerReport extends React.Component {
           })
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
     })
   }
@@ -150,22 +150,45 @@ class DetailedGeneralLedgerReport extends React.Component {
     }, () => {
       this.initializeData()
     })
-}
+  }
 
-onSort = (column) => {
-  let checkedValue;
-  let obj = {}
-  const direction = this.state.sort.column ? (this.state.sort.direction === 'asc' ? 'desc' : 'asc') : 'desc';
-  const sortedData = this.state.detailedGeneralLedgerList.map(data => {
-    let nameA, nameB
-    data.sort((a, b) => {
-      if (column !== 'date') {
-        nameA = a[column] ? a[column].toUpperCase() : ''; 
-        nameB = b[column] ? b[column].toUpperCase() : '';
-      } else {
-        nameA = new Date(a[column]); 
-        nameB = new Date(b[column]);
+  onSort = (column) => {
+    let checkedValue;
+    let obj = {}
+    const direction = this.state.sort.column ? (this.state.sort.direction === 'asc' ? 'desc' : 'asc') : 'desc';
+    const sortedData = this.state.detailedGeneralLedgerList.map(data => {
+      let nameA, nameB
+      data.sort((a, b) => {
+        if (column !== 'date') {
+          nameA = a[column] ? a[column].toUpperCase() : '';
+          nameB = b[column] ? b[column].toUpperCase() : '';
+        } else {
+          nameA = new Date(a[column]);
+          nameB = new Date(b[column]);
+        }
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
       }
+      );
+      checkedValue = data[0][column]
+      if (direction === 'desc') {
+        data.reverse();
+        checkedValue = data[0][column]
+      }
+      obj = {
+        'data': data,
+        'value': checkedValue
+      }
+      return obj
+    })
+    const temp = sortedData.sort((a, b) => {
+      const nameA = a['value'] ? a['value'].toUpperCase() : '';
+      const nameB = b['value'] ? b['value'].toUpperCase() : '';
       if (nameA < nameB) {
         return -1;
       }
@@ -173,189 +196,166 @@ onSort = (column) => {
         return 1;
       }
       return 0;
-    }
-    );
-    checkedValue = data[0][column]
+    })
     if (direction === 'desc') {
-      data.reverse();
-      checkedValue = data[0][column]
+      temp.reverse();
     }
-    obj = {
-      'data': data,
-      'value': checkedValue
-    }
-    return obj
-  })
-  const temp = sortedData.sort((a, b) => {
-    const nameA = a['value'] ? a['value'].toUpperCase() : '';
-    const nameB = b['value'] ? b['value'].toUpperCase() : '';
-    if (nameA < nameB) {
-      return -1;
-    }
-    if (nameA > nameB) {
-      return 1;
-    }
-    return 0;
-  })
-  if (direction === 'desc') {
-    temp.reverse();
-  }
 
-  const val = temp.map(item => {
-    return item.data
-  })
-  this.setState({
-    detailedGeneralLedgerList: val,
-    sort: {
-      column,
-      direction,
-    }
-  });
-};
-
-setArrow = (column) => {
-  let className = 'sort-direction';
-  if (this.state.sort.column === column) {
-    className += this.state.sort.direction === 'asc' ? ' asc' : ' desc';
-  }
-  return className;
-};
-
-
-getInvoice = (postingType, type, id) => {
-  switch (postingType) {
-    case 'INVOICE':
-      if (type === 1) {
-        this.props.history.push('/admin/expense/supplier-invoice/view', { 'id': id })
-      } else {
-        this.props.history.push('/admin/revenue/customer-invoice/view', { 'id': id })
+    const val = temp.map((item) => {
+      return item.data
+    })
+    this.setState({
+      detailedGeneralLedgerList: val,
+      sort: {
+        column,
+        direction,
       }
-      break;
-    case 'EXPENSE':
-      this.props.history.push('/admin/expense/expense/detail', { 'expenseId': id, 'view': true });
-      break;
-    case 'BANK_ACCOUNT':
-      this.props.history.push('/admin/banking/bank-account/transaction/detail', { 'id': id, 'view': true });
-      break;
-    case 'MANUAL':
-      this.props.history.push('/admin/accountant/journal', { 'id': id });
-      break;
-    default:
+    });
+  };
+
+  setArrow = (column) => {
+    let className = 'sort-direction';
+    if (this.state.sort.column === column) {
+      className += this.state.sort.direction === 'asc' ? ' asc' : ' desc';
+    }
+    return className;
+  };
+
+
+  getInvoice = (postingType, type, id) => {
+    switch (postingType) {
+      case 'INVOICE':
+        if (type === 1) {
+          this.props.history.push('/admin/expense/supplier-invoice/view', { 'id': id })
+        } else {
+          this.props.history.push('/admin/revenue/customer-invoice/view', { 'id': id })
+        }
+        break;
+      case 'EXPENSE':
+        this.props.history.push('/admin/expense/expense/detail', { 'expenseId': id, 'view': true });
+        break;
+      case 'BANK_ACCOUNT':
+        this.props.history.push('/admin/banking/bank-account/transaction/detail', { 'id': id, 'view': true });
+        break;
+      case 'MANUAL':
+        this.props.history.push('/admin/accountant/journal', { 'id': id });
+        break;
+      default:
+    }
   }
-}
 
-render() {
+  render() {
 
-  const { loading , initValue ,dropdownOpen , csvData,view,chart_of_account_list} = this.state
-  const { profile } = this.props
-  return (
-    <div className="transactions-report-screen">
-      <div className="animated fadeIn">
-        <Card>
+    const { loading, initValue, dropdownOpen, csvData, view, chart_of_account_list } = this.state
+    const { profile } = this.props
+    return (
+      <div className="transactions-report-screen">
+        <div className="animated fadeIn">
+          <Card>
 
-          <div>
-            <CardHeader>
-              <Row>
-                <Col lg={12}>
-                  <div className="h4 mb-0 d-flex align-items-center" style={{ justifyContent: 'space-between' }}>
-                    <div><p className="mb-0" style={{ cursor: 'pointer', fontSize: '1rem', paddingLeft: '15px' }} onClick={this.viewFilter}><i className="fa fa-cog mr-2"></i>Customize Report</p></div>
-                    <div className="d-flex">
-                      <div className="mr-2 print-btn-cont" onClick={() => window.print()}><i className="fa fa-print"></i></div>
-                      <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
-                        <DropdownToggle caret>
-                          Export As
+            <div>
+              <CardHeader>
+                <Row>
+                  <Col lg={12}>
+                    <div className="h4 mb-0 d-flex align-items-center" style={{ justifyContent: 'space-between' }}>
+                      <div><p className="mb-0" style={{ cursor: 'pointer', fontSize: '1rem', paddingLeft: '15px' }} onClick={this.viewFilter}><i className="fa fa-cog mr-2"></i>Customize Report</p></div>
+                      <div className="d-flex">
+                        <div className="mr-2 print-btn-cont" onClick={() => window.print()}><i className="fa fa-print"></i></div>
+                        <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
+                          <DropdownToggle caret>
+                            Export As
                         </DropdownToggle>
-                        <DropdownMenu>
-                          <DropdownItem onClick={this.exportPDFWithComponent}>Pdf</DropdownItem>
-                          <DropdownItem><CSVLink data={csvData} className="csv-btn" filename={"detailGeneralLedger.csv"}>CSV (Comma Separated Value)</CSVLink></DropdownItem>
-                          <DropdownItem onClick={() => { this.exportFile(csvData, 'detailGeneralLedger', 'xls') }}>XLS (Microsoft Excel 1997-2004 Compatible)</DropdownItem>
-                          <DropdownItem onClick={() => { this.exportFile(csvData, 'detailGeneralLedger', 'xlsx') }}>XLSX (Microsoft Excel)</DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
+                          <DropdownMenu>
+                            <DropdownItem onClick={this.exportPDFWithComponent}>Pdf</DropdownItem>
+                            <DropdownItem><CSVLink data={csvData} className="csv-btn" filename={"detailGeneralLedger.csv"}>CSV (Comma Separated Value)</CSVLink></DropdownItem>
+                            <DropdownItem onClick={() => { this.exportFile(csvData, 'detailGeneralLedger', 'xls') }}>XLS (Microsoft Excel 1997-2004 Compatible)</DropdownItem>
+                            <DropdownItem onClick={() => { this.exportFile(csvData, 'detailGeneralLedger', 'xlsx') }}>XLSX (Microsoft Excel)</DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
+                      </div>
                     </div>
-                  </div>
-                </Col>
-              </Row>
-            </CardHeader>
-            <div className={`panel ${view ? 'view-panel' : ''}`}><FilterComponent viewFilter={this.viewFilter} chart_of_account_list={chart_of_account_list} generateReport={(value) => { this.generateReport(value) }} /></div>
-            <CardBody id="section-to-print">
-              <PDFExport
-                ref={component => (this.pdfExportComponent = component)}
-                scale={0.8}
-                paperSize="A3"
-              >
-                <div style={{ textAlign: 'center', margin: '3rem 0' }}>
-                  <p>{profile && profile.company && profile.company['companyName'] ? profile.company['companyName'] : ''}<br style={{ marginBottom: '5px' }} />
+                  </Col>
+                </Row>
+              </CardHeader>
+              <div className={`panel ${view ? 'view-panel' : ''}`}><FilterComponent viewFilter={this.viewFilter} chart_of_account_list={chart_of_account_list} generateReport={(value) => { this.generateReport(value) }} /></div>
+              <CardBody id="section-to-print">
+                <PDFExport
+                  ref={(component) => (this.pdfExportComponent = component)}
+                  scale={0.8}
+                  paperSize="A3"
+                >
+                  <div style={{ textAlign: 'center', margin: '3rem 0' }}>
+                    <p>{profile && profile.company && profile.company['companyName'] ? profile.company['companyName'] : ''}<br style={{ marginBottom: '5px' }} />
                       Detailed General Ledger<br style={{ marginBottom: '5px' }} />
                       From {initValue.startDate} To {initValue.endDate}
-                  </p>
-                </div>
-                {loading ? <Loader /> : (
-                  <div className="table-wrapper">
-                    <Table responsive>
-                      <thead>
-                      <tr className="header-row">
-                        {this.columnHeader.map((column, index) => {
-                          return <th key={index} style={{ fontWeight: '600' }} className={column.align ? 'text-right' : ''}
-                            onClick={() => { column.sort && this.onSort(column.value) }}>{column.label}
-                            <span className={column.sort ? this.setArrow(column.value) : ''}></span>
-                          </th>
-                        })}
-                      </tr>
-                      </thead>
-                      <tbody className="data-column">
-                        {this.state.detailedGeneralLedgerList && this.state.detailedGeneralLedgerList.length > 0 ? this.state.detailedGeneralLedgerList.map((item, index) => {
-                          return (
-                            <>
-                              <tr style={{ background: '#f7f7f7' }} key={index}><td colSpan="9"><b style={{ fontWeight: '600' }}>{item[0]['transactionTypeName']}</b></td></tr>
-                              {/* <tr>
+                    </p>
+                  </div>
+                  {loading ? <Loader /> : (
+                    <div className="table-wrapper">
+                      <Table responsive>
+                        <thead>
+                          <tr className="header-row">
+                            {this.columnHeader.map((column, index) => {
+                              return <th key={index} style={{ fontWeight: '600' }} className={column.align ? 'text-right' : ''}
+                                onClick={() => { column.sort && this.onSort(column.value) }}>{column.label}
+                                <span className={column.sort ? this.setArrow(column.value) : ''}></span>
+                              </th>
+                            })}
+                          </tr>
+                        </thead>
+                        <tbody className="data-column">
+                          {this.state.detailedGeneralLedgerList && this.state.detailedGeneralLedgerList.length > 0 ? this.state.detailedGeneralLedgerList.map((item, index) => {
+                            return (
+                              <>
+                                <tr style={{ background: '#f7f7f7' }} key={index}><td colSpan="9"><b style={{ fontWeight: '600' }}>{item[0]['transactionTypeName']}</b></td></tr>
+                                {/* <tr>
                               <td>As On 01/01/2020 </td>
                               <td colSpan="5">Opening Balance</td>
                               <td></td>
                               <td>0.00</td>
                               <td></td>
                             </tr> */}
-                              {item.map((row, index) => {
-                                return (
-                                  <tr key={index}>
-                                    <td style={{ width: '12%' }}>{row.date}</td>
-                                    <td style={{ width: '18%' }}>{row.transactionTypeName}</td>
-                                    <td style={{ width: '13%' }}>{row['name']}</td>
-                                    <td style={{ width: '10%' }}>{row["postingReferenceTypeEnum"]}</td>
-                                    <td style={{ width: '12%' }}>{row["transactonRefNo"]}</td>
-                                    <td style={{ width: '8%' }}>{row["referenceNo"]}</td>
-                                    <td style={{ width: '12%' }}>{row.debitAmount > 0 ? <p className="text-right" onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{(row.debitAmount).toFixed(2)}</p> : ''}</td>
-                                    <td style={{ width: '15%' }}>{row.creditAmount > 0 ? <p className="text-right" onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{(row.creditAmount).toFixed(2)}</p> : ''}</td>
-                                    <td className="amount-col text-right" style={{ width: '15%' }} onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{`${(row.amount).toFixed(2)}`}{`${row.debitAmount}` > 0 ? 'Dr' : 'Cr'}</td>
-                                  </tr>
-                                )
-                              })}
-                              {/* <tr>
+                                {item.map((row, index) => {
+                                  return (
+                                    <tr key={index}>
+                                      <td style={{ width: '12%' }}>{row.date}</td>
+                                      <td style={{ width: '18%' }}>{row.transactionTypeName}</td>
+                                      <td style={{ width: '13%' }}>{row['name']}</td>
+                                      <td style={{ width: '10%' }}>{row["postingReferenceTypeEnum"]}</td>
+                                      <td style={{ width: '12%' }}>{row["transactonRefNo"]}</td>
+                                      <td style={{ width: '8%' }}>{row["referenceNo"]}</td>
+                                      <td style={{ width: '12%' }}>{row.debitAmount > 0 ? <p className="text-right" onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{(row.debitAmount).toFixed(2)}</p> : ''}</td>
+                                      <td style={{ width: '15%' }}>{row.creditAmount > 0 ? <p className="text-right" onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{(row.creditAmount).toFixed(2)}</p> : ''}</td>
+                                      <td className="amount-col text-right" style={{ width: '15%' }} onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{`${(row.amount).toFixed(2)}`}{`${row.debitAmount}` > 0 ? 'Dr' : 'Cr'}</td>
+                                    </tr>
+                                  )
+                                })}
+                                {/* <tr>
                               <td>As On 31/01/2020 </td>
                               <td colSpan="5">Closing Balance</td>
                               <td>0.00</td>
                               <td></td>
                               <td></td>
                             </tr> */}
-                            </>
-                          )
-                        }) : (
-                            <tr style={{ borderBottom: '2px solid lightgray' }}>
-                              <td style={{ textAlign: 'center' }} colSpan="9">There is no data to display</td>
-                            </tr>
-                          )}
-                      </tbody>
-                    </Table>
-                  </div>
-                )}
-              </PDFExport>
-            </CardBody>
-          </div>
-        </Card>
+                              </>
+                            )
+                          }) : (
+                              <tr style={{ borderBottom: '2px solid lightgray' }}>
+                                <td style={{ textAlign: 'center' }} colSpan="9">There is no data to display</td>
+                              </tr>
+                            )}
+                        </tbody>
+                      </Table>
+                    </div>
+                  )}
+                </PDFExport>
+              </CardBody>
+            </div>
+          </Card>
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailedGeneralLedgerReport)

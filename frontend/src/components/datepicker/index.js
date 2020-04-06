@@ -65,7 +65,7 @@ class DateRangePicker2 extends React.Component{
         endDate={this.state.endDate}
         opens={this.props.opens || 'right'}
         ranges={this.props.ranges} onEvent={(e, picker) => this.handleEvent(e, picker)}>
-        <ButtonDropdown className="date-select" toggle={()=>{}}>
+        <ButtonDropdown className="date-select" toggle={() => {}}>
           <DropdownToggle caret>
             {nick_key}
           </DropdownToggle>

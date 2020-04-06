@@ -106,11 +106,11 @@ class Payment extends React.Component {
     }
     const postData = { ...filterData, ...paginationData , ...sortingData}
 
-    this.props.paymentActions.getPaymentList(postData).then(res => {
+    this.props.paymentActions.getPaymentList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
@@ -161,7 +161,7 @@ class Payment extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -173,7 +173,7 @@ class Payment extends React.Component {
       temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.paymentId)
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.paymentId) {
           temp_list.push(item)
         }
@@ -187,7 +187,7 @@ class Payment extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
+      rows.map((item) => {
         temp_list.push(item.paymentId)
         return item
       })
@@ -242,7 +242,7 @@ class Payment extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.paymentActions.getPaymentList(obj).then(res => {
+      this.props.paymentActions.getPaymentList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -391,7 +391,7 @@ class Payment extends React.Component {
                           className="payment-table"
                           trClassName="cursor-pointer"
                           csvFileName="payment_list.csv"
-                          ref={node => {
+                          ref={(node) => {
                             this.table = node
                           }}
                         >

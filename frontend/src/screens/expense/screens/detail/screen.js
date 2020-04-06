@@ -96,7 +96,7 @@ class DetailExpense extends React.Component {
     
     if (this.props.location.state && this.props.location.state.expenseId) {
       this.props.expenseActions.getVatList();
-      this.props.expenseDetailActions.getExpenseDetail(this.props.location.state.expenseId).then(res => {
+      this.props.expenseDetailActions.getExpenseDetail(this.props.location.state.expenseId).then((res) => {
         if (res.status === 200) {
           this.props.expenseActions.getCurrencyList();
           this.props.expenseActions.getProjectList();
@@ -135,7 +135,7 @@ class DetailExpense extends React.Component {
             }
           })
         }
-      }).catch(err => {
+      }).catch((err) => {
         this.setState({ loading: false })
       })
     } else {
@@ -191,13 +191,13 @@ class DetailExpense extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
-    this.props.expenseDetailActions.updateExpense(formData).then(res => {
+    this.props.expenseDetailActions.updateExpense(formData).then((res) => {
       if (res.status === 200) {
         // resetValue({});
         this.props.commonActions.tostifyAlert('success', 'Expense Updated Successfully.')
         this.props.history.push('/admin/expense/expense')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -215,13 +215,13 @@ class DetailExpense extends React.Component {
 
   removeExpense = () => {
     const { current_expense_id } = this.state
-    this.props.expenseDetailActions.deleteExpense(current_expense_id).then(res => {
+    this.props.expenseDetailActions.deleteExpense(current_expense_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
         this.props.commonActions.tostifyAlert('success', 'Expense Deleted Successfully')
         this.props.history.push('/admin/expense/expense')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -334,7 +334,7 @@ class DetailExpense extends React.Component {
                               })
                             }
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   <Col lg={4}>
@@ -346,7 +346,7 @@ class DetailExpense extends React.Component {
                                         options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
                                         value={props.values.expenseCategory}
                                         className={props.errors.expenseCategory && props.touched.expenseCategory ? "is-invalid" : ""}
-                                        onChange={option => props.handleChange('expenseCategory')(option)}
+                                        onChange={(option) => props.handleChange('expenseCategory')(option)}
                                       />
                                       {props.errors.expenseCategory && props.touched.expenseCategory && (
                                         <div className="invalid-feedback">{props.errors.expenseCategory}</div>
@@ -407,7 +407,7 @@ class DetailExpense extends React.Component {
                                         name="currencyCode"
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currency}
-                                        onChange={option => props.handleChange('currency')(option)}
+                                        onChange={(option) => props.handleChange('currency')(option)}
                                         className={
                                           props.errors.currency &&
                                             props.touched.currency
@@ -432,7 +432,7 @@ class DetailExpense extends React.Component {
                                         name="employee"
                                         options={employee_list ? selectOptionsFactory.renderOptions('label', 'value', employee_list, 'Employee') : []}
                                         value={props.values.employee}
-                                        onChange={option => props.handleChange('employee')(option)}
+                                        onChange={(option) => props.handleChange('employee')(option)}
                                       />
                                     </FormGroup>
                                   </Col>
@@ -445,7 +445,7 @@ class DetailExpense extends React.Component {
                                         name="project"
                                         options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                         value={props.values.projectId}
-                                        onChange={option => props.handleChange('projectId')(option)}
+                                        onChange={(option) => props.handleChange('projectId')(option)}
                                       />
                                     </FormGroup>
                                   </Col>
@@ -487,7 +487,7 @@ class DetailExpense extends React.Component {
                                             : []
                                         }
                                         value={props.values.vatCategoryId}
-                                        onChange={option =>
+                                        onChange={(option) =>
                                           props.handleChange("vatCategoryId")(option)
                                         }
                                       />
@@ -511,7 +511,7 @@ class DetailExpense extends React.Component {
                                             : []
                                         }
                                         value={props.values.payMode}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           props.handleChange("payMode")(option.value)
                                           if (option && option.value) {
                                             this.setState({
@@ -544,7 +544,7 @@ class DetailExpense extends React.Component {
                                         name="bankAccountId"
                                         options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}
                                         value={props.values.bankAccountId}
-                                        onChange={option => props.handleChange('bankAccountId')(option)}
+                                        onChange={(option) => props.handleChange('bankAccountId')(option)}
                                         className={
                                           props.errors.bankAccountId && props.touched.bankAccountId
                                             ? 'is-invalid'
@@ -571,7 +571,7 @@ class DetailExpense extends React.Component {
                                         id="expenseDescription"
                                         rows="5"
                                         placeholder="1024 characters..."
-                                        onChange={option => props.handleChange('expenseDescription')(option)}
+                                        onChange={(option) => props.handleChange('expenseDescription')(option)}
                                         value={props.values.expenseDescription}
 
                                       />
@@ -591,7 +591,7 @@ class DetailExpense extends React.Component {
                                             name="receiptNumber"
                                             placeholder="Enter Reciept Number"
 
-                                            onChange={option => props.handleChange('receiptNumber')(option)}
+                                            onChange={(option) => props.handleChange('receiptNumber')(option)}
                                             value={props.values.receiptNumber}
 
                                           />
@@ -608,7 +608,7 @@ class DetailExpense extends React.Component {
                                             id="receiptAttachmentDescription"
                                             rows="5"
                                             placeholder="1024 characters..."
-                                            onChange={option => props.handleChange('receiptAttachmentDescription')(option)}
+                                            onChange={(option) => props.handleChange('receiptAttachmentDescription')(option)}
                                             value={props.values.receiptAttachmentDescription}
 
                                           />

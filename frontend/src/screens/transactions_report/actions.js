@@ -16,7 +16,7 @@ export const getCustomerInvoiceReport = (inputObj) => {
       url: `rest/transactionreport/customerInvoiceReport?${refNumber}&${contactId}`,
       data: inputObj    
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: TEMP.CUSTOMER_INVOICE_REPORT,
@@ -25,7 +25,7 @@ export const getCustomerInvoiceReport = (inputObj) => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -50,7 +50,7 @@ let transactionTypeCode,transactionCategoryId,accountId
       
       data: postObj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: TEMP.ACCOUNT_BALANCE_REPORT,
@@ -59,7 +59,7 @@ let transactionTypeCode,transactionCategoryId,accountId
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -75,7 +75,7 @@ export const getContactNameList = () => {
       method: 'get',
       url: 'rest/contact/contactlist'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: TEMP.CONTACT_LIST,
@@ -84,7 +84,7 @@ export const getContactNameList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -96,7 +96,7 @@ export const getAccountTypeList = () => {
       method: 'get',
       url: 'rest/bank/getaccounttype'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: TEMP.ACCOUNT_TYPE_LIST,
@@ -105,7 +105,7 @@ export const getAccountTypeList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -117,7 +117,7 @@ export const getTransactionTypeList = () => {
       method: 'get',
       url: 'rest/transactionreport/getTransactionTypes'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: TEMP.TRANSACTION_TYPE_LIST,
@@ -126,7 +126,7 @@ export const getTransactionTypeList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -138,7 +138,7 @@ export const getTransactionCategoryList = () => {
       method: 'get',
       url: 'rest/transactioncategory/gettransactioncategory'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: TEMP.TRANSACTION_CATEGORY_LIST,
@@ -147,7 +147,7 @@ export const getTransactionCategoryList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

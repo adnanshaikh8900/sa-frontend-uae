@@ -122,7 +122,7 @@ class CustomerInvoice extends React.Component {
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.customerInvoiceActions.getCustomerInvoiceList(postData).then(res => {
+    this.props.customerInvoiceActions.getCustomerInvoiceList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false }, () => {
           if (this.props.location.state && this.props.location.state.id) {
@@ -130,8 +130,8 @@ class CustomerInvoice extends React.Component {
           }
         });
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({ loading: false })
     })
   }
@@ -171,7 +171,7 @@ class CustomerInvoice extends React.Component {
       postingRefId: row.id,
       postingRefType: 'INVOICE'
     }
-    this.props.customerInvoiceActions.postInvoice(postingRequestModel).then(res => {
+    this.props.customerInvoiceActions.postInvoice(postingRequestModel).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Invoice Posted Successfully');
         this.setState({
@@ -179,8 +179,8 @@ class CustomerInvoice extends React.Component {
         })
         this.initializeData()
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({
         loading: false
       })
@@ -288,11 +288,11 @@ class CustomerInvoice extends React.Component {
   }
 
   sendMail = (id) => {
-    this.props.customerInvoiceActions.sendMail(id).then(res => {
+    this.props.customerInvoiceActions.sendMail(id).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Invoice Send Successfully');
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', 'Please First fill The Mail Configuration Detail');
     })
   }
@@ -303,7 +303,7 @@ class CustomerInvoice extends React.Component {
       temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.id);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.id) {
           temp_list.push(item)
         }
@@ -317,7 +317,7 @@ class CustomerInvoice extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
+      rows.map((item) => {
         temp_list.push(item.id)
         return item
       })
@@ -362,7 +362,7 @@ class CustomerInvoice extends React.Component {
           })
         }
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -410,7 +410,7 @@ class CustomerInvoice extends React.Component {
     this.props.customerInvoiceActions.deleteInvoice(id).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
       this.initializeData()
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -424,7 +424,7 @@ class CustomerInvoice extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.customerInvoiceActions.getCustomerInvoiceList(obj).then(res => {
+      this.props.customerInvoiceActions.getCustomerInvoiceList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -637,7 +637,7 @@ class CustomerInvoice extends React.Component {
                       fetchInfo={{ dataTotalSize: customer_invoice_list.count ? customer_invoice_list.count : 0 }}
                       className="customer-invoice-table"
                       csvFileName="Customer_Invoice.csv"
-                      ref={node => {
+                      ref={(node) => {
                         this.table = node
                       }}
                     >

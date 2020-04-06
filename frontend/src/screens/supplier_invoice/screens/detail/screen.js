@@ -126,7 +126,7 @@ class DetailSupplierInvoice extends React.Component {
 
   initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
-      this.props.supplierInvoiceDetailActions.getInvoiceById(this.props.location.state.id).then(res => {
+      this.props.supplierInvoiceDetailActions.getInvoiceById(this.props.location.state.id).then((res) => {
         if (res.status === 200) {
           this.props.supplierInvoiceActions.getVatList()
           this.props.supplierInvoiceActions.getProjectList();
@@ -171,7 +171,7 @@ class DetailSupplierInvoice extends React.Component {
               const { data } = this.state
               const idCount = data.length > 0 ? Math.max.apply(Math, data.map((item) => { return item.id; })) : 0
               this.setState({
-                idCount: idCount
+                idCount
               })
             } else {
               this.setState({
@@ -189,7 +189,7 @@ class DetailSupplierInvoice extends React.Component {
 
   calTotalNet = (data) => {
     let total_net = 0
-    data.map(obj => {
+    data.map((obj) => {
       total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
       return obj
     })
@@ -220,11 +220,11 @@ class DetailSupplierInvoice extends React.Component {
             }}
             placeholder="Description"
             className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
-                props.errors.lineItemsString[idx].description &&
+            ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx)] &&
+                props.errors.lineItemsString[parseInt(idx)].description &&
                 Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
-                props.touched.lineItemsString[idx] &&
-                props.touched.lineItemsString[idx].description ? "is-invalid" : ""}`}
+                props.touched.lineItemsString[parseInt(idx)] &&
+                props.touched.lineItemsString[parseInt(idx)].description ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -252,11 +252,11 @@ class DetailSupplierInvoice extends React.Component {
             }
             placeholder="Quantity"
             className={`form-control 
-           						${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
-                props.errors.lineItemsString[idx].quantity &&
+           						${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx)] &&
+                props.errors.lineItemsString[parseInt(idx)].quantity &&
                 Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
-                props.touched.lineItemsString[idx] &&
-                props.touched.lineItemsString[idx].quantity ? "is-invalid" : ""}`}
+                props.touched.lineItemsString[parseInt(idx)] &&
+                props.touched.lineItemsString[parseInt(idx)].quantity ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -281,11 +281,11 @@ class DetailSupplierInvoice extends React.Component {
             onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'unitPrice', form, field, props) }}
             placeholder="Unit Price"
             className={`form-control 
-                       ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
-                props.errors.lineItemsString[idx].unitPrice &&
+                       ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx)] &&
+                props.errors.lineItemsString[parseInt(idx)].unitPrice &&
                 Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
-                props.touched.lineItemsString[idx] &&
-                props.touched.lineItemsString[idx].unitPrice ? "is-invalid" : ""}`}
+                props.touched.lineItemsString[parseInt(idx)] &&
+                props.touched.lineItemsString[parseInt(idx)].unitPrice ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -328,11 +328,11 @@ class DetailSupplierInvoice extends React.Component {
       return obj
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
-      form.setFieldValue(field.name, this.state.data[idx][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
       this.updateAmount(data, props);
     } else {
       this.setState({ data: data }, () => {
-        form.setFieldValue(field.name, this.state.data[idx][name], true)
+        form.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
       });
     }
 
@@ -359,13 +359,13 @@ class DetailSupplierInvoice extends React.Component {
             // this.formRef.current.props.handleChange(field.name)(e.value)
           }} value={row.vatCategoryId}
             className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[idx] &&
-                props.errors.lineItemsString[idx].vatCategoryId &&
+            ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx)] &&
+                props.errors.lineItemsString[parseInt(idx)].vatCategoryId &&
                 Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
-                props.touched.lineItemsString[idx] &&
-                props.touched.lineItemsString[idx].vatCategoryId ? "is-invalid" : ""}`}
+                props.touched.lineItemsString[parseInt(idx)] &&
+                props.touched.lineItemsString[parseInt(idx)].vatCategoryId ? "is-invalid" : ""}`}
           >
-            {vatList ? vatList.map(obj => {
+            {vatList ? vatList.map((obj) => {
               // obj.name = obj.name === 'default' ? '0' : obj.name
               return <option value={obj.id} key={obj.id}>{obj.vat}</option>
             }) : ''}
@@ -422,8 +422,8 @@ class DetailSupplierInvoice extends React.Component {
     let total_vat = 0;
     const { discountPercentage, discountAmount } = this.state
 
-    data.map(obj => {
-      const index = obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
+    data.map((obj) => {
+      const index = obj.vatCategoryId !== '' ? vat_list.findIndex((item) => item.id === (+obj.vatCategoryId)) : '';
       const vat = index !== '' ? vat_list[index].vat : 0
       // let val = (((+obj.unitPrice) * vat) / 100)
       let val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
@@ -503,11 +503,11 @@ class DetailSupplierInvoice extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attachmentFile", this.uploadFile.files[0]);
     }
-    this.props.supplierInvoiceDetailActions.updateInvoice(formData).then(res => {
+    this.props.supplierInvoiceDetailActions.updateInvoice(formData).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Invoice Updated Successfully.')
       this.props.history.push('/admin/expense/supplier-invoice')
 
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -524,12 +524,12 @@ class DetailSupplierInvoice extends React.Component {
 
   removeInvoice = () => {
     const { current_supplier_id } = this.state;
-    this.props.supplierInvoiceDetailActions.deleteInvoice(current_supplier_id).then(res => {
+    this.props.supplierInvoiceDetailActions.deleteInvoice(current_supplier_id).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
         this.props.history.push('/admin/expense/supplier-invoice')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -687,7 +687,7 @@ class DetailSupplierInvoice extends React.Component {
                                   )
                               })}
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   <Col lg={4}>
@@ -723,7 +723,7 @@ class DetailSupplierInvoice extends React.Component {
                                         id="project"
                                         name="project"
                                         value={props.values.project}
-                                        onChange={option => props.handleChange('project')(option)}
+                                        onChange={(option) => props.handleChange('project')(option)}
                                       />
                                     </FormGroup>
                                   </Col>
@@ -772,7 +772,7 @@ class DetailSupplierInvoice extends React.Component {
                                         id="term"
                                         name="term"
                                         value={this.state.term}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           props.handleChange('term')(option)
                                           if (option.value === '') {
                                             this.setState({
@@ -856,7 +856,7 @@ class DetailSupplierInvoice extends React.Component {
                                         id="currency"
                                         name="currency"
                                         value={props.values.currency}
-                                        onChange={option => props.handleChange('currency')(option)}
+                                        onChange={(option) => props.handleChange('currency')(option)}
                                         className={`${props.errors.currency && props.touched.currency ? "is-invalid" : ""}`}
                                         />
                                         {props.errors.currency && props.touched.currency && (
@@ -891,7 +891,7 @@ class DetailSupplierInvoice extends React.Component {
                                             id="receiptNumber"
                                             name="receiptNumber"
                                             placeholder="Enter Reciept Number"
-                                            onChange={option => props.handleChange('receiptNumber')(option)}
+                                            onChange={(option) => props.handleChange('receiptNumber')(option)}
                                             value={props.values.receiptNumber}
 
                                           />
@@ -908,7 +908,7 @@ class DetailSupplierInvoice extends React.Component {
                                             id="receiptAttachmentDescription"
                                             rows="5"
                                             placeholder="1024 characters..."
-                                            onChange={option => props.handleChange('receiptAttachmentDescription')(option)}
+                                            onChange={(option) => props.handleChange('receiptAttachmentDescription')(option)}
                                             defaultValue={props.values.receiptAttachmentDescription}
 
                                           />
@@ -1039,7 +1039,7 @@ class DetailSupplierInvoice extends React.Component {
                                             id="notes"
                                             rows="6"
                                             placeholder="notes..."
-                                            onChange={option => props.handleChange('notes')(option)}
+                                            onChange={(option) => props.handleChange('notes')(option)}
                                             value={props.values.notes}
                                           />
                                         </FormGroup>
@@ -1108,7 +1108,7 @@ class DetailSupplierInvoice extends React.Component {
                                                     disabled={props.values.discountType && props.values.discountType === 'Percentage' ? true : false}
                                                     placeholder="Discount Amounts"
                                                     value={props.values.discount}
-                                                    onChange={option => {
+                                                    onChange={(option) => {
                                                       if (option.target.value === '' || this.regEx.test(option.target.value)) {
                                                         props.handleChange('discount')(option)
                                                         this.setState({

@@ -63,7 +63,7 @@ class DetailChartAccount extends React.Component {
   initializeData = () => {
     const id = this.props.location.state.id
     if (this.props.location.state && id) {
-      this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then(res => {
+      this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then((res) => {
         if (res.status === 200) {
           this.props.chartOfAccontActions.getSubTransactionTypes();
           this.setState({
@@ -75,7 +75,7 @@ class DetailChartAccount extends React.Component {
             }
           })
         }
-      }).catch(err => {
+      }).catch((err) => {
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null);
         this.setState({ loading: false })
         this.props.history.push('/admin/master/chart-account')
@@ -113,12 +113,12 @@ class DetailChartAccount extends React.Component {
 
   removeChartAccount = () => {
     const id = this.props.location.state.id;
-    this.props.detailChartOfAccontActions.deleteChartAccount(id).then(res => {
+    this.props.detailChartOfAccontActions.deleteChartAccount(id).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Account Deleted Successfully')
         this.props.history.push('/admin/master/chart-account')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -133,7 +133,7 @@ class DetailChartAccount extends React.Component {
   handleSubmit = (data, resetForm) => {
     const id = this.props.location.state.id
     const postData = Object.assign(data, { transactionCategoryId: id })
-    this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then(res => {
+    this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then((res) => {
       if (res.status === 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', 'Chart Account Updated Successfully')
@@ -194,7 +194,7 @@ class DetailChartAccount extends React.Component {
                                   .nullable()
                               })}
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 {/* <FormGroup>
                                   <Label htmlFor="transactionCategoryCode">Code</Label>
@@ -241,7 +241,7 @@ class DetailChartAccount extends React.Component {
                                     className="select-default-width"
                                     options={sub_transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', sub_transaction_type_list,'Type') : []}
                                     value={props.values.chartOfAccount}
-                                    onChange={option => {
+                                    onChange={(option) => {
                                       if(option && option.value) {
                                         props.handleChange('chartOfAccount')(option.value)
                                       } else {
@@ -263,7 +263,7 @@ class DetailChartAccount extends React.Component {
                                 name='chartOfAccount'
                                 value={props.values.chartOfAccount}
                                 // size="1"
-                                onChange={(e)=>{
+                                onChange={(e) => {
                                   props.handleChange('chartOfAccount')(e.target.value)
                                 }}
                               >

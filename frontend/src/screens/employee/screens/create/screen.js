@@ -68,7 +68,7 @@ class CreateEmployee extends React.Component {
 
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
   componentDidMount = () => {
@@ -76,7 +76,7 @@ class CreateEmployee extends React.Component {
   }
 
   handleSubmit = (data, resetForm) => {
-    this.props.employeeCreateActions.createEmployee(data).then(res => {
+    this.props.employeeCreateActions.createEmployee(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Employee Created Successfully')
         if (this.state.createMore) {
@@ -88,8 +88,8 @@ class CreateEmployee extends React.Component {
           this.props.history.push('/admin/master/employee')
         }
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -150,7 +150,7 @@ class CreateEmployee extends React.Component {
                             .required('DOB is Required')
                         })}
                       >
-                        {props => (
+                        {(props) => (
 
                           <Form onSubmit={props.handleSubmit}>
                             <h4 className="mb-4">Contact Name</h4>
@@ -403,7 +403,7 @@ class CreateEmployee extends React.Component {
                                   <Select
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currencyCode}
-                                    onChange={option => {
+                                    onChange={(option) => {
                                       if (option && option.value) {
                                         props.handleChange('currencyCode')(option.value)
                                       } else {

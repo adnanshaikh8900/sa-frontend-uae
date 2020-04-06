@@ -55,7 +55,7 @@ class CreateVatCode extends React.Component {
       loading: false,
       createMore: false
     }
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regEx = /^[0-9\d]+$/;
   }
 
@@ -83,7 +83,7 @@ class CreateVatCode extends React.Component {
 
   // Create or Edit Vat
   handleSubmit = (data, resetForm) => {
-    this.props.vatCreateActions.createVat(data).then(res => {
+    this.props.vatCreateActions.createVat(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New vat code Created Successfully!')
         resetForm()
@@ -93,7 +93,7 @@ class CreateVatCode extends React.Component {
           })
         } else this.props.history.push('/admin/master/vat-code')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err.data.message)
     })
   }
@@ -101,7 +101,7 @@ class CreateVatCode extends React.Component {
   render() {
     const { loading } = this.state
     const { vat_list } = this.props
-    const VatList = vat_list.map(item => {
+    const VatList = vat_list.map((item) => {
       return item.name
     })
 
@@ -135,7 +135,7 @@ class CreateVatCode extends React.Component {
                         //   vat: Yup.string()
                         //     .required("Vat Percentage is Required")
                         // })}
-                        validate={values => {
+                        validate={(values) => {
                           // let status = false
                           let errors = {};
                           if (!values.name) {
@@ -152,7 +152,7 @@ class CreateVatCode extends React.Component {
                           return errors;
                         }}
                       >
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit} name="simpleForm">
                             <FormGroup>
                               <Label htmlFor="name"><span className="text-danger">*</span>Vat Code Name</Label>

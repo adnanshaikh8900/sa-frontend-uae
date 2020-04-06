@@ -12,7 +12,7 @@ export const getTransactionByID = (id) => {
       url: `rest/transaction/edittransactioncategory?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: TRANSACTION.TRANSACTION_ROW,
         payload: {
@@ -26,7 +26,7 @@ export const getTransactionByID = (id) => {
         }
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -40,13 +40,13 @@ export const getTransactionTypes = () => {
       url: `rest/transaction/gettransactiontype`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: TRANSACTION.TRANSACTION_TYPES,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -61,13 +61,13 @@ export const getParentCategoryCodeListData = (code, val) => {
       url: `rest/transaction/getparenttransaction?TransactionTypeCode=${code}&transcationTxt=${val}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: TRANSACTION.TRANSACTION_PARENT_CATEGORY_CODE_LIST,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -81,13 +81,13 @@ export const getTransactionVatCategories = () => {
       url: `rest/transaction/getvatcategories`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: TRANSACTION.TRANSACTION_VAT_CATEGORIES,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -102,9 +102,9 @@ export const createAndUpdateTransaction = (transaction) => {
       data: transaction
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

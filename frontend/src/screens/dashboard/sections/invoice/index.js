@@ -58,7 +58,7 @@ class Invoice extends Component {
 
   toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
-    newArray[tabPane] = tab
+    newArray[parseInt(tabPane)] = tab
     this.setState({
       activeTab: newArray
     })
@@ -122,7 +122,7 @@ class Invoice extends Component {
               <TabPane tabId="1">
                 <div className="flex-wrapper" style={{paddingLeft: 20}}>
                   <div className="data-info">
-                  <button className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm" onClick={()=>{this.props.history.push('/admin/revenue/customer-invoice/create')}}>
+                  <button className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm" onClick={() => {this.props.history.push('/admin/revenue/customer-invoice/create')}}>
                     <i className="nav-icon icon-speech"></i><span>New Invoice</span>
                   </button>
                   </div>

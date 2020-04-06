@@ -48,13 +48,13 @@ class DetailProductCategory extends React.Component {
       dialog: null,
       current_product_category_id: null
     }
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
   componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.id) {
-      this.props.detailProductCategoryAction.getProductCategoryById(this.props.location.state.id).then(res => {
+      this.props.detailProductCategoryAction.getProductCategoryById(this.props.location.state.id).then((res) => {
         if (res.status === 200) {
           this.setState({
             loading: false,
@@ -66,7 +66,7 @@ class DetailProductCategory extends React.Component {
             }
           })
         }
-      }).catch(err => {
+      }).catch((err) => {
         this.setState({loading: false})
         this.props.history.push('/admin/master/product-category')
       })
@@ -79,16 +79,16 @@ class DetailProductCategory extends React.Component {
   handleSubmit = (data) => {
     const { id, productCategoryName, productCategoryCode } = data;
     const postData = {
-      id: id,
+      id,
       productCategoryName: productCategoryName ? productCategoryName : '',
       productCategoryCode: productCategoryCode ? productCategoryCode : ''
     }
-    this.props.detailProductCategoryAction.updateProductCategory(postData).then(res => {
+    this.props.detailProductCategoryAction.updateProductCategory(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Product Category Updated Successfully!')
         this.props.history.push('/admin/master/product-category')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err.data.message)
     })
   }
@@ -105,13 +105,13 @@ class DetailProductCategory extends React.Component {
 
   removeProductCategory = () => {
     const {current_product_category_id} = this.state
-    this.props.detailProductCategoryAction.deleteProductCategory(current_product_category_id).then(res => {
+    this.props.detailProductCategoryAction.deleteProductCategory(current_product_category_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
         this.props.commonActions.tostifyAlert('success', 'ProductCategory Deleted Successfully')
         this.props.history.push('/admin/master/product-category')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -146,7 +146,7 @@ class DetailProductCategory extends React.Component {
                         <Col lg={6}>
                           <Formik
                             initialValues={initValue}
-                            onSubmit={values => {
+                            onSubmit={(values) => {
                               this.handleSubmit(values)
                             }}
                           // validationSchema={Yup.object().shape({
@@ -156,7 +156,7 @@ class DetailProductCategory extends React.Component {
                           //     .required("Code is Required")
                           // })}
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <FormGroup>
                                   <Label htmlFor="productCategoryCode"><span className="text-danger">*</span>Product Category Code</Label>

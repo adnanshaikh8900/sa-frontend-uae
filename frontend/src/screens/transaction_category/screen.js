@@ -121,7 +121,7 @@ class TransactionCategory extends React.Component {
   // Get All Transaction Categories
   getTransactionListData = () => {
     this.setState({ loading: true })
-    this.props.transactionActions.getTransactionList().then(res => {
+    this.props.transactionActions.getTransactionList().then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -132,7 +132,7 @@ class TransactionCategory extends React.Component {
   deleteTransaction = () => {
     this.setState({ loading: true })
     this.setState({ openDeleteModal: false })
-    this.props.transactionActions.deleteTransaction(this.state.selectedData.id).then(res => {
+    this.props.transactionActions.deleteTransaction(this.state.selectedData.id).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
         this.getTransactionListData()

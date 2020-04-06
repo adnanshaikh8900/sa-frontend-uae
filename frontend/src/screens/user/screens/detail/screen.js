@@ -59,7 +59,7 @@ class DetailUser extends React.Component {
       imageState: true,
       current_user_id: null
     }
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
   componentDidMount = () => {
@@ -72,7 +72,7 @@ class DetailUser extends React.Component {
     //   userPhoto: this.state.userPhoto.concat(`https://i.picsum.photos/id/1/5616/3744.jpg`),
     // });
     if (this.props.location.state && this.props.location.state.id) {
-      this.props.userDetailActions.getUserById(this.props.location.state.id).then(res => {
+      this.props.userDetailActions.getUserById(this.props.location.state.id).then((res) => {
         this.props.userActions.getRoleList();
         if (res.status === 200) {
           this.setState({
@@ -93,8 +93,8 @@ class DetailUser extends React.Component {
             current_user_id: this.props.location.state.id
           })
         }
-      }).catch(err => {
-        this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+      }).catch((err) => {
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
         this.props.history.push('/admin/settings/user')
       })
     } else {
@@ -126,13 +126,13 @@ class DetailUser extends React.Component {
 
   removeUser = () => {
     const { current_user_id } = this.state;
-    this.props.userDetailActions.deleteUser(current_user_id).then(res => {
+    this.props.userDetailActions.deleteUser(current_user_id).then((res) => {
       if (res.status === 200) {
         // this.success('Chart Account Deleted Successfully');
         this.props.commonActions.tostifyAlert('success', 'User Deleted Successfully')
         this.props.history.push('/admin/settings/user')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -170,13 +170,13 @@ class DetailUser extends React.Component {
       formData.append("profilePic", userPhotoFile[0]);
     }
 
-    this.props.userDetailActions.updateUser(formData).then(res => {
+    this.props.userDetailActions.updateUser(formData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'User Updated Successfully')
         this.props.history.push('/admin/settings/user')
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -245,7 +245,7 @@ class DetailUser extends React.Component {
                                 .required('DOB is Required')
                             })}
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   <Col xs="4" md="4" lg={2}>
@@ -259,7 +259,7 @@ class DetailUser extends React.Component {
                                         console.error(err);
                                       }
                                     }}
-                                    onChange={(e)=>{}}
+                                    onChange={(e) => {}}
                                   /> */}
                                       <ImageUploader
                                         // withIcon={true}
@@ -373,7 +373,7 @@ class DetailUser extends React.Component {
                                           <Select
                                             options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                                             value={props.values.roleId}
-                                            onChange={option => {
+                                            onChange={(option) => {
                                               if (option && option.value) {
                                                 props.handleChange('roleId')(option.value)
                                               } else {
@@ -402,7 +402,7 @@ class DetailUser extends React.Component {
                                       className="select-default-width"
                                       options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list , 'Role') : []}
                                       value={props.values.companyId}
-                                      onChange={option => props.handleChange('companyId')(option.value)}
+                                      onChange={(option) => props.handleChange('companyId')(option.value)}
                                       placeholder="Select Company"
                                       id="companyId"
                                       name="companyId"
@@ -431,7 +431,7 @@ class DetailUser extends React.Component {
                                                   name="active"
                                                   checked={this.state.selectedStatus}
                                                   value={true}
-                                                  onChange={e => {
+                                                  onChange={(e) => {
                                                     if (e.target.value) {
                                                       this.setState({ selectedStatus: true }, () => {
                                                       })
@@ -450,7 +450,7 @@ class DetailUser extends React.Component {
                                                   name="active"
                                                   value={false}
                                                   checked={!this.state.selectedStatus}
-                                                  onChange={e => {
+                                                  onChange={(e) => {
                                                     if (e.target.value === 'false') {
                                                       this.setState({ selectedStatus: false })
                                                     }

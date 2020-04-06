@@ -113,7 +113,7 @@ class User extends React.Component {
     }
     const postData = { ...filterData, ...paginationData , ...sortingData}
 
-    this.props.userActions.getUserList(postData).then(res => {
+    this.props.userActions.getUserList(postData).then((res) => {
       if (res.status === 200) {
         // this.props.userActions.getCompanyTypeList()
         this.setState({ loading: false })
@@ -156,7 +156,7 @@ class User extends React.Component {
       temp_list = Object.assign([], this.state.selectedRows)
       temp_list.push(row.id);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.id) {
           temp_list.push(item)
         }
@@ -171,7 +171,7 @@ class User extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
-      rows.map(item => {
+      rows.map((item) => {
         temp_list.push(item.id)
         return item
       })
@@ -213,7 +213,7 @@ class User extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -257,7 +257,7 @@ class User extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.userActions.getUserList(obj).then(res => {
+      this.props.userActions.getUserList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -430,7 +430,7 @@ class User extends React.Component {
                           fetchInfo={{ dataTotalSize: user_list.count ? user_list.count : 0 }}
                           className="product-table"
                           trClassName="cursor-pointer"
-                          ref={node => {
+                          ref={(node) => {
                             this.table = node
                           }}
                         >

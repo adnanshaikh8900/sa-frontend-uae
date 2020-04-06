@@ -52,7 +52,7 @@ class ImageUploader extends React.Component {
 	 */
   hasExtension(fileName) {
     const pattern = '(' + this.props.imgExtension.join('|').replace(/\./g, '\\.') + ')$';
-    return new RegExp(pattern, 'i').test(fileName);
+    return new RegExp(pattern, 'g').test(fileName);
   }
 
   /*
@@ -85,24 +85,24 @@ class ImageUploader extends React.Component {
         fileErrors.push(fileError);
         continue;
       }
-
-      allFilePromises.push(this.readFile(file));
+      const temp = this.readFile(file);
+      allFilePromises.push(temp);
     }
 
     this.setState({
-      fileErrors: fileErrors
+      fileErrors
     });
 
-    Promise.all(allFilePromises).then(newFilesData => {
+    Promise.all(allFilePromises).then((newFilesData) => {
       const dataURLs = this.state.pictures.slice();
       const files = this.state.files.slice();
 
-      newFilesData.forEach(newFileData => {
+      newFilesData.forEach((newFileData) => {
         dataURLs.push(newFileData.dataURL);
         files.push(newFileData.file);
       });
 
-      this.setState({pictures: dataURLs, files: files});
+      this.setState({pictures: dataURLs, files});
     });
   }
 
@@ -133,7 +133,6 @@ class ImageUploader extends React.Component {
       reader.onloadend =(e) => {
         this.setState({loadFile:false})
     }
-
     });
   }
 
@@ -141,7 +140,7 @@ class ImageUploader extends React.Component {
    Remove the image from state
    */
   removeImage(picture) {
-    const removeIndex = this.state.pictures.findIndex(e => e === picture);
+    const removeIndex = this.state.pictures.findIndex((e) => e === picture);
     const filteredPictures = this.state.pictures.filter((e, index) => index !== removeIndex);
     const filteredFiles = this.state.files.filter((e, index) => index !== removeIndex);
     this.setState({pictures: filteredPictures, files: filteredFiles}, () => {
@@ -242,7 +241,7 @@ class ImageUploader extends React.Component {
           </button>
           <input
             type="file"
-            ref={input => this.inputElement = input}
+            ref={(input) => this.inputElement = input}
             name={this.props.name}
             multiple={!this.props.singleImage}
             onChange={this.onDropFile}

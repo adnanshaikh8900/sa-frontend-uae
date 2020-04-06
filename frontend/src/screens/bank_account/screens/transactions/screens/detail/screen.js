@@ -89,7 +89,7 @@ class DetailBankTransaction extends React.Component {
     this.props.transactionActions.getTransactionTypeList()
     this.props.transactionActions.getProjectList()
     if (this.props.location.state && this.props.location.state.id) {
-      this.props.transactionDetailActions.getTransactionDetail(this.props.location.state.id).then(res => {
+      this.props.transactionDetailActions.getTransactionDetail(this.props.location.state.id).then((res) => {
         this.setState({
           transaction_id: this.props.location.state.id,
           initValue: {
@@ -107,14 +107,14 @@ class DetailBankTransaction extends React.Component {
             filePath: res.data.receiptAttachmentPath ? res.data.receiptAttachmentPath : '',
           },
           view: this.props.location.state && this.props.location.state.view ? true : false
-        },()=>{
+        },() => {
           if(this.props.location.state && this.props.location.state.view) {
             this.setState({loading : false})
           } else {
             this.setState({loading : false})
           }
         })
-      }).catch(err => {
+      }).catch((err) => {
         // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
         this.props.history.push('/admin/banking/bank-account')
       })
@@ -164,13 +164,13 @@ class DetailBankTransaction extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attachment", this.uploadFile.files[0]);
     }
-    this.props.transactionDetailActions.updateTransaction(formData).then(res => {
+    this.props.transactionDetailActions.updateTransaction(formData).then((res) => {
       if (res.status === 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', 'Transaction Detail Updated Successfully.')
         this.props.history.push('/admin/banking/bank-account/transaction', { 'bankAccountId': bankAccountId })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -190,7 +190,7 @@ class DetailBankTransaction extends React.Component {
         <div className="animated fadeIn">
           <Row>
             <Col lg={12} className="mx-auto">
-              {loading ? <Loader /> : this.state.view ? <ViewBankAccount initialVals={initValue} editDetails={()=>{this.editDetails()}}/> :
+              {loading ? <Loader /> : this.state.view ? <ViewBankAccount initialVals={initValue} editDetails={() => {this.editDetails()}}/> :
                 (
                   <Card>
                     <CardHeader>
@@ -251,7 +251,7 @@ class DetailBankTransaction extends React.Component {
                                   )
                               })}
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   <Col lg={4}>
@@ -260,7 +260,7 @@ class DetailBankTransaction extends React.Component {
                                       <Select
                                         options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type') : ''}
                                         value={props.values.chartOfAccountId}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('chartOfAccountId')(option.value)
                                           } else {
@@ -335,7 +335,7 @@ class DetailBankTransaction extends React.Component {
                                         options={transaction_category_list && transaction_category_list.data ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list.data, 'Category') : []}
                                         id="transactionCategoryId"
                                         value={props.values.transactionCategoryId}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('transactionCategoryId')(option.value)
                                           } else {
@@ -356,7 +356,7 @@ class DetailBankTransaction extends React.Component {
                                         id="description"
                                         rows="6"
                                         placeholder="Description..."
-                                        onChange={option => props.handleChange('transactionDescription')(option)}
+                                        onChange={(option) => props.handleChange('transactionDescription')(option)}
                                         value={props.values.transactionDescription}
                                       />
                                     </FormGroup>
@@ -372,7 +372,7 @@ class DetailBankTransaction extends React.Component {
                                         id="projectId"
                                         name="projectId"
                                         value={props.values.projectId}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('projectId')(option.value)
                                           } else {
@@ -410,7 +410,7 @@ class DetailBankTransaction extends React.Component {
                                             id="attachementDescription"
                                             rows="5"
                                             placeholder="1024 characters..."
-                                            onChange={option => props.handleChange('attachementDescription')(option)}
+                                            onChange={(option) => props.handleChange('attachementDescription')(option)}
                                             value={props.values.attachementDescription}
                                           />
                                         </FormGroup>

@@ -4,5 +4,6 @@ public enum PayMode {
 
 	CASH, BANK;
 
-	private String payMode;
+	@SuppressWarnings("unused")
+	private String mode;
 }

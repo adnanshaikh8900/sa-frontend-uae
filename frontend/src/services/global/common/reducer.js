@@ -3,7 +3,8 @@ import { COMMON } from 'constants/types'
 const initState = {
   is_loading: false,
   version: '',
-  tostifyAlertFunc: null
+  tostifyAlertFunc: null,
+  tostifyAlert: {}
 }
 
 const CommonReducer = (state = initState, action) => {
@@ -32,6 +33,10 @@ const CommonReducer = (state = initState, action) => {
     case COMMON.TOSTIFY_ALERT:
       if (state.tostifyAlertFunc) {
         state.tostifyAlertFunc(payload.status, payload.message)
+      }
+      return {
+        ...state,
+        tostifyAlert: {status:payload.status,message: payload.message}
       }
       // break;
 

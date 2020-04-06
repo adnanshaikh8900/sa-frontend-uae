@@ -41,11 +41,9 @@ class CashFlow extends Component {
     this.state = {
       activeTab: new Array(4).fill('1')
     }
-
-    this.toggle = this.toggle.bind(this)
   }
 
-  toggle(tabPane, tab) {
+  toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
     newArray[tabPane] = tab
     this.setState({
@@ -53,11 +51,11 @@ class CashFlow extends Component {
     })
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.DashboardActions.getCashFlowGraphData(12)
   }
 
-  handleChange(e) {
+  handleChange = (e) => {
     e.preventDefault()
     this.props.DashboardActions.getCashFlowGraphData(e.currentTarget.value)
   }

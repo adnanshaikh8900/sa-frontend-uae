@@ -250,7 +250,7 @@ public class ChartUtil {
 			String mnt = dateFormatUtil.getDateAsString(inv.getInvoiceDate(), "MMM yyyy");
 			if (map.containsKey(mnt)) {
 				BigDecimal totalAmt = map.get(mnt);
-				totalAmt.add(inv.getTotalAmount());
+				totalAmt = totalAmt.add(inv.getTotalAmount());
 				map.put(mnt, totalAmt);
 			} else {
 				map.put(mnt, inv.getTotalAmount());

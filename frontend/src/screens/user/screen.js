@@ -22,6 +22,7 @@ import {
   CommonActions
 } from 'services/global'
 import { selectOptionsFactory } from 'utils'
+import { CSVLink } from "react-csv";
 
 import moment from 'moment'
 
@@ -62,7 +63,9 @@ class User extends React.Component {
         // companyId: '',
         roleId: ''
       },
-      selectedStatus: ''
+      selectedStatus: '',
+      csvData: [],
+      view: false
     }
 
     this.statusOption = [
@@ -71,26 +74,6 @@ class User extends React.Component {
       { label: 'InActive', value: '0' },
     ]
 
-    this.initializeData = this.initializeData.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
-
-    this.renderDate = this.renderDate.bind(this)
-    this.renderRole = this.renderRole.bind(this)
-    this.renderStatus = this.renderStatus.bind(this)
-
-    this.renderCompany = this.renderCompany.bind(this)
-
-    this.bulkDelete = this.bulkDelete.bind(this)
-    this.removeBulk = this.removeBulk.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.onPageChange = this.onPageChange.bind(this);
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
-
-
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top',
@@ -98,6 +81,9 @@ class User extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -107,24 +93,29 @@ class User extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
+    this.props.userActions.getRoleList()
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData , ...sortingData}
+
     this.props.userActions.getUserList(postData).then(res => {
       if (res.status === 200) {
-        this.props.userActions.getRoleList()
-        this.props.userActions.getCompanyTypeList()
+        // this.props.userActions.getCompanyTypeList()
         this.setState({ loading: false })
       }
     }).catch((err) => {
@@ -135,7 +126,7 @@ class User extends React.Component {
     })
   }
 
-  goToDetail(row) {
+  goToDetail = (row) => {
     this.props.history.push('/admin/settings/user/detail', { id: row.id })
   }
 
@@ -153,7 +144,13 @@ class User extends React.Component {
     }
   }
 
-  onRowSelect(row, isSelected, e) {
+  sortColumn = (sortName,sortOrder) => {
+    this.options.sortName = sortName
+    this.options.sortOrder = sortOrder
+    this.initializeData()
+}
+
+  onRowSelect = (row, isSelected, e) => {
     let temp_list = []
     if (isSelected) {
       temp_list = Object.assign([], this.state.selectedRows)
@@ -170,7 +167,8 @@ class User extends React.Component {
       selectedRows: temp_list
     })
   }
-  onSelectAll(isSelected, rows) {
+
+  onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
       rows.map(item => {
@@ -183,7 +181,7 @@ class User extends React.Component {
     })
   }
 
-  bulkDelete() {
+  bulkDelete = () => {
     const {
       selectedRows
     } = this.state
@@ -200,7 +198,7 @@ class User extends React.Component {
     }
   }
 
-  removeBulk() {
+  removeBulk = () => {
     let { selectedRows } = this.state;
     const { user_list } = this.props
     let obj = {
@@ -220,29 +218,29 @@ class User extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  renderDate(cell, row) {
+  renderDate = (cell, row) => {
     return row['dob'] !== null ? moment(row['dob'],'DD-MM-YYYY').format('DD/MM/YYYY') : ''
   }
 
-  renderRole(cell, row) {
+  renderRole = (cell, row) => {
     return row['role'] ? row['role']['roleName'] : ''
   }
 
-  renderCompany(cell, row) {
+  renderCompany = (cell, row) => {
     return row['company'] ? row['company']['companyName'] : ''
   }
 
-  renderStatus(cell, row) {
+  renderStatus = (cell, row) => {
     return (row['active'] !== '') ? (row['active'] === true ? 'Active' : 'InActive') : ''
   }
 
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -250,13 +248,31 @@ class User extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData();
   }
 
+  getCsvData = () => {
+       if(this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.userActions.getUserList(obj).then(res => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
   render() {
 
-    const { loading, dialog, selectedRows, selectedStatus, filterData } = this.state
+    const { loading, dialog, selectedRows, selectedStatus, filterData,csvData,view } = this.state
     const { user_list, role_list,  } = this.props
 
 
@@ -289,15 +305,20 @@ class User extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                          <Button
+                        <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                            disabled={user_list.length === 0}
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                           {view && <CSVLink
+                            data={csvData}
+                            filename={'User.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"

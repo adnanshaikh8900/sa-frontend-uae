@@ -23,8 +23,8 @@ public class ChartOfAccountFilter extends AbstractFilter<ChartOfAccount> {
 
 	protected static final int START = 0;
 
-	public ChartOfAccountFilter(ChartOfAccountCriteria chartOfAccountCriteria_) {
-		chartOfAccountCriteria = chartOfAccountCriteria_;
+	public ChartOfAccountFilter(ChartOfAccountCriteria chartOfAccountCriteria) {
+		this.chartOfAccountCriteria = chartOfAccountCriteria;
 		if (chartOfAccountCriteria == null) {
 			chartOfAccountCriteria = new ChartOfAccountCriteria();
 		}
@@ -57,10 +57,10 @@ public class ChartOfAccountFilter extends AbstractFilter<ChartOfAccount> {
 		Long start = chartOfAccountCriteria.getStart();
 		Long limit = chartOfAccountCriteria.getLimit();
 		if (query != null) {
-			long _start = (start == null || start < START) ? START : start;
-			long _limit = (limit == null || limit < 1) ? DEFAULT_MAX_SIZE : (limit > MAX_RESULTS) ? MAX_RESULTS : limit;
-			query.setMaxResults((int) _limit);
-			query.setFirstResult((int) _start);
+			long newStart = (start == null || start < START) ? START : start;
+			long newLimit = (limit == null || limit < 1) ? DEFAULT_MAX_SIZE : (limit > MAX_RESULTS) ? MAX_RESULTS : limit;
+			query.setMaxResults((int) newLimit);
+			query.setFirstResult((int) newStart);
 		}
 	}
 

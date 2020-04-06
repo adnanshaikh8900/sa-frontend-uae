@@ -25,10 +25,6 @@ public enum PaymentFilterEnum {
     @Getter
     String condition;
 
-    private PaymentFilterEnum(String dbColumnName) {
-        this.dbColumnName = dbColumnName;
-    }
-
     private PaymentFilterEnum(String dbColumnName, String condition) {
         this.dbColumnName = dbColumnName;
         this.condition = condition;

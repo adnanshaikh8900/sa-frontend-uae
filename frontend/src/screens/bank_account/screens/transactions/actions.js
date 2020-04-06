@@ -6,8 +6,14 @@ import {
 import moment from 'moment'
 
 export const getTransactionList = (obj) => {
-  const { chartOfAccountId, transactionDate , id , pageNo , pageSize} = obj
-  let param = `/rest/transaction/list?bankId=${id}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}`
+  let id = obj.id ? obj.id : '';  
+  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId : '';  
+  let transactionDate = obj.transactionDate ? obj.transactionDate : '';  
+  let pageNo = obj.pageNo ? obj.pageNo : '';  
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false;
+  
+  let param = `/rest/transaction/list?bankId=${id}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
   if(transactionDate !== '') {
     let date = moment(transactionDate).format('DD-MM-YYYY')
     param = param +`&transactionDate=${date}`
@@ -19,12 +25,14 @@ export const getTransactionList = (obj) => {
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
-        dispatch({
-          type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
-          payload: {
-            data: res.data
-          }
-        })
+        if(!obj.paginationDisable) {
+          dispatch({
+            type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
+            payload: {
+              data: res.data
+            }
+          })
+        }
       }
     }).catch(err => {
       throw err
@@ -98,6 +106,55 @@ export const deleteTransactionById = (id) => {
     }
     return authApi(data).then(res => {
       return res
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getTransactionListForReconcile = (type) => {
+  return (dispatch) => {
+    let data ={
+      method: 'get',
+      url: `/rest/datalist/reconsileCategories?debitCreditFlag=${type}`
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+      return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const getCategoryListForReconcile = (code) => {
+  return (dispatch) => {
+    let data ={
+      method: 'get',
+      url: `/rest/reconsile/getByReconcilationCatCode?reconcilationCatCode=${code}`
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+      return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const reconcileTransaction = (obj) => {
+  return (dispatch) => {
+    let data ={
+      method: 'POST',
+      url: `/rest/reconsile/reconcile`,
+      data: obj
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+      return res
+      }
     }).catch(err => {
       throw err
     })

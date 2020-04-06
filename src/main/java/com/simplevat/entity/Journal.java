@@ -80,7 +80,7 @@ public class Journal implements Serializable {
 	@Basic
 	@Column(name = "TOTAL_CREDIT_AMOUNT")
 	@ColumnDefault(value = "0.00")
-	private BigDecimal TotalCreditAmount;
+	private BigDecimal totalCreditAmount;
 
 	@Basic
 	@Column(name = "SUB_TOTAL_CREDIT_AMOUNT")

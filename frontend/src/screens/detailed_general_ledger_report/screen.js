@@ -72,11 +72,9 @@ class DetailedGeneralLedgerReport extends React.Component {
       { label: 'Credit', value: 'creditAmount', sort: false, align: 'right' },
       { label: 'Amount', value: 'amount', sort: false, align: 'right' },
     ]
-
-    this.toggle = this.toggle.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
     this.props.detailGeneralLedgerActions.getTransactionCategoryList().then(res => {
       if(res.status === 200) {
@@ -87,7 +85,7 @@ class DetailedGeneralLedgerReport extends React.Component {
     })
   }
 
-  initializeData() {
+  initializeData = () => {
     const { initValue } = this.state
     const postData = {
       startDate: initValue.startDate,
@@ -188,7 +186,6 @@ onSort = (column) => {
     }
     return obj
   })
-
   const temp = sortedData.sort((a, b) => {
     const nameA = a['value'] ? a['value'].toUpperCase() : '';
     const nameB = b['value'] ? b['value'].toUpperCase() : '';
@@ -235,13 +232,13 @@ getInvoice = (postingType, type, id) => {
       }
       break;
     case 'EXPENSE':
-      // this.props.history.push('/admin/expense/expense',{'id': id});
+      this.props.history.push('/admin/expense/expense/detail', { 'expenseId': id, 'view': true });
       break;
     case 'BANK_ACCOUNT':
-      // this.props.history.push('/admin/banking/bank-account/transaction/detail',{'id': id,'view': true});
+      this.props.history.push('/admin/banking/bank-account/transaction/detail', { 'id': id, 'view': true });
       break;
     case 'MANUAL':
-      // this.props.history.push('/admin/accountant/journal',{'id': id});
+      this.props.history.push('/admin/accountant/journal', { 'id': id });
       break;
     default:
   }
@@ -296,6 +293,7 @@ render() {
                 {loading ? <Loader /> : (
                   <div className="table-wrapper">
                     <Table responsive>
+                      <thead>
                       <tr className="header-row">
                         {this.columnHeader.map((column, index) => {
                           return <th key={index} style={{ fontWeight: '600' }} className={column.align ? 'text-right' : ''}
@@ -304,11 +302,12 @@ render() {
                           </th>
                         })}
                       </tr>
+                      </thead>
                       <tbody className="data-column">
                         {this.state.detailedGeneralLedgerList && this.state.detailedGeneralLedgerList.length > 0 ? this.state.detailedGeneralLedgerList.map((item, index) => {
                           return (
                             <>
-                              <tr style={{ background: '#f7f7f7' }}><td colSpan="9"><b style={{ fontWeight: '600' }}>{item[0]['transactionTypeName']}</b></td></tr>
+                              <tr style={{ background: '#f7f7f7' }} key={index}><td colSpan="9"><b style={{ fontWeight: '600' }}>{item[0]['transactionTypeName']}</b></td></tr>
                               {/* <tr>
                               <td>As On 01/01/2020 </td>
                               <td colSpan="5">Opening Balance</td>

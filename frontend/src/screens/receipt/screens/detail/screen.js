@@ -60,21 +60,16 @@ class DetailReceipt extends React.Component {
       current_receipt_id: null
     }
 
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.initializeData = this.initializeData.bind(this)
-    this.deleteReceipt = this.deleteReceipt.bind(this)
-    this.removeReceipt = this.removeReceipt.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-
     this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.receiptActions.getContactList();
       this.props.receiptActions.getInvoiceList();
@@ -104,7 +99,7 @@ class DetailReceipt extends React.Component {
     }
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     const { current_receipt_id } = this.state
     const {
       receiptDate,
@@ -136,7 +131,7 @@ class DetailReceipt extends React.Component {
     })
   }
 
-  deleteReceipt() {
+  deleteReceipt = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -146,7 +141,7 @@ class DetailReceipt extends React.Component {
     })
   }
 
-  removeReceipt() {
+  removeReceipt = () => {
     const {current_receipt_id} = this.state;
     this.props.receiptDetailActions.deleteReceipt(current_receipt_id).then(res => {
       if (res.status === 200) {
@@ -158,7 +153,7 @@ class DetailReceipt extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
@@ -226,8 +221,8 @@ class DetailReceipt extends React.Component {
                                         id="receiptNo"
                                         name="receiptNo"
                                         placeholder="Receipt Number"
-                                        onChange={(value) => {
-                                          props.handleChange("receiptNo")(value)
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNo')(option)
                                         }}
                                         value={props.values.receiptNo}
                                       />
@@ -266,7 +261,9 @@ class DetailReceipt extends React.Component {
                                         name="referenceCode"
                                         placeholder="Reference Number"
                                         value={props.values.referenceCode}
-                                        onChange={option => { props.handleChange('referenceCode')(option) }}
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('referenceCode')(option)
+                                        }}
                                         className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
                                         />
                                         {props.errors.referenceCode && props.touched.referenceCode && (

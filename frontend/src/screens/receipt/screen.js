@@ -24,6 +24,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css'
 import {
   CommonActions
 } from 'services/global'
+import { CSVLink } from "react-csv";
 
 
 import * as ReceiptActions from './actions'
@@ -58,21 +59,10 @@ class Receipt extends React.Component {
         invoiceId: '',
         receiptReferenceCode: '',
         receiptDate: '',
-      }
+      },
+      csvData: [],
+      view: false
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.renderMode = this.renderMode.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
-    this.bulkDelete = this.bulkDelete.bind(this)
-    this.removeBulk = this.removeBulk.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.onPageChange = this.onPageChange.bind(this);
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -81,6 +71,9 @@ class Receipt extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -90,22 +83,28 @@ class Receipt extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
+    this.props.receiptActions.getContactList();
+    this.props.receiptActions.getInvoiceList();
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...data };
-    this.props.receiptActions.getContactList();
-    this.props.receiptActions.getInvoiceList();
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData , ...sortingData}
+
+
     this.props.receiptActions.getReceiptList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
@@ -116,18 +115,26 @@ class Receipt extends React.Component {
     })
   }
 
-  goToDetail(row) {
+  goToDetail = (row) => {
     this.props.history.push('/admin/revenue/receipt/detail', { id: row.receiptId })
   }
 
-  renderMode(cell, row) {
+  renderMode = (cell, row) => {
     return (
       <span className="badge badge-success mb-0">Cash</span>
     )
   }
 
-  renderDate(cell, rows) {
+  renderDate = (cell, rows) => {
     return rows['receiptDate'] !== null ? moment(rows['receiptDate']).format('DD/MM/YYYY') : ''
+  }
+
+  renderAmount = (cell,row) => {
+    return row.amount ? (row.amount).toFixed(2) : ''
+  }  
+  
+  renderUnusedAmount = (cell,row) => {
+    return row.unusedAmount ? (row.unusedAmount).toFixed(2) : ''
   }
 
   onSizePerPageList = (sizePerPage) => {
@@ -144,7 +151,13 @@ class Receipt extends React.Component {
     }
   }
 
-  onRowSelect(row, isSelected, e) {
+  sortColumn = (sortName,sortOrder) => {
+    this.options.sortName = sortName
+    this.options.sortOrder = sortOrder
+    this.initializeData()
+}
+
+  onRowSelect = (row, isSelected, e) => {
     let temp_list = []
     if (isSelected) {
       temp_list = Object.assign([], this.state.selectedRows)
@@ -161,7 +174,7 @@ class Receipt extends React.Component {
       selectedRows: temp_list
     })
   }
-  onSelectAll(isSelected, rows) {
+  onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
       rows.map(item => temp_list.push(item.receiptId))
@@ -171,7 +184,7 @@ class Receipt extends React.Component {
     })
   }
 
-  bulkDelete() {
+  bulkDelete = () => {
     const {
       selectedRows
     } = this.state
@@ -188,7 +201,7 @@ class Receipt extends React.Component {
     }
   }
 
-  removeBulk() {
+  removeBulk = () => {
     let { selectedRows } = this.state;
     const { receipt_list } = this.props
     let obj = {
@@ -208,13 +221,13 @@ class Receipt extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -222,12 +235,32 @@ class Receipt extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData();
   }
 
+  getCsvData = () => {
+       if(this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.receiptActions.getReceiptList(obj).then(res => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+              this.initializeData();
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
   render() {
-    const { loading, dialog, selectedRows, filterData } = this.state
+    const { loading, dialog, selectedRows, filterData,csvData,view } = this.state
     const { receipt_list, invoice_list, contact_list } = this.props;
 
     return (
@@ -259,15 +292,20 @@ class Receipt extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                          <Button
+                        <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                            // disabled={receipt_list.length === 0}
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                           {view && <CSVLink
+                            data={csvData}
+                            filename={'Receipt.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -400,12 +438,16 @@ class Receipt extends React.Component {
                           <TableHeaderColumn
                             dataField="amount"
                             dataSort
+                            dataAlign="right"
+                            dataFormat={this.renderAmount}
                           >
                             Amount
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="unusedAmount"
                             dataSort
+                            dataAlign="right"
+                            dataFormat={this.renderUnusedAmount}
                           >
                             Unused Amount
                           </TableHeaderColumn>

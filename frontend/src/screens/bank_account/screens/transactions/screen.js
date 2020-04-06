@@ -12,14 +12,16 @@ import {
   ButtonDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  Label,
+  FormGroup
 } from 'reactstrap'
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 
-import { Loader , ConfirmDeleteModal} from 'components'
+import { Loader, ConfirmDeleteModal, SidebarComponent } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -31,15 +33,16 @@ import {
   CommonActions
 } from 'services/global'
 import { selectOptionsFactory } from 'utils'
+import { CSVLink } from "react-csv";
 
 
 import './style.scss'
+import moment from 'moment'
 
 const mapStateToProps = (state) => {
   return ({
     bank_transaction_list: state.bank_account.bank_transaction_list,
     transaction_type_list: state.bank_account.transaction_type_list,
-
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -78,21 +81,23 @@ class BankTransactions extends React.Component {
       selectedTransactionType: '',
       id: '',
       dialog: null,
+      selectedRowData: {},
+      sidebarOpen: false,
+      transaction_type_list_reconcile: [],
+      categoryList: [],
+      reconcileData: {
+        transaction_type: '',
+        category_type: '',
+        transaction_id: ''
+      },
+      categoryDetails: {},
+      selectedReconcileTransactionType: '',
+      selectedReconcileCategoryType: '',
+      category_label: '',
+      csvData: [],
+      view: false
+      
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    // this.toggleDangerModal = this.toggleDangerModal.bind(this)
-    this.renderAccountNumber = this.renderAccountNumber.bind(this)
-    this.renderTransactionStatus = this.renderTransactionStatus.bind(this)
-    this.renderTransactionType = this.renderTransactionType.bind(this)
-    this.renderActions = this.renderActions.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.toggleActionButton = this.toggleActionButton.bind(this)
-    this.onPageChange = this.onPageChange.bind(this);
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.handleChange = this.handleChange.bind(this)
 
     this.options = {
       paginationPosition: 'top',
@@ -109,14 +114,14 @@ class BankTransactions extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     let { filterData } = this.state
     const data = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -127,8 +132,8 @@ class BankTransactions extends React.Component {
       this.props.transactionsActions.getTransactionList(postData).then(res => {
         this.props.transactionsActions.getTransactionTypeList();
         if (res.status === 200) {
-          this.setState({ 
-            loading: false 
+          this.setState({
+            loading: false
           });
         }
       }).catch(err => {
@@ -145,8 +150,177 @@ class BankTransactions extends React.Component {
   //     openDeleteModal: !this.state.openDeleteModal
   //   })
   // }
+  onSetSidebarOpen = (open, data) => {
+    this.setState({ sidebarOpen: open, reconcileData: {transaction_id: data.id},categoryDetails:{} });
+    this.getTransactionListForReconcile(data.debitCreditFlag)
+  }
 
-  toggleActionButton(index) {
+  getTransactionListForReconcile = (type) => {
+    let element = document.querySelector('body');
+   if(!element.className.includes('sidebar-minimized')) {
+    element.className = element.className + ' sidebar-minimized brand-minimized'
+   }
+
+    this.props.transactionsActions.getTransactionListForReconcile(type).then(res => {
+      if(res.status === 200) {
+        this.setState({
+          transaction_type_list_reconcile: res.data
+      })
+    }})
+}
+
+  getCategoryList = (val) => {
+    this.props.transactionsActions.getCategoryListForReconcile(val).then(res => {
+      if (res.status === 200) {
+        res.data.map(x => {
+          x['name'] = x.label
+          x['label'] = `${x['label']} (${x['amount']} ${x['currencySymbol']})`
+          return x
+        })
+        this.setState({
+          categoryList: res.data
+        })
+  }})
+}
+
+  getDetail = (val) => {
+    const data = this.state.categoryList.filter(x => x.id === val)
+    this.setState({
+          categoryDetails: {
+            name: data[0].name,
+            date: data[0].date,
+            amount: `${data[0].currencySymbol} ${(data[0].amount).toFixed(2)}`,
+            due_date: data[0].dueDate,
+          }
+    })
+  }
+
+  handleSubmit = () => {
+    const { reconcileData} = this.state
+    const postData= {
+     reconcileCategoryCode: reconcileData.transaction_type,
+     reconcileRrefId:  reconcileData.category_type,
+     transactionId:  reconcileData.transaction_id
+    }
+    this.props.transactionsActions.reconcileTransaction(postData).then(res => {
+      if (res.status === 200) {
+        this.setState({
+          sidebarOpen: false
+        })
+      }
+    })
+  }
+
+  closeSideBar = () => {
+    this.setState({ sidebarOpen: false, selectedRowData: '' })
+    let element = document.querySelector('body');
+    element.className = element.className.replace('sidebar-minimized brand-minimized','')
+  }
+
+  getSideBarContent = () => {
+    const { transaction_type_list_reconcile, categoryList, reconcileData, category_label } = this.state
+    const { date, amount, name, due_date } = this.state.categoryDetails
+    return (
+      <div className="sidebar-content">
+        <div className="header text">
+          <h2>Explain</h2>
+          <i className="fa fa-close" onClick={() => this.closeSideBar()}></i>
+        </div>
+        {
+          <div>
+            <div className="content-details p-3">
+            <form>
+                <div className="details-container">
+                  <div className="mb-3">
+                    <Label className="label">Transaction Type</Label>
+                    <Select
+                      options={transaction_type_list_reconcile ? selectOptionsFactory.renderOptions('label', 'value', transaction_type_list_reconcile, 'Transaction Type') : []}
+                      onChange={(val) => {
+                        if (val && val.value) {
+                          this.setState({
+                            category_label: val.label
+                          }, () => {
+                            this.getCategoryList(val.value)
+                            this.handleChange(val.value, 'transaction_type', true)
+                          })
+                        } else {
+                          this.handleChange('', 'transaction_type', true)
+                        }
+                        this.handleChange('', 'category_type', true)
+                        this.setState({
+                          categoryDetails: {}
+                        })
+                      }}
+                      className="select-default-width"
+                      placeholder="Transaction Type"
+                      value={reconcileData.transaction_type}
+                    />
+                  </div>
+                  {reconcileData.transaction_type && <div className="mb-3">
+                    <Label className="label">{category_label}</Label>
+                    <Select
+                      options={categoryList ? selectOptionsFactory.renderOptions('label', 'id', categoryList, category_label) : []}
+                      onChange={(val) => {
+                        if (val && val.value) {
+                          this.getDetail(val.value)
+                          this.handleChange(val.value, 'category_type', true)
+                        } else {
+                          this.handleChange('', 'category_type', true)
+                          this.setState({
+                            categoryDetails: {}
+                          })
+                        }
+                      }}
+                      className="select-default-width"
+                      value={reconcileData.category_type}
+                    />
+                  </div>}
+                  {name ?
+                    <>
+                      <label className="label">Name</label>
+                      <label className="value">{name}</label>
+                    </> : ''
+                  }
+                  {amount ?
+                    <>
+                      <label className="label">Amount</label>
+                      <label className="value">{amount}</label>
+                    </> : ''
+                  }
+                  {date ?
+                    <>
+                      <label className="label">Date</label>
+                      <label className="value">{moment(date).format('DD/MM/YYYY')}</label>
+                    </> : ''
+                  }
+                  {due_date ?
+                    <>
+                      <label className="label">Due Date</label>
+                      <label className="value">{moment(due_date).format('DD/MM/YYYY')}</label>
+                    </> : ''
+                  }
+                </div>
+                <Row>
+                  <Col lg={12} className="mt-5">
+                    <FormGroup className="text-right">
+                      <Button type="button" color="primary" className="btn-square mr-3" onClick={() => { this.handleSubmit() }}
+                        disabled={Object.keys(this.state.categoryDetails).length > 0 ? false : true}
+                      >
+                        <i className="fa fa-dot-circle-o"></i> Reconcile
+                        </Button>
+                    </FormGroup>
+                  </Col>
+                </Row>
+              </form>                 
+            </div>
+          </div>
+          // :
+          // <Loader />
+        }
+      </div >)
+  }
+
+  toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -158,7 +332,7 @@ class BankTransactions extends React.Component {
     })
   }
 
-  renderAccountNumber(cell, row) {
+  renderAccountNumber = (cell, row) => {
     return (
       <label
         className="mb-0 my-link"
@@ -169,7 +343,7 @@ class BankTransactions extends React.Component {
     )
   }
 
-  renderTransactionStatus(cell, row) {
+  renderTransactionStatus = (cell, row) => {
     let classname = ''
     if (row.status === 'Explained') {
       classname = 'badge-success'
@@ -183,7 +357,7 @@ class BankTransactions extends React.Component {
     )
   }
 
-  renderTransactionType(cell, row) {
+  renderTransactionType = (cell, row) => {
     let classname = ''
     let value = ''
     if (row.status === 'Explained') {
@@ -201,7 +375,17 @@ class BankTransactions extends React.Component {
     )
   }
 
-  renderActions(cell, row) {
+  renderDepositAmount = (cell, row) => {
+    return row.depositeAmount >= 0 ? (row.depositeAmount).toFixed(2) : ''
+  }
+  renderWithdrawalAmount = (cell, row) => {
+    return row.withdrawalAmount >= 0 ? (row.withdrawalAmount).toFixed(2) : ''
+  }
+  renderRunningAmount = (cell, row) => {
+    return row.runningAmount >= 0 ? (row.runningAmount).toFixed(2) : ''
+  }
+
+  renderActions = (cell, row) => {
     return (
       <div>
         <ButtonDropdown
@@ -223,8 +407,11 @@ class BankTransactions extends React.Component {
             <DropdownItem>
               <i className="fas fa-wrench" /> Archive
             </DropdownItem>
+            <DropdownItem onClick={() => { this.onSetSidebarOpen(true, row) }}>
+              <i className="fa fa-connectdevelop" /> Explain
+            </DropdownItem>
             <DropdownItem onClick={() => this.closeTransaction(row.id)}>
-              <i className="fa fa-trash" /> Close
+              <i className="fa fa-trash" /> Delete
             </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
@@ -232,9 +419,9 @@ class BankTransactions extends React.Component {
     )
   }
 
-  onRowSelect(row, isSelected, e) {
+  onRowSelect = (row, isSelected, e) => {
   }
-  onSelectAll(isSelected, rows) {
+  onSelectAll = (isSelected, rows) => {
   }
 
   onSizePerPageList = (sizePerPage) => {
@@ -251,15 +438,23 @@ class BankTransactions extends React.Component {
     }
   }
 
-  handleChange(val, name) {
-    this.setState({
-      filterData: Object.assign(this.state.filterData, {
-        [name]: val
+  handleChange = (val, name, reconcile) => {
+    if (!reconcile) {
+      this.setState({
+        filterData: Object.assign(this.state.filterData, {
+          [name]: val
+        })
       })
-    })
+    } else {
+      this.setState({
+        reconcileData: Object.assign(this.state.reconcileData, {
+          [name]: val
+        })
+      })
+    }
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData();
   }
 
@@ -289,13 +484,35 @@ class BankTransactions extends React.Component {
     })
   }
 
+  getCsvData = () => {
+    if(this.state.csvData.length === 0) {
+   let obj = {
+     paginationDisable: true
+   }
+   this.props.transactionsActions.getTransactionList(obj).then(res => {
+     if (res.status === 200) {
+       this.setState({ csvData: res.data.data, view: true }, () => {
+         setTimeout(() => {
+           this.csvLink.current.link.click()
+         }, 0)
+       });
+     }
+   })
+ } else {
+   this.csvLink.current.link.click()
+ }
+}
+
+
   render() {
 
     const {
       loading,
       statusOptions,
       filterData,
-      dialog
+      dialog,
+      csvData,
+      view
     } = this.state
     const { bank_transaction_list, transaction_type_list } = this.props
 
@@ -303,7 +520,7 @@ class BankTransactions extends React.Component {
       <div className="bank-transaction-screen">
         <div className="animated fadeIn">
           {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
-          <Card>
+          <Card className={this.state.sidebarOpen ? `main-table-panel` : ''}>
             <CardHeader>
               <Row>
                 <Col lg={12}>
@@ -315,7 +532,11 @@ class BankTransactions extends React.Component {
               </Row>
             </CardHeader>
             <CardBody>
-            {dialog}
+              <SidebarComponent
+                sidebar={this.getSideBarContent()}
+                pullRight
+                sidebarOpen={this.state.sidebarOpen} />
+              {dialog}
               {
                 loading ?
                   <Row>
@@ -328,6 +549,20 @@ class BankTransactions extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
+                        <Button
+                            color="success"
+                            className="btn-square"
+                            onClick={() => this.getCsvData()}
+                          >
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
+                          </Button>
+                           {view && <CSVLink
+                            data={csvData}
+                            filename={'Transaction.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="info"
                             className="btn-square"
@@ -374,21 +609,21 @@ class BankTransactions extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                              <Select
-                                options={transaction_type_list  ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Transaction Type') : []}
-                                onChange={(val) => {
-                                  if (val && val.value) {
-                                    this.handleChange(val.value, 'chartOfAccountId')
-                                    this.setState({ 'selectedTransactionType': val.value })
-                                  } else {
-                                    this.handleChange('', 'chartOfAccountId')
-                                    this.setState({ 'selectedTransactionType': '' })
-                                  }
-                                }}
-                                className="select-default-width"
-                                placeholder="Transaction Type"
-                                value={this.state.selectedTransactionType}
-                              />
+                            <Select
+                              options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Transaction Type') : []}
+                              onChange={(val) => {
+                                if (val && val.value) {
+                                  this.handleChange(val.value, 'chartOfAccountId')
+                                  this.setState({ 'selectedTransactionType': val.value })
+                                } else {
+                                  this.handleChange('', 'chartOfAccountId')
+                                  this.setState({ 'selectedTransactionType': '' })
+                                }
+                              }}
+                              className="select-default-width"
+                              placeholder="Transaction Type"
+                              value={this.state.selectedTransactionType}
+                            />
                           </Col>
                           <Col lg={2} className="mb-1">
                             <DatePicker
@@ -421,7 +656,7 @@ class BankTransactions extends React.Component {
                           version="4"
                           hover
                           keyField="id"
-                          pagination = {bank_transaction_list && bank_transaction_list.data && bank_transaction_list.data.length > 0 ? true : false}
+                          pagination={bank_transaction_list && bank_transaction_list.data && bank_transaction_list.data.length > 0 ? true : false}
                           // totalSize={bank_transaction_list ? bank_transaction_list.length : 0}
                           remote
                           fetchInfo={{ dataTotalSize: bank_transaction_list.count ? bank_transaction_list.count : 0 }}
@@ -455,18 +690,26 @@ class BankTransactions extends React.Component {
                           <TableHeaderColumn
                             dataField="depositeAmount"
                             dataSort
+                            dataFormat={this.renderDepositAmount}
+                            dataAlign="right"
                           >
                             Deposit
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="withdrawalAmount"
                             dataSort
+                            dataFormat={this.renderWithdrawalAmount}
+                            dataAlign="right"
+
                           >
                             Withdrawal
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="runningAmount"
                             dataSort
+                            dataFormat={this.renderRunningAmount}
+                            dataAlign="right"
+
                           >
                             Running Balance
                           </TableHeaderColumn>
@@ -484,22 +727,6 @@ class BankTransactions extends React.Component {
               }
             </CardBody>
           </Card>
-          {/* <Modal
-            isOpen={this.state.openDeleteModal}
-            centered
-            className="modal-primary"
-          >
-            <ModalHeader toggle={this.toggleDangerModal}>
-              <h4 className="mb-0">Are you sure ?</h4>
-            </ModalHeader>
-            <ModalBody>
-              <h5 className="mb-0">This record will be deleleted permanently.</h5>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" className="btn-square" onClick={this.deleteBank}>Yes</Button>{' '}
-              <Button color="secondary" className="btn-square" onClick={this.toggleDangerModal}>No</Button>
-            </ModalFooter>
-          </Modal> */}
         </div>
       </div>
     )

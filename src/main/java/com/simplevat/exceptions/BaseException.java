@@ -4,7 +4,7 @@ package com.simplevat.exceptions;
 public abstract class BaseException extends RuntimeException {
 
 	private static final long serialVersionUID = 605231601334551397L;
-	String errorMsg;
+	protected String errorMsg;
 	public BaseException(String errorMsg) {
 		super(errorMsg);
 		this.errorMsg = errorMsg;
@@ -17,9 +17,9 @@ public abstract class BaseException extends RuntimeException {
 	public abstract String getErrorDescription();
 	
 	public abstract boolean  isBusinessException();
-	
+
+	@Override
 	public String toString() {
-		String toString = "Error in : " + getSource() + ", Error Code : " + getErrorCode() + ", Error Code Description : " + getErrorDescription() + ", Error Message : " + this.errorMsg;
-		return toString;
+		return "Error in : " + getSource() + ", Error Code : " + getErrorCode() + ", Error Code Description : " + getErrorDescription() + ", Error Message : " + this.errorMsg;
 	}
 }

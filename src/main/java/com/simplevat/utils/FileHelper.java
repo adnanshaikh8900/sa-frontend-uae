@@ -5,7 +5,6 @@
  */
 package com.simplevat.utils;
 
-import com.simplevat.constant.FileTypeEnum;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -15,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -23,11 +23,11 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import com.simplevat.constant.FileTypeEnum;
 
 /**
  *
@@ -91,6 +91,7 @@ public class FileHelper {
 	}
 
 	public String saveFile(MultipartFile multipartFile, FileTypeEnum fileTypeEnum) throws IOException {
+		String filePath = "";
 		String storagePath = fileLocation;
 		createFolderIfNotExist(storagePath);
 		Map<String, String> map = getFileName(multipartFile, fileTypeEnum);
@@ -101,9 +102,9 @@ public class FileHelper {
 			}
 			File file = new File(storagePath + entry.getValue());
 			multipartFile.transferTo(file);
-			return entry.getValue();
+			filePath = entry.getValue();
 		}
-		return "";
+		return filePath;
 	}
 
 	public void createFolderIfNotExist(String filePath) {

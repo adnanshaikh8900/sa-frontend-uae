@@ -95,12 +95,10 @@ class ExpenseReport extends React.Component {
     this.state = {
       selectedOption: '',
     }
-
-    this.handleChange = this.handleChange.bind(this)
   }
 
 
-  handleChange(selectedOption) {
+  handleChange = (selectedOption) => {
     this.setState({ selectedOption })
   }
 
@@ -121,6 +119,7 @@ class ExpenseReport extends React.Component {
                         <Button
                           color="success"
                           className="btn-square"
+                          onClick={() => this.table.handleExportCSV()}
                         >
                           <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                           Export to CSV
@@ -149,13 +148,30 @@ class ExpenseReport extends React.Component {
                       <Input type="text" placeholder="Expense Date" />
                     </DateRangePicker>
                   </Col>
+                  <Col lg={2} className="mb-1">
+                    <Button
+                        color="secondary"
+                        className="btn-square"
+                        type="submit"
+                        name="submit"
+                        onClick = {this.getSelectedData}
+                    >
+                      <i className="fa glyphicon glyphicon-export fa-search mr-1" />
+                      Search
+                    </Button>
+                  </Col>
                 </Row>
               </div>
                 <div className="table-wrapper">
                 <BootstrapTable 
                   data={tempdata} 
                   hover
-                  pagination
+                  pagination={tempdata && tempdata.length > 0 ? true : false}
+                  fetchInfo={{ dataTotalSize: tempdata.count ? tempdata.count : 0 }}
+                  csvFileName="tempdata.csv"
+                  ref={node => {
+                    this.table = node
+                  }}
                   filter = {true}
                   responsive={true}
                   version="4"

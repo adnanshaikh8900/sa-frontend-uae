@@ -55,18 +55,16 @@ class CreateVatCode extends React.Component {
       loading: false,
       createMore: false
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.success = this.success.bind(this)
+    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regEx = /^[0-9\d]+$/;
   }
 
-  componentDidMount() {
-    this.props.vatActions.getVatList()
+  componentDidMount = () => {
+    // this.props.vatActions.getVatList()
   }
 
   // Save Updated Field's Value to State
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       vatData: _.set(
         { ...this.state.vatData },
@@ -77,14 +75,14 @@ class CreateVatCode extends React.Component {
   }
 
   // Show Success Toast
-  success() {
+  success = () => {
     toast.success('Vat Code Updated successfully... ', {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
   // Create or Edit Vat
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     this.props.vatCreateActions.createVat(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New vat code Created Successfully!')
@@ -163,7 +161,9 @@ class CreateVatCode extends React.Component {
                                 id="name"
                                 name="name"
                                 placeholder="Enter Vat Code Name"
-                                onChange={props.handleChange}
+                                onChange={(option) => {
+                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('name')(option)
+                                }}
                                 // validate={this.validateCode}
                                 value={props.values.name}
                                 className={
@@ -179,11 +179,13 @@ class CreateVatCode extends React.Component {
                             <FormGroup>
                               <Label htmlFor="name"><span className="text-danger">*</span>Percentage</Label>
                               <Input
-                                type="number"
-                                id="name"
+                                type="text"
+                                id="vat"
                                 name="vat"
                                 placeholder="Enter Percentage"
-                                onChange={props.handleChange}
+                                onChange={(option) => {
+                                  if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('vat')(option)
+                                }}
                                 value={props.values.vat}
                                 className={
                                   props.errors.vat && props.touched.vat

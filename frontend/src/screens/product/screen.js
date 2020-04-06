@@ -27,6 +27,7 @@ import * as ProductActions from './actions'
 import {
   CommonActions
 } from 'services/global'
+import { CSVLink } from "react-csv";
 
 
 import './style.scss'
@@ -57,22 +58,10 @@ class Product extends React.Component {
         productCode: '',
         vatPercentage: ''
       },
-      selectedVat: ''
+      selectedVat: '',
+      csvData: [],
+      view: false
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
-    this.vatCategoryFormatter = this.vatCategoryFormatter.bind(this);
-    this.bulkDelete = this.bulkDelete.bind(this);
-    this.removeBulk = this.removeBulk.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-
-    this.onPageChange = this.onPageChange.bind(this)
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -81,6 +70,9 @@ class Product extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -90,28 +82,32 @@ class Product extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
+    this.props.productActions.getProductVatCategoryList();
     this.initializeData()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     this.setState({
       selectedRows: []
     })
   }
 
-  initializeData() {
+  initializeData = () => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.productActions.getProductList(postData).then(res => {
-      this.props.productActions.getProductVatCategoryList();
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -121,11 +117,17 @@ class Product extends React.Component {
     })
   }
 
-  goToDetail(row) {
+  goToDetail = (row) => {
     this.props.history.push('/admin/master/product/detail', { id: row.id })
   }
 
-  onRowSelect(row, isSelected, e) {
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
+  }
+
+  onRowSelect = (row, isSelected, e) => {
     let temp_list = []
     if (isSelected) {
       temp_list = Object.assign([], this.state.selectedRows)
@@ -142,7 +144,8 @@ class Product extends React.Component {
       selectedRows: temp_list
     })
   }
-  onSelectAll(isSelected, rows) {
+
+  onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
       rows.map(item => temp_list.push(item.id))
@@ -152,7 +155,7 @@ class Product extends React.Component {
     })
   }
 
-  bulkDelete() {
+  bulkDelete = () => {
     const {
       selectedRows
     } = this.state
@@ -169,7 +172,7 @@ class Product extends React.Component {
     }
   }
 
-  removeBulk() {
+  removeBulk = () => {
     this.removeDialog()
     let { selectedRows } = this.state;
     const { product_list } = this.props
@@ -191,17 +194,17 @@ class Product extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  vatCategoryFormatter(cell, row) {
+  vatCategoryFormatter = (cell, row) => {
     return row['vatCategory'] !== null ? row['vatCategory']['name'] : ''
   }
 
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -209,7 +212,7 @@ class Product extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData();
     // this.setState({})
   }
@@ -227,10 +230,27 @@ class Product extends React.Component {
       this.initializeData()
     }
   }
-
+  getCsvData = () => {
+       if(this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.productActions.getProductList(obj).then(res => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
   render() {
 
-    const { loading, dialog , filterData , selectedRows} = this.state
+    const { loading, dialog , filterData , selectedRows,csvData,view} = this.state
     const { product_list, vat_list } = this.props
 
 
@@ -263,16 +283,20 @@ class Product extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                          <Button
+                        <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                            disabled={product_list.length === 0}
-
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                           {view && <CSVLink
+                            data={csvData}
+                            filename={'Product.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"

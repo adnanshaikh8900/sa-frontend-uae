@@ -5,23 +5,6 @@
  */
 package com.simplevat.rest.transactioncategorycontroller;
 
-import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.ChartOfAccountConstant;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
-import com.simplevat.constant.dbfilter.ProductFilterEnum;
-import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.entity.Product;
-import com.simplevat.entity.User;
-import com.simplevat.entity.VatCategory;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.productcontroller.ProductRequestFilterModel;
-import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.UserService;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
-import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -29,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +26,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ChartOfAccountConstant;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
+import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
+import com.simplevat.entity.User;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.UserService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
+
+import io.swagger.annotations.ApiOperation;
+
 /**
  *
  * @author Sonu
@@ -47,7 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/rest/transactioncategory")
 public class TransactionCategoryRestController implements Serializable {
-
+	private final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryRestController.class);
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
 
@@ -134,7 +135,7 @@ public class TransactionCategoryRestController implements Serializable {
 			transactionCategoryService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -154,7 +155,7 @@ public class TransactionCategoryRestController implements Serializable {
 			transactionCategoryService.persist(selectedTransactionCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -183,7 +184,7 @@ public class TransactionCategoryRestController implements Serializable {
 			transactionCategoryService.update(selectedTransactionCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

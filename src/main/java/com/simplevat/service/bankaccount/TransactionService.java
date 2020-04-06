@@ -91,9 +91,4 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
 	public abstract PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,
 			PaginationModel paginationModel);
 
-	public void getForDashBoardCashFlow() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

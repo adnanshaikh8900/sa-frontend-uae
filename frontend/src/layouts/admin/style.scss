@@ -31,9 +31,29 @@
     z-index: 10;
   }
 
+  .breadcrumb-container {
+    
+    div{
+    height: 3rem !important;
+  }
+  nav{
+    z-index: 1000;
+    position: fixed;
+    width: 100%;
+    margin-bottom: 0;
+    height: inherit;
+    box-shadow: 0 8px 6px -10px #ddcfcf;
+  }
+  ol{
+    height: inherit;
+    margin-bottom: 0;
+  }
+}
+
   .app-footer {
     border-top: none;
     background: #ffffff;
+    z-index: 1000;
     .footer-logo {
       max-width: 100px;
     }
@@ -139,6 +159,7 @@
         }
       }
     }
+
 
     .sidebar-minimizer {
       background-color: #ffffff !important;

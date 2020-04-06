@@ -4,10 +4,18 @@ import {
 } from 'utils'
 import moment from 'moment'
 
-export const getExpenseList = (expenseData) => {
-  const { expenseDate, payee, transactionCategoryId, pageNo, pageSize} = expenseData;
+export const getExpenseList = (obj) => {
+  let payee = obj.payee ? obj.payee : ''
+  let expenseDate =  obj.expenseDate ? obj.expenseDate : ''
+  let transactionCategoryId = obj.transactionCategoryId ?  obj.transactionCategoryId : '' 
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+
   return (dispatch) => {
-    let param = `rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}`
+    let param = `rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     if (expenseDate) {
       let date = moment(expenseDate).format('DD-MM-YYYY')
       param = param + `&expenseDate=${date}`
@@ -17,10 +25,12 @@ export const getExpenseList = (expenseData) => {
       url: param
     }
     return authApi(data).then(res => {
-      dispatch({
-        type: EXPENSE.EXPENSE_LIST,
-        payload: res.data
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: EXPENSE.EXPENSE_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

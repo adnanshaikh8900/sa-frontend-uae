@@ -1,5 +1,6 @@
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import java.util.List;
@@ -19,16 +20,16 @@ import com.simplevat.dao.InvoiceDao;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.DateUtils;
-
-import net.bytebuddy.asm.Advice.This;
 
 @Repository
 public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements InvoiceDao {
 
 	@Autowired
 	private DateUtils dateUtil;
+
+	@Autowired
+	private DatatableSortingFilterConstant datatableUtil;
 
 	@Override
 	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,
@@ -37,7 +38,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-
+		paginationModel.setSortingCol(datatableUtil.getColName(paginationModel.getSortingCol(), datatableUtil.INVOICE));
 		PaginationResponseModel response = new PaginationResponseModel();
 		response.setCount(this.getResultCount(dbFilters));
 		response.setData(this.executeQuery(dbFilters, paginationModel));
@@ -46,9 +47,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 
 	@Override
 	public List<DropdownModel> getInvoicesForDropdown() {
-		List<DropdownModel> empSelectItemModels = getEntityManager()
-				.createNamedQuery("invoiceForDropdown", DropdownModel.class).getResultList();
-		return empSelectItemModels;
+		return getEntityManager().createNamedQuery("invoiceForDropdown", DropdownModel.class).getResultList();
 	}
 
 	@Override
@@ -69,7 +68,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setMaxResults(1);
 		List<Invoice> invoiceList = query.getResultList();
 
-		return invoiceList != null && invoiceList.size() > 0 ? invoiceList.get(0) : null;
+		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList.get(0) : null;
 	}
 
 	@Override
@@ -78,6 +77,6 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter("startDate", dateUtil.get(startDate));
 		query.setParameter("endDate", dateUtil.get(endDate));
 		List<Invoice> invoiceList = query.getResultList();
-		return invoiceList != null && invoiceList.size() > 0 ? invoiceList : null;
+		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList : null;
 	}
 }

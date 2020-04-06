@@ -69,28 +69,27 @@ class CreateUser extends React.Component {
       userPhotoFile: [],
       showIcon: false,
     }
-    this.uploadImage = this.uploadImage.bind(this);
-    this.initializeData = this.initializeData.bind(this)
+    this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.userActions.getRoleList()
     this.props.userActions.getCompanyTypeList()
     this.setState({ showIcon: false })
   }
 
-  uploadImage(picture, file) {
+  uploadImage = (picture, file) => {
     this.setState({
       userPhoto: picture,
       userPhotoFile: file
     });
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const {
       firstName,
       lastName,
@@ -128,7 +127,7 @@ class CreateUser extends React.Component {
         }
       }
     }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data : 'Internal Server Error')
     })
   }
 
@@ -172,6 +171,9 @@ class CreateUser extends React.Component {
                             .required("First Name is Required"),
                           lastName: Yup.string()
                             .required("Last Name is Required"),
+                            email: Yup.string()
+                            .required("Email is Required")
+                            .email("Invalid Email"),
                           password: Yup.string()
                             .required("Password is Required")
                             // .min(8, "Password Too Short")
@@ -231,7 +233,9 @@ class CreateUser extends React.Component {
                                         name="firstName"
                                         value={props.values.firstName}
                                         placeholder="First Name"
-                                        onChange={(value) => { props.handleChange('firstName')(value) }}
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                                        }}
                                         className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                       />
                                       {props.errors.firstName && props.touched.firstName && (
@@ -248,7 +252,9 @@ class CreateUser extends React.Component {
                                         name="lastName"
                                         placeholder ="Last Name"
                                         value={props.values.lastName}
-                                        onChange={(value) => { props.handleChange('lastName')(value) }}
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                                        }}
                                         className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                       />
                                       {props.errors.lastName && props.touched.lastName && (
@@ -270,7 +276,11 @@ class CreateUser extends React.Component {
                                         onChange={(value) => {
                                           props.handleChange("email")(value)
                                         }}
-                                      />
+                                        className={props.errors.email && props.touched.email ? "is-invalid" : ""}
+                                        />
+                                        {props.errors.email && props.touched.email && (
+                                          <div className="invalid-feedback">{props.errors.email}</div>
+                                        )}
                                     </FormGroup>
                                   </Col>
                                   <Col lg={6}>
@@ -284,7 +294,9 @@ class CreateUser extends React.Component {
                                         showYearDropdown
                                         dateFormat="dd/MM/yyyy"
                                         dropdownMode="select"
-                                        placeholderText="Enter Birth Date"
+                                        placeholderText="Enter Date of Birth"
+                                        maxDate={new Date()}
+                                        autoComplete="off"
                                         selected={props.values.dob}
                                         onChange={(value) => {
                                           props.handleChange("dob")(value)
@@ -399,14 +411,15 @@ class CreateUser extends React.Component {
                                         type="password"
                                         id="password"
                                         name="password"
-                                        autoComplete="new-password"
                                         value={props.values.password}
+                                        autoComplete="new-password"
+                                        placeholder="Enter the Password"
                                         onChange={(value) => { props.handleChange('password')(value) }}
                                         className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                       />
-                                      {props.errors.password && props.touched.password && (
+                                      {props.errors.password && props.touched.password ? (
                                         <div className="invalid-feedback">{props.errors.password}</div>
-                                      )}
+                                      ):  (<span className="password-msg">Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character.</span>)}
                                     </FormGroup>
                                   </Col>
                                   <Col lg={6}>
@@ -417,6 +430,7 @@ class CreateUser extends React.Component {
                                         id="confirmPassword"
                                         name="confirmPassword"
                                         value={props.values.confirmPassword}
+                                        placeholder="Enter the Confirm Password"
                                         onChange={(value) => { props.handleChange('confirmPassword')(value) }}
                                         className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
                                       />

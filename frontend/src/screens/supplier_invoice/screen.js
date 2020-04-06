@@ -20,6 +20,7 @@ import Select from 'react-select'
 // import { ToastContainer, toast } from 'react-toastify'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
+import { CSVLink } from "react-csv";
 
 
 import { Loader, ConfirmDeleteModal } from 'components'
@@ -77,24 +78,10 @@ class SupplierInvoice extends React.Component {
       selectedRows: [],
       contactType: 1,
       openInvoicePreviewModal: false,
-      selectedId: ''
-
+      selectedId: '',
+      csvData: [],
+      view: false
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.renderInvoiceNumber = this.renderInvoiceNumber.bind(this)
-    this.renderInvoiceStatus = this.renderInvoiceStatus.bind(this)
-    this.renderActions = this.renderActions.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.toggleActionButton = this.toggleActionButton.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.bulkDelete = this.bulkDelete.bind(this);
-    this.removeBulk = this.removeBulk.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-    this.closeInvoicePreviewModal = this.closeInvoicePreviewModal.bind(this)
-    this.openInvoicePreviewModal = this.openInvoicePreviewModal.bind(this)
 
     this.options = {
       paginationPosition: 'top',
@@ -102,6 +89,9 @@ class SupplierInvoice extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
     this.selectRowProp = {
       mode: 'checkbox',
@@ -110,23 +100,30 @@ class SupplierInvoice extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
+    let { filterData } = this.state
+    this.props.supplierInvoiceActions.getStatusList()
+    this.props.supplierInvoiceActions.getSupplierList(filterData.contactType);
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.supplierInvoiceActions.getSupplierInvoiceList(postData).then(res => {
       if (res.status === 200) {
-        this.props.supplierInvoiceActions.getStatusList()
-        this.props.supplierInvoiceActions.getSupplierList(filterData.contactType);
+
         this.setState({ loading: false }, () => {
           if (this.props.location.state && this.props.location.state.id) {
             this.openInvoicePreviewModal(this.props.location.state.id)
@@ -139,13 +136,13 @@ class SupplierInvoice extends React.Component {
     })
 
   }
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     this.setState({
       selectedRows: []
     })
   }
 
-  renderInvoiceNumber(cell, row) {
+  renderInvoiceNumber = (cell, row) => {
     return (
       <label
         className="mb-0 my-link"
@@ -156,7 +153,7 @@ class SupplierInvoice extends React.Component {
     )
   }
 
-  renderInvoiceStatus(cell, row) {
+  renderInvoiceStatus = (cell, row) => {
     let classname = ''
     if (row.status === 'Post') {
       classname = 'badge-success'
@@ -172,7 +169,22 @@ class SupplierInvoice extends React.Component {
     )
   }
 
-  toggleActionButton(index) {
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
+  }
+
+  renderInvoiceAmount = (cell, row) => {
+    return row.invoiceAmount ? (row.invoiceAmount).toFixed(2) : ''
+  }
+
+  renderVatAmount = (cell, row) => {
+    return row.vatAmount ? (row.vatAmount).toFixed(2) : ''
+  }
+
+
+  toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -186,7 +198,7 @@ class SupplierInvoice extends React.Component {
 
 
 
-  renderActions(cell, row) {
+  renderActions = (cell, row) => {
     return (
       <div>
         <ButtonDropdown
@@ -208,7 +220,7 @@ class SupplierInvoice extends React.Component {
             {row.status !== 'Post' && (
               <DropdownItem onClick={() => { this.postInvoice(row) }}>
                 <i className="fas fa-heart" /> Post
-                        </DropdownItem>
+              </DropdownItem>
             )}
             {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.id)}}>
               <i className="fas fa-eye" /> View
@@ -216,15 +228,15 @@ class SupplierInvoice extends React.Component {
             <DropdownItem onClick={() => this.props.history.push('/admin/expense/supplier-invoice/view', { id: row.id })}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem onClick={() => { this.sendMail(row.id) }}>
               <i className="fas fa-upload" /> Send
             </DropdownItem>
-            <DropdownItem>
+            {/* <DropdownItem>
               <i className="fas fa-print" /> Print
-            </DropdownItem>
-            <DropdownItem>
+            </DropdownItem> */}
+            {/* <DropdownItem>
               <i className="fas fa-times" /> Cancel
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem onClick={() => { this.closeInvoice(row.id) }}>
               <i className="fa fa-trash-o" /> Delete
             </DropdownItem>
@@ -232,6 +244,16 @@ class SupplierInvoice extends React.Component {
         </ButtonDropdown>
       </div>
     )
+  }
+
+  sendMail = (id) => {
+    this.props.supplierInvoiceActions.sendMail(id).then(res => {
+      if (res.status === 200) {
+        this.props.commonActions.tostifyAlert('success', 'Invoice Send Successfully');
+      }
+    }).catch(err => {
+      this.props.commonActions.tostifyAlert('error', 'Please First fill The Mail Configuration Detail');
+    })
   }
 
   onSizePerPageList = (sizePerPage) => {
@@ -248,7 +270,7 @@ class SupplierInvoice extends React.Component {
     }
   }
 
-  onRowSelect(row, isSelected, e) {
+  onRowSelect = (row, isSelected, e) => {
     let temp_list = []
     if (isSelected) {
       temp_list = Object.assign([], this.state.selectedRows)
@@ -265,7 +287,7 @@ class SupplierInvoice extends React.Component {
       selectedRows: temp_list
     })
   }
-  onSelectAll(isSelected, rows) {
+  onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
       rows.map(item => {
@@ -279,7 +301,7 @@ class SupplierInvoice extends React.Component {
   }
 
 
-  bulkDelete() {
+  bulkDelete = () => {
     const {
       selectedRows
     } = this.state
@@ -296,7 +318,7 @@ class SupplierInvoice extends React.Component {
     }
   }
 
-  removeBulk() {
+  removeBulk = () => {
     this.removeDialog()
     let { selectedRows, filterData } = this.state;
     const { supplier_invoice_list } = this.props
@@ -316,13 +338,13 @@ class SupplierInvoice extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -330,11 +352,11 @@ class SupplierInvoice extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData()
   }
 
-  postInvoice(row) {
+  postInvoice = (row) => {
     this.setState({
       loading: true
     })
@@ -359,7 +381,7 @@ class SupplierInvoice extends React.Component {
     })
   }
 
-  openInvoicePreviewModal(id) {
+  openInvoicePreviewModal = (id) => {
     this.setState({
       selectedId: id
     }, () => {
@@ -369,7 +391,7 @@ class SupplierInvoice extends React.Component {
     })
   }
 
-  closeInvoicePreviewModal(res) {
+  closeInvoicePreviewModal = (res) => {
     this.setState({ openInvoicePreviewModal: false })
   }
 
@@ -407,8 +429,28 @@ class SupplierInvoice extends React.Component {
     })
   }
 
+  getCsvData = () => {
+    if (this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+
+      }
+      this.props.supplierInvoiceActions.getSupplierInvoiceList(obj).then(res => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
   render() {
-    const { loading, filterData, dialog, selectedRows } = this.state
+    const { loading, filterData, dialog, selectedRows, csvData, view } = this.state
     const { status_list, supplier_list, supplier_invoice_list } = this.props
     // const containerStyle = {
     //   zIndex: 1999
@@ -481,16 +523,18 @@ class SupplierInvoice extends React.Component {
                     <ButtonGroup size="sm">
                       <Button
                         color="success"
-                        type="button"
                         className="btn-square"
-                        onClick={() => {
-                          this.table.handleExportCSV()
-                        }}
-                      // disabled={supplier_invoice_list.length === 0}
+                        onClick={() => this.getCsvData()}
                       >
-                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                        Export to CSV
+                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                      {view && <CSVLink
+                        data={csvData}
+                        filename={'SupplierInvoice.csv'}
+                        className="hidden"
+                        ref={this.csvLink}
+                        target="_blank"
+                      />}
                       <Button
                         color="primary"
                         className="btn-square"
@@ -645,14 +689,18 @@ class SupplierInvoice extends React.Component {
                         Due Date
                           </TableHeaderColumn>
                       <TableHeaderColumn
-                        dataField="invoiceAmount"
+                        dataField="totalAmount"
                         dataSort
+                        dataFormat={this.renderInvoiceAmount}
+                        dataAlign="right"
                       >
                         Invoice Amount
                           </TableHeaderColumn>
                       <TableHeaderColumn
-                        dataField="vatAmount"
+                        dataField="totalVatAmount"
                         dataSort
+                        dataFormat={this.renderVatAmount}
+                        dataAlign="right"
                       >
                         VAT Amount
                           </TableHeaderColumn>

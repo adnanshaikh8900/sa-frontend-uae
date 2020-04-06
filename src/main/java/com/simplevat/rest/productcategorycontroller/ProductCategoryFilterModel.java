@@ -5,12 +5,12 @@ import com.simplevat.rest.PaginationModel;
 import lombok.Data;
 
 @Data
-public class ProductCategoryFilterModel extends PaginationModel{
+public class ProductCategoryFilterModel extends PaginationModel {
 
-	public Integer id;
-	public String productCategoryCode;
-	public String productCategoryName;
-	public boolean delete;
-	public Integer userId;
+	private Integer id;
+	private String productCategoryCode;
+	private String productCategoryName;
+	private boolean delete;
+	private Integer userId;
 
 }

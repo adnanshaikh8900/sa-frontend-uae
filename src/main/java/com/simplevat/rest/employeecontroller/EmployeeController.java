@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.simplevat.rest.employeecontroller;
 
 import com.simplevat.bank.model.DeleteModel;
@@ -17,12 +12,15 @@ import com.simplevat.service.EmployeeService;
 import io.swagger.annotations.ApiOperation;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +40,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/rest/employee")
-public class EmployeeController implements Serializable {
+public class EmployeeController {
+
+	private final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Autowired
 	private EmployeeService employeeService;
@@ -59,11 +59,10 @@ public class EmployeeController implements Serializable {
 
 		try {
 
-			Map<EmployeeFilterEnum, Object> filterDataMap = new HashMap<EmployeeFilterEnum, Object>();
+			Map<EmployeeFilterEnum, Object> filterDataMap = new EnumMap<>(EmployeeFilterEnum.class);
 			filterDataMap.put(EmployeeFilterEnum.FIRST_NAME, filterModel.getName());
 			filterDataMap.put(EmployeeFilterEnum.EMAIL, filterModel.getEmail());
 			filterDataMap.put(EmployeeFilterEnum.DELETE_FLAG, false);
-			filterDataMap.put(EmployeeFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
 			PaginationResponseModel response = employeeService.getEmployeeList(filterDataMap, filterModel);
 			if (response == null) {
@@ -73,7 +72,7 @@ public class EmployeeController implements Serializable {
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -90,7 +89,7 @@ public class EmployeeController implements Serializable {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -102,7 +101,7 @@ public class EmployeeController implements Serializable {
 			employeeService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -119,7 +118,7 @@ public class EmployeeController implements Serializable {
 				return new ResponseEntity<>(employeeHelper.getModel(employee), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -137,7 +136,7 @@ public class EmployeeController implements Serializable {
 			employeeService.persist(employee);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -153,33 +152,13 @@ public class EmployeeController implements Serializable {
 			employeeService.update(employee);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@GetMapping(value = "/getEmployeesForDropdown")
-	public ResponseEntity getEmployeesForDropdown() throws IOException {
-		List<DropdownModel> dropdownModels = employeeService.getEmployeesForDropdown();
-		return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+	public ResponseEntity getEmployeesForDropdown() {
+		return new ResponseEntity<>(employeeService.getEmployeesForDropdown(), HttpStatus.OK);
 	}
-
-//    @Deprecated
-//    @GetMapping(value = "/getEmployeeById")
-//    public ResponseEntity getContactById(@RequestParam("employeeId") Integer employeeId) throws IOException {
-//        EmployeeListModel employeePersistModel = employeeHelper.getModel(employeeService.findByPK(employeeId));
-//        return new ResponseEntity<>(employeePersistModel, HttpStatus.OK);
-//    }
-//
-//    @Deprecated
-//    @GetMapping(value = "/getEmployeeByEmailId")
-//    public ResponseEntity getContactById(@RequestParam("emailId") String emailId) throws IOException {
-//        Optional<Employee> optional = employeeService.getEmployeeByEmail(emailId);
-//        if (optional.isPresent()) {
-//            EmployeeListModel employeePersistModel = employeeHelper
-//                    .getModel(employeeService.getEmployeeByEmail(emailId).get());
-//            return new ResponseEntity<>(employeePersistModel, HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
 }

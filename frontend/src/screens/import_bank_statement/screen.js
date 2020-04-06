@@ -58,19 +58,13 @@ class ImportBankStatement extends React.Component {
     this.options = {
       paginationPosition: 'top'
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.renderTransactionType = this.renderTransactionType.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleSave = this.handleSave.bind(this)
-    this.columnClassNameFormat = this.columnClassNameFormat.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     if(this.props.location.state && this.props.location.state.bankAccountId) {
       this.props.importBankStatementActions.getTemplateList().then(res => {
         if (res.status === 200) {
@@ -87,7 +81,7 @@ class ImportBankStatement extends React.Component {
     }
   }
 
-  renderTransactionType(cell, row) {
+  renderTransactionType = (cell, row) => {
     let classname = ''
     let value = ''
     if (row.status === 'Explained') {
@@ -105,7 +99,7 @@ class ImportBankStatement extends React.Component {
     )
   }
 
-  columnClassNameFormat(fieldValue, row, rowIdx, colIdx) {
+  columnClassNameFormat = (fieldValue, row, rowIdx, colIdx) => {
     // fieldValue is column value
     // row is whole row object
     // rowIdx is index of row
@@ -114,7 +108,7 @@ class ImportBankStatement extends React.Component {
     return this.state.errorIndexList.indexOf(index) > -1 ? 'invalid' : '';
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     this.setState({ loading: true })
     const {  selectedTemplate } = this.state
     let formData = new FormData()
@@ -139,7 +133,7 @@ class ImportBankStatement extends React.Component {
     })
   }
 
-  handleSave() {
+  handleSave = () => {
     const { selectedTemplate, tableData } = this.state
     const postData = {
       bankId: this.props.location.state.bankAccountId ? this.props.location.state.bankAccountId : '',

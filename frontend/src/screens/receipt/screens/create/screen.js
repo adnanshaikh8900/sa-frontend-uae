@@ -63,21 +63,19 @@ class CreateReceipt extends React.Component {
     }
 
     this.regEx = /^[0-9\d]+$/;
-
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.initializeData = this.initializeData.bind(this)
+    this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.receiptActions.getContactList();
     this.props.receiptActions.getInvoiceList();
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     this.props.receiptCreateActions.createReceipt(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Receipt Created Successfully!')
@@ -149,8 +147,8 @@ class CreateReceipt extends React.Component {
                                     name="receiptNo"
                                     placeholder="Receipt Number"
                                     value={props.values.receiptNo}
-                                    onChange={(value) => {
-                                      props.handleChange("receiptNo")(value)
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNo')(option)
                                     }}
                                   />
                                 </FormGroup>
@@ -189,7 +187,9 @@ class CreateReceipt extends React.Component {
                                     id="referenceCode"
                                     name="referenceCode"
                                     placeholder="Reference Number"
-                                    onChange={option => { props.handleChange('referenceCode')(option) }}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('referenceCode')(option)
+                                    }}
                                     value={props.values.referenceCode}
                                     className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
                                   />

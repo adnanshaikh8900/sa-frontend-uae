@@ -77,14 +77,10 @@ class AccountBalances extends React.Component {
       filter_account : '',
       startDate : '',
       endDate : ''
-
     }
-
-    this.changeType = this.changeType.bind(this)
-    this.changeCategory = this.changeCategory.bind(this)
   }
 
-  componentDidMount(){
+  componentDidMount = () =>{
     this.getAccountBalanceData()
     
   }
@@ -97,11 +93,11 @@ class AccountBalances extends React.Component {
   }
 
 
-  changeType(selectedType) {
+  changeType = (selectedType) => {
     this.setState({ selectedType })
   }
 
-  changeCategory(selectedCategory) {
+  changeCategory = (selectedCategory) => {
     this.setState({ selectedCategory })
   }
 
@@ -124,11 +120,6 @@ class AccountBalances extends React.Component {
   }
 
   render() {
-
-
-  
-
-
     const account_balance_table = this.props.account_balance_report ?
     this.props.account_balance_report.map(account => ({
       account : account.bankAccount,
@@ -165,6 +156,7 @@ class AccountBalances extends React.Component {
                         <Button
                           color="success"
                           className="btn-square"
+                          onClick={() => this.table.handleExportCSV()}
                         >
                           <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                           Export to CSV
@@ -256,7 +248,12 @@ class AccountBalances extends React.Component {
                 <BootstrapTable 
                   data={account_balance_table} 
                   hover
-                  pagination
+                  pagination={account_balance_table && account_balance_table.length > 0 ? true : false}
+                  fetchInfo={{ dataTotalSize: account_balance_table.count ? account_balance_table.count : 0 }}
+                  csvFileName="account_balance_table.csv"
+                  ref={node => {
+                    this.table = node
+                  }}
                   version="4"
                 >
                   <TableHeaderColumn

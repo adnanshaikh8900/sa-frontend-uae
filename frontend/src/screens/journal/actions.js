@@ -6,8 +6,16 @@ import moment from 'moment'
 
 
 export const getJournalList = (obj) => {
-  const { journalDate , journalReferenceNo , description,pageNo,pageSize} = obj
-  let url = `/rest/journal/getList?journalReferenceNo=${journalReferenceNo}&description=${description}&pageNo=${pageNo}&pageSize=${pageSize}`
+  let journalDate =  obj.journalDate ? obj.journalDate : ''
+  let journalReferenceNo =  obj.journalReferenceNo ? obj.journalReferenceNo : ''
+  let description = obj.description ? obj.description : ''  
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+  
+  let url = `/rest/journal/getList?journalReferenceNo=${journalReferenceNo}&description=${description}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
   if(journalDate) {
     let date = moment(journalDate).format('DD-MM-YYYY')
     url = url + `&journalDate=${date}`
@@ -19,10 +27,12 @@ export const getJournalList = (obj) => {
     }
 
     return authApi(data).then(res => {
-      dispatch({
-        type: JOURNAL.JOURNAL_LIST,
-        payload: res
-      })
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: JOURNAL.JOURNAL_LIST,
+          payload: res
+        })
+      }
       return res
     }).catch(err => {
       throw err

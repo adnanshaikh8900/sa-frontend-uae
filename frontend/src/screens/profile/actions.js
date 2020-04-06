@@ -161,3 +161,23 @@ export const getRoleList = (obj) => {
     })
   }
 }
+
+export const getStateList = (countryCode,type) => {
+  let types = type === 'invoicing' ? 'INVOICING_STATE_LIST' : 'COMPANY_STATE_LIST'
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/datalist/getstate?countryCode=' + countryCode
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        dispatch({
+          type: PROFILE[types],
+          payload: res.data
+        })
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}

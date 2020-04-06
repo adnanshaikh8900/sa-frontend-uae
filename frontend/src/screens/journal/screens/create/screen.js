@@ -60,7 +60,6 @@ class CreateJournal extends React.Component {
         id: 0,
         description: '',
         transactionCategoryId: '',
-        vatCategoryId: '',
         contactId: '',
         debitAmount: 0,
         creditAmount: 0,
@@ -68,7 +67,6 @@ class CreateJournal extends React.Component {
         id: 1,
         description: '',
         transactionCategoryId: '',
-        vatCategoryId: '',
         contactId: '',
         debitAmount: 0,
         creditAmount: 0,
@@ -88,16 +86,13 @@ class CreateJournal extends React.Component {
           id: 0,
           description: '',
           transactionCategoryId: '',
-          vatCategoryId: '',
           contactId: '',
           debitAmount: 0,
           creditAmount: 0,
-          // error: []
         }, {
           id: 1,
           description: '',
           transactionCategoryId: '',
-          vatCategoryId: '',
           contactId: '',
           debitAmount: 0,
           creditAmount: 0,
@@ -106,41 +101,21 @@ class CreateJournal extends React.Component {
       submitJournal: false
     }
 
-    // this.options = {
-    //   paginationPosition: 'top'
-    // }
     this.formRef = React.createRef()
-
-    this.initializeData = this.initializeData.bind(this)
-    this.renderActions = this.renderActions.bind(this)
-    this.renderAccount = this.renderAccount.bind(this)
-    this.renderDescription = this.renderDescription.bind(this)
-    this.renderContact = this.renderContact.bind(this)
-    this.renderVatCode = this.renderVatCode.bind(this)
-    this.renderDebits = this.renderDebits.bind(this)
-    this.renderCredits = this.renderCredits.bind(this)
-
-    this.updateAmount = this.updateAmount.bind(this)
-    this.selectItem = this.selectItem.bind(this)
-    this.addRow = this.addRow.bind(this)
-    this.deleteRow = this.deleteRow.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.checkedRow = this.checkedRow.bind(this)
-
+    this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.journalActions.getContactList();
     this.props.journalActions.getCurrencyList()
     this.props.journalActions.getTransactionCategoryList()
-    this.props.journalActions.getVatList()
   }
 
-  renderActions(cell, rows, props) {
+  renderActions = (cell, rows, props) => {
     return (
       <Button
         size="sm"
@@ -153,7 +128,7 @@ class CreateJournal extends React.Component {
     )
   }
 
-  checkedRow() {
+  checkedRow = () => {
     if (this.state.data.length > 0) {
       let length = this.state.data.length - 1
       let temp = Object.values(this.state.data[length]).indexOf('');
@@ -168,7 +143,7 @@ class CreateJournal extends React.Component {
   }
 
 
-  renderAccount(cell, row, props) {
+  renderAccount = (cell, row, props) => {
     const { transaction_category_list } = this.props;
     let transactionCategoryList = transaction_category_list && transaction_category_list.data && transaction_category_list.data.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select Account' }, ...transaction_category_list.data] : transaction_category_list.data
     let idx
@@ -202,21 +177,9 @@ class CreateJournal extends React.Component {
         )}
       />
     )
-    // const { transaction_category_list } = this.props;
-    // let transactionCategoryList = transaction_category_list.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select Account' }, ...transaction_category_list] : transaction_category_list
-    // return (
-    //   <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'transactionCategoryId') }} value={row.transactionCategoryId}
-    //     className={row.error && row.error.transactionCategoryId ? "is-invalid" : ""}
-
-    //   >
-    //     {transactionCategoryList ? transactionCategoryList.map(obj => {
-    //       return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId}>{obj.transactionCategoryName}</option>
-    //     }) : ''}
-    //   </Input>
-    // )
   }
 
-  renderDescription(cell, row, props) {
+  renderDescription = (cell, row, props) => {
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -248,7 +211,7 @@ class CreateJournal extends React.Component {
     )
   }
 
-  renderContact(cell, row, props) {
+  renderContact = (cell, row, props) => {
     const { contact_list } = this.props;
     let contactList = contact_list.length ? [{ value: '', label: 'Select Contact' }, ...contact_list] : contact_list
     let idx
@@ -266,7 +229,6 @@ class CreateJournal extends React.Component {
 
           <Input type="select" onChange={(e) => {
             this.selectItem(e, row, 'contactId', form, field)
-            // this.formRef.current.props.handleChange(field.name)(e.value)
           }} value={row.contactId}
             className={`form-control 
             ${props.errors.journalLineItems && props.errors.journalLineItems[idx] &&
@@ -276,7 +238,6 @@ class CreateJournal extends React.Component {
                 props.touched.journalLineItems[idx].contactId ? "is-invalid" : ""}`}
           >
             {contactList ? contactList.map(obj => {
-              // obj.name = obj.name === 'default' ? '0' : obj.name
               return <option value={obj.value} key={obj.value}>{obj.label}</option>
             }) : ''}
           </Input>
@@ -284,59 +245,10 @@ class CreateJournal extends React.Component {
         )}
       />
     )
-    // const { contact_list } = this.props;
-    // let contactList = contact_list.length ? [{ value: '', label: 'Select Contact' }, ...contact_list] : contact_list
-
-    // return (
-    //   <Input type="select" required onChange={(e) => { this.selectItem(e, row, 'contactId') }} value={row.value}
-    //     className={row.error && row.error.contactId ? "is-invalid" : ""}
-    //   >
-    //     {contactList ? contactList.map(obj => {
-    //       return <option value={obj.value} key={obj.value}>{obj.label}</option>
-    //     }) : ''}
-    //   </Input>
-    // )
   }
 
-  renderVatCode(cell, row, props) {
-    const { vat_list } = this.props;
-    let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
-    let idx
-    this.state.data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index
-      }
-      return obj
-    });
 
-    return (
-
-      <Field name={`journalLineItems.${idx}.vatCategoryId`}
-        render={({ field, form }) => (
-
-          <Input type="select" onChange={(e) => {
-            this.selectItem(e, row, 'vatCategoryId', form, field)
-            // this.formRef.current.props.handleChange(field.name)(e.value)
-          }} value={row.vatCategoryId}
-            className={`form-control 
-            ${props.errors.journalLineItems && props.errors.journalLineItems[idx] &&
-                props.errors.journalLineItems[idx].vatCategoryId &&
-                Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
-                props.touched.journalLineItems[idx] &&
-                props.touched.journalLineItems[idx].vatCategoryId ? "is-invalid" : ""}`}
-          >
-            {vatList ? vatList.map(obj => {
-              // obj.name = obj.name === 'default' ? '0' : obj.name
-              return <option value={obj.id} key={obj.id}>{obj.vat}</option>
-            }) : ''}
-          </Input>
-
-        )}
-      />
-    )
-  }
-
-  renderDebits(cell, row, props) {
+  renderDebits = (cell, row, props) => {
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -365,7 +277,7 @@ class CreateJournal extends React.Component {
     )
   }
 
-  renderCredits(cell, row, props) {
+  renderCredits = (cell, row, props) => {
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -394,23 +306,12 @@ class CreateJournal extends React.Component {
     )
   }
 
-  // checkedRow() {
-  //   let length = this.state.data.length - 1
-  //   let temp = Object.values(this.state.data[length]).indexOf('');
-  //   if (temp > -1) {
-  //     return true
-  //   } else {
-  //     return false
-  //   }
-  // }
-
-  addRow() {
+  addRow = () => {
     const data = [...this.state.data]
     this.setState({
       data: data.concat({
         id: this.state.idCount + 1,
         description: '',
-        vatCategoryId: '',
         transactionCategoryId: '',
         contactId: '',
         debitAmount: 0,
@@ -422,7 +323,7 @@ class CreateJournal extends React.Component {
     })
   }
 
-  selectItem(e, row, name, form, field) {
+  selectItem = (e, row, name, form, field) => {
     e.preventDefault();
     let idx;
     const data = this.state.data
@@ -443,9 +344,6 @@ class CreateJournal extends React.Component {
       form.setFieldValue(field.name, this.state.data[idx][name], true)
       form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
       this.updateAmount(data)
-    } else if (name === 'vatCategoryId') {
-      form.setFieldValue(field.name, this.state.data[idx][name], true)
-      this.updateAmount(data);
     } else {
       this.setState({ data: data }, () => {
         this.formRef.current.setFieldValue(field.name, this.state.data[idx][name], true)
@@ -455,7 +353,7 @@ class CreateJournal extends React.Component {
   }
 
 
-  deleteRow(e, row, props) {
+  deleteRow = (e, row, props) => {
     const id = row['id'];
     let newData = []
     e.preventDefault();
@@ -463,26 +361,19 @@ class CreateJournal extends React.Component {
     newData = data.filter(obj => obj.id !== id);
     props.setFieldValue('journalLineItems', newData, true)
     this.updateAmount(newData)
-    // const index = data.findIndex(item => item.id === id)
-    // if(index <= newData.length) props.setFieldTouched(`journalLineItems[${index}]`, false,true)
   }
 
 
-  updateAmount(data) {
-    const { vat_list } = this.props;
+  updateAmount = (data) => {
     let subTotalDebitAmount = 0;
     let subTotalCreditAmount = 0;
     // let totalDebitAmount = 0;
     // let totalCreditAmount = 0;
 
     data.map(obj => {
-      const index = obj.vatCategoryId !== '' ? vat_list.findIndex(item => item.id === (+obj.vatCategoryId)) : '';
-      const vat = index !== '' ? vat_list[index].vat : ''
-
-      if ((vat !== '' && obj.debitAmount) || (vat !== '' && obj.creditAmount)) {
-        // const val = (+obj.debitAmount) + (((+obj.debitAmount)*vat)/100)
-        subTotalDebitAmount = subTotalDebitAmount + (+obj.debitAmount) + (((+obj.debitAmount) * vat) / 100);
-        subTotalCreditAmount = subTotalCreditAmount + (+obj.creditAmount) + (((+obj.creditAmount) * vat) / 100);
+      if ((obj.debitAmount) || (obj.creditAmount)) {
+        subTotalDebitAmount = subTotalDebitAmount + (+obj.debitAmount);
+        subTotalCreditAmount = subTotalCreditAmount + (+obj.creditAmount);
       }
       return obj
     })
@@ -498,19 +389,15 @@ class CreateJournal extends React.Component {
           subTotalCreditAmount: subTotalCreditAmount,
         }
       }
-    }, () => {
-      // this.formRef.current.setFieldValue('journalLineItems', this.state.data, true)
     })
   }
 
-  handleSubmit(values, resetForm) {
+  handleSubmit = (values, resetForm) => {
     const { data, initValue } = this.state
-    // const postData = { ...initValue, ...values, ...{ journalLineItems: this.state.data } }
     if (initValue.totalCreditAmount === initValue.totalDebitAmount) {
       data.map(item => {
         delete item.id
         item.transactionCategoryId = item.transactionCategoryId ? item.transactionCategoryId : ''
-        item.vatCategoryId = item.vatCategoryId ? item.vatCategoryId : ''
         item.contactId = item.contactId ? item.contactId : ''
 
         return item
@@ -538,7 +425,6 @@ class CreateJournal extends React.Component {
                 id: 0,
                 description: '',
                 transactionCategoryId: '',
-                vatCategoryId: '',
                 contactId: '',
                 debitAmount: 0,
                 creditAmount: 0,
@@ -549,7 +435,6 @@ class CreateJournal extends React.Component {
                     id: 0,
                     description: '',
                     transactionCategoryId: '',
-                    vatCategoryId: '',
                     contactId: '',
                     debitAmount: 0,
                     creditAmount: 0,
@@ -611,7 +496,6 @@ class CreateJournal extends React.Component {
                             journalLineItems: Yup.array()
                               .of(
                                 Yup.object().shape({
-                                  vatCategoryId: Yup.string().required('Vat is required'),
                                   transactionCategoryId: Yup.string().required('Account is required'),
                                   contactId: Yup.string().required('Contact is required'),
                                   debitAmount: Yup.number().required(),
@@ -640,6 +524,7 @@ class CreateJournal extends React.Component {
                                     onChange={(value) => {
                                       props.handleChange("journalDate")(value)
                                     }}
+                                    autoComplete="off"
                                     className={`form-control ${props.errors.journalDate && props.touched.journalDate ? "is-invalid" : ""}`}
                                   />
                                   {props.errors.journalDate && props.touched.journalDate ? (
@@ -658,7 +543,9 @@ class CreateJournal extends React.Component {
                                     name="journalReferenceNo"
                                     placeholder="Reference Number"
                                     value={props.values.journalReferenceNo || ''}
-                                    onChange={(value) => { props.handleChange("journalReferenceNo")(value) }}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('journalReferenceNo')(option)
+                                    }}
                                   />
                                 </FormGroup>
                               </Col>
@@ -666,7 +553,7 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={8}>
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="description">Description</Label>
+                                  <Label htmlFor="description">Notes</Label>
                                   <Input
                                     type="textarea"
                                     name="description"
@@ -704,7 +591,6 @@ class CreateJournal extends React.Component {
                             <Row>
                               <Col lg={12} className="mb-3">
                                 <Button color="primary" className="btn-square mr-3" onClick={this.addRow}
-                                // disabled={this.checkedRow() ? true : false}
                                 >
                                   <i className="fa fa-plus"></i> Add More
                             </Button>
@@ -732,20 +618,17 @@ class CreateJournal extends React.Component {
                                     width="55"
                                     dataAlign="center"
                                     dataFormat={(cell, rows) => this.renderActions(cell, rows, props)}
-
                                   >
                                   </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="transactionCategoryId"
                                     dataFormat={(cell, rows) => this.renderAccount(cell, rows, props)}
-
                                   >
                                     Account
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="description"
                                     dataFormat={(cell, rows) => this.renderDescription(cell, rows, props)}
-
                                   >
                                     Description
                               </TableHeaderColumn>
@@ -754,13 +637,6 @@ class CreateJournal extends React.Component {
                                     dataFormat={(cell, rows) => this.renderContact(cell, rows, props)}
                                   >
                                     Contact
-                              </TableHeaderColumn>
-                                  <TableHeaderColumn
-                                    dataField="vatCategoryId"
-                                    dataFormat={(cell, rows) => this.renderVatCode(cell, rows, props)}
-
-                                  >
-                                    Tax Code
                               </TableHeaderColumn>
                                   <TableHeaderColumn
                                     dataField="debitAmount"
@@ -830,11 +706,9 @@ class CreateJournal extends React.Component {
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right form-action-btn">
                                   <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
-                                    // () => {
                                     this.setState({ createMore: false, submitJournal: true }, () => {
                                       props.handleSubmit()
                                     })
-                                    // }
                                   }}
                                   >
                                     <i className="fa fa-dot-circle-o"></i> Create

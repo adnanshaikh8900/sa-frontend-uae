@@ -21,7 +21,6 @@ public class StateDaoImpl extends AbstractDao<Integer, State> implements StateDa
 		filterMap.forEach(
 				(stateFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(stateFilter.getDbColumnName())
 						.condition(stateFilter.getCondition()).value(value).build()));
-		List<State> stateList = this.executeQuery(dbFilters);
-		return stateList;
+		return this.executeQuery(dbFilters);
 	}
 }

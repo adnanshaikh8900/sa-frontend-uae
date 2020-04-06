@@ -53,18 +53,16 @@ class CreateProductCategory extends React.Component {
       loading: false,
       createMore: false
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    // this.success = this.success.bind(this)
+    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.productCategoryActions.getProductCategoryList()
   }
 
   // Save Updated Field's Value to State
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       vatData: _.set(
         { ...this.state.vatData },
@@ -82,7 +80,7 @@ class CreateProductCategory extends React.Component {
   // }
 
   // Create or Edit Vat
-  handleSubmit(data,resetForm) {
+  handleSubmit = (data,resetForm) => {
     this.props.createProductCategoryActions.createProductCategory(data).then(res => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Product Category is Created Successfully!')
@@ -159,9 +157,7 @@ class CreateProductCategory extends React.Component {
                                     id="productCategoryCode"
                                     name="productCategoryCode"
                                     placeholder="Enter Product Category Code"
-                                    onChange={props.handleChange}
-                                    onBlur={(e)=>{
-                                    }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCategoryCode')(option) }}
                                     value={props.values.productCategoryCode}
                                     className={
                                       props.errors.productCategoryCode  && props.touched.productCategoryCode 
@@ -180,7 +176,7 @@ class CreateProductCategory extends React.Component {
                                     id="productCategoryName"
                                     name="productCategoryName"
                                     placeholder="Enter Product Category Name"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('productCategoryName')(option) }}
                                     value={props.values.productCategoryName }
                                     className={
                                       props.errors.productCategoryName  && props.touched.productCategoryName 

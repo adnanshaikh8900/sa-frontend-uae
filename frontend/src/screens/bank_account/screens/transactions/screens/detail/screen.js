@@ -75,19 +75,16 @@ class DetailBankTransaction extends React.Component {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
     this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
 
     this.formRef = React.createRef()
-
-    this.initializeData = this.initializeData.bind(this)
-    this.handleFileChange = this.handleFileChange.bind(this)
-
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.transactionActions.getTransactionCategoryList()
     this.props.transactionActions.getTransactionTypeList()
     this.props.transactionActions.getProjectList()
@@ -126,7 +123,7 @@ class DetailBankTransaction extends React.Component {
     }
   }
 
-  handleFileChange(e, props) {
+  handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -139,7 +136,7 @@ class DetailBankTransaction extends React.Component {
   }
 
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const {
       bankAccountId,
       transactionDate,
@@ -397,7 +394,7 @@ class DetailBankTransaction extends React.Component {
                                             id="receiptNumber"
                                             name="receiptNumber"
                                             placeholder="Reciept Number"
-                                            onChange={option => props.handleChange('receiptNumber')(option)}
+                                            onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option) }}
                                             value={props.values.receiptNumber}
                                           />
                                         </FormGroup>

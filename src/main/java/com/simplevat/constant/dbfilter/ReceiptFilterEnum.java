@@ -20,10 +20,6 @@ public enum ReceiptFilterEnum {
     @Getter
     String condition;
 
-    private ReceiptFilterEnum(String dbColumnName) {
-        this.dbColumnName = dbColumnName;
-    }
-
     private ReceiptFilterEnum(String dbColumnName, String condition) {
         this.dbColumnName = dbColumnName;
         this.condition = condition;

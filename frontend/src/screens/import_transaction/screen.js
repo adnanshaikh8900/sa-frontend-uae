@@ -78,20 +78,13 @@ class ImportTransaction extends React.Component {
     this.options = {
       paginationPosition: 'top'
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.handleApply = this.handleApply.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleSave = this.handleSave.bind(this)
-    this.validateForm = this.validateForm.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.props.importTransactionActions.getDateFormatList()
       this.props.importTransactionActions.getConfigurationList().then(res => {
@@ -115,7 +108,7 @@ class ImportTransaction extends React.Component {
     }
   }
 
-  validateForm() {
+  validateForm = () => {
     const { initValue,fileName } = this.state
     let temp = {}
     for (let val in this.state.initValue) {
@@ -140,7 +133,7 @@ class ImportTransaction extends React.Component {
   }
 
 
-  handleApply(value, resetForm) {
+  handleApply = (value, resetForm) => {
     if (this.validateForm()) {
         const { initValue } = this.state
         initValue['delimiter'] = this.state.selectedDelimiter
@@ -203,7 +196,7 @@ class ImportTransaction extends React.Component {
   }
 
 
-  handleChange(e, index) {
+  handleChange = (e, index) => {
     let tempDataSelectedValueDropdown = this.state.selectedValueDropdown;
     let tempStatus = [...this.state.columnStatus];
     let status = tempDataSelectedValueDropdown.filter(item => item.value === e.value && e.value !== "")
@@ -260,7 +253,7 @@ class ImportTransaction extends React.Component {
   }
 
 
-  handleInputChange(name, value) {
+  handleInputChange = (name, value) => {
     this.setState({
       initValue: Object.assign(this.state.initValue, {
         [name]: value
@@ -268,7 +261,7 @@ class ImportTransaction extends React.Component {
     })
   }
 
-  handleSave() {
+  handleSave = () => {
     let optionErr = [...this.state.selectError]
     let item = this.state.selectedValueDropdown.map((item, index) => {
       if (item.value === '') {

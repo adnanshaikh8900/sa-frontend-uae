@@ -24,6 +24,7 @@ import { Formik, Field } from 'formik'
 import * as Yup from 'yup'
 
 import { Loader, ConfirmDeleteModal } from 'components'
+import { ViewExpenseDetails } from './sections' 
 
 import { selectOptionsFactory } from 'utils'
 
@@ -69,18 +70,13 @@ class DetailExpense extends React.Component {
       current_expense_id: null,
       fileName: '',
       payMode: '',
+      view: false
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.deleteExpense = this.deleteExpense.bind(this)
-    this.removeExpense = this.removeExpense.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    this.handleFileChange = this.handleFileChange.bind(this)
-
 
     this.file_size = 1024000;
     this.regEx = /^[0-9\b]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/
+    this.regExBoth = /[a-zA-Z0-9]+$/;
 
     this.supported_format = [
       "",
@@ -92,11 +88,12 @@ class DetailExpense extends React.Component {
     ];
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
+    
     if (this.props.location.state && this.props.location.state.expenseId) {
       this.props.expenseActions.getVatList();
       this.props.expenseDetailActions.getExpenseDetail(this.props.location.state.expenseId).then(res => {
@@ -129,6 +126,13 @@ class DetailExpense extends React.Component {
               fileName: res.data.fileName ? res.data.fileName : '',
               filePath: res.data.receiptAttachmentPath ? res.data.receiptAttachmentPath : '',
             },
+            view: this.props.location.state && this.props.location.state.view ? true : false
+          },() => {
+            if (this.props.location.state && this.props.location.state.view) {
+              this.setState({ loading: false })
+            } else {
+              this.setState({ loading: false })
+            }
           })
         }
       }).catch(err => {
@@ -139,7 +143,7 @@ class DetailExpense extends React.Component {
     }
   }
 
-  handleSubmit(data, resetValue) {
+  handleSubmit = (data, resetValue) => {
     const { current_expense_id } = this.state
     const {
       payee,
@@ -199,7 +203,7 @@ class DetailExpense extends React.Component {
   }
 
 
-  deleteExpense() {
+  deleteExpense = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -209,7 +213,7 @@ class DetailExpense extends React.Component {
     })
   }
 
-  removeExpense() {
+  removeExpense = () => {
     const { current_expense_id } = this.state
     this.props.expenseDetailActions.deleteExpense(current_expense_id).then(res => {
       if (res.status === 200) {
@@ -222,13 +226,19 @@ class DetailExpense extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  handleFileChange(e, props) {
+  editDetails = () => {
+    this.setState({
+      view: false
+    })
+  }
+
+  handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -249,10 +259,8 @@ class DetailExpense extends React.Component {
       <div className="detail-expense-screen">
         <div className="animated fadeIn">
           {dialog}
-          {loading ? (
-            <Loader />
-          )
-            :
+          {loading ? <Loader /> : this.state.view ? <ViewExpenseDetails initialVals={initValue} editDetails={() => { this.editDetails() }} />
+           :
             (
               <Row>
                 <Col lg={12} className="mx-auto">
@@ -354,7 +362,8 @@ class DetailExpense extends React.Component {
                                         id="payee"
                                         rows="5"
                                         placeholder="Payee"
-                                        onChange={(value) => { props.handleChange("payee")(value) }}
+                                        onChange={(option) => { 
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('payee')(option) }}
                                         defaultValue={props.values.payee}
                                         className={props.errors.payee && props.touched.payee ? "is-invalid" : ""}
                                       />
@@ -529,7 +538,7 @@ class DetailExpense extends React.Component {
 
                                   {props.values.payMode === 'BANK' && (<Col lg={4}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="bankAccountId">bankAccountId</Label>
+                                      <Label htmlFor="bankAccountId">Bank</Label>
                                       <Select
                                         id="bankAccountId"
                                         name="bankAccountId"

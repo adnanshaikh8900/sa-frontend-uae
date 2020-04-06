@@ -25,10 +25,6 @@ public enum ProductFilterEnum {
     @Getter
     String condition;
 
-    private ProductFilterEnum(String dbColumnName) {
-        this.dbColumnName = dbColumnName;
-    }
-
     private ProductFilterEnum(String dbColumnName, String condition) {
         this.dbColumnName = dbColumnName;
         this.condition = condition;

@@ -39,6 +39,7 @@ import {
 import * as ExpenseActions from './actions';
 
 import moment from 'moment'
+import { CSVLink } from "react-csv";
 
 
 import './style.scss'
@@ -68,36 +69,24 @@ class Expense extends React.Component {
       filterData: {
         expenseDate: '',
         transactionCategoryId: '',
-        payee: ''
-      }
+        payee: '',
+        sortName: '',
+        sortOrder: ''
+      },
+      csvData: [],
+      view: false
     }
 
-    this.initializeData = this.initializeData.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.bulkDeleteExpenses = this.bulkDeleteExpenses.bind(this);
-    this.removeBulkExpenses = this.removeBulkExpenses.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.goToDetail = this.goToDetail.bind(this);
-    this.renderDate = this.renderDate.bind(this);
-    this.renderActions = this.renderActions.bind(this)
-    this.renderInvoiceStatus = this.renderInvoiceStatus.bind(this)
-
-    this.toggleActionButton = this.toggleActionButton.bind(this)
-    this.postExpense = this.postExpense.bind(this)
-
-
-
     this.options = {
-      // onRowClick: this.goToDetail,
+      //  onRowClick: this.goToDetail,
       paginationPosition: 'top',
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: this.state.sortName,
+      sortOrder: this.state.sortOrder,
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -107,29 +96,29 @@ class Expense extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
-  componentWillUnmount() {
-    this.setState({
-      selectedRows: []
-    })
-  }
-
-  componentDidMount() {
+  
+  componentDidMount = () => {
+    this.props.expenseActions.getExpenseCategoriesList();
     this.initializeData()
   }
-
-  initializeData() {
+  
+  initializeData = () => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
+    const sortingData = {
+      order: this.state.sortOrder ? this.state.sortOrder : '',
+      sortingCol: this.state.sortName ? this.state.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+    
     this.props.expenseActions.getExpenseList(postData).then(res => {
       if (res.status === 200) {
-        this.props.expenseActions.getExpenseCategoriesList();
         this.setState({ loading: false })
       }
     }).catch(err => {
@@ -137,12 +126,26 @@ class Expense extends React.Component {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
     })
   }
+  
+  componentWillUnmount = () => {
+    this.setState({
+      selectedRows: []
+    })
+  }
 
-  goToDetail(row) {
+  sortColumn = (sortName, sortOrder) => {
+    this.setState({
+      sortName,
+      sortOrder
+    }, () => {
+      this.initializeData()
+    });
+  }
+  goToDetail = (row) => {
     this.props.history.push('/admin/expense/expense/detail', { expenseId: row['expenseId'] })
   }
 
-  onRowSelect(row, isSelected, e) {
+  onRowSelect = (row, isSelected, e) => {
     let temp_list = []
     if (isSelected) {
       temp_list = Object.assign([], this.state.selectedRows)
@@ -159,7 +162,8 @@ class Expense extends React.Component {
       selectedRows: temp_list
     })
   }
-  onSelectAll(isSelected, rows) {
+
+  onSelectAll = (isSelected, rows) => {
     let temp_list = []
     if (isSelected) {
       rows.map(item => {
@@ -172,11 +176,11 @@ class Expense extends React.Component {
     })
   }
 
-  renderDate(cell, rows) {
+  renderDate = (cell, rows) => {
     return moment(rows.expenseDate).format('DD/MM/YYYY')
   }
 
-  renderActions(cell, row) {
+  renderActions = (cell, row) => {
     return (
       <div>
         <ButtonDropdown
@@ -200,9 +204,9 @@ class Expense extends React.Component {
             {row.expenseStatus !== 'Post' && (
               <DropdownItem onClick={() => { this.postExpense(row) }}>
                 <i className="fas fa-heart" /> Post
-                        </DropdownItem>
+              </DropdownItem>
             )}
-             {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.expenseId)}}>
+            {/* <DropdownItem  onClick={()=>{this.openInvoicePreviewModal(row.expenseId)}}>
               <i className="fas fa-eye" /> View
             </DropdownItem>
             <DropdownItem>
@@ -214,16 +218,16 @@ class Expense extends React.Component {
             <DropdownItem>
               <i className="fas fa-times" /> Cancel
             </DropdownItem>  */}
-            <DropdownItem onClick={()=>{this.closeExpense(row.expenseId)}}>
+            <DropdownItem onClick={() => { this.closeExpense(row.expenseId) }}>
               <i className="fa fa-trash-o" /> Delete
-            </DropdownItem> 
+            </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
       </div>
     )
   }
 
-  toggleActionButton(index) {
+  toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[index]) {
       temp[index] = false
@@ -235,7 +239,7 @@ class Expense extends React.Component {
     })
   }
 
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -243,7 +247,7 @@ class Expense extends React.Component {
     })
   }
 
-  renderInvoiceStatus(cell, row) {
+  renderInvoiceStatus = (cell, row) => {
     let classname = ''
     if (row.expenseStatus === 'Post') {
       classname = 'badge-success'
@@ -255,11 +259,15 @@ class Expense extends React.Component {
       classname = 'badge-primary'
     }
     return (
-      <span className={`badge ${classname} mb-0`} style={{color: 'white'}}>{row.expenseStatus}</span>
+      <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>{row.expenseStatus}</span>
     )
   }
 
-  handleSearch() {
+  renderAmount = (cell, row) => {
+    return row.expenseAmount ? (row.expenseAmount).toFixed(2) : ''
+  }
+
+  handleSearch = () => {
     this.initializeData()
   }
 
@@ -277,7 +285,7 @@ class Expense extends React.Component {
     }
   }
 
-  postExpense(row) {
+  postExpense = (row) => {
     this.setState({
       loading: true
     })
@@ -303,7 +311,7 @@ class Expense extends React.Component {
     })
   }
 
-  bulkDeleteExpenses() {
+  bulkDeleteExpenses = () => {
     const {
       selectedRows
     } = this.state
@@ -320,7 +328,9 @@ class Expense extends React.Component {
     }
   }
 
-  removeBulkExpenses() {
+
+
+  removeBulkExpenses = () => {
     this.removeDialog()
     let { selectedRows } = this.state;
     const { expense_list } = this.props
@@ -360,17 +370,38 @@ class Expense extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
+  }
+
+  getCsvData = () => {
+       if(this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.expenseActions.getExpenseList(obj).then(res => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
   }
 
   render() {
     const { loading,
       dialog,
       filterData,
-      selectedRows
+      selectedRows,      
+      csvData,
+      view
     } = this.state
     const { expense_list, expense_categories_list } = this.props
     // const containerStyle = {
@@ -409,12 +440,17 @@ class Expense extends React.Component {
                       <Button
                         color="success"
                         className="btn-square"
-                        onClick={() => this.table.handleExportCSV()}
-                        disabled={expense_list && expense_list.data && expense_list.data.length === 0 ? true : false}
+                        onClick={() => this.getCsvData()}
                       >
-                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                        Export to CSV
+                        <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                      {view && <CSVLink
+                        data={csvData}
+                        filename={'Expense.csv'}
+                        className="hidden"
+                        ref={this.csvLink}
+                        target="_blank"
+                      />}
                       <Button
                         color="primary"
                         className="btn-square"
@@ -505,6 +541,7 @@ class Expense extends React.Component {
                       pagination={expense_list && expense_list.data && expense_list.data.length > 0 ? true : false}
                       remote
                       fetchInfo={{ dataTotalSize: expense_list.count ? expense_list.count : 0 }}
+                      multiColumnSort
                       className="expense-table"
                       trClassName="cursor-pointer"
                       ref={node => this.table = node}
@@ -539,6 +576,8 @@ class Expense extends React.Component {
                       <TableHeaderColumn
                         dataField="expenseAmount"
                         dataSort
+                        dataFormat={this.renderAmount}
+                        dataAlign="right"
                       >
                         Expense Amount
                           </TableHeaderColumn>

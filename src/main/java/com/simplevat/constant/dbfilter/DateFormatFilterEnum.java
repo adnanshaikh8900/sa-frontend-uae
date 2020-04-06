@@ -12,10 +12,6 @@ public enum DateFormatFilterEnum {
 	@Getter
 	String condition;
 
-	private DateFormatFilterEnum(String dbColumnName) {
-		this.dbColumnName = dbColumnName;
-	}
-
 	private DateFormatFilterEnum(String dbColumnName, String condition) {
 		this.dbColumnName = dbColumnName;
 		this.condition = condition;

@@ -1,27 +1,6 @@
 package com.simplevat.rest.invoicecontroller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.Currency;
-import com.simplevat.entity.Project;
-import com.simplevat.entity.Invoice;
-import com.simplevat.entity.InvoiceLineItem;
-import com.simplevat.constant.InvoiceStatusEnum;
-import com.simplevat.invoice.model.InvoiceItemModel;
-import com.simplevat.rest.contactController.ContactHelper;
-import com.simplevat.service.ContactService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.InvoiceLineItemService;
-import com.simplevat.service.InvoiceService;
-import com.simplevat.service.PaymentService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.utils.FileHelper;
-
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -30,14 +9,42 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import javax.mail.internet.MimeMultipart;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simplevat.constant.ConfigurationConstants;
+import com.simplevat.constant.EmailConstant;
+import com.simplevat.constant.InvoiceStatusEnum;
+import com.simplevat.entity.Configuration;
+import com.simplevat.entity.Contact;
+import com.simplevat.entity.Currency;
+import com.simplevat.entity.Invoice;
+import com.simplevat.entity.InvoiceLineItem;
+import com.simplevat.entity.Mail;
+import com.simplevat.entity.Project;
+import com.simplevat.entity.User;
+import com.simplevat.service.ConfigurationService;
+import com.simplevat.service.ContactService;
+import com.simplevat.service.CurrencyService;
+import com.simplevat.service.InvoiceLineItemService;
+import com.simplevat.service.InvoiceService;
+import com.simplevat.service.PaymentService;
+import com.simplevat.service.ProjectService;
+import com.simplevat.service.UserService;
+import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.FileHelper;
+import com.simplevat.utils.MailUtility;
+
 @Service
 public class InvoiceRestHelper {
-
+	private final Logger LOGGER = LoggerFactory.getLogger(InvoiceRestHelper.class);
 	@Autowired
 	VatCategoryService vatCategoryService;
 
@@ -63,7 +70,13 @@ public class InvoiceRestHelper {
 	private PaymentService paymentService;
 
 	@Autowired
-	private ContactHelper contactHelper;
+	private MailUtility mailUtility;
+
+	@Autowired
+	private ConfigurationService configurationService;
+
+	@Autowired
+	private UserService userService;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -118,11 +131,11 @@ public class InvoiceRestHelper {
 						new TypeReference<List<InvoiceLineItemModel>>() {
 						});
 			} catch (IOException ex) {
-				Logger.getLogger(InvoiceRestHelper.class.getName()).log(Level.SEVERE, null, ex);
+				LOGGER.error("Error", ex);
 			}
-			if (itemModels.size() > 0) {
-				List<InvoiceLineItem> InvoiceLineItemList = getLineItems(itemModels, invoice, userId);
-				invoice.setInvoiceLineItems(InvoiceLineItemList);
+			if (!itemModels.isEmpty()) {
+				List<InvoiceLineItem> invoiceLineItemList = getLineItems(itemModels, invoice, userId);
+				invoice.setInvoiceLineItems(invoiceLineItemList);
 			}
 		}
 		if (invoiceModel.getTaxIdentificationNumber() != null) {
@@ -142,7 +155,6 @@ public class InvoiceRestHelper {
 
 	public List<InvoiceLineItem> getLineItems(List<InvoiceLineItemModel> itemModels, Invoice invoice, Integer userId) {
 		List<InvoiceLineItem> lineItems = new ArrayList<>();
-		int i = 0;
 		for (InvoiceLineItemModel model : itemModels) {
 			try {
 				InvoiceLineItem lineItem = new InvoiceLineItem();
@@ -158,10 +170,9 @@ public class InvoiceRestHelper {
 				}
 				lineItem.setInvoice(invoice);
 				lineItems.add(lineItem);
-				i++;
 			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
+				LOGGER.error("Error", e);
+				return new ArrayList<>();
 			}
 		}
 		return lineItems;
@@ -314,7 +325,7 @@ public class InvoiceRestHelper {
 		if (contact.getCountry() != null && contact.getCountry().getCountryName() != null) {
 			sb.append(contact.getCountry().getCountryName()).append(", ");
 		}
-		if (contact.getState() != null ) {
+		if (contact.getState() != null) {
 			sb.append(contact.getState().getStateName()).append(", ");
 		}
 		if (contact.getCity() != null && !contact.getCity().isEmpty()) {
@@ -325,5 +336,122 @@ public class InvoiceRestHelper {
 		}
 
 		return sb.toString();
+	}
+
+	public void send(Invoice invoice, Integer userId) {
+		String subject = "";
+		String body = "";
+		Contact contact = invoice.getContact();
+		Configuration invoiceEmailSub = configurationService
+				.getConfigurationByName(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_SUBJECT);
+
+		Map<String, String> map = getInvoceData(invoice, userId);
+
+		if (invoiceEmailSub != null && invoiceEmailSub.getValue() != null) {
+			subject = mailUtility.create(map, invoiceEmailSub.getValue());
+		}
+
+		Configuration invoiceEmailBody = configurationService
+				.getConfigurationByName(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_BODY);
+
+		if (invoiceEmailBody != null && invoiceEmailBody.getValue() != null) {
+			body = mailUtility.create(map, invoiceEmailBody.getValue());
+		}
+
+		if (invoice.getContact() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
+			mailUtility.triggerEmailOnBackground(subject, body, null, EmailConstant.ADMIN_SUPPORT_EMAIL,
+					EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[] { invoice.getContact().getBillingEmail() },
+					true);
+		} else {
+			LOGGER.info("BILLING ADDRES NOT PRESENT");
+		}
+	}
+
+	public Map<String, String> getInvoceData(Invoice invoice, Integer userId) {
+		Map<String, String> map = mailUtility.getInvoiceEmailParamMap();
+		Map<String, String> invoiceDataMap = new HashMap<>();
+		User user = userService.findByPK(userId);
+
+		for (String key : map.keySet()) {
+			String value = map.get(key);
+			switch (key) {
+			case MailUtility.Invoice_Reference_Number:
+				if (invoice.getReferenceNumber() != null && !invoice.getReferenceNumber().isEmpty()) {
+					invoiceDataMap.put(value, invoice.getReferenceNumber());
+				}
+				break;
+
+			case MailUtility.Invoice_Date:
+				if (invoice.getInvoiceDate() != null) {
+					invoiceDataMap.put(value, invoice.getInvoiceDate().toString());
+				}
+				break;
+
+			case MailUtility.Invoice_Due_Date:
+				if (invoice.getInvoiceDueDate() != null) {
+					invoiceDataMap.put(value, invoice.getInvoiceDueDate().toString());
+				}
+				break;
+
+			case MailUtility.Invoic_Discount:
+				if (invoice.getDiscount() != null) {
+					invoiceDataMap.put(value, invoice.getDiscount().toString());
+				}
+				break;
+
+			case MailUtility.Contract_Po_Number:
+				if (invoice.getContactPoNumber() != null && !invoice.getContactPoNumber().isEmpty()) {
+					invoiceDataMap.put(value, invoice.getContactPoNumber());
+				}
+				break;
+
+			case MailUtility.Contact_Name:
+				if (invoice.getContact() != null && !invoice.getContact().getFirstName().isEmpty()) {
+					StringBuilder sb = new StringBuilder();
+					Contact c = invoice.getContact();
+					if (c.getFirstName() != null && !c.getFirstName().isEmpty()) {
+						sb.append(c.getFirstName()).append(" ");
+					}
+					if (c.getMiddleName() != null && !c.getMiddleName().isEmpty()) {
+						sb.append(c.getMiddleName()).append(" ");
+					}
+					if (c.getLastName() != null && !c.getLastName().isEmpty()) {
+						sb.append(c.getLastName());
+					}
+					invoiceDataMap.put(value, sb.toString());
+				}
+
+				break;
+
+			case MailUtility.Project_Name:
+				if (invoice.getProject() != null && !invoice.getProject().getProjectName().isEmpty()) {
+					invoiceDataMap.put(value, invoice.getProject().getProjectName());
+				}
+				break;
+
+			case MailUtility.Invoice_Amount:
+				if (invoice.getTotalAmount() != null) {
+					invoiceDataMap.put(value, invoice.getTotalAmount().toString());
+				}
+				break;
+
+//			case MailUtility.Due_Amount:
+//				if (invoice.getd!= null) {
+//					invoiceDataMap.put(value, invoice.getTotalAmount().toString());
+//				}
+//				break;
+
+			case MailUtility.Sender_Name:
+
+				invoiceDataMap.put(value, user.getUserEmail());
+				break;
+
+			case MailUtility.Company_Name:
+				if (user.getCompany() != null)
+					invoiceDataMap.put(value, user.getCompany().getCompanyName());
+				break;
+			}
+		}
+		return invoiceDataMap;
 	}
 }

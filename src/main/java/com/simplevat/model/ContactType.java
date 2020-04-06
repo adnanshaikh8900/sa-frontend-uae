@@ -5,6 +5,8 @@
  */
 package com.simplevat.model;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,18 +16,20 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ContactType {
+public class ContactType implements Serializable {
 
-    private Integer id;
-    private String name;
+	private static final long serialVersionUID = 1L;
 
-    public ContactType(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+	private Integer id;
+	private String name;
 
-    public ContactType() {
+	public ContactType(Integer id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
-    }
+	public ContactType() {
+
+	}
 
 }

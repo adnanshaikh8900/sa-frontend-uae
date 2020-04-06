@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.simplevat.rest.bankaccountcontroller;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.helper.BankHelper;
-import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.model.BankModel;
@@ -18,16 +12,13 @@ import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;
 import com.simplevat.entity.bankaccount.BankAccountType;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.service.BankAccountTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.UserService;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.BankAccountStatusService;
-import com.simplevat.service.bankaccount.TransactionStatusService;
 import com.simplevat.util.ChartUtil;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
 
 import io.swagger.annotations.ApiOperation;
@@ -37,17 +28,17 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.type.LocalDateTimeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -72,6 +63,8 @@ public class BankAccountController implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private final Logger LOGGER = LoggerFactory.getLogger(BankAccountController.class);
 
 	@Autowired
 	private BankAccountService bankAccountService;
@@ -101,15 +94,12 @@ public class BankAccountController implements Serializable {
 	private BankHelper bankRestHelper;
 
 	@Autowired
-	private ChartUtil chartUtil;
-
-	@Autowired
 	private TransactionService transactionService;
 
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
 	public ResponseEntity getBankAccountList(BankAccountFilterModel filterModel) {
-		Map<BankAccounrFilterEnum, Object> filterDataMap = new HashMap<BankAccounrFilterEnum, Object>();
+		Map<BankAccounrFilterEnum, Object> filterDataMap = new EnumMap<>(BankAccounrFilterEnum.class);
 
 		filterDataMap.put(BankAccounrFilterEnum.BANK_ACCOUNT_NAME, filterModel.getBankAccountName());
 		filterDataMap.put(BankAccounrFilterEnum.BANK_BNAME, filterModel.getBankName());
@@ -130,7 +120,7 @@ public class BankAccountController implements Serializable {
 					currencyService.findByPK(filterModel.getCurrencyCode()));
 		}
 
-		filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
+		// filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
 
 		PaginationResponseModel paginatinResponseModel = bankAccountService.getBankAccounts(filterDataMap, filterModel);
 		if (paginatinResponseModel != null) {
@@ -156,7 +146,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity<>(bankAccount, HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -177,7 +167,7 @@ public class BankAccountController implements Serializable {
 			return new ResponseEntity<>(HttpStatus.OK);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -215,19 +205,19 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Delete the Bank Account", response = BankAccount.class)
 	@DeleteMapping(value = "/{bankAccountId}")
-	public ResponseEntity deleteBankAccount(@PathVariable("bankAccountId") Integer bank_account_id,
+	public ResponseEntity deleteBankAccount(@PathVariable("bankAccountId") Integer bankAccountId,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-			BankAccount bankAccount = bankAccountService.findByPK(bank_account_id);
+			BankAccount bankAccount = bankAccountService.findByPK(bankAccountId);
 			if (bankAccount != null) {
 				bankAccount.setLastUpdateDate(LocalDateTime.now());
 				bankAccount.setLastUpdatedBy(userId);
@@ -238,7 +228,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -255,7 +245,7 @@ public class BankAccountController implements Serializable {
 
 			return new ResponseEntity<>(bankAccountRestHelper.getModel(bankAccount), HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -267,12 +257,11 @@ public class BankAccountController implements Serializable {
 			bankAccountService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@Deprecated
 	@GetMapping(value = "/getcurrenncy")
 	public ResponseEntity getCurrency() {
 		try {
@@ -283,7 +272,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -295,7 +284,7 @@ public class BankAccountController implements Serializable {
 					transactionService.getCashInData(monthCount, bankId),
 					transactionService.getCashOutData(monthCount, bankId)), HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -306,7 +295,7 @@ public class BankAccountController implements Serializable {
 			BigDecimal totalBalance = bankAccountService.getAllBankAccountsTotalBalance();
 			return new ResponseEntity<>(totalBalance != null ? totalBalance : 0, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

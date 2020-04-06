@@ -54,17 +54,13 @@ class CustomerModal extends React.Component {
       state_list: []
     };
     this.formikRef = React.createRef();
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.displayMsg = this.displayMsg.bind(this);
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z]+$/;
-
-
   }
 
   // Create or Contact
-  handleSubmit(data, resetForm, setSubmitting) {
+  handleSubmit = (data, resetForm, setSubmitting) => {
     this.props
       .createCustomer(data)
       .then(res => {
@@ -80,7 +76,7 @@ class CustomerModal extends React.Component {
       });
   }
 
-  displayMsg() {
+  displayMsg= () => {
     toast.error("Something Went Wrong... ", {
       position: toast.POSITION.TOP_RIGHT
     });
@@ -337,8 +333,8 @@ class CustomerModal extends React.Component {
                             type="text"
                             id="organization"
                             name="organization"
-                            onChange={value => {
-                              props.handleChange("organization")(value);
+                            onChange={(option) => {
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('organization')(option)
                             }}
                             value={props.values.organization}
                             className={
@@ -363,8 +359,8 @@ class CustomerModal extends React.Component {
                             type="text"
                             id="poBoxNumber"
                             name="poBoxNumber"
-                            onChange={value => {
-                              props.handleChange("poBoxNumber")(value);
+                            onChange={(option) => {
+                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('poBoxNumber')(option)
                             }}
                             value={props.values.poBoxNumber}
                             className={
@@ -664,9 +660,9 @@ class CustomerModal extends React.Component {
                           <Input
                             // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                             value={props.values.city}
-                            onChange={option =>
-                              props.handleChange("city")(option)
-                            }
+                            onChange={(option) => {
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('city')(option)
+                            }}
                             placeholder=""
                             id="city"
                             name="city"
@@ -750,8 +746,8 @@ class CustomerModal extends React.Component {
                             type="text"
                             id="contractPoNumber"
                             name="contractPoNumber"
-                            onChange={value => {
-                              props.handleChange("contractPoNumber")(value);
+                            onChange={(option) => {
+                              if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('contractPoNumber')(option)
                             }}
                             value={props.values.contractPoNumber}
                             className={

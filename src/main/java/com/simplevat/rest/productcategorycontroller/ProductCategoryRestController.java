@@ -2,11 +2,12 @@ package com.simplevat.rest.productcategorycontroller;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductCategoryFilterEnum;
-import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.ProductCategory;
 import com.simplevat.entity.User;
-import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.transactioncategorycontroller.TransactionCategoryBean;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ProductCategoryService;
 import com.simplevat.service.UserService;
@@ -41,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/productcategory")
 public class ProductCategoryRestController {
-
+	private final Logger LOGGER = LoggerFactory.getLogger(ProductCategoryRestController.class);
 	@Autowired
 	private ProductCategoryService productCategoryService;
 
@@ -69,7 +67,6 @@ public class ProductCategoryRestController {
 		filterDataMap.put(ProductCategoryFilterEnum.PRODUCT_CATEGORY_NAME, filterModel.getProductCategoryName());
 		filterDataMap.put(ProductCategoryFilterEnum.USER_ID, filterModel.getUserId());
 		filterDataMap.put(ProductCategoryFilterEnum.DELETE_FLAG, false);
-		filterDataMap.put(ProductCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
 		PaginationResponseModel response = productCategoryService.getProductCategoryList(filterDataMap, filterModel);
 		if (response != null) {
@@ -105,7 +102,7 @@ public class ProductCategoryRestController {
 			productCategoryService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -122,7 +119,7 @@ public class ProductCategoryRestController {
 			productCategoryService.persist(selectedProductCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -137,17 +134,12 @@ public class ProductCategoryRestController {
 			ProductCategory selectedProductCategory = productCategoryService.findByPK(productCategoryModel.getId());
 			selectedProductCategory.setProductCategoryCode(productCategoryModel.getProductCategoryCode());
 			selectedProductCategory.setProductCategoryName(productCategoryModel.getProductCategoryName());
-			/*
-			 * if (productCategoryModel.getId() != null) {
-			 * selectedProductCategory.setTransactionType(
-			 * transactionTypeService.findByPK(pr.getTransactionType())); }
-			 */
 			productCategoryModel.setLastUpdateBy(user.getUserId());
 			productCategoryModel.setLastUpdateDate(LocalDateTime.now());
 			productCategoryService.update(selectedProductCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

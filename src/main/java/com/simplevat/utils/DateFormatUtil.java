@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DateFormatUtil {
+	private final Logger LOGGER = LoggerFactory.getLogger(DateFormatUtil.class);
 
 	public static List<String> dateFormatList() {
 		List<String> dateFormats = new ArrayList<>();
@@ -51,7 +54,7 @@ public class DateFormatUtil {
 			d = dateFormatter.parse(strDate);
 		} catch (ParseException e) {
 			d = new Date();
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		LocalDateTime dob = Instant.ofEpochMilli(d.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 		return dob;

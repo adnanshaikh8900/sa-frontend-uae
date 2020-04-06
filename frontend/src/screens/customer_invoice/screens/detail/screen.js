@@ -93,6 +93,8 @@ class DetailCustomerInvoice extends React.Component {
 			{ label: "Due on Receipt", value: "DUE_ON_RECEIPT" },
 		]
 		this.regEx = /^[0-9\b]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+
 		this.file_size = 1024000;
 		this.supported_format = [
 			"text/plain",
@@ -101,35 +103,13 @@ class DetailCustomerInvoice extends React.Component {
 			"application/vnd.ms-excel",
 			"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 		];
-
-		this.initializeData = this.initializeData.bind(this)
-		this.renderActions = this.renderActions.bind(this)
-		this.renderDescription = this.renderDescription.bind(this)
-		this.renderQuantity = this.renderQuantity.bind(this)
-		this.renderUnitPrice = this.renderUnitPrice.bind(this)
-		this.renderVat = this.renderVat.bind(this)
-		this.renderSubTotal = this.renderSubTotal.bind(this)
-		this.updateAmount = this.updateAmount.bind(this)
-		this.selectItem = this.selectItem.bind(this)
-		this.addRow = this.addRow.bind(this)
-		this.deleteRow = this.deleteRow.bind(this)
-		this.calTotalNet = this.calTotalNet.bind(this)
-
-		this.closeCustomerModal = this.closeCustomerModal.bind(this)
-		this.openCustomerModal = this.openCustomerModal.bind(this)
-		this.getCurrentUser = this.getCurrentUser.bind(this)
-		this.deleteInvoice = this.deleteInvoice.bind(this)
-		this.removeInvoice = this.removeInvoice.bind(this)
-		this.removeDialog = this.removeDialog.bind(this)
-		this.checkedRow = this.checkedRow.bind(this)
-		this.handleFileChange = this.handleFileChange.bind(this)
 	}
 
-	componentDidMount() {
+	componentDidMount = () => {
 		this.initializeData();
 	}
 
-	initializeData() {
+	initializeData = () => {
 		if (this.props.location.state && this.props.location.state.id) {
 			this.props.customerInvoiceDetailActions.getInvoiceById(this.props.location.state.id).then(res => {
 				if (res.status === 200) {
@@ -191,7 +171,7 @@ class DetailCustomerInvoice extends React.Component {
 		}
 	}
 
-	calTotalNet(data) {
+	calTotalNet = (data) => {
 		let total_net = 0
 		data.map(obj => {
 			total_net = +(total_net + (+obj.unitPrice) * obj.quantity);
@@ -203,7 +183,7 @@ class DetailCustomerInvoice extends React.Component {
 	}
 
 
-	renderDescription(cell, row, props) {
+	renderDescription = (cell, row, props) => {
 		let idx
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -235,7 +215,7 @@ class DetailCustomerInvoice extends React.Component {
 		)
 	}
 
-	renderQuantity(cell, row, props) {
+	renderQuantity = (cell, row, props) => {
 		let idx
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -267,7 +247,7 @@ class DetailCustomerInvoice extends React.Component {
 		)
 	}
 
-	renderUnitPrice(cell, row, props) {
+	renderUnitPrice = (cell, row, props) => {
 		let idx
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -299,14 +279,14 @@ class DetailCustomerInvoice extends React.Component {
 
 
 
-	renderSubTotal(cell, row) {
+	renderSubTotal = (cell, row) => {
 		return (
 			<label className="mb-0">{row.subTotal.toFixed(2)}</label>
 		)
 	}
 
 
-	addRow() {
+	addRow = () => {
 		const data = [...this.state.data]
 		this.setState({
 			data: data.concat({
@@ -322,7 +302,7 @@ class DetailCustomerInvoice extends React.Component {
 		})
 	}
 
-	selectItem(e, row, name, form, field, props) {
+	selectItem = (e, row, name, form, field, props) => {
 		e.preventDefault();
 		let data = this.state.data
 		let idx
@@ -344,7 +324,7 @@ class DetailCustomerInvoice extends React.Component {
 
 	}
 
-	renderVat(cell, row, props) {
+	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
 		let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
 		let idx
@@ -383,7 +363,7 @@ class DetailCustomerInvoice extends React.Component {
 	}
 
 
-	deleteRow(e, row, props) {
+	deleteRow = (e, row, props) => {
 		const id = row['id'];
 		let newData = []
 		e.preventDefault();
@@ -393,7 +373,7 @@ class DetailCustomerInvoice extends React.Component {
 		this.updateAmount(newData, props)
 	}
 
-	renderActions(cell, rows, props) {
+	renderActions = (cell, rows, props) => {
 		return (
 			<Button
 				size="sm"
@@ -406,7 +386,7 @@ class DetailCustomerInvoice extends React.Component {
 		)
 	}
 
-	checkedRow() {
+	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1
 			let temp = Object.values(this.state.data[length]).indexOf('');
@@ -421,7 +401,7 @@ class DetailCustomerInvoice extends React.Component {
 	}
 
 
-	updateAmount(data, props) {
+	updateAmount = (data, props) => {
 		const { vat_list } = this.props;
 		let total_net = 0;
 		let total = 0;
@@ -470,7 +450,7 @@ class DetailCustomerInvoice extends React.Component {
 		}
 	}
 
-	handleFileChange(e, props) {
+	handleFileChange = (e, props) => {
 		e.preventDefault();
 		let reader = new FileReader();
 		let file = e.target.files[0];
@@ -483,7 +463,7 @@ class DetailCustomerInvoice extends React.Component {
 	}
 
 
-	handleSubmit(data) {
+	handleSubmit = (data) => {
 		const { current_customer_id, term } = this.state;
 		const {
 			receiptAttachmentDescription,
@@ -542,12 +522,12 @@ class DetailCustomerInvoice extends React.Component {
 		})
 	}
 
-	openCustomerModal(e) {
+	openCustomerModal = (e) => {
 		e.preventDefault()
 		this.setState({ openCustomerModal: true })
 	}
 
-	getCurrentUser(data) {
+	getCurrentUser = (data) => {
 		let option
 		if (data.label || data.value) {
 			option = data
@@ -564,14 +544,14 @@ class DetailCustomerInvoice extends React.Component {
 
 	}
 
-	closeCustomerModal(res) {
+	closeCustomerModal = (res) => {
 		if (res) {
 			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		}
 		this.setState({ openCustomerModal: false })
 	}
 
-	deleteInvoice() {
+	deleteInvoice = () =>{
 		this.setState({
 			dialog: <ConfirmDeleteModal
 				isOpen={true}
@@ -581,7 +561,7 @@ class DetailCustomerInvoice extends React.Component {
 		})
 	}
 
-	removeInvoice() {
+	removeInvoice = () =>{
 		const { current_customer_id } = this.state;
 		this.props.customerInvoiceDetailActions.deleteInvoice(current_customer_id).then(res => {
 			if (res.status === 200) {
@@ -593,12 +573,11 @@ class DetailCustomerInvoice extends React.Component {
 		})
 	}
 
-	removeDialog() {
+	removeDialog = () => {
 		this.setState({
 			dialog: null
 		})
 	}
-
 
 	render() {
 
@@ -895,7 +874,9 @@ class DetailCustomerInvoice extends React.Component {
 																				name="contact_po_number"
 																				placeholder=""
 																				value={props.values.contact_po_number}
-																				onChange={(value) => { props.handleChange("contact_po_number")(value) }}
+																				onChange={(option) => {
+																					if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contact_po_number')(option)
+																				}}
 																			/>
 																		</FormGroup>
 																	</Col>
@@ -913,7 +894,9 @@ class DetailCustomerInvoice extends React.Component {
 																						id="receiptNumber"
 																						name="receiptNumber"
 																						placeholder="Enter Reciept Number"
-																						onChange={option => props.handleChange('receiptNumber')(option)}
+																						onChange={(option) => {
+																							if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option)
+																						}}
 																						value={props.values.receiptNumber}
 
 																					/>

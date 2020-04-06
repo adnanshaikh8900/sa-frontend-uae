@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.simplevat.entity.Currency;
 import com.simplevat.entity.User;
 import com.simplevat.service.UserService;
 
@@ -27,12 +26,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtTokenUtil implements Serializable {
 
 	private static final long serialVersionUID = -2550185165626007488L;
-	
-	public static final long JWT_TOKEN_VALIDITY = 5*60*60;//5hr 45; // 1/4 min 
+
+	public static final long JWT_TOKEN_VALIDITY = 5L * 60 * 60;// 5hr 45; // 1/4 min
 
 	@Value("${jwt.secret}")
 	private String secret;
-	
+
 	@Autowired
 	UserService userServiceNew;
 
@@ -75,7 +74,8 @@ public class JwtTokenUtil implements Serializable {
 	private String doGenerateToken(Map<String, Object> claims, String subject) {
 
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY*1000)).signWith(SignatureAlgorithm.HS512, secret).compact();
+				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+				.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
 
 	public Boolean canTokenBeRefreshed(String token) {
@@ -86,17 +86,16 @@ public class JwtTokenUtil implements Serializable {
 		final String username = getUsernameFromToken(token);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
-	
+
 	public Integer getUserIdFromHttpRequest(HttpServletRequest request) {
 		String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
-            throw new JwtException("No JWT token found in request headers");
-        }
-        String authToken = header.substring(7);
+		if (header == null || !header.startsWith("Bearer ")) {
+			throw new JwtException("No JWT token found in request headers");
+		}
+		String authToken = header.substring(7);
 		String userEmail = getUsernameFromToken(authToken);
 		Optional<User> optionalUser = userServiceNew.getUserByEmail(userEmail);
-		Integer userId = optionalUser.get().getUserId();
-		return userId;
+		return optionalUser.isPresent() ? optionalUser.get().getUserId() : null;
 	}
-	
+
 }

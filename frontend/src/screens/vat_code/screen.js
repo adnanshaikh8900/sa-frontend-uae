@@ -21,6 +21,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import './style.scss'
 
 import * as VatActions from './actions'
+import { CSVLink } from "react-csv";
+
 import {
   CommonActions
 } from 'services/global'
@@ -48,7 +50,9 @@ class VatCode extends React.Component {
       filterData: {
         name: '',
         vatPercentage: ''
-      }
+      },
+      csvData: [],
+      view: false
     }
 
     this.options = {
@@ -58,6 +62,9 @@ class VatCode extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -66,20 +73,26 @@ class VatCode extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
+
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = () => {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
     }
-    filterData = { ...filterData, ...data }
-    this.props.vatActions.getVatList(filterData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+    this.props.vatActions.getVatList(postData).then(res => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -89,6 +102,13 @@ class VatCode extends React.Component {
       })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
+  }
+
+
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
   }
 
   onRowSelect = (row, isSelected) => {
@@ -203,8 +223,27 @@ class VatCode extends React.Component {
     this.initializeData();
   }
 
+  getCsvData = () => {
+       if(this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.vatActions.getVatList(obj).then(res => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
   render() {
-    const { loading, selectedRows, dialog } = this.state
+    const { loading, selectedRows, dialog,csvData,view } = this.state
     const { vat_list } = this.props
 
     return (
@@ -226,13 +265,20 @@ class VatCode extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup className="toolbar" size="sm">
-                          <Button
+                        <Button
                             color="success"
                             className="btn-square"
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                          Export to CSV
-                        </Button>
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
+                          </Button>
+                           {view && <CSVLink
+                            data={csvData}
+                            filename={'VatCode.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"

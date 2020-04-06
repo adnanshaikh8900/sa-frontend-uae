@@ -17,12 +17,11 @@ import {
   Nav,
   NavItem,
   NavLink,
-  FormText
 } from 'reactstrap'
 import Select from 'react-select'
 // import ImagesUploader from 'react-images-uploader'
 import { Loader, ImageUploader } from 'components'
-import { selectOptionsFactory ,cryptoService} from 'utils'
+import { selectOptionsFactory, cryptoService } from 'utils'
 
 
 import DatePicker from 'react-datepicker'
@@ -50,6 +49,8 @@ const mapStateToProps = (state) => {
     industry_type_list: state.profile.industry_type_list,
     company_type_list: state.profile.company_type_list,
     role_list: state.profile.role_list,
+    invoicing_state_list: state.profile.invoicing_state_list,
+    company_state_list: state.profile.company_state_list,
 
   })
 }
@@ -120,17 +121,12 @@ class Profile extends React.Component {
       }
     }
 
-    this.toggle = this.toggle.bind(this)
-    this.getUserData = this.getUserData.bind(this)
-    this.getCompanyData = this.getCompanyData.bind(this)
-    this.uploadUserImage = this.uploadUserImage.bind(this)
-    this.uploadCompanyImage = this.uploadCompanyImage.bind(this)
-    this.handleUserSubmit = this.handleUserSubmit.bind(this)
-    this.stopLoading = this.stopLoading.bind(this)
-
+    this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
-  toggle(tabPane, tab) {
+  toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
     newArray[tabPane] = tab
     this.setState({
@@ -147,18 +143,19 @@ class Profile extends React.Component {
       this.getCompanyData()
     }
   }
-  componentDidMount() {
+  componentDidMount = () => {
     this.getUserData()
   }
 
-  uploadUserImage(picture, file) {
+  uploadUserImage = (picture, file) => {
     this.setState({
       userPhoto: picture,
       userPhotoFile: file,
       imageState: false
     })
   }
-  uploadCompanyImage(picture, file) {
+
+  uploadCompanyImage = (picture, file) => {
     this.setState({
       companyLogo: picture,
       companyLogoFile: file,
@@ -166,16 +163,16 @@ class Profile extends React.Component {
     })
   }
 
-  stopLoading() {
+  stopLoading = () => {
     this.setState({ loading: false })
   }
 
-  getUserData() {
+  getUserData = () => {
     const userId = cryptoService.decryptService('userId')
     this.setState({
       loading: true
     })
-    if(userId) {
+    if (userId) {
       this.props.profileActions.getUserById(userId).then(res => {
         // this.props.userActions.getRoleList();
         this.props.profileActions.getCurrencyList();
@@ -183,7 +180,7 @@ class Profile extends React.Component {
         this.props.profileActions.getIndustryTypeList();
         this.props.profileActions.getCompanyTypeList();
         this.props.profileActions.getRoleList();
-  
+
         if (res.status === 200) {
           this.setState({
             initUserData: {
@@ -191,7 +188,7 @@ class Profile extends React.Component {
               lastName: res.data.lastName ? res.data.lastName : '',
               email: res.data.email ? res.data.email : '',
               password: '',
-              dob: res.data.dob ? moment(res.data.dob,'DD-MM-YYYY').toDate() : '',
+              dob: res.data.dob ? moment(res.data.dob, 'DD-MM-YYYY').toDate() : '',
               active: res.data.active ? res.data.active : '',
               // confirmPassword: '',
               roleId: res.data.roleId ? res.data.roleId : '',
@@ -210,7 +207,11 @@ class Profile extends React.Component {
     }
   }
 
-  handleUserSubmit(data) {
+  getStateList = (countryCode,type) => {
+    this.props.profileActions.getStateList(countryCode,type);
+  }
+
+  handleUserSubmit = (data) => {
     const {
       firstName,
       lastName,
@@ -220,7 +221,7 @@ class Profile extends React.Component {
       roleId,
       // companyId,
     } = data;
-    const {userPhotoFile} = this.state
+    const { userPhotoFile } = this.state
     const userId = cryptoService.decryptService('userId')
 
     let formData = new FormData();
@@ -228,7 +229,7 @@ class Profile extends React.Component {
     formData.append("firstName", firstName ? firstName : '');
     formData.append("lastName", lastName ? lastName : '');
     formData.append("email", email ? email : '');
-    formData.append("dob", dob ?  moment(dob).format('DD-MM-YYYY') : (''));
+    formData.append("dob", dob ? moment(dob).format('DD-MM-YYYY') : (''));
     formData.append("active", this.state.selectedStatus);
     // formData.append("companyId", companyId ? companyId : '');
     formData.append("roleId", roleId ? roleId : '');
@@ -256,7 +257,7 @@ class Profile extends React.Component {
     })
   }
 
-  getCompanyData() {
+  getCompanyData = () => {
     // const {companyId} = this.state;
     this.props.profileActions.getCompanyById().then(res => {
       if (res.status === 200) {
@@ -292,11 +293,28 @@ class Profile extends React.Component {
               companyExpenseBudget: res.data.companyExpenseBudget ? res.data.companyExpenseBudget : '',
               companyRevenueBudget: res.data.companyRevenueBudget ? res.data.companyRevenueBudget : '',
               dateFormat: res.data.dateFormat ? res.data.dateFormat : '',
-
             },
             companyLogo: res.data.companyLogoByteArray ? this.state.companyLogo.concat(res.data.companyLogoByteArray) : [],
             loading: false,
-            flag: false
+            flag: false,
+            isSame: res.data.isSame ? res.data.isSame : false 
+          },()=>{
+            if(res.data.invoicingCountryCode) this.getStateList(res.data.invoicingCountryCode,'invoicing')
+            if(res.data.companyCountryCode) this.getStateList(res.data.companyCountryCode,'company')
+            if(this.state.isSame){
+              this.setState({
+                companyAddress: {
+                  companyAddressLine1: res.data.invoicingAddressLine1 ? res.data.invoicingAddressLine1 : '',
+                  companyAddressLine2: res.data.invoicingAddressLine2 ? res.data.invoicingAddressLine2 : '',
+                  companyAddressLine3: res.data.invoicingAddressLine3 ? res.data.invoicingAddressLine3 : '',
+                  companyCity: res.data.invoicingCity ? res.data.invoicingCity : '',
+                  companyStateRegion: res.data.invoicingStateRegion ? res.data.invoicingStateRegion : '',
+                  companyPostZipCode: res.data.invoicingPostZipCode ? res.data.invoicingPostZipCode : '',
+                  companyPoBoxNumber: res.data.invoicingPoBoxNumber ? res.data.invoicingPoBoxNumber : '',
+                  companyCountryCode: res.data.invoicingCountryCode ? res.data.invoicingCountryCode : '',
+                }
+              })
+            }
           })
         } else {
           this.setState({
@@ -321,7 +339,7 @@ class Profile extends React.Component {
       })
     })
   }
-  handleCompanySubmit(data) {
+  handleCompanySubmit = (data) => {
     const {
       companyName,
       companyRegistrationNumber,
@@ -383,6 +401,8 @@ class Profile extends React.Component {
     formData.append("companyPostZipCode", isSame ? companyAddress.companyPostZipCode : companyPostZipCode);
     formData.append("companyPoBoxNumber", isSame ? companyAddress.companyPoBoxNumber : companyPoBoxNumber);
     formData.append("companyCountryCode", isSame ? companyAddress.companyCountryCode : companyCountryCode);
+    formData.append("isSame", isSame);
+
     if (this.state.companyLogoFile.length > 0) {
       formData.append("companyLogo", this.state.companyLogoFile[0]);
     }
@@ -398,7 +418,7 @@ class Profile extends React.Component {
 
   render() {
     const { loading, isSame } = this.state
-    const { currency_list, country_list, industry_type_list, company_type_list, role_list } = this.props
+    const { currency_list, country_list, industry_type_list, company_type_list, role_list, invoicing_state_list,company_state_list } = this.props
     return (
       <div className="profile-screen">
         <div className="animated fadeIn">
@@ -462,6 +482,9 @@ class Profile extends React.Component {
                                     .required("First Name is Required"),
                                   lastName: Yup.string()
                                     .required("Last Name is Required"),
+                                  email: Yup.string()
+                                    .required("Email is Required")
+                                    .email("Invalid Email"),
                                   password: Yup.string()
                                     // .required("Password is Required")
                                     // .min(8, "Password Too Short")
@@ -495,7 +518,7 @@ class Profile extends React.Component {
                                             // withIcon={true}
                                             buttonText='Choose images'
                                             onChange={this.uploadUserImage}
-                                            imgExtension={['.jpg', '.gif', '.png', '.gif','.jpeg']}
+                                            imgExtension={['.jpg', '.gif', '.png', '.gif', '.jpeg']}
                                             maxFileSize={1048576}
                                             withPreview={true}
                                             singleImage={true}
@@ -520,7 +543,9 @@ class Profile extends React.Component {
                                                 type="text"
                                                 id="firstName"
                                                 name="firstName"
-                                                onChange={(value) => { props.handleChange('firstName')(value) }}
+                                                onChange={(option) => {
+                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                                                }}
                                                 value={props.values.firstName}
                                                 className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                               />
@@ -536,7 +561,9 @@ class Profile extends React.Component {
                                                 type="text"
                                                 id="lastName"
                                                 name="lastName"
-                                                onChange={(value) => { props.handleChange('lastName')(value) }}
+                                                onChange={(option) => {
+                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                                                }}
                                                 value={props.values.lastName}
                                                 className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                               />
@@ -556,11 +583,14 @@ class Profile extends React.Component {
                                                 name="email"
                                                 placeholder="Enter Email ID"
                                                 value={props.values.email}
-
                                                 onChange={(value) => {
                                                   props.handleChange("email")(value)
                                                 }}
+                                                className={props.errors.email && props.touched.email ? "is-invalid" : ""}
                                               />
+                                              {props.errors.email && props.touched.email && (
+                                                <div className="invalid-feedback">{props.errors.email}</div>
+                                              )}
                                             </FormGroup>
                                           </Col>
                                           <Col lg={6}>
@@ -574,10 +604,11 @@ class Profile extends React.Component {
                                                 showYearDropdown
                                                 dateFormat="dd/MM/yyyy"
                                                 dropdownMode="select"
-                                                placeholderText="Enter Birth Date"
+                                                placeholderText="Enter Date of Birth"
+                                                maxDate={new Date()}
+                                                autoComplete="off"
                                                 // selected={props.values.dob}
                                                 value={props.values.dob ? moment(props.values.dob).format('DD-MM-YYYY') : ''}
-
                                                 onChange={(value) => {
                                                   props.handleChange("dob")(value)
                                                 }}
@@ -737,16 +768,14 @@ class Profile extends React.Component {
                                                 type="password"
                                                 id="password"
                                                 name="password"
+                                                autoComplete="new-password"
+                                                placeholder="Enter the Password"
                                                 onChange={(value) => { props.handleChange('password')(value) }}
                                                 className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                               />
-                                              {!props.errors.password ?
-                                                (
-                                                  <FormText style={{color:'#20a8d8',fontSize:'14px'}}>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
-                                                ) : null}
-                                              {props.errors.password && props.touched.password && (
+                                              {props.errors.password && props.touched.password ? (
                                                 <div className="invalid-feedback">{props.errors.password}</div>
-                                              )}
+                                              ) : (<span className="password-msg">Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character.</span>)}
                                             </FormGroup>
                                           </Col>
                                           <Col lg={6}>
@@ -756,6 +785,7 @@ class Profile extends React.Component {
                                                 type="password"
                                                 id="confirmPassword"
                                                 name="confirmPassword"
+                                                placeholder="Enter the Confirm Password"
                                                 onChange={(value) => { props.handleChange('confirmPassword')(value) }}
                                                 className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
                                               />
@@ -818,7 +848,7 @@ class Profile extends React.Component {
                                   <Form onSubmit={props.handleSubmit}>
                                     <h5 className="mt-3 mb-3">Company Detail</h5>
                                     <Row>
-                                      <Col lg={2}>
+                                      <Col lg={2} md={4}>
                                         <FormGroup className="mb-3 text-center">
                                           {/* <ImagesUploader
                                     url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -862,7 +892,9 @@ class Profile extends React.Component {
                                                 name="companyName"
                                                 placeholder="Enter Company Name"
                                                 value={props.values.companyName}
-                                                onChange={value => props.handleChange('companyName')(value)}
+                                                onChange={(option) => {
+                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('companyName')(option)
+                                                }}
                                               />
                                             </FormGroup>
                                           </Col>
@@ -875,7 +907,9 @@ class Profile extends React.Component {
                                                 name="companyRegistrationNumber"
                                                 placeholder="Enter Company Registration No"
                                                 value={props.values.companyRegistrationNumber}
-                                                onChange={value => props.handleChange('companyRegistrationNumber')(value)}
+                                                onChange={(option) => {
+                                                  if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('companyRegistrationNumber')(option)
+                                                }}
                                               />
                                             </FormGroup>
                                           </Col>
@@ -888,7 +922,9 @@ class Profile extends React.Component {
                                                 name="vatRegistrationNumber"
                                                 placeholder="Enter VAT Registration No"
                                                 value={props.values.vatRegistrationNumber}
-                                                onChange={value => props.handleChange('vatRegistrationNumber')(value)}
+                                                onChange={(option) => {
+                                                  if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                                                }}
                                               />
                                             </FormGroup>
                                           </Col>
@@ -1020,8 +1056,8 @@ class Profile extends React.Component {
                                                 name="phoneNumber"
                                                 placeholder="Enter Phone Number"
                                                 value={props.values.phoneNumber}
-                                                onChange={option => {
-                                                  props.handleChange('phoneNumber')(option)
+                                                onChange={(option) => {
+                                                  if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('phoneNumber')(option)
                                                 }}
                                               />
                                             </FormGroup>
@@ -1041,8 +1077,8 @@ class Profile extends React.Component {
                                             name="companyExpenseBudget"
                                             placeholder="Enter Expense Budget"
                                             value={props.values.companyExpenseBudget}
-                                            onChange={option => {
-                                              props.handleChange('companyExpenseBudget')(option)
+                                            onChange={(option) => {
+                                              if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('companyExpenseBudget')(option)
                                             }}
                                           />
                                         </FormGroup>
@@ -1056,8 +1092,8 @@ class Profile extends React.Component {
                                             name="companyRevenueBudget"
                                             placeholder="Enter Revenue Budget"
                                             value={props.values.companyRevenueBudget}
-                                            onChange={option => {
-                                              props.handleChange('companyRevenueBudget')(option)
+                                            onChange={(option) => {
+                                              if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('companyRevenueBudget')(option)
                                             }}
                                           />
                                         </FormGroup>
@@ -1139,6 +1175,114 @@ class Profile extends React.Component {
 
                                     <Row>
                                       <Col lg={4}>
+                                        <FormGroup>
+                                          <Label htmlFor="invoicingCountryCode">Country Code</Label>
+                                          <Select
+                                            options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
+                                            value={props.values.invoicingCountryCode}
+                                            onChange={option => {
+                                              if (option && option.value) {
+                                                props.handleChange('invoicingCountryCode')(option.value)
+                                                props.handleChange('invoicingStateRegion')('')
+                                                this.getStateList(option.value,'invoicing')
+                                                this.setState({
+                                                  companyAddress: {
+                                                    ...this.state.companyAddress, ...{
+                                                      companyCountryCode: option.value,
+                                                      companyStateRegion: '',
+                                                    }
+                                                  }
+                                                })
+                                              } else {
+                                                props.handleChange('invoicingCountryCode')('')
+                                                props.handleChange('invoicingStateRegion')('')
+                                                this.setState({
+                                                  companyAddress: {
+                                                    ...this.state.companyAddress, ...{
+                                                      companyCountryCode: '',
+                                                      companyStateRegion: ''
+                                                    }
+                                                  }
+                                                })
+                                              }
+                                            }}
+                                            placeholder="Select Currency"
+                                            id="invoicingCountryCode"
+                                            name="invoicingCountryCode"
+                                            className={
+                                              props.errors.invoicingCountryCode && props.touched.invoicingCountryCode
+                                                ? "is-invalid"
+                                                : ""
+                                            }
+                                          />
+                                          {props.errors.invoicingCountryCode && props.touched.invoicingCountryCode && (
+                                            <div className="invalid-feedback">{props.errors.invoicingCountryCode}</div>
+                                          )}
+
+                                        </FormGroup>
+                                      </Col>
+                                      <Col lg={4}>
+                                        <FormGroup className="mb-3">
+                                          <Label htmlFor="product_code">State Region</Label>
+                                          {/* <Input
+                                            type="text"
+                                            id="invoicingStateRegion"
+                                            name="invoicingStateRegion"
+                                            placeholder="Enter State Region"
+                                            value={props.values.invoicingStateRegion || ''}
+                                            onChange={option => {
+                                              props.handleChange('invoicingStateRegion')(option)
+                                              this.setState({
+                                                companyAddress: {
+                                                  ...this.state.companyAddress, ...{
+                                                    companyStateRegion: option.target.value
+                                                  }
+                                                }
+                                              })
+                                            }}
+                                          /> */}
+                                          <Select
+                                            options={invoicing_state_list ? selectOptionsFactory.renderOptions('label', 'value', invoicing_state_list, 'State') : []}
+                                            value={props.values.invoicingStateRegion}
+                                            onChange={option => {
+                                              if (option && option.value) {
+                                                props.handleChange('invoicingStateRegion')(option.value)
+                                                // props.handleChange('companyStateRegion')(option.value)
+                                                this.setState({
+                                                  companyAddress: {
+                                                    ...this.state.companyAddress, ...{
+                                                      companyStateRegion: option.value
+                                                    }
+                                                  }
+                                                })
+                                              } else {
+                                                props.handleChange('invoicingStateRegion')('')
+                                                // props.handleChange('companyStateRegion')('')
+                                                this.setState({
+                                                  companyAddress: {
+                                                    ...this.state.companyAddress, ...{
+                                                      companyStateRegion: ''
+                                                    }
+                                                  }
+                                                })
+                                              }
+                                            }}
+                                            placeholder="Select State"
+                                            id="invoicingStateRegion"
+                                            name="invoicingStateRegion"
+                                            className={
+                                              props.errors.invoicingStateRegion && props.touched.invoicingStateRegion
+                                                ? "is-invalid"
+                                                : ""
+                                            }
+                                          />
+                                          {props.errors.invoicingStateRegion && props.touched.invoicingStateRegion && (
+                                            <div className="invalid-feedback">{props.errors.invoicingStateRegion}</div>
+                                          )}
+
+                                        </FormGroup>
+                                      </Col>
+                                      <Col lg={4}>
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="product_code">City</Label>
                                           <Input
@@ -1160,70 +1304,6 @@ class Profile extends React.Component {
                                           />
                                         </FormGroup>
                                       </Col>
-                                      <Col lg={4}>
-                                        <FormGroup className="mb-3">
-                                          <Label htmlFor="product_code">State Region</Label>
-                                          <Input
-                                            type="text"
-                                            id="invoicingStateRegion"
-                                            name="invoicingStateRegion"
-                                            placeholder="Enter State Region"
-                                            value={props.values.invoicingStateRegion || ''}
-                                            onChange={option => {
-                                              props.handleChange('invoicingStateRegion')(option)
-                                              this.setState({
-                                                companyAddress: {
-                                                  ...this.state.companyAddress, ...{
-                                                    companyStateRegion: option.target.value
-                                                  }
-                                                }
-                                              })
-                                            }}
-                                          />
-                                        </FormGroup>
-                                      </Col>
-                                      <Col lg={4}>
-                                        <FormGroup>
-                                          <Label htmlFor="invoicingCountryCode">Country Code</Label>
-                                          <Select
-                                            options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
-                                            value={props.values.invoicingCountryCode}
-                                            onChange={option => {
-                                              if (option && option.value) {
-                                                props.handleChange('invoicingCountryCode')(option.value)
-                                                this.setState({
-                                                  companyAddress: {
-                                                    ...this.state.companyAddress, ...{
-                                                      companyCountryCode: option.value
-                                                    }
-                                                  }
-                                                })
-                                              } else {
-                                                props.handleChange('invoicingCountryCode')('')
-                                                this.setState({
-                                                  companyAddress: {
-                                                    ...this.state.companyAddress, ...{
-                                                      companyCountryCode: ''
-                                                    }
-                                                  }
-                                                })
-                                              }
-                                            }}
-                                            placeholder="Select Currency"
-                                            id="invoicingCountryCode"
-                                            name="invoicingCountryCode"
-                                            className={
-                                              props.errors.invoicingCountryCode && props.touched.invoicingCountryCode
-                                                ? "is-invalid"
-                                                : ""
-                                            }
-                                          />
-                                          {props.errors.invoicingCountryCode && props.touched.invoicingCountryCode && (
-                                            <div className="invalid-feedback">{props.errors.invoicingCountryCode}</div>
-                                          )}
-
-                                        </FormGroup>
-                                      </Col>
                                     </Row>
                                     <Row>
                                       <Col lg={4}>
@@ -1236,14 +1316,16 @@ class Profile extends React.Component {
                                             placeholder="Enter PO Box No"
                                             value={props.values.invoicingPoBoxNumber || ''}
                                             onChange={option => {
-                                              props.handleChange('invoicingPoBoxNumber')(option)
-                                              this.setState({
-                                                companyAddress: {
-                                                  ...this.state.companyAddress, ...{
-                                                    companyPoBoxNumber: option.target.value
+                                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) {
+                                                props.handleChange('invoicingPoBoxNumber')(option)
+                                                this.setState({
+                                                  companyAddress: {
+                                                    ...this.state.companyAddress, ...{
+                                                      companyPoBoxNumber: option.target.value
+                                                    }
                                                   }
-                                                }
-                                              })
+                                                })
+                                              }
                                             }}
                                           />
                                         </FormGroup>
@@ -1258,14 +1340,16 @@ class Profile extends React.Component {
                                             placeholder="Enter Post Zip Code"
                                             value={props.values.invoicingPostZipCode || ''}
                                             onChange={option => {
-                                              props.handleChange('invoicingPostZipCode')(option)
-                                              this.setState({
-                                                companyAddress: {
-                                                  ...this.state.companyAddress, ...{
-                                                    companyPostZipCode: option.target.value
+                                              if (option.target.value === '' || this.regEx.test(option.target.value)) {
+                                                props.handleChange('invoicingPostZipCode')(option)
+                                                this.setState({
+                                                  companyAddress: {
+                                                    ...this.state.companyAddress, ...{
+                                                      companyPostZipCode: option.target.value
+                                                    }
                                                   }
-                                                }
-                                              })
+                                                })
+                                              }
                                             }}
                                           />
                                         </FormGroup>
@@ -1371,6 +1455,75 @@ class Profile extends React.Component {
 
                                     <Row>
                                       <Col lg={4}>
+                                        <FormGroup>
+                                          <Label htmlFor="companyCountryCode">Country Code</Label>
+                                          <Select
+                                            options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
+                                            value={isSame ? this.state.companyAddress.companyCountryCode : props.values.companyCountryCode}
+                                            onChange={option => {
+                                              if (option && option.value) {
+                                                props.handleChange('companyCountryCode')(option.value,'company')
+                                                props.handleChange('companyStateRegion')('')
+                                                this.getStateList(option.value,'company')
+                                              } else {
+                                                props.handleChange('companyCountryCode')('')
+                                                props.handleChange('companyStateRegion')('')
+                                              }
+                                            }}
+                                            placeholder="Select Country"
+                                            id="companyCountryCode"
+                                            name="companyCountryCode"
+                                            className={
+                                              props.errors.companyCountryCode && props.touched.companyCountryCode
+                                                ? "is-invalid"
+                                                : ""
+                                            }
+                                          />
+                                          {props.errors.companyCountryCode && props.touched.companyCountryCode && (
+                                            <div className="invalid-feedback">{props.errors.companyCountryCode}</div>
+                                          )}
+
+                                        </FormGroup>
+                                      </Col>
+                                      <Col lg={4}>
+                                        <FormGroup className="mb-3">
+                                          <Label htmlFor="product_code">State Region</Label>
+                                          {/* <Input
+                                            type="text"
+                                            id="companyStateRegion"
+                                            name="companyStateRegion"
+                                            placeholder="Enter State Region"
+                                            value={isSame ? this.state.companyAddress.companyStateRegion : props.values.companyStateRegion}
+
+                                            onChange={option => {
+                                              props.handleChange('companyStateRegion')(option)
+                                            }}
+                                          /> */}
+                                          <Select
+                                            options={selectOptionsFactory.renderOptions('label', 'value',isSame ? invoicing_state_list : company_state_list, 'State')}
+                                            value={isSame ? this.state.companyAddress.companyStateRegion : props.values.companyStateRegion}
+                                            onChange={option => {
+                                              if (option && option.value) {
+                                                props.handleChange('companyStateRegion')(option.value)
+                                              } else {
+                                                props.handleChange('companyStateRegion')('')
+                                              }
+                                            }}
+                                            placeholder="Select State"
+                                            id="companyStateRegion"
+                                            name="companyStateRegion"
+                                            className={
+                                              props.errors.companyStateRegion && props.touched.companyStateRegion
+                                                ? "is-invalid"
+                                                : ""
+                                            }
+                                          />
+                                          {props.errors.companyStateRegion && props.touched.companyStateRegion && (
+                                            <div className="invalid-feedback">{props.errors.companyStateRegion}</div>
+                                          )}
+                                        </FormGroup>
+                                      </Col>
+                                      <Col lg={4}>
                                         <FormGroup className="mb-3">
                                           <Label htmlFor="companyCity">City</Label>
                                           <Input
@@ -1386,50 +1539,7 @@ class Profile extends React.Component {
                                           />
                                         </FormGroup>
                                       </Col>
-                                      <Col lg={4}>
-                                        <FormGroup className="mb-3">
-                                          <Label htmlFor="product_code">State Region</Label>
-                                          <Input
-                                            type="text"
-                                            id="companyStateRegion"
-                                            name="companyStateRegion"
-                                            placeholder="Enter State Region"
-                                            value={isSame ? this.state.companyAddress.companyStateRegion : props.values.companyStateRegion}
 
-                                            onChange={option => {
-                                              props.handleChange('companyStateRegion')(option)
-                                            }}
-                                          />
-                                        </FormGroup>
-                                      </Col>
-                                      <Col lg={4}>
-                                        <FormGroup>
-                                          <Label htmlFor="companyCountryCode">Country Code</Label>
-                                          <Select
-                                            options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
-                                            value={isSame ? this.state.companyAddress.companyCountryCode : props.values.companyCountryCode}
-                                            onChange={option => {
-                                              if (option.value) {
-                                                props.handleChange('companyCountryCode')(option.value)
-                                              } else {
-                                                props.handleChange('companyCountryCode')('')
-                                              }
-                                            }}
-                                            placeholder="Select Currency"
-                                            id="companyCountryCode"
-                                            name="companyCountryCode"
-                                            className={
-                                              props.errors.companyCountryCode && props.touched.companyCountryCode
-                                                ? "is-invalid"
-                                                : ""
-                                            }
-                                          />
-                                          {props.errors.companyCountryCode && props.touched.companyCountryCode && (
-                                            <div className="invalid-feedback">{props.errors.companyCountryCode}</div>
-                                          )}
-
-                                        </FormGroup>
-                                      </Col>
                                     </Row>
                                     <Row>
                                       <Col lg={4}>
@@ -1441,9 +1551,8 @@ class Profile extends React.Component {
                                             name="companyPoBoxNumber"
                                             placeholder="Enter PO Box No"
                                             value={isSame ? this.state.companyAddress.companyPoBoxNumber : props.values.companyPoBoxNumber}
-
-                                            onChange={option => {
-                                              props.handleChange('companyPoBoxNumber')(option)
+                                            onChange={(option) => {
+                                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('companyRevenueBudget')(option)
                                             }}
                                           />
                                         </FormGroup>
@@ -1457,9 +1566,8 @@ class Profile extends React.Component {
                                             name="companyPostZipCode"
                                             placeholder="Enter Post Zip Code"
                                             value={isSame ? this.state.companyAddress.companyPostZipCode : props.values.companyPostZipCode}
-
-                                            onChange={option => {
-                                              props.handleChange('companyPostZipCode')(option)
+                                            onChange={(option) => {
+                                              if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('companyRevenueBudget')(option)
                                             }}
                                           />
                                         </FormGroup>

@@ -23,5 +23,5 @@ public interface EmployeeDao extends Dao<Integer, Employee> {
 
 	public PaginationResponseModel getEmployeeList(Map<EmployeeFilterEnum, Object> filterMap,PaginationModel paginationModel);
 
-	public void deleteByIds(ArrayList<Integer> ids);
+	public void deleteByIds(List<Integer> ids);
 }

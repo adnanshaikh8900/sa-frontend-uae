@@ -48,13 +48,11 @@ class DetailProductCategory extends React.Component {
       dialog: null,
       current_product_category_id: null
     }
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.deleteProductCategory = this.deleteProductCategory.bind(this)
-    this.removeProductCategory = this.removeProductCategory.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
+    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.detailProductCategoryAction.getProductCategoryById(this.props.location.state.id).then(res => {
         if (res.status === 200) {
@@ -78,7 +76,7 @@ class DetailProductCategory extends React.Component {
   }
 
   // Create or Edit Vat
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     const { id, productCategoryName, productCategoryCode } = data;
     const postData = {
       id: id,
@@ -95,7 +93,7 @@ class DetailProductCategory extends React.Component {
     })
   }
 
-  deleteProductCategory() {
+  deleteProductCategory = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -105,7 +103,7 @@ class DetailProductCategory extends React.Component {
     })
   }
 
-  removeProductCategory() {
+  removeProductCategory = () => {
     const {current_product_category_id} = this.state
     this.props.detailProductCategoryAction.deleteProductCategory(current_product_category_id).then(res => {
       if (res.status === 200) {
@@ -118,7 +116,7 @@ class DetailProductCategory extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
@@ -167,7 +165,7 @@ class DetailProductCategory extends React.Component {
                                     id="productCategoryCode"
                                     name="productCategoryCode"
                                     placeholder="Enter Product Category Code"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCategoryCode')(option) }}
                                     value={props.values.productCategoryCode}
                                     className={
                                       props.errors.productCategoryCode && props.touched.productCategoryCode
@@ -186,7 +184,7 @@ class DetailProductCategory extends React.Component {
                                     id="productCategoryName"
                                     name="productCategoryName"
                                     placeholder="Enter Product Category Name"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCategoryName')(option) }}
                                     value={props.values.productCategoryName}
                                     className={
                                       props.errors.productCategoryName && props.touched.productCategoryName

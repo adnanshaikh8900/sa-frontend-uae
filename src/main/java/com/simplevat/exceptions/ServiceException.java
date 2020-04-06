@@ -3,20 +3,17 @@ package com.simplevat.exceptions;
 import com.simplevat.service.exceptions.ServiceErrorCode;
 
 public class ServiceException extends BaseException {
+	private static final long serialVersionUID = 1L;
 
 	private String errorMsg;
 	private ServiceErrorCode errorCode;
 	public static final String SERVICE = "SERVICE";
-	public ServiceException(String errorMsg_, ServiceErrorCode errorCode_) {
-		super(errorMsg_);
-		this.errorMsg = errorMsg_;
-		this.errorCode = errorCode_;
-	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	public ServiceException(String errorMsg, ServiceErrorCode errorCode) {
+		super(errorMsg);
+		this.errorMsg = errorMsg;
+		this.errorCode = errorCode;
+	}
 
 	@Override
 	public String getSource() {

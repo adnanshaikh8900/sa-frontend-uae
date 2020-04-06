@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class TransactionParsingSettingDetailModel {
 
-	public Long id;
+	private Long id;
 	private String name;
 	private ExcellDelimiterEnum delimiter;
 	private Integer skipRows;
@@ -18,5 +18,5 @@ public class TransactionParsingSettingDetailModel {
 	private Integer textQualifier;
 	private Integer dateFormatId;
 	private Map<TransactionEnum, Integer> indexMap;
-	public String otherDilimiterStr;
+	private String otherDilimiterStr;
 }

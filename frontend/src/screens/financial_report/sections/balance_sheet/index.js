@@ -491,17 +491,14 @@ class BalanceSheet extends React.Component {
       selectedType: '',
       selectedCategory: ''
     }
-
-    this.changeType = this.changeType.bind(this)
-    this.changeCategory = this.changeCategory.bind(this)
   }
 
 
-  changeType(selectedType) {
+  changeType = (selectedType) => {
     this.setState({ selectedType })
   }
 
-  changeCategory(selectedCategory) {
+  changeCategory = (selectedCategory) => {
     this.setState({ selectedCategory })
   }
 
@@ -520,6 +517,7 @@ class BalanceSheet extends React.Component {
                     <Button
                       color="success"
                       className="btn-square"
+                      onClick={() => this.table.handleExportCSV()}
                     >
                       <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                       Export to CSV
@@ -538,6 +536,8 @@ class BalanceSheet extends React.Component {
             </Form>
           </div>
           <div className="table-wrapper">
+
+
             <Table responsive>
               <thead>
                 <tr>

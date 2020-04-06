@@ -138,40 +138,10 @@ class CreateSupplierInvoice extends React.Component {
     ]
 
     this.regEx = /^[0-9\b]+$/;
-
-    this.renderActions = this.renderActions.bind(this)
-    this.renderProductName = this.renderProductName.bind(this)
-    this.renderDescription = this.renderDescription.bind(this)
-    this.renderQuantity = this.renderQuantity.bind(this)
-    this.renderUnitPrice = this.renderUnitPrice.bind(this)
-    this.renderVat = this.renderVat.bind(this)
-    this.renderSubTotal = this.renderSubTotal.bind(this)
-    this.updateAmount = this.updateAmount.bind(this)
-    this.selectItem = this.selectItem.bind(this)
-    this.addRow = this.addRow.bind(this)
-    this.deleteRow = this.deleteRow.bind(this)
-
-    this.closeSupplierModal = this.closeSupplierModal.bind(this)
-    this.openSupplierModal = this.openSupplierModal.bind(this)
-    this.getCurrentUser = this.getCurrentUser.bind(this)
-    this.checkedRow = this.checkedRow.bind(this)
-    this.handleFileChange = this.handleFileChange.bind(this)
-
+    this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
-  // renderActions (cell, row) {
-  //   return (
-  //     <Button
-  //       size="sm"
-  //       color="primary"
-  //       className="btn-brand icon"
-  //     >
-  //       <i className="fas fa-trash"></i>
-  //     </Button>
-  //   )
-  // }
-
-  renderProductName(cell, row) {
+  renderProductName = (cell, row) => {
     return (
       <div className="d-flex align-items-center">
         <Input type="hidden" className="mr-1">
@@ -182,7 +152,7 @@ class CreateSupplierInvoice extends React.Component {
     )
   }
 
-  renderDescription(cell, row, props) {
+  renderDescription = (cell, row, props) => {
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -214,7 +184,7 @@ class CreateSupplierInvoice extends React.Component {
     )
   }
 
-  renderQuantity(cell, row, props) {
+  renderQuantity = (cell, row, props) => {
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -246,7 +216,7 @@ class CreateSupplierInvoice extends React.Component {
     )
   }
 
-  renderUnitPrice(cell, row, props) {
+  renderUnitPrice = (cell, row, props) => {
     let idx
     this.state.data.map((obj, index) => {
       if (obj.id === row.id) {
@@ -277,13 +247,13 @@ class CreateSupplierInvoice extends React.Component {
 
 
 
-  renderSubTotal(cell, row) {
+  renderSubTotal = (cell, row) => {
     return (
       <label className="mb-0">{row.subTotal.toFixed(2)}</label>
     )
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.getInitialData();
   }
 
@@ -297,7 +267,7 @@ class CreateSupplierInvoice extends React.Component {
 
   }
 
-  addRow() {
+  addRow = () => {
     const data = [...this.state.data]
     this.setState({
       data: data.concat({
@@ -315,7 +285,7 @@ class CreateSupplierInvoice extends React.Component {
     })
   }
 
-  selectItem(e, row, name, form, field, props) {
+  selectItem = (e, row, name, form, field, props) => {
     e.preventDefault();
     let data = this.state.data
     let idx
@@ -337,7 +307,7 @@ class CreateSupplierInvoice extends React.Component {
 
   }
 
-  renderVat(cell, row, props) {
+  renderVat = (cell, row, props) => {
     const { vat_list } = this.props;
     let vatList = vat_list.length ? [{ id: '', vat: 'Select Vat' }, ...vat_list] : vat_list
     let idx
@@ -376,7 +346,7 @@ class CreateSupplierInvoice extends React.Component {
   }
 
 
-  deleteRow(e, row, props) {
+  deleteRow = (e, row, props) => {
     const id = row['id'];
     let newData = []
     e.preventDefault();
@@ -386,7 +356,7 @@ class CreateSupplierInvoice extends React.Component {
     this.updateAmount(newData, props)
   }
 
-  renderActions(cell, rows, props) {
+  renderActions = (cell, rows, props) => {
     return (
       <Button
         size="sm"
@@ -399,7 +369,7 @@ class CreateSupplierInvoice extends React.Component {
     )
   }
 
-  checkedRow() {
+  checkedRow = () => {
     if (this.state.data.length > 0) {
       let length = this.state.data.length - 1
       let temp = Object.values(this.state.data[length]).indexOf('');
@@ -425,7 +395,7 @@ class CreateSupplierInvoice extends React.Component {
   }
 
 
-  updateAmount(data, props) {
+  updateAmount = (data, props) => {
     const { vat_list } = this.props;
     const { discountPercentage, discountAmount } = this.state
 
@@ -462,7 +432,7 @@ class CreateSupplierInvoice extends React.Component {
     })
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const {
       receiptAttachmentDescription,
       receiptNumber,
@@ -551,11 +521,11 @@ class CreateSupplierInvoice extends React.Component {
   }
 
 
-  openSupplierModal(e) {
+  openSupplierModal = (e) => {
     this.setState({ openSupplierModal: true })
   }
 
-  handleFileChange(e, props) {
+  handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -567,7 +537,7 @@ class CreateSupplierInvoice extends React.Component {
     }
   }
 
-  getCurrentUser(data) {
+  getCurrentUser = (data) => {
     let option
     if (data.label || data.value) {
       option = data
@@ -583,7 +553,7 @@ class CreateSupplierInvoice extends React.Component {
     this.formRef.current.setFieldValue('contactId', option.value, true)
   }
 
-  closeSupplierModal(res) {
+  closeSupplierModal = (res) => {
     if (res) {
       this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
       this.getInvoiceNo();
@@ -898,7 +868,10 @@ class CreateSupplierInvoice extends React.Component {
                                     id="contact_po_number"
                                     name="contact_po_number"
                                     placeholder="Contact PO Number"
-                                    onChange={(value) => { props.handleChange("contact_po_number")(value) }}
+                                    value={props.values.contact_po_number}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contact_po_number')(option)
+                                    }}
                                   />
                                 </FormGroup>
                               </Col>
@@ -916,9 +889,10 @@ class CreateSupplierInvoice extends React.Component {
                                         id="receiptNumber"
                                         name="receiptNumber"
                                         placeholder="Reciept Number"
-                                        onChange={option => props.handleChange('receiptNumber')(option)}
+                                        onChange={(option) => {
+																					if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option)
+																				}}
                                         value={props.values.receiptNumber}
-
                                       />
                                     </FormGroup>
                                   </Col>

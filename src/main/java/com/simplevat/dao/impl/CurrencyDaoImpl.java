@@ -32,8 +32,7 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 
 	@Override
 	public List<Currency> getCurrencies() {
-		List<Currency> languages = this.executeNamedQuery("allCurrencies");
-		return languages;
+		return this.executeNamedQuery("allCurrencies");
 	}
 
 	@Override
@@ -86,15 +85,12 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 	}
 
 	@Override
-	public String getCountryCodeAsString(String CountryCode) {
+	public String getCountryCodeAsString(String countryCode) {
 		Query query = getEntityManager()
 				.createQuery("select c.currencyIsoCode from Currency c where c.currencyIsoCode !=:currencyCode");
-		query.setParameter("currencyCode", CountryCode);
+		query.setParameter("currencyCode", countryCode);
 		List<String> currency = query.getResultList();
 		String name = StringUtils.join(currency, ',');
-		System.out.println("currency===" + name);
-// query.setParameter("currencyCode", currencyCode);
-
 		return name;
 	}
 
@@ -102,17 +98,12 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 		Query query = getEntityManager()
 				.createQuery("select c from Currency c where c.currencyIsoCode !=:currencyCode");
 		query.setParameter("currencyCode", currency.getCurrencyIsoCode());
-		List<Currency> currencyList = query.getResultList();
-
-// query.setParameter("currencyCode", currencyCode);
-		return currencyList;
+		return query.getResultList();
 	}
 
 	@Override
 	public List<String> getCountryCodeString() {
-		Query query = getEntityManager().createQuery("select c.currencyIsoCode from Currency c");
-		List<String> currency = query.getResultList();
-		return currency;
+		return getEntityManager().createQuery("select c.currencyIsoCode from Currency c").getResultList();
 	}
 
 	@Override

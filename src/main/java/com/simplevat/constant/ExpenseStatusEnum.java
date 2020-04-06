@@ -1,6 +1,6 @@
 package com.simplevat.constant;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,12 +10,8 @@ import lombok.Setter;
 
 public enum ExpenseStatusEnum {
 
-	SAVED("Saved", 1), 
-	PENDING("Pending", 2), 
-	POST("Post", 3), 
-	APPROVED("Approved", 4),
-	PARTIALLY_PAID("Partially Paid", 5), 
-	PAID("Paid", 6);
+	SAVED("Saved", 1), PENDING("Pending", 2), POST("Post", 3), APPROVED("Approved", 4),
+	PARTIALLY_PAID("Partially Paid", 5), PAID("Paid", 6);
 
 	@Getter
 	@Setter
@@ -36,11 +32,7 @@ public enum ExpenseStatusEnum {
 	}
 
 	public static List<ExpenseStatusEnum> getInvoiceStatusList() {
-		List<ExpenseStatusEnum> statusEnums = new ArrayList<ExpenseStatusEnum>();
-		for (ExpenseStatusEnum statusEnum : values()) {
-			statusEnums.add(statusEnum);
-		}
-		return statusEnums;
+		return Arrays.asList(values());
 	}
 
 	public static Map<Integer, ExpenseStatusEnum> map() {

@@ -81,28 +81,28 @@ class CreateProject extends React.Component {
         currency: '',
       },
     }
+    this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
+		this.formRef = React.createRef()
 
-    this.showContactModal = this.showContactModal.bind(this)
-    this.closeContactModal = this.closeContactModal.bind(this)
-
-    this.projectHandleSubmit = this.projectHandleSubmit.bind(this)
-    this.success = this.success.bind(this)
   }
 
 
   // Show Invite User Modal
-  showContactModal() {
+  showContactModal = () => {
     this.setState({ openContactModal: true })
   }
   // Cloase Confirm Modal
-  closeContactModal(res) {
+  closeContactModal = (res,data) => {
     if (res) {
       this.props.projectActions.getContactList();
+      this.formRef.current.setFieldValue('contactId', data.contactId, true)
     }
     this.setState({ openContactModal: false })
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.projectActions.getCurrencyList();
     this.props.projectActions.getContactList();
     this.props.projectActions.getCountryList();
@@ -110,18 +110,12 @@ class CreateProject extends React.Component {
 
   }
 
-  // Show Success Toast
-  success() {
-    // toast.success('Vat Code Updated successfully... ', {
-    //   position: toast.POSITION.TOP_RIGHT
-    // })
-  }
 
   // Create or Edit Project
-  projectHandleSubmit(data,resetForm) {
+  projectHandleSubmit = (data,resetForm) => {
     const {
       projectName,
-      invoiceLanguageCode,
+      // invoiceLanguageCode,
       contactId,
       contractPoNumber,
       vatRegistrationNumber,
@@ -132,7 +126,7 @@ class CreateProject extends React.Component {
 
     const postData = {
       projectName: projectName ? projectName : '',
-      invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
+      // invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
       contactId: contactId && contactId !== null ? contactId : '',
       contractPoNumber: contractPoNumber ? contractPoNumber : '',
       vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
@@ -179,6 +173,7 @@ class CreateProject extends React.Component {
                   <Row>
                     <Col lg={12}>
                       <Formik
+                      	ref={this.formRef}
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
                           this.projectHandleSubmit(values,resetForm)
@@ -211,7 +206,9 @@ class CreateProject extends React.Component {
                                     type="text"
                                     id="name"
                                     name="projectName"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('projectName')(option)
+                                    }}
                                     placeholder="Enter Project Name"
                                     value={props.values.projectName}
                                     className={
@@ -270,7 +267,9 @@ class CreateProject extends React.Component {
                                     type="text"
                                     id="contractPoNumber"
                                     name="contractPoNumber"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contractPoNumber')(option)
+                                    }}
                                     placeholder="Enter Contract PO Number"
                                     value={props.values.contractPoNumber}
                                     className={
@@ -291,7 +290,9 @@ class CreateProject extends React.Component {
                                     type="text"
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                                    }}
                                     placeholder="Enter VAT Registration Number"
                                     value={props.values.vatRegistrationNumber}
                                     className={
@@ -343,10 +344,12 @@ class CreateProject extends React.Component {
                                 <FormGroup className="">
                                   <Label htmlFor="expenseBudget">Expense Budget</Label>
                                   <Input
-                                    type="number"
+                                    type="text"
                                     id="expenseBudget"
                                     name="expenseBudget"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('expenseBudget')(option)
+                                    }}
                                     placeholder="Enter Expense Budgets"
                                     value={props.values.expenseBudget}
                                     className={
@@ -364,10 +367,12 @@ class CreateProject extends React.Component {
                                 <FormGroup className="">
                                   <Label htmlFor="revenueBudget">Revenue Budget</Label>
                                   <Input
-                                    type="number"
+                                    type="text"
                                     id="revenueBudget"
                                     name="revenueBudget"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('revenueBudget')(option)
+                                    }}
                                     placeholder="Enter VAT Revenue Budget"
                                     value={props.values.revenueBudget}
                                     className={
@@ -448,11 +453,12 @@ class CreateProject extends React.Component {
 
         <ContactModal
           openContactModal={this.state.openContactModal}
-          closeContactModal={(val) => { this.closeContactModal(val) }}
-          currencyList={currency_list}
-          countryList={country_list}
+          closeContactModal={(val,data) => { this.closeContactModal(val,data) }}
           createContact={this.props.projectActions.createProjectContact}
           titleList={title_list}
+          currencyList={currency_list}
+					countryList={country_list}
+					getStateList={this.props.projectActions.getStateList}
         />
 
       </div>

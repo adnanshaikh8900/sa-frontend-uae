@@ -69,16 +69,9 @@ class DetailBankAccount extends React.Component {
       { label: 'Personal', value: 'P' },
       { label: 'Corporate', value: 'C' }
     ]
-    this.initializeData = this.initializeData.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.closeBankAccount = this.closeBankAccount.bind(this)
-    this.removeBankAccount = this.removeBankAccount.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.initializeData()
       this.setState({
@@ -110,13 +103,13 @@ class DetailBankAccount extends React.Component {
     }
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.detailBankAccountActions.getAccountTypeList()
     this.props.detailBankAccountActions.getCurrencyList()
     this.props.detailBankAccountActions.getCountryList()
   }
 
-  handleChange(e, name) {
+  handleChange = (e, name) => {
     this.setState({
       currentData: _.set(
         { ...this.state.currentData },
@@ -126,7 +119,7 @@ class DetailBankAccount extends React.Component {
     })
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     let obj = {
       bankAccountId: this.state.current_bank_account_id,
       bankAccountName: data.account_name,
@@ -150,7 +143,7 @@ class DetailBankAccount extends React.Component {
     })
   }
 
-  closeBankAccount() {
+  closeBankAccount = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -160,7 +153,7 @@ class DetailBankAccount extends React.Component {
     })
   }
 
-  removeBankAccount() {
+  removeBankAccount = () => {
     let {
       current_bank_account_id
     } = this.state
@@ -173,7 +166,7 @@ class DetailBankAccount extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
@@ -233,6 +226,8 @@ class DetailBankAccount extends React.Component {
                           account_number: Yup.string()
                             .required('Account Number is Required'),
                           account_is_for: Yup.string().required('Account is for is Required'),
+                          ifsc_code: Yup.string()
+                          .required('IFSC Code is Required'),
                           swift_code: Yup.string().matches(/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/, {message: "Please enter valid Swift Code.", excludeEmptyString: false})
                         })}
                       >
@@ -391,7 +386,7 @@ class DetailBankAccount extends React.Component {
                               <Row>
                                 <Col lg={4}>
                                   <FormGroup className="mb-3">
-                                    <Label htmlFor="ifsc_code">IFSC Code</Label>
+                                    <Label htmlFor="ifsc_code"><span className="text-danger">*</span>IFSC Code</Label>
                                     <Input
                                       type="text"
                                       id="ifsc_code"
@@ -400,12 +395,15 @@ class DetailBankAccount extends React.Component {
                                       value={props.values.ifsc_code}
                                       onChange={(option) => { 
                                         if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('ifsc_code')(option) }}
-                                      className={
+                                         className={
                                         props.errors.ifsc_code && props.touched.ifsc_code
                                           ? 'is-invalid'
                                           : ''
                                       }
                                     />
+                                      {props.errors.ifsc_code && props.touched.ifsc_code && (
+                                      <div className="invalid-feedback">{props.errors.ifsc_code}</div>
+                                    )}
                                   </FormGroup>
                                 </Col>
                                 <Col lg={4}>
@@ -487,7 +485,7 @@ class DetailBankAccount extends React.Component {
                                     <Button type="button" name="button" color="danger" className="btn-square"
                                       onClick={this.closeBankAccount}
                                     >
-                                      <i className="fa fa-trash"></i> Close
+                                      <i className="fa fa-trash"></i> Delete
                                     </Button>
                                   </FormGroup>
                                   <FormGroup className="text-right">

@@ -51,10 +51,6 @@ class ViewInvoice extends React.Component {
     }
 
     this.formRef = React.createRef()
-    this.initializeData = this.initializeData.bind(this)
-
-
-
     this.termList = [
       { label: "Net 7", value: "NET_7" },
       { label: "Net 10", value: "NET_10" },
@@ -65,11 +61,11 @@ class ViewInvoice extends React.Component {
 
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.supplierInvoiceDetailActions.getInvoiceById(this.props.location.state.id).then(res => {
         let val = 0;

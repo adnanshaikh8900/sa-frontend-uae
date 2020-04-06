@@ -27,13 +27,13 @@ public enum ModuleName {
     VATCATEGORY_MODULE("VATCATEGORY_MODULE"),
     TRANSACTIONCATEGORY_MODULE("TRANSACTIONCATEGORY_MODULE");
 
-    String moduleName;
+    String name;
 
-    ModuleName(String moduleName) {
-        this.moduleName = moduleName;
+    ModuleName(String name) {
+        this.name = name;
     }
 
     public String getName() {
-        return moduleName;
+        return name;
     }
 }

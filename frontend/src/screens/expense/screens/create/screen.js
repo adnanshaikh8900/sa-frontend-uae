@@ -65,6 +65,7 @@ class CreateExpense extends React.Component {
         expenseDescription: "",
         receiptNumber: "",
         attachmentFile: '',
+        employee: '',
         receiptAttachmentDescription: "",
         vatCategoryId: '',
         payMode: '',
@@ -75,14 +76,13 @@ class CreateExpense extends React.Component {
       payMode: '',
     };
 
-    this.initializeData = this.initializeData.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleFileChange = this.handleFileChange.bind(this);
-
     this.options = {
       paginationPosition: "top"
     };
     this.regEx = /^[0-9\b]+$/;
+    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+
     this.file_size = 1024000;
     this.supported_format = [
       "",
@@ -99,11 +99,11 @@ class CreateExpense extends React.Component {
     ]
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.expenseActions.getVatList();
     this.props.expenseActions.getExpenseCategoriesList();
     this.props.expenseActions.getCurrencyList();
@@ -113,7 +113,7 @@ class CreateExpense extends React.Component {
     this.props.expenseActions.getPaymentMode();
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const {
       payee,
       expenseDate,
@@ -187,17 +187,7 @@ class CreateExpense extends React.Component {
       });
   }
 
-  // handleChange(e, name) {
-  //   this.setState({
-  //     currentData: _.set(
-  //       { ...this.state.currentData },
-  //       e.target.name && e.target.name !== '' ? e.target.name : name,
-  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //     )
-  //   })
-  // }
-
-  handleFileChange(e, props) {
+  handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -354,11 +344,9 @@ class CreateExpense extends React.Component {
                                     type="text"
                                     name="payee"
                                     id="payee"
-                                    rows="5"
-                                    placeholder="Payee"
-                                    onChange={value => {
-                                      props.handleChange("payee")(value);
-                                    }}
+                                    placeholder="Enter Payee"
+                                    value={props.values.payee}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('payee')(option) }}
                                     className={
                                       props.errors.payee && props.touched.payee
                                         ? "is-invalid"
@@ -645,11 +633,7 @@ class CreateExpense extends React.Component {
                                         id="receiptNumber"
                                         name="receiptNumber"
                                         placeholder="Enter Reciept Number"
-                                        onChange={option =>
-                                          props.handleChange("receiptNumber")(
-                                            option
-                                          )
-                                        }
+                                        onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option) }}
                                         value={props.values.receiptNumber}
                                       />
                                     </FormGroup>

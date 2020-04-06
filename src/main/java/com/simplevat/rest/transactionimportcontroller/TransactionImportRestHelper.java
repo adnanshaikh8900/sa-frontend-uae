@@ -21,12 +21,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -43,6 +43,7 @@ import com.simplevat.service.bankaccount.TransactionService;
 
 @Component
 public class TransactionImportRestHelper {
+	private final Logger LOGGER = LoggerFactory.getLogger(TransactionImportRestHelper.class);
 
 	private String transactionDate = "Transaction Date";
 
@@ -98,7 +99,7 @@ public class TransactionImportRestHelper {
 			CSVParser parser = new CSVParser(br, CSVFormat.EXCEL);
 			listParser = parser.getRecords();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		populateTranscationOnFileUpload(listParser);
 	}
@@ -259,7 +260,7 @@ public class TransactionImportRestHelper {
 
 			}
 		} catch (Exception ex) {
-			Logger.getLogger(TransactionImportController.class.getName()).log(Level.SEVERE, null, ex);
+			LOGGER.error("Error", ex);
 		}
 	}
 
@@ -303,7 +304,7 @@ public class TransactionImportRestHelper {
 					case CR_AMOUNT:
 					case DR_AMOUNT:
 					case AMOUNT:
-					
+
 						MathContext mc = new MathContext(4); // 2 precision
 
 						// need to create enum
@@ -321,8 +322,8 @@ public class TransactionImportRestHelper {
 							if (dbColEnum.equals(TransactionEnum.DR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
 								if (!data.equals("-")) {
-									BigDecimal debitAmt = new BigDecimal(Float.valueOf(data));
-									if (debitAmt.compareTo(BigDecimal.valueOf(0)) == 1) {
+									BigDecimal debitAmt = BigDecimal.valueOf((Float.valueOf(data)));
+									if (debitAmt.compareTo(BigDecimal.ZERO) == 1) {
 										trnx.setTransactionAmount(debitAmt);
 										currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
 										trnx.setDebitCreditFlag('D');
@@ -332,8 +333,8 @@ public class TransactionImportRestHelper {
 							if (dbColEnum.equals(TransactionEnum.CR_AMOUNT)) {
 								data = (String) dataMap.get(TransactionEnum.CR_AMOUNT.getDisplayName());
 								if (!data.equals("-")) {
-									BigDecimal creditAmt = new BigDecimal(Float.valueOf(data));
-									if (creditAmt.compareTo(BigDecimal.valueOf(0)) == 1) {
+									BigDecimal creditAmt = BigDecimal.valueOf(Float.valueOf(data));
+									if (creditAmt.compareTo(BigDecimal.ZERO) == 1) {
 										trnx.setTransactionAmount(creditAmt);
 										currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
 										trnx.setDebitCreditFlag('C');
@@ -358,7 +359,7 @@ public class TransactionImportRestHelper {
 									.atZone(ZoneId.systemDefault()).toLocalDateTime();
 							trnx.setTransactionDate(transactionDate);
 						} catch (ParseException e) {
-							e.printStackTrace();
+							LOGGER.error("Error", e);
 						}
 						break;
 					}

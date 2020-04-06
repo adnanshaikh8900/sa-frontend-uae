@@ -10,7 +10,6 @@ import {
   Col,
   Form,
   FormGroup,
-  FormText,
   Input,
   Label
 } from 'reactstrap'
@@ -60,20 +59,14 @@ class DetailUser extends React.Component {
       imageState: true,
       current_user_id: null
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.deleteUser = this.deleteUser.bind(this)
-    this.removeUser = this.removeUser.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.uploadImage = this.uploadImage.bind(this);
+    this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     // this.setState({
     //   loading: false,
     //   userPhoto: this.state.userPhoto.concat(`https://i.picsum.photos/id/1/5616/3744.jpg`),
@@ -109,7 +102,7 @@ class DetailUser extends React.Component {
     }
   }
 
-  uploadImage(picture, file) {
+  uploadImage = (picture, file) => {
     if (this.state.userPhoto[0] && this.state.userPhoto[0].indexOf('data') < 0) {
       this.setState({ imageState: true })
     } else {
@@ -121,7 +114,7 @@ class DetailUser extends React.Component {
     });
   }
 
-  deleteUser() {
+  deleteUser = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -131,7 +124,7 @@ class DetailUser extends React.Component {
     })
   }
 
-  removeUser() {
+  removeUser = () => {
     const { current_user_id } = this.state;
     this.props.userDetailActions.deleteUser(current_user_id).then(res => {
       if (res.status === 200) {
@@ -144,13 +137,13 @@ class DetailUser extends React.Component {
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     const {
       firstName,
       lastName,
@@ -235,6 +228,9 @@ class DetailUser extends React.Component {
                                 .required("First Name is Required"),
                               lastName: Yup.string()
                                 .required("Last Name is Required"),
+                              email: Yup.string()
+                                .required("Email is Required")
+                                .email("Invalid Email"),
                               password: Yup.string()
                                 // .required("Password is Required")
                                 // .min(8, "Password Too Short")
@@ -269,7 +265,7 @@ class DetailUser extends React.Component {
                                         // withIcon={true}
                                         buttonText='Choose images'
                                         onChange={this.uploadImage}
-                                        imgExtension={['.jpg', '.gif', '.png', '.gif','.jpeg']}
+                                        imgExtension={['.jpg', '.gif', '.png', '.gif', '.jpeg']}
                                         maxFileSize={1048576}
                                         withPreview={true}
                                         singleImage={true}
@@ -293,7 +289,9 @@ class DetailUser extends React.Component {
                                             type="text"
                                             id="firstName"
                                             name="firstName"
-                                            onChange={(value) => { props.handleChange('firstName')(value) }}
+                                            onChange={(option) => {
+                                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                                            }}
                                             value={props.values.firstName}
                                             className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                           />
@@ -309,7 +307,9 @@ class DetailUser extends React.Component {
                                             type="text"
                                             id="lastName"
                                             name="lastName"
-                                            onChange={(value) => { props.handleChange('lastName')(value) }}
+                                            onChange={(option) => {
+                                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                                            }}
                                             value={props.values.lastName}
                                             className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                           />
@@ -329,11 +329,14 @@ class DetailUser extends React.Component {
                                             name="email"
                                             placeholder="Enter Email ID"
                                             value={props.values.email}
-
                                             onChange={(value) => {
                                               props.handleChange("email")(value)
                                             }}
+                                            className={props.errors.email && props.touched.email ? "is-invalid" : ""}
                                           />
+                                          {props.errors.email && props.touched.email && (
+                                            <div className="invalid-feedback">{props.errors.email}</div>
+                                          )}
                                         </FormGroup>
                                       </Col>
                                       <Col lg={6}>
@@ -347,7 +350,9 @@ class DetailUser extends React.Component {
                                             showYearDropdown
                                             dateFormat="dd/MM/yyyy"
                                             dropdownMode="select"
-                                            placeholderText="Enter Birth Date"
+                                            maxDate={new Date()}
+                                            autoComplete="off"
+                                            placeholderText="Enter Date of Birth"
                                             // selected={props.values.dob}
                                             value={props.values.dob ? moment(props.values.dob).format('DD-MM-YYYY') : ''}
 
@@ -469,16 +474,14 @@ class DetailUser extends React.Component {
                                             type="password"
                                             id="password"
                                             name="password"
+                                             placeholder="Enter the Password"
+                                             autoComplete="new-password"
                                             onChange={(value) => { props.handleChange('password')(value) }}
                                             className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                           />
-                                          {!props.errors.password ?
-                                            (
-                                              <FormText style={{ color: '#20a8d8', fontSize: '14px' }}>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
-                                            ) : null}
-                                          {props.errors.password && props.touched.password && (
+                                          {props.errors.password && props.touched.password ? (
                                             <div className="invalid-feedback">{props.errors.password}</div>
-                                          )}
+                                          ) : (<span className="password-msg">Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character.</span>)}
                                         </FormGroup>
                                       </Col>
                                       <Col lg={6}>
@@ -488,6 +491,7 @@ class DetailUser extends React.Component {
                                             type="password"
                                             id="confirmPassword"
                                             name="confirmPassword"
+                                             placeholder="Enter the Confirm Password"
                                             onChange={(value) => { props.handleChange('confirmPassword')(value) }}
                                             className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
                                           />

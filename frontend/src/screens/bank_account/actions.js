@@ -46,14 +46,18 @@ export const getCurrencyList = () => {
 }
 
 export const getBankAccountList = (obj) => {
-  const { bankName,
-    bankAccountTypeId,
-    bankAccountName,
-    accountNumber,
-    currencyCode,
-    pageNo,
-    pageSize } = obj
-  let param = `/rest/bank/list?bankName=${bankName}&bankAccountTypeId=${bankAccountTypeId}&bankAccountName=${bankAccountName}&accountNumber=${accountNumber}&currencyCode=${currencyCode}&pageNo=${pageNo}&pageSize=${pageSize}`
+  let bankName = obj.bankName ? obj.bankName : '';
+  let bankAccountTypeId = obj.bankAccountTypeId ? obj.bankAccountTypeId : '';  
+  let bankAccountName = obj.bankAccountName ? obj.bankAccountName : '';
+  let accountNumber = obj.accountNumber ? obj.accountNumber : '';  
+  let currencyCode = obj.currencyCode ? obj.currencyCode : '';  
+  let pageNo = obj.pageNo ? obj.pageNo : '';  
+  let pageSize = obj.pageSize ? obj.pageSize : '';  
+  let order = obj.order ? obj.order : '';  
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false;
+  
+  let param = `/rest/bank/list?bankName=${bankName}&bankAccountTypeId=${bankAccountTypeId}&bankAccountName=${bankAccountName}&accountNumber=${accountNumber}&currencyCode=${currencyCode}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
 
   return (dispatch) => {
     let data = {
@@ -62,12 +66,14 @@ export const getBankAccountList = (obj) => {
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
-        dispatch({
-          type: BANK_ACCOUNT.BANK_ACCOUNT_LIST,
-          payload: {
-            data: Object.assign([], res.data)
-          }
-        })
+        if(!obj.paginationDisable) {
+          dispatch({
+            type: BANK_ACCOUNT.BANK_ACCOUNT_LIST,
+            payload: {
+              data: Object.assign([], res.data)
+            }
+          })
+        }
       }
       return res
     }).catch(err => {

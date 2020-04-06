@@ -13,10 +13,6 @@ public enum StateFilterEnum {
 	@Getter
 	String condition;
 
-	private StateFilterEnum(String dbColumnName) {
-		this.dbColumnName = dbColumnName;
-	}
-
 	private StateFilterEnum(String dbColumnName, String condition) {
 		this.dbColumnName = dbColumnName;
 		this.condition = condition;

@@ -6,7 +6,16 @@ import moment from 'moment'
 
 export const getUserList = (obj) => {
   // const value = (obj.active)  ? obj.active : true
-  let url = `/rest/user/getList?name=${obj.name}&roleId=${obj.roleId}&active=${obj.active}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+  let name = obj.name ? obj.name : '';
+  let roleId = obj.roleId ? obj.roleId : '';
+  let active = obj.active ? obj.active : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+
+  let url = `/rest/user/getList?name=${name}&roleId=${roleId}&active=${active}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
   if(obj.dob) {
     let date = moment(obj.dob).format('DD-MM-YYYY')
     url = url +`&dob=${date}`
@@ -17,12 +26,13 @@ export const getUserList = (obj) => {
       url: url
     }
 
-    return authApi(data).then(res => {
-
-      dispatch({
-        type: USER.USER_LIST,
-        payload: res.data
-      })
+    return authApi(data).then(res => {  
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: USER.USER_LIST,
+          payload: res.data
+        })
+      }
       return res
     }).catch(err => {
       throw err

@@ -5,16 +5,21 @@ import {
 import moment from 'moment'
 
 export const getCustomerInvoiceList = (postObj) => {
-  let customerName = postObj ? postObj.customerId : ''
-  let referenceNumber =  postObj ? postObj.referenceNumber : ''
-  let invoiceDate =  postObj.invoiceDate
-  let invoiceDueDate =  postObj.invoiceDueDate
-  let amount =  postObj ? postObj.amount : ''
-  let status =  postObj ? postObj.status : ''
-  let contactType = postObj ? postObj.contactType : ''
-  const { pageNo, pageSize} = postObj
+  let customerName = postObj.customerId ? postObj.customerId : ''
+  let referenceNumber =  postObj.referenceNumber ? postObj.referenceNumber : ''
+  let invoiceDate = postObj.invoiceDate ?  postObj.invoiceDate : ''
+  let invoiceDueDate = postObj.invoiceDueDate ?   postObj.invoiceDueDate : ''
+  let amount =  postObj.amount ? postObj.amount : ''
+  let status =  postObj.status ? postObj.status : ''
+  let contactType = 2;//postObj.contactType ? postObj.contactType : ''  
+  let pageNo = postObj.pageNo ? postObj.pageNo : '';
+  let pageSize = postObj.pageSize ? postObj.pageSize : '';
+  let order = postObj.order ? postObj.order : '';
+  let sortingCol = postObj.sortingCol ? postObj.sortingCol : '';
+  let paginationDisable = postObj.paginationDisable ? postObj.paginationDisable : false
+
   return (dispatch) => {
-    let param = `rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}`
+    let param = `rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     if(invoiceDate) {
       let date = moment(invoiceDate).format('DD-MM-YYYY')
       param = param +`&invoiceDate=${date}`
@@ -30,12 +35,14 @@ export const getCustomerInvoiceList = (postObj) => {
     }
     return authApi(data).then(res => {
       if (res.status === 200) {
-        dispatch({
-          type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
-          payload: {
-            data: res.data
-          }
-        })
+        if(!postObj.paginationDisable) {
+          dispatch({
+            type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
+            payload: {
+              data: res.data
+            }
+          })
+        }
         return res
       }
     }).catch(err => {
@@ -281,6 +288,22 @@ export const getStateList = (countryCode) => {
         //   type: CONTACT.STATE_LIST,
         //   payload: res.data
         // })
+        return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}
+
+export const sendMail = (id) => {
+  return (dispatch) => {
+    let data = {
+      method: 'post',
+      url: `/rest/invoice/send?id=${id}`,
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
         return res
       }
     }).catch(err => {

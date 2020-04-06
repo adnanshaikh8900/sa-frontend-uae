@@ -112,21 +112,18 @@ class VatTransactions extends React.Component {
       selectedVat: '',
       selectedStatus: ''
     }
-
-    this.changeVat = this.changeVat.bind(this)
-    this.changeStatus = this.changeStatus.bind(this)
   }
 
 
-  changeVat(selectedVat) {
+  changeVat = (selectedVat) => {
     this.setState({ selectedVat })
   }
 
-  changeStatus(selectedStatus) {
+  changeStatus = (selectedStatus) => {
     this.setState({ selectedStatus })
   }
 
-  getAction(cell, row) {
+  getAction = (cell, row) => {
     return(<button className="btn">Detail</button>)
   }
 
@@ -153,6 +150,7 @@ class VatTransactions extends React.Component {
                         <Button
                           color="success"
                           className="btn-square"
+                          onClick={() => this.table.handleExportCSV()}
                         >
                           <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                           Export to CSV
@@ -202,13 +200,23 @@ class VatTransactions extends React.Component {
                         onChange={this.changeType}
                       />
                   </Col>
+                  <Col lg={1} className="mb-1">
+                    <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                      <i className="fa fa-search"></i>
+                    </Button>
+                  </Col>
                 </Row>
               </div>
               <div className="table-wrapper">
                 <BootstrapTable 
                     data={tempdata} 
                     hover
-                    pagination
+                    pagination={tempdata && tempdata.length > 0 ? true : false}
+                    fetchInfo={{ dataTotalSize: tempdata.count ? tempdata.count : 0 }}
+                    csvFileName="tempdata.csv"
+                    ref={node => {
+                      this.table = node
+                    }}
                   >
                     <TableHeaderColumn isKey dataField="transactionDate" >
                       Party Name

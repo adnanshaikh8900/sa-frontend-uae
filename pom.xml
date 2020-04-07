@@ -6,7 +6,7 @@
 
 	<groupId>com.simplevat</groupId>
 	<artifactId>simplevat-service</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>simplevat-service</name>

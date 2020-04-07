@@ -71,6 +71,7 @@ public class TransactionView implements Serializable {
     private Date dueOn;
 
     public TransactionView() {
+    	//default constrctor
     }
 
 }

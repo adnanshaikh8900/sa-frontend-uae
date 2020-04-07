@@ -39,7 +39,7 @@ public class ReconsilationRestHelper {
 			}
 			break;
 
-		case Supplier_Invoice:
+		case SUPPLIER_INVOICE:
 
 			attribute.put("type", 1);
 			List<Invoice> invoices = invoiceService.findByAttributes(attribute);

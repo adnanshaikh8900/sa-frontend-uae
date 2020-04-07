@@ -90,7 +90,7 @@ public class ReconsilationController {
 				journal = expenseReconsile(reconsileRequestModel, userId);
 				break;
 
-			case Supplier_Invoice:
+			case SUPPLIER_INVOICE:
 				journal = invoiceReconsile(reconsileRequestModel, userId);
 				break;
 

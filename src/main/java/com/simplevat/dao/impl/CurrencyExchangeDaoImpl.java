@@ -1,16 +1,12 @@
 package com.simplevat.dao.impl;
 
-import org.springframework.stereotype.Repository;
-
-import com.simplevat.dao.AbstractDao;
-import com.simplevat.dao.CurrencyExchangeDao;
-import com.simplevat.entity.Currency;
-import com.simplevat.entity.CurrencyConversion;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -20,6 +16,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+
+import com.simplevat.dao.AbstractDao;
+import com.simplevat.dao.CurrencyExchangeDao;
+import com.simplevat.entity.Currency;
+import com.simplevat.entity.CurrencyConversion;
 
 @Repository
 public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConversion> implements CurrencyExchangeDao {
@@ -39,8 +41,9 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 
 			String currencyIsoName = StringUtils.join(listOfCounteries, ',');
 			System.out.println("currencyIsoName=" + currencyIsoName);
-			String url = "http://data.fixer.io/api/latest?access_key=" + URLEncoder.encode(ACCESSKEY, "UTF-8")
-					+ "&base=" + URLEncoder.encode(baseCurrency.getCurrencyIsoCode(), "UTF-8") + "&symbols="
+			String url = "http://data.fixer.io/api/latest?access_key="
+					+ URLEncoder.encode(ACCESSKEY, StandardCharsets.UTF_8.toString()) + "&base="
+					+ URLEncoder.encode(baseCurrency.getCurrencyIsoCode(), "UTF-8") + "&symbols="
 					+ URLEncoder.encode(currencyIsoName, "UTF8");
 			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 			HttpGet httpGet = new HttpGet(url);

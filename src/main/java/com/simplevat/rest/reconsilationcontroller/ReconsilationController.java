@@ -2,12 +2,12 @@ package com.simplevat.rest.reconsilationcontroller;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.simplevat.constant.ExpenseStatusEnum;
-import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.ReconsileCategoriesEnumConstant;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
@@ -29,8 +27,6 @@ import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.rest.DropdownModel;
-import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.rest.ReconsileRequestModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
@@ -42,6 +38,8 @@ import com.simplevat.service.bankaccount.TransactionService;
 @RestController
 @RequestMapping("/rest/reconsile")
 public class ReconsilationController {
+
+	private final Logger LOGGER = LoggerFactory.getLogger(ReconsilationController.class);
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -71,7 +69,7 @@ public class ReconsilationController {
 					reconsilationRestHelper.getList(ReconsileCategoriesEnumConstant.get(reconcilationCatCode)),
 					HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -85,14 +83,14 @@ public class ReconsilationController {
 
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			ReconsileCategoriesEnumConstant cat = ReconsileCategoriesEnumConstant
-					.get(Integer.valueOf(reconsileRequestModel.getReconcileCategoryCode()));
+					.get(reconsileRequestModel.getReconcileCategoryCode());
 
 			switch (cat) {
 			case EXPENSE:
 				journal = expenseReconsile(reconsileRequestModel, userId);
 				break;
 
-			case Supplier_Invoice:
+			case SUPPLIER_INVOICE:
 				journal = invoiceReconsile(reconsileRequestModel, userId);
 				break;
 
@@ -109,7 +107,7 @@ public class ReconsilationController {
 
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

@@ -323,7 +323,7 @@ public class TransactionImportRestHelper {
 								data = (String) dataMap.get(TransactionEnum.DR_AMOUNT.getDisplayName());
 								if (!data.equals("-")) {
 									BigDecimal debitAmt = BigDecimal.valueOf((Float.valueOf(data)));
-									if (debitAmt.compareTo(BigDecimal.ZERO) == 1) {
+									if (debitAmt.compareTo(BigDecimal.ZERO) > 0) {
 										trnx.setTransactionAmount(debitAmt);
 										currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
 										trnx.setDebitCreditFlag('D');
@@ -334,7 +334,7 @@ public class TransactionImportRestHelper {
 								data = (String) dataMap.get(TransactionEnum.CR_AMOUNT.getDisplayName());
 								if (!data.equals("-")) {
 									BigDecimal creditAmt = BigDecimal.valueOf(Float.valueOf(data));
-									if (creditAmt.compareTo(BigDecimal.ZERO) == 1) {
+									if (creditAmt.compareTo(BigDecimal.ZERO) > 0) {
 										trnx.setTransactionAmount(creditAmt);
 										currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
 										trnx.setDebitCreditFlag('C');

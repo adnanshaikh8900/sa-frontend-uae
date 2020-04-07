@@ -188,13 +188,13 @@ public class CsvParser implements TransactionFileParser {
 
 			return responseMap;
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Error = ", e);
 		} finally {
 			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					LOGGER.error("Error = ", e);
 				}
 			}
 		}

@@ -5,15 +5,6 @@
  */
 package com.simplevat.rest.currencycontroller;
 
-import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.entity.Currency;
-
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.UserService;
-
-import io.swagger.annotations.ApiOperation;
-
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +23,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.simplevat.entity.Currency;
+import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.CurrencyService;
+import com.simplevat.service.UserService;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  *
@@ -92,7 +90,7 @@ public class CurrencyController {
 			currency.setCreatedBy(userId);
 			currency.setCreatedDate(new Date());
 			currencyService.persist(currency);
-			return new ResponseEntity<>(currency, HttpStatus.CREATED);
+			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (Exception e) {
 			LOGGER.error("ERROR = ", e);
 		}
@@ -117,7 +115,7 @@ public class CurrencyController {
 				currencyService.update(currency);
 				return new ResponseEntity<>(currency, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			LOGGER.error("ERROR = ", e);

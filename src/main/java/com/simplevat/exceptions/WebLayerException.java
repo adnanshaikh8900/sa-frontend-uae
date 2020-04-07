@@ -6,7 +6,7 @@ public class WebLayerException extends BaseException {
 
 	private static final long serialVersionUID = 1L;
 
-	private String errorMsg;
+	//private String errorMsg;
 	private WebLayerErrorCodeEnum errorCode;
 	public static final String WEB = "WEB";
 

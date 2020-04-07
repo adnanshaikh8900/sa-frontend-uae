@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.simplevat.model.OverDueAmountDetailsModel;
+import com.simplevat.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.simplevat.dao.Dao;
@@ -30,6 +32,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 
 	@Autowired
 	ChartUtil util;
+
+	@Autowired
+	DateUtils dateUtils;
 
 	@Override
 	protected Dao<Integer, Invoice> getDao() {
@@ -71,5 +76,14 @@ public class InvoiceServiceImpl extends InvoiceService {
 		return supplierInvoiceDao.getInvoiceList(util.getStartDate(Calendar.MONTH, -mounthCount).getTime(),
 				util.getEndDate().getTime());
 
+	}
+//created by zain/Muzammil for getting overdueamount
+	//created on:28/03/2020
+
+	@Override
+	public OverDueAmountDetailsModel getOverDueAmountDetails(Integer type) {
+
+		OverDueAmountDetailsModel overDueAmountDetails = supplierInvoiceDao.getOverDueAmountDetails(type);
+		return overDueAmountDetails;
 	}
 }

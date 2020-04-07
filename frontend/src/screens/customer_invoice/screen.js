@@ -78,7 +78,12 @@ class CustomerInvoice extends React.Component {
       selectedId: '',
       openInvoicePreviewModal: false,
       csvData: [],
-      view: false
+      view: false,
+      overDueAmountDetails: {
+        overDueAmount: '',
+        overDueAmountWeekly: '',
+        overDueAmountMonthly: '',
+      }
     }
 
     this.options = {
@@ -130,6 +135,11 @@ class CustomerInvoice extends React.Component {
           }
         });
       }
+      this.props.customerInvoiceActions.getOverdueAmountDetails(2).then(res => {
+        if (res.status === 200) {
+          this.setState({overDueAmountDetails: res.data});
+        }
+      });
     }).catch(err => {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
       this.setState({ loading: false })
@@ -490,15 +500,15 @@ class CustomerInvoice extends React.Component {
                     <Row>
                       <Col lg={3}>
                         <h5>Overdue</h5>
-                        <h3 className="status-title">$53.25 USD</h3>
+                        <h3 className="status-title"><td>{this.state.overDueAmountDetails.overDueAmount}</td></h3>
                       </Col>
                       <Col lg={3}>
                         <h5>Due Within This Week</h5>
-                        <h3 className="status-title">$220.28 USD</h3>
+                        <h3 className="status-title"><td>{this.state.overDueAmountDetails.overDueAmountWeekly}</td></h3>
                       </Col>
                       <Col lg={3}>
                         <h5>Due Within 30 Days</h5>
-                        <h3 className="status-title">$220.28 USD</h3>
+                        <h3 className="status-title"><td>{this.state.overDueAmountDetails.overDueAmountMonthly}</td></h3>
                       </Col>
                       <Col lg={3}>
                         <h5>Average Time to Get Paid</h5>

@@ -23,10 +23,10 @@ export const getJournalList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: url
+      url
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if(!obj.paginationDisable) {
         dispatch({
           type: JOURNAL.JOURNAL_LIST,
@@ -34,7 +34,7 @@ export const getJournalList = (obj) => {
         })
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -47,14 +47,14 @@ export const getCurrencyList = () => {
       method: 'get',
       url: 'rest/bank/getcurrenncy'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: JOURNAL.CURRENCY_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -67,13 +67,13 @@ export const getTransactionCategoryList = (obj) => {
       url: `/rest/transactioncategory/getList`,
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: JOURNAL.TRANSACTION_CATEGORY_LIST,
         payload: res
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -87,13 +87,13 @@ export const getContactList = () => {
       url: `/rest/contact/getContactsForDropdown`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: JOURNAL.CONTACT_LIST,
         payload: res
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -106,13 +106,13 @@ export const getVatList = () => {
       url: '/rest/datalist/vatCategory'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: JOURNAL.VAT_LIST,
         payload: res
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -126,9 +126,9 @@ export const removeBulkJournal  = (obj) => {
       url: '/rest/journal/deletes',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

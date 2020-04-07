@@ -30,7 +30,7 @@ class InitialLayout extends React.Component {
   }
 
   componentDidMount () {
-    if (window.sessionStorage.getItem('accessToken')) {
+    if (window['sessionStorage'].getItem('accessToken')) {
       this.props.history.push('/admin')
     }
     this.props.commonActions.getSimpleVATVersion()
@@ -43,8 +43,9 @@ class InitialLayout extends React.Component {
         <Switch>
           {
             initialRoutes.map((prop, key) => {
-              if (prop.redirect)
+              if (prop.redirect) {
                 return <Redirect from={prop.path} to={prop.pathTo} key={key} />
+              }
               return (
                 <Route
                   path={prop.path}

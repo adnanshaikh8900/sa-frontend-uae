@@ -10,9 +10,9 @@ export const getProjectById = (id) => {
       url: `/rest/project/getProjectById?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -25,9 +25,9 @@ export const deleteProject = (id) => {
       url: `/rest/project/delete?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -41,9 +41,9 @@ export const updateProject = (obj) => {
       data: obj
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

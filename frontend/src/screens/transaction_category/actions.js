@@ -11,7 +11,7 @@ export const getTransactionList = () => {
       url: '/rest/transaction/gettransactioncategory'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: TRANSACTION.TRANSACTION_LIST,
         payload: [{
@@ -35,7 +35,7 @@ export const getTransactionList = () => {
         }]
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -49,9 +49,9 @@ export const deleteTransaction = (id) => {
       url: `/rest/transaction/deletetransactioncategory?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

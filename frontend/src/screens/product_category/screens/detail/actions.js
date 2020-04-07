@@ -10,9 +10,9 @@ export const getProductCategoryById = (id) => {
       url: `/rest/productcategory/getById?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -26,9 +26,9 @@ export const updateProductCategory = (obj) => {
       data: obj
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -41,9 +41,9 @@ export const deleteProductCategory = (id) => {
       url: `/rest/productcategory/delete?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

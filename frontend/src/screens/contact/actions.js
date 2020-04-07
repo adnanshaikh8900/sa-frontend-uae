@@ -19,7 +19,7 @@ export const getContactList = (obj) => {
       url: `/rest/contact/getContactList?name=${name}&email=${email}&contactType=${contactType}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if(!obj.paginationDisable) {
         dispatch({
           type: CONTACT.CONTACT_LIST,
@@ -27,7 +27,7 @@ export const getContactList = (obj) => {
         })
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -40,11 +40,11 @@ export const removeBulk = (obj) => {
       url: '/rest/contact/deletes',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -56,14 +56,14 @@ export const getCurrencyList = () => {
       method: 'get',
       url: 'rest/bank/getcurrenncy'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: CONTACT.CURRENCY_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -75,14 +75,14 @@ export const getCountryList = () => {
       method: 'get',
       url: 'rest/datalist/getcountry'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: CONTACT.COUNTRY_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -94,14 +94,14 @@ export const getContactTypeList = () => {
       method: 'get',
       url: `/rest/datalist/getContactTypes`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: CONTACT.CONTACT_TYPE_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -113,14 +113,14 @@ export const getStateList = (countryCode) => {
       method: 'get',
       url: '/rest/datalist/getstate?countryCode=' + countryCode
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: CONTACT.STATE_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

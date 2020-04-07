@@ -9,9 +9,9 @@ export const createUser = (obj) => {
       url: '/rest/user/save',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

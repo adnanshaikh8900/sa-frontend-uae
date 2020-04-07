@@ -36,7 +36,7 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 
 import "./style.scss";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     transaction_category_list: state.journal.transaction_category_list,
     currency_list: state.journal.currency_list,
@@ -44,7 +44,7 @@ const mapStateToProps = state => {
     vat_list: state.journal.vat_list
   };
 };
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     journalActions: bindActionCreators(JournalActions, dispatch),
@@ -75,7 +75,7 @@ class DetailJournal extends React.Component {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.journalDetailActions
         .getJournalById(this.props.location.state.id)
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             this.props.journalActions.getCurrencyList();
             this.props.journalActions.getTransactionCategoryList();
@@ -105,19 +105,19 @@ class DetailJournal extends React.Component {
                   data.length > 0
                     ? Math.max.apply(
                       Math,
-                      data.map(item => {
+                      data.map((item) => {
                         return item.id;
                       })
                     )
                     : 0;
                 this.setState({
-                  idCount: idCount
+                  idCount
                 });
               }
             );
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.setState({ loading: false });
         });
     } else {
@@ -131,7 +131,7 @@ class DetailJournal extends React.Component {
         size="sm"
         disabled={props.values.postingReferenceType === 'MANUAL' || this.state.data.length > 2 ? false : true}
         className="btn-twitter btn-brand icon"
-        onClick={e => {
+        onClick={(e) => {
           this.deleteRow(e, rows, props);
         }}
       >
@@ -179,7 +179,7 @@ class DetailJournal extends React.Component {
         render={({ field, form }) => (
           <Input
             type="select"
-            onChange={e => {
+            onChange={(e) => {
               this.selectItem(e, row, "transactionCategoryId", form, field);
             }}
             disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
@@ -187,18 +187,18 @@ class DetailJournal extends React.Component {
             className={`form-control 
             ${
               props.errors.journalLineItems &&
-                props.errors.journalLineItems[idx] &&
-                props.errors.journalLineItems[idx].transactionCategoryId &&
+                props.errors.journalLineItems[parseInt(idx, 10)] &&
+                props.errors.journalLineItems[parseInt(idx, 10)].transactionCategoryId &&
                 Object.keys(props.touched).length > 0 &&
                 props.touched.journalLineItems &&
-                props.touched.journalLineItems[idx] &&
-                props.touched.journalLineItems[idx].transactionCategoryId
+                props.touched.journalLineItems[parseInt(idx, 10)] &&
+                props.touched.journalLineItems[parseInt(idx, 10)].transactionCategoryId
                 ? "is-invalid"
                 : ""
               }`}
           >
             {transactionCategoryList
-              ? transactionCategoryList.map(obj => {
+              ? transactionCategoryList.map((obj) => {
                 return (
                   <option
                     value={obj.transactionCategoryId}
@@ -232,19 +232,19 @@ class DetailJournal extends React.Component {
             type="text"
             value={row["description"] !== "" ? row["description"] : ""}
             disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
-            onChange={e => {
+            onChange={(e) => {
               this.selectItem(e, row, "description", form, field);
             }}
             placeholder="Description"
             className={`form-control 
             ${
               props.errors.journalLineItems &&
-                props.errors.journalLineItems[idx] &&
-                props.errors.journalLineItems[idx].description &&
+                props.errors.journalLineItems[parseInt(idx, 10)] &&
+                props.errors.journalLineItems[parseInt(idx, 10)].description &&
                 Object.keys(props.touched).length > 0 &&
                 props.touched.journalLineItems &&
-                props.touched.journalLineItems[idx] &&
-                props.touched.journalLineItems[idx].description
+                props.touched.journalLineItems[parseInt(idx, 10)] &&
+                props.touched.journalLineItems[parseInt(idx, 10)].description
                 ? "is-invalid"
                 : ""
               }`}
@@ -273,7 +273,7 @@ class DetailJournal extends React.Component {
         render={({ field, form }) => (
           <Input
             type="select"
-            onChange={e => {
+            onChange={(e) => {
               this.selectItem(e, row, "contactId", form, field);
             }}
             disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
@@ -281,18 +281,18 @@ class DetailJournal extends React.Component {
             className={`form-control 
             ${
               props.errors.journalLineItems &&
-                props.errors.journalLineItems[idx] &&
-                props.errors.journalLineItems[idx].contactId &&
+                props.errors.journalLineItems[parseInt(idx, 10)] &&
+                props.errors.journalLineItems[parseInt(idx, 10)].contactId &&
                 Object.keys(props.touched).length > 0 &&
                 props.touched.journalLineItems &&
-                props.touched.journalLineItems[idx] &&
-                props.touched.journalLineItems[idx].contactId
+                props.touched.journalLineItems[parseInt(idx, 10)] &&
+                props.touched.journalLineItems[parseInt(idx, 10)].contactId
                 ? "is-invalid"
                 : ""
               }`}
           >
             {contactList
-              ? contactList.map(obj => {
+              ? contactList.map((obj) => {
                 return (
                   <option value={obj.value} key={obj.value}>
                     {obj.label}
@@ -323,19 +323,19 @@ class DetailJournal extends React.Component {
             type="number"
             value={row["debitAmount"] !== 0 ? row["debitAmount"] : 0}
             disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
-            onChange={e => {
+            onChange={(e) => {
               this.selectItem(e, row, "debitAmount", form, field);
             }}
             placeholder="Debit Amount"
             className={`form-control 
             ${
               props.errors.journalLineItems &&
-                props.errors.journalLineItems[idx] &&
-                props.errors.journalLineItems[idx].debitAmount &&
+                props.errors.journalLineItems[parseInt(idx, 10)] &&
+                props.errors.journalLineItems[parseInt(idx, 10)].debitAmount &&
                 Object.keys(props.touched).length > 0 &&
                 props.touched.journalLineItems &&
-                props.touched.journalLineItems[idx] &&
-                props.touched.journalLineItems[idx].debitAmount
+                props.touched.journalLineItems[parseInt(idx, 10)] &&
+                props.touched.journalLineItems[parseInt(idx, 10)].debitAmount
                 ? "is-invalid"
                 : ""
               }`}
@@ -362,19 +362,19 @@ class DetailJournal extends React.Component {
             type="number"
             value={row["creditAmount"] !== 0 ? row["creditAmount"] : 0}
             disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
-            onChange={e => {
+            onChange={(e) => {
               this.selectItem(e, row, "creditAmount", form, field);
             }}
             placeholder="Credit Amount"
             className={`form-control 
             ${
               props.errors.journalLineItems &&
-                props.errors.journalLineItems[idx] &&
-                props.errors.journalLineItems[idx].creditAmount &&
+                props.errors.journalLineItems[parseInt(idx, 10)] &&
+                props.errors.journalLineItems[parseInt(idx, 10)].creditAmount &&
                 Object.keys(props.touched).length > 0 &&
                 props.touched.journalLineItems &&
-                props.touched.journalLineItems[idx] &&
-                props.touched.journalLineItems[idx].creditAmount
+                props.touched.journalLineItems[parseInt(idx, 10)] &&
+                props.touched.journalLineItems[parseInt(idx, 10)].creditAmount
                 ? "is-invalid"
                 : ""
               }`}
@@ -410,24 +410,24 @@ class DetailJournal extends React.Component {
     const data = this.state.data
     data.map((obj, index) => {
       if (obj.id === row.id) {
-        if (name === 'debitAmount') { obj[name] = e.target.value; obj['creditAmount'] = 0 }
-        else if (name === 'creditAmount') { obj[name] = e.target.value; obj['debitAmount'] = 0 }
-        else obj[name] = e.target.value
+        if (name === 'debitAmount') { obj[`${name}`] = e.target.valuevalue; obj['creditAmount'] = 0 }
+        else if (name === 'creditAmount') { obj[`${name}`] = e.target.value; obj['debitAmount'] = 0 }
+        else {obj[`${name}`] = e.target.value}
         idx = index
       }
       return obj
     });
     if (name === 'debitAmount') {
       form.setFieldValue(`journalLineItems.[${idx}].creditAmount`, 0, true)
-      form.setFieldValue(field.name, this.state.data[idx][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
       this.updateAmount(data);
     } else if (name === 'creditAmount') {
-      form.setFieldValue(field.name, this.state.data[idx][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
       form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
       this.updateAmount(data);
     }  else {
-      this.setState({ data: data }, () => {
-        this.formRef.current.setFieldValue(field.name, this.state.data[idx][name], true)
+      this.setState({ data }, () => {
+        this.formRef.current.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
       });
     }
   }
@@ -437,7 +437,7 @@ class DetailJournal extends React.Component {
     let newData = [];
     e.preventDefault();
     const data = this.state.data;
-    newData = data.filter(obj => obj.id !== id);
+    newData = data.filter((obj) => obj.id !== id);
     props.setFieldValue("journalLineItems", newData, true);
     this.updateAmount(newData);
   }
@@ -448,7 +448,7 @@ class DetailJournal extends React.Component {
     // let totalDebitAmount = 0;
     // let totalCreditAmount = 0;
 
-    data.map(obj => {
+    data.map((obj) => {
       if (obj.debitAmount || obj.creditAmount) {
         subTotalDebitAmount = subTotalDebitAmount + (+obj.debitAmount);
         subTotalCreditAmount = subTotalCreditAmount + (+obj.creditAmount);
@@ -457,14 +457,14 @@ class DetailJournal extends React.Component {
     });
 
     this.setState({
-      data: data,
+      data,
       initValue: {
         ...this.state.initValue,
         ...{
-          subTotalDebitAmount: subTotalDebitAmount,
+          subTotalDebitAmount,
           totalDebitAmount: subTotalDebitAmount,
           totalCreditAmount: subTotalCreditAmount,
-          subTotalCreditAmount: subTotalCreditAmount
+          subTotalCreditAmount
         }
       }
     });
@@ -486,7 +486,7 @@ class DetailJournal extends React.Component {
     const { current_journal_id } = this.state;
     this.props.journalDetailActions
       .deleteJournal(current_journal_id)
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           this.props.commonActions.tostifyAlert(
             "success",
@@ -495,7 +495,7 @@ class DetailJournal extends React.Component {
           this.props.history.push("/admin/accountant/journal");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.props.commonActions.tostifyAlert(
           "error",
           err && err.data ? err.data.message : null
@@ -512,7 +512,7 @@ class DetailJournal extends React.Component {
   handleSubmit = (values) => {
     const { data, initValue } = this.state;
     if (initValue.totalCreditAmount === initValue.totalDebitAmount) {
-      data.map(item => {
+      data.map((item) => {
         delete item.id;
         item.transactionCategoryId = item.transactionCategoryId
           ? item.transactionCategoryId
@@ -535,13 +535,13 @@ class DetailJournal extends React.Component {
       };
       this.props.journalDetailActions
         .updateJournal(postData)
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             this.props.commonActions.tostifyAlert("success", "Journal Updated Successfully");
             this.props.history.push("/admin/accountant/journal");
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.props.commonActions.tostifyAlert(
             "error",
             err && err.data ? err.data.message : null
@@ -603,7 +603,7 @@ class DetailJournal extends React.Component {
                                 .min(2, 'Atleast Two Journal Debit and Credit Details is mandatory')
                             })}
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   <Col lg={4}>
@@ -627,7 +627,7 @@ class DetailJournal extends React.Component {
                                             ).format("DD-MM-YYYY")
                                             : ""
                                         }
-                                        onChange={value => {
+                                        onChange={(value) => {
                                           props.handleChange("journalDate")(
                                             value
                                           );
@@ -650,7 +650,7 @@ class DetailJournal extends React.Component {
                                         placeholder="Reference Number"
                                         value={props.values.journalReferenceNo}
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('journalReferenceNo')(option)
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('journalReferenceNo')(option)}
                                         }}
                                       />
                                     </FormGroup>
@@ -670,7 +670,7 @@ class DetailJournal extends React.Component {
                                         disabled={props.values.postingReferenceType === "MANUAL" ? false : true}
                                         placeholder="1024 characters..."
                                         value={props.values.description}
-                                        onChange={value => {
+                                        onChange={(value) => {
                                           props.handleChange("description")(
                                             value
                                           );
@@ -701,7 +701,7 @@ class DetailJournal extends React.Component {
                                         name="currencyCode"
                                         disabled={props.values.postingReferenceType === "MANUAL" ? false : true}
                                         value={props.values.currencyCode}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange("currencyCode")(
                                               option.value

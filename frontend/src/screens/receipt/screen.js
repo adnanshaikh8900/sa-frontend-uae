@@ -105,7 +105,7 @@ class Receipt extends React.Component {
     const postData = { ...filterData, ...paginationData , ...sortingData}
 
 
-    this.props.receiptActions.getReceiptList(postData).then(res => {
+    this.props.receiptActions.getReceiptList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -158,29 +158,29 @@ class Receipt extends React.Component {
 }
 
   onRowSelect = (row, isSelected, e) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.receiptId);
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.receiptId);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.receiptId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       });
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
   onSelectAll = (isSelected, rows) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      rows.map(item => temp_list.push(item.receiptId))
+      rows.map((item) => tempList.push(item.receiptId))
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
@@ -216,7 +216,7 @@ class Receipt extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -244,7 +244,7 @@ class Receipt extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.receiptActions.getReceiptList(obj).then(res => {
+      this.props.receiptActions.getReceiptList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -401,7 +401,7 @@ class Receipt extends React.Component {
                           className="receipt-table"
                           trClassName="cursor-pointer"
                           csvFileName="Receipt.csv"
-                          ref={node => this.table = node}
+                          ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
                             dataField="receiptDate"

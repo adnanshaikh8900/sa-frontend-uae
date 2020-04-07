@@ -9,9 +9,9 @@ export const getTransactionDetail = (id) => {
       method: 'GET',
       url: `/rest/transaction/getById?id=${id}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -24,9 +24,9 @@ export const updateTransaction = (obj) => {
       url: '/rest/transaction/update',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

@@ -83,8 +83,8 @@ class CreateProject extends React.Component {
     }
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-    this.regExAlpha = /^[a-zA-Z]+$/;
-		this.formRef = React.createRef()
+    this.regExAlpha = /^[a-zA-Z ]+$/;
+    this.formRef = React.createRef()
 
   }
 
@@ -94,7 +94,7 @@ class CreateProject extends React.Component {
     this.setState({ openContactModal: true })
   }
   // Cloase Confirm Modal
-  closeContactModal = (res,data) => {
+  closeContactModal = (res, data) => {
     if (res) {
       this.props.projectActions.getContactList();
       this.formRef.current.setFieldValue('contactId', data.contactId, true)
@@ -112,7 +112,7 @@ class CreateProject extends React.Component {
 
 
   // Create or Edit Project
-  projectHandleSubmit = (data,resetForm) => {
+  projectHandleSubmit = (data, resetForm) => {
     const {
       projectName,
       // invoiceLanguageCode,
@@ -135,7 +135,7 @@ class CreateProject extends React.Component {
       currencyCode: currency && currency !== null ? currency : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
-    this.props.createProjectActions.createAndSaveProject(postData).then(res => {
+    this.props.createProjectActions.createAndSaveProject(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Project Created Successfully!')
         if (this.state.createMore) {
@@ -143,7 +143,7 @@ class CreateProject extends React.Component {
             createMore: false
           })
           resetForm()
-        } else this.props.history.push('/admin/master/project')
+        } else { this.props.history.push('/admin/master/project') }
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
@@ -173,10 +173,10 @@ class CreateProject extends React.Component {
                   <Row>
                     <Col lg={12}>
                       <Formik
-                      	ref={this.formRef}
+                        ref={this.formRef}
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.projectHandleSubmit(values,resetForm)
+                          this.projectHandleSubmit(values, resetForm)
                           // resetForm(this.state.initValue)
 
                           this.setState({
@@ -196,7 +196,7 @@ class CreateProject extends React.Component {
                           // invoiceLanguageCode: Yup.string()
                           //   .required("Invoice Language is Required")
                         })}>
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={4}>
@@ -207,7 +207,7 @@ class CreateProject extends React.Component {
                                     id="name"
                                     name="projectName"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('projectName')(option)
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('projectName')(option) }
                                     }}
                                     placeholder="Enter Project Name"
                                     value={props.values.projectName}
@@ -231,7 +231,7 @@ class CreateProject extends React.Component {
                                       this.setState({
                                         selectedContact: option.value
                                       })
-                                      if(option && option.value) {
+                                      if (option && option.value) {
                                         props.handleChange("contactId")(option.value)
                                       } else {
                                         props.handleChange("contactId")('')
@@ -268,7 +268,7 @@ class CreateProject extends React.Component {
                                     id="contractPoNumber"
                                     name="contractPoNumber"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contractPoNumber')(option)
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('contractPoNumber')(option) }
                                     }}
                                     placeholder="Enter Contract PO Number"
                                     value={props.values.contractPoNumber}
@@ -291,7 +291,7 @@ class CreateProject extends React.Component {
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('vatRegistrationNumber')(option) }
                                     }}
                                     placeholder="Enter VAT Registration Number"
                                     value={props.values.vatRegistrationNumber}
@@ -317,7 +317,7 @@ class CreateProject extends React.Component {
                                       this.setState({
                                         selectedCurrency: option.value
                                       })
-                                      if(option && option.value) {
+                                      if (option && option.value) {
                                         props.handleChange('currency')(option.value)
                                       } else {
                                         props.handleChange('currency')('')
@@ -348,7 +348,7 @@ class CreateProject extends React.Component {
                                     id="expenseBudget"
                                     name="expenseBudget"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('expenseBudget')(option)
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('expenseBudget')(option) }
                                     }}
                                     placeholder="Enter Expense Budgets"
                                     value={props.values.expenseBudget}
@@ -371,7 +371,7 @@ class CreateProject extends React.Component {
                                     id="revenueBudget"
                                     name="revenueBudget"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('revenueBudget')(option)
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('revenueBudget')(option) }
                                     }}
                                     placeholder="Enter VAT Revenue Budget"
                                     value={props.values.revenueBudget}
@@ -453,12 +453,12 @@ class CreateProject extends React.Component {
 
         <ContactModal
           openContactModal={this.state.openContactModal}
-          closeContactModal={(val,data) => { this.closeContactModal(val,data) }}
+          closeContactModal={(val, data) => { this.closeContactModal(val, data) }}
           createContact={this.props.projectActions.createProjectContact}
           titleList={title_list}
           currencyList={currency_list}
-					countryList={country_list}
-					getStateList={this.props.projectActions.getStateList}
+          countryList={country_list}
+          getStateList={this.props.projectActions.getStateList}
         />
 
       </div>

@@ -213,7 +213,7 @@ class ReportsFiling extends React.Component {
                   pagination={tempdata && tempdata.length > 0 ? true : false}
                   fetchInfo={{ dataTotalSize: tempdata.count ? tempdata.count : 0 }}
                   csvFileName="tempdata.csv"
-                  ref={node => {
+                  ref={(node) => {
                     this.table = node
                   }}
                 >

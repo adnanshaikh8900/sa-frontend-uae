@@ -53,7 +53,7 @@ class CreateProductCategory extends React.Component {
       loading: false,
       createMore: false
     }
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
@@ -81,7 +81,7 @@ class CreateProductCategory extends React.Component {
 
   // Create or Edit Vat
   handleSubmit = (data,resetForm) => {
-    this.props.createProductCategoryActions.createProductCategory(data).then(res => {
+    this.props.createProductCategoryActions.createProductCategory(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Product Category is Created Successfully!')
 
@@ -90,9 +90,9 @@ class CreateProductCategory extends React.Component {
           this.setState({
             createMore: false
           })
-        } else this.props.history.push('/admin/master/product-category')
+        } else { this.props.history.push('/admin/master/product-category') }
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
 
     })
@@ -101,7 +101,7 @@ class CreateProductCategory extends React.Component {
   render() {
     const { loading , initValue} = this.state
     const { product_category_list } = this.props
-    const ProductCategoryList = product_category_list.map(item => {
+    const ProductCategoryList = product_category_list.map((item) => {
       return item.productCategoryCode
     })
 
@@ -132,7 +132,7 @@ class CreateProductCategory extends React.Component {
                           //     productCategoryCode: Yup.string()
                           //     .required("Product Category Code is Required")
                           // })}
-                          validate = {values => {
+                          validate = {(values) => {
                             let errors = {};
                             if(!values.productCategoryName) {
                               errors.productCategoryName = 'Product Category Name is  required';
@@ -148,7 +148,7 @@ class CreateProductCategory extends React.Component {
                             return errors;
                           }}
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit} name="simpleForm">
                                 <FormGroup>
                                   <Label htmlFor="productCategoryCode"><span className="text-danger">*</span>Product Category Code</Label>
@@ -157,7 +157,7 @@ class CreateProductCategory extends React.Component {
                                     id="productCategoryCode"
                                     name="productCategoryCode"
                                     placeholder="Enter Product Category Code"
-                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCategoryCode')(option) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('productCategoryCode')(option) }}}
                                     value={props.values.productCategoryCode}
                                     className={
                                       props.errors.productCategoryCode  && props.touched.productCategoryCode 
@@ -176,7 +176,7 @@ class CreateProductCategory extends React.Component {
                                     id="productCategoryName"
                                     name="productCategoryName"
                                     placeholder="Enter Product Category Name"
-                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('productCategoryName')(option) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('productCategoryName')(option) }}}
                                     value={props.values.productCategoryName }
                                     className={
                                       props.errors.productCategoryName  && props.touched.productCategoryName 

@@ -9,7 +9,7 @@ export const getAccountTypeList = () => {
       method: 'get',
       url: 'rest/bank/getaccounttype'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.ACCOUNT_TYPE_LIST,
@@ -18,7 +18,7 @@ export const getAccountTypeList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -30,7 +30,7 @@ export const getCurrencyList = () => {
       method: 'get',
       url: 'rest/bank/getcurrenncy'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.CURRENCY_LIST,
@@ -39,7 +39,7 @@ export const getCurrencyList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -64,7 +64,7 @@ export const getBankAccountList = (obj) => {
       method: 'get',
       url: param
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         if(!obj.paginationDisable) {
           dispatch({
@@ -76,7 +76,7 @@ export const getBankAccountList = (obj) => {
         }
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -89,9 +89,9 @@ export const deleteBankAccount = (_id) => {
       method: 'delete',
       url: `rest/bank/deletebank?id=${_id}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -104,9 +104,9 @@ export const removeBankAccountByID = (_id) => {
       method: 'delete',
       url: `rest/bank/${_id}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -119,9 +119,9 @@ export const removeBulkBankAccount = (obj) => {
       url: 'rest/bank/multiple',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

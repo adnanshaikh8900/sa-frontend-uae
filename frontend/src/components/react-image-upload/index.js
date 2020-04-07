@@ -51,8 +51,8 @@ class ImageUploader extends React.Component {
 	 Check file extension (onDropFile)
 	 */
   hasExtension(fileName) {
-    const pattern = '(' + this.props.imgExtension.join('|').replace(/\./g, '\\.') + ')$';
-    return new RegExp(pattern, 'i').test(fileName);
+    let ext = fileName.split('.');
+    return this.props.imgExtension.includes(ext[1].toLowerCase());
   }
 
   /*
@@ -65,7 +65,7 @@ class ImageUploader extends React.Component {
 
     // Iterate over all uploaded files
     for (let i = 0; i < files.length; i++) {
-      let file = files[i];
+      let file = files[parseInt(i, 10)];
       let fileError = {
         name: file.name,
       };
@@ -85,24 +85,24 @@ class ImageUploader extends React.Component {
         fileErrors.push(fileError);
         continue;
       }
-
-      allFilePromises.push(this.readFile(file));
+      const temp = this.readFile(file);
+      allFilePromises.push(temp);
     }
 
     this.setState({
-      fileErrors: fileErrors
+      fileErrors
     });
 
-    Promise.all(allFilePromises).then(newFilesData => {
+    Promise.all(allFilePromises).then((newFilesData) => {
       const dataURLs = this.state.pictures.slice();
       const files = this.state.files.slice();
 
-      newFilesData.forEach(newFileData => {
+      newFilesData.forEach((newFileData) => {
         dataURLs.push(newFileData.dataURL);
         files.push(newFileData.file);
       });
 
-      this.setState({pictures: dataURLs, files: files});
+      this.setState({pictures: dataURLs, files});
     });
   }
 
@@ -133,7 +133,6 @@ class ImageUploader extends React.Component {
       reader.onloadend =(e) => {
         this.setState({loadFile:false})
     }
-
     });
   }
 
@@ -141,7 +140,7 @@ class ImageUploader extends React.Component {
    Remove the image from state
    */
   removeImage(picture) {
-    const removeIndex = this.state.pictures.findIndex(e => e === picture);
+    const removeIndex = this.state.pictures.findIndex((e) => e === picture);
     const filteredPictures = this.state.pictures.filter((e, index) => index !== removeIndex);
     const filteredFiles = this.state.files.filter((e, index) => index !== removeIndex);
     this.setState({pictures: filteredPictures, files: filteredFiles}, () => {
@@ -242,7 +241,7 @@ class ImageUploader extends React.Component {
           </button>
           <input
             type="file"
-            ref={input => this.inputElement = input}
+            ref={(input) => this.inputElement = input}
             name={this.props.name}
             multiple={!this.props.singleImage}
             onChange={this.onDropFile}
@@ -271,7 +270,7 @@ ImageUploader.defaultProps = {
   label: "Max file size: 5mb, accepted: jpg|gif|png",
   labelStyles: {},
   labelClass: "",
-  imgExtension: ['.jpg', '.jpeg', '.gif', '.png'],
+  imgExtension: ['jpg', 'jpeg', 'gif', 'png'],
   maxFileSize: 11242880,
   fileSizeError: " file size is too big",
   fileTypeError: " is not a supported file extension",

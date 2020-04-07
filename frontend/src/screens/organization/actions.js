@@ -11,9 +11,9 @@ export const createOrganization = (obj) => {
       url: '/rest/company/save',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -26,14 +26,14 @@ export const getCountryList = () => {
       method: 'get',
       url: 'rest/datalist/getcountry'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: ORGANIZATION.COUNTRY_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -45,14 +45,14 @@ export const getIndustryTypeList = () => {
       method: 'get',
       url: `/rest/datalist/getIndustryTypes`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: ORGANIZATION.INDUSTRY_TYPE_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

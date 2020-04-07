@@ -9,9 +9,9 @@ export const getContactById = (id) => {
       url: `/rest/contact/getContactById?contactId=${id}`,
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -25,9 +25,9 @@ export const updateContact = (obj) => {
       data: obj
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -40,9 +40,9 @@ export const deleteContact = (id) => {
       url: `/rest/contact/delete?id=${id}`,
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

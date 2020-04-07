@@ -48,7 +48,7 @@ class FinancialReport extends React.Component {
 
   toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
-    newArray[tabPane] = tab
+    newArray[parseInt(tabPane, 10)] = tab
     this.setState({
       activeTab: newArray
     })

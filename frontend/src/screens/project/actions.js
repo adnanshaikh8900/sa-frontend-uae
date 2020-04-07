@@ -20,7 +20,7 @@ export const getProjectList = (obj) => {
       url: `/rest/project/getList?projectName=${projectName}&expenseBudget=${expenseBudget}&revenueBudget=${revenueBudget}&vatRegistrationNumber=${vatRegistrationNumber}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if(!obj.paginationDisable) {
         dispatch({
           type: PROJECT.PROJECT_LIST,
@@ -28,7 +28,7 @@ export const getProjectList = (obj) => {
         })
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -51,9 +51,9 @@ export  const createProjectContact = (project) => {
       data: project
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -68,13 +68,13 @@ export const getCurrencyList = () => {
       url: '/rest/bank/getcurrenncy'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: PROJECT.CURRENCY_LIST,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -89,13 +89,13 @@ export const getCountryList = () => {
       url: '/rest/datalist/getcountry'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: PROJECT.COUNTRY_LIST,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -110,13 +110,13 @@ export const getTitleList = () => {
       url: '/rest/project/gettitle/?titleStr'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: PROJECT.TITLE_LIST,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -129,11 +129,11 @@ export const removeBulk = (obj) => {
       url: '/rest/project/deletes',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -145,13 +145,13 @@ export const getContactList = () => {
         method: 'GET',
         url: '/rest/contact/getContactsForDropdown'
       }
-      return authApi(data).then(res => {
+      return authApi(data).then((res) => {
         dispatch({
           type: PROJECT.CONTACT_LIST,
           payload: res.data
         })
         return res
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
     }
@@ -163,7 +163,7 @@ export const getContactList = () => {
         method: 'get',
         url: '/rest/datalist/getstate?countryCode=' + countryCode
       }
-      return authApi(data).then(res => {
+      return authApi(data).then((res) => {
         if (res.status === 200) {
           // dispatch({
           //   type: CONTACT.STATE_LIST,
@@ -171,7 +171,7 @@ export const getContactList = () => {
           // })
           return res
         }
-      }).catch(err => {
+      }).catch((err) => {
         throw err
       })
     }

@@ -87,7 +87,7 @@ class OpeningBalance extends React.Component {
       }} value={row.bankAccountId}
         className={`form-control `}
       >
-        {bank_account_list ? bank_account_list.map(obj => {
+        {bank_account_list ? bank_account_list.map((obj) => {
           // obj.name = obj.name === 'default' ? '0' : obj.name
           return <option value={obj.bankAccountId} key={obj.bankAccountId}>{obj.accounName}</option>
         }) : []}

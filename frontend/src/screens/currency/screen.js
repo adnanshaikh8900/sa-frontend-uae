@@ -73,7 +73,7 @@ class Currency extends React.Component {
   }
 
   getCurrencyDetails = () => {
-    this.props.currenciesActions.getCurrencyList().then(res => {
+    this.props.currenciesActions.getCurrencyList().then((res) => {
       if(res.status === 200) {
         this.setState({
           loading:false
@@ -103,7 +103,7 @@ class Currency extends React.Component {
 
     
     const currencyList = this.props.currency_list && this.props.currency_list !== [] ?
-    this.props.currency_list.map(currencyData => ({
+    this.props.currency_list.map((currencyData) => ({
       name : currencyData.currencyName,
       symbol:currencyData.currencySymbol
 

@@ -87,13 +87,13 @@ class ImportTransaction extends React.Component {
   initializeData = () => {
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.props.importTransactionActions.getDateFormatList()
-      this.props.importTransactionActions.getConfigurationList().then(res => {
+      this.props.importTransactionActions.getConfigurationList().then((res) => {
         this.setState({
           configurationList: res.data
         })
       })
 
-      this.props.importTransactionActions.getDelimiterList().then(res => {
+      this.props.importTransactionActions.getDelimiterList().then((res) => {
         this.setState({
           delimiterList: res.data,
           selectedDelimiter: res.data[1].value
@@ -111,12 +111,14 @@ class ImportTransaction extends React.Component {
   validateForm = () => {
     const { initValue,fileName } = this.state
     let temp = {}
-    for (let val in this.state.initValue) {
-      if (val === 'name' && !initValue[val]) {
-        temp[val] = '*Template Name is Required'
-      }
-      if (val === 'dateFormatId' && !initValue[val]) {
-        temp[val] = '*Date Format is Required'
+    for (let val in initValue) {
+      if(initValue.hasOwnProperty(val)) {
+        if (val === 'name' && !initValue.val) {
+          temp['name'] = '*Template Name is Required'
+        }
+        if (val === 'dateFormatId' && !initValue.val) {
+          temp['dateFormatId'] = '*Date Format is Required'
+        }
       }
     }
     if(!fileName) {
@@ -148,10 +150,10 @@ class ImportTransaction extends React.Component {
         if (this.uploadFile.files[0]) {
           formData.append("file", this.uploadFile.files[0]);
         }
-        this.props.importTransactionActions.parseFile(formData).then(res => {
+        this.props.importTransactionActions.parseFile(formData).then((res) => {
           if (res.status === 200) {
             // this.props.commonActions.tostifyAlert('success', 'New Configuration Created Successfully')
-            this.props.importTransactionActions.getTableDataList(formData).then(res => {
+            this.props.importTransactionActions.getTableDataList(formData).then((res) => {
               this.setState({
                 tableData: [...res.data],
                 tableDataKey: res.data[0] ? Object.keys(res.data[0]) : []
@@ -175,11 +177,11 @@ class ImportTransaction extends React.Component {
                   selectError: tempError
                 })
               })
-            }).catch(err => {
+            }).catch((err) => {
               this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
               this.setState({ loading: false })
             })
-            this.props.importTransactionActions.getTableHeaderList(formData).then(res => {
+            this.props.importTransactionActions.getTableHeaderList(formData).then((res) => {
               let temp = [...res.data];
               // temp.unshift({ label: 'Select', value: '' })
               this.setState({
@@ -188,7 +190,7 @@ class ImportTransaction extends React.Component {
               })
             })
           }
-        }).catch(err => {
+        }).catch((err) => {
           this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
           this.setState({ loading: false })
         })
@@ -199,11 +201,11 @@ class ImportTransaction extends React.Component {
   handleChange = (e, index) => {
     let tempDataSelectedValueDropdown = this.state.selectedValueDropdown;
     let tempStatus = [...this.state.columnStatus];
-    let status = tempDataSelectedValueDropdown.filter(item => item.value === e.value && e.value !== "")
+    let status = tempDataSelectedValueDropdown.filter((item) => item.value === e.value && e.value !== "")
     if (status.length > 0) {
-      tempStatus[index] = { label: `${e.value}`, status: true }
-      // tempDataSelectedValueDropdown[index] = { label: `Select`, value: '' }
-      if (tempDataSelectedValueDropdown[index].value !== e.value) {
+      tempStatus[`${index}`] = { label: `${e.value}`, status: true }
+      // tempDataSelectedValueDropdown[`${index}`] = { label: `Select`, value: '' }
+      if (tempDataSelectedValueDropdown[`${index}`].value !== e.value) {
         this.setState({
           columnStatus: tempStatus,
           selectedValueDropdown: tempDataSelectedValueDropdown
@@ -211,39 +213,40 @@ class ImportTransaction extends React.Component {
       }
     }
     else if (e.value === '') {
-      let val = tempDataSelectedValueDropdown[index].value;
+      let val = tempDataSelectedValueDropdown[`${index}`].value;
       let multiSelected = []
-      tempStatus.map(item => item.label).reduce(function (a, e, i) {
-        if (e === val)
+      tempStatus.map((item) => item.label).reduce(function (a, e, i) {
+        if (e === val) {
           multiSelected.push(i);
+        }
         return a;
       }, []);
 
       if (multiSelected.length > 0) {
-        multiSelected.map(item => {
+        multiSelected.map((item) => {
           tempStatus[item] = { label: '', status: false }
           return item
         })
       }
-      tempDataSelectedValueDropdown[index] = e
-      tempStatus[index] = { label: '', status: false }
+      tempDataSelectedValueDropdown[`${index}`] = e
+      tempStatus[`${index}`] = { label: '', status: false }
       this.setState({
         columnStatus: tempStatus,
         selectedValueDropdown: tempDataSelectedValueDropdown
       })
     } else {
       let a = tempStatus.map((item, i) => {
-        let idx = tempDataSelectedValueDropdown.map(val => val.value).indexOf(item.label);
+        let idx = tempDataSelectedValueDropdown.map((val) => val.value).indexOf(item.label);
         if (idx === index || item.label === '') {
           return { label: '', status: false }
         } else {
           return { label: `${item.label}`, status: `${item.status}` }
         }
       })
-      a[index] = { label: '', status: false }
-      tempDataSelectedValueDropdown[index] = e
+      a[`${index}`] = { label: '', status: false }
+      tempDataSelectedValueDropdown[`${index}`] = e
       const tempSelectError = [...this.state.selectError]
-      tempSelectError[index] = false
+      tempSelectError[`${index}`] = false
       this.setState({
         columnStatus: a,
         selectedValueDropdown: tempDataSelectedValueDropdown,
@@ -265,7 +268,7 @@ class ImportTransaction extends React.Component {
     let optionErr = [...this.state.selectError]
     let item = this.state.selectedValueDropdown.map((item, index) => {
       if (item.value === '') {
-        optionErr[index] = true
+        optionErr[`${index}`] = true
       }
       return item.value
     }).indexOf('');
@@ -284,10 +287,10 @@ class ImportTransaction extends React.Component {
       })
       let postData = { ...this.state.initValue }
       postData.indexMap = a
-      this.props.importTransactionActions.createConfiguration(postData).then(res => {
+      this.props.importTransactionActions.createConfiguration(postData).then((res) => {
         this.props.commonActions.tostifyAlert('success', 'New Template Created Successfully')
         this.props.history.push('admin/banking/upload-statement', { id: res.data.id, bankAccountId: this.props.location.state.bankAccountId })
-      }).catch(err => {
+      }).catch((err) => {
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
       })
     } else {
@@ -334,7 +337,7 @@ class ImportTransaction extends React.Component {
                             }}
                           >
                             {
-                              props => ( */}
+                              (props) => ( */}
                             <Form >
                               <Row>
                                 <Col lg={3}>
@@ -348,7 +351,7 @@ class ImportTransaction extends React.Component {
                                       name="name"
                                       placeholder="Enter Name"
                                       value={this.state.initValue.name}
-                                      onChange={e => { 
+                                      onChange={(e) => { 
                                         this.handleInputChange('name', e.target.value)
                                         this.setState({ error: {...this.state.error,...{name: ''}}})
                                       }}
@@ -370,7 +373,7 @@ class ImportTransaction extends React.Component {
                                       value={this.state.selectedConfiguration || ''}
                                       options={configurationList ? selectOptionsFactory.renderOptions('name', 'id', configurationList, 'Configuration') : []}
                                       onChange={(e) => {
-                                        let data = configurationList.filter(item => item.id === e.value);
+                                        let data = configurationList.filter((item) => item.id === e.value);
                                         if (data.length > 0) {
                                           this.setState({
                                             initValue: {
@@ -412,7 +415,7 @@ class ImportTransaction extends React.Component {
                                                   type="radio"
                                                   id={option.value}
                                                   name="delimiter"
-                                                  value={this.state.delimiterList[index].value}
+                                                  value={this.state.delimiterList[`${index}`].value}
                                                   checked={this.state.selectedDelimiter === option.value}
                                                   onChange={(e) => {
                                                     this.setState({
@@ -450,7 +453,7 @@ class ImportTransaction extends React.Component {
                                               <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                                 <i className="fa fa-upload"></i> Upload
                                                 </Button>
-                                              <input id="fileInput" ref={ref => {
+                                              <input id="fileInput" ref={(ref) => {
                                                 this.uploadFile = ref;
                                               }}
                                                 type="file" style={{ display: 'none' }} onChange={(e) => {
@@ -527,7 +530,7 @@ class ImportTransaction extends React.Component {
                                                 type=""
                                                 options={date_format_list ? selectOptionsFactory.renderOptions('format', 'id', date_format_list, 'Date Format') : []}
                                                 value={this.state.selectedDateFormat || ''}
-                                                onChange={option => {
+                                                onChange={(option) => {
                                                   if (option && option.value) {
                                                     this.handleInputChange('dateFormatId', option.value)
                                                     this.setState({ selectedDateFormat: option.value,error: {...this.state.error,...{dateFormatId: ''}}})
@@ -579,7 +582,7 @@ class ImportTransaction extends React.Component {
                                   return (
 
                                     <Col style={{ width: `calc(100% / ${this.state.tableDataKey.length})`, margin: '20px 0' }}>
-                                      <FormGroup className={`mb-0 ${this.state.columnStatus[index].status ? 'is-invalid' : ''} ${this.state.selectError[index] ? 'invalid-select' : ''}`}
+                                      <FormGroup className={`mb-0 ${this.state.columnStatus[`${index}`].status ? 'is-invalid' : ''} ${this.state.selectError[`${index}`] ? 'invalid-select' : ''}`}
                                       >
                                         <Select
                                           type=""
@@ -587,14 +590,14 @@ class ImportTransaction extends React.Component {
                                           name={index}
                                           id=""
                                           rows="6"
-                                          value={this.state.selectedValueDropdown[index]}
+                                          value={this.state.selectedValueDropdown[`${index}`]}
                                           onChange={(e) => {
                                             this.handleChange(e, index)
                                           }}
                                         // className={}
                                         />
                                       </FormGroup>
-                                      <p className={this.state.columnStatus[index].status ? 'is-invalid' : 'valid'}>*Already Selected</p>
+                                      <p className={this.state.columnStatus[`${index}`].status ? 'is-invalid' : 'valid'}>*Already Selected</p>
                                     </Col>
 
                                   )
@@ -604,7 +607,7 @@ class ImportTransaction extends React.Component {
                               {
                                 this.state.tableDataKey.length > 0 ? (
                                   <BootstrapTable data={tableData} keyField={this.state.tableDataKey[0]}>
-                                    {this.state.tableDataKey.map(name => <TableHeaderColumn dataField={name} dataAlign="center">{name}</TableHeaderColumn>)}
+                                    {this.state.tableDataKey.map((name) => <TableHeaderColumn dataField={name} dataAlign="center">{name}</TableHeaderColumn>)}
                                   </BootstrapTable>
                                 ) : null
                               }

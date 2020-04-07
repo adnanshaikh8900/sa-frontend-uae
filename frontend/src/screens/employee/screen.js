@@ -101,13 +101,13 @@ class Employee extends React.Component {
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.employeeActions.getEmployeeList(postData).then(res => {
+    this.props.employeeActions.getEmployeeList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -122,32 +122,32 @@ class Employee extends React.Component {
   }
   
   onRowSelect = (row, isSelected, e) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.id);
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.id);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.id) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       });
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
   onSelectAll = (isSelected, rows) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.id)
+      rows.map((item) => {
+        tempList.push(item.id)
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
@@ -175,7 +175,7 @@ class Employee extends React.Component {
     let obj = {
       ids: selectedRows
     }
-    this.props.employeeActions.removeBulkEmployee(obj).then(res => {
+    this.props.employeeActions.removeBulkEmployee(obj).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Employees Deleted Successfully')
         this.initializeData();
@@ -185,8 +185,8 @@ class Employee extends React.Component {
           })
         }
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -228,7 +228,7 @@ class Employee extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.employeeActions.getEmployeeList(obj).then(res => {
+      this.props.employeeActions.getEmployeeList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -343,7 +343,7 @@ class Employee extends React.Component {
                           className="employee-table"
                           trClassName="cursor-pointer"
                           csvFileName="employee_list.csv"
-                          ref={node => this.table = node}
+                          ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
 

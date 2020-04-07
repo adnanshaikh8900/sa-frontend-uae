@@ -9,9 +9,9 @@ export const getEmployeeDetail = (_id) => {
       url: `/rest/employee/getById?id=${_id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -24,9 +24,9 @@ export const updateEmployee = (obj) => {
       url: '/rest/employee/update',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -39,9 +39,9 @@ export const deleteEmployee = (id) => {
       url: `/rest/employee/delete?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

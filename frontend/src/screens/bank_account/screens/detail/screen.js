@@ -64,6 +64,7 @@ class DetailBankAccount extends React.Component {
     this.regExAlpha = /^[a-zA-Z]+$/
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/
 
     this.account_for = [
       { label: 'Personal', value: 'P' },
@@ -77,7 +78,7 @@ class DetailBankAccount extends React.Component {
       this.setState({
         current_bank_account_id: this.props.location.state.bankAccountId
       }, () => {
-        this.props.detailBankAccountActions.getBankAccountByID(this.state.current_bank_account_id).then(res => {
+        this.props.detailBankAccountActions.getBankAccountByID(this.state.current_bank_account_id).then((res) => {
           this.setState({
             current_bank_account: res,
             initialVals: {
@@ -93,7 +94,7 @@ class DetailBankAccount extends React.Component {
               account_is_for: res.personalCorporateAccountInd ? res.personalCorporateAccountInd : ''
             }
           })
-        }).catch(err => {
+        }).catch((err) => {
           this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
           this.props.history.push('/admin/banking/bank-account')
         })
@@ -133,13 +134,13 @@ class DetailBankAccount extends React.Component {
       bankCountry: data.country,
       bankAccountType: data.account_type
     }
-    this.props.detailBankAccountActions.updateBankAccount(obj).then(res => {
+    this.props.detailBankAccountActions.updateBankAccount(obj).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Bank Account Details Updated Successfully')
         this.props.history.push('/admin/banking/bank-account')
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -161,7 +162,7 @@ class DetailBankAccount extends React.Component {
     this.props.detailBankAccountActions.removeBankAccountByID(current_bank_account_id).then(() => {
       this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
       this.props.history.push('/admin/banking/bank-account')
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -227,12 +228,12 @@ class DetailBankAccount extends React.Component {
                             .required('Account Number is Required'),
                           account_is_for: Yup.string().required('Account is for is Required'),
                           ifsc_code: Yup.string()
-                          .required('IFSC Code is Required'),
-                          swift_code: Yup.string().matches(/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/, {message: "Please enter valid Swift Code.", excludeEmptyString: false})
+                            .required('IFSC Code is Required'),
+                          swift_code: Yup.string().matches(this.swiftRegex, { message: "Please enter valid Swift Code.", excludeEmptyString: false })
                         })}
                       >
                         {
-                          props => (
+                          (props) => (
                             <Form onSubmit={props.handleSubmit}>
                               <Row>
                                 <Col lg={4}>
@@ -244,8 +245,9 @@ class DetailBankAccount extends React.Component {
                                       name="account_name"
                                       placeholder="Enter Account Name"
                                       value={props.values.account_name}
-                                      onChange={(option) => { 
-                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('account_name')(option) }}
+                                      onChange={(option) => {
+                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('account_name')(option) }
+                                      }}
                                       className={
                                         props.errors.account_name && props.touched.account_name
                                           ? 'is-invalid'
@@ -265,7 +267,7 @@ class DetailBankAccount extends React.Component {
                                       name="currency"
                                       options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                       value={props.values.currency}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('currency')(option.value)
                                         } else {
@@ -292,7 +294,7 @@ class DetailBankAccount extends React.Component {
                                       name="opening_balance"
                                       placeholder="Your Opening Balance"
                                       value={props.values.opening_balance}
-                                      onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('opening_balance')(option) }}
+                                      onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('opening_balance')(option) } }}
                                       className={
                                         props.errors.opening_balance && props.touched.opening_balance
                                           ? 'is-invalid'
@@ -317,7 +319,7 @@ class DetailBankAccount extends React.Component {
                                       name="account_type"
                                       options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, 'Account Type') : []}
                                       value={props.values.account_type}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('account_type')(option.value)
                                         } else {
@@ -347,8 +349,9 @@ class DetailBankAccount extends React.Component {
                                       name="bank_name"
                                       placeholder="Enter Bank Name"
                                       value={props.values.bank_name}
-                                      onChange={(option) => { 
-                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('bank_name')(option) }}
+                                      onChange={(option) => {
+                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('bank_name')(option) }
+                                      }}
                                       className={
                                         props.errors.bank_name && props.touched.bank_name
                                           ? 'is-invalid'
@@ -369,8 +372,9 @@ class DetailBankAccount extends React.Component {
                                       name="account_number"
                                       placeholder="Enter Account Number"
                                       value={props.values.account_number}
-                                      onChange={(option) => { 
-                                        if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('account_number')(option) }}
+                                      onChange={(option) => {
+                                        if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('account_number')(option) }
+                                      }}
                                       className={
                                         props.errors.account_number && props.touched.account_number
                                           ? 'is-invalid'
@@ -392,16 +396,17 @@ class DetailBankAccount extends React.Component {
                                       id="ifsc_code"
                                       name="ifsc_code"
                                       placeholder="Enter IFSC Code"
-                                      value={props.values.ifsc_code}
-                                      onChange={(option) => { 
-                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('ifsc_code')(option) }}
-                                         className={
+                                      value={props.values.ifsc_code || ''}
+                                      onChange={(option) => {
+                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('ifsc_code')(option) }
+                                      }}
+                                      className={
                                         props.errors.ifsc_code && props.touched.ifsc_code
                                           ? 'is-invalid'
                                           : ''
                                       }
                                     />
-                                      {props.errors.ifsc_code && props.touched.ifsc_code && (
+                                    {props.errors.ifsc_code && props.touched.ifsc_code && (
                                       <div className="invalid-feedback">{props.errors.ifsc_code}</div>
                                     )}
                                   </FormGroup>
@@ -422,7 +427,7 @@ class DetailBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
-                                      {props.errors.swift_code && props.touched.swift_code && (
+                                    {props.errors.swift_code && props.touched.swift_code && (
                                       <div className="invalid-feedback">{props.errors.swift_code}</div>
                                     )}
                                   </FormGroup>
@@ -435,7 +440,7 @@ class DetailBankAccount extends React.Component {
                                       name="country"
                                       options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                       value={props.values.country}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('country')(option.value)
                                         } else {
@@ -460,7 +465,7 @@ class DetailBankAccount extends React.Component {
                                       name="account_is_for"
                                       options={currency_list ? selectOptionsFactory.renderOptions('label', 'value', this.account_for, 'Type') : []}
                                       value={props.values.account_is_for}
-                                      onChange={option => {
+                                      onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('account_is_for')(option.value)
                                         } else {

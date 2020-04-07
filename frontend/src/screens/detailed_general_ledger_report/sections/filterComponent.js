@@ -41,7 +41,7 @@ class FilterComponent extends Component {
 
 	render() {
 		const { initValue } = this.state
-		const {chart_of_account_list} = this.props
+		const { chart_of_account_list } = this.props
 		return (
 			<div>
 				<Card>
@@ -53,7 +53,7 @@ class FilterComponent extends Component {
 						<Formik
 							initialValues={initValue}
 						>
-							{props => (
+							{(props) => (
 								<Form>
 									<Row>
 										<Col lg={4}>
@@ -71,10 +71,10 @@ class FilterComponent extends Component {
 													value={moment(props.values.startDate).format('DD/MM/YYYY')}
 													dropdownMode="select"
 													dateFormat="dd/MM/yyyy"
-													onChange={value => {
+													onChange={(value) => {
 														props.handleChange("startDate")(value);
-														if(moment(value).isAfter(props.values.endDate)){
-															props.setFieldValue('endDate',moment(value).add(1, 'M'))
+														if (moment(value).isAfter(props.values.endDate)) {
+															props.setFieldValue('endDate', moment(value).add(1, 'M'))
 														}
 													}}
 												/>
@@ -96,10 +96,10 @@ class FilterComponent extends Component {
 													value={moment(props.values.endDate).format('DD/MM/YYYY')}
 													dropdownMode="select"
 													dateFormat="dd/MM/yyyy"
-													onChange={value => {
+													onChange={(value) => {
 														props.handleChange("endDate")(value);
-														if(moment(value).isBefore(props.values.endDate)){
-															props.setFieldValue('startDate',moment(value).subtract(1, 'M'))
+														if (moment(value).isBefore(props.values.endDate)) {
+															props.setFieldValue('startDate', moment(value).subtract(1, 'M'))
 														}
 													}}
 												/>
@@ -114,9 +114,9 @@ class FilterComponent extends Component {
 													className="select-default-width"
 													id="reportBasis"
 													name="reportBasis"
-												  options={this.reportBasis}
+													options={this.reportBasis}
 													value={props.values.reportBasis}
-													onChange={option =>
+													onChange={(option) =>
 														props.handleChange("reportBasis")(option)
 													}
 												/>
@@ -131,7 +131,7 @@ class FilterComponent extends Component {
 													name="chart_of_account_list"
 													options={chart_of_account_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', chart_of_account_list, 'Chart of Account') : []}
 													value={props.values.chartOfAccountId}
-													onChange={option =>
+													onChange={(option) =>
 														props.handleChange("chartOfAccountId")(option)
 													}
 												/>

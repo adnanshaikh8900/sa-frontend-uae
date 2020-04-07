@@ -92,7 +92,7 @@ class VatCode extends React.Component {
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.vatActions.getVatList(postData).then(res => {
+    this.props.vatActions.getVatList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -118,15 +118,16 @@ class VatCode extends React.Component {
         selectedRows: this.state.selectedRows
       })
     }
-    else
+    else {
       this.setState({
-        selectedRows: this.state.selectedRows.filter(el => el !== row.id)
+        selectedRows: this.state.selectedRows.filter((el) => el !== row.id)
       })
+    }
   }
 
   onSelectAll = (isSelected, rows) => {
     this.setState({
-      selectedRows: isSelected ? rows.map(row => row.id) : []
+      selectedRows: isSelected ? rows.map((row) => row.id) : []
     })
   }
 
@@ -200,7 +201,7 @@ class VatCode extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -228,7 +229,7 @@ class VatCode extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.vatActions.getVatList(obj).then(res => {
+      this.props.vatActions.getVatList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -332,7 +333,7 @@ class VatCode extends React.Component {
                         fetchInfo={{ dataTotalSize: vat_list.count ? vat_list.count : 0 }}
                         trClassName="cursor-pointer"
                         csvFileName="vat_code.csv"
-                        ref={node => {
+                        ref={(node) => {
                           this.table = node
                         }}
                       >

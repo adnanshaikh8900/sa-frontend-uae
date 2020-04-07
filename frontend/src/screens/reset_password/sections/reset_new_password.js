@@ -49,20 +49,20 @@ class ResetNewPassword extends React.Component {
         url: '/public/resetPassword',
         data: obj
       } 
-    api(data).then(res => {
+    api(data).then((res) => {
       if(res.status === 200 ) {
         this.setState({
           alert: <Message
             type="success"
             content="Password Reset Successfully."
           />
-        },()=>{
-          setTimeout(()=>{
+        },() => {
+          setTimeout(() => {
             this.props.history.push('/login')
           },1500)
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({
         alert: <Message
           type="danger"
@@ -117,7 +117,7 @@ class ResetNewPassword extends React.Component {
                             .oneOf([Yup.ref("password"), null], "Passwords must match"),
                         })}
                       >
-                        {props => {
+                        {(props) => {
                           return (
                             <Form >
                               <Row>

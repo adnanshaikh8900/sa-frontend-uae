@@ -44,7 +44,7 @@ class ResetPassword extends React.Component {
       const query = new URLSearchParams(this.props.location.search);
       const token = query.get('token')
       this.setState({
-        token: token
+        token
       })
     }
   }
@@ -56,18 +56,18 @@ class ResetPassword extends React.Component {
       url: '/public/forgotPassword',
       data: { "username": obj.username }
     }
-    api(data).then(res => {
+    api(data).then((res) => {
       this.setState({
         alert: <Message
           type="success"
           content="We Have Sent You a Verification Email. Please Check Your Mail Box."
         />
-      },()=>{
+      },() => {
           setTimeout(() => {
             this.props.history.push('/login')
         }, 1500);
       })
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({
         alert: <Message
           type="danger"
@@ -116,7 +116,7 @@ class ResetPassword extends React.Component {
                               .email("Invalid Email Id"),
                           })}
                         >
-                          {props => {
+                          {(props) => {
                             return (
                               <Form >
                                 <Row>
@@ -129,7 +129,7 @@ class ResetPassword extends React.Component {
                                         type="text"
                                         id="username"
                                         name="username"
-                                        onChange={value => {
+                                        onChange={(value) => {
                                           props.handleChange("username")(value);
                                         }}
                                         placeholder="Please Enter Your Email Address"

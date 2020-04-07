@@ -45,13 +45,13 @@ class ContactModal extends React.Component {
     }
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
   // Create or Contact
   contactHandleSubmit = (data) => {
     const request = this.props.createContact(data);
-    request.then(res => {
+    request.then((res) => {
       if (res.status === 200) {
         this.props.closeContactModal(true,res.data)
       }
@@ -59,7 +59,7 @@ class ContactModal extends React.Component {
   }
 
   getStateList = (countryCode) => {
-    this.props.getStateList(countryCode).then(res => {
+    this.props.getStateList(countryCode).then((res) => {
       if (res.status === 200) {
         this.setState({
           stateList: res.data
@@ -112,7 +112,7 @@ class ContactModal extends React.Component {
               addressLine2: Yup.string()
                 .required('Address2 is a required field')
             })}>
-            {props => (
+            {(props) => (
               <Form name="simpleForm" onSubmit={props.handleSubmit}>
                 <ModalHeader toggle={this.toggleDanger}>New Contact</ModalHeader>
                 <ModalBody>
@@ -153,7 +153,7 @@ class ContactModal extends React.Component {
                           id="firstName"
                           name="firstName"
                           onChange={(option) => {
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
                           }}
                           placeholder="Enter firstName "
                           value={props.values.firstName}
@@ -176,7 +176,7 @@ class ContactModal extends React.Component {
                           id="middleName"
                           name="middleName"
                           onChange={(option) => {
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option)
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
                           }}
                           placeholder="Enter middleName  "
                           value={props.values.middleName}
@@ -199,7 +199,7 @@ class ContactModal extends React.Component {
                           id="lastName"
                           name="lastName"
                           onChange={(option) => {
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
                           }}
                           placeholder="Enter lastName   "
                           value={props.values.lastName}
@@ -300,7 +300,7 @@ class ContactModal extends React.Component {
                               : []
                           }
                           value={props.values.countryId}
-                          onChange={option => {
+                          onChange={(option) => {
                             if (option && option.value) {
                               props.handleChange("countryId")(option.value);
                               this.getStateList(option.value)
@@ -332,7 +332,7 @@ class ContactModal extends React.Component {
                         <Select
                           options={stateList ? selectOptionsFactory.renderOptions('label', 'value', stateList, 'State') : []}
                           value={props.values.stateId}
-                          onChange={option => {
+                          onChange={(option) => {
                             if (option && option.value) {
                               props.handleChange('stateId')(option.value)
                             } else {
@@ -360,7 +360,7 @@ class ContactModal extends React.Component {
                           // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                           value={props.values.city}
                           onChange={(option) => {
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('city')(option)
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('city')(option)}
                           }}
                           placeholder=""
                           id="city"
@@ -396,7 +396,7 @@ class ContactModal extends React.Component {
                               : []
                           }
                           value={props.values.currencyCode}
-                          onChange={option => {
+                          onChange={(option) => {
                             if (option && option.value) {
                               props.handleChange("currencyCode")(
                                 option.value

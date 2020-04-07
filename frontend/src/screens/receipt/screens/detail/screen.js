@@ -73,7 +73,7 @@ class DetailReceipt extends React.Component {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.receiptActions.getContactList();
       this.props.receiptActions.getInvoiceList();
-      this.props.receiptDetailActions.getReceiptById(this.props.location.state.id).then(res => {
+      this.props.receiptDetailActions.getReceiptById(this.props.location.state.id).then((res) => {
         // this.props.receiptActions.getTitleList()
         if (res.status === 200) {
           this.setState({
@@ -90,7 +90,7 @@ class DetailReceipt extends React.Component {
             loading: false,
           })
         }
-      }).catch(err => {
+      }).catch((err) => {
         this.props.commonActions.tostifyAlert('error', err ? err.data.message : null)
         this.setState({ loading: false })
       })
@@ -121,7 +121,7 @@ class DetailReceipt extends React.Component {
       unusedAmount: unusedAmount ? unusedAmount : '',
       invoiceId: invoiceId && invoiceId !== null ? invoiceId : ''
     }
-    this.props.receiptDetailActions.updateReceipt(postData).then(res => {
+    this.props.receiptDetailActions.updateReceipt(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Reeceipt Updated successfully!')
         this.props.history.push('/admin/revenue/receipt')
@@ -143,12 +143,12 @@ class DetailReceipt extends React.Component {
 
   removeReceipt = () => {
     const {current_receipt_id} = this.state;
-    this.props.receiptDetailActions.deleteReceipt(current_receipt_id).then(res => {
+    this.props.receiptDetailActions.deleteReceipt(current_receipt_id).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Receipt Deleted Successfully');
         this.props.history.push('/admin/revenue/receipt')
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -210,7 +210,7 @@ class DetailReceipt extends React.Component {
 
                               })}
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   <Col lg={4}>
@@ -222,7 +222,7 @@ class DetailReceipt extends React.Component {
                                         name="receiptNo"
                                         placeholder="Receipt Number"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNo')(option)
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('receiptNo')(option)}
                                         }}
                                         value={props.values.receiptNo}
                                       />
@@ -262,7 +262,7 @@ class DetailReceipt extends React.Component {
                                         placeholder="Reference Number"
                                         value={props.values.referenceCode}
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('referenceCode')(option)
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('referenceCode')(option)}
                                         }}
                                         className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
                                         />
@@ -337,7 +337,7 @@ class DetailReceipt extends React.Component {
                                         id="amount"
                                         name="amount"
                                         placeholder="Amount"
-                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('amount')(option) }}
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('amount')(option) }}}
                                         value={props.values.amount}
                                         className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
     
@@ -355,7 +355,7 @@ class DetailReceipt extends React.Component {
                                         id="unusedAmount"
                                         name="unusedAmount"
                                         placeholder="Unused Amount"
-                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('unusedAmount')(option) }}
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('unusedAmount')(option) }}}
                                         value={props.values.unusedAmount}
     
                                       />

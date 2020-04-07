@@ -34,7 +34,7 @@ export const getSupplierInvoiceList = (postObj) => {
       url: param
       // data: postObj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         if(!postObj.paginationDisable) {
           dispatch({
@@ -46,7 +46,7 @@ export const getSupplierInvoiceList = (postObj) => {
         }
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -59,7 +59,7 @@ export const getProjectList = () => {
       method: 'get',
       url: 'rest/project/getProjectsForDropdown'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.PROJECT_LIST,
@@ -68,7 +68,7 @@ export const getProjectList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -82,7 +82,7 @@ export const getContactList = (nameCode) => {
       method: 'get',
       url: `rest/contact/getContactsForDropdown?contactType=${contactType}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.CONTACT_LIST,
@@ -91,7 +91,7 @@ export const getContactList = (nameCode) => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -104,14 +104,14 @@ export const getStatusList = () => {
       method: 'get',
       url: '/rest/datalist/getInvoiceStatusTypes'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.STATUS_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -124,7 +124,7 @@ export const getCurrencyList = () => {
       method: 'get',
       url: 'rest/bank/getcurrenncy'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.CURRENCY_LIST,
@@ -134,7 +134,7 @@ export const getCurrencyList = () => {
         })
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -147,7 +147,7 @@ export const getVatList = () => {
       method: 'get',
       url: 'rest/datalist/vatCategory'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.VAT_LIST,
@@ -156,7 +156,7 @@ export const getVatList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -168,14 +168,14 @@ export const getSupplierList = (id) => {
       method: 'get',
       url: `/rest/contact/getContactsForDropdown?contactType=${id}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.SUPPLIER_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -187,9 +187,9 @@ export const createSupplier = (obj) => {
       url: 'rest/contact/save',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -202,11 +202,11 @@ export const removeBulk = (obj) => {
       url: '/rest/invoice/deletes',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -218,14 +218,14 @@ export const getCountryList = () => {
       method: 'get',
       url: 'rest/datalist/getcountry'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: SUPPLIER_INVOICE.COUNTRY_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -238,11 +238,11 @@ export const postInvoice = (obj) => {
       url: '/rest/invoice/posting',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -255,9 +255,9 @@ export const deleteInvoice = (id) => {
       url: `/rest/invoice/delete?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -270,9 +270,9 @@ export const getInvoiceById = (_id) => {
       url: `/rest/invoice/getInvoiceById?id=${_id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -284,7 +284,7 @@ export const getStateList = (countryCode) => {
       method: 'get',
       url: '/rest/datalist/getstate?countryCode=' + countryCode
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         // dispatch({
         //   type: CONTACT.STATE_LIST,
@@ -292,7 +292,7 @@ export const getStateList = (countryCode) => {
         // })
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -304,11 +304,11 @@ export const sendMail = (id) => {
       method: 'post',
       url: `/rest/invoice/send?id=${id}`,
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

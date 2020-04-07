@@ -78,7 +78,7 @@ class DetailProject extends React.Component {
     }
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
   // Show Invite User Modal
@@ -96,7 +96,7 @@ class DetailProject extends React.Component {
 
   componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.id) {
-      this.props.detailProjectActions.getProjectById(this.props.location.state.id).then(res => {
+      this.props.detailProjectActions.getProjectById(this.props.location.state.id).then((res) => {
         this.props.projectActions.getContactList()
         this.props.projectActions.getCountryList()
         this.props.projectActions.getCurrencyList()
@@ -119,7 +119,7 @@ class DetailProject extends React.Component {
             loading: false,
           })
         }
-      }).catch(err => {
+      }).catch((err) => {
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
         this.setState({loading: false})
       })
@@ -164,7 +164,7 @@ class DetailProject extends React.Component {
       currencyCode: currencyCode && currencyCode!== null ? currencyCode : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
-    this.props.detailProjectActions.updateProject(postData).then(res => {
+    this.props.detailProjectActions.updateProject(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Project Updated successfully!')
          this.props.history.push('/admin/master/project')
@@ -186,12 +186,12 @@ class DetailProject extends React.Component {
 
   removeProject = () => {
     const { current_project_id }= this.state;
-    this.props.detailProjectActions.deleteProject(current_project_id).then(res=>{
+    this.props.detailProjectActions.deleteProject(current_project_id).then((res) => {
       if(res.status === 200) {
         this.success('Project Deleted Successfully');
         this.props.history.push('/admin/master/project')
       }
-    }).catch(err=> {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -246,7 +246,7 @@ class DetailProject extends React.Component {
                           // invoiceLanguageCode: Yup.string()
                           //   .required("Invoice Language is Required")
                         })}>
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={4}>
@@ -257,7 +257,7 @@ class DetailProject extends React.Component {
                                     id="name"
                                     name="projectName"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('projectName')(option)
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('projectName')(option)}
                                     }}
                                     placeholder="Enter Project Name"
                                     defaultValue={props.values.projectName}
@@ -318,7 +318,7 @@ class DetailProject extends React.Component {
                                     id="contractPoNumber"
                                     name="contractPoNumber"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contractPoNumber')(option)
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('contractPoNumber')(option)}
                                     }}
                                     placeholder="Enter Contract PO Number"
                                     defaultValue={props.values.contractPoNumber}
@@ -341,7 +341,7 @@ class DetailProject extends React.Component {
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('vatRegistrationNumber')(option)}
                                     }}
                                     placeholder="Enter VAT Registration Number"
                                     defaultValue={props.values.vatRegistrationNumber}
@@ -398,7 +398,7 @@ class DetailProject extends React.Component {
                                     id="expenseBudget"
                                     name="expenseBudget"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('expenseBudget')(option)
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('expenseBudget')(option)}
                                     }}
                                     placeholder="Enter Expense Budgets"
                                     defaultValue={props.values.expenseBudget}
@@ -421,7 +421,7 @@ class DetailProject extends React.Component {
                                     id="revenueBudget"
                                     name="revenueBudget"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('revenueBudget')(option)
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('revenueBudget')(option)}
                                     }}
                                     placeholder="Enter VAT Revenue Budget"
                                     defaultValue={props.values.revenueBudget}

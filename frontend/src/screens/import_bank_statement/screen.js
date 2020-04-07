@@ -66,7 +66,7 @@ class ImportBankStatement extends React.Component {
 
   initializeData = () => {
     if(this.props.location.state && this.props.location.state.bankAccountId) {
-      this.props.importBankStatementActions.getTemplateList().then(res => {
+      this.props.importBankStatementActions.getTemplateList().then((res) => {
         if (res.status === 200) {
           let id;
           id = this.props.location.state && this.props.location.state.id ? id : ''
@@ -120,14 +120,14 @@ class ImportBankStatement extends React.Component {
     //       // tableData: [...res.data],
     //       tableDataKey: ['a','b','c','d']
     //     })
-    this.props.importBankStatementActions.parseFile(formData).then(res => {
+    this.props.importBankStatementActions.parseFile(formData).then((res) => {
       this.setState({
         tableData: res.data['data'],
         tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
         errorIndexList: res.data.error ? res.data.error : []
       })
       // })
-    }).catch(err => {
+    }).catch((err) => {
       // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
       // this.setState({ loading: false })
     })
@@ -140,10 +140,10 @@ class ImportBankStatement extends React.Component {
       templateId: selectedTemplate ? +selectedTemplate : '',
       importDataMap: tableData
     }
-    this.props.importBankStatementActions.importTransaction(postData).then(res => {
+    this.props.importBankStatementActions.importTransaction(postData).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Transaction  Imported Successfully')
       this.props.history.push('/admin/banking/bank-account')
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -265,7 +265,7 @@ class ImportBankStatement extends React.Component {
                             })}
                         >
                           {
-                            props => (
+                            (props) => (
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   <Col md="2">
@@ -277,7 +277,7 @@ class ImportBankStatement extends React.Component {
                                       <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                         <i className="fa fa-upload"></i> Upload
                                                 </Button>
-                                      <input id="fileInput" ref={ref => {
+                                      <input id="fileInput" ref={(ref) => {
                                         this.uploadFile = ref;
                                       }}
                                         type="file" style={{ display: 'none' }} onChange={(e) => {
@@ -294,7 +294,7 @@ class ImportBankStatement extends React.Component {
                                       <Select
                                         options={templateList ? templateList : []}
                                         value={this.state.selectedTemplate}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('templateId')(option.value)
                                             this.setState({
@@ -405,7 +405,7 @@ class ImportBankStatement extends React.Component {
                             className="product-table"
                             trClassName="cursor-pointer"
                             csvFileName="product_list.csv"
-                            ref={node => this.table = node}
+                            ref={(node) => this.table = node}
                           >
                             <TableHeaderColumn
                               isKey

@@ -4,6 +4,7 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
+import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationResponseModel;
@@ -233,4 +234,22 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+	/**
+	 * This method web service will retriever the OverDueAmountDetails To Be Paid for the the specific user
+	 * @param request HTTP servelet request
+	 * @return Response entity
+	 */
+	@ApiOperation(value = "Get Overdue Amount Details")
+	@GetMapping(value = "/getOverDueAmountDetails")
+	public ResponseEntity getOverDueAmountDetails(HttpServletRequest request) {
+		try {
+			Integer type = Integer.parseInt(request.getParameter("type"));
+			OverDueAmountDetailsModel overDueAmountDetails = invoiceService.getOverDueAmountDetails(type);
+			return new ResponseEntity(overDueAmountDetails, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
+

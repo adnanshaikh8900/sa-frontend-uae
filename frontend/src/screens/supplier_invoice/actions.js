@@ -313,3 +313,18 @@ export const sendMail = (id) => {
     })
   }
 }
+export const getOverdueAmountDetails = (invoiceType) => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/invoice/getOverDueAmountDetails?type=' + invoiceType
+    }
+    return authApi(data).then(res => {
+      if (res.status === 200) {
+        return res
+      }
+    }).catch(err => {
+      throw err
+    })
+  }
+}

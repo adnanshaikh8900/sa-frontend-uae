@@ -272,7 +272,7 @@ class CustomerInvoice extends React.Component {
             {/* <DropdownItem>
               <i className="fas fa-adjust" /> Adjust
             </DropdownItem> */}
-            <DropdownItem onClick={()=> {this.sendMail(row.id)}}>
+            <DropdownItem onClick={() => { this.sendMail(row.id) }}>
               <i className="fas fa-upload" /> Send
             </DropdownItem>
             {/* <DropdownItem>
@@ -287,22 +287,15 @@ class CustomerInvoice extends React.Component {
     )
   }
 
-  sendEmail = (id) => {
-    const postData = {
-      id
-    }
-    this.props.customerInvoiceActions.checkMailConfiguration().then(res => {
+  sendMail = (id) => {
+    this.props.customerInvoiceActions.sendMail(id).then(res => {
       if (res.status === 200) {
-          this.props.customerInvoiceActions.sendEmail(postData).then(res => {
-            if(res.status === 200)  {
-               this.props.commonActions.tostifyAlert('success', 'Invoice Send Successfully');
-            }
-          })
+        this.props.commonActions.tostifyAlert('success', 'Invoice Send Successfully');
       }
     }).catch(err => {
-        this.props.commonActions.tostifyAlert('error', 'Please First fill The Mail Configuration Detail');
-  })
-}
+      this.props.commonActions.tostifyAlert('error', 'Please First fill The Mail Configuration Detail');
+    })
+  }
 
   onRowSelect = (row, isSelected, e) => {
     let temp_list = []

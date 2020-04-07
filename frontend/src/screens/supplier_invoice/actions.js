@@ -298,26 +298,11 @@ export const getStateList = (countryCode) => {
   }
 }
 
-export const checkMailConfiguration = () => {
-  return (dispatch) => {
-    let data = {
-      method: 'get',
-      url: '/rest/datalist/getstate'
-    }
-    return authApi(data).then(res => {
-        return res
-    }).catch(err => {
-      throw err
-    })
-  }
-}
-
-export const sendMail = (obj) => {
+export const sendMail = (id) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/invoice/send',
-      data: obj
+      url: `/rest/invoice/send?id=${id}`,
     }
     return authApi(data).then(res => {
       if (res.status === 200) {

@@ -56,7 +56,7 @@ export const getSimpleVATVersion = () => {
           data: res.data.simpleVatRelease
         }
       })
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

@@ -103,7 +103,7 @@ class CreateProduct extends React.Component {
           })
           resetForm(this.state.initValue)
           // this.props.history.push('/admin/master/product/create')
-        } else this.props.history.push('/admin/master/product')
+        } else { this.props.history.push('/admin/master/product') }
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)

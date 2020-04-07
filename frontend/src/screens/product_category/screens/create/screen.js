@@ -90,7 +90,7 @@ class CreateProductCategory extends React.Component {
           this.setState({
             createMore: false
           })
-        } else this.props.history.push('/admin/master/product-category')
+        } else { this.props.history.push('/admin/master/product-category') }
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)

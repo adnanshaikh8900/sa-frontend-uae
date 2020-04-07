@@ -112,7 +112,7 @@ class CustomerReport extends React.Component {
 
   render() {
   
-    const customerInvoice = this.props.customer_invoice_report ? this.props.customer_invoice_report.map(customer => 
+    const customerInvoice = this.props.customer_invoice_report ? this.props.customer_invoice_report.map((customer) => 
      
       ({
         status : customer.status,

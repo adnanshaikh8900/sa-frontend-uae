@@ -186,10 +186,10 @@ class SupplierInvoice extends React.Component {
 
   toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
-    if (temp[index]) {
-      temp[index] = false
+    if (temp[parseInt(index, 10)]) {
+      temp[parseInt(index, 10)] = false
     } else {
-      temp[index] = true
+      temp[parseInt(index, 10)] = true
     }
     this.setState({
       actionButtons: temp
@@ -456,7 +456,7 @@ class SupplierInvoice extends React.Component {
     //   zIndex: 1999
     // }
 
-    const supplier_invoice_data = supplier_invoice_list && supplier_invoice_list.data ? this.props.supplier_invoice_list.data.map(supplier =>
+    const supplier_invoice_data = supplier_invoice_list && supplier_invoice_list.data ? this.props.supplier_invoice_list.data.map((supplier) =>
 
       ({
         id: supplier.id,

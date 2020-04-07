@@ -22,13 +22,13 @@ export const checkAuthStatus = () => {
             data: res.data
           }
         })
-        // window.sessionStorage.setItem('profilePic', res.data.profileImageBinary);
+        // window['sessionStorage'].setItem('profilePic', res.data.profileImageBinary);
         cryptoService.encryptService('userId',res.data.userId)
 
       } else {
         throw new Error('Auth Failed')
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -45,11 +45,11 @@ export const logIn = (obj) => {
       dispatch({
         type: AUTH.SIGNED_IN
       })
-      window.sessionStorage.setItem('accessToken', res.data.token);
-      // window.sessionStorage.setItem('userId', res.data.userId);
+      window['sessionStorage'].setItem('accessToken', res.data.token);
+      // window['sessionStorage'].setItem('userId', res.data.userId);
 
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -57,7 +57,7 @@ export const logIn = (obj) => {
 
 export const logOut = () => {
   return (dispatch) => {
-    window.sessionStorage.clear()
+    window['sessionStorage'].clear()
 
     dispatch({
       type: AUTH.SIGNED_OUT

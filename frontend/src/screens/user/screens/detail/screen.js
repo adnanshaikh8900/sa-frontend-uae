@@ -265,7 +265,7 @@ class DetailUser extends React.Component {
                                         // withIcon={true}
                                         buttonText='Choose images'
                                         onChange={this.uploadImage}
-                                        imgExtension={['.jpg', '.gif', '.png', '.gif', '.jpeg']}
+                                        imgExtension={['jpg', 'gif', 'png', 'jpeg']}
                                         maxFileSize={1048576}
                                         withPreview={true}
                                         singleImage={true}

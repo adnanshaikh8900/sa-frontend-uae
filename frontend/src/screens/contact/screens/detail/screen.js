@@ -372,7 +372,7 @@ class DetailContact extends React.Component {
                                         name="organization"
                                         placeholder="Enter Organization Name"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('organization')(option)
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('organization')(option)}
                                         }}
                                         value={props.values.organization}
                                         className={

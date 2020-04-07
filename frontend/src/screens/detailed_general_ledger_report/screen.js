@@ -97,7 +97,7 @@ class DetailedGeneralLedgerReport extends React.Component {
       const tempData = []
       if (res.status === 200) {
         res.data.map((item) => {
-          item.map(val => {
+          item.map((val) => {
             tempData.push(val)
             return val
           })
@@ -125,11 +125,11 @@ class DetailedGeneralLedgerReport extends React.Component {
     FileSaver.saveAs(data, fileName + fileExtension);
   }
 
-  toggle = () => this.setState(prevState => {
+  toggle = () => this.setState((prevState) => {
     return { dropdownOpen: !prevState.dropdownOpen }
   });
 
-  viewFilter = () => this.setState(prevState => {
+  viewFilter = () => this.setState((prevState) => {
     return { view: !prevState.view }
   });
 
@@ -156,7 +156,7 @@ class DetailedGeneralLedgerReport extends React.Component {
     let checkedValue;
     let obj = {}
     const direction = this.state.sort.column ? (this.state.sort.direction === 'asc' ? 'desc' : 'asc') : 'desc';
-    const sortedData = this.state.detailedGeneralLedgerList.map(data => {
+    const sortedData = this.state.detailedGeneralLedgerList.map((data) => {
       let nameA, nameB
       data.sort((a, b) => {
         if (column !== 'date') {
@@ -181,7 +181,7 @@ class DetailedGeneralLedgerReport extends React.Component {
         checkedValue = data[0][column]
       }
       obj = {
-        'data': data,
+        data,
         'value': checkedValue
       }
       return obj

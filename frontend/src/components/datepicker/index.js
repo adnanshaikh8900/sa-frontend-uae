@@ -56,9 +56,9 @@ class DateRangePicker2 extends React.Component{
       return key
     })
 
-    if(this.state.startDate !== null && nick_key === null)
+    if(this.state.startDate !== null && nick_key === null) {
       nick_key = this.state.startDate.format('ll') + ' - ' + this.state.endDate.format('ll')
-
+    }
     return (
       <DateRangePicker 
         startDate={this.state.startDate} 

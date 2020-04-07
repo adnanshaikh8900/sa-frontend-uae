@@ -217,10 +217,10 @@ class CustomerInvoice extends React.Component {
 
   toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
-    if (temp[index]) {
-      temp[index] = false
+    if (temp[parseInt(index, 10)]) {
+      temp[parseInt(index, 10)] = false
     } else {
-      temp[index] = true
+      temp[parseInt(index, 10)] = true
     }
     this.setState({
       actionButtons: temp
@@ -442,7 +442,7 @@ class CustomerInvoice extends React.Component {
     const { loading, filterData, dialog, selectedRows, csvData, view } = this.state
     const { status_list, customer_list, customer_invoice_list } = this.props
 
-    const customer_invoice_data = this.props.customer_invoice_list && this.props.customer_invoice_list.data ? this.props.customer_invoice_list.data.map(customer =>
+    const customer_invoice_data = this.props.customer_invoice_list && this.props.customer_invoice_list.data ? this.props.customer_invoice_list.data.map((customer) =>
 
       ({
         id: customer.id,

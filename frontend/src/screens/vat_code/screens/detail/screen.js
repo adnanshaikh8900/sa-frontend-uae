@@ -59,12 +59,13 @@ class DetailVatCode extends React.Component {
     if (this.props.location.state && this.props.location.state.id) {
       this.setState({ loading: true });
       this.props.vatDetailActions.getVatByID(this.props.location.state.id).then((res) => {
-        if (res.status === 200)
+        if (res.status === 200) {
           this.setState({ 
             current_vat_id: this.props.location.state.id,
             loading: false,
             vatData: res.data
           })
+        }
       }).catch((err) => {
         this.props.history.push('/admin/master/vat-code')
       })

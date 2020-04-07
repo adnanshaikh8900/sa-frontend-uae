@@ -128,7 +128,7 @@ class Profile extends React.Component {
 
   toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
-    newArray[parseInt(tabPane)] = tab
+    newArray[parseInt(tabPane, 10)] = tab
     this.setState({
       activeTab: newArray
     })
@@ -299,8 +299,8 @@ class Profile extends React.Component {
             flag: false,
             isSame: res.data.isSame ? res.data.isSame : false 
           },() => {
-            if(res.data.invoicingCountryCode) this.getStateList(res.data.invoicingCountryCode,'invoicing')
-            if(res.data.companyCountryCode) this.getStateList(res.data.companyCountryCode,'company')
+            if(res.data.invoicingCountryCode){ this.getStateList(res.data.invoicingCountryCode,'invoicing')}
+            if(res.data.companyCountryCode){ this.getStateList(res.data.companyCountryCode,'company')}
             if(this.state.isSame){
               this.setState({
                 companyAddress: {
@@ -518,7 +518,7 @@ class Profile extends React.Component {
                                             // withIcon={true}
                                             buttonText='Choose images'
                                             onChange={this.uploadUserImage}
-                                            imgExtension={['.jpg', '.gif', '.png', '.gif', '.jpeg']}
+                                            imgExtension={['jpg', 'gif', 'png', 'jpeg']}
                                             maxFileSize={1048576}
                                             withPreview={true}
                                             singleImage={true}
@@ -864,7 +864,7 @@ class Profile extends React.Component {
                                             // withIcon={true}
                                             buttonText='Choose images'
                                             onChange={this.uploadCompanyImage}
-                                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                            imgExtension={['jpg', 'gif', 'png', 'jpeg']}
                                             maxFileSize={1048576}
                                             withPreview={true}
                                             singleImage={true}

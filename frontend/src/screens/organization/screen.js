@@ -215,7 +215,7 @@ class Organization extends React.Component {
                                   withIcon={true}
                                   buttonText='Choose images'
                                   onChange={this.uploadImage}
-                                  imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                  imgExtension={['jpg', 'gif', 'png' , 'jpeg']}
                                   maxFileSize={1048576}
                                   withPreview={true}
                                   singleImage={true}

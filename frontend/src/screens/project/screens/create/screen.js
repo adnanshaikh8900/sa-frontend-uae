@@ -143,7 +143,7 @@ class CreateProject extends React.Component {
             createMore: false
           })
           resetForm()
-        } else this.props.history.push('/admin/master/project')
+        } else { this.props.history.push('/admin/master/project') }
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)

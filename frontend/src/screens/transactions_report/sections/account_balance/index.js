@@ -121,7 +121,7 @@ class AccountBalances extends React.Component {
 
   render() {
     const account_balance_table = this.props.account_balance_report ?
-    this.props.account_balance_report.map(account => ({
+    this.props.account_balance_report.map((account) => ({
       account : account.bankAccount,
       transactionType:account.transactionType,
       transactionDescription : account.transactionDescription,

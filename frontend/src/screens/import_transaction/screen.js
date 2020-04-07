@@ -216,8 +216,9 @@ class ImportTransaction extends React.Component {
       let val = tempDataSelectedValueDropdown[index].value;
       let multiSelected = []
       tempStatus.map((item) => item.label).reduce(function (a, e, i) {
-        if (e === val)
+        if (e === val) {
           multiSelected.push(i);
+        }
         return a;
       }, []);
 
@@ -235,7 +236,7 @@ class ImportTransaction extends React.Component {
       })
     } else {
       let a = tempStatus.map((item, i) => {
-        let idx = tempDataSelectedValueDropdown.map(val => val.value).indexOf(item.label);
+        let idx = tempDataSelectedValueDropdown.map((val) => val.value).indexOf(item.label);
         if (idx === index || item.label === '') {
           return { label: '', status: false }
         } else {
@@ -606,7 +607,7 @@ class ImportTransaction extends React.Component {
                               {
                                 this.state.tableDataKey.length > 0 ? (
                                   <BootstrapTable data={tableData} keyField={this.state.tableDataKey[0]}>
-                                    {this.state.tableDataKey.map(name => <TableHeaderColumn dataField={name} dataAlign="center">{name}</TableHeaderColumn>)}
+                                    {this.state.tableDataKey.map((name) => <TableHeaderColumn dataField={name} dataAlign="center">{name}</TableHeaderColumn>)}
                                   </BootstrapTable>
                                 ) : null
                               }

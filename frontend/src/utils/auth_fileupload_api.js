@@ -7,7 +7,7 @@ const authFileUploadApi = axios.create({
 
 authFileUploadApi.interceptors.request.use(
   (config) => {
-    config.headers.Authorization = `Bearer ${window.sessionStorage.getItem('accessToken')}`
+    config.headers.Authorization = `Bearer ${window['sessionStorage'].getItem('accessToken')}`
     return config
   },
   (error) => {
@@ -21,7 +21,7 @@ authFileUploadApi.interceptors.response.use(
   },
   (error) => {
     if(error.response && error.response.status && error.response.status === 401) {
-      window.sessionStorage.clear()
+      window['sessionStorage'].clear()
         window.location = '/login'
       } else {
       return Promise.reject(error.response)

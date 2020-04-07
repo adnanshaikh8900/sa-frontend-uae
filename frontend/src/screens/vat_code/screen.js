@@ -118,10 +118,11 @@ class VatCode extends React.Component {
         selectedRows: this.state.selectedRows
       })
     }
-    else
+    else {
       this.setState({
         selectedRows: this.state.selectedRows.filter((el) => el !== row.id)
       })
+    }
   }
 
   onSelectAll = (isSelected, rows) => {

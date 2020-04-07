@@ -163,11 +163,11 @@ class CreateJournal extends React.Component {
             this.selectItem(e, row, 'transactionCategoryId', form, field)
           }} value={row.transactionCategoryId}
             className={`form-control 
-            ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx)] &&
-                props.errors.journalLineItems[parseInt(idx)].transactionCategoryId &&
+            ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx, 10)] &&
+                props.errors.journalLineItems[parseInt(idx, 10)].transactionCategoryId &&
                 Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
-                props.touched.journalLineItems[parseInt(idx)] &&
-                props.touched.journalLineItems[parseInt(idx)].transactionCategoryId ? "is-invalid" : ""}`}
+                props.touched.journalLineItems[parseInt(idx, 10)] &&
+                props.touched.journalLineItems[parseInt(idx, 10)].transactionCategoryId ? "is-invalid" : ""}`}
           >
             {transactionCategoryList ? transactionCategoryList.map((obj) => {
               return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId}>{obj.transactionCategoryName}</option>
@@ -200,11 +200,11 @@ class CreateJournal extends React.Component {
             }}
             placeholder="Description"
             className={`form-control 
-            ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx)] &&
-                props.errors.journalLineItems[parseInt(idx)].description &&
+            ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx, 10)] &&
+                props.errors.journalLineItems[parseInt(idx, 10)].description &&
                 Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
-                props.touched.journalLineItems[parseInt(idx)] &&
-                props.touched.journalLineItems[parseInt(idx)].description ? "is-invalid" : ""}`}
+                props.touched.journalLineItems[parseInt(idx, 10)] &&
+                props.touched.journalLineItems[parseInt(idx, 10)].description ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -231,11 +231,11 @@ class CreateJournal extends React.Component {
             this.selectItem(e, row, 'contactId', form, field)
           }} value={row.contactId}
             className={`form-control 
-            ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx)] &&
-                props.errors.journalLineItems[parseInt(idx)].contactId &&
+            ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx, 10)] &&
+                props.errors.journalLineItems[parseInt(idx, 10)].contactId &&
                 Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
-                props.touched.journalLineItems[parseInt(idx)] &&
-                props.touched.journalLineItems[parseInt(idx)].contactId ? "is-invalid" : ""}`}
+                props.touched.journalLineItems[parseInt(idx, 10)] &&
+                props.touched.journalLineItems[parseInt(idx, 10)].contactId ? "is-invalid" : ""}`}
           >
             {contactList ? contactList.map((obj) => {
               return <option value={obj.value} key={obj.value}>{obj.label}</option>
@@ -266,11 +266,11 @@ class CreateJournal extends React.Component {
             onChange={(e) => { this.selectItem(e, row, 'debitAmount', form, field) }}
             placeholder="Debit Amount"
             className={`form-control 
-            ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx)] &&
-                props.errors.journalLineItems[parseInt(idx)].debitAmount &&
+            ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx, 10)] &&
+                props.errors.journalLineItems[parseInt(idx, 10)].debitAmount &&
                 Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
-                props.touched.journalLineItems[parseInt(idx)] &&
-                props.touched.journalLineItems[parseInt(idx)].debitAmount ? "is-invalid" : ""}`}
+                props.touched.journalLineItems[parseInt(idx, 10)] &&
+                props.touched.journalLineItems[parseInt(idx, 10)].debitAmount ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -295,11 +295,11 @@ class CreateJournal extends React.Component {
             onChange={(e) => { this.selectItem(e, row, 'creditAmount', form, field) }}
             placeholder="Credit Amount"
             className={`form-control 
-            ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx)] &&
-                props.errors.journalLineItems[parseInt(idx)].creditAmount &&
+            ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx, 10)] &&
+                props.errors.journalLineItems[parseInt(idx, 10)].creditAmount &&
                 Object.keys(props.touched).length > 0 && props.touched.journalLineItems &&
-                props.touched.journalLineItems[parseInt(idx)] &&
-                props.touched.journalLineItems[parseInt(idx)].creditAmount ? "is-invalid" : ""}`}
+                props.touched.journalLineItems[parseInt(idx, 10)] &&
+                props.touched.journalLineItems[parseInt(idx, 10)].creditAmount ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -331,22 +331,22 @@ class CreateJournal extends React.Component {
       if (obj.id === row.id) {
         if (name === 'debitAmount') { obj[name] = e.target.value; obj['creditAmount'] = 0 }
         else if (name === 'creditAmount') { obj[name] = e.target.value; obj['debitAmount'] = 0 }
-        else obj[name] = e.target.value
+        else {obj[name] = e.target.value}
         idx = index
       }
       return obj
     });
     if (name === 'debitAmount') {
       form.setFieldValue(`journalLineItems.[${idx}].creditAmount`, 0, true)
-      form.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
       this.updateAmount(data);
     } else if (name === 'creditAmount') {
-      form.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
       form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
       this.updateAmount(data)
     } else {
       this.setState({ data }, () => {
-        this.formRef.current.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
+        this.formRef.current.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
       });
     }
 
@@ -383,10 +383,10 @@ class CreateJournal extends React.Component {
       data,
       initValue: {
         ...this.state.initValue, ...{
-          subTotalDebitAmount: subTotalDebitAmount,
+          subTotalDebitAmount,
           totalDebitAmount: subTotalDebitAmount,
           totalCreditAmount: subTotalCreditAmount,
-          subTotalCreditAmount: subTotalCreditAmount,
+          subTotalCreditAmount,
         }
       }
     })

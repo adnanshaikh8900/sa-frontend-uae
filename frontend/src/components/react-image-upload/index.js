@@ -51,8 +51,8 @@ class ImageUploader extends React.Component {
 	 Check file extension (onDropFile)
 	 */
   hasExtension(fileName) {
-    const pattern = '(' + this.props.imgExtension.join('|').replace(/\./g, '\\.') + ')$';
-    return new RegExp(pattern, 'g').test(fileName);
+    let ext = fileName.split('.');
+    return this.props.imgExtension.includes(ext[1].toLowerCase());
   }
 
   /*
@@ -270,7 +270,7 @@ ImageUploader.defaultProps = {
   label: "Max file size: 5mb, accepted: jpg|gif|png",
   labelStyles: {},
   labelClass: "",
-  imgExtension: ['.jpg', '.jpeg', '.gif', '.png'],
+  imgExtension: ['jpg', 'jpeg', 'gif', 'png'],
   maxFileSize: 11242880,
   fileSizeError: " file size is too big",
   fileTypeError: " is not a supported file extension",

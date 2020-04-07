@@ -220,11 +220,11 @@ class DetailSupplierInvoice extends React.Component {
             }}
             placeholder="Description"
             className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx)] &&
-                props.errors.lineItemsString[parseInt(idx)].description &&
+            ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx, 10)] &&
+                props.errors.lineItemsString[parseInt(idx, 10)].description &&
                 Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
-                props.touched.lineItemsString[parseInt(idx)] &&
-                props.touched.lineItemsString[parseInt(idx)].description ? "is-invalid" : ""}`}
+                props.touched.lineItemsString[parseInt(idx, 10)] &&
+                props.touched.lineItemsString[parseInt(idx, 10)].description ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -247,16 +247,16 @@ class DetailSupplierInvoice extends React.Component {
             type="text"
             value={row['quantity'] !== 0 ? row['quantity'] : 0}
             onChange={(e) => {
-              if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'quantity', form, field, props)
+              if (e.target.value === '' || this.regEx.test(e.target.value)){ this.selectItem(e, row, 'quantity', form, field, props)}
             }
             }
             placeholder="Quantity"
             className={`form-control 
-           						${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx)] &&
-                props.errors.lineItemsString[parseInt(idx)].quantity &&
+           						${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx, 10)] &&
+                props.errors.lineItemsString[parseInt(idx, 10)].quantity &&
                 Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
-                props.touched.lineItemsString[parseInt(idx)] &&
-                props.touched.lineItemsString[parseInt(idx)].quantity ? "is-invalid" : ""}`}
+                props.touched.lineItemsString[parseInt(idx, 10)] &&
+                props.touched.lineItemsString[parseInt(idx, 10)].quantity ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -278,14 +278,14 @@ class DetailSupplierInvoice extends React.Component {
           <Input
             type="text"
             value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-            onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'unitPrice', form, field, props) }}
+            onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)){ this.selectItem(e, row, 'unitPrice', form, field, props) }}}
             placeholder="Unit Price"
             className={`form-control 
-                       ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx)] &&
-                props.errors.lineItemsString[parseInt(idx)].unitPrice &&
+                       ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx, 10)] &&
+                props.errors.lineItemsString[parseInt(idx, 10)].unitPrice &&
                 Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
-                props.touched.lineItemsString[parseInt(idx)] &&
-                props.touched.lineItemsString[parseInt(idx)].unitPrice ? "is-invalid" : ""}`}
+                props.touched.lineItemsString[parseInt(idx, 10)] &&
+                props.touched.lineItemsString[parseInt(idx, 10)].unitPrice ? "is-invalid" : ""}`}
           />
         )}
       />
@@ -328,11 +328,11 @@ class DetailSupplierInvoice extends React.Component {
       return obj
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
-      form.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
       this.updateAmount(data, props);
     } else {
       this.setState({ data }, () => {
-        form.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
+        form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
       });
     }
 
@@ -359,11 +359,11 @@ class DetailSupplierInvoice extends React.Component {
             // this.formRef.current.props.handleChange(field.name)(e.value)
           }} value={row.vatCategoryId}
             className={`form-control 
-            ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx)] &&
-                props.errors.lineItemsString[parseInt(idx)].vatCategoryId &&
+            ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx, 10)] &&
+                props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
                 Object.keys(props.touched).length > 0 && props.touched.lineItemsString &&
-                props.touched.lineItemsString[parseInt(idx)] &&
-                props.touched.lineItemsString[parseInt(idx)].vatCategoryId ? "is-invalid" : ""}`}
+                props.touched.lineItemsString[parseInt(idx, 10)] &&
+                props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId ? "is-invalid" : ""}`}
           >
             {vatList ? vatList.map((obj) => {
               // obj.name = obj.name === 'default' ? '0' : obj.name

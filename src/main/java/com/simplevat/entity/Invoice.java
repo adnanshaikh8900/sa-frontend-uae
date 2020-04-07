@@ -33,7 +33,9 @@ import org.hibernate.annotations.ColumnDefault;
 				+ "(i.id , i.referenceNumber )" + " FROM Invoice i where i.deleteFlag = FALSE order by i.invoiceDate "),
 		@NamedQuery(name = "updateStatus", query = "Update Invoice i set i.status = :status where id = :id "),
 		@NamedQuery(name = "lastInvoice", query = "from Invoice i order by i.id desc"),
-		@NamedQuery(name = "activeInvoicesByDateRange", query = "from Invoice i where i.invoiceDate between :startDate and :endDate and i.deleteFlag = false")
+		@NamedQuery(name = "activeInvoicesByDateRange", query = "from Invoice i where i.invoiceDate between :startDate and :endDate and i.deleteFlag = false"),
+		@NamedQuery(name = "overDueAmount", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2"),
+		@NamedQuery(name = "overDueAmountWeeklyMonthly", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2 and i.invoiceDueDate between :startDate and :endDate")
 		//select com.simplevat.entity.Invoice(i.invoiceDate,i.invoiceDueDate,i.totalAmount,i.type) 
 
 })

@@ -3,8 +3,8 @@ package com.simplevat.constant;
 import lombok.Getter;
 
 public enum ReconsileCategoriesEnumConstant {
-	EXPENSE(21), Supplier_Invoice(22), Money_Paid_to_user(23), Money_Transfer_to_another_account(24),
-	Cash_Withdrawal(25), Sales(11), Money_paid_by_user(12), Transfer_from_another_account(13);
+	EXPENSE(21), SUPPLIER_INVOICE(22), MONEY_PAID_TO_USER(23), MONEY_TRANSFER_TO_ANOTHER_ACCOUNT(24),
+	CASH_WITHDRAWAL(25), SALES(11), MONEY_PAID_BY_USER(12), TRANSFER_TO_ANOTHER_ACCOUNT(13);
 
 	@Getter
 	private int code;

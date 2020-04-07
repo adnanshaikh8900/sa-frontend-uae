@@ -2,6 +2,7 @@ package com.simplevat.rest.companysettingcontroller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,73 +24,63 @@ public class CompanySettingRestHelper {
 		if (configurationList != null && !configurationList.isEmpty()) {
 			CompanySettingModel companySettingModel = new CompanySettingModel();
 
-			if (configurationList.stream()
+			Optional<Configuration> config = configurationList.stream()
 					.filter(mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_HOST))
-					.findAny().isPresent()) {
-				companySettingModel.setMailingHost(configurationList.stream().filter(
-						mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_HOST))
-						.findAny().get().getValue());
+					.findAny();
+			if (config.isPresent()) {
+				companySettingModel.setMailingHost(config.get().getValue());
 			}
-			if (configurationList.stream()
+
+			config = configurationList.stream()
 					.filter(mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_PORT))
-					.findAny().isPresent()) {
-				companySettingModel.setMailingPort(configurationList.stream().filter(
-						mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_PORT))
-						.findAny().get().getValue());
+					.findAny();
+			if (config.isPresent()) {
+				companySettingModel.setMailingPort(config.get().getValue());
 			}
-			if (configurationList.stream().filter(
+
+			config = configurationList.stream().filter(
 					mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_USERNAME))
-					.findAny().isPresent()) {
-				companySettingModel.setMailingUserName(configurationList.stream().filter(
-						mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_USERNAME))
-						.findAny().get().getValue());
+					.findAny();
+			if (config.isPresent()) {
+				companySettingModel.setMailingUserName(config.get().getValue());
 			}
-			if (configurationList.stream().filter(
+
+			config = configurationList.stream().filter(
 					mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_PASSWORD))
-					.findAny().isPresent()) {
-				companySettingModel.setMailingPassword(configurationList.stream().filter(
-						mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_PASSWORD))
-						.findAny().get().getValue());
+					.findAny();
+			if (config.isPresent()) {
+				companySettingModel.setMailingPassword(config.get().getValue());
 			}
-			if (configurationList.stream().filter(
+
+			config = configurationList.stream().filter(
 					mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_SMTP_AUTH))
-					.findAny().isPresent()) {
-				companySettingModel.setMailingSmtpAuthorization(configurationList.stream().filter(
-						mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_SMTP_AUTH))
-						.findAny().get().getValue());
-			}
-			if (configurationList.stream().filter(mailConfiguration -> mailConfiguration.getName()
-					.equals(ConfigurationConstants.MAIL_SMTP_STARTTLS_ENABLE)).findAny().isPresent()) {
-				companySettingModel
-						.setMailingSmtpStarttlsEnable(configurationList.stream()
-								.filter(mailConfiguration -> mailConfiguration.getName()
-										.equals(ConfigurationConstants.MAIL_SMTP_STARTTLS_ENABLE))
-								.findAny().get().getValue());
+					.findAny();
+			if (config.isPresent()) {
+				companySettingModel.setMailingSmtpAuthorization(config.get().getValue());
 			}
 
-			if (configurationList.stream().filter(mailConfiguration -> mailConfiguration.getName()
-					.equals(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_SUBJECT)).findAny().isPresent()) {
-				companySettingModel.setInvoiceMailingSubject(configurationList.stream()
-						.filter(mailConfiguration -> mailConfiguration.getName()
-								.equals(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_SUBJECT))
-						.findAny().get().getValue());
+			config = configurationList.stream().filter(mailConfiguration -> mailConfiguration.getName()
+					.equals(ConfigurationConstants.MAIL_SMTP_STARTTLS_ENABLE)).findAny();
+			if (config.isPresent()) {
+				companySettingModel.setMailingSmtpStarttlsEnable(config.get().getValue());
 			}
 
-			if (configurationList.stream().filter(mailConfiguration -> mailConfiguration.getName()
-					.equals(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_BODY)).findAny().isPresent()) {
-				companySettingModel
-						.setInvoiceMailingBody(configurationList.stream()
-								.filter(mailConfiguration -> mailConfiguration.getName()
-										.equals(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_BODY))
-								.findAny().get().getValue());
+			config = configurationList.stream().filter(mailConfiguration -> mailConfiguration.getName()
+					.equals(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_SUBJECT)).findAny();
+			if (config.isPresent()) {
+				companySettingModel.setInvoiceMailingSubject(config.get().getValue());
 			}
 
-			if (configurationList.stream().filter(mailConfiguration -> mailConfiguration.getName()
-					.equals(ConfigurationConstants.INVOICING_REFERENCE_PATTERN)).findAny().isPresent()) {
-				companySettingModel.setInvoicingReferencePattern(configurationList.stream()
-						.filter(mailConfiguration -> mailConfiguration.getName()
-								.equals(ConfigurationConstants.INVOICING_REFERENCE_PATTERN))
-						.findAny().get().getValue());
+			config = configurationList.stream().filter(mailConfiguration -> mailConfiguration.getName()
+					.equals(ConfigurationConstants.INVOICE_MAIL_TAMPLATE_BODY)).findAny();
+			if (config.isPresent()) {
+				companySettingModel.setInvoiceMailingBody(config.get().getValue());
+			}
+
+			config = configurationList.stream().filter(mailConfiguration -> mailConfiguration.getName()
+					.equals(ConfigurationConstants.INVOICING_REFERENCE_PATTERN)).findAny();
+			if (config.isPresent()) {
+				companySettingModel.setInvoicingReferencePattern(config.get().getValue());
 			}
 
 			return companySettingModel;

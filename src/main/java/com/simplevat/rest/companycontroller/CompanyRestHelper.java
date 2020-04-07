@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +20,9 @@ import com.simplevat.service.UserService;
 
 @Component
 public class CompanyRestHelper implements Serializable{
-
+	
+	private final Logger LOGGER = LoggerFactory.getLogger(CompanyRestHelper.class);
+	
 	@Autowired
 	private IndustryTypeService industryTypeService;
 
@@ -161,7 +165,7 @@ public class CompanyRestHelper implements Serializable{
 			try {
 				company.setCompanyLogo(companyModel.getCompanyLogo().getBytes());
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("ERROR = ", e);
 			}
 		}
 		return company;

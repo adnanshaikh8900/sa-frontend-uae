@@ -1,35 +1,11 @@
 package com.simplevat.rest.bankaccountcontroller;
 
-import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
-import com.simplevat.helper.BankHelper;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.model.BankModel;
-import com.simplevat.entity.Country;
-import com.simplevat.entity.Currency;
-import com.simplevat.entity.User;
-import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.bankaccount.BankAccountStatus;
-import com.simplevat.entity.bankaccount.BankAccountType;
-import com.simplevat.service.BankAccountTypeService;
-import com.simplevat.service.CountryService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.UserService;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.BankAccountStatusService;
-import com.simplevat.util.ChartUtil;
-import com.simplevat.service.bankaccount.TransactionService;
-
-import io.swagger.annotations.ApiOperation;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,6 +25,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
+import com.simplevat.entity.Country;
+import com.simplevat.entity.Currency;
+import com.simplevat.entity.User;
+import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.entity.bankaccount.BankAccountStatus;
+import com.simplevat.entity.bankaccount.BankAccountType;
+import com.simplevat.helper.BankHelper;
+import com.simplevat.model.BankModel;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.BankAccountService;
+import com.simplevat.service.BankAccountStatusService;
+import com.simplevat.service.BankAccountTypeService;
+import com.simplevat.service.CountryService;
+import com.simplevat.service.CurrencyService;
+import com.simplevat.service.UserService;
+import com.simplevat.service.bankaccount.TransactionService;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  *
@@ -143,7 +140,7 @@ public class BankAccountController implements Serializable {
 					bankAccount.setCreatedBy(user.getUserId());
 				}
 				bankAccountService.persist(bankAccount);
-				return new ResponseEntity<>(bankAccount, HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			LOGGER.error("ERROR = ", e);

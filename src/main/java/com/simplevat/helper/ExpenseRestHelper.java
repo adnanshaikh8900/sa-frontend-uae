@@ -5,21 +5,6 @@
  */
 package com.simplevat.helper;
 
-import com.simplevat.constant.ExpenseStatusEnum;
-import com.simplevat.entity.Expense;
-import com.simplevat.entity.User;
-import com.simplevat.rest.expensescontroller.ExpenseListModel;
-import com.simplevat.rest.expensescontroller.ExpenseModel;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.EmployeeService;
-import com.simplevat.service.ExpenseService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.utils.FileHelper;
-
-import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -32,14 +17,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.simplevat.constant.ExpenseStatusEnum;
+import com.simplevat.entity.Expense;
+import com.simplevat.rest.expensescontroller.ExpenseListModel;
+import com.simplevat.rest.expensescontroller.ExpenseModel;
+import com.simplevat.service.BankAccountService;
+import com.simplevat.service.CurrencyService;
+import com.simplevat.service.EmployeeService;
+import com.simplevat.service.ExpenseService;
+import com.simplevat.service.ProjectService;
+import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.FileHelper;
+
 /**
  *
  * @author daynil
  */
 @Component
-public class ExpenseRestHelper implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class ExpenseRestHelper {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(ExpenseRestHelper.class);
 

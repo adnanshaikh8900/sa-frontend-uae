@@ -230,7 +230,7 @@ public class PaymentController {
 			paymentModelHelper.deletePayments(expenseIds, paymentService);
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}

@@ -130,7 +130,7 @@ class CustomerModal extends React.Component {
                 .required("Telephone Number is Required"),
               mobileNumber: Yup.string()
                 .required("Mobile Number is required")
-                .test('quantity', 'Invalid Mobile Number', value => {
+                .test('quantity', 'Invalid Mobile Number', (value) => {
                   if (isValidPhoneNumber(value)) {
                     return true
                   } else {
@@ -251,7 +251,7 @@ class CustomerModal extends React.Component {
                             id="firstName"
                             name="firstName"
                             onChange={(option) => {
-                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
                             }}
                             value={props.values.firstName}
                             className={
@@ -276,7 +276,7 @@ class CustomerModal extends React.Component {
                             id="middleName "
                             name="middleName "
                             onChange={(option) => {
-                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option)
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
                             }}
                             value={props.values.middleName}
                             className={
@@ -304,7 +304,7 @@ class CustomerModal extends React.Component {
                             id="lastName"
                             name="lastName"
                             onChange={(option) => {
-                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
                             }}
                             value={props.values.lastName}
                             className={
@@ -334,7 +334,7 @@ class CustomerModal extends React.Component {
                             id="organization"
                             name="organization"
                             onChange={(option) => {
-                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('organization')(option)
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {props.handleChange('organization')(option)}
                             }}
                             value={props.values.organization}
                             className={
@@ -360,7 +360,7 @@ class CustomerModal extends React.Component {
                             id="poBoxNumber"
                             name="poBoxNumber"
                             onChange={(option) => {
-                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('poBoxNumber')(option)
+                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('poBoxNumber')(option)}
                             }}
                             value={props.values.poBoxNumber}
                             className={
@@ -413,7 +413,7 @@ class CustomerModal extends React.Component {
                             type="text"
                             id="telephone"
                             name="telephone"
-                            onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('telephone')(option) }}
+                            onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('telephone')(option) }}}
                             value={props.values.telephone}
                             className={
                               props.errors.telephone && props.touched.telephone
@@ -661,7 +661,7 @@ class CustomerModal extends React.Component {
                             // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                             value={props.values.city}
                             onChange={(option) => {
-                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('city')(option)
+                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('city')(option)}
                             }}
                             placeholder=""
                             id="city"
@@ -689,7 +689,7 @@ class CustomerModal extends React.Component {
                             id="postZipCode"
                             name="postZipCode"
                             onChange={(option) => {
-                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('postZipCode')(option)
+                              if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('postZipCode')(option)}
                             }}
                             value={props.values.postZipCode}
                             className={
@@ -747,7 +747,7 @@ class CustomerModal extends React.Component {
                             id="contractPoNumber"
                             name="contractPoNumber"
                             onChange={(option) => {
-                              if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('contractPoNumber')(option)
+                              if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('contractPoNumber')(option)}
                             }}
                             value={props.values.contractPoNumber}
                             className={
@@ -777,7 +777,7 @@ class CustomerModal extends React.Component {
                             id="vatRegistrationNumber"
                             name="vatRegistrationNumber"
                             onChange={(option) => {
-                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                              if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('vatRegistrationNumber')(option)}
                             }}
                             value={props.values.vatRegistrationNumber}
                             className={

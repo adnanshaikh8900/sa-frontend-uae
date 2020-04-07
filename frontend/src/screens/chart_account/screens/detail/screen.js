@@ -145,7 +145,7 @@ class DetailChartAccount extends React.Component {
   }
 
   renderOptions = (options) => {
-    return options.map(option => {
+    return options.map((option) => {
       return (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -223,7 +223,7 @@ class DetailChartAccount extends React.Component {
                                     name="transactionCategoryName"
                                     placeholder="Enter Name"
                                     onChange={(option) => { 
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('transactionCategoryName')(option) }}
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {props.handleChange('transactionCategoryName')(option)} }}
                                     value={props.values.transactionCategoryName}
                                     className={
                                       props.errors.transactionCategoryName && props.touched.transactionCategoryName

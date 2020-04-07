@@ -234,7 +234,7 @@ class CreateUser extends React.Component {
                                         value={props.values.firstName}
                                         placeholder="First Name"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
                                         }}
                                         className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                       />
@@ -253,7 +253,7 @@ class CreateUser extends React.Component {
                                         placeholder ="Last Name"
                                         value={props.values.lastName}
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
                                         }}
                                         className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                       />

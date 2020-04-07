@@ -621,7 +621,7 @@ class DetailPayment extends React.Component {
           closeSupplierModal={(e) => {
             this.closeSupplierModal(e);
           }}
-          getCurrentUser={e => this.getCurrentUser(e)}
+          getCurrentUser={(e) => this.getCurrentUser(e)}
           createSupplier={this.props.paymentActions.createSupplier}
         />
       </div>

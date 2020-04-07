@@ -168,7 +168,7 @@ class DetailBankTransaction extends React.Component {
       if (res.status === 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', 'Transaction Detail Updated Successfully.')
-        this.props.history.push('/admin/banking/bank-account/transaction', { 'bankAccountId': bankAccountId })
+        this.props.history.push('/admin/banking/bank-account/transaction', { bankAccountId })
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
@@ -224,7 +224,7 @@ class DetailBankTransaction extends React.Component {
                                   .test(
                                     "fileType",
                                     "*Unsupported File Format",
-                                    value => {
+                                    (value) => {
                                       value && this.setState({
                                         fileName: value.name
                                       });
@@ -241,7 +241,7 @@ class DetailBankTransaction extends React.Component {
                                   .test(
                                     "fileSize",
                                     "*File Size is too large",
-                                    value => {
+                                    (value) => {
                                       if (!value || (value && value.size <= this.file_size) || !value) {
                                         return true;
                                       } else {
@@ -312,7 +312,7 @@ class DetailBankTransaction extends React.Component {
                                         id="transactionAmount"
                                         name="transactionAmount"
                                         placeholder="Amount"
-                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('transactionAmount')(option) }}
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) {props.handleChange('transactionAmount')(option)} }}
                                         value={props.values.transactionAmount}
                                         className={
                                           props.errors.transactionAmount && props.touched.transactionAmount
@@ -394,7 +394,7 @@ class DetailBankTransaction extends React.Component {
                                             id="receiptNumber"
                                             name="receiptNumber"
                                             placeholder="Reciept Number"
-                                            onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option) }}
+                                            onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('receiptNumber')(option)} }}
                                             value={props.values.receiptNumber}
                                           />
                                         </FormGroup>
@@ -429,7 +429,7 @@ class DetailBankTransaction extends React.Component {
                                                   <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                                     <i className="fa fa-upload"></i> Upload
                                          		   </Button>
-                                                  <input id="fileInput" ref={ref => {
+                                                  <input id="fileInput" ref={(ref) => {
                                                     this.uploadFile = ref;
                                                   }} type="file" style={{ display: 'none' }} onChange={(e) => {
                                                     this.handleFileChange(e, props)

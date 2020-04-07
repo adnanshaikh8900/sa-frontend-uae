@@ -544,7 +544,7 @@ class Profile extends React.Component {
                                                 id="firstName"
                                                 name="firstName"
                                                 onChange={(option) => {
-                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
                                                 }}
                                                 value={props.values.firstName}
                                                 className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
@@ -562,7 +562,7 @@ class Profile extends React.Component {
                                                 id="lastName"
                                                 name="lastName"
                                                 onChange={(option) => {
-                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
                                                 }}
                                                 value={props.values.lastName}
                                                 className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
@@ -893,7 +893,7 @@ class Profile extends React.Component {
                                                 placeholder="Enter Company Name"
                                                 value={props.values.companyName}
                                                 onChange={(option) => {
-                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('companyName')(option)
+                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('companyName')(option)}
                                                 }}
                                               />
                                             </FormGroup>
@@ -908,7 +908,7 @@ class Profile extends React.Component {
                                                 placeholder="Enter Company Registration No"
                                                 value={props.values.companyRegistrationNumber}
                                                 onChange={(option) => {
-                                                  if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('companyRegistrationNumber')(option)
+                                                  if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('companyRegistrationNumber')(option)}
                                                 }}
                                               />
                                             </FormGroup>
@@ -923,7 +923,7 @@ class Profile extends React.Component {
                                                 placeholder="Enter VAT Registration No"
                                                 value={props.values.vatRegistrationNumber}
                                                 onChange={(option) => {
-                                                  if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                                                  if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('vatRegistrationNumber')(option)}
                                                 }}
                                               />
                                             </FormGroup>
@@ -1057,7 +1057,7 @@ class Profile extends React.Component {
                                                 placeholder="Enter Phone Number"
                                                 value={props.values.phoneNumber}
                                                 onChange={(option) => {
-                                                  if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('phoneNumber')(option)
+                                                  if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('phoneNumber')(option)}
                                                 }}
                                               />
                                             </FormGroup>
@@ -1078,7 +1078,7 @@ class Profile extends React.Component {
                                             placeholder="Enter Expense Budget"
                                             value={props.values.companyExpenseBudget}
                                             onChange={(option) => {
-                                              if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('companyExpenseBudget')(option)
+                                              if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('companyExpenseBudget')(option)}
                                             }}
                                           />
                                         </FormGroup>
@@ -1093,7 +1093,7 @@ class Profile extends React.Component {
                                             placeholder="Enter Revenue Budget"
                                             value={props.values.companyRevenueBudget}
                                             onChange={(option) => {
-                                              if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('companyRevenueBudget')(option)
+                                              if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('companyRevenueBudget')(option)}
                                             }}
                                           />
                                         </FormGroup>
@@ -1552,7 +1552,7 @@ class Profile extends React.Component {
                                             placeholder="Enter PO Box No"
                                             value={isSame ? this.state.companyAddress.companyPoBoxNumber : props.values.companyPoBoxNumber}
                                             onChange={(option) => {
-                                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('companyRevenueBudget')(option)
+                                              if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('companyRevenueBudget')(option)}
                                             }}
                                           />
                                         </FormGroup>
@@ -1567,7 +1567,7 @@ class Profile extends React.Component {
                                             placeholder="Enter Post Zip Code"
                                             value={isSame ? this.state.companyAddress.companyPostZipCode : props.values.companyPostZipCode}
                                             onChange={(option) => {
-                                              if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('companyRevenueBudget')(option)
+                                              if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('companyRevenueBudget')(option)}
                                             }}
                                           />
                                         </FormGroup>

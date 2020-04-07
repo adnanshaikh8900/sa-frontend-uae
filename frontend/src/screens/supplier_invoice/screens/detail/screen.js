@@ -194,7 +194,7 @@ class DetailSupplierInvoice extends React.Component {
       return obj
     })
     this.setState({
-      initValue: Object.assign(this.state.initValue, { total_net: total_net })
+      initValue: Object.assign(this.state.initValue, { total_net })
     })
   }
 
@@ -331,7 +331,7 @@ class DetailSupplierInvoice extends React.Component {
       form.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
       this.updateAmount(data, props);
     } else {
-      this.setState({ data: data }, () => {
+      this.setState({ data }, () => {
         form.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
       });
     }
@@ -382,7 +382,7 @@ class DetailSupplierInvoice extends React.Component {
     let newData = []
     e.preventDefault();
     const data = this.state.data
-    newData = data.filter(obj => obj.id !== id);
+    newData = data.filter((obj) => obj.id !== id);
     props.setFieldValue('lineItemsString', newData, true)
     this.updateAmount(newData, props)
   }
@@ -437,10 +437,10 @@ class DetailSupplierInvoice extends React.Component {
     const discount = props.values.discountType === 'PERCENTAGE' ? (total_net * discountPercentage) / 100 : discountAmount
 
     this.setState({
-      data: data,
+      data,
       initValue: {
         ...this.state.initValue, ...{
-          total_net: total_net,
+          total_net,
           invoiceVATAmount: total_vat,
           discount: total_net > discount ? discount : 0,
           totalAmount: total_net > discount ? total - discount : total
@@ -660,7 +660,7 @@ class DetailSupplierInvoice extends React.Component {
                                   .test(
                                     "fileType",
                                     "*Unsupported File Format",
-                                    value => {
+                                    (value) => {
                                       value && this.setState({
                                         fileName: value.name
                                       });
@@ -677,7 +677,7 @@ class DetailSupplierInvoice extends React.Component {
                                   .test(
                                     "fileSize",
                                     "*File Size is too large",
-                                    value => {
+                                    (value) => {
                                       if (!value || (value && value.size <= this.file_size)) {
                                         return true;
                                       } else {
@@ -928,7 +928,7 @@ class DetailSupplierInvoice extends React.Component {
                                                   <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                                     <i className="fa fa-upload"></i> Upload
                                          		   </Button>
-                                                  <input id="fileInput" ref={ref => {
+                                                  <input id="fileInput" ref={(ref) => {
                                                     this.uploadFile = ref;
                                                   }} type="file" style={{ display: 'none' }} onChange={(e) => {
                                                     this.handleFileChange(e, props)
@@ -1201,7 +1201,7 @@ class DetailSupplierInvoice extends React.Component {
         <SupplierModal
           openSupplierModal={this.state.openSupplierModal}
           closeSupplierModal={(e) => { this.closeSupplierModal(e) }}
-          getCurrentUser={e => this.getCurrentUser(e)}
+          getCurrentUser={(e) => this.getCurrentUser(e)}
           createSupplier={this.props.supplierInvoiceActions.createSupplier}
           currency_list={this.props.currency_list}
           country_list={this.props.country_list}

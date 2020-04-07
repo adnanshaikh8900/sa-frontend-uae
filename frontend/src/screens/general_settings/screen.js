@@ -193,7 +193,7 @@ render() {
                                   name="invoicingReferencePattern"
                                   placeholder="Enter Invoicing Reference Pattern"
                                   value={props.values.invoicingReferencePattern}
-                                  onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('invoicingReferencePattern')(option) }}
+                                  onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('invoicingReferencePattern')(option) }}}
                                   className={
                                     props.errors.invoicingReferencePattern && props.touched.invoicingReferencePattern
                                       ? "is-invalid"

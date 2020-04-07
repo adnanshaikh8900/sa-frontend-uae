@@ -11,7 +11,7 @@ export const checkAuthStatus = () => {
       method: 'get',
       url: '/rest/user/current'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: AUTH.SIGNED_IN
@@ -41,7 +41,7 @@ export const logIn = (obj) => {
       url: '/auth/token',
       data: obj
     }
-    return api(data).then(res => {
+    return api(data).then((res) => {
       dispatch({
         type: AUTH.SIGNED_IN
       })

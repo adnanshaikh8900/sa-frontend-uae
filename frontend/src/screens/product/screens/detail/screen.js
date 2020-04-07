@@ -243,7 +243,7 @@ class DetailProduct extends React.Component {
                                         id="productName"
                                         name="productName"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('productName')(option)
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('productName')(option)}
                                         }}
                                         value={props.values.productName || ''}
                                         placeholder="Enter Product Name"
@@ -269,7 +269,7 @@ class DetailProduct extends React.Component {
                                         value={props.values.productCode || ''}
                                         placeholder="Enter Product Code"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCode')(option)
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('productCode')(option)}
                                         }}
                                       />
                                     </FormGroup>
@@ -308,7 +308,7 @@ class DetailProduct extends React.Component {
                                         id="unitPrice"
                                         name="unitPrice"
                                         placeholder="Enter Product Price"
-                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('unitPrice')(option) }}
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('unitPrice')(option) }}}
                                         value={props.values.unitPrice || ''}
                                       />
                                     </FormGroup>

@@ -178,7 +178,7 @@ class DetailCustomerInvoice extends React.Component {
 			return obj
 		})
 		this.setState({
-			initValue: Object.assign(this.state.initValue, { total_net: total_net })
+			initValue: Object.assign(this.state.initValue, { total_net })
 		})
 	}
 
@@ -317,7 +317,7 @@ class DetailCustomerInvoice extends React.Component {
 			form.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
 			this.updateAmount(data, props);
 		} else {
-			this.setState({ data: data }, () => {
+			this.setState({ data }, () => {
 				form.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
 			});
 		}
@@ -368,7 +368,7 @@ class DetailCustomerInvoice extends React.Component {
 		let newData = []
 		e.preventDefault();
 		const data = this.state.data
-		newData = data.filter(obj => obj.id !== id);
+		newData = data.filter((obj) => obj.id !== id);
 		props.setFieldValue('lineItemsString', newData, true)
 		this.updateAmount(newData, props)
 	}
@@ -423,10 +423,10 @@ class DetailCustomerInvoice extends React.Component {
 		})
 		const discount = props.values.discountType === 'PERCENTAGE' ? +((total_net * discountPercentage) / 100).toFixed(2) : discountAmount
 		this.setState({
-			data: data,
+			data,
 			initValue: {
 				...this.state.initValue, ...{
-					total_net: total_net,
+					total_net,
 					invoiceVATAmount: total_vat,
 					discount: total_net > discount ? discount : 0,
 					totalAmount: total_net > discount ? total - discount : total
@@ -642,7 +642,7 @@ class DetailCustomerInvoice extends React.Component {
 																	.of(Yup.object().shape({
 																		description: Yup.string().required("Value is Required"),
 																		quantity: Yup.string().required("Value is Required")
-																			.test('quantity', 'Quantity Should be Greater than 1', value => {
+																			.test('quantity', 'Quantity Should be Greater than 1', (value) => {
 																				if (value > 0) {
 																					return true
 																				} else {
@@ -650,7 +650,7 @@ class DetailCustomerInvoice extends React.Component {
 																				}
 																			}),
 																		unitPrice: Yup.string().required("Value is Required")
-																			.test('Unit Price', 'Unit Price Should be Greater than 1', value => {
+																			.test('Unit Price', 'Unit Price Should be Greater than 1', (value) => {
 																				if (value > 0) {
 																					return true
 																				} else {
@@ -663,7 +663,7 @@ class DetailCustomerInvoice extends React.Component {
 																	.test(
 																		"fileType",
 																		"*Unsupported File Format",
-																		value => {
+																		(value) => {
 																			value && this.setState({
 																				fileName: value.name
 																			});
@@ -680,7 +680,7 @@ class DetailCustomerInvoice extends React.Component {
 																	.test(
 																		"fileSize",
 																		"*File Size is too large",
-																		value => {
+																		(value) => {
 																			if (!value || (value && value.size <= this.file_size)) {
 																				return true;
 																			} else {
@@ -875,7 +875,7 @@ class DetailCustomerInvoice extends React.Component {
 																				placeholder=""
 																				value={props.values.contact_po_number}
 																				onChange={(option) => {
-																					if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contact_po_number')(option)
+																					if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('contact_po_number')(option)}
 																				}}
 																			/>
 																		</FormGroup>
@@ -895,7 +895,7 @@ class DetailCustomerInvoice extends React.Component {
 																						name="receiptNumber"
 																						placeholder="Enter Reciept Number"
 																						onChange={(option) => {
-																							if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option)
+																							if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('receiptNumber')(option)}
 																						}}
 																						value={props.values.receiptNumber}
 
@@ -932,7 +932,7 @@ class DetailCustomerInvoice extends React.Component {
 																									<Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
 																										<i className="fa fa-upload"></i> Upload
                                          		   </Button>
-																									<input id="fileInput" ref={ref => {
+																									<input id="fileInput" ref={(ref) => {
 																										this.uploadFile = ref;
 																									}} type="file" style={{ display: 'none' }} onChange={(e) => {
 																										this.handleFileChange(e, props)
@@ -1202,7 +1202,7 @@ class DetailCustomerInvoice extends React.Component {
 				<CustomerModal
 					openCustomerModal={this.state.openCustomerModal}
 					closeCustomerModal={(e) => { this.closeCustomerModal(e) }}
-					getCurrentUser={e => this.getCurrentUser(e)}
+					getCurrentUser={(e) => this.getCurrentUser(e)}
 					createCustomer={this.props.customerInvoiceActions.createCustomer}
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}

@@ -290,7 +290,7 @@ class DetailUser extends React.Component {
                                             id="firstName"
                                             name="firstName"
                                             onChange={(option) => {
-                                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
                                             }}
                                             value={props.values.firstName}
                                             className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
@@ -308,7 +308,7 @@ class DetailUser extends React.Component {
                                             id="lastName"
                                             name="lastName"
                                             onChange={(option) => {
-                                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                                              if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
                                             }}
                                             value={props.values.lastName}
                                             className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}

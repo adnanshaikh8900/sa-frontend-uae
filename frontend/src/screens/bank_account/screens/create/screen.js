@@ -193,7 +193,7 @@ class CreateBankAccount extends React.Component {
                         })}
                       >
                         {
-                          props => (
+                          (props) => (
                             <Form onSubmit={props.handleSubmit}>
                               <Row>
                                 <Col lg={4}>
@@ -206,7 +206,7 @@ class CreateBankAccount extends React.Component {
                                       placeholder="Enter Account Name"
                                       value={props.values.account_name}
                                       onChange={(option) => { 
-                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('account_name')(option) }}
+                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('account_name')(option) }}}
                                       className={
                                         props.errors.account_name && props.touched.account_name
                                           ? 'is-invalid'
@@ -254,7 +254,7 @@ class CreateBankAccount extends React.Component {
                                       placeholder="Your Opening Balance"
                                       value={props.values.opening_balance}
                                       onChange={(option) => { 
-                                        if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('opening_balance')(option) }}
+                                        if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('opening_balance')(option) }}}
                                       className={
                                         props.errors.opening_balance && props.touched.opening_balance
                                           ? 'is-invalid'
@@ -308,7 +308,7 @@ class CreateBankAccount extends React.Component {
                                       placeholder="Enter Bank Name"
                                       value={props.values.bank_name}
                                       onChange={(option) => { 
-                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('bank_name')(option) }}
+                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('bank_name')(option) } }}
                                       className={
                                         props.errors.bank_name && props.touched.bank_name
                                           ? 'is-invalid'
@@ -330,7 +330,7 @@ class CreateBankAccount extends React.Component {
                                       placeholder="Enter Account Number"
                                       value={props.values.account_number}
                                       onChange={(option) => { 
-                                        if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('account_number')(option) }}
+                                        if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('account_number')(option) } }}
                                       className={
                                         props.errors.account_number && props.touched.account_number
                                           ? 'is-invalid'
@@ -354,7 +354,7 @@ class CreateBankAccount extends React.Component {
                                       placeholder="Enter IFSC Code"
                                       value={props.values.ifsc_code}
                                       onChange={(option) => { 
-                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('ifsc_code')(option) }}
+                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('ifsc_code')(option) }}}
                                          className={
                                         props.errors.ifsc_code && props.touched.ifsc_code
                                           ? 'is-invalid'

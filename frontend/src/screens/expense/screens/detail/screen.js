@@ -314,7 +314,7 @@ class DetailExpense extends React.Component {
                                       .required('Bank Account is Required')
                                   }),
                                 attachmentFile: Yup.mixed()
-                                  .test('fileType', "*Unsupported File Format", value => {
+                                  .test('fileType', "*Unsupported File Format", (value) => {
                                     value && this.setState({
                                       fileName: value.name
                                     })
@@ -324,7 +324,7 @@ class DetailExpense extends React.Component {
                                       return false
                                     }
                                   })
-                                  .test('fileSize', "*File Size is too large", value => {
+                                  .test('fileSize', "*File Size is too large", (value) => {
                                     if (!value || (value && value.size <= this.file_size)) {
                                       return true
                                     } else {
@@ -363,7 +363,7 @@ class DetailExpense extends React.Component {
                                         rows="5"
                                         placeholder="Payee"
                                         onChange={(option) => { 
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('payee')(option) }}
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('payee')(option) }}}
                                         defaultValue={props.values.payee}
                                         className={props.errors.payee && props.touched.payee ? "is-invalid" : ""}
                                       />
@@ -460,7 +460,7 @@ class DetailExpense extends React.Component {
                                         id="expenseAmount"
                                         rows="5"
                                         className={props.errors.expenseAmount && props.touched.expenseAmount ? "is-invalid" : ""}
-                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('expenseAmount')(option) }}
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('expenseAmount')(option) }}}
                                         value={props.values.expenseAmount}
 
                                       />
@@ -628,7 +628,7 @@ class DetailExpense extends React.Component {
                                                   <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                                     <i className="fa fa-upload"></i> Upload
                                          		   </Button>
-                                                  <input id="fileInput" ref={ref => {
+                                                  <input id="fileInput" ref={(ref) => {
                                                     this.uploadFile = ref;
                                                   }} type="file" style={{ display: 'none' }} onChange={(e) => {
                                                     this.handleFileChange(e, props)

@@ -268,7 +268,7 @@ class CreateExpense extends React.Component {
                             .test(
                               "fileType",
                               "*Unsupported File Format",
-                              value => {
+                              (value) => {
                                 value && this.setState({
                                   fileName: value.name
                                 });
@@ -285,7 +285,7 @@ class CreateExpense extends React.Component {
                             .test(
                               "fileSize",
                               "*File Size is too large",
-                              value => {
+                              (value) => {
                                 if (!value || (value && value.size <= this.file_size)) {
                                   return true;
                                 } else {
@@ -346,7 +346,7 @@ class CreateExpense extends React.Component {
                                     id="payee"
                                     placeholder="Enter Payee"
                                     value={props.values.payee}
-                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('payee')(option) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('payee')(option) }}}
                                     className={
                                       props.errors.payee && props.touched.payee
                                         ? "is-invalid"
@@ -495,7 +495,7 @@ class CreateExpense extends React.Component {
                                         ? "is-invalid"
                                         : ""
                                     }
-                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('expenseAmount')(option) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('expenseAmount')(option) }}}
                                     value={props.values.expenseAmount}
                                     placeholder="Amount"
                                   />
@@ -633,7 +633,7 @@ class CreateExpense extends React.Component {
                                         id="receiptNumber"
                                         name="receiptNumber"
                                         placeholder="Enter Reciept Number"
-                                        onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option) }}
+                                        onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('receiptNumber')(option) }}}
                                         value={props.values.receiptNumber}
                                       />
                                     </FormGroup>
@@ -689,7 +689,7 @@ class CreateExpense extends React.Component {
                                             </Button>
                                             <input
                                               id="fileInput"
-                                              ref={ref => {
+                                              ref={(ref) => {
                                                 this.uploadFile = ref;
                                               }}
                                               type="file"

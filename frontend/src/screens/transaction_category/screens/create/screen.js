@@ -225,7 +225,7 @@ class CreateTransactionCategory extends React.Component {
       transactionCategoryId: '0',
       transactionCategoryName: categoryName,
       transactionCategoryCode: categoryCode,
-      defaltFlag: defaltFlag,
+      defaltFlag,
       parentTransactionCategory: selectedParentCategory?selectedParentCategory.transactionCategoryId:'',
       transactionCategoryDescription: categoryDiscription,
       vatCategory: selectVatCategoryCode,

@@ -172,7 +172,7 @@ class CustomerReport extends React.Component {
                               type="text"
                               placeholder="Ref. Number" 
                               value={this.state.filter_refNumber}
-                              onChange={e => this.inputHandler('filter_refNumber', e.target.value)}
+                              onChange={(e) => this.inputHandler('filter_refNumber', e.target.value)}
                             />
                   </Col>
                   <Col lg={2} className="mb-1">

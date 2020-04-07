@@ -426,7 +426,7 @@ class DetailJournal extends React.Component {
       form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
       this.updateAmount(data);
     }  else {
-      this.setState({ data: data }, () => {
+      this.setState({ data }, () => {
         this.formRef.current.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
       });
     }
@@ -437,7 +437,7 @@ class DetailJournal extends React.Component {
     let newData = [];
     e.preventDefault();
     const data = this.state.data;
-    newData = data.filter(obj => obj.id !== id);
+    newData = data.filter((obj) => obj.id !== id);
     props.setFieldValue("journalLineItems", newData, true);
     this.updateAmount(newData);
   }
@@ -457,14 +457,14 @@ class DetailJournal extends React.Component {
     });
 
     this.setState({
-      data: data,
+      data,
       initValue: {
         ...this.state.initValue,
         ...{
-          subTotalDebitAmount: subTotalDebitAmount,
+          subTotalDebitAmount,
           totalDebitAmount: subTotalDebitAmount,
           totalCreditAmount: subTotalCreditAmount,
-          subTotalCreditAmount: subTotalCreditAmount
+          subTotalCreditAmount
         }
       }
     });
@@ -650,7 +650,7 @@ class DetailJournal extends React.Component {
                                         placeholder="Reference Number"
                                         value={props.values.journalReferenceNo}
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('journalReferenceNo')(option)
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('journalReferenceNo')(option)}
                                         }}
                                       />
                                     </FormGroup>

@@ -260,7 +260,7 @@ class DetailTransactionCategory extends React.Component {
       transactionCategoryId: this.id ? this.id : '0',
       transactionCategoryName: categoryName,
       transactionCategoryCode: categoryCode,
-      defaltFlag: defaltFlag,
+      defaltFlag,
       parentTransactionCategory: selectedParentCategory?selectedParentCategory.transactionCategoryId:'',
       transactionCategoryDescription: categoryDiscription,
       vatCategory: selectVatCategoryCode,

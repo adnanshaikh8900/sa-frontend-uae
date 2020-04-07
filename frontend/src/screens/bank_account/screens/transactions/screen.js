@@ -172,7 +172,7 @@ class BankTransactions extends React.Component {
   getCategoryList = (val) => {
     this.props.transactionsActions.getCategoryListForReconcile(val).then((res) => {
       if (res.status === 200) {
-        res.data.map(x => {
+        res.data.map((x) => {
           x['name'] = x.label
           x['label'] = `${x['label']} (${x['amount']} ${x['currencySymbol']})`
           return x
@@ -184,7 +184,7 @@ class BankTransactions extends React.Component {
 }
 
   getDetail = (val) => {
-    const data = this.state.categoryList.filter(x => x.id === val)
+    const data = this.state.categoryList.filter((x) => x.id === val)
     this.setState({
           categoryDetails: {
             name: data[0].name,

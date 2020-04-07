@@ -345,7 +345,7 @@ class CreateJournal extends React.Component {
       form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
       this.updateAmount(data)
     } else {
-      this.setState({ data: data }, () => {
+      this.setState({ data }, () => {
         this.formRef.current.setFieldValue(field.name, this.state.data[parseInt(idx)][name], true)
       });
     }
@@ -358,7 +358,7 @@ class CreateJournal extends React.Component {
     let newData = []
     e.preventDefault();
     const data = this.state.data
-    newData = data.filter(obj => obj.id !== id);
+    newData = data.filter((obj) => obj.id !== id);
     props.setFieldValue('journalLineItems', newData, true)
     this.updateAmount(newData)
   }
@@ -380,7 +380,7 @@ class CreateJournal extends React.Component {
 
 
     this.setState({
-      data: data,
+      data,
       initValue: {
         ...this.state.initValue, ...{
           subTotalDebitAmount: subTotalDebitAmount,
@@ -428,11 +428,25 @@ class CreateJournal extends React.Component {
                 contactId: '',
                 debitAmount: 0,
                 creditAmount: 0,
+              }, {
+                id: 1,
+                description: '',
+                transactionCategoryId: '',
+                contactId: '',
+                debitAmount: 0,
+                creditAmount: 0,
               }],
               initValue: {
                 ...this.state.initValue, ...{
                   journalLineItems: [{
                     id: 0,
+                    description: '',
+                    transactionCategoryId: '',
+                    contactId: '',
+                    debitAmount: 0,
+                    creditAmount: 0,
+                  },{
+                    id: 1,
                     description: '',
                     transactionCategoryId: '',
                     contactId: '',
@@ -544,7 +558,7 @@ class CreateJournal extends React.Component {
                                     placeholder="Reference Number"
                                     value={props.values.journalReferenceNo || ''}
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('journalReferenceNo')(option)
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('journalReferenceNo')(option)}
                                     }}
                                   />
                                 </FormGroup>

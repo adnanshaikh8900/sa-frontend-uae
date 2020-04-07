@@ -293,7 +293,7 @@ class CreatePayment extends React.Component {
                         }
                       >
                         {
-                          props => (
+                          (props) => (
                             <Form onSubmit={props.handleSubmit}>
                               <Row>
                                 <Col lg={12}>
@@ -372,7 +372,7 @@ class CreatePayment extends React.Component {
                                           // defaultValue={props.values.amount}
                                           className={props.errors.amount && props.touched.amount ? "is-invalid" : ""}
                                           value={props.values.amount}
-                                          onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('amount')(option) }}
+                                          onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('amount')(option) }}}
                                         />
                                         {props.errors.amount && props.touched.amount && (
                                           <div className="invalid-feedback">{props.errors.amount}</div>
@@ -542,7 +542,7 @@ class CreatePayment extends React.Component {
         <SupplierModal
           openSupplierModal={this.state.openSupplierModal}
           closeSupplierModal={(e) => { this.closeSupplierModal(e) }}
-          getCurrentUser={e => this.getCurrentUser(e)}
+          getCurrentUser={(e) => this.getCurrentUser(e)}
           createSupplier={this.props.paymentActions.createSupplier}
         />
       </div >

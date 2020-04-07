@@ -157,7 +157,7 @@ class CreateProductCategory extends React.Component {
                                     id="productCategoryCode"
                                     name="productCategoryCode"
                                     placeholder="Enter Product Category Code"
-                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCategoryCode')(option) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('productCategoryCode')(option) }}}
                                     value={props.values.productCategoryCode}
                                     className={
                                       props.errors.productCategoryCode  && props.touched.productCategoryCode 
@@ -176,7 +176,7 @@ class CreateProductCategory extends React.Component {
                                     id="productCategoryName"
                                     name="productCategoryName"
                                     placeholder="Enter Product Category Name"
-                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('productCategoryName')(option) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('productCategoryName')(option) }}}
                                     value={props.values.productCategoryName }
                                     className={
                                       props.errors.productCategoryName  && props.touched.productCategoryName 

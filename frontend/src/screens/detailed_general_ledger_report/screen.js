@@ -226,19 +226,19 @@ class DetailedGeneralLedgerReport extends React.Component {
     switch (postingType) {
       case 'INVOICE':
         if (type === 1) {
-          this.props.history.push('/admin/expense/supplier-invoice/view', { 'id': id })
+          this.props.history.push('/admin/expense/supplier-invoice/view', { id })
         } else {
-          this.props.history.push('/admin/revenue/customer-invoice/view', { 'id': id })
+          this.props.history.push('/admin/revenue/customer-invoice/view', { id })
         }
         break;
       case 'EXPENSE':
         this.props.history.push('/admin/expense/expense/detail', { 'expenseId': id, 'view': true });
         break;
       case 'BANK_ACCOUNT':
-        this.props.history.push('/admin/banking/bank-account/transaction/detail', { 'id': id, 'view': true });
+        this.props.history.push('/admin/banking/bank-account/transaction/detail', { id, 'view': true });
         break;
       case 'MANUAL':
-        this.props.history.push('/admin/accountant/journal', { 'id': id });
+        this.props.history.push('/admin/accountant/journal', { id });
         break;
       default:
     }

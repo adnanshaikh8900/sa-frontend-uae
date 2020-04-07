@@ -120,7 +120,7 @@ class LogIn extends React.Component {
                               placeholder="Username"
                               name="username"
                               value={this.state.username}
-                              onChange={e => this.handleChange('username', e.target.value)}
+                              onChange={(e) => this.handleChange('username', e.target.value)}
                               autoComplete="username"
                               required
                             />
@@ -136,7 +136,7 @@ class LogIn extends React.Component {
                               placeholder="Password"
                               name="password"
                               value={this.state.password}
-                              onChange={e => this.handleChange('password', e.target.value)}
+                              onChange={(e) => this.handleChange('password', e.target.value)}
                               autoComplete="current-password"
                               required
                             />

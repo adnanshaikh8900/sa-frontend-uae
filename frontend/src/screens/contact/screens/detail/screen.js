@@ -222,7 +222,7 @@ class DetailContact extends React.Component {
                                   .required("Telephone Number is Required"),
                                 mobileNumber: Yup.string()
                                   .required("Mobile Number is required")
-                                  .test('quantity', 'Invalid Mobile Number', value => {
+                                  .test('quantity', 'Invalid Mobile Number', (value) => {
                                     if (isValidPhoneNumber(value)) {
                                       return true
                                     } else {
@@ -271,7 +271,7 @@ class DetailContact extends React.Component {
                                         name="firstName"
                                         placeholder="Enter First Name"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
                                         }}
                                         value={props.values.firstName}
                                         className={
@@ -294,7 +294,7 @@ class DetailContact extends React.Component {
                                         name="middleName"
                                         placeholder="Enter Middle Name"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option)
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
                                         }}
                                         value={props.values.middleName}
                                         className={
@@ -317,7 +317,7 @@ class DetailContact extends React.Component {
                                         name="lastName"
                                         placeholder="Enter Last Name"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
                                         }}
                                         value={props.values.lastName}
                                         className={
@@ -396,7 +396,7 @@ class DetailContact extends React.Component {
                                         name="poBoxNumber"
                                         placeholder="Enter PO Box Number"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('poBoxNumber')(option)
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('poBoxNumber')(option)}
                                         }}
                                         value={props.values.poBoxNumber}
                                         className={
@@ -443,7 +443,7 @@ class DetailContact extends React.Component {
                                         id="telephone"
                                         name="telephone"
                                         placeholder="Enter Telephone Number"
-                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('telephone')(option) }}
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('telephone')(option) }}}
                                         value={props.values.telephone}
                                         className={
                                           props.errors.telephone && props.touched.telephone
@@ -616,7 +616,7 @@ class DetailContact extends React.Component {
                                         // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                                         value={props.values.city}
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('city')(option)
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('city')(option)}
                                         }}
                                         placeholder="Enter City"
                                         id="city"
@@ -644,7 +644,7 @@ class DetailContact extends React.Component {
                                         name="postZipCode"
                                         placeholder="Enter Postal Zip Code"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('postZipCode')(option)
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('postZipCode')(option)}
                                         }}
                                         value={props.values.postZipCode}
                                         className={
@@ -694,7 +694,7 @@ class DetailContact extends React.Component {
                                         name="contractPoNumber"
                                         placeholder="Enter Contract PO Number"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contractPoNumber')(option)
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('contractPoNumber')(option)}
                                         }}
                                         value={props.values.contractPoNumber}
                                         className={
@@ -720,7 +720,7 @@ class DetailContact extends React.Component {
                                         name="vatRegistrationNumber"
                                         placeholder="Enter Tax Registration Number"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('vatRegistrationNumber')(option)
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('vatRegistrationNumber')(option)}
                                         }}
                                         value={props.values.vatRegistrationNumber}
                                         className={

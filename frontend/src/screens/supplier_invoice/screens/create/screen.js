@@ -351,7 +351,7 @@ class CreateSupplierInvoice extends React.Component {
     let newData = []
     e.preventDefault();
     const data = this.state.data
-    newData = data.filter(obj => obj.id !== id);
+    newData = data.filter((obj) => obj.id !== id);
     props.setFieldValue('lineItemsString', newData, true)
     this.updateAmount(newData, props)
   }
@@ -419,7 +419,7 @@ class CreateSupplierInvoice extends React.Component {
       data: data,
       initValue: {
         ...this.state.initValue, ...{
-          total_net: total_net,
+          total_net,
           invoiceVATAmount: total_vat,
           discount: total_net > discount ? discount : 0,
           totalAmount: total_net > discount ? total - discount : total
@@ -637,7 +637,7 @@ class CreateSupplierInvoice extends React.Component {
                               .of(Yup.object().shape({
                                 description: Yup.string().required("Value is Required"),
                                 quantity: Yup.string().required("Value is Required")
-                                  .test('quantity', 'Quantity Should be Greater than 1', value => {
+                                  .test('quantity', 'Quantity Should be Greater than 1', (value) => {
                                     if (value > 0) {
                                       return true
                                     } else {
@@ -645,7 +645,7 @@ class CreateSupplierInvoice extends React.Component {
                                     }
                                   }),
                                 unitPrice: Yup.string().required("Value is Required")
-                                  .test('Unit Price', 'Unit Price Should be Greater than 1', value => {
+                                  .test('Unit Price', 'Unit Price Should be Greater than 1', (value) => {
                                     if (value > 0) {
                                       return true
                                     } else {
@@ -658,7 +658,7 @@ class CreateSupplierInvoice extends React.Component {
                               .test(
                                 "fileType",
                                 "*Unsupported File Format",
-                                value => {
+                                (value) => {
                                   value && this.setState({
                                     fileName: value.name
                                   });
@@ -675,7 +675,7 @@ class CreateSupplierInvoice extends React.Component {
                               .test(
                                 "fileSize",
                                 "*File Size is too large",
-                                value => {
+                                (value) => {
                                   if (!value || (value && value.size <= this.file_size)) {
                                     return true;
                                   } else {
@@ -870,7 +870,7 @@ class CreateSupplierInvoice extends React.Component {
                                     placeholder="Contact PO Number"
                                     value={props.values.contact_po_number}
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('contact_po_number')(option)
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('contact_po_number')(option)}
                                     }}
                                   />
                                 </FormGroup>
@@ -890,7 +890,7 @@ class CreateSupplierInvoice extends React.Component {
                                         name="receiptNumber"
                                         placeholder="Reciept Number"
                                         onChange={(option) => {
-																					if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('receiptNumber')(option)
+																					if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('receiptNumber')(option)}
 																				}}
                                         value={props.values.receiptNumber}
                                       />
@@ -926,7 +926,7 @@ class CreateSupplierInvoice extends React.Component {
                                             <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                               <i className="fa fa-upload"></i> Upload
                                   </Button>
-                                            <input id="fileInput" ref={ref => {
+                                            <input id="fileInput" ref={(ref) => {
                                               this.uploadFile = ref;
                                             }} type="file" style={{ display: 'none' }} onChange={(e) => {
                                               this.handleFileChange(e, props)
@@ -1210,7 +1210,7 @@ class CreateSupplierInvoice extends React.Component {
         <SupplierModal
           openSupplierModal={this.state.openSupplierModal}
           closeSupplierModal={(e) => { this.closeSupplierModal(e) }}
-          getCurrentUser={e => this.getCurrentUser(e)}
+          getCurrentUser={(e) => this.getCurrentUser(e)}
           createSupplier={this.props.supplierInvoiceActions.createSupplier}
           getStateList={this.props.supplierInvoiceActions.getStateList}
           currency_list={this.props.currency_list}

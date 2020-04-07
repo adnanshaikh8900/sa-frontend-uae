@@ -478,7 +478,7 @@ class Expense extends React.Component {
                           type="text"
                           placeholder="Payee"
                           value={filterData.payee}
-                          onChange={e => this.handleChange(e.target.value, 'payee')}
+                          onChange={(e) => this.handleChange(e.target.value, 'payee')}
                         />
                       </Col>
                       <Col lg={2} className="mb-1">

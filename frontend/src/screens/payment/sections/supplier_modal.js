@@ -97,7 +97,7 @@ class SupplierModal extends React.Component {
                           id="firstName"
                           name="firstName"
                           onChange={(option) => { 
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option) }}
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) } }}
                           placeholder="Enter First Name "
                           value={props.values.firstName}
                           className={
@@ -121,7 +121,7 @@ class SupplierModal extends React.Component {
                           id="middleName"
                           name="middleName"
                           onChange={(option) => { 
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option) }}
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) } }}
                           placeholder="Enter Middle Name "
                           value={props.values.middleName}
                           className={
@@ -145,7 +145,7 @@ class SupplierModal extends React.Component {
                           id="lastName"
                           name="lastName"
                           onChange={(option) => { 
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option) }}
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) } }}
                           placeholder="Enter Last Name "
                           value={props.values.lastName}
                           className={

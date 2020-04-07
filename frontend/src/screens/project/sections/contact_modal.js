@@ -153,7 +153,7 @@ class ContactModal extends React.Component {
                           id="firstName"
                           name="firstName"
                           onChange={(option) => {
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option)
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
                           }}
                           placeholder="Enter firstName "
                           value={props.values.firstName}
@@ -176,7 +176,7 @@ class ContactModal extends React.Component {
                           id="middleName"
                           name="middleName"
                           onChange={(option) => {
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option)
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
                           }}
                           placeholder="Enter middleName  "
                           value={props.values.middleName}
@@ -199,7 +199,7 @@ class ContactModal extends React.Component {
                           id="lastName"
                           name="lastName"
                           onChange={(option) => {
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option)
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
                           }}
                           placeholder="Enter lastName   "
                           value={props.values.lastName}
@@ -360,7 +360,7 @@ class ContactModal extends React.Component {
                           // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                           value={props.values.city}
                           onChange={(option) => {
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('city')(option)
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('city')(option)}
                           }}
                           placeholder=""
                           id="city"

@@ -162,7 +162,7 @@ class CreateVatCode extends React.Component {
                                 name="name"
                                 placeholder="Enter Vat Code Name"
                                 onChange={(option) => {
-                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('name')(option)
+                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('name')(option)}
                                 }}
                                 // validate={this.validateCode}
                                 value={props.values.name}
@@ -184,7 +184,7 @@ class CreateVatCode extends React.Component {
                                 name="vat"
                                 placeholder="Enter Percentage"
                                 onChange={(option) => {
-                                  if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('vat')(option)
+                                  if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('vat')(option)}
                                 }}
                                 value={props.values.vat}
                                 className={

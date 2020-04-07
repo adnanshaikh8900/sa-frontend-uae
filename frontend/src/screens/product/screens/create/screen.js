@@ -168,7 +168,7 @@ class CreateProduct extends React.Component {
                                       id="productName"
                                       name="productName"
                                       onChange={(option) => {
-                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('productName')(option)
+                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('productName')(option)}
                                       }}
                                       value={props.values.productName}
                                       placeholder="Enter Product Name"
@@ -193,7 +193,7 @@ class CreateProduct extends React.Component {
                                       name="productCode"
                                       placeholder="Enter Product Code"
                                         onChange={(option) => {
-                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) props.handleChange('productCode')(option)
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('productCode')(option)}
                                         }}
                                       value={props.values.productCode}
                                     />

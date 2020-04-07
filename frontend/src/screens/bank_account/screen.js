@@ -542,7 +542,7 @@ class BankAccount extends React.Component {
                               type="text"
                               placeholder="Bank"
                               value={filterData.bankName}
-                              onChange={e => this.inputHandler('bankName', e.target.value)}
+                              onChange={(e) => this.inputHandler('bankName', e.target.value)}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -559,7 +559,7 @@ class BankAccount extends React.Component {
                               type="text"
                               placeholder="Account Name"
                               value={filterData.bankAccountName}
-                              onChange={e => this.inputHandler('bankAccountName', e.target.value)}
+                              onChange={(e) => this.inputHandler('bankAccountName', e.target.value)}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -567,7 +567,7 @@ class BankAccount extends React.Component {
                               type="text"
                               placeholder="Account Number"
                               value={filterData.accountNumber}
-                              onChange={e => this.inputHandler('accountNumber', e.target.value)}
+                              onChange={(e) => this.inputHandler('accountNumber', e.target.value)}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">

@@ -160,8 +160,6 @@ class DetailedGeneralLedgerReport extends React.Component {
       let nameA, nameB
       data.sort((a, b) => {
         if (column !== 'date') {
-          console.log(a.column)
-          console.log(b.column)
           nameA = a[`${column}`] ? a[`${column}`].toUpperCase() : '';
           nameB = b[`${column}`] ? b[`${column}`].toUpperCase() : '';
         } else {

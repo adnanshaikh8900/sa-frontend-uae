@@ -410,9 +410,9 @@ class DetailJournal extends React.Component {
     const data = this.state.data
     data.map((obj, index) => {
       if (obj.id === row.id) {
-        if (name === 'debitAmount') { obj[name] = e.target.value; obj['creditAmount'] = 0 }
-        else if (name === 'creditAmount') { obj[name] = e.target.value; obj['debitAmount'] = 0 }
-        else {obj[name] = e.target.value}
+        if (name === 'debitAmount') { obj[`${name}`] = e.target.valuevalue; obj['creditAmount'] = 0 }
+        else if (name === 'creditAmount') { obj[`${name}`] = e.target.value; obj['debitAmount'] = 0 }
+        else {obj[`${name}`] = e.target.value}
         idx = index
       }
       return obj

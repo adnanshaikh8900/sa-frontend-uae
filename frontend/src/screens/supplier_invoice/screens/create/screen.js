@@ -291,7 +291,7 @@ class CreateSupplierInvoice extends React.Component {
     let idx
     data.map((obj, index) => {
       if (obj.id === row.id) {
-        obj[name] = e.target.value
+        obj[`${name}`] = e.target.value
         idx = index
       }
       return obj
@@ -404,7 +404,7 @@ class CreateSupplierInvoice extends React.Component {
     let total_vat = 0;
     data.map((obj) => {
       const index = obj.vatCategoryId !== '' ? vat_list.findIndex((item) => item.id === (+obj.vatCategoryId)) : '';
-      const vat = index !== '' ? vat_list[index].vat : 0
+      const vat = index !== '' ? vat_list[`${index}`].vat : 0
       // let val = (((+obj.unitPrice) * vat) / 100)
       let val = ((((+obj.unitPrice) * vat) * obj.quantity) / 100)
       obj.subTotal = (obj.unitPrice && obj.vatCategoryId) ? (((+obj.unitPrice) * obj.quantity) + val) : 0;

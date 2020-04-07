@@ -428,7 +428,7 @@ class DetailBankTransaction extends React.Component {
                                                 <div className="file-upload-cont">
                                                   <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                                     <i className="fa fa-upload"></i> Upload
-                                         		      </Button>
+                                                  </Button>
                                                   <input id="fileInput" ref={(ref) => {
                                                     this.uploadFile = ref;
                                                   }} type="file" style={{ display: 'none' }} onChange={(e) => {

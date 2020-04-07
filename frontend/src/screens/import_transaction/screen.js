@@ -114,10 +114,10 @@ class ImportTransaction extends React.Component {
     for (let val in initValue) {
       if(initValue.hasOwnProperty(val)) {
         if (val === 'name' && !initValue.val) {
-          temp[val] = '*Template Name is Required'
+          temp['name'] = '*Template Name is Required'
         }
         if (val === 'dateFormatId' && !initValue.val) {
-          temp[val] = '*Date Format is Required'
+          temp['dateFormatId'] = '*Date Format is Required'
         }
       }
     }
@@ -203,9 +203,9 @@ class ImportTransaction extends React.Component {
     let tempStatus = [...this.state.columnStatus];
     let status = tempDataSelectedValueDropdown.filter((item) => item.value === e.value && e.value !== "")
     if (status.length > 0) {
-      tempStatus[index] = { label: `${e.value}`, status: true }
-      // tempDataSelectedValueDropdown[index] = { label: `Select`, value: '' }
-      if (tempDataSelectedValueDropdown[index].value !== e.value) {
+      tempStatus[`${index}`] = { label: `${e.value}`, status: true }
+      // tempDataSelectedValueDropdown[`${index}`] = { label: `Select`, value: '' }
+      if (tempDataSelectedValueDropdown[`${index}`].value !== e.value) {
         this.setState({
           columnStatus: tempStatus,
           selectedValueDropdown: tempDataSelectedValueDropdown
@@ -213,7 +213,7 @@ class ImportTransaction extends React.Component {
       }
     }
     else if (e.value === '') {
-      let val = tempDataSelectedValueDropdown[index].value;
+      let val = tempDataSelectedValueDropdown[`${index}`].value;
       let multiSelected = []
       tempStatus.map((item) => item.label).reduce(function (a, e, i) {
         if (e === val) {
@@ -228,8 +228,8 @@ class ImportTransaction extends React.Component {
           return item
         })
       }
-      tempDataSelectedValueDropdown[index] = e
-      tempStatus[index] = { label: '', status: false }
+      tempDataSelectedValueDropdown[`${index}`] = e
+      tempStatus[`${index}`] = { label: '', status: false }
       this.setState({
         columnStatus: tempStatus,
         selectedValueDropdown: tempDataSelectedValueDropdown
@@ -243,10 +243,10 @@ class ImportTransaction extends React.Component {
           return { label: `${item.label}`, status: `${item.status}` }
         }
       })
-      a[index] = { label: '', status: false }
-      tempDataSelectedValueDropdown[index] = e
+      a[`${index}`] = { label: '', status: false }
+      tempDataSelectedValueDropdown[`${index}`] = e
       const tempSelectError = [...this.state.selectError]
-      tempSelectError[index] = false
+      tempSelectError[`${index}`] = false
       this.setState({
         columnStatus: a,
         selectedValueDropdown: tempDataSelectedValueDropdown,
@@ -268,7 +268,7 @@ class ImportTransaction extends React.Component {
     let optionErr = [...this.state.selectError]
     let item = this.state.selectedValueDropdown.map((item, index) => {
       if (item.value === '') {
-        optionErr[index] = true
+        optionErr[`${index}`] = true
       }
       return item.value
     }).indexOf('');
@@ -415,7 +415,7 @@ class ImportTransaction extends React.Component {
                                                   type="radio"
                                                   id={option.value}
                                                   name="delimiter"
-                                                  value={this.state.delimiterList[index].value}
+                                                  value={this.state.delimiterList[`${index}`].value}
                                                   checked={this.state.selectedDelimiter === option.value}
                                                   onChange={(e) => {
                                                     this.setState({
@@ -582,7 +582,7 @@ class ImportTransaction extends React.Component {
                                   return (
 
                                     <Col style={{ width: `calc(100% / ${this.state.tableDataKey.length})`, margin: '20px 0' }}>
-                                      <FormGroup className={`mb-0 ${this.state.columnStatus[index].status ? 'is-invalid' : ''} ${this.state.selectError[index] ? 'invalid-select' : ''}`}
+                                      <FormGroup className={`mb-0 ${this.state.columnStatus[`${index}`].status ? 'is-invalid' : ''} ${this.state.selectError[`${index}`] ? 'invalid-select' : ''}`}
                                       >
                                         <Select
                                           type=""
@@ -590,14 +590,14 @@ class ImportTransaction extends React.Component {
                                           name={index}
                                           id=""
                                           rows="6"
-                                          value={this.state.selectedValueDropdown[index]}
+                                          value={this.state.selectedValueDropdown[`${index}`]}
                                           onChange={(e) => {
                                             this.handleChange(e, index)
                                           }}
                                         // className={}
                                         />
                                       </FormGroup>
-                                      <p className={this.state.columnStatus[index].status ? 'is-invalid' : 'valid'}>*Already Selected</p>
+                                      <p className={this.state.columnStatus[`${index}`].status ? 'is-invalid' : 'valid'}>*Already Selected</p>
                                     </Col>
 
                                   )

@@ -203,11 +203,12 @@ class DetailTransactionCategory extends React.Component {
   getTransactionTypes = () => {
     this.setState({ loading: true })
     this.props.transactionActions.getTransactionTypes().then((res) => {
-      if (res.status === 200)
+      if (res.status === 200) {
         this.setState({ 
           loading: false,
           transactionCategoryList: res.data
         })
+      }
     })
   }
 

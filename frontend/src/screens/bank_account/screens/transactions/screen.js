@@ -306,7 +306,7 @@ class BankTransactions extends React.Component {
                       <Button type="button" color="primary" className="btn-square mr-3" onClick={() => { this.handleSubmit() }}
                         disabled={Object.keys(this.state.categoryDetails).length > 0 ? false : true}
                       >
-                        <i className="fa fa-dot-circle-o"></i> Reconcile
+                        <i className="fa fa-dot-circle-o"></i> Explain
                         </Button>
                     </FormGroup>
                   </Col>
@@ -321,6 +321,7 @@ class BankTransactions extends React.Component {
   }
 
   toggleActionButton = (index) => {
+    console.log(index)
     let temp = Object.assign({}, this.state.actionButtons)
     if (temp[parseInt(index, 10)]) {
       temp[parseInt(index, 10)] = false
@@ -386,6 +387,8 @@ class BankTransactions extends React.Component {
   }
 
   renderActions = (cell, row) => {
+    console.log(cell)
+    console.log(row)
     return (
       <div>
         <ButtonDropdown

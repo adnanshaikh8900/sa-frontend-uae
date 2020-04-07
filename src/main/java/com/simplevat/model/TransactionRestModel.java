@@ -63,5 +63,10 @@ public class TransactionRestModel implements Comparable<TransactionRestModel> {
 	public boolean isParent() {
 		return parentTransaction == null;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 
 }

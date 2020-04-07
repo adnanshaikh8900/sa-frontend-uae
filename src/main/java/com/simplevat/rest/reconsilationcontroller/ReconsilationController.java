@@ -85,7 +85,7 @@ public class ReconsilationController {
 
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			ReconsileCategoriesEnumConstant cat = ReconsileCategoriesEnumConstant
-					.get(Integer.valueOf(reconsileRequestModel.getReconcileCategoryCode()));
+					.get(reconsileRequestModel.getReconcileCategoryCode());
 
 			switch (cat) {
 			case EXPENSE:

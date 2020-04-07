@@ -160,11 +160,13 @@ class DetailedGeneralLedgerReport extends React.Component {
       let nameA, nameB
       data.sort((a, b) => {
         if (column !== 'date') {
-          nameA = a[column] ? a[column].toUpperCase() : '';
-          nameB = b[column] ? b[column].toUpperCase() : '';
+          console.log(a.column)
+          console.log(b.column)
+          nameA = a[`${column}`] ? a[`${column}`].toUpperCase() : '';
+          nameB = b[`${column}`] ? b[`${column}`].toUpperCase() : '';
         } else {
-          nameA = new Date(a[column]);
-          nameB = new Date(b[column]);
+          nameA = new Date(a[`${column}`]);
+          nameB = new Date(b[`${column}`]);
         }
         if (nameA < nameB) {
           return -1;
@@ -175,10 +177,10 @@ class DetailedGeneralLedgerReport extends React.Component {
         return 0;
       }
       );
-      checkedValue = data[0][column]
+      checkedValue = data[0][`${column}`]
       if (direction === 'desc') {
         data.reverse();
-        checkedValue = data[0][column]
+        checkedValue = data[0][`${column}`]
       }
       obj = {
         data,

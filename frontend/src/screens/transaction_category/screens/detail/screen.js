@@ -215,11 +215,12 @@ class DetailTransactionCategory extends React.Component {
   getTransactionVatCategories = () => {
     this.setState({ loading: true })
     this.props.transactionActions.getTransactionVatCategories().then((res) => {
-      if (res.status === 200)
+      if (res.status === 200) {
         this.setState({ 
           loading: false,
           vatCategoryList: res.data
         })
+      }
     })
   }
 

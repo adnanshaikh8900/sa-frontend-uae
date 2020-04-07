@@ -22,7 +22,7 @@ authFileUploadApi.interceptors.response.use(
   (error) => {
     if(error.response && error.response.status && error.response.status === 401) {
       window['sessionStorage'].clear()
-        window.location = '/login'
+        window['location'] = '/login'
       } else {
       return Promise.reject(error.response)
       }

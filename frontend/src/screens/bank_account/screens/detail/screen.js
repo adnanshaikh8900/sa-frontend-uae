@@ -64,6 +64,7 @@ class DetailBankAccount extends React.Component {
     this.regExAlpha = /^[a-zA-Z]+$/
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/
 
     this.account_for = [
       { label: 'Personal', value: 'P' },
@@ -227,8 +228,8 @@ class DetailBankAccount extends React.Component {
                             .required('Account Number is Required'),
                           account_is_for: Yup.string().required('Account is for is Required'),
                           ifsc_code: Yup.string()
-                          .required('IFSC Code is Required'),
-                          swift_code: Yup.string().matches(/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/, {message: "Please enter valid Swift Code.", excludeEmptyString: false})
+                            .required('IFSC Code is Required'),
+                          swift_code: Yup.string().matches(this.swiftRegex, { message: "Please enter valid Swift Code.", excludeEmptyString: false })
                         })}
                       >
                         {
@@ -244,8 +245,9 @@ class DetailBankAccount extends React.Component {
                                       name="account_name"
                                       placeholder="Enter Account Name"
                                       value={props.values.account_name}
-                                      onChange={(option) => { 
-                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('account_name')(option) }}}
+                                      onChange={(option) => {
+                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('account_name')(option) }
+                                      }}
                                       className={
                                         props.errors.account_name && props.touched.account_name
                                           ? 'is-invalid'
@@ -347,8 +349,9 @@ class DetailBankAccount extends React.Component {
                                       name="bank_name"
                                       placeholder="Enter Bank Name"
                                       value={props.values.bank_name}
-                                      onChange={(option) => { 
-                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('bank_name')(option) } }}
+                                      onChange={(option) => {
+                                        if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('bank_name')(option) }
+                                      }}
                                       className={
                                         props.errors.bank_name && props.touched.bank_name
                                           ? 'is-invalid'
@@ -369,8 +372,9 @@ class DetailBankAccount extends React.Component {
                                       name="account_number"
                                       placeholder="Enter Account Number"
                                       value={props.values.account_number}
-                                      onChange={(option) => { 
-                                        if (option.target.value === '' || this.regEx.test(option.target.value)) {props.handleChange('account_number')(option)} }}
+                                      onChange={(option) => {
+                                        if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('account_number')(option) }
+                                      }}
                                       className={
                                         props.errors.account_number && props.touched.account_number
                                           ? 'is-invalid'
@@ -392,16 +396,17 @@ class DetailBankAccount extends React.Component {
                                       id="ifsc_code"
                                       name="ifsc_code"
                                       placeholder="Enter IFSC Code"
-                                      value={props.values.ifsc_code || '' }
-                                      onChange={(option) => { 
-                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('ifsc_code')(option)} }}
-                                         className={
+                                      value={props.values.ifsc_code || ''}
+                                      onChange={(option) => {
+                                        if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('ifsc_code')(option) }
+                                      }}
+                                      className={
                                         props.errors.ifsc_code && props.touched.ifsc_code
                                           ? 'is-invalid'
                                           : ''
                                       }
                                     />
-                                      {props.errors.ifsc_code && props.touched.ifsc_code && (
+                                    {props.errors.ifsc_code && props.touched.ifsc_code && (
                                       <div className="invalid-feedback">{props.errors.ifsc_code}</div>
                                     )}
                                   </FormGroup>
@@ -422,7 +427,7 @@ class DetailBankAccount extends React.Component {
                                           : ''
                                       }
                                     />
-                                      {props.errors.swift_code && props.touched.swift_code && (
+                                    {props.errors.swift_code && props.touched.swift_code && (
                                       <div className="invalid-feedback">{props.errors.swift_code}</div>
                                     )}
                                   </FormGroup>

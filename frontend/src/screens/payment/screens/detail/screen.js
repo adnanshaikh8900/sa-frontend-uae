@@ -404,10 +404,11 @@ class DetailPayment extends React.Component {
                                           if (
                                             option.target.value === "" ||
                                             this.regEx.test(option.target.value)
-                                          )
+                                          ) {
                                             props.handleChange("invoiceAmount")(
                                               option
                                             );
+                                          }
                                         }}
                                       />
                                       {props.errors.invoiceAmount && props.touched.invoiceAmount && (

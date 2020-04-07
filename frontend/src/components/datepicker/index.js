@@ -28,8 +28,8 @@ class DateRangePicker2 extends React.Component{
     Object.keys(this.props.ranges).map((key, index) => {
       if(index === 0) {
         this.setState({
-          startDate: this.props.ranges[key][0],
-          endDate: this.props.ranges[key][1]
+          startDate: this.props.ranges[`${key}`][0],
+          endDate: this.props.ranges[`${key}`][1]
         })
       }
       return key
@@ -48,8 +48,8 @@ class DateRangePicker2 extends React.Component{
     let nick_key = null
 
     Object.keys(this.props.ranges).map((key) => {
-      if(this.state.startDate.format('YYYY-MM-DD') === this.props.ranges[key][0].format('YYYY-MM-DD') && 
-        this.state.endDate.format('YYYY-MM-DD') === this.props.ranges[key][1].format('YYYY-MM-DD')){
+      if(this.state.startDate.format('YYYY-MM-DD') === this.props.ranges[`${key}`][0].format('YYYY-MM-DD') && 
+        this.state.endDate.format('YYYY-MM-DD') === this.props.ranges[`${key}`][1].format('YYYY-MM-DD')){
         nick_key = key
         return true
       }

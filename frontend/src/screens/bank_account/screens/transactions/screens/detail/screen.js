@@ -107,11 +107,11 @@ class DetailBankTransaction extends React.Component {
             filePath: res.data.receiptAttachmentPath ? res.data.receiptAttachmentPath : '',
           },
           view: this.props.location.state && this.props.location.state.view ? true : false
-        },() => {
-          if(this.props.location.state && this.props.location.state.view) {
-            this.setState({loading : false})
+        }, () => {
+          if (this.props.location.state && this.props.location.state.view) {
+            this.setState({ loading: false })
           } else {
-            this.setState({loading : false})
+            this.setState({ loading: false })
           }
         })
       }).catch((err) => {
@@ -190,7 +190,7 @@ class DetailBankTransaction extends React.Component {
         <div className="animated fadeIn">
           <Row>
             <Col lg={12} className="mx-auto">
-              {loading ? <Loader /> : this.state.view ? <ViewBankAccount initialVals={initValue} editDetails={() => {this.editDetails()}}/> :
+              {loading ? <Loader /> : this.state.view ? <ViewBankAccount initialVals={initValue} editDetails={() => { this.editDetails() }} /> :
                 (
                   <Card>
                     <CardHeader>
@@ -230,7 +230,7 @@ class DetailBankTransaction extends React.Component {
                                       });
                                       if (
                                         !value || (value &&
-                                        this.supported_format.includes(value.type)) || !value
+                                          this.supported_format.includes(value.type)) || !value
                                       ) {
                                         return true;
                                       } else {
@@ -312,7 +312,7 @@ class DetailBankTransaction extends React.Component {
                                         id="transactionAmount"
                                         name="transactionAmount"
                                         placeholder="Amount"
-                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) {props.handleChange('transactionAmount')(option)} }}
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('transactionAmount')(option) } }}
                                         value={props.values.transactionAmount}
                                         className={
                                           props.errors.transactionAmount && props.touched.transactionAmount
@@ -394,7 +394,7 @@ class DetailBankTransaction extends React.Component {
                                             id="receiptNumber"
                                             name="receiptNumber"
                                             placeholder="Reciept Number"
-                                            onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('receiptNumber')(option)} }}
+                                            onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('receiptNumber')(option) } }}
                                             value={props.values.receiptNumber}
                                           />
                                         </FormGroup>
@@ -428,7 +428,7 @@ class DetailBankTransaction extends React.Component {
                                                 <div className="file-upload-cont">
                                                   <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                                     <i className="fa fa-upload"></i> Upload
-                                         		   </Button>
+                                         		      </Button>
                                                   <input id="fileInput" ref={(ref) => {
                                                     this.uploadFile = ref;
                                                   }} type="file" style={{ display: 'none' }} onChange={(e) => {

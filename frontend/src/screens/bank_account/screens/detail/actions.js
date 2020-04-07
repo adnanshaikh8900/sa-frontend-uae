@@ -93,7 +93,7 @@ export const updateBankAccount = (obj) => {
     delete obj['bankAccountId']
     for (let key in obj) {
         if(obj.hasOwnProperty(key)) {
-          url += `&${key}=${obj[key]}`
+          url += `&${key}=${obj[`${key}`]}`
         }
     }
     let data = {

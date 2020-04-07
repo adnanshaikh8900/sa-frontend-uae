@@ -168,32 +168,32 @@ class Payment extends React.Component {
 
 
   onRowSelect = (row, isSelected, e) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.paymentId)
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.paymentId)
     } else {
       this.state.selectedRows.map((item) => {
         if (item !== row.paymentId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
   onSelectAll = (isSelected, rows) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
       rows.map((item) => {
-        temp_list.push(item.paymentId)
+        tempList.push(item.paymentId)
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 

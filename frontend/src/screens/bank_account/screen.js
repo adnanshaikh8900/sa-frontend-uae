@@ -322,15 +322,15 @@ class BankAccount extends React.Component {
     this.props.bankAccountActions.removeBankAccountByID(_id).then(() => {
       this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
       this.initializeData()
-      let temp_List = []
+      let tempList = []
       this.state.selected_id_list.map((item) => {
         if (item !== _id) {
-          temp_List.push(item)
+          tempList.push(item)
         }
         return item
       })
       this.setState({
-        selected_id_list: temp_List
+        selected_id_list: tempList
       })
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
@@ -359,33 +359,33 @@ class BankAccount extends React.Component {
 
 
   onRowSelect = (row, isSelected, e) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
-      temp_list.push(row.bankAccountId)
+      tempList = Object.assign([], this.state.selected_id_list)
+      tempList.push(row.bankAccountId)
     } else {
       this.state.selected_id_list.map((item) => {
         if (item !== row.bankAccountId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selected_id_list: tempList
     })
   }
 
   onSelectAll = (isSelected, rows) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
       rows.map((item) => {
-        temp_list.push(item.bankAccountId)
+        tempList.push(item.bankAccountId)
         return item
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selected_id_list: tempList
     })
   }
 

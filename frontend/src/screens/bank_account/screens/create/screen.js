@@ -66,7 +66,7 @@ class CreateBankAccount extends React.Component {
     this.regExAlpha = /^[a-zA-Z]+$/
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-
+    this.swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/
     this.account_for = [
       { label: 'Personal', value: 'Personal' },
       { label: 'Corporate', value: 'Corporate' }
@@ -189,7 +189,7 @@ class CreateBankAccount extends React.Component {
                           ),
                           ifsc_code: Yup.string()
                             .required('IFSC Code is Required'),
-                          swift_code: Yup.string().matches(/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/, {message: "Please enter valid Swift Code.", excludeEmptyString: false})
+                          swift_code: Yup.string().matches(this.swiftRegex, {message: "Please enter valid Swift Code.", excludeEmptyString: false})
                         })}
                       >
                         {

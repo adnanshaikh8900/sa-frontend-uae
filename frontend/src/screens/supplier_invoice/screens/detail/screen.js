@@ -247,7 +247,7 @@ class DetailSupplierInvoice extends React.Component {
             type="text"
             value={row['quantity'] !== 0 ? row['quantity'] : 0}
             onChange={(e) => {
-              if (e.target.value === '' || this.regEx.test(e.target.value)){ this.selectItem(e, row, 'quantity', form, field, props)}
+              if (e.target.value === '' || this.regEx.test(e.target.value)) { this.selectItem(e, row, 'quantity', form, field, props) }
             }
             }
             placeholder="Quantity"
@@ -278,7 +278,7 @@ class DetailSupplierInvoice extends React.Component {
           <Input
             type="text"
             value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-            onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)){ this.selectItem(e, row, 'unitPrice', form, field, props) }}}
+            onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)) { this.selectItem(e, row, 'unitPrice', form, field, props) } }}
             placeholder="Unit Price"
             className={`form-control 
                        ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -476,7 +476,7 @@ class DetailSupplierInvoice extends React.Component {
     formData.append("invoiceId", current_supplier_id);
     formData.append("referenceNumber", invoice_number ? invoice_number : "");
     formData.append("invoiceDate", typeof invoiceDate === "string" ? moment(invoiceDate, 'DD/MM/YYYY').toDate() : invoiceDate)
-		formData.append("invoiceDueDate", typeof invoiceDueDate === "string" ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : invoiceDueDate)
+    formData.append("invoiceDueDate", typeof invoiceDueDate === "string" ? moment(invoiceDueDate, 'DD/MM/YYYY').toDate() : invoiceDueDate)
     formData.append("receiptNumber", receiptNumber ? receiptNumber : "");
     formData.append("contactPoNumber", contact_po_number ? contact_po_number : "");
     formData.append("receiptAttachmentDescription", receiptAttachmentDescription ? receiptAttachmentDescription : "");
@@ -646,7 +646,7 @@ class DetailSupplierInvoice extends React.Component {
                                   .required('Invoice Date is Required'),
                                 invoiceDueDate: Yup.string()
                                   .required('Invoice Due Date is Required'),
-                                  currency: Yup.string()
+                                currency: Yup.string()
                                   .required('Currency is Requsired'),
                                 lineItemsString: Yup.array()
                                   .required('Atleast one invoice sub detail is mandatory')
@@ -858,10 +858,10 @@ class DetailSupplierInvoice extends React.Component {
                                         value={props.values.currency}
                                         onChange={(option) => props.handleChange('currency')(option)}
                                         className={`${props.errors.currency && props.touched.currency ? "is-invalid" : ""}`}
-                                        />
-                                        {props.errors.currency && props.touched.currency && (
-                                          <div className="invalid-feedback">{props.errors.currency}</div>
-                                        )}
+                                      />
+                                      {props.errors.currency && props.touched.currency && (
+                                        <div className="invalid-feedback">{props.errors.currency}</div>
+                                      )}
                                     </FormGroup>
                                   </Col>
                                   <Col lg={4}>
@@ -927,7 +927,7 @@ class DetailSupplierInvoice extends React.Component {
                                                 <div className="file-upload-cont">
                                                   <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                                     <i className="fa fa-upload"></i> Upload
-                                         		   </Button>
+                                         		      </Button>
                                                   <input id="fileInput" ref={(ref) => {
                                                     this.uploadFile = ref;
                                                   }} type="file" style={{ display: 'none' }} onChange={(e) => {
@@ -1205,7 +1205,7 @@ class DetailSupplierInvoice extends React.Component {
           createSupplier={this.props.supplierInvoiceActions.createSupplier}
           currency_list={this.props.currency_list}
           country_list={this.props.country_list}
-					getStateList={this.props.supplierInvoiceActions.getStateList}
+          getStateList={this.props.supplierInvoiceActions.getStateList}
 
         />
       </div>

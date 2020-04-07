@@ -65,7 +65,7 @@ class ImageUploader extends React.Component {
 
     // Iterate over all uploaded files
     for (let i = 0; i < files.length; i++) {
-      let file = files[i];
+      let file = files[parseInt(i, 10)];
       let fileError = {
         name: file.name,
       };

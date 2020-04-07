@@ -197,33 +197,33 @@ class Journal extends React.Component {
   }
 
   onRowSelect = (row, isSelected, e) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.journalId);
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.journalId);
     } else {
       this.state.selectedRows.map((item) => {
         if (item !== row.journalId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       });
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
   onSelectAll = (isSelected, rows) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
       rows.map((item) => {
-        temp_list.push(item.journalId)
+        tempList.push(item.journalId)
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 

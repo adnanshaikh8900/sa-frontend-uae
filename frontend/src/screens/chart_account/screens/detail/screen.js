@@ -270,7 +270,7 @@ class DetailChartAccount extends React.Component {
                                 {sub_transaction_type_list && Object.keys(sub_transaction_type_list).map((group, index) => {
                                   return (
                                     <optgroup key={index} label={group}>
-                                      {this.renderOptions(sub_transaction_type_list[group])}
+                                      {this.renderOptions(sub_transaction_type_list[`${group}`])}
                                     </optgroup>
                                   );
                                 })}

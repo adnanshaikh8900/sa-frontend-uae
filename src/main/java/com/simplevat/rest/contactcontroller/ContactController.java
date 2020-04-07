@@ -99,7 +99,7 @@ public class ContactController implements Serializable {
 			contact.setCreatedDate(LocalDateTime.now());
 			contact.setDeleteFlag(false);
 			contactService.persist(contact);
-			return new ResponseEntity<>(contact, HttpStatus.OK);
+			return new ResponseEntity<>(contactHelper.getModel(contact), HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error("Error =", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -5,29 +5,6 @@
  */
 package com.simplevat.rest.purchase;
 
-import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.helper.PurchaseRestControllerHelper;
-import com.simplevat.model.PurchaseRestModel;
-import com.simplevat.model.PurchaseItemRestModel;
-import com.simplevat.constant.InvoicePurchaseStatusConstant;
-import com.simplevat.constant.TransactionCategoryConsatant;
-import com.simplevat.criteria.ProjectCriteria;
-import com.simplevat.entity.Company;
-import com.simplevat.entity.Currency;
-import com.simplevat.entity.CurrencyConversion;
-import com.simplevat.entity.Project;
-import com.simplevat.entity.Purchase;
-import com.simplevat.entity.VatCategory;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.service.CompanyService;
-import com.simplevat.service.ContactService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.ProductService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.PurchaseService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.UserService;
-import com.simplevat.service.VatCategoryService;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -44,6 +21,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.InvoicePurchaseStatusConstant;
+import com.simplevat.constant.TransactionCategoryConsatant;
+import com.simplevat.criteria.ProjectCriteria;
+import com.simplevat.entity.Company;
+import com.simplevat.entity.Currency;
+import com.simplevat.entity.CurrencyConversion;
+import com.simplevat.entity.Project;
+import com.simplevat.entity.Purchase;
+import com.simplevat.entity.VatCategory;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.helper.PurchaseRestControllerHelper;
+import com.simplevat.model.PurchaseItemRestModel;
+import com.simplevat.model.PurchaseRestModel;
+import com.simplevat.service.CurrencyService;
+import com.simplevat.service.ProjectService;
+import com.simplevat.service.PurchaseService;
+import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.UserService;
+import com.simplevat.service.VatCategoryService;
 
 /**
  *
@@ -141,7 +139,7 @@ public class PurchaseRestController {
 			purchaseService.update(purchase);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -210,7 +208,7 @@ public class PurchaseRestController {
 		try {
 			return new ResponseEntity(userServiceNew.executeNamedQuery("findAllUsers"), HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}

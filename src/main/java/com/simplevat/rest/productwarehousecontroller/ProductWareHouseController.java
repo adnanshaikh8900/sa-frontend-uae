@@ -30,28 +30,33 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/rest/productwarehouse")
 public class ProductWareHouseController implements Serializable {
 
-    @Autowired
-    private ProductWarehouseService productWarehouseService;
+	@Autowired
+	private ProductWareHouseRestHelper productWareHouseRestHelper;
 
-    @ApiOperation(value = "get Ware House List")
-    @GetMapping(value = "/getWareHouse")
-    public ResponseEntity getProductWarehouse() {
-        List<ProductWarehouse> productWarehouseList = productWarehouseService.getProductWarehouseList();
-        if (productWarehouseList == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(productWarehouseList, HttpStatus.OK);
-    }
+	@Autowired
+	private ProductWarehouseService productWarehouseService;
 
-    @ApiOperation(value = "Save Ware House")
-    @PostMapping(value = "/saveWareHouse")
-    public ResponseEntity createNewWarehouse(@RequestBody ProductWarehouse productWarehouse) {
+	@ApiOperation(value = "get Ware House List")
+	@GetMapping(value = "/getWareHouse")
+	public ResponseEntity getProductWarehouse() {
+		List<ProductWarehouse> productWarehouseList = productWarehouseService.getProductWarehouseList();
+		if (productWarehouseList == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(productWarehouseList, HttpStatus.OK);
+	}
 
-        if (productWarehouse != null) {
-            productWarehouseService.persist(productWarehouse);
-        }
-        return new ResponseEntity(HttpStatus.OK);
+	@ApiOperation(value = "Save Ware House")
+	@PostMapping(value = "/saveWareHouse")
+	public ResponseEntity createNewWarehouse(@RequestBody ProductWareHousePersistModel productWarehouseModel) {
 
-    }
+		if (productWarehouseModel != null) {
+			ProductWarehouse productWarehouse = productWareHouseRestHelper.getEntity(productWarehouseModel);
+			productWarehouse.setDeleteFlag(Boolean.FALSE);
+			productWarehouseService.persist(productWarehouse);
+		}
+		return new ResponseEntity(HttpStatus.OK);
+
+	}
 
 }

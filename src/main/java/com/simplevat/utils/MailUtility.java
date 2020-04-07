@@ -79,7 +79,8 @@ public class MailUtility {
 		mailProps.put("mail.smtp.socketFactory.port", "465");
 		mailProps.put("mail.smtp.starttls.enable prop", "true");
 		mailProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-
+		mailProps.put("mail.smtp.ssl.checkserveridentity", true);
+		
 		sender.setJavaMailProperties(mailProps);
 		return sender;
 	}

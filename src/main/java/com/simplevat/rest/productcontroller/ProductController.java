@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.Product;
 import com.simplevat.entity.ProductWarehouse;
@@ -99,23 +98,23 @@ public class ProductController implements Serializable {
 
 	}
 
-	@GetMapping(value = "/getvatpercentage")
-	public ResponseEntity<List<VatCategory>> vatCategorys() {
-		List<VatCategory> vatCategorys = vatCategoryService.getVatCategoryList();
-		if (vatCategorys == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<>(vatCategorys, HttpStatus.OK);
-	}
-
-	@GetMapping(value = "/getwarehouse")
-	public ResponseEntity<List<ProductWarehouse>> getProductWarehouse() {
-		List<ProductWarehouse> productWarehouseList = productWarehouseService.getProductWarehouseList();
-		if (productWarehouseList == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<>(productWarehouseList, HttpStatus.OK);
-	}
+//	@GetMapping(value = "/getvatpercentage")
+//	public ResponseEntity<List<VatCategory>> vatCategorys() {
+//		List<VatCategory> vatCategorys = vatCategoryService.getVatCategoryList();
+//		if (vatCategorys == null) {
+//			return new ResponseEntity(HttpStatus.NOT_FOUND);
+//		}
+//		return new ResponseEntity<>(vatCategorys, HttpStatus.OK);
+//	}
+//
+//	@GetMapping(value = "/getwarehouse")
+//	public ResponseEntity<List<ProductWarehouse>> getProductWarehouse() {
+//		List<ProductWarehouse> productWarehouseList = productWarehouseService.getProductWarehouseList();
+//		if (productWarehouseList == null) {
+//			return new ResponseEntity(HttpStatus.NOT_FOUND);
+//		}
+//		return new ResponseEntity<>(productWarehouseList, HttpStatus.OK);
+//	}
 
 	@PostMapping(value = "/savewarehouse")
 	public ResponseEntity createNewWarehouse(@RequestBody ProductWarehouse productWarehouse) {

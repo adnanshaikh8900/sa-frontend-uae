@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import javax.mail.MessagingException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +31,9 @@ import com.simplevat.dao.UserDao;
 @Service("userService")
 public class UserServiceImpl extends UserService implements Serializable {
 
+	private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+
+	
 	@Value("${simplevat.baseUrl}")
 	private String baseUrl;
 
@@ -94,7 +99,7 @@ public class UserServiceImpl extends UserService implements Serializable {
 					emailSender.resetPassword.replace("LINK", baseUrl + "/reset-password?token=" + token),
 					EmailConstant.ADMIN_SUPPORT_EMAIL, true);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return false;
 		}
 		user.setForgotPasswordToken(token);

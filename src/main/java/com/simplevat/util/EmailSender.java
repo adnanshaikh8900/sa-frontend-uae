@@ -1,5 +1,7 @@
 package com.simplevat.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.EmailConstant;
@@ -17,6 +19,8 @@ import javax.mail.internet.AddressException;
 @Component
 public class EmailSender {
 
+	private final Logger LOGGER = LoggerFactory.getLogger(EmailSender.class);
+
 	public void send(String recipients, String subject, String content, String from, boolean html)
 			throws AddressException, MessagingException {
 
@@ -30,7 +34,8 @@ public class EmailSender {
 		prop.put("mail.smtp.socketFactory.port", "465");
 		prop.put("mail.smtp.starttls.enable prop", "true");
 		prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-
+		prop.put("mail.smtp.ssl.checkserveridentity", true);
+		
 		Session session;
 		session = Session.getInstance(prop, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -50,7 +55,7 @@ public class EmailSender {
 			}
 			Transport.send(message);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 	}
 

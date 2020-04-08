@@ -128,7 +128,7 @@ class ImportBankStatement extends React.Component {
       })
       // })
     }).catch((err) => {
-      // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
       // this.setState({ loading: false })
     })
   }
@@ -144,7 +144,7 @@ class ImportBankStatement extends React.Component {
       this.props.commonActions.tostifyAlert('success', 'Transaction  Imported Successfully')
       this.props.history.push('/admin/banking/bank-account')
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 

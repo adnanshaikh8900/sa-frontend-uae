@@ -113,6 +113,14 @@ class CustomerInvoice extends React.Component {
     this.props.customerInvoiceActions.getStatusList()
     this.props.customerInvoiceActions.getCurrencyList()
     this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
+    this.props.customerInvoiceActions.getOverdueAmountDetails(filterData.contactType).then((res) => {
+      if (res.status === 200) {
+        this.setState({overDueAmountDetails: res.data});
+      }
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+      this.setState({ loading: false })
+    })
     this.initializeData()
   }
 
@@ -135,14 +143,8 @@ class CustomerInvoice extends React.Component {
           }
         });
       }
-      this.props.customerInvoiceActions.getOverdueAmountDetails(2).then(res => {
-        if (res.status === 200) {
-          this.setState({overDueAmountDetails: res.data});
-        }
-      });
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
-      this.setState({ loading: false })
     })
   }
 
@@ -373,7 +375,7 @@ class CustomerInvoice extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -421,7 +423,7 @@ class CustomerInvoice extends React.Component {
       this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
       this.initializeData()
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -500,15 +502,15 @@ class CustomerInvoice extends React.Component {
                     <Row>
                       <Col lg={3}>
                         <h5>Overdue</h5>
-                        <h3 className="status-title"><td>{this.state.overDueAmountDetails.overDueAmount}</td></h3>
+                        <h3 className="status-title">{this.state.overDueAmountDetails.overDueAmount}</h3>
                       </Col>
                       <Col lg={3}>
                         <h5>Due Within This Week</h5>
-                        <h3 className="status-title"><td>{this.state.overDueAmountDetails.overDueAmountWeekly}</td></h3>
+                        <h3 className="status-title">{this.state.overDueAmountDetails.overDueAmountWeekly}</h3>
                       </Col>
                       <Col lg={3}>
                         <h5>Due Within 30 Days</h5>
-                        <h3 className="status-title"><td>{this.state.overDueAmountDetails.overDueAmountMonthly}</td></h3>
+                        <h3 className="status-title">{this.state.overDueAmountDetails.overDueAmountMonthly}</h3>
                       </Col>
                       <Col lg={3}>
                         <h5>Average Time to Get Paid</h5>

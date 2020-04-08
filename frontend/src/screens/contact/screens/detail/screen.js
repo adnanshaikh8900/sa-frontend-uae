@@ -108,7 +108,7 @@ class DetailContact extends React.Component {
 
       }).catch((err) => {
         this.setState({ loading: false })
-        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
       })
     } else {
       this.props.history.push('/admin/master/contact')
@@ -155,7 +155,7 @@ class DetailContact extends React.Component {
         this.props.history.push('/admin/master/contact')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 

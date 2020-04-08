@@ -196,7 +196,7 @@ class Contact extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err !== null ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err !== null ? err.data.message : 'Something Went Wrong' )
       this.setState({ isLoading: false })
     })
   }

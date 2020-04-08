@@ -133,7 +133,7 @@ class DetailUser extends React.Component {
         this.props.history.push('/admin/settings/user')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 

@@ -107,7 +107,7 @@ class GeneralSettings extends React.Component {
       this.setState({
         loading: false,
       })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null);
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' );
       this.props.history.push('/admin')
     })
   }
@@ -132,7 +132,7 @@ handleSubmit = (data) => {
       this.props.history.push('/admin');
     }
   }).catch((err) => {
-    this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
   })
 }
 

@@ -498,7 +498,7 @@ class DetailJournal extends React.Component {
       .catch((err) => {
         this.props.commonActions.tostifyAlert(
           "error",
-          err && err.data ? err.data.message : null
+          err && err.data ? err.data.message : 'Something Went Wrong' 
         );
       });
   }
@@ -544,7 +544,7 @@ class DetailJournal extends React.Component {
         .catch((err) => {
           this.props.commonActions.tostifyAlert(
             "error",
-            err && err.data ? err.data.message : null
+            err && err.data ? err.data.message : 'Something Went Wrong' 
           );
         });
     }

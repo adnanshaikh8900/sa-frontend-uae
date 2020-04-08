@@ -178,7 +178,7 @@ class ImportTransaction extends React.Component {
                 })
               })
             }).catch((err) => {
-              this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+              this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
               this.setState({ loading: false })
             })
             this.props.importTransactionActions.getTableHeaderList(formData).then((res) => {
@@ -191,7 +191,7 @@ class ImportTransaction extends React.Component {
             })
           }
         }).catch((err) => {
-          this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+          this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
           this.setState({ loading: false })
         })
       }
@@ -291,7 +291,7 @@ class ImportTransaction extends React.Component {
         this.props.commonActions.tostifyAlert('success', 'New Template Created Successfully')
         this.props.history.push('admin/banking/upload-statement', { id: res.data.id, bankAccountId: this.props.location.state.bankAccountId })
       }).catch((err) => {
-        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
       })
     } else {
       this.setState({

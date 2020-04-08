@@ -32,7 +32,7 @@ import 'core-js/features/map'
 // CustomEvent() constructor functionality in IE9, IE10, IE11
 (function () {
 
-  if ( typeof window.CustomEvent === "function" ) return false
+  if ( typeof window.CustomEvent === "function" ) { return false}
 
   function CustomEvent ( event, params ) {
     params = params || { bubbles: false, cancelable: false, detail: undefined }

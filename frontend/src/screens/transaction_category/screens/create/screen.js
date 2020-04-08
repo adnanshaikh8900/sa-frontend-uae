@@ -71,7 +71,7 @@ class CreateTransactionCategory extends React.Component {
     return inputLength === 0
       ? []
       : this.state.transactionCategoryList.filter(
-        transaction =>
+        (transaction) =>
           transaction.transactionTypeName
             .toLowerCase()
             .slice(0, inputLength) === inputValue
@@ -110,12 +110,13 @@ class CreateTransactionCategory extends React.Component {
 
   getParentCategoryCodeListData = (val) => {
     const code = this.state.selectedTransactionCategory.transactionTypeCode
-    this.props.transactionActions.getParentCategoryCodeListData(code, val).then(res => {
-      if (res.status === 200)
+    this.props.transactionActions.getParentCategoryCodeListData(code, val).then((res) => {
+      if (res.status === 200) {
         this.setState({ 
           loading: false,
           parentCategoryCodeList: res.data
         })
+      }
     })
   }
 
@@ -131,7 +132,7 @@ class CreateTransactionCategory extends React.Component {
     return inputLength === 0
       ? []
       : this.state.parentCategoryCodeList.filter(
-        transaction =>
+        (transaction) =>
           transaction.transactionCategoryName
             .toLowerCase()
             .slice(0, inputLength) === inputValue
@@ -167,24 +168,26 @@ class CreateTransactionCategory extends React.Component {
   // Get All Transaction Types
   getTransactionTypes = () => {
     this.setState({ loading: true })
-    this.props.transactionActions.getTransactionTypes().then(res => {
-      if (res.status === 200)
+    this.props.transactionActions.getTransactionTypes().then((res) => {
+      if (res.status === 200) {
         this.setState({ 
           loading: false,
           transactionCategoryList: res.data
         })
+      }
     })
   }
 
   // Get All Transaction Vat Categories
   getTransactionVatCategories = () => {
     this.setState({ loading: true })
-    this.props.transactionActions.getTransactionVatCategories().then(res => {
-      if (res.status === 200)
+    this.props.transactionActions.getTransactionVatCategories().then((res) => {
+      if (res.status === 200) {
         this.setState({ 
           loading: false,
           vatCategoryList: res.data
         })
+      }
     })
   }
 
@@ -225,7 +228,7 @@ class CreateTransactionCategory extends React.Component {
       transactionCategoryId: '0',
       transactionCategoryName: categoryName,
       transactionCategoryCode: categoryCode,
-      defaltFlag: defaltFlag,
+      defaltFlag,
       parentTransactionCategory: selectedParentCategory?selectedParentCategory.transactionCategoryId:'',
       transactionCategoryDescription: categoryDiscription,
       vatCategory: selectVatCategoryCode,
@@ -234,7 +237,7 @@ class CreateTransactionCategory extends React.Component {
         : ''
     }
 
-    this.props.transactionActions.createAndUpdateTransaction(postObj).then(res => {
+    this.props.transactionActions.createAndUpdateTransaction(postObj).then((res) => {
       if (res.status === 200) {
         this.success()
         if (status === 'addMore') {

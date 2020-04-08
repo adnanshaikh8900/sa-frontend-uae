@@ -9,9 +9,9 @@ export const getPaymentById = (id) => {
       url: `rest/payment/getpaymentbyid?paymentId=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -24,9 +24,9 @@ export const updatePayment = (obj) => {
       url: 'rest/payment/update',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -39,9 +39,9 @@ export const deletePayment = (id) => {
       url: `/rest/payment/delete?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

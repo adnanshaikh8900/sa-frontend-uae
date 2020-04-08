@@ -23,7 +23,7 @@ export const getTransactionList = (obj) => {
       method: 'get',
       url: param
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         if(!obj.paginationDisable) {
           dispatch({
@@ -33,8 +33,9 @@ export const getTransactionList = (obj) => {
             }
           })
         }
+        return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -46,14 +47,14 @@ export const getTransactionCategoryList = () => {
       method: 'get',
       url: '/rest/transactioncategory/getList'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.TRANSACTION_CATEGORY_LIST,
           payload:  res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -65,7 +66,7 @@ export const getTransactionTypeList = () => {
       method: 'get',
       url: '/rest/datalist/getTransactionTypes'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.TRANSACTION_TYPE_LIST,
@@ -73,7 +74,7 @@ export const getTransactionTypeList = () => {
         })
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -85,14 +86,14 @@ export const getProjectList = () => {
       method: 'get',
       url: '/rest/project/getProjectsForDropdown'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.PROJECT_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -104,9 +105,9 @@ export const deleteTransactionById = (id) => {
       method: 'DELETE',
       url: `/rest/transaction/delete?id=${id}`,
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -118,11 +119,11 @@ export const getTransactionListForReconcile = (type) => {
       method: 'get',
       url: `/rest/datalist/reconsileCategories?debitCreditFlag=${type}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
       return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -134,11 +135,11 @@ export const getCategoryListForReconcile = (code) => {
       method: 'get',
       url: `/rest/reconsile/getByReconcilationCatCode?reconcilationCatCode=${code}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
       return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -151,11 +152,11 @@ export const reconcileTransaction = (obj) => {
       url: `/rest/reconsile/reconcile`,
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
       return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

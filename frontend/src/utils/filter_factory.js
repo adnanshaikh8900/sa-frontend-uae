@@ -24,13 +24,13 @@ export const compareString = (filter, value, option) => {
 
 
 export const filterDataList = (filter, real_key, option, data) => {
-  let temp_list = []
-  data.map(item => {
+  let tempList = []
+  data.map((item) => {
     if (compareString(filter, item[real_key], option)) {
       let temp = Object.assign({}, item)
-      temp_list.push(temp)
+      tempList.push(temp)
     }
     return item
   })
-  return temp_list
+  return tempList
 }

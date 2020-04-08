@@ -11,13 +11,13 @@ export const getExpenseDetail = (_id) => {
       url: `/rest/expense/getExpenseById?expenseId=${_id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: EXPENSE.EXPENSE_DETAIL,
         payload: res
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -29,7 +29,7 @@ export const getCurrencyList = () => {
       method: 'get',
       url: 'rest/bank/getcurrenncy'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.CURRENCY_LIST,
@@ -38,7 +38,7 @@ export const getCurrencyList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -51,9 +51,9 @@ export const updateExpense = (obj) => {
       url: '/rest/expense/update',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -66,9 +66,9 @@ export const deleteExpense = (id) => {
       url: `/rest/expense/delete?expenseId=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

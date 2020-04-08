@@ -65,7 +65,7 @@ class CustomerReport extends React.Component {
       currentDate : {}
     }
   }
-  componentDidMount = () =>{
+  componentDidMount = () => {
     this.getCustomerInvoice() 
   }
   getCustomerInvoice = () => {
@@ -112,7 +112,7 @@ class CustomerReport extends React.Component {
 
   render() {
   
-    const customerInvoice = this.props.customer_invoice_report ? this.props.customer_invoice_report.map(customer => 
+    const customerInvoice = this.props.customer_invoice_report ? this.props.customer_invoice_report.map((customer) => 
      
       ({
         status : customer.status,
@@ -172,14 +172,14 @@ class CustomerReport extends React.Component {
                               type="text"
                               placeholder="Ref. Number" 
                               value={this.state.filter_refNumber}
-                              onChange={e => this.inputHandler('filter_refNumber', e.target.value)}
+                              onChange={(e) => this.inputHandler('filter_refNumber', e.target.value)}
                             />
                   </Col>
                   <Col lg={2} className="mb-1">
 
                     <DateRangePicker   id="payment_date"
                                         name="payment_date" 
-                                        // onChange={option => this.handleChange('payment_date')(option)}
+                                        // onChange={(option) => this.handleChange('payment_date')(option)}
                                        
                                         onApply={ this.handleChange}
                                         >
@@ -201,7 +201,7 @@ class CustomerReport extends React.Component {
                       // options={accountOptions}
                       options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list) : []}
                       value={this.state.filter_contactName}
-                      onChange={option => this.setState({
+                      onChange={(option) => this.setState({
                         filter_contactName: option
                       })}
                       placeholder="contact Name"
@@ -229,7 +229,7 @@ class CustomerReport extends React.Component {
                   pagination={customerInvoice && customerInvoice.length > 0 ? true : false}
                   fetchInfo={{ dataTotalSize: customerInvoice.count ? customerInvoice.count : 0 }}
                   csvFileName="customerInvoice.csv"
-                  ref={node => {
+                  ref={(node) => {
                     this.table = node
                   }}
                   filter = {true}

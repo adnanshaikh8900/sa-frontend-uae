@@ -17,10 +17,10 @@ export const createInvoice = (obj) => {
       url: 'rest/invoice/save',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
       return res
     })
-    .catch(err => {
+    .catch((err) => {
       throw err
     })
   }
@@ -33,9 +33,9 @@ export const getInvoiceNo = () => {
       url: `/rest/invoice/getNextInvoiceNo`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

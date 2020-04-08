@@ -24,10 +24,10 @@ export const getVatList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: url
+      url
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if(obj && !obj.paginationDisable) {
         dispatch({
           type: VAT.VAT_LIST,
@@ -35,7 +35,7 @@ export const getVatList = (obj) => {
         })
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -50,13 +50,13 @@ export const getVatByID = (id) => {
       url: `/rest/vat/getById?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: VAT.VAT_ROW,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -72,9 +72,9 @@ export const getVatByID = (id) => {
 //       data: bat
 //     }
 
-//     return authApi(data).then(res => {
+//     return authApi(data).then((res) => {
 //       return res
-//     }).catch(err => {
+//     }).catch((err) => {
 //       throw err
 //     })
 //   }
@@ -89,9 +89,9 @@ export const deleteVat = (obj) => {
       data: obj
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

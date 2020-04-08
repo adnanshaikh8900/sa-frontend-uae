@@ -25,10 +25,10 @@ export const getProductCategoryList = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: url
+      url
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if(obj && !obj.paginationDisable) {
         dispatch({
           type: PRODUCT_CATEGORY.PRODUCT_CATEGORY_LIST,
@@ -36,7 +36,7 @@ export const getProductCategoryList = (obj) => {
         })
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -50,9 +50,9 @@ export const deleteProductCategory = (obj) => {
       data: obj
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

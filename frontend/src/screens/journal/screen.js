@@ -106,11 +106,11 @@ class Journal extends React.Component {
     }
     const postData = { ...filterData, ...paginationData , ...sortingData}
 
-    this.props.journalActions.getJournalList(postData).then(res => {
+    this.props.journalActions.getJournalList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
@@ -181,10 +181,10 @@ class Journal extends React.Component {
 
   toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
-    if (temp[index]) {
-      temp[index] = false
+    if (temp[parseInt(index, 10)]) {
+      temp[parseInt(index, 10)] = false
     } else {
-      temp[index] = true
+      temp[parseInt(index, 10)] = true
     }
     this.setState({
       actionButtons: temp
@@ -197,33 +197,33 @@ class Journal extends React.Component {
   }
 
   onRowSelect = (row, isSelected, e) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.journalId);
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.journalId);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.journalId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       });
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
   onSelectAll = (isSelected, rows) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.journalId)
+      rows.map((item) => {
+        tempList.push(item.journalId)
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
@@ -232,7 +232,7 @@ class Journal extends React.Component {
   }
 
   renderAccount = (cell, rows) => {
-    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['transactionCategoryName']}) : []
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => {return item['transactionCategoryName']}) : []
     const listItems = temp.map((number,index) =>
     <li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
   );
@@ -240,7 +240,7 @@ class Journal extends React.Component {
     }
 
   renderCreditAmount = (cell, rows) => {
-    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['creditAmount']}) : []
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => {return item['creditAmount']}) : []
     const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number.toFixed(2)}</li>)
   );
   return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
@@ -248,7 +248,7 @@ class Journal extends React.Component {
     }
 
   renderDebitAmount = (cell, rows) => {
-    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['debitAmount']}) : []
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => {return item['debitAmount']}) : []
     const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number.toFixed(2)}</li>)
   );
     return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
@@ -300,7 +300,7 @@ class Journal extends React.Component {
           })
         }
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -330,7 +330,7 @@ class Journal extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.journalActions.getJournalList(obj).then(res => {
+      this.props.journalActions.getJournalList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -465,7 +465,7 @@ class Journal extends React.Component {
                           // totalSize={journal_list ? journal_list.length : 0}
                           className="journal-table"
                           trClassName="cursor-pointer"
-                          ref={node => this.table = node}
+                          ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
                             dataField="journalDate"

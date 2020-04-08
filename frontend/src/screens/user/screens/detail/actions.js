@@ -10,9 +10,9 @@ export const getUserById = (_id) => {
       url: `/rest/user/getById?id=${_id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -25,9 +25,9 @@ export const updateUser = (obj) => {
       url: '/rest/user/update',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -40,9 +40,9 @@ export const deleteUser = (id) => {
       url: `/rest/user/delete?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

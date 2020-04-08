@@ -49,7 +49,7 @@ class ViewBankAccount extends React.Component {
                   </div>
                 </Col>
                 <Col lg={1} style={{textAlign: 'right'}}>
-                    <i className="fas fa-edit" onClick={()=>{this.props.editDetails()}}/>
+                    <i className="fas fa-edit" onClick={() => {this.props.editDetails()}}/>
                 </Col>
               </Row>
             </CardHeader>

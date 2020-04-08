@@ -86,14 +86,14 @@ class ProductCategory extends React.Component {
       })
     } else {
       this.setState({
-        selectedRows: this.state.selectedRows.filter(el => el !== row.id)
+        selectedRows: this.state.selectedRows.filter((el) => el !== row.id)
       })
     }
   }
 
   onSelectAll = (isSelected, rows) => {
     this.setState({
-      selectedRows: isSelected ? rows.map(row => row.id) : []
+      selectedRows: isSelected ? rows.map((row) => row.id) : []
     })
   }
 
@@ -129,11 +129,11 @@ class ProductCategory extends React.Component {
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.productCategoryActions.getProductCategoryList(postData).then(res => {
+    this.props.productCategoryActions.getProductCategoryList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : '')
     })
@@ -196,7 +196,7 @@ class ProductCategory extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
@@ -212,12 +212,12 @@ class ProductCategory extends React.Component {
   //   const data = {
   //     ids: this.state.selectedRows
   //   }
-  //   this.props.productCategoryActions.deleteProductCategory(data).then(res => {
+  //   this.props.productCategoryActions.deleteProductCategory(data).then((res) => {
   //     if (res.status === 200) {
   //       // this.setState({ loading: false })
   //       this.initializeData()
   //     }
-  //   }).catch(err => {
+  //   }).catch((err) => {
   //     this.setState({ openDeleteModal: false })
   //   })
   // }
@@ -248,7 +248,7 @@ class ProductCategory extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.productCategoryActions.getProductCategoryList(obj).then(res => {
+      this.props.productCategoryActions.getProductCategoryList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -360,7 +360,7 @@ class ProductCategory extends React.Component {
                         className="product-table"
                         trClassName="cursor-pointer"
                         csvFileName="product_category.csv"
-                        ref={node => this.table = node}
+                        ref={(node) => this.table = node}
                       >
                         <TableHeaderColumn
                           dataField="productCategoryCode"

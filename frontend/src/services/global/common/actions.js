@@ -49,14 +49,14 @@ export const getSimpleVATVersion = () => {
       method: 'get',
       url: '/config/getreleasenumber'
     }
-    return api(data).then(res => {
+    return api(data).then((res) => {
       dispatch({
         type: COMMON.VAT_VERSION,
         payload: {
           data: res.data.simpleVatRelease
         }
       })
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

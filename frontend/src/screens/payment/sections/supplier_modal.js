@@ -39,13 +39,13 @@ class SupplierModal extends React.Component {
 
   // Create or Contact
   handleSubmit = (data,resetForm,setSubmitting) => {
-    this.props.createSupplier(data).then(res => {
+    this.props.createSupplier(data).then((res) => {
       if (res.status === 200) {
         resetForm();
         this.props.closeSupplierModal(true)
         this.props.getCurrentUser(res.data)
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.displayMsg();
       this.formikRef.current.setSubmitting(false);
     })
@@ -82,7 +82,7 @@ class SupplierModal extends React.Component {
               })
             }
           >
-            {props => {
+            {(props) => {
                 const { isSubmitting } = props;
               return (
               <Form name="simpleForm" onSubmit={props.handleSubmit}>
@@ -97,7 +97,7 @@ class SupplierModal extends React.Component {
                           id="firstName"
                           name="firstName"
                           onChange={(option) => { 
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('firstName')(option) }}
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) } }}
                           placeholder="Enter First Name "
                           value={props.values.firstName}
                           className={
@@ -121,7 +121,7 @@ class SupplierModal extends React.Component {
                           id="middleName"
                           name="middleName"
                           onChange={(option) => { 
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('middleName')(option) }}
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) } }}
                           placeholder="Enter Middle Name "
                           value={props.values.middleName}
                           className={
@@ -145,7 +145,7 @@ class SupplierModal extends React.Component {
                           id="lastName"
                           name="lastName"
                           onChange={(option) => { 
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) props.handleChange('lastName')(option) }}
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) } }}
                           placeholder="Enter Last Name "
                           value={props.values.lastName}
                           className={
@@ -164,7 +164,7 @@ class SupplierModal extends React.Component {
                 </ModalBody>
                 <ModalFooter>
                   <Button color="success" type="submit" className="btn-square" disabled={isSubmitting}>Save</Button>&nbsp;
-                    <Button color="secondary" className="btn-square" onClick={()=>{closeSupplierModal(false)}}>Cancel</Button>
+                    <Button color="secondary" className="btn-square" onClick={() => {closeSupplierModal(false)}}>Cancel</Button>
                 </ModalFooter>
               </Form>
             )}

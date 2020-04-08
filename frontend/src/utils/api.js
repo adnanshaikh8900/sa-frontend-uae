@@ -9,10 +9,10 @@ const api = axios.create({
 })
 
 api.interceptors.response.use(
-  response => {
+  (response) => {
     return response
   },
-  error => {
+  (error) => {
     return Promise.reject(error.response)
   },
 )

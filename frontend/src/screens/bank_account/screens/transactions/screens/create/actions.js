@@ -10,9 +10,9 @@ export const createTransaction = (obj) => {
       url: '/rest/transaction/save',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

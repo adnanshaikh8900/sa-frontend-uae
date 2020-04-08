@@ -10,9 +10,9 @@ export const getGeneralSettingDetail = () => {
       url: `rest/companySetting/get`,
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -27,9 +27,9 @@ export const updateGeneralSettings = (obj) => {
       data: obj
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

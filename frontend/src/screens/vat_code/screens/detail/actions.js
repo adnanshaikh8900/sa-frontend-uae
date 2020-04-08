@@ -12,13 +12,13 @@ export const getVatByID = (id) => {
       url: `/rest/vat/getById?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: VAT.VAT_ROW,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -31,9 +31,9 @@ export const updateVat = (obj) => {
       url: '/rest/vat/update',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -46,9 +46,9 @@ export const deleteVat = (id) => {
       url: `/rest/vat/delete?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

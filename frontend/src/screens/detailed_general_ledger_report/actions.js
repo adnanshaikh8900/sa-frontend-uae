@@ -11,9 +11,9 @@ export const getDetailedGeneralLedgerList = (postData) => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: url
+      url
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         // dispatch({
         //   type: EMPLOYEE.CURRENCY_LIST,
@@ -21,7 +21,7 @@ export const getDetailedGeneralLedgerList = (postData) => {
         // })
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -33,11 +33,11 @@ export const getTransactionCategoryList = () => {
       method: 'get',
       url: '/rest/transactioncategory/getList'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

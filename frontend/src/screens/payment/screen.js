@@ -106,11 +106,11 @@ class Payment extends React.Component {
     }
     const postData = { ...filterData, ...paginationData , ...sortingData}
 
-    this.props.paymentActions.getPaymentList(postData).then(res => {
+    this.props.paymentActions.getPaymentList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
@@ -161,39 +161,39 @@ class Payment extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
     })
   }
 
 
   onRowSelect = (row, isSelected, e) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.paymentId)
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.paymentId)
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.paymentId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
   onSelectAll = (isSelected, rows) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.paymentId)
+      rows.map((item) => {
+        tempList.push(item.paymentId)
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
@@ -242,7 +242,7 @@ class Payment extends React.Component {
       let obj = {
         paginationDisable: true
       }
-      this.props.paymentActions.getPaymentList(obj).then(res => {
+      this.props.paymentActions.getPaymentList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
@@ -366,7 +366,7 @@ class Payment extends React.Component {
                               type="text"
                               placeholder="Invoice Amount"
                               value={filterData.invoiceAmount}
-                              onChange={e => this.handleChange(e.target.value, 'invoiceAmount')}
+                              onChange={(e) => this.handleChange(e.target.value, 'invoiceAmount')}
                             />
                           </Col>
                           <Col lg={1} className="mb-1">
@@ -391,7 +391,7 @@ class Payment extends React.Component {
                           className="payment-table"
                           trClassName="cursor-pointer"
                           csvFileName="payment_list.csv"
-                          ref={node => {
+                          ref={(node) => {
                             this.table = node
                           }}
                         >

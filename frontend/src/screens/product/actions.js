@@ -19,7 +19,7 @@ export const getProductList = (obj) => {
       method: 'GET',
       url: `/rest/product/getList?name=${name}&productCode=${productCode}&vatPercentage=${vatPercentage}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if(!obj.paginationDisable) {
         dispatch({
           type: PRODUCT.PRODUCT_LIST,
@@ -27,7 +27,7 @@ export const getProductList = (obj) => {
         })
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -47,9 +47,9 @@ export const createAndSaveProduct = (product) => {
       data: product
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -65,9 +65,9 @@ export const createWarehouse = (warehouse) => {
     data: warehouse
   }
 
-  return authApi(data).then(res => {
+  return authApi(data).then((res) => {
     return res
-  }).catch(err => {
+  }).catch((err) => {
     throw err
   })
 }
@@ -81,13 +81,13 @@ export const getProductWareHouseList = () => {
       url: '/rest/productwarehouse/getWareHouse'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: PRODUCT.PRODUCT_WHARE_HOUSE,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -102,13 +102,13 @@ export const getProductVatCategoryList = () => {
       url: 'rest/datalist/vatCategory'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: PRODUCT.PRODUCT_VAT_CATEGORY,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -123,13 +123,13 @@ export const getProductCategoryList = () => {
       url: '/rest/productcategory/getList'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: PRODUCT.PRODUCT_CATEGORY,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -142,11 +142,11 @@ export const removeBulk = (obj) => {
       url: 'rest/product/deletes',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

@@ -80,45 +80,16 @@ public class MailUtility {
 		mailProps.put("mail.smtp.starttls.enable prop", "true");
 		mailProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		mailProps.put("mail.smtp.ssl.checkserveridentity", true);
-		
+
 		sender.setJavaMailProperties(mailProps);
 		return sender;
 	}
 
 	public static MailConfigurationModel getEMailConfigurationList(List<Configuration> configurationList) {
 		MailConfigurationModel mailDefaultConfigurationModel = getDefaultEmailConfigurationList();
-		int mailConfigCount = 0;
-		if (configurationList != null && !configurationList.isEmpty()) {
-			for (Configuration configuration : configurationList) {
-				if (configuration.getName().equals(ConfigurationConstants.MAIL_HOST)) {
-					if (configuration.getValue() != null && !configuration.getValue().isEmpty()) {
-						mailConfigCount++;
-					}
-				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_PORT)) {
-					if (configuration.getValue() != null && !configuration.getValue().isEmpty()) {
-						mailConfigCount++;
-					}
-				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_USERNAME)) {
-					if (configuration.getValue() != null && !configuration.getValue().isEmpty()) {
-						mailConfigCount++;
-					}
-				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_PASSWORD)) {
-					if (configuration.getValue() != null && !configuration.getValue().isEmpty()) {
-						mailConfigCount++;
-					}
-				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_SMTP_AUTH)) {
-					if (configuration.getValue() != null && !configuration.getValue().isEmpty()) {
-						mailConfigCount++;
-					}
-				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_SMTP_STARTTLS_ENABLE)) {
-					if (configuration.getValue() != null && !configuration.getValue().isEmpty()) {
-						mailConfigCount++;
-					}
-				}
-			}
-		}
-		if (mailConfigCount == 6) {
 
+		if (isDbConfigAvailable(configurationList)) {
+			
 			Optional<Configuration> config = configurationList.stream()
 					.filter(mailConfiguration -> mailConfiguration.getName().equals(ConfigurationConstants.MAIL_HOST))
 					.findAny();
@@ -181,34 +152,67 @@ public class MailUtility {
 		return data;
 	}
 
-	public static final String Invoice_Reference_Number = "Invoice_Reference_Number";
-	public static final String Invoice_Date = "Invoice_Date";
-	public static final String Invoice_Due_Date = "Invoice_Due_Date";
-	public static final String Invoic_Discount = "Invoic_Discount";
-	public static final String Contract_Po_Number = "contract_Po_Number";
-	public static final String Contact_Name = "Contact_Name";
-	public static final String Project_Name = "Project_Name";
-	public static final String Invoice_Amount = "Invoice_Amount";
-	public static final String Due_Amount = "Due_Amount";
-	public static final String Sender_Name = "Sender_Name";
-	public static final String Company_Name = "Company_Name";
+	public static final String INVOICE_REFEREBCE_NO = "Invoice_Reference_Number";
+	public static final String INVOICE_DATE = "Invoice_Date";
+	public static final String INVOICE_DUE_DATE = "Invoice_Due_Date";
+	public static final String INVOICE_DISCOUNT = "Invoic_Discount";
+	public static final String CONTRACT_PO_NUMBER = "contract_Po_Number";
+	public static final String CONTACT_NAME = "Contact_Name";
+	public static final String PROJECT_NAME = "Project_Name";
+	public static final String INVOICE_AMOUNT = "Invoice_Amount";
+	public static final String DUE_AMOUNT = "Due_Amount";
+	public static final String SENDER_NAME = "Sender_Name";
+	public static final String COMPANY_NAME = "Company_Name";
 
 	public Map<String, String> getInvoiceEmailParamMap() {
 
 		Map<String, String> dataMap = new HashMap<String, String>();
-		dataMap.put(Invoice_Reference_Number, "{invoicingReferencePattern}");
-		dataMap.put(Invoice_Date, "{invoiceDate}");
-		dataMap.put(Invoice_Due_Date, "{invoiceDueDate}");
-		dataMap.put(Invoic_Discount, "{invoiceDiscount}");
-		dataMap.put(Contract_Po_Number, "{contractPoNumber}");
-		dataMap.put(Contact_Name, "{contactName}");
-		dataMap.put(Project_Name, "{projectName}");
-		dataMap.put(Invoice_Amount, "{invoiceAmount}");
-		dataMap.put(Due_Amount, "{dueAmount}	");
-		dataMap.put(Sender_Name, "{senderName}");
-		dataMap.put(Company_Name, "{companyName}");
+		dataMap.put(INVOICE_REFEREBCE_NO, "{invoicingReferencePattern}");
+		dataMap.put(INVOICE_DATE, "{invoiceDate}");
+		dataMap.put(INVOICE_DUE_DATE, "{invoiceDueDate}");
+		dataMap.put(INVOICE_DISCOUNT, "{invoiceDiscount}");
+		dataMap.put(CONTRACT_PO_NUMBER, "{contractPoNumber}");
+		dataMap.put(CONTACT_NAME, "{contactName}");
+		dataMap.put(PROJECT_NAME, "{projectName}");
+		dataMap.put(INVOICE_AMOUNT, "{invoiceAmount}");
+		dataMap.put(DUE_AMOUNT, "{dueAmount}	");
+		dataMap.put(SENDER_NAME, "{senderName}");
+		dataMap.put(COMPANY_NAME, "{companyName}");
 
 		return dataMap;
 	}
 
+	private static boolean isDbConfigAvailable(List<Configuration> configurationList) {
+		int mailConfigCount = 0;
+		if (configurationList != null && !configurationList.isEmpty()) {
+			for (Configuration configuration : configurationList) {
+				if (configuration.getName().equals(ConfigurationConstants.MAIL_HOST) && configuration.getValue() != null
+						&& !configuration.getValue().isEmpty()) {
+					mailConfigCount++;
+
+				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_PORT)
+						&& configuration.getValue() != null && !configuration.getValue().isEmpty()) {
+					mailConfigCount++;
+
+				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_USERNAME)
+						&& configuration.getValue() != null && !configuration.getValue().isEmpty()) {
+					mailConfigCount++;
+
+				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_PASSWORD)
+						&& configuration.getValue() != null && !configuration.getValue().isEmpty()) {
+					mailConfigCount++;
+
+				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_SMTP_AUTH)
+						&& configuration.getValue() != null && !configuration.getValue().isEmpty()) {
+					mailConfigCount++;
+
+				} else if (configuration.getName().equals(ConfigurationConstants.MAIL_SMTP_STARTTLS_ENABLE)
+						&& configuration.getValue() != null && !configuration.getValue().isEmpty()) {
+					mailConfigCount++;
+
+				}
+			}
+		}
+		return (mailConfigCount == 6);
+	}
 }

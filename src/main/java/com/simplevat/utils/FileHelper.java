@@ -42,8 +42,7 @@ public class FileHelper {
 	private final String LOGO_IMAGE_PATH = "images/SimpleVatLogoFinalFinal.png";
 
 	public String readFile(String fileName) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
-		try {
+		try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
 
@@ -53,8 +52,6 @@ public class FileHelper {
 				line = br.readLine();
 			}
 			return sb.toString();
-		} finally {
-			br.close();
 		}
 	}
 

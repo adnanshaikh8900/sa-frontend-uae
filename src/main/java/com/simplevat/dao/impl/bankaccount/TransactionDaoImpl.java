@@ -327,7 +327,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionViewList != null && !transactionViewList.isEmpty()) {
 			return transactionViewList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override

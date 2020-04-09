@@ -127,8 +127,10 @@ public class ReconsilationController {
 				}
 
 				if (!journalList.isEmpty()) {
-					journalService.persist(journal);
-
+				
+					for(Journal journal1 :journalList) {
+						journalService.persist(journal1);
+					}
 					trnx.setReconsileJournalList(journalList);
 					transactionService.persist(trnx);
 				}
@@ -210,17 +212,13 @@ public class ReconsilationController {
 		return journal;
 	}
 
-	private Journal getByTransactionType(String transactionCategoryCode, BigDecimal amount, int userId,
+	private Journal getByTransactionType(Integer transactionCategoryCode, BigDecimal amount, int userId,
 			Transaction transaction) {
 		List<JournalLineItem> journalLineItemList = new ArrayList();
 
-		Map<String, Object> param = new HashMap<>();
-		param.put("transactionCategoryCode", transactionCategoryCode);
-		List<TransactionCategory> transactionTypeList = transactionCategoryService.findByAttributes(param);
+		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
 
-		TransactionCategory transactioncategory = transactionTypeList.get(0);
-
-		ChartOfAccount transactionType = transactioncategory.getChartOfAccount();
+		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
 
 		boolean isdebitFromBank = transactionType.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
 				|| (transactionType.getParentChartOfAccount() != null

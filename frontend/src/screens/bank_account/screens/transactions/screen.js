@@ -87,8 +87,8 @@ class BankTransactions extends React.Component {
       transaction_type_list_reconcile: [],
       categoryList: {},
       reconcileData: {
-        reconcileRrefId: '',
         categoryType: '',
+        reconcileRrefId: '',
       },
       categoryDetails: {},
       selectedReconcilereconcileRrefId: '',
@@ -174,8 +174,8 @@ class BankTransactions extends React.Component {
     this.setState({
       explainList: explainList.concat({
         id: this.state.idCount + 1,
-        reconcileRrefId: '',
         categoryType: '',
+        reconcileRrefId: '',
         categoryLabel: ''
       }), idCount: this.state.idCount + 1
     })
@@ -198,8 +198,8 @@ class BankTransactions extends React.Component {
     this.setState({
       explainList: [{
         id: 0,
-        reconcileRrefId: '',
         categoryType: '',
+        reconcileRrefId: '',
         categoryLabel: ''
       }]
     }, () => {
@@ -407,35 +407,35 @@ class BankTransactions extends React.Component {
                           onChange={(val) => {
                             if (val && val.value) {
                               this.handleChange(val.label, 'categoryLabel', true, item)
-                              this.handleChange(val.value, 'reconcileRrefId', true, item)
+                              this.handleChange(val.value, 'categoryType', true, item)
                               this.getCategoryList(val)
                             } else {
-                              this.handleChange('', 'reconcileRrefId', true, item)
+                              this.handleChange('', 'categoryType', true, item)
                             }
                           }}
                           className="select-default-width"
                           placeholder="Transaction Type"
-                          value={item.reconcileRrefId}
+                          value={item.categoryType}
                         />
                       </div>
-                      {explainList[`${index}`].reconcileRrefId && <div className="mb-3" style={{ width: '40%' }}>
+                      {explainList[`${index}`].categoryType && <div className="mb-3" style={{ width: '40%' }}>
                         <Label className="label">{explainList[`${index}`].categoryLabel}</Label>
                         <Select
                           options={categoryList[`${explainList[`${index}`].categoryLabel}`] ? selectOptionsFactory.renderOptions('label', 'id', categoryList[`${explainList[`${index}`].categoryLabel}`], explainList[`${index}`].categoryLabel, ['disabled']) : []}
                           onChange={(val) => {
                             if (val && val.value) {
                               // this.getDetail(val.value)
-                              if (this.checkCategory(val.value, 'categoryType')) {
-                                this.handleChange(val.value, 'categoryType', true, item, explainList[`${index}`].categoryLabel)
+                              if (this.checkCategory(val.value, 'reconcileRrefId')) {
+                                this.handleChange(val.value, 'reconcileRrefId', true, item, explainList[`${index}`].categoryLabel)
                               } else {
-                                this.handleChange('', 'categoryType', true, item, explainList[`${index}`].categoryLabel)
+                                this.handleChange('', 'reconcileRrefId', true, item, explainList[`${index}`].categoryLabel)
                               }
                             } else {
-                              this.handleChange('', 'categoryType', true, item, explainList[`${index}`].categoryLabel)
+                              this.handleChange('', 'reconcileRrefId', true, item, explainList[`${index}`].categoryLabel)
                             }
                           }}
                           className="select-default-width"
-                          value={item.categoryType}
+                          value={item.reconcileRrefId}
                         />
                       </div>}
                       {/* {name ?
@@ -666,7 +666,7 @@ class BankTransactions extends React.Component {
     this.setState({
       explainList: data
     }, () => {
-      // if (name === 'categoryType') {
+      // if (name === 'reconcileRrefId') {
       this.calculateCurrentBalance();
       // }
     })
@@ -679,7 +679,7 @@ class BankTransactions extends React.Component {
       for (let item in this.state.categoryList) {
         let tempAmount;
         if (item === obj['categoryLabel']) {
-          temp = this.state.categoryList[`${obj['categoryLabel']}`].filter((item) => item.id === obj.categoryType);
+          temp = this.state.categoryList[`${obj['categoryLabel']}`].filter((item) => item.id === obj.reconcileRrefId);
           tempAmount = temp.length ? temp[0]['amount'] : 0
           amount = amount + tempAmount;
         }

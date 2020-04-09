@@ -7,8 +7,8 @@ import lombok.Data;
 
 @Data
 public class ReconsileRequestModel {
-	private String transactionCategory;
+	private Integer transactionCategory;
 	private BigDecimal remainingBalance;
 	private Integer transactionId;
-	List<ReconsileLineItemModel> explainData;
+	private List<ReconsileLineItemModel> explainData;
 }

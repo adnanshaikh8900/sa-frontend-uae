@@ -95,7 +95,7 @@ class DetailBankAccount extends React.Component {
             }
           })
         }).catch((err) => {
-          this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+          this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
           this.props.history.push('/admin/banking/bank-account')
         })
       })
@@ -163,7 +163,7 @@ class DetailBankAccount extends React.Component {
       this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
       this.props.history.push('/admin/banking/bank-account')
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 

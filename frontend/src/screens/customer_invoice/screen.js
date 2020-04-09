@@ -113,10 +113,18 @@ class CustomerInvoice extends React.Component {
     this.props.customerInvoiceActions.getStatusList()
     this.props.customerInvoiceActions.getCurrencyList()
     this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
+    this.props.customerInvoiceActions.getOverdueAmountDetails(filterData.contactType).then((res) => {
+      if (res.status === 200) {
+        this.setState({overDueAmountDetails: res.data});
+      }
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
+      this.setState({ loading: false })
+    })
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -133,16 +141,23 @@ class CustomerInvoice extends React.Component {
           if (this.props.location.state && this.props.location.state.id) {
             this.openInvoicePreviewModal(this.props.location.state.id)
           }
+          if(search) {
+            this.setState({
+              filterData: {
+                customerId: '',
+                referenceNumber: '',
+                invoiceDate: '',
+                invoiceDueDate: '',
+                amount: '',
+                status: '',
+                contactType: 2,
+              },
+            })
+          }
         });
       }
-      this.props.customerInvoiceActions.getOverdueAmountDetails(2).then(res => {
-        if (res.status === 200) {
-          this.setState({overDueAmountDetails: res.data});
-        }
-      });
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
-      this.setState({ loading: false })
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
     })
   }
 
@@ -373,7 +388,7 @@ class CustomerInvoice extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -392,7 +407,7 @@ class CustomerInvoice extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData()
+    this.initializeData(true)
   }
 
   openInvoicePreviewModal = (id) => {
@@ -421,7 +436,7 @@ class CustomerInvoice extends React.Component {
       this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
       this.initializeData()
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -500,15 +515,15 @@ class CustomerInvoice extends React.Component {
                     <Row>
                       <Col lg={3}>
                         <h5>Overdue</h5>
-                        <h3 className="status-title"><td>{this.state.overDueAmountDetails.overDueAmount}</td></h3>
+                        <h3 className="status-title">{this.state.overDueAmountDetails.overDueAmount}</h3>
                       </Col>
                       <Col lg={3}>
                         <h5>Due Within This Week</h5>
-                        <h3 className="status-title"><td>{this.state.overDueAmountDetails.overDueAmountWeekly}</td></h3>
+                        <h3 className="status-title">{this.state.overDueAmountDetails.overDueAmountWeekly}</h3>
                       </Col>
                       <Col lg={3}>
                         <h5>Due Within 30 Days</h5>
-                        <h3 className="status-title"><td>{this.state.overDueAmountDetails.overDueAmountMonthly}</td></h3>
+                        <h3 className="status-title">{this.state.overDueAmountDetails.overDueAmountMonthly}</h3>
                       </Col>
                       <Col lg={3}>
                         <h5>Average Time to Get Paid</h5>
@@ -572,7 +587,7 @@ class CustomerInvoice extends React.Component {
                         />
                       </Col>
                       <Col lg={2} className="mb-1">
-                        <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'referenceNumber') }} />
+                        <Input type="text" placeholder="Reference Number" value={filterData.referenceNumber} onChange={(e) => { this.handleChange(e.target.value, 'referenceNumber') }} />
                       </Col>
                       <Col lg={2} className="mb-1">
                         <DatePicker
@@ -581,6 +596,7 @@ class CustomerInvoice extends React.Component {
                           name="invoiceDate"
                           placeholderText="Invoice Date"
                           selected={filterData.invoiceDate}
+                          autoComplete="off"
                           showMonthDropdown
                           showYearDropdown
                           dateFormat="dd/MM/yyyy"
@@ -601,6 +617,7 @@ class CustomerInvoice extends React.Component {
                           showYearDropdown
                           dropdownMode="select"
                           dateFormat="dd/MM/yyyy"
+                          autoComplete="off"
                           selected={filterData.invoiceDueDate}
                           onChange={(value) => {
                             this.handleChange(value, "invoiceDueDate")
@@ -608,13 +625,13 @@ class CustomerInvoice extends React.Component {
                         />
                       </Col>
                       <Col lg={1} className="mb-1">
-                        <Input type="text" placeholder="Amount" onChange={(e) => { this.handleChange(e.target.value, 'amount') }} />
+                        <Input type="text" value={filterData.amount} placeholder="Amount" onChange={(e) => { this.handleChange(e.target.value, 'amount') }} />
                       </Col>
                       <Col lg={2} className="mb-1">
                         <Select
                           className=""
                           options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list, 'Status') : []}
-                          value={this.state.filterData.status}
+                          value={filterData.status}
                           onChange={(option) => {
                             if (option && option.value) {
                               this.handleChange(option.value, 'status')

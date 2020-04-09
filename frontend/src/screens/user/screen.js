@@ -53,7 +53,7 @@ class User extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       selectedRows: [],
       dialog: false,
       filterData: {
@@ -101,7 +101,7 @@ class User extends React.Component {
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -116,13 +116,24 @@ class User extends React.Component {
     this.props.userActions.getUserList(postData).then((res) => {
       if (res.status === 200) {
         // this.props.userActions.getCompanyTypeList()
-        this.setState({ loading: false })
+        this.setState({ loading: false },()=>{
+          if(search) {
+            this.setState({
+              filterData: {
+                name: '',
+                dob: '',
+                active: '',
+                roleId: ''
+              },
+            })
+          }
+        })
       }
     }).catch((err) => {
       this.setState({
         loading: false
       })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -214,7 +225,7 @@ class User extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -249,7 +260,7 @@ class User extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData();
+    this.initializeData(true);
   }
 
   getCsvData = () => {
@@ -272,7 +283,7 @@ class User extends React.Component {
   }
   render() {
 
-    const { loading, dialog, selectedRows, selectedStatus, filterData,csvData,view } = this.state
+    const { loading, dialog, selectedRows, filterData,csvData,view} = this.state
     const { user_list, role_list,  } = this.props
 
 
@@ -342,7 +353,7 @@ class User extends React.Component {
                         <h5>Filter : </h5>
                         <Row>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="User Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                            <Input type="text" value={filterData.name} placeholder="User Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
                             <DatePicker
@@ -352,6 +363,7 @@ class User extends React.Component {
                               placeholderText="Date of Birth"
                               showMonthDropdown
                               showYearDropdown
+                              autoComplete="off"
                               dateFormat="dd/MM/yyyy"
                               dropdownMode="select"
                               selected={filterData.dob}
@@ -386,7 +398,7 @@ class User extends React.Component {
                               name="active"
                               options={this.statusOption ? this.statusOption : []}
                               // value={filterData.supplierId}
-                              value={selectedStatus}
+                              value={filterData.active}
                               onChange={(option) => {
                                 if (option) {
                                   this.handleChange(option.value, 'active')

@@ -6,11 +6,11 @@ import moment from 'moment'
 
 export const getCustomerInvoiceList = (postObj) => {
   let customerName = postObj.customerId ? postObj.customerId : ''
-  let referenceNumber =  postObj.referenceNumber ? postObj.referenceNumber : ''
-  let invoiceDate = postObj.invoiceDate ?  postObj.invoiceDate : ''
-  let invoiceDueDate = postObj.invoiceDueDate ?   postObj.invoiceDueDate : ''
-  let amount =  postObj.amount ? postObj.amount : ''
-  let status =  postObj.status ? postObj.status : ''
+  let referenceNumber = postObj.referenceNumber ? postObj.referenceNumber : ''
+  let invoiceDate = postObj.invoiceDate ? postObj.invoiceDate : ''
+  let invoiceDueDate = postObj.invoiceDueDate ? postObj.invoiceDueDate : ''
+  let amount = postObj.amount ? postObj.amount : ''
+  let status = postObj.status ? postObj.status : ''
   let contactType = 2;//postObj.contactType ? postObj.contactType : ''  
   let pageNo = postObj.pageNo ? postObj.pageNo : '';
   let pageSize = postObj.pageSize ? postObj.pageSize : '';
@@ -20,22 +20,22 @@ export const getCustomerInvoiceList = (postObj) => {
 
   return (dispatch) => {
     let param = `rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
-    if(invoiceDate) {
+    if (invoiceDate) {
       let date = moment(invoiceDate).format('DD-MM-YYYY')
-      param = param +`&invoiceDate=${date}`
+      param = param + `&invoiceDate=${date}`
     }
-    if(invoiceDueDate) {
+    if (invoiceDueDate) {
       let date = moment(invoiceDueDate).format('DD-MM-YYYY')
       param = param + `&invoiceDueDate=${date}`
     }
-    let data ={
+    let data = {
       method: 'get',
       url: param
       // data: postObj
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
-        if(!postObj.paginationDisable) {
+        if (!postObj.paginationDisable) {
           dispatch({
             type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
             payload: {
@@ -50,7 +50,7 @@ export const getCustomerInvoiceList = (postObj) => {
     })
   }
 }
- 
+
 export const getProjectList = () => {
   return (dispatch) => {
     let data = {
@@ -61,7 +61,7 @@ export const getProjectList = () => {
       if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.PROJECT_LIST,
-          payload:  {
+          payload: {
             data: res.data
           }
         })
@@ -84,7 +84,7 @@ export const getCustomerList = (nameCode) => {
       if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.CUSTOMER_LIST,
-          payload:  {
+          payload: {
             data: res.data
           }
         })
@@ -106,7 +106,7 @@ export const getCurrencyList = () => {
       if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.CURRENCY_LIST,
-          payload:  res
+          payload: res
         })
         return res
       }
@@ -127,7 +127,7 @@ export const getVatList = () => {
       if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.VAT_LIST,
-          payload:  {
+          payload: {
             data: res.data
           }
         })
@@ -150,7 +150,7 @@ export const getContactList = (nameCode) => {
       if (res.status === 200) {
         dispatch({
           type: CUSTOMER_INVOICE.CONTACT_LIST,
-          payload:  {
+          payload: {
             data: res.data
           }
         })
@@ -203,7 +203,7 @@ export const removeBulk = (obj) => {
       data: obj
     }
     return authApi(data).then((res) => {
-        return res
+      return res
     }).catch((err) => {
       throw err
     })
@@ -311,18 +311,19 @@ export const sendMail = (id) => {
     })
   }
 }
-  export const getOverdueAmountDetails = (invoiceType) => {
-    return (dispatch) => {
-      let data = {
-        method: 'get',
-        url: '/rest/invoice/getOverDueAmountDetails?type=' + invoiceType
-      }
-      return authApi(data).then(res => {
-        if (res.status === 200) {
-          return res
-        }
-      }).catch(err => {
-        throw err
-      })
+
+export const getOverdueAmountDetails = (invoiceType) => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/invoice/getOverDueAmountDetails?type=' + invoiceType
     }
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+        return res
+      }
+    }).catch((err) => {
+      throw err
+    })
   }
+}

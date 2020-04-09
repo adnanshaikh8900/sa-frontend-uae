@@ -146,11 +146,12 @@ class DetailTransactionCategory extends React.Component {
   getParentCategoryCodeListData = (val) => {
     const code = this.state.selectedTransactionCategory.transactionTypeCode
     this.props.transactionActions.getParentCategoryCodeListData(code, val).then((res) => {
-      if (res.status === 200)
+      if (res.status === 200) {
         this.setState({ 
           loading: false,
           parentCategoryCodeList: res.data
         })
+      }
     })
   }
 

@@ -70,9 +70,9 @@ class Expense extends React.Component {
         expenseDate: '',
         transactionCategoryId: '',
         payee: '',
-        sortName: '',
-        sortOrder: ''
       },
+      sortName: '',
+      sortOrder: '',
       csvData: [],
       view: false
     }
@@ -105,7 +105,7 @@ class Expense extends React.Component {
     this.initializeData()
   }
   
-  initializeData = () => {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -119,7 +119,17 @@ class Expense extends React.Component {
     
     this.props.expenseActions.getExpenseList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        this.setState({ loading: false },()=>{
+          if(search) {
+            this.setState({
+              filterData: {
+                expenseDate: '',
+                transactionCategoryId: '',
+                payee: '',
+              },
+            })
+          }
+        })
       }
     }).catch((err) => {
       this.setState({ loading: false })
@@ -268,7 +278,7 @@ class Expense extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData()
+    this.initializeData(true)
   }
 
   onSizePerPageList = (sizePerPage) => {
@@ -346,7 +356,7 @@ class Expense extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -366,7 +376,7 @@ class Expense extends React.Component {
       this.props.commonActions.tostifyAlert('success', 'Expense Deleted Successfully')
       this.initializeData()
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 

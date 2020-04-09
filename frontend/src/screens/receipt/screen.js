@@ -92,7 +92,7 @@ class Receipt extends React.Component {
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -107,11 +107,22 @@ class Receipt extends React.Component {
 
     this.props.receiptActions.getReceiptList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        this.setState({ loading: false },()=>{
+          if(search) {
+            this.setState({
+              filterData: {
+                contactId: '',
+                invoiceId: '',
+                receiptReferenceCode: '',
+                receiptDate: '',
+              },
+            })
+          }
+        })
       }
     }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -217,7 +228,7 @@ class Receipt extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -236,7 +247,7 @@ class Receipt extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData();
+    this.initializeData(true);
   }
 
   getCsvData = () => {
@@ -335,6 +346,7 @@ class Receipt extends React.Component {
                               name="receiptDate"
                               placeholderText="Receipt Date"
                               selected={filterData.receiptDate}
+                              autoComplete="off"
                               showMonthDropdown
                               showYearDropdown
                               dateFormat="dd/MM/yyyy"
@@ -345,7 +357,7 @@ class Receipt extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'receiptReferenceCode') }} />
+                            <Input type="text" placeholder="Reference Number" value={filterData.receiptReferenceCode} onChange={(e) => { this.handleChange(e.target.value, 'receiptReferenceCode') }} />
                           </Col>
                           <Col lg={3} className="mb-1">
                               <Select

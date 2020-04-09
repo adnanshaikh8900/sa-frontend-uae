@@ -64,6 +64,7 @@ class DetailJournal extends React.Component {
     };
 
     this.formRef = React.createRef();
+    this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
@@ -320,11 +321,11 @@ class DetailJournal extends React.Component {
         name={`journalLineItems.${idx}.debitAmount`}
         render={({ field, form }) => (
           <Input
-            type="number"
+            type="text"
             value={row["debitAmount"] !== 0 ? row["debitAmount"] : 0}
             disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
             onChange={(e) => {
-              this.selectItem(e, row, "debitAmount", form, field);
+              if (e.target.value === '' || this.regEx.test(e.target.value)){this.selectItem(e, row, "debitAmount", form, field) };
             }}
             placeholder="Debit Amount"
             className={`form-control 
@@ -359,11 +360,11 @@ class DetailJournal extends React.Component {
         name={`journalLineItems.${idx}.creditAmount`}
         render={({ field, form }) => (
           <Input
-            type="number"
+            type="text"
             value={row["creditAmount"] !== 0 ? row["creditAmount"] : 0}
             disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
             onChange={(e) => {
-              this.selectItem(e, row, "creditAmount", form, field);
+              if (e.target.value === '' || this.regEx.test(e.target.value)){this.selectItem(e, row, "creditAmount", form, field)};
             }}
             placeholder="Credit Amount"
             className={`form-control 
@@ -498,7 +499,7 @@ class DetailJournal extends React.Component {
       .catch((err) => {
         this.props.commonActions.tostifyAlert(
           "error",
-          err && err.data ? err.data.message : null
+          err && err.data ? err.data.message : 'Something Went Wrong' 
         );
       });
   }
@@ -544,7 +545,7 @@ class DetailJournal extends React.Component {
         .catch((err) => {
           this.props.commonActions.tostifyAlert(
             "error",
-            err && err.data ? err.data.message : null
+            err && err.data ? err.data.message : 'Something Went Wrong' 
           );
         });
     }

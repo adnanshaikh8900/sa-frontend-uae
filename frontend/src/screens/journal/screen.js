@@ -94,7 +94,7 @@ class Journal extends React.Component {
     })
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -108,11 +108,21 @@ class Journal extends React.Component {
 
     this.props.journalActions.getJournalList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        this.setState({ loading: false },()=>{
+          if(search) {
+            this.setState({
+              filterData: {
+                journalDate: '',
+                journalReferenceNo: '',
+                description: ''
+              },  
+            })
+          }
+        })
       }
     }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -263,7 +273,7 @@ class Journal extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData()
+    this.initializeData(true)
   }
 
   bulkDeleteJournal = () => {
@@ -301,7 +311,7 @@ class Journal extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -426,11 +436,11 @@ class Journal extends React.Component {
                               id="date"
                               name="journalDate"
                               placeholderText="Post Date"
-                              // showMonthDropdown
-                              // showYearDropdown
-                              // dropdownMode="select"
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
                               dateFormat="dd/MM/yyyy"
-
+                              autoComplete="off"
                               selected={filterData.journalDate}
                               onChange={(value) => {
                                 this.handleChange(value, "journalDate")
@@ -438,10 +448,10 @@ class Journal extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder=" Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'journalReferenceNo') }} />
+                            <Input type="text" placeholder="Reference Number" value={filterData.journalReferenceNo} onChange={(e) => { this.handleChange(e.target.value, 'journalReferenceNo') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Description" onChange={(e) => { this.handleChange(e.target.value, 'description') }} />
+                            <Input type="text" placeholder="Description" value={filterData.description} onChange={(e) => { this.handleChange(e.target.value, 'description') }} />
                           </Col>
                           <Col lg={1} className="mb-1">
                             <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>

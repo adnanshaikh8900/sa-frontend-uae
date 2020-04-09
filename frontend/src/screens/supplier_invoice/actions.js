@@ -319,11 +319,11 @@ export const getOverdueAmountDetails = (invoiceType) => {
       method: 'get',
       url: '/rest/invoice/getOverDueAmountDetails?type=' + invoiceType
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

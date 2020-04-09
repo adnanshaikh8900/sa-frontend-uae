@@ -54,6 +54,7 @@ export const getTransactionCategoryList = () => {
           payload:  res.data
         })
       }
+      return res
     }).catch((err) => {
       throw err
     })

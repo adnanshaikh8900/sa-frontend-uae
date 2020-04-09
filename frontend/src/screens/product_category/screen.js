@@ -118,7 +118,7 @@ class ProductCategory extends React.Component {
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -131,7 +131,16 @@ class ProductCategory extends React.Component {
     const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.productCategoryActions.getProductCategoryList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        this.setState({ loading: false },()=>{
+          if(search) {
+            this.setState({
+              filterData: {
+                productCategoryCode: '',
+                productCategoryName: '',
+              },
+            })
+          }
+        })
       }
     }).catch((err) => {
       this.setState({ loading: false })
@@ -197,7 +206,7 @@ class ProductCategory extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -240,7 +249,7 @@ class ProductCategory extends React.Component {
     })
   }
   handleSearch = () => {
-    this.initializeData()
+    this.initializeData(true)
   }
 
   getCsvData = () => {
@@ -262,7 +271,7 @@ class ProductCategory extends React.Component {
     }
   }
   render() {
-    const { loading, selectedRows ,dialog, csvData,view} = this.state
+    const { loading, selectedRows ,dialog, csvData,view,filterData} = this.state
     const { product_category_list } = this.props
 
     // let display_data = this.filterVatList(vatList)
@@ -327,6 +336,7 @@ class ProductCategory extends React.Component {
                               <Input type="text"
                                 name="code"
                                 placeholder="Product Category Code"
+                                value={filterData.productCategoryCode}
                                 // value={productCategoryCode ? productCategoryCode: ''}
                                 onChange={(e) => { this.handleFilterChange(e, 'productCategoryCode') }} />
                             </Col>
@@ -334,6 +344,8 @@ class ProductCategory extends React.Component {
                               <Input type="text"
                                 name="name"
                                 placeholder="Product Category Name"
+                                value={filterData.productCategoryName}
+                                autoComplete="off"
                                 // value={productCategoryName ?  productCategoryName : ''}
                                 onChange={(e) => { this.handleFilterChange(e, 'productCategoryName') }} />
                             </Col>

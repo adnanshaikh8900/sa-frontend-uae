@@ -13,6 +13,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
+
 import org.hibernate.annotations.ColumnDefault;
 
 /**
@@ -104,9 +106,9 @@ public class Transaction implements Serializable {
 	@ColumnDefault(value = "0.00")
 	private BigDecimal currentBalance;
 
-	@OneToOne
+	@OneToMany
 	@JoinColumn(name = "RECONSILE_JOURNAL_ID")
-	private Journal reconsileJournal;
+	private List<Journal> reconsileJournalList;
 
 	@Column(name = "CREATED_BY")
 	@Basic(optional = false)

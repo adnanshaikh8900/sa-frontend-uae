@@ -52,7 +52,7 @@ public class PurchaseRestModel implements Serializable {
 	private LocalDateTime lastUpdateDate;
 	private Boolean deleteFlag = Boolean.FALSE;
 	private byte[] receiptAttachmentBinary;
-	private MultipartFile attachmentFile;
+//	private MultipartFile attachmentFile;
 	private List<PurchaseItemRestModel> purchaseItems;
 	private Integer versionNumber;
 	private Integer status;

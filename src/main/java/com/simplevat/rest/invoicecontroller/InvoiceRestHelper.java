@@ -375,37 +375,37 @@ public class InvoiceRestHelper {
 		for (String key : map.keySet()) {
 			String value = map.get(key);
 			switch (key) {
-			case MailUtility.Invoice_Reference_Number:
+			case MailUtility.INVOICE_REFEREBCE_NO:
 				if (invoice.getReferenceNumber() != null && !invoice.getReferenceNumber().isEmpty()) {
 					invoiceDataMap.put(value, invoice.getReferenceNumber());
 				}
 				break;
 
-			case MailUtility.Invoice_Date:
+			case MailUtility.INVOICE_DATE:
 				if (invoice.getInvoiceDate() != null) {
 					invoiceDataMap.put(value, invoice.getInvoiceDate().toString());
 				}
 				break;
 
-			case MailUtility.Invoice_Due_Date:
+			case MailUtility.INVOICE_DUE_DATE:
 				if (invoice.getInvoiceDueDate() != null) {
 					invoiceDataMap.put(value, invoice.getInvoiceDueDate().toString());
 				}
 				break;
 
-			case MailUtility.Invoic_Discount:
+			case MailUtility.INVOICE_DISCOUNT:
 				if (invoice.getDiscount() != null) {
 					invoiceDataMap.put(value, invoice.getDiscount().toString());
 				}
 				break;
 
-			case MailUtility.Contract_Po_Number:
+			case MailUtility.CONTRACT_PO_NUMBER:
 				if (invoice.getContactPoNumber() != null && !invoice.getContactPoNumber().isEmpty()) {
 					invoiceDataMap.put(value, invoice.getContactPoNumber());
 				}
 				break;
 
-			case MailUtility.Contact_Name:
+			case MailUtility.CONTACT_NAME:
 				if (invoice.getContact() != null && !invoice.getContact().getFirstName().isEmpty()) {
 					StringBuilder sb = new StringBuilder();
 					Contact c = invoice.getContact();
@@ -423,13 +423,13 @@ public class InvoiceRestHelper {
 
 				break;
 
-			case MailUtility.Project_Name:
+			case MailUtility.PROJECT_NAME:
 				if (invoice.getProject() != null && !invoice.getProject().getProjectName().isEmpty()) {
 					invoiceDataMap.put(value, invoice.getProject().getProjectName());
 				}
 				break;
 
-			case MailUtility.Invoice_Amount:
+			case MailUtility.INVOICE_AMOUNT:
 				if (invoice.getTotalAmount() != null) {
 					invoiceDataMap.put(value, invoice.getTotalAmount().toString());
 				}
@@ -441,12 +441,12 @@ public class InvoiceRestHelper {
 //				}
 //				break;
 
-			case MailUtility.Sender_Name:
+			case MailUtility.SENDER_NAME:
 
 				invoiceDataMap.put(value, user.getUserEmail());
 				break;
 
-			case MailUtility.Company_Name:
+			case MailUtility.COMPANY_NAME:
 				if (user.getCompany() != null)
 					invoiceDataMap.put(value, user.getCompany().getCompanyName());
 				break;

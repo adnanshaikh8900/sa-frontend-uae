@@ -83,7 +83,7 @@ class Project extends React.Component {
     this.initializeData();
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -102,7 +102,7 @@ class Project extends React.Component {
       this.setState({
         loading: false
       })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -187,13 +187,13 @@ class Project extends React.Component {
     this.props.projectActions.removeBulk(obj).then((res) => {
       this.initializeData();
       this.props.commonActions.tostifyAlert('success', 'Projects Deleted Successfully')
-      if (project_list && project_list.data &&  project_list.data.length > 0) {
+      if (project_list && project_list.data && project_list.data.length > 0) {
         this.setState({
           selectedRows: []
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -224,7 +224,7 @@ class Project extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -242,8 +242,19 @@ class Project extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        projectName: '',
+        vatRegistrationNumber: '',
+        expenseBudget: '',
+        revenueBudget: '',
+      }
+    })
+  }
+
   render() {
-    const { loading, dialog,selectedRows,csvData,view} = this.state
+    const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { project_list } = this.props
 
 
@@ -271,14 +282,14 @@ class Project extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'Project.csv'}
                             className="hidden"
@@ -311,21 +322,24 @@ class Project extends React.Component {
                         <form>
                           <Row>
                             <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Project Name" onChange={(e) => { this.handleChange(e.target.value, 'projectName') }} />
+                              <Input type="text" placeholder="Project Name" value={filterData.projectName} onChange={(e) => { this.handleChange(e.target.value, 'projectName') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Expense Budget" onChange={(e) => { this.handleChange(e.target.value, 'expenseBudget') }} />
+                              <Input type="text" placeholder="Expense Budget" value={filterData.expenseBudget} onChange={(e) => { this.handleChange(e.target.value, 'expenseBudget') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Revenue Budget" onChange={(e) => { this.handleChange(e.target.value, 'revenueBudget') }} />
+                              <Input type="text" placeholder="Revenue Budget" value={filterData.revenueBudget} onChange={(e) => { this.handleChange(e.target.value, 'revenueBudget') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="VAT Number" onChange={(e) => { this.handleChange(e.target.value, 'vatRegistrationNumber') }} />
+                              <Input type="text" placeholder="VAT Number" value={filterData.vatRegistrationNumber} onChange={(e) => { this.handleChange(e.target.value, 'vatRegistrationNumber') }} />
                             </Col>
-                            <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                            <Col lg={1} className="pl-0 pr-0">
+                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
-                            </Button>
+                              </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                                <i className="fa fa-remove"></i>
+                              </Button>
                             </Col>
                           </Row>
                         </form>
@@ -339,7 +353,7 @@ class Project extends React.Component {
                           version="4"
                           hover
                           keyField="projectId"
-                          pagination = {project_list && project_list.data &&  project_list.data.length > 0  ? true : false}
+                          pagination={project_list && project_list.data && project_list.data.length > 0 ? true : false}
                           remote
                           fetchInfo={{ dataTotalSize: project_list.count ? project_list.count : 0 }}
                           className="product-table"

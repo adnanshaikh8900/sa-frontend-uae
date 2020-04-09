@@ -43,7 +43,7 @@ class Contact extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       selectedRows: [],
       dialog: null,
       filterData: {
@@ -78,7 +78,7 @@ class Contact extends React.Component {
     this.csvLink = React.createRef()
   }
 
-  componentDidMount = () =>  {
+  componentDidMount = () => {
     this.props.contactActions.getContactTypeList();
     this.initializeData()
   }
@@ -89,7 +89,7 @@ class Contact extends React.Component {
     })
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -102,7 +102,9 @@ class Contact extends React.Component {
     const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.contactActions.getContactList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false });
+        this.setState({
+          loading: false,
+        });
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
@@ -152,7 +154,7 @@ class Contact extends React.Component {
   onSelectAll = (isSelected, rows) => {
     let tempList = []
     if (isSelected) {
-      rows.map((item) =>  tempList.push(item.id))
+      rows.map((item) => tempList.push(item.id))
     }
     this.setState({
       selectedRows: tempList
@@ -196,7 +198,7 @@ class Contact extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err !== null ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err !== null ? err.data.message : 'Something Went Wrong')
       this.setState({ isLoading: false })
     })
   }
@@ -220,7 +222,7 @@ class Contact extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -238,11 +240,21 @@ class Contact extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        name: '',
+        email: '',
+        contactType: '',
+      },
+    })
+  }
+
   render() {
 
-    const { loading, dialog , selectedRows , csvData, view } = this.state
+    const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { contact_list, contact_type_list } = this.props
-    
+
     return (
       <div className="contact-screen">
         <div className="animated fadeIn">
@@ -272,14 +284,14 @@ class Contact extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'Contact.csv'}
                             className="hidden"
@@ -311,34 +323,37 @@ class Contact extends React.Component {
                           <Row>
 
                             <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                              <Input type="text" placeholder="Name" value={filterData.name} onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                             </Col>
 
                             <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Email" onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
+                              <Input type="text" placeholder="Email" value={filterData.email} onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
                             </Col>
 
                             <Col lg={3} className="mb-1">
-                                <Select
-                                  options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
-                                  onChange={(val) => {
-                                    if (val && val.value) {
-                                      this.handleChange(val['value'], 'contactType')
-                                      this.setState({ 'selectedContactType': val['value'] })
-                                    } else {
-                                      this.handleChange('', 'contactType')
-                                      this.setState({ 'selectedContactType': '' })
-                                    }
-                                  }}
-                                  className="select-default-width"
-                                  placeholder="Contact Type"
-                                  value={this.state.selectedContactType}
-                                />
+                              <Select
+                                options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
+                                onChange={(val) => {
+                                  if (val && val.value) {
+                                    this.handleChange(val['value'], 'contactType')
+                                    this.setState({ 'selectedContactType': val['value'] })
+                                  } else {
+                                    this.handleChange('', 'contactType')
+                                    this.setState({ 'selectedContactType': '' })
+                                  }
+                                }}
+                                className="select-default-width"
+                                placeholder="Contact Type"
+                                value={filterData.contactType}
+                              />
                             </Col>
 
-                            <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch} >
+                            <Col lg={1} className="pl-0 pr-0">
+                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
+                              </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                                <i className="fa fa-remove"></i>
                               </Button>
                             </Col>
 
@@ -355,7 +370,7 @@ class Contact extends React.Component {
                               data={contact_list && contact_list.data ? contact_list.data : []}
                               version="4"
                               hover
-                              pagination = {contact_list && contact_list.data && contact_list.data.length > 0 ? true : false}
+                              pagination={contact_list && contact_list.data && contact_list.data.length > 0 ? true : false}
                               remote
                               fetchInfo={{ dataTotalSize: contact_list.count ? contact_list.count : 0 }}
                               className="product-table"

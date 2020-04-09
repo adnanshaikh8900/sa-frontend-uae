@@ -53,7 +53,7 @@ class User extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       selectedRows: [],
       dialog: false,
       filterData: {
@@ -101,7 +101,7 @@ class User extends React.Component {
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -111,7 +111,7 @@ class User extends React.Component {
       order: this.options.sortOrder ? this.options.sortOrder : '',
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
-    const postData = { ...filterData, ...paginationData , ...sortingData}
+    const postData = { ...filterData, ...paginationData, ...sortingData }
 
     this.props.userActions.getUserList(postData).then((res) => {
       if (res.status === 200) {
@@ -122,7 +122,7 @@ class User extends React.Component {
       this.setState({
         loading: false
       })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -144,11 +144,11 @@ class User extends React.Component {
     }
   }
 
-  sortColumn = (sortName,sortOrder) => {
+  sortColumn = (sortName, sortOrder) => {
     this.options.sortName = sortName
     this.options.sortOrder = sortOrder
     this.initializeData()
-}
+  }
 
   onRowSelect = (row, isSelected, e) => {
     let tempList = []
@@ -214,7 +214,7 @@ class User extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -225,7 +225,7 @@ class User extends React.Component {
   }
 
   renderDate = (cell, row) => {
-    return row['dob'] !== null ? moment(row['dob'],'DD-MM-YYYY').format('DD/MM/YYYY') : ''
+    return row['dob'] !== null ? moment(row['dob'], 'DD-MM-YYYY').format('DD/MM/YYYY') : ''
   }
 
   renderRole = (cell, row) => {
@@ -253,7 +253,7 @@ class User extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -270,10 +270,22 @@ class User extends React.Component {
       this.csvLink.current.link.click()
     }
   }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        name: '',
+        dob: '',
+        active: '',
+        roleId: ''
+      },
+    })
+  }
+
   render() {
 
-    const { loading, dialog, selectedRows, selectedStatus, filterData,csvData,view } = this.state
-    const { user_list, role_list,  } = this.props
+    const { loading, dialog, selectedRows, filterData, csvData, view } = this.state
+    const { user_list, role_list, } = this.props
 
 
     return (
@@ -305,14 +317,14 @@ class User extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'User.csv'}
                             className="hidden"
@@ -342,7 +354,7 @@ class User extends React.Component {
                         <h5>Filter : </h5>
                         <Row>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="User Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                            <Input type="text" value={filterData.name} placeholder="User Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
                             <DatePicker
@@ -352,6 +364,7 @@ class User extends React.Component {
                               placeholderText="Date of Birth"
                               showMonthDropdown
                               showYearDropdown
+                              autoComplete="off"
                               dateFormat="dd/MM/yyyy"
                               dropdownMode="select"
                               selected={filterData.dob}
@@ -386,7 +399,7 @@ class User extends React.Component {
                               name="active"
                               options={this.statusOption ? this.statusOption : []}
                               // value={filterData.supplierId}
-                              value={selectedStatus}
+                              value={filterData.active}
                               onChange={(option) => {
                                 if (option) {
                                   this.handleChange(option.value, 'active')
@@ -409,9 +422,12 @@ class User extends React.Component {
                               onChange={(option) => { this.handleChange(option.value, 'companyId') }}
                             />
                           </Col> */}
-                          <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>

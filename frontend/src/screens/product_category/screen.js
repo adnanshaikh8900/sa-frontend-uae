@@ -12,12 +12,12 @@ import {
   ButtonGroup
 } from 'reactstrap'
 import { toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn,  } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn, } from 'react-bootstrap-table'
 import {
   CommonActions
 } from 'services/global'
 
-import { Loader , ConfirmDeleteModal} from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -73,7 +73,7 @@ class ProductCategory extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll,
       clickToSelect: false,
-    }   
+    }
     this.csvLink = React.createRef()
   }
 
@@ -118,7 +118,7 @@ class ProductCategory extends React.Component {
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -158,7 +158,7 @@ class ProductCategory extends React.Component {
     this.options.sortOrder = sortOrder;
     this.initializeData()
   }
-  
+
   // -------------------------
   // Actions
   //--------------------------
@@ -197,7 +197,7 @@ class ProductCategory extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -244,7 +244,7 @@ class ProductCategory extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -261,8 +261,18 @@ class ProductCategory extends React.Component {
       this.csvLink.current.link.click()
     }
   }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        productCategoryCode: '',
+        productCategoryName: '',
+      },
+    })
+  }
+
   render() {
-    const { loading, selectedRows ,dialog, csvData,view} = this.state
+    const { loading, selectedRows, dialog, csvData, view, filterData } = this.state
     const { product_category_list } = this.props
 
     // let display_data = this.filterVatList(vatList)
@@ -286,14 +296,14 @@ class ProductCategory extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup className="toolbar" size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'ProductCategory.csv'}
                             className="hidden"
@@ -327,6 +337,7 @@ class ProductCategory extends React.Component {
                               <Input type="text"
                                 name="code"
                                 placeholder="Product Category Code"
+                                value={filterData.productCategoryCode}
                                 // value={productCategoryCode ? productCategoryCode: ''}
                                 onChange={(e) => { this.handleFilterChange(e, 'productCategoryCode') }} />
                             </Col>
@@ -334,13 +345,18 @@ class ProductCategory extends React.Component {
                               <Input type="text"
                                 name="name"
                                 placeholder="Product Category Name"
+                                value={filterData.productCategoryName}
+                                autoComplete="off"
                                 // value={productCategoryName ?  productCategoryName : ''}
                                 onChange={(e) => { this.handleFilterChange(e, 'productCategoryName') }} />
                             </Col>
 
-                            <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                            <Col lg={1} className="pl-0 pr-0">
+                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
+                              </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                                <i className="fa fa-remove"></i>
                               </Button>
                             </Col>
                           </Row>

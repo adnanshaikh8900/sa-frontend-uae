@@ -47,7 +47,7 @@ class Employee extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       selectedRows: [],
       dialog: null,
       filterData: {
@@ -90,7 +90,7 @@ class Employee extends React.Component {
     })
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -120,7 +120,7 @@ class Employee extends React.Component {
     this.options.sortOrder = sortOrder;
     this.initializeData()
   }
-  
+
   onRowSelect = (row, isSelected, e) => {
     let tempList = []
     if (isSelected) {
@@ -179,7 +179,7 @@ class Employee extends React.Component {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Employees Deleted Successfully')
         this.initializeData();
-        if (employee_list && employee_list.data &&  employee_list.data.length > 0) {
+        if (employee_list && employee_list.data && employee_list.data.length > 0) {
           this.setState({
             selectedRows: []
           })
@@ -224,7 +224,7 @@ class Employee extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -242,9 +242,18 @@ class Employee extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        name: '',
+        email: ''
+      },
+    })
+  }
+
   render() {
 
-    const { loading, dialog , selectedRows,csvData, view} = this.state
+    const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { employee_list } = this.props
 
 
@@ -277,14 +286,14 @@ class Employee extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'Employee.csv'}
                             className="hidden"
@@ -315,14 +324,17 @@ class Employee extends React.Component {
                         <form>
                           <Row>
                             <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                              <Input type="text" placeholder="Name" value={filterData.name} onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                             </Col>
                             <Col lg={3} className="mb-2">
-                              <Input type="text" placeholder="Email" onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
+                              <Input type="text" placeholder="Email" value={filterData.email} onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
                             </Col>
-                            <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                            <Col lg={1} className="pl-0 pr-0">
+                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
+                              </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                                <i className="fa fa-remove"></i>
                               </Button>
                             </Col>
                           </Row>
@@ -336,7 +348,7 @@ class Employee extends React.Component {
                           data={employee_list && employee_list.data ? employee_list.data : []}
                           version="4"
                           hover
-                          pagination = {employee_list && employee_list.data && employee_list.data.length > 0 ? true : false}
+                          pagination={employee_list && employee_list.data && employee_list.data.length > 0 ? true : false}
                           keyField="id"
                           remote
                           fetchInfo={{ dataTotalSize: employee_list.count ? employee_list.count : 0 }}

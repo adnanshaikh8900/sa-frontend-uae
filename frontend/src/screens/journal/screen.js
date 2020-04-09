@@ -57,7 +57,7 @@ class Journal extends React.Component {
         journalDate: '',
         journalReferenceNo: '',
         description: ''
-      },  
+      },
       csvData: [],
       view: false
     }
@@ -94,7 +94,7 @@ class Journal extends React.Component {
     })
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -104,7 +104,7 @@ class Journal extends React.Component {
       order: this.options.sortOrder ? this.options.sortOrder : '',
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
-    const postData = { ...filterData, ...paginationData , ...sortingData}
+    const postData = { ...filterData, ...paginationData, ...sortingData }
 
     this.props.journalActions.getJournalList(postData).then((res) => {
       if (res.status === 200) {
@@ -112,7 +112,7 @@ class Journal extends React.Component {
       }
     }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -232,27 +232,27 @@ class Journal extends React.Component {
   }
 
   renderAccount = (cell, rows) => {
-    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => {return item['transactionCategoryName']}) : []
-    const listItems = temp.map((number,index) =>
-    <li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
-  );
-    return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
-    }
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => { return item['transactionCategoryName'] }) : []
+    const listItems = temp.map((number, index) =>
+      <li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>{number}</li>
+    );
+    return (<ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>)
+  }
 
   renderCreditAmount = (cell, rows) => {
-    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => {return item['creditAmount']}) : []
-    const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number.toFixed(2)}</li>)
-  );
-  return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => { return item['creditAmount'] }) : []
+    const listItems = temp.map((number, index) => (<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>{number.toFixed(2)}</li>)
+    );
+    return (<ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>)
 
-    }
+  }
 
   renderDebitAmount = (cell, rows) => {
-    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => {return item['debitAmount']}) : []
-    const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number.toFixed(2)}</li>)
-  );
-    return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
-    }
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => { return item['debitAmount'] }) : []
+    const listItems = temp.map((number, index) => (<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>{number.toFixed(2)}</li>)
+    );
+    return (<ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>)
+  }
 
   handleChange = (val, name) => {
     this.setState({
@@ -301,7 +301,7 @@ class Journal extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -326,7 +326,7 @@ class Journal extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -342,6 +342,16 @@ class Journal extends React.Component {
     } else {
       this.csvLink.current.link.click()
     }
+  }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        journalDate: '',
+        journalReferenceNo: '',
+        description: ''
+      },
+    })
   }
 
   render() {
@@ -384,14 +394,14 @@ class Journal extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'Journal.csv'}
                             className="hidden"
@@ -426,11 +436,11 @@ class Journal extends React.Component {
                               id="date"
                               name="journalDate"
                               placeholderText="Post Date"
-                              // showMonthDropdown
-                              // showYearDropdown
-                              // dropdownMode="select"
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
                               dateFormat="dd/MM/yyyy"
-
+                              autoComplete="off"
                               selected={filterData.journalDate}
                               onChange={(value) => {
                                 this.handleChange(value, "journalDate")
@@ -438,14 +448,17 @@ class Journal extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder=" Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'journalReferenceNo') }} />
+                            <Input type="text" placeholder="Reference Number" value={filterData.journalReferenceNo} onChange={(e) => { this.handleChange(e.target.value, 'journalReferenceNo') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Description" onChange={(e) => { this.handleChange(e.target.value, 'description') }} />
+                            <Input type="text" placeholder="Description" value={filterData.description} onChange={(e) => { this.handleChange(e.target.value, 'description') }} />
                           </Col>
-                          <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>
@@ -505,18 +518,18 @@ class Journal extends React.Component {
                             Account
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                             dataField="journalLineItems"
-                             dataFormat={this.renderDebitAmount}
-                             dataAlign="right"
-                             width="13%"
+                            dataField="journalLineItems"
+                            dataFormat={this.renderDebitAmount}
+                            dataAlign="right"
+                            width="13%"
                           >
                             DEBIT AMOUNT
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                             dataField="journalLineItems"
-                             dataFormat={this.renderCreditAmount}
-                             dataAlign="right"
-                             width="14%"
+                            dataField="journalLineItems"
+                            dataFormat={this.renderCreditAmount}
+                            dataAlign="right"
+                            width="14%"
                           >
                             CREDIT AMOUNT
                           </TableHeaderColumn>

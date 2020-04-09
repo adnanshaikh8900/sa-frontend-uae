@@ -115,7 +115,9 @@ class BankAccount extends React.Component {
 
     this.props.bankAccountActions.getBankAccountList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false });
+        this.setState({
+          loading: false,
+        });
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
@@ -333,7 +335,7 @@ class BankAccount extends React.Component {
         selected_id_list: tempList
       })
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -421,7 +423,7 @@ class BankAccount extends React.Component {
         selected_id_list: []
       })
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -441,7 +443,7 @@ class BankAccount extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -457,6 +459,19 @@ class BankAccount extends React.Component {
     } else {
       this.csvLink.current.link.click()
     }
+  }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        bankName: '',
+        bankAccountTypeId: '',
+        bankAccountName: '',
+        transactionDate: '',
+        accountNumber: '',
+        currencyCode: '',
+      },
+    })
   }
 
   render() {
@@ -509,7 +524,7 @@ class BankAccount extends React.Component {
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'BankAccount.csv'}
                             className="hidden"
@@ -579,9 +594,12 @@ class BankAccount extends React.Component {
                               placeholder="Currency"
                             />
                           </Col>
-                          <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>

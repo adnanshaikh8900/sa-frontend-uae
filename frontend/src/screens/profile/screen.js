@@ -207,8 +207,8 @@ class Profile extends React.Component {
     }
   }
 
-  getStateList = (countryCode,type) => {
-    this.props.profileActions.getStateList(countryCode,type);
+  getStateList = (countryCode, type) => {
+    this.props.profileActions.getStateList(countryCode, type);
   }
 
   handleUserSubmit = (data) => {
@@ -297,11 +297,11 @@ class Profile extends React.Component {
             companyLogo: res.data.companyLogoByteArray ? this.state.companyLogo.concat(res.data.companyLogoByteArray) : [],
             loading: false,
             flag: false,
-            isSame: res.data.isSame ? res.data.isSame : false 
-          },() => {
-            if(res.data.invoicingCountryCode){ this.getStateList(res.data.invoicingCountryCode,'invoicing')}
-            if(res.data.companyCountryCode){ this.getStateList(res.data.companyCountryCode,'company')}
-            if(this.state.isSame){
+            isSame: res.data.isSame ? res.data.isSame : false
+          }, () => {
+            if (res.data.invoicingCountryCode) { this.getStateList(res.data.invoicingCountryCode, 'invoicing') }
+            if (res.data.companyCountryCode) { this.getStateList(res.data.companyCountryCode, 'company') }
+            if (this.state.isSame) {
               this.setState({
                 companyAddress: {
                   companyAddressLine1: res.data.invoicingAddressLine1 ? res.data.invoicingAddressLine1 : '',
@@ -418,7 +418,7 @@ class Profile extends React.Component {
 
   render() {
     const { loading, isSame } = this.state
-    const { currency_list, country_list, industry_type_list, company_type_list, role_list, invoicing_state_list,company_state_list } = this.props
+    const { currency_list, country_list, industry_type_list, company_type_list, role_list, invoicing_state_list, company_state_list } = this.props
     return (
       <div className="profile-screen">
         <div className="animated fadeIn">
@@ -893,7 +893,7 @@ class Profile extends React.Component {
                                                 placeholder="Enter Company Name"
                                                 value={props.values.companyName}
                                                 onChange={(option) => {
-                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('companyName')(option)}
+                                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('companyName')(option) }
                                                 }}
                                               />
                                             </FormGroup>
@@ -908,7 +908,7 @@ class Profile extends React.Component {
                                                 placeholder="Enter Company Registration No"
                                                 value={props.values.companyRegistrationNumber}
                                                 onChange={(option) => {
-                                                  if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('companyRegistrationNumber')(option)}
+                                                  if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('companyRegistrationNumber')(option) }
                                                 }}
                                               />
                                             </FormGroup>
@@ -923,7 +923,7 @@ class Profile extends React.Component {
                                                 placeholder="Enter VAT Registration No"
                                                 value={props.values.vatRegistrationNumber}
                                                 onChange={(option) => {
-                                                  if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('vatRegistrationNumber')(option)}
+                                                  if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('vatRegistrationNumber')(option) }
                                                 }}
                                               />
                                             </FormGroup>
@@ -1057,7 +1057,7 @@ class Profile extends React.Component {
                                                 placeholder="Enter Phone Number"
                                                 value={props.values.phoneNumber}
                                                 onChange={(option) => {
-                                                  if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('phoneNumber')(option)}
+                                                  if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('phoneNumber')(option) }
                                                 }}
                                               />
                                             </FormGroup>
@@ -1078,7 +1078,7 @@ class Profile extends React.Component {
                                             placeholder="Enter Expense Budget"
                                             value={props.values.companyExpenseBudget}
                                             onChange={(option) => {
-                                              if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('companyExpenseBudget')(option)}
+                                              if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('companyExpenseBudget')(option) }
                                             }}
                                           />
                                         </FormGroup>
@@ -1093,7 +1093,7 @@ class Profile extends React.Component {
                                             placeholder="Enter Revenue Budget"
                                             value={props.values.companyRevenueBudget}
                                             onChange={(option) => {
-                                              if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('companyRevenueBudget')(option)}
+                                              if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('companyRevenueBudget')(option) }
                                             }}
                                           />
                                         </FormGroup>
@@ -1184,7 +1184,7 @@ class Profile extends React.Component {
                                               if (option && option.value) {
                                                 props.handleChange('invoicingCountryCode')(option.value)
                                                 props.handleChange('invoicingStateRegion')('')
-                                                this.getStateList(option.value,'invoicing')
+                                                this.getStateList(option.value, 'invoicing')
                                                 this.setState({
                                                   companyAddress: {
                                                     ...this.state.companyAddress, ...{
@@ -1462,9 +1462,9 @@ class Profile extends React.Component {
                                             value={isSame ? this.state.companyAddress.companyCountryCode : props.values.companyCountryCode}
                                             onChange={(option) => {
                                               if (option && option.value) {
-                                                props.handleChange('companyCountryCode')(option.value,'company')
+                                                props.handleChange('companyCountryCode')(option.value, 'company')
                                                 props.handleChange('companyStateRegion')('')
-                                                this.getStateList(option.value,'company')
+                                                this.getStateList(option.value, 'company')
                                               } else {
                                                 props.handleChange('companyCountryCode')('')
                                                 props.handleChange('companyStateRegion')('')
@@ -1500,7 +1500,7 @@ class Profile extends React.Component {
                                             }}
                                           /> */}
                                           <Select
-                                            options={selectOptionsFactory.renderOptions('label', 'value',isSame ? invoicing_state_list : company_state_list, 'State')}
+                                            options={selectOptionsFactory.renderOptions('label', 'value', isSame ? invoicing_state_list : company_state_list, 'State')}
                                             value={isSame ? this.state.companyAddress.companyStateRegion : props.values.companyStateRegion}
                                             onChange={(option) => {
                                               if (option && option.value) {
@@ -1552,7 +1552,7 @@ class Profile extends React.Component {
                                             placeholder="Enter PO Box No"
                                             value={isSame ? this.state.companyAddress.companyPoBoxNumber : props.values.companyPoBoxNumber}
                                             onChange={(option) => {
-                                              if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('companyRevenueBudget')(option)}
+                                              if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('companyRevenueBudget')(option) }
                                             }}
                                           />
                                         </FormGroup>
@@ -1567,7 +1567,7 @@ class Profile extends React.Component {
                                             placeholder="Enter Post Zip Code"
                                             value={isSame ? this.state.companyAddress.companyPostZipCode : props.values.companyPostZipCode}
                                             onChange={(option) => {
-                                              if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('companyRevenueBudget')(option)}
+                                              if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('companyRevenueBudget')(option) }
                                             }}
                                           />
                                         </FormGroup>

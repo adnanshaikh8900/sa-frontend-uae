@@ -41,7 +41,7 @@ import com.simplevat.service.VatCategoryService;
 @RestController
 @RequestMapping(value = "/rest/product")
 public class ProductController implements Serializable {
-	
+
 	private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@Autowired
@@ -98,6 +98,7 @@ public class ProductController implements Serializable {
 
 	}
 
+	// TODO remove after checking proper working of earehouse functionity
 //	@GetMapping(value = "/getvatpercentage")
 //	public ResponseEntity<List<VatCategory>> vatCategorys() {
 //		List<VatCategory> vatCategorys = vatCategoryService.getVatCategoryList();
@@ -116,15 +117,15 @@ public class ProductController implements Serializable {
 //		return new ResponseEntity<>(productWarehouseList, HttpStatus.OK);
 //	}
 
-	@PostMapping(value = "/savewarehouse")
-	public ResponseEntity createNewWarehouse(@RequestBody ProductWarehouse productWarehouse) {
-
-		if (productWarehouse != null) {
-			productWarehouseService.persist(productWarehouse);
-		}
-		return new ResponseEntity(HttpStatus.OK);
-
-	}
+//	@PostMapping(value = "/savewarehouse")
+//	public ResponseEntity createNewWarehouse(@RequestBody ProductWarehouse productWarehouse) {
+//
+//		if (productWarehouse != null) {
+//			productWarehouseService.persist(productWarehouse);
+//		}
+//		return new ResponseEntity(HttpStatus.OK);
+//
+//	}
 
 	@PostMapping(value = "/saveproduct")
 	public ResponseEntity save(@RequestBody ProductRequestModel productModel, @RequestParam(value = "id") Integer id) {

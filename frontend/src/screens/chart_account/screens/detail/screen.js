@@ -76,7 +76,7 @@ class DetailChartAccount extends React.Component {
           })
         }
       }).catch((err) => {
-        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null);
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' );
         this.setState({ loading: false })
         this.props.history.push('/admin/master/chart-account')
       })
@@ -119,7 +119,7 @@ class DetailChartAccount extends React.Component {
         this.props.history.push('/admin/master/chart-account')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -140,7 +140,7 @@ class DetailChartAccount extends React.Component {
         this.props.history.push('/admin/master/chart-account')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 

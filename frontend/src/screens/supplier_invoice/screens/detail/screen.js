@@ -403,7 +403,7 @@ class DetailSupplierInvoice extends React.Component {
   checkedRow = () => {
     if (this.state.data.length > 0) {
       let length = this.state.data.length - 1
-      let temp = Object.values(this.state.data[length]).indexOf('');
+      let temp = Object.values(this.state.data[`${length}`]).indexOf('');
       if (temp > -1) {
         return true
       } else {
@@ -508,7 +508,7 @@ class DetailSupplierInvoice extends React.Component {
       this.props.history.push('/admin/expense/supplier-invoice')
 
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -530,7 +530,7 @@ class DetailSupplierInvoice extends React.Component {
         this.props.history.push('/admin/expense/supplier-invoice')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 

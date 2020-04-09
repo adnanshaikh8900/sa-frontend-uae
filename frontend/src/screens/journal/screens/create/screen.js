@@ -102,6 +102,7 @@ class CreateJournal extends React.Component {
     }
 
     this.formRef = React.createRef()
+    this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
@@ -131,7 +132,7 @@ class CreateJournal extends React.Component {
   checkedRow = () => {
     if (this.state.data.length > 0) {
       let length = this.state.data.length - 1
-      let temp = Object.values(this.state.data[length]).indexOf('');
+      let temp = Object.values(this.state.data[`${length}`]).indexOf('');
       if (temp > -1) {
         return true
       } else {
@@ -261,9 +262,9 @@ class CreateJournal extends React.Component {
       <Field name={`journalLineItems.${idx}.debitAmount`}
         render={({ field, form }) => (
           <Input
-            type="number"
+            type="text"
             value={row['debitAmount'] !== 0 ? row['debitAmount'] : 0}
-            onChange={(e) => { this.selectItem(e, row, 'debitAmount', form, field) }}
+            onChange={(e) => {if (e.target.value === '' || this.regEx.test(e.target.value)){this.selectItem(e, row, 'debitAmount', form, field)}}}
             placeholder="Debit Amount"
             className={`form-control 
             ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx, 10)] &&
@@ -290,9 +291,9 @@ class CreateJournal extends React.Component {
       <Field name={`journalLineItems.${idx}.creditAmount`}
         render={({ field, form }) => (
           <Input
-            type="number"
+            type="text"
             value={row['creditAmount'] !== 0 ? row['creditAmount'] : 0}
-            onChange={(e) => { this.selectItem(e, row, 'creditAmount', form, field) }}
+            onChange={(e) => {	if (e.target.value === '' || this.regEx.test(e.target.value)){this.selectItem(e, row, 'creditAmount', form, field)}}}
             placeholder="Credit Amount"
             className={`form-control 
             ${props.errors.journalLineItems && props.errors.journalLineItems[parseInt(idx, 10)] &&
@@ -465,7 +466,7 @@ class CreateJournal extends React.Component {
           }
         }
       }).catch((err) => {
-        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
       })
     }
   }

@@ -15,7 +15,7 @@ import {
 import { selectOptionsFactory } from 'utils'
 import Select from 'react-select'
 // import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn,  } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn, } from 'react-bootstrap-table'
 import {
   Loader,
   ConfirmDeleteModal
@@ -94,7 +94,7 @@ class Payment extends React.Component {
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -104,7 +104,7 @@ class Payment extends React.Component {
       order: this.options.sortOrder ? this.options.sortOrder : '',
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
-    const postData = { ...filterData, ...paginationData , ...sortingData}
+    const postData = { ...filterData, ...paginationData, ...sortingData }
 
     this.props.paymentActions.getPaymentList(postData).then((res) => {
       if (res.status === 200) {
@@ -112,7 +112,7 @@ class Payment extends React.Component {
       }
     }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -162,7 +162,7 @@ class Payment extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -201,9 +201,9 @@ class Payment extends React.Component {
     return rows['paymentDate'] !== null ? moment(rows['paymentDate']).format('DD/MM/YYYY') : ''
   }
 
-  renderAmount = (cell,row) => {
+  renderAmount = (cell, row) => {
     return row.invoiceAmount ? (row.invoiceAmount).toFixed(2) : ''
-  }  
+  }
 
   handleChange = (val, name) => {
     this.setState({
@@ -231,14 +231,14 @@ class Payment extends React.Component {
     }
   }
 
-  sortColumn = (sortName,sortOrder) => {
-      this.options.sortName = sortName
-      this.options.sortOrder = sortOrder
-      this.initializeData()
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName
+    this.options.sortOrder = sortOrder
+    this.initializeData()
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -256,8 +256,18 @@ class Payment extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        supplierId: '',
+        paymentDate: '',
+        invoiceAmount: ''
+      },
+    })
+  }
+
   render() {
-    const { loading, dialog, filterData, selectedRows,csvData,view } = this.state
+    const { loading, dialog, filterData, selectedRows, csvData, view } = this.state
     const { payment_list, supplier_list } = this.props
     // const containerStyle = {
     //   zIndex: 1999
@@ -291,14 +301,14 @@ class Payment extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'Payment.csv'}
                             className="hidden"
@@ -353,6 +363,7 @@ class Payment extends React.Component {
                               selected={filterData.paymentDate}
                               showMonthDropdown
                               showYearDropdown
+                              autoComplete="off"
                               dateFormat="dd/MM/yyyy"
                               dropdownMode="select"
                               value={filterData.paymentDate}
@@ -369,9 +380,12 @@ class Payment extends React.Component {
                               onChange={(e) => this.handleChange(e.target.value, 'invoiceAmount')}
                             />
                           </Col>
-                          <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>
@@ -381,11 +395,11 @@ class Payment extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={payment_list && payment_list.data? payment_list.data : []}
+                          data={payment_list && payment_list.data ? payment_list.data : []}
                           version="4"
                           hover
                           keyField="paymentId"
-                          pagination = {payment_list && payment_list.data && payment_list.data.length > 0 ? true : false}
+                          pagination={payment_list && payment_list.data && payment_list.data.length > 0 ? true : false}
                           remote
                           fetchInfo={{ dataTotalSize: payment_list.count ? payment_list.count : 0 }}
                           className="payment-table"

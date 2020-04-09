@@ -92,7 +92,7 @@ class Receipt extends React.Component {
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -102,7 +102,7 @@ class Receipt extends React.Component {
       order: this.options.sortOrder ? this.options.sortOrder : '',
       sortingCol: this.options.sortName ? this.options.sortName : ''
     }
-    const postData = { ...filterData, ...paginationData , ...sortingData}
+    const postData = { ...filterData, ...paginationData, ...sortingData }
 
 
     this.props.receiptActions.getReceiptList(postData).then((res) => {
@@ -111,7 +111,7 @@ class Receipt extends React.Component {
       }
     }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -129,11 +129,11 @@ class Receipt extends React.Component {
     return rows['receiptDate'] !== null ? moment(rows['receiptDate']).format('DD/MM/YYYY') : ''
   }
 
-  renderAmount = (cell,row) => {
+  renderAmount = (cell, row) => {
     return row.amount ? (row.amount).toFixed(2) : ''
-  }  
-  
-  renderUnusedAmount = (cell,row) => {
+  }
+
+  renderUnusedAmount = (cell, row) => {
     return row.unusedAmount ? (row.unusedAmount).toFixed(2) : ''
   }
 
@@ -151,11 +151,11 @@ class Receipt extends React.Component {
     }
   }
 
-  sortColumn = (sortName,sortOrder) => {
+  sortColumn = (sortName, sortOrder) => {
     this.options.sortName = sortName
     this.options.sortOrder = sortOrder
     this.initializeData()
-}
+  }
 
   onRowSelect = (row, isSelected, e) => {
     let tempList = []
@@ -217,7 +217,7 @@ class Receipt extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -240,7 +240,7 @@ class Receipt extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -259,8 +259,19 @@ class Receipt extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        contactId: '',
+        invoiceId: '',
+        receiptReferenceCode: '',
+        receiptDate: '',
+      },
+    })
+  }
+
   render() {
-    const { loading, dialog, selectedRows, filterData,csvData,view } = this.state
+    const { loading, dialog, selectedRows, filterData, csvData, view } = this.state
     const { receipt_list, invoice_list, contact_list } = this.props;
 
     return (
@@ -292,14 +303,14 @@ class Receipt extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'Receipt.csv'}
                             className="hidden"
@@ -335,6 +346,7 @@ class Receipt extends React.Component {
                               name="receiptDate"
                               placeholderText="Receipt Date"
                               selected={filterData.receiptDate}
+                              autoComplete="off"
                               showMonthDropdown
                               showYearDropdown
                               dateFormat="dd/MM/yyyy"
@@ -345,43 +357,46 @@ class Receipt extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'receiptReferenceCode') }} />
+                            <Input type="text" placeholder="Reference Number" value={filterData.receiptReferenceCode} onChange={(e) => { this.handleChange(e.target.value, 'receiptReferenceCode') }} />
                           </Col>
                           <Col lg={3} className="mb-1">
-                              <Select
-                                options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
-                                className="select-default-width"
-                                placeholder="Invoice Number"
-                                value={filterData.invoiceId}
-                                onChange={(option) => {
-                                  if (option && option.value) {
-                                    this.handleChange(option.value, 'invoiceId')
-                                  } else {
-                                    this.handleChange('', 'invoiceId')
+                            <Select
+                              options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
+                              className="select-default-width"
+                              placeholder="Invoice Number"
+                              value={filterData.invoiceId}
+                              onChange={(option) => {
+                                if (option && option.value) {
+                                  this.handleChange(option.value, 'invoiceId')
+                                } else {
+                                  this.handleChange('', 'invoiceId')
 
-                                  }
-                                }}
-                              />
+                                }
+                              }}
+                            />
                           </Col>
                           <Col lg={3} className="mb-1">
-                              <Select
-                                options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer') : []}
-                                className="select-default-width"
-                                placeholder="Customer Name"
-                                value={filterData.contactId}
-                                onChange={(option) => {
-                                  if (option && option.value) {
-                                    this.handleChange(option.value, 'contactId')
-                                  } else {
-                                    this.handleChange('', 'contactId')
+                            <Select
+                              options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer') : []}
+                              className="select-default-width"
+                              placeholder="Customer Name"
+                              value={filterData.contactId}
+                              onChange={(option) => {
+                                if (option && option.value) {
+                                  this.handleChange(option.value, 'contactId')
+                                } else {
+                                  this.handleChange('', 'contactId')
 
-                                  }
-                                }}
-                              />
+                                }
+                              }}
+                            />
                           </Col>
-                          <Col lg={2} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>
@@ -391,11 +406,11 @@ class Receipt extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={receipt_list  && receipt_list.data ? receipt_list.data : []}
+                          data={receipt_list && receipt_list.data ? receipt_list.data : []}
                           version="4"
                           keyField="receiptId"
                           hover
-                          pagination = {receipt_list && receipt_list.data && receipt_list.data.length > 0 ? true : false}
+                          pagination={receipt_list && receipt_list.data && receipt_list.data.length > 0 ? true : false}
                           remote
                           fetchInfo={{ dataTotalSize: receipt_list.count ? receipt_list.count : 0 }}
                           className="receipt-table"

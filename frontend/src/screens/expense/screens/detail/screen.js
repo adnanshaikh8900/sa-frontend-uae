@@ -24,7 +24,7 @@ import { Formik, Field } from 'formik'
 import * as Yup from 'yup'
 
 import { Loader, ConfirmDeleteModal } from 'components'
-import { ViewExpenseDetails } from './sections' 
+import { ViewExpenseDetails } from './sections'
 
 import { selectOptionsFactory } from 'utils'
 
@@ -93,7 +93,7 @@ class DetailExpense extends React.Component {
   }
 
   initializeData = () => {
-    
+
     if (this.props.location.state && this.props.location.state.expenseId) {
       this.props.expenseActions.getVatList();
       this.props.expenseDetailActions.getExpenseDetail(this.props.location.state.expenseId).then((res) => {
@@ -127,7 +127,7 @@ class DetailExpense extends React.Component {
               filePath: res.data.receiptAttachmentPath ? res.data.receiptAttachmentPath : '',
             },
             view: this.props.location.state && this.props.location.state.view ? true : false
-          },() => {
+          }, () => {
             if (this.props.location.state && this.props.location.state.view) {
               this.setState({ loading: false })
             } else {
@@ -198,7 +198,7 @@ class DetailExpense extends React.Component {
         this.props.history.push('/admin/expense/expense')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -222,7 +222,7 @@ class DetailExpense extends React.Component {
         this.props.history.push('/admin/expense/expense')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -253,14 +253,14 @@ class DetailExpense extends React.Component {
 
   render() {
     const { currency_list, project_list, employee_list, bank_list, vat_list, expense_categories_list, pay_mode_list } = this.props
-    const { initValue, loading, dialog} = this.state
+    const { initValue, loading, dialog } = this.state
 
     return (
       <div className="detail-expense-screen">
         <div className="animated fadeIn">
           {dialog}
           {loading ? <Loader /> : this.state.view ? <ViewExpenseDetails initialVals={initValue} editDetails={() => { this.editDetails() }} />
-           :
+            :
             (
               <Row>
                 <Col lg={12} className="mx-auto">
@@ -362,8 +362,9 @@ class DetailExpense extends React.Component {
                                         id="payee"
                                         rows="5"
                                         placeholder="Payee"
-                                        onChange={(option) => { 
-                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('payee')(option) }}}
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('payee')(option) }
+                                        }}
                                         defaultValue={props.values.payee}
                                         className={props.errors.payee && props.touched.payee ? "is-invalid" : ""}
                                       />
@@ -460,7 +461,7 @@ class DetailExpense extends React.Component {
                                         id="expenseAmount"
                                         rows="5"
                                         className={props.errors.expenseAmount && props.touched.expenseAmount ? "is-invalid" : ""}
-                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('expenseAmount')(option) }}}
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('expenseAmount')(option) } }}
                                         value={props.values.expenseAmount}
 
                                       />
@@ -551,15 +552,15 @@ class DetailExpense extends React.Component {
                                             : ''
                                         }
                                       />
-                                       {props.errors.bankAccountId &&
-                                    props.touched.bankAccountId && (
-                                      <div className="invalid-feedback">
-                                        {props.errors.bankAccountId}
-                                      </div>
-                                    )}
+                                      {props.errors.bankAccountId &&
+                                        props.touched.bankAccountId && (
+                                          <div className="invalid-feedback">
+                                            {props.errors.bankAccountId}
+                                          </div>
+                                        )}
                                     </FormGroup>
                                   </Col>
-                                   ) }
+                                  )}
                                 </Row>
                                 <Row>
                                   <Col lg={8}>

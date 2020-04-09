@@ -94,22 +94,13 @@ class VatCode extends React.Component {
     const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.vatActions.getVatList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false },()=>{
-          if(search) {
-            this.setState({
-              filterData: {
-                name: '',
-                vatPercentage: ''
-              },
-            })
-          }
-        })
+        this.setState({ loading: false })
       }
     }).catch((err) => {
       this.setState({
         loading: false
       })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -211,7 +202,7 @@ class VatCode extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -230,11 +221,11 @@ class VatCode extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData(true);
+    this.initializeData();
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -252,8 +243,17 @@ class VatCode extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        name: '',
+        vatPercentage: ''
+      },
+    })
+  }
+
   render() {
-    const { loading, selectedRows, dialog,csvData,view ,filterData} = this.state
+    const { loading, selectedRows, dialog, csvData, view, filterData } = this.state
     const { vat_list } = this.props
 
     return (
@@ -275,14 +275,14 @@ class VatCode extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup className="toolbar" size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'VatCode.csv'}
                             className="hidden"
@@ -323,9 +323,12 @@ class VatCode extends React.Component {
                               this.handleChange(e.target.value, 'vatPercentage')
                             }} />
                           </Col>
-                          <Col lg={2} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>

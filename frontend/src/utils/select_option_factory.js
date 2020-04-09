@@ -4,7 +4,7 @@ export const renderOptions = (label_key, value_key, data,placeholder,valueArr) =
   let a = {}
   if (valueArr && valueArr.length) {
     data.map(item => {
-      valueArr.map(x => a[x] = item[x])
+      valueArr.map((x) => a[`${x}`] = item[`${x}`])
       result.push({
         label: item[`${label_key}`],
         value: item[`${value_key}`],
@@ -13,7 +13,7 @@ export const renderOptions = (label_key, value_key, data,placeholder,valueArr) =
       return item
     })
   } else {
-    data.map(item => {
+    data.map((item) => {
       return result.push({
         label: item[`${label_key}`],
         value: item[`${value_key}`],

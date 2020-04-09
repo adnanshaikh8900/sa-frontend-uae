@@ -101,7 +101,7 @@ class BankAccount extends React.Component {
     this.initializeData()
   }
 
-  initializeData = (search) => {
+  initializeData = () => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -117,14 +117,6 @@ class BankAccount extends React.Component {
       if (res.status === 200) {
         this.setState({
           loading: false,
-          filterData: {
-            bankName: '',
-            bankAccountTypeId: '',
-            bankAccountName: '',
-            transactionDate: '',
-            accountNumber: '',
-            currencyCode: '',
-          },
         });
       }
     }).catch((err) => {
@@ -144,7 +136,7 @@ class BankAccount extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData(true)
+    this.initializeData()
   }
 
   // filterBankAccountList (bank_account_list) {
@@ -469,6 +461,19 @@ class BankAccount extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        bankName: '',
+        bankAccountTypeId: '',
+        bankAccountName: '',
+        transactionDate: '',
+        accountNumber: '',
+        currencyCode: '',
+      },
+    })
+  }
+
   render() {
 
     const {
@@ -589,9 +594,12 @@ class BankAccount extends React.Component {
                               placeholder="Currency"
                             />
                           </Col>
-                          <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>

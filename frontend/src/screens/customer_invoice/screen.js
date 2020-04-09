@@ -115,7 +115,7 @@ class CustomerInvoice extends React.Component {
     this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
     this.props.customerInvoiceActions.getOverdueAmountDetails(filterData.contactType).then((res) => {
       if (res.status === 200) {
-        this.setState({overDueAmountDetails: res.data});
+        this.setState({ overDueAmountDetails: res.data });
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
@@ -140,19 +140,6 @@ class CustomerInvoice extends React.Component {
         this.setState({ loading: false }, () => {
           if (this.props.location.state && this.props.location.state.id) {
             this.openInvoicePreviewModal(this.props.location.state.id)
-          }
-          if(search) {
-            this.setState({
-              filterData: {
-                customerId: '',
-                referenceNumber: '',
-                invoiceDate: '',
-                invoiceDueDate: '',
-                amount: '',
-                status: '',
-                contactType: 2,
-              },
-            })
           }
         });
       }
@@ -388,7 +375,7 @@ class CustomerInvoice extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -407,7 +394,7 @@ class CustomerInvoice extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData(true)
+    this.initializeData()
   }
 
   openInvoicePreviewModal = (id) => {
@@ -436,7 +423,7 @@ class CustomerInvoice extends React.Component {
       this.props.commonActions.tostifyAlert('success', 'Invoice Deleted Successfully')
       this.initializeData()
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -461,6 +448,20 @@ class CustomerInvoice extends React.Component {
     } else {
       this.csvLink.current.link.click()
     }
+  }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        customerId: '',
+        referenceNumber: '',
+        invoiceDate: '',
+        invoiceDueDate: '',
+        amount: '',
+        status: '',
+        contactType: 2,
+      },
+    })
   }
 
   render() {
@@ -642,9 +643,12 @@ class CustomerInvoice extends React.Component {
                           placeholder="Status"
                         />
                       </Col>
-                      <Col lg={1} className="mb-1">
-                        <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                      <Col lg={1} className="pl-0 pr-0">
+                        <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                           <i className="fa fa-search"></i>
+                        </Button>
+                        <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                          <i className="fa fa-remove"></i>
                         </Button>
                       </Col>
                     </Row>

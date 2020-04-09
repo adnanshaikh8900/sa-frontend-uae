@@ -325,7 +325,7 @@ class DetailJournal extends React.Component {
             value={row["debitAmount"] !== 0 ? row["debitAmount"] : 0}
             disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
             onChange={(e) => {
-              if (e.target.value === '' || this.regEx.test(e.target.value)){this.selectItem(e, row, "debitAmount", form, field) };
+              if (e.target.value === '' || this.regEx.test(e.target.value)){this.selectItem(e, row, "debitAmount", form, field) }
             }}
             placeholder="Debit Amount"
             className={`form-control 
@@ -364,7 +364,7 @@ class DetailJournal extends React.Component {
             value={row["creditAmount"] !== 0 ? row["creditAmount"] : 0}
             disabled={props.values.postingReferenceType === 'MANUAL' ? false : true}
             onChange={(e) => {
-              if (e.target.value === '' || this.regEx.test(e.target.value)){this.selectItem(e, row, "creditAmount", form, field)};
+              if (e.target.value === '' || this.regEx.test(e.target.value)){this.selectItem(e, row, "creditAmount", form, field)}
             }}
             placeholder="Credit Amount"
             className={`form-control 

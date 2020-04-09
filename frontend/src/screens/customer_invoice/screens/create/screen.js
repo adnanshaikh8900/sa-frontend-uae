@@ -386,7 +386,7 @@ class CreateCustomerInvoice extends React.Component {
 	checkedRow = () => {
 		if (this.state.data.length > 0) {
 			let length = this.state.data.length - 1
-			let temp = Object.values(this.state.data[length]).indexOf('');
+			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
 			if (temp > -1) {
 				return true
 			} else {

@@ -112,17 +112,17 @@ class SupplierInvoice extends React.Component {
     let { filterData } = this.state
     this.props.supplierInvoiceActions.getStatusList()
     this.props.supplierInvoiceActions.getSupplierList(filterData.contactType);
-    this.props.supplierInvoiceActions.getOverdueAmountDetails(filterData.contactType).then(res => {
+    this.props.supplierInvoiceActions.getOverdueAmountDetails(filterData.contactType).then((res) => {
       if (res.status === 200) {
         this.setState({ overDueAmountDetails: res.data });
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' );
     })
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -138,6 +138,19 @@ class SupplierInvoice extends React.Component {
         this.setState({ loading: false }, () => {
           if (this.props.location.state && this.props.location.state.id) {
             this.openInvoicePreviewModal(this.props.location.state.id)
+          }
+          if(search) {
+            this.setState({
+              filterData: {
+                supplierId: '',
+                referenceNumber: '',
+                invoiceDate: '',
+                invoiceDueDate: '',
+                amount: '',
+                status: '',
+                contactType: 1
+              },
+            })
           }
         });
       }
@@ -363,7 +376,7 @@ class SupplierInvoice extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData()
+    this.initializeData(true)
   }
 
   postInvoice = (row) => {
@@ -586,7 +599,7 @@ class SupplierInvoice extends React.Component {
                         />
                       </Col>
                       <Col lg={2} className="mb-1">
-                        <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'referenceNumber') }} />
+                        <Input type="text" value={filterData.referenceNumber} placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'referenceNumber') }} />
                       </Col>
                       <Col lg={2} className="mb-1">
                         <DatePicker
@@ -596,6 +609,7 @@ class SupplierInvoice extends React.Component {
                           placeholderText="Invoice Date"
                           showMonthDropdown
                           showYearDropdown
+                          autoComplete="off"
                           dropdownMode="select"
                           dateFormat="dd/MM/yyyy"
                           selected={filterData.invoiceDate}
@@ -613,6 +627,7 @@ class SupplierInvoice extends React.Component {
                           placeholderText="Invoice Due Date"
                           showMonthDropdown
                           showYearDropdown
+                          autoComplete="off"
                           dropdownMode="select"
                           dateFormat="dd/MM/yyyy"
                           selected={filterData.invoiceDueDate}
@@ -622,7 +637,7 @@ class SupplierInvoice extends React.Component {
                         />
                       </Col>
                       <Col lg={1} className="mb-1">
-                        <Input type="text" placeholder="Amount" onChange={(e) => { this.handleChange(e.target.value, 'amount') }} />
+                        <Input type="text" value={filterData.amount} placeholder="Amount" onChange={(e) => { this.handleChange(e.target.value, 'amount') }} />
                       </Col>
                       <Col lg={2} className="mb-1">
                         <Select
@@ -631,7 +646,7 @@ class SupplierInvoice extends React.Component {
                           //   return { label: item, value: item }
                           // }) : ''}
                           options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list, 'Status') : []}
-                          value={this.state.filterData.status}
+                          value={filterData.status}
                           onChange={(option) => {
                             if (option && option.value) {
                               this.handleChange(option.value, 'status')

@@ -83,7 +83,7 @@ class Project extends React.Component {
     this.initializeData();
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -96,7 +96,18 @@ class Project extends React.Component {
     const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.projectActions.getProjectList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        this.setState({ loading: false },()=>{
+          if(search) {
+            this.setState({
+              filterData: {
+                projectName: '',
+                vatRegistrationNumber: '',
+                expenseBudget: '',
+                revenueBudget: '',
+              }
+            })
+          }
+        })
       }
     }).catch((err) => {
       this.setState({
@@ -212,7 +223,7 @@ class Project extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData();
+    this.initializeData(true);
   }
 
   contactFormatter = (cell, row) => {
@@ -243,7 +254,7 @@ class Project extends React.Component {
   }
 
   render() {
-    const { loading, dialog,selectedRows,csvData,view} = this.state
+    const { loading, dialog,selectedRows,csvData,view, filterData} = this.state
     const { project_list } = this.props
 
 
@@ -311,16 +322,16 @@ class Project extends React.Component {
                         <form>
                           <Row>
                             <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Project Name" onChange={(e) => { this.handleChange(e.target.value, 'projectName') }} />
+                              <Input type="text" placeholder="Project Name" value={filterData.projectName} onChange={(e) => { this.handleChange(e.target.value, 'projectName') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Expense Budget" onChange={(e) => { this.handleChange(e.target.value, 'expenseBudget') }} />
+                              <Input type="text" placeholder="Expense Budget" value={filterData.expenseBudget} onChange={(e) => { this.handleChange(e.target.value, 'expenseBudget') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="Revenue Budget" onChange={(e) => { this.handleChange(e.target.value, 'revenueBudget') }} />
+                              <Input type="text" placeholder="Revenue Budget" value={filterData.revenueBudget} onChange={(e) => { this.handleChange(e.target.value, 'revenueBudget') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
-                              <Input type="text" placeholder="VAT Number" onChange={(e) => { this.handleChange(e.target.value, 'vatRegistrationNumber') }} />
+                              <Input type="text" placeholder="VAT Number" value={filterData.vatRegistrationNumber} onChange={(e) => { this.handleChange(e.target.value, 'vatRegistrationNumber') }} />
                             </Col>
                             <Col lg={2} className="mb-1">
                               <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>

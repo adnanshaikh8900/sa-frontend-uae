@@ -394,7 +394,7 @@ class DetailProject extends React.Component {
                                 <FormGroup className="">
                                   <Label htmlFor="expenseBudget">Expense Budget</Label>
                                   <Input
-                                    type="number"
+                                    type="text"
                                     id="expenseBudget"
                                     name="expenseBudget"
                                     onChange={(option) => {
@@ -417,7 +417,7 @@ class DetailProject extends React.Component {
                                 <FormGroup className="">
                                   <Label htmlFor="revenueBudget">Revenue Budget</Label>
                                   <Input
-                                    type="number"
+                                    type="text"
                                     id="revenueBudget"
                                     name="revenueBudget"
                                     onChange={(option) => {

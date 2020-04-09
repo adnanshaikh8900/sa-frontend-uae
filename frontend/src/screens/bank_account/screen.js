@@ -101,7 +101,7 @@ class BankAccount extends React.Component {
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -115,7 +115,17 @@ class BankAccount extends React.Component {
 
     this.props.bankAccountActions.getBankAccountList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false });
+        this.setState({
+          loading: false,
+          filterData: {
+            bankName: '',
+            bankAccountTypeId: '',
+            bankAccountName: '',
+            transactionDate: '',
+            accountNumber: '',
+            currencyCode: '',
+          },
+        });
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
@@ -134,7 +144,7 @@ class BankAccount extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData()
+    this.initializeData(true)
   }
 
   // filterBankAccountList (bank_account_list) {
@@ -333,7 +343,7 @@ class BankAccount extends React.Component {
         selected_id_list: tempList
       })
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -421,7 +431,7 @@ class BankAccount extends React.Component {
         selected_id_list: []
       })
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -441,7 +451,7 @@ class BankAccount extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -509,7 +519,7 @@ class BankAccount extends React.Component {
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'BankAccount.csv'}
                             className="hidden"

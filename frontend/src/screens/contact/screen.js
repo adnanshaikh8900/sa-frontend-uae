@@ -43,7 +43,7 @@ class Contact extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       selectedRows: [],
       dialog: null,
       filterData: {
@@ -89,7 +89,7 @@ class Contact extends React.Component {
     })
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -102,7 +102,18 @@ class Contact extends React.Component {
     const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.contactActions.getContactList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false });
+        this.setState({ loading: false,
+        },()=>{
+          if(search) {
+            this.setState({
+              filterData: {
+                name: '',
+                email: '',
+                contactType: '',
+              },
+            })
+          }
+        });
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
@@ -216,7 +227,7 @@ class Contact extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData();
+    this.initializeData(true);
   }
 
   getCsvData = () => {
@@ -240,7 +251,7 @@ class Contact extends React.Component {
 
   render() {
 
-    const { loading, dialog , selectedRows , csvData, view } = this.state
+    const { loading, dialog , selectedRows , csvData, view , filterData} = this.state
     const { contact_list, contact_type_list } = this.props
     
     return (
@@ -311,11 +322,11 @@ class Contact extends React.Component {
                           <Row>
 
                             <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                              <Input type="text" placeholder="Name" value={filterData.name} onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                             </Col>
 
                             <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Email" onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
+                              <Input type="text" placeholder="Email" value={filterData.email} onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
                             </Col>
 
                             <Col lg={3} className="mb-1">
@@ -332,7 +343,7 @@ class Contact extends React.Component {
                                   }}
                                   className="select-default-width"
                                   placeholder="Contact Type"
-                                  value={this.state.selectedContactType}
+                                  value={filterData.contactType}
                                 />
                             </Col>
 

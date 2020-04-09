@@ -118,13 +118,13 @@ class CustomerInvoice extends React.Component {
         this.setState({overDueAmountDetails: res.data});
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({ loading: false })
     })
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -141,10 +141,23 @@ class CustomerInvoice extends React.Component {
           if (this.props.location.state && this.props.location.state.id) {
             this.openInvoicePreviewModal(this.props.location.state.id)
           }
+          if(search) {
+            this.setState({
+              filterData: {
+                customerId: '',
+                referenceNumber: '',
+                invoiceDate: '',
+                invoiceDueDate: '',
+                amount: '',
+                status: '',
+                contactType: 2,
+              },
+            })
+          }
         });
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.message : null);
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
     })
   }
 
@@ -394,7 +407,7 @@ class CustomerInvoice extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData()
+    this.initializeData(true)
   }
 
   openInvoicePreviewModal = (id) => {
@@ -574,7 +587,7 @@ class CustomerInvoice extends React.Component {
                         />
                       </Col>
                       <Col lg={2} className="mb-1">
-                        <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'referenceNumber') }} />
+                        <Input type="text" placeholder="Reference Number" value={filterData.referenceNumber} onChange={(e) => { this.handleChange(e.target.value, 'referenceNumber') }} />
                       </Col>
                       <Col lg={2} className="mb-1">
                         <DatePicker
@@ -583,6 +596,7 @@ class CustomerInvoice extends React.Component {
                           name="invoiceDate"
                           placeholderText="Invoice Date"
                           selected={filterData.invoiceDate}
+                          autoComplete="off"
                           showMonthDropdown
                           showYearDropdown
                           dateFormat="dd/MM/yyyy"
@@ -603,6 +617,7 @@ class CustomerInvoice extends React.Component {
                           showYearDropdown
                           dropdownMode="select"
                           dateFormat="dd/MM/yyyy"
+                          autoComplete="off"
                           selected={filterData.invoiceDueDate}
                           onChange={(value) => {
                             this.handleChange(value, "invoiceDueDate")
@@ -610,13 +625,13 @@ class CustomerInvoice extends React.Component {
                         />
                       </Col>
                       <Col lg={1} className="mb-1">
-                        <Input type="text" placeholder="Amount" onChange={(e) => { this.handleChange(e.target.value, 'amount') }} />
+                        <Input type="text" value={filterData.amount} placeholder="Amount" onChange={(e) => { this.handleChange(e.target.value, 'amount') }} />
                       </Col>
                       <Col lg={2} className="mb-1">
                         <Select
                           className=""
                           options={status_list ? selectOptionsFactory.renderOptions('label', 'value', status_list, 'Status') : []}
-                          value={this.state.filterData.status}
+                          value={filterData.status}
                           onChange={(option) => {
                             if (option && option.value) {
                               this.handleChange(option.value, 'status')

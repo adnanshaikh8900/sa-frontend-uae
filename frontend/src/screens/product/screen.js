@@ -50,7 +50,7 @@ class Product extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       selectedRows: [],
       dialog: null,
       filterData: {
@@ -96,7 +96,7 @@ class Product extends React.Component {
     })
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -109,7 +109,17 @@ class Product extends React.Component {
     const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.productActions.getProductList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        this.setState({ loading: false },()=>{
+          if(search) {
+            this.setState({
+              filterData: {
+                name: '',
+                productCode: '',
+                vatPercentage: ''
+              },
+            })
+          }
+        })
       }
     }).catch((err) => {
       this.setState({ loading: false })
@@ -213,7 +223,7 @@ class Product extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData();
+    this.initializeData(true);
     // this.setState({})
   }
 
@@ -321,10 +331,10 @@ class Product extends React.Component {
                         <form>
                           <Row>
                             <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                              <Input type="text" placeholder="Name" value={filterData.name} onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                             </Col>
                             <Col lg={3} className="mb-2">
-                              <Input type="text" placeholder="Product Code" onChange={(e) => { this.handleChange(e.target.value, 'productCode') }} />
+                              <Input type="text" placeholder="Product Code" value={filterData.productCode} onChange={(e) => { this.handleChange(e.target.value, 'productCode') }} />
                             </Col>
                             <Col lg={3} className="mb-1">
                               <FormGroup className="mb-3">

@@ -93,7 +93,7 @@ class DetailCustomerInvoice extends React.Component {
 			{ label: "Due on Receipt", value: "DUE_ON_RECEIPT" },
 		]
 		this.regEx = /^[0-9\b]+$/;
-    this.regExBoth = /[a-zA-Z0-9]+$/;
+		this.regExBoth = /[a-zA-Z0-9]+$/;
 
 		this.file_size = 1024000;
 		this.supported_format = [
@@ -231,7 +231,7 @@ class DetailCustomerInvoice extends React.Component {
 						type="text"
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
 						onChange={(e) => {
-							if (e.target.value === '' || this.regEx.test(e.target.value)){ this.selectItem(e, row, 'quantity', form, field, props)}
+							if (e.target.value === '' || this.regEx.test(e.target.value)) { this.selectItem(e, row, 'quantity', form, field, props) }
 						}
 						}
 						placeholder="Quantity"
@@ -262,7 +262,7 @@ class DetailCustomerInvoice extends React.Component {
 					<Input
 						type="text"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
-						onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)){ this.selectItem(e, row, 'unitPrice', form, field, props) }}}
+						onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)) { this.selectItem(e, row, 'unitPrice', form, field, props) } }}
 						placeholder="Unit Price"
 						className={`form-control 
                        ${props.errors.lineItemsString && props.errors.lineItemsString[parseInt(idx, 10)] &&
@@ -518,7 +518,7 @@ class DetailCustomerInvoice extends React.Component {
 			this.props.history.push('/admin/revenue/customer-invoice')
 
 		}).catch((err) => {
-			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
 		})
 	}
 
@@ -569,7 +569,7 @@ class DetailCustomerInvoice extends React.Component {
 				this.props.history.push('/admin/revenue/customer-invoice')
 			}
 		}).catch((err) => {
-			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+			this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
 		})
 	}
 
@@ -875,7 +875,7 @@ class DetailCustomerInvoice extends React.Component {
 																				placeholder=""
 																				value={props.values.contact_po_number}
 																				onChange={(option) => {
-																					if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('contact_po_number')(option)}
+																					if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('contact_po_number')(option) }
 																				}}
 																			/>
 																		</FormGroup>
@@ -895,7 +895,7 @@ class DetailCustomerInvoice extends React.Component {
 																						name="receiptNumber"
 																						placeholder="Enter Reciept Number"
 																						onChange={(option) => {
-																							if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('receiptNumber')(option)}
+																							if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('receiptNumber')(option) }
 																						}}
 																						value={props.values.receiptNumber}
 
@@ -1207,8 +1207,8 @@ class DetailCustomerInvoice extends React.Component {
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}
 					getStateList={this.props.customerInvoiceActions.getStateList}
-			
-			/>
+
+				/>
 			</div>
 		)
 	}

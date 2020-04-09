@@ -224,7 +224,7 @@ class ImportTransaction extends React.Component {
 
       if (multiSelected.length > 0) {
         multiSelected.map((item) => {
-          tempStatus[item] = { label: '', status: false }
+          tempStatus[`${item}`] = { label: '', status: false }
           return item
         })
       }

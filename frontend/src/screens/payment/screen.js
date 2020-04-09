@@ -94,7 +94,7 @@ class Payment extends React.Component {
     this.initializeData()
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -108,7 +108,17 @@ class Payment extends React.Component {
 
     this.props.paymentActions.getPaymentList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        this.setState({ loading: false },()=>{
+          if(search) {
+            this.setState({
+              filterData: {
+                supplierId: '',
+                paymentDate: '',
+                invoiceAmount: ''
+              },
+            })
+          }
+        })
       }
     }).catch((err) => {
       this.setState({ loading: false })
@@ -214,7 +224,7 @@ class Payment extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData()
+    this.initializeData(true)
   }
 
   onSizePerPageList = (sizePerPage) => {
@@ -353,6 +363,7 @@ class Payment extends React.Component {
                               selected={filterData.paymentDate}
                               showMonthDropdown
                               showYearDropdown
+                              autoComplete="off"
                               dateFormat="dd/MM/yyyy"
                               dropdownMode="select"
                               value={filterData.paymentDate}

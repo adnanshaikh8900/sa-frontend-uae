@@ -133,7 +133,7 @@ class DetailUser extends React.Component {
         this.props.history.push('/admin/settings/user')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -474,8 +474,8 @@ class DetailUser extends React.Component {
                                             type="password"
                                             id="password"
                                             name="password"
-                                             placeholder="Enter the Password"
-                                             autoComplete="new-password"
+                                            placeholder="Enter the Password"
+                                            autoComplete="new-password"
                                             onChange={(value) => { props.handleChange('password')(value) }}
                                             className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                           />
@@ -491,7 +491,7 @@ class DetailUser extends React.Component {
                                             type="password"
                                             id="confirmPassword"
                                             name="confirmPassword"
-                                             placeholder="Enter the Confirm Password"
+                                            placeholder="Enter the Confirm Password"
                                             onChange={(value) => { props.handleChange('confirmPassword')(value) }}
                                             className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
                                           />

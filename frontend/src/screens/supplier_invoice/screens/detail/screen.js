@@ -508,7 +508,7 @@ class DetailSupplierInvoice extends React.Component {
       this.props.history.push('/admin/expense/supplier-invoice')
 
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -530,7 +530,7 @@ class DetailSupplierInvoice extends React.Component {
         this.props.history.push('/admin/expense/supplier-invoice')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 

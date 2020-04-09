@@ -81,7 +81,7 @@ class VatCode extends React.Component {
     this.initializeData();
   }
 
-  initializeData = () => {
+  initializeData = (search) => {
     let { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
@@ -94,7 +94,16 @@ class VatCode extends React.Component {
     const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.vatActions.getVatList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false })
+        this.setState({ loading: false },()=>{
+          if(search) {
+            this.setState({
+              filterData: {
+                name: '',
+                vatPercentage: ''
+              },
+            })
+          }
+        })
       }
     }).catch((err) => {
       this.setState({
@@ -221,7 +230,7 @@ class VatCode extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData();
+    this.initializeData(true);
   }
 
   getCsvData = () => {
@@ -244,7 +253,7 @@ class VatCode extends React.Component {
   }
 
   render() {
-    const { loading, selectedRows, dialog,csvData,view } = this.state
+    const { loading, selectedRows, dialog,csvData,view ,filterData} = this.state
     const { vat_list } = this.props
 
     return (
@@ -303,13 +312,13 @@ class VatCode extends React.Component {
                         <h5>Filter : </h5>
                         <Row>
                           <Col lg={4} className="mb-1">
-                            <Input type="text" placeholder="Name" onChange={(e) => {
+                            <Input type="text" value={filterData.name} placeholder="Name" onChange={(e) => {
                               e.preventDefault()
                               this.handleChange(e.target.value, 'name')
                             }} />
                           </Col>
                           <Col lg={4} className="mb-1">
-                            <Input type="number" placeholder="Vat Percentage" onChange={(e) => {
+                            <Input type="text" value={filterData.vatPercentage} placeholder="Vat Percentage" onChange={(e) => {
                               e.preventDefault()
                               this.handleChange(e.target.value, 'vatPercentage')
                             }} />

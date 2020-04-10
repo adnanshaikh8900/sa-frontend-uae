@@ -10,14 +10,14 @@ export const getCurrencyList = () => {
       method: 'get',
       url: 'rest/bank/getcurrenncy'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: PAYMENT.CURRENCY_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -29,14 +29,14 @@ export const getBankList = () => {
       method: 'get',
       url: '/rest/bank/list'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: PAYMENT.BANK_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -48,14 +48,14 @@ export const getSupplierContactList = (id) => {
       method: 'get',
       url: `/rest/contact/getContactsForDropdown?contactType=${id}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: PAYMENT.SUPPLIER_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -67,14 +67,14 @@ export const getSupplierInvoiceList = () => {
       method: 'get',
       url: '/rest/invoice/getInvoicesForDropdown'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: PAYMENT.INVOICE_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -86,23 +86,31 @@ export const getProjectList = () => {
       method: 'get',
       url: 'rest/project/getProjectsForDropdown'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: PAYMENT.PROJECT_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
 }
 
-export const getPaymentList = (paymentData) => {
-  const { supplierId, paymentDate, invoiceAmount, pageNo, pageSize } = paymentData;
+export const getPaymentList = (obj) => {
+  let supplierId = obj.supplierId ? obj.supplierId : ''
+  let paymentDate = obj.paymentDate ?  obj.paymentDate : ''
+  let invoiceAmount =  obj.invoiceAmount ? obj.invoiceAmount : ''
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+  
   return (dispatch) => {
-    let param = `rest/payment/getlist?supplierId=${supplierId ? supplierId : ''}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}`
+    let param = `rest/payment/getlist?supplierId=${supplierId}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     if (paymentDate) {
       let date = moment(paymentDate).format('DD-MM-YYYY')
       param = param + `&paymentDate=${date}`
@@ -110,16 +118,18 @@ export const getPaymentList = (paymentData) => {
     let data = {
       method: 'get',
       url: param
-      // data: postObj
+      // data: obj
     }
 
-    return authApi(data).then(res => {
-      dispatch({
-        type: PAYMENT.PAYMENT_LIST,
-        payload: res
-      })
+    return authApi(data).then((res) => {
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: PAYMENT.PAYMENT_LIST,
+          payload: res
+        })
+      }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -131,9 +141,9 @@ export const removeBulkPayments = (obj) => {
       url: 'rest/payment/deletes',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -146,9 +156,9 @@ export const createSupplier = (obj) => {
       url: 'rest/contact/save',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -160,11 +170,11 @@ export const getInvoiceById = (id) => {
       method: 'get',
       url: `/rest/invoice/getInvoiceById?id=${id}`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
           return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

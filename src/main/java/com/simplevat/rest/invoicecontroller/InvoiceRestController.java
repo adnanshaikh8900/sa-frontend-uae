@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.simplevat.rest.invoicecontroller;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
+import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationResponseModel;
@@ -19,21 +15,20 @@ import com.simplevat.util.ChartUtil;
 import com.simplevat.utils.FileHelper;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +37,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -51,8 +45,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/rest/invoice")
-public class InvoiceRestController extends AbstractDoubleEntryRestController implements Serializable {
-
+public class InvoiceRestController extends AbstractDoubleEntryRestController {
+	private final Logger LOGGER = LoggerFactory.getLogger(InvoiceRestController.class);
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -76,7 +70,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 	public ResponseEntity getInvoiceList(InvoiceRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			Map<InvoiceFilterEnum, Object> filterDataMap = new HashMap();
+			Map<InvoiceFilterEnum, Object> filterDataMap = new EnumMap<>(InvoiceFilterEnum.class);
 			if (filterModel.getContact() != null) {
 				filterDataMap.put(InvoiceFilterEnum.CONTACT, contactService.findByPK(filterModel.getContact()));
 			}
@@ -101,7 +95,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 			filterDataMap.put(InvoiceFilterEnum.USER_ID, userId);
 			filterDataMap.put(InvoiceFilterEnum.DELETE_FLAG, false);
 			filterDataMap.put(InvoiceFilterEnum.TYPE, filterModel.getType());
-			filterDataMap.put(InvoiceFilterEnum.ORDER_BY, "DESC");
 
 			PaginationResponseModel responseModel = invoiceService.getInvoiceList(filterDataMap, filterModel);
 			if (responseModel == null) {
@@ -110,15 +103,14 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 			responseModel.setData(invoiceRestHelper.getListModel(responseModel.getData()));
 			return new ResponseEntity(responseModel, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@GetMapping(value = "/getInvoicesForDropdown")
-	public ResponseEntity getInvoicesForDropdown() throws IOException {
-		List<DropdownModel> dropdownModels = invoiceService.getInvoicesForDropdown();
-		return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+	public ResponseEntity getInvoicesForDropdown() {
+		return new ResponseEntity<>(invoiceService.getInvoicesForDropdown(), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Delete Invoice By ID")
@@ -140,7 +132,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 			invoiceService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -174,7 +166,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 			invoiceService.persist(invoice);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -195,7 +187,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 			invoiceService.update(invoice);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -210,7 +202,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 			}
 			return new ResponseEntity(nxtInvoiceNo, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -225,8 +217,39 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController imp
 			}
 			return new ResponseEntity(chartUtil.getinvoiceData(invList, monthCount), HttpStatus.OK);
 		} catch (Exception e) {
+			LOGGER.error("Error", e);
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@ApiOperation(value = "Send Invoice")
+	@PostMapping(value = "/send")
+	public ResponseEntity update(@RequestParam("id") Integer id, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			invoiceRestHelper.send(invoiceService.findByPK(id),userId);
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.error("Error", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	/**
+	 * This method web service will retriever the OverDueAmountDetails To Be Paid for the the specific user
+	 * @param request HTTP servelet request
+	 * @return Response entity
+	 */
+	@ApiOperation(value = "Get Overdue Amount Details")
+	@GetMapping(value = "/getOverDueAmountDetails")
+	public ResponseEntity getOverDueAmountDetails(HttpServletRequest request) {
+		try {
+			Integer type = Integer.parseInt(request.getParameter("type"));
+			OverDueAmountDetailsModel overDueAmountDetails = invoiceService.getOverDueAmountDetails(type);
+			return new ResponseEntity(overDueAmountDetails, HttpStatus.OK);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
+

@@ -32,7 +32,7 @@ import * as PaymentActions from "../../actions";
 import * as DetailPaymentActions from "./actions";
 import { CommonActions } from "services/global";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     bank_list: state.payment.bank_list,
     currency_list: state.payment.currency_list,
@@ -41,7 +41,7 @@ const mapStateToProps = state => {
     invoice_list: state.payment.invoice_list
   };
 };
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     detailPaymentActions: bindActionCreators(DetailPaymentActions, dispatch),
@@ -63,28 +63,17 @@ class DetailPayment extends React.Component {
     };
 
     this.regEx = /^[0-9\d]+$/;
-
-
-    this.initializeData = this.initializeData.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleChange = this.handleChange.bind(this)
-    this.deletePayment = this.deletePayment.bind(this);
-    this.removePayment = this.removePayment.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-    this.closeSupplierModal = this.closeSupplierModal.bind(this);
-    this.openSupplierModal = this.openSupplierModal.bind(this);
-    this.getCurrentUser = this.getCurrentUser.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.detailPaymentActions
         .getPaymentById(this.props.location.state.id)
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             this.getCurrentUser({ value: res.data.supplierId });
             this.props.paymentActions.getCurrencyList();
@@ -114,7 +103,7 @@ class DetailPayment extends React.Component {
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.props.history.push("/admin/expense/payment");
         });
     } else {
@@ -122,7 +111,7 @@ class DetailPayment extends React.Component {
     }
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     const {
       bank,
       supplier,
@@ -137,9 +126,9 @@ class DetailPayment extends React.Component {
     const postData = {
       paymentId: this.state.initValue.paymentId,
       paymentDate: payment_date !== null ? payment_date : "",
-      description: description,
+      description,
       invoiceId: invoiceId && invoiceId.value ? invoiceId.value : "",
-      invoiceAmount: invoiceAmount,
+      invoiceAmount,
       bankAccountId: bank && bank.value ? bank.value : "",
       contactId: this.state.selectedSupplier.value
         ? this.state.selectedSupplier.value
@@ -151,27 +140,27 @@ class DetailPayment extends React.Component {
     };
     this.props.detailPaymentActions
       .updatePayment(postData)
-      .then(res => {
+      .then((res) => {
         this.props.commonActions.tostifyAlert(
           "success",
           "Payment Update Successfully."
         );
         this.props.history.push("/admin/expense/payment");
       })
-      .catch(err => {
+      .catch((err) => {
         this.props.commonActions.tostifyAlert(
           "error",
-          err && err.data ? err.data.message : null
+          err && err.data ? err.data.message : 'Something Went Wrong' 
         );
       });
   }
 
-  openSupplierModal(e) {
+  openSupplierModal = (e) => {
     e.preventDefault();
     this.setState({ openSupplierModal: true });
   }
 
-  getCurrentUser(data) {
+  getCurrentUser = (data) => {
     let option;
     if (data.label || data.value) {
       option = data;
@@ -186,14 +175,14 @@ class DetailPayment extends React.Component {
     });
   }
 
-  closeSupplierModal(res) {
+  closeSupplierModal = (res) => {
     if (res) {
       this.props.paymentActions.getSupplierContactList(this.state.contactType);
     }
     this.setState({ openSupplierModal: false });
   }
 
-  deletePayment() {
+  deletePayment = () => {
     this.setState({
       dialog: (
         <ConfirmDeleteModal
@@ -205,11 +194,11 @@ class DetailPayment extends React.Component {
     });
   }
 
-  removePayment() {
+  removePayment = () => {
     const { current_payment_id } = this.state;
     this.props.detailPaymentActions
       .deletePayment(current_payment_id)
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           this.props.commonActions.tostifyAlert(
             "success",
@@ -218,24 +207,24 @@ class DetailPayment extends React.Component {
           this.props.history.push("/admin/expense/payment");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.props.commonActions.tostifyAlert(
           "error",
-          err && err.data ? err.data.message : null
+          err && err.data ? err.data.message : 'Something Went Wrong' 
         );
       });
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate = (prevProps) => {
     if (prevProps.supplier_list !== this.props.supplier_list) {
       const { selectedSupplier } = this.state;
-      prevProps.supplier_list.map(item =>
+      prevProps.supplier_list.map((item) =>
         item.value === selectedSupplier.value ? this.getCurrentUser(item) : ""
       );
     }
@@ -313,7 +302,7 @@ class DetailPayment extends React.Component {
                             .matches(/^[0-9]*$/, "Enter a Valid Amount")
                         })}
                       >
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={12}>
@@ -338,7 +327,7 @@ class DetailPayment extends React.Component {
                                             : []
                                         }
                                         value={selectedSupplier}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           props.handleChange("supplier")(option);
                                           this.getCurrentUser(option);
                                         }}
@@ -380,8 +369,8 @@ class DetailPayment extends React.Component {
                                             : []
                                         }
                                         value={props.values.invoiceId}
-                                        onChange={option => {
-                                          // data = invoice_list.filter(item => item.invoiceId === option.value);
+                                        onChange={(option) => {
+                                          // data = invoice_list.filter((item) => item.invoiceId === option.value);
                                           // props.handleChange('amount')(data[0]['invoiceAmount'])
                                           props.handleChange("invoiceId")(option);
                                         }}
@@ -411,14 +400,15 @@ class DetailPayment extends React.Component {
                                         placeholder="Enter Amount"
                                         value={props.values.invoiceAmount ? props.values.invoiceAmount : ''}
                                         className={props.errors.invoiceAmount && props.touched.invoiceAmount ? "is-invalid" : ""}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (
                                             option.target.value === "" ||
                                             this.regEx.test(option.target.value)
-                                          )
+                                          ) {
                                             props.handleChange("invoiceAmount")(
                                               option
                                             );
+                                          }
                                         }}
                                       />
                                       {props.errors.invoiceAmount && props.touched.invoiceAmount && (
@@ -445,7 +435,7 @@ class DetailPayment extends React.Component {
                                             : []
                                         }
                                         value={props.values.currency}
-                                        onChange={option =>
+                                        onChange={(option) =>
                                           props.handleChange("currency")(option)
                                         }
                                         className={
@@ -480,7 +470,7 @@ class DetailPayment extends React.Component {
                                             : []
                                         }
                                         value={props.values.project}
-                                        onChange={option =>
+                                        onChange={(option) =>
                                           props.handleChange("project")(option)
                                         }
                                         className={
@@ -508,7 +498,7 @@ class DetailPayment extends React.Component {
                                           showYearDropdown
                                           dateFormat="dd/MM/yyyy"
                                           dropdownMode="select"
-                                          onChange={option =>
+                                          onChange={(option) =>
                                             props.handleChange("payment_date")(
                                               option
                                             )
@@ -540,7 +530,7 @@ class DetailPayment extends React.Component {
                                             : []
                                         }
                                         value={props.values.bank}
-                                        onChange={option =>
+                                        onChange={(option) =>
                                           props.handleChange("bank")(option)
                                         }
                                         className={
@@ -564,7 +554,7 @@ class DetailPayment extends React.Component {
                                         id="description"
                                         rows="6"
                                         placeholder="Description..."
-                                        onChange={option =>
+                                        onChange={(option) =>
                                           props.handleChange("description")(
                                             option
                                           )
@@ -629,10 +619,10 @@ class DetailPayment extends React.Component {
         </div>
         <SupplierModal
           openSupplierModal={this.state.openSupplierModal}
-          closeSupplierModal={e => {
+          closeSupplierModal={(e) => {
             this.closeSupplierModal(e);
           }}
-          getCurrentUser={e => this.getCurrentUser(e)}
+          getCurrentUser={(e) => this.getCurrentUser(e)}
           createSupplier={this.props.paymentActions.createSupplier}
         />
       </div>

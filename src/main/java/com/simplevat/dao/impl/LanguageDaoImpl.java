@@ -2,7 +2,6 @@ package com.simplevat.dao.impl;
 
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import com.simplevat.dao.LanguageDao;
@@ -23,8 +22,7 @@ public class LanguageDaoImpl extends AbstractDao<Integer, Language> implements L
 
     @Override
     public List<Language> getLanguages() {
-        List<Language> languages = this.executeNamedQuery("allLanguages");
-        return languages;
+       return this.executeNamedQuery("allLanguages");
     }
 
     @Override

@@ -10,9 +10,9 @@ export const getInvoiceById = (_id) => {
       url: `/rest/invoice/getInvoiceById?id=${_id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -25,9 +25,9 @@ export const updateInvoice = (obj) => {
       url: '/rest/invoice/update',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -40,9 +40,9 @@ export const deleteInvoice = (id) => {
       url: `/rest/invoice/delete?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

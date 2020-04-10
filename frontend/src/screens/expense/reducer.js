@@ -97,7 +97,7 @@ const ExpenseReducer = (state = initState, action) => {
         }
   
       case EXPENSE.EXPENSE_CATEGORIES_LIST:
-      //   const chart_of_account_list = payload.map(item => {
+      //   const chart_of_account_list = payload.map((item) => {
       //     return { label: item.transactionCategoryDescription, value: item.transactionCategoryId }
       //   })
   

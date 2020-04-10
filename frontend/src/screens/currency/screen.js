@@ -55,10 +55,6 @@ class Currency extends React.Component {
       ]
     }
 
-    this.closeCurrencyModal = this.closeCurrencyModal.bind(this)
-    this.showCurrencyModal = this.showCurrencyModal.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
-
     this.options = {
       onRowClick: this.goToDetail,
       paginationPosition: 'top'
@@ -72,12 +68,12 @@ class Currency extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.getCurrencyDetails();
   }
 
   getCurrencyDetails = () => {
-    this.props.currenciesActions.getCurrencyList().then(res => {
+    this.props.currenciesActions.getCurrencyList().then((res) => {
       if(res.status === 200) {
         this.setState({
           loading:false
@@ -87,15 +83,15 @@ class Currency extends React.Component {
   }
 
   // Show Invite User Modal
-  showCurrencyModal() {
+  showCurrencyModal = () => {
     this.setState({ openCurrencyModal: true })
   }
   // Cloase Confirm Modal
-  closeCurrencyModal() {
+  closeCurrencyModal = () => {
     this.setState({ openCurrencyModal: false })
   }
 
-  goToDetail(row) {
+  goToDetail = (row) => {
     this.showCurrencyModal()
   }
 
@@ -107,7 +103,7 @@ class Currency extends React.Component {
 
     
     const currencyList = this.props.currency_list && this.props.currency_list !== [] ?
-    this.props.currency_list.map(currencyData => ({
+    this.props.currency_list.map((currencyData) => ({
       name : currencyData.currencyName,
       symbol:currencyData.currencySymbol
 

@@ -62,25 +62,22 @@ class DetailContact extends React.Component {
       dialog: null,
       current_contact_id: null
     }
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.initializeData = this.initializeData.bind(this)
-    this.success = this.success.bind(this)
-    this.removeContact = this.removeContact.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-    this.deleteContact = this.deleteContact.bind(this)
+    this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     if (this.props.location.state && this.props.location.state.id) {
       this.props.contactActions.getContactTypeList();
       this.props.contactActions.getCountryList();
       this.props.contactActions.getCurrencyList();
 
-      this.props.detailContactActions.getContactById(this.props.location.state.id).then(res => {
+      this.props.detailContactActions.getContactById(this.props.location.state.id).then((res) => {
         this.setState({
           current_contact_id: this.props.location.state.id,
           loading: false,
@@ -109,38 +106,38 @@ class DetailContact extends React.Component {
           }
         }, () => { this.props.contactActions.getStateList(this.state.initValue.countryId) })
 
-      }).catch(err => {
+      }).catch((err) => {
         this.setState({ loading: false })
-        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
       })
     } else {
       this.props.history.push('/admin/master/contact')
     }
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const { current_contact_id } = this.state
 
     const postData = { ...data, ...{ contactId: current_contact_id } }
 
-    this.props.detailContactActions.updateContact(postData).then(res => {
+    this.props.detailContactActions.updateContact(postData).then((res) => {
       if (res.status === 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', ' Contact Updated Successfully')
         this.props.history.push('/admin/master/contact');
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err !== undefined && err.data ? err.data.message : null);
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.props.history.push('/admin/master/contact');
     })
   }
-  success(msg) {
+  success = (msg) => {
     toast.success(msg, {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
-  deleteContact() {
+  deleteContact = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -150,25 +147,25 @@ class DetailContact extends React.Component {
     })
   }
 
-  removeContact() {
+  removeContact = () => {
     const { current_contact_id } = this.state
-    this.props.detailContactActions.deleteContact(current_contact_id).then(res => {
+    this.props.detailContactActions.deleteContact(current_contact_id).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Contact Deleted Successfully')
         this.props.history.push('/admin/master/contact')
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  getStateList(countryCode) {
+  getStateList = (countryCode) => {
     this.props.contactActions.getStateList(countryCode);
   }
 
@@ -225,7 +222,7 @@ class DetailContact extends React.Component {
                                   .required("Telephone Number is Required"),
                                 mobileNumber: Yup.string()
                                   .required("Mobile Number is required")
-                                  .test('quantity', 'Invalid Mobile Number', value => {
+                                  .test('quantity', 'Invalid Mobile Number', (value) => {
                                     if (isValidPhoneNumber(value)) {
                                       return true
                                     } else {
@@ -261,7 +258,7 @@ class DetailContact extends React.Component {
                               })
                             }
                           >
-                            {props => (
+                            {(props) => (
                               <Form onSubmit={props.handleSubmit}>
                                 <h4 className="mb-4">Contact Name</h4>
                                 <Row className="row-wrapper">
@@ -272,9 +269,11 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="firstName"
                                         name="firstName"
-
-                                        onChange={(value) => { props.handleChange("firstName")(value) }}
-                                        defaultValue={props.values.firstName}
+                                        placeholder="Enter First Name"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
+                                        }}
+                                        value={props.values.firstName}
                                         className={
                                           props.errors.firstName && props.touched.firstName
                                             ? "is-invalid"
@@ -288,14 +287,16 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="middleName "><span className="text-danger">*</span>Middle Name</Label>
+                                      <Label htmlFor="middleName"><span className="text-danger">*</span>Middle Name</Label>
                                       <Input
                                         type="text"
-                                        id="middleName "
-                                        name="middleName "
-
-                                        onChange={(value) => { props.handleChange("middleName")(value) }}
-                                        defaultValue={props.values.middleName}
+                                        id="middleName"
+                                        name="middleName"
+                                        placeholder="Enter Middle Name"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
+                                        }}
+                                        value={props.values.middleName}
                                         className={
                                           props.errors.middleName && props.touched.middleName
                                             ? "is-invalid"
@@ -314,9 +315,11 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="lastName"
                                         name="lastName"
-
-                                        onChange={(value) => { props.handleChange("lastName")(value) }}
-                                        defaultValue={props.values.lastName}
+                                        placeholder="Enter Last Name"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
+                                        }}
+                                        value={props.values.lastName}
                                         className={
                                           props.errors.lastName && props.touched.lastName
                                             ? "is-invalid"
@@ -338,7 +341,7 @@ class DetailContact extends React.Component {
                                       <Select
                                         options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                         value={props.values.contactType}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('contactType')(option.value)
                                           } else {
@@ -367,9 +370,11 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="organization"
                                         name="organization"
-
-                                        onChange={(value) => { props.handleChange("organization")(value) }}
-                                        defaultValue={props.values.organization}
+                                        placeholder="Enter Organization Name"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('organization')(option)}
+                                        }}
+                                        value={props.values.organization}
                                         className={
                                           props.errors.organization && props.touched.organization
                                             ? "is-invalid"
@@ -389,9 +394,11 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="poBoxNumber"
                                         name="poBoxNumber"
-
-                                        onChange={(value) => { props.handleChange("poBoxNumber")(value) }}
-                                        defaultValue={props.values.poBoxNumber}
+                                        placeholder="Enter PO Box Number"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('poBoxNumber')(option)}
+                                        }}
+                                        value={props.values.poBoxNumber}
                                         className={
                                           props.errors.poBoxNumber && props.touched.poBoxNumber
                                             ? "is-invalid"
@@ -413,9 +420,9 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="email"
                                         name="email"
-
+                                        placeholder="Enter Email Address"
                                         onChange={(value) => { props.handleChange("email")(value) }}
-                                        defaultValue={props.values.email}
+                                        value={props.values.email}
                                         className={
                                           props.errors.email && props.touched.email
                                             ? "is-invalid"
@@ -435,9 +442,9 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="telephone"
                                         name="telephone"
-
-                                        onChange={(value) => { props.handleChange("telephone")(value) }}
-                                        defaultValue={props.values.telephone}
+                                        placeholder="Enter Telephone Number"
+                                        onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('telephone')(option) }}}
+                                        value={props.values.telephone}
                                         className={
                                           props.errors.telephone && props.touched.telephone
                                             ? "is-invalid"
@@ -459,7 +466,7 @@ class DetailContact extends React.Component {
                                         name="mobileNumber"
 
                                         onChange={(value) => { props.handleChange("mobileNumber")(value) }}
-                                        defaultValue={props.values.mobileNumber}
+                                        value={props.values.mobileNumber}
                                         className={
                                           props.errors.mobileNumber && props.touched.mobileNumber
                                             ? "is-invalid"
@@ -498,9 +505,9 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="addressLine1"
                                         name="addressLine1"
-
+                                        placeholder="Enter Address Line1"
                                         onChange={(value) => { props.handleChange("addressLine1")(value) }}
-                                        defaultValue={props.values.addressLine1}
+                                        value={props.values.addressLine1}
                                         className={
                                           props.errors.addressLine1 && props.touched.addressLine1
                                             ? "is-invalid"
@@ -520,7 +527,8 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="addressLine2"
                                         name="addressLine2"
-                                        defaultValue={props.values.addressLine2}
+                                        placeholder="Enter Address Line2"
+                                        value={props.values.addressLine2}
                                         onChange={(value) => { props.handleChange("addressLine2")(value) }}
 
                                       />
@@ -533,7 +541,8 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="addressLine3"
                                         name="addressLine3"
-                                        defaultValue={props.values.addressLine3}
+                                        placeholder="Enter Address Line3"
+                                        value={props.values.addressLine3}
                                         onChange={(value) => { props.handleChange("addressLine3")(value) }}
 
                                       />
@@ -547,7 +556,7 @@ class DetailContact extends React.Component {
                                       <Select
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                         value={props.values.countryId}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('countryId')(option.value)
                                             this.getStateList(option.value)
@@ -578,7 +587,7 @@ class DetailContact extends React.Component {
                                       <Select
                                         options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
                                         value={props.values.stateId}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('stateId')(option.value)
                                           } else {
@@ -605,9 +614,11 @@ class DetailContact extends React.Component {
                                       <Label htmlFor="city">City</Label>
                                       <Input
                                         // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
-                                        defaultValue={props.values.city}
-                                        onChange={option => props.handleChange('city')(option)}
-                                        placeholder=""
+                                        value={props.values.city}
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('city')(option)}
+                                        }}
+                                        placeholder="Enter City"
                                         id="city"
                                         name="city"
                                         className={
@@ -631,9 +642,11 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="postZipCode"
                                         name="postZipCode"
-
-                                        onChange={(value) => { props.handleChange("postZipCode")(value) }}
-                                        defaultValue={props.values.postZipCode}
+                                        placeholder="Enter Postal Zip Code"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('postZipCode')(option)}
+                                        }}
+                                        value={props.values.postZipCode}
                                         className={
                                           props.errors.postZipCode && props.touched.postZipCode
                                             ? "is-invalid"
@@ -658,9 +671,9 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="billingEmail"
                                         name="billingEmail"
-
+                                        placeholder="Enter Billing Email Address"
                                         onChange={(value) => { props.handleChange("billingEmail")(value) }}
-                                        defaultValue={props.values.billingEmail}
+                                        value={props.values.billingEmail}
                                         className={
                                           props.errors.billingEmail && props.touched.billingEmail
                                             ? "is-invalid"
@@ -679,9 +692,11 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="contractPoNumber"
                                         name="contractPoNumber"
-
-                                        onChange={(value) => { props.handleChange("contractPoNumber")(value) }}
-                                        defaultValue={props.values.contractPoNumber}
+                                        placeholder="Enter Contract PO Number"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('contractPoNumber')(option)}
+                                        }}
+                                        value={props.values.contractPoNumber}
                                         className={
                                           props.errors.contractPoNumber && props.touched.contractPoNumber
                                             ? "is-invalid"
@@ -703,9 +718,11 @@ class DetailContact extends React.Component {
                                         type="text"
                                         id="vatRegistrationNumber"
                                         name="vatRegistrationNumber"
-
-                                        onChange={(value) => { props.handleChange("vatRegistrationNumber")(value) }}
-                                        defaultValue={props.values.vatRegistrationNumber}
+                                        placeholder="Enter Tax Registration Number"
+                                        onChange={(option) => {
+                                          if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('vatRegistrationNumber')(option)}
+                                        }}
+                                        value={props.values.vatRegistrationNumber}
                                         className={
                                           props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber
                                             ? "is-invalid"
@@ -724,7 +741,7 @@ class DetailContact extends React.Component {
                                       <Select
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={props.values.currencyCode}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('currencyCode')(option.value)
                                           } else {

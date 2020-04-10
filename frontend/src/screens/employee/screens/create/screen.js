@@ -12,7 +12,6 @@ import {
   FormGroup,
   Input,
   Label,
-  FormText
 } from 'reactstrap'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
@@ -67,37 +66,17 @@ class CreateEmployee extends React.Component {
       },
     }
 
-    // this.changeBirthday = this.changeBirthday.bind(this)
+    this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
-  // changeBirthday(date){
-  //   this.setState({
-  //     birthday: date
-  //   })
-  // }
-
-  // handleChange = (name, e) => {
-  //    this.setState({
-  //     currentData: _.set(
-  //       { ...this.state.currentData },
-  //       e.target.name && e.target.name !== '' ? e.target.name : name,
-  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //     )
-  //   })
-  // this.setState({
-  //   currentData: _.set(
-  //     { ...this.state.currentData },
-  //     e.target.name && e.target.name !== '' ? e.target.name : name,
-  //     e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //   )
-  // })
-
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.employeeActions.getCurrencyList()
   }
 
-  handleSubmit(data, resetForm) {
-    this.props.employeeCreateActions.createEmployee(data).then(res => {
+  handleSubmit = (data, resetForm) => {
+    this.props.employeeCreateActions.createEmployee(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Employee Created Successfully')
         if (this.state.createMore) {
@@ -109,10 +88,11 @@ class CreateEmployee extends React.Component {
           this.props.history.push('/admin/master/employee')
         }
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
+
   render() {
 
     const { currency_list } = this.props
@@ -170,7 +150,7 @@ class CreateEmployee extends React.Component {
                             .required('DOB is Required')
                         })}
                       >
-                        {props => (
+                        {(props) => (
 
                           <Form onSubmit={props.handleSubmit}>
                             <h4 className="mb-4">Contact Name</h4>
@@ -183,7 +163,10 @@ class CreateEmployee extends React.Component {
                                     id="referenceCode"
                                     name="referenceCode"
                                     value={props.values.referenceCode}
-                                    onChange={(value) => { props.handleChange('referenceCode')(value) }}
+                                    placeholder="Enter Reference Code"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('referenceCode')(option)}
+                                    }}
                                   />
                                 </FormGroup>
                               </Col>
@@ -195,7 +178,10 @@ class CreateEmployee extends React.Component {
                                     id="title"
                                     name="title"
                                     value={props.values.title}
-                                    onChange={(value) => { props.handleChange('title')(value) }}
+                                    placeholder="Enter Title"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('title')(option)}
+                                    }}
                                   />
                                 </FormGroup>
                               </Col>
@@ -207,6 +193,7 @@ class CreateEmployee extends React.Component {
                                     id="email"
                                     name="email"
                                     value={props.values.email}
+                                    placeholder="Enter Email Address"
                                     onChange={(value) => { props.handleChange('email')(value) }}
                                     className={props.errors.email && props.touched.email ? "is-invalid" : ""}
                                   />
@@ -225,7 +212,10 @@ class CreateEmployee extends React.Component {
                                     id="firstName"
                                     name="firstName"
                                     value={props.values.firstName}
-                                    onChange={(value) => { props.handleChange('firstName')(value) }}
+                                    placeholder="Enter First Name"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
+                                    }}
                                     className={props.errors.firstName && props.touched.firstName ? "is-invalid" : ""}
                                   />
                                   {props.errors.firstName && props.touched.firstName && (
@@ -241,7 +231,10 @@ class CreateEmployee extends React.Component {
                                     id="middleName"
                                     name="middleName"
                                     value={props.values.middleName}
-                                    onChange={(value) => { props.handleChange('middleName')(value) }}
+                                    placeholder="Enter Middle Name"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('middleName')(option)}
+                                    }}
                                     className={props.errors.middleName && props.touched.middleName ? "is-invalid" : ""}
                                   />
                                   {props.errors.middleName && props.touched.middleName && (
@@ -257,8 +250,10 @@ class CreateEmployee extends React.Component {
                                     id="lastName"
                                     name="lastName"
                                     value={props.values.lastName}
-
-                                    onChange={(value) => { props.handleChange('lastName')(value) }}
+                                    placeholder="Enter Last Name"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
+                                    }}
                                     className={props.errors.lastName && props.touched.lastName ? "is-invalid" : ""}
                                   />
                                   {props.errors.lastName && props.touched.lastName && (
@@ -275,17 +270,15 @@ class CreateEmployee extends React.Component {
                                     type="password"
                                     id="password"
                                     name="password"
+                                    autoComplete="new-password"
                                     value={props.values.password}
+                                    placeholder="Enter Password"
                                     onChange={(value) => { props.handleChange('password')(value) }}
                                     className={props.errors.password && props.touched.password ? "is-invalid" : ""}
                                   />
-                                  {!props.errors.password ?
-                                    (
-                                      <FormText style={{ color: '#20a8d8', fontSize: '14px' }}>hint: Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character</FormText>
-                                    ) : null}
-                                  {props.errors.password && props.touched.password && (
+                                  {props.errors.password && props.touched.password ? (
                                     <div className="invalid-feedback">{props.errors.password}</div>
-                                  )}
+                                  ) : (<span className="password-msg">Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character.</span>)}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -296,6 +289,7 @@ class CreateEmployee extends React.Component {
                                     id="confirmPassword"
                                     name="confirmPassword"
                                     value={props.values.confirmPassword}
+                                    placeholder="Enter Confirm Password"
                                     onChange={(value) => { props.handleChange('confirmPassword')(value) }}
                                     className={props.errors.confirmPassword && props.touched.confirmPassword ? "is-invalid" : ""}
                                   />
@@ -311,12 +305,13 @@ class CreateEmployee extends React.Component {
                                     className={`form-control ${props.errors.dob && props.touched.dob ? "is-invalid" : ""}`}
                                     id="dob"
                                     name="dob"
-                                    placeholderText="Enter Birth Date"
+                                    placeholderText="Select Date of Birth"
                                     showMonthDropdown
                                     showYearDropdown
                                     dateFormat="dd/MM/yyyy"
                                     dropdownMode="select"
                                     selected={props.values.dob}
+                                    maxDate={new Date()}
                                     value={props.values.dob}
                                     onChange={(value) => {
                                       props.handleChange("dob")(value)
@@ -338,7 +333,7 @@ class CreateEmployee extends React.Component {
                                     type="text"
                                     id="billingEmail"
                                     name="billingEmail"
-
+                                    placeholder="Enter Billing Email Address"
                                     onChange={(value) => { props.handleChange("billingEmail")(value) }}
                                     value={props.values.billingEmail}
                                     className={
@@ -359,8 +354,10 @@ class CreateEmployee extends React.Component {
                                     type="text"
                                     id="poBoxNumber"
                                     name="poBoxNumber"
-
-                                    onChange={(value) => { props.handleChange("poBoxNumber")(value) }}
+                                    placeholder="Enter Contract PO Number"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('poBoxNumber')(option)}
+                                    }}
                                     value={props.values.poBoxNumber}
                                     className={
                                       props.errors.poBoxNumber && props.touched.poBoxNumber
@@ -383,8 +380,10 @@ class CreateEmployee extends React.Component {
                                     type="text"
                                     id="vatRegestationNo"
                                     name="vatRegestationNo"
-
-                                    onChange={(value) => { props.handleChange("vatRegestationNo")(value) }}
+                                    placeholder="Enter Tax Registration Number"
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('vatRegestationNo')(option)}
+                                    }}
                                     value={props.values.vatRegestationNo}
                                     className={
                                       props.errors.vatRegestationNo && props.touched.vatRegestationNo
@@ -404,7 +403,7 @@ class CreateEmployee extends React.Component {
                                   <Select
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     value={props.values.currencyCode}
-                                    onChange={option => {
+                                    onChange={(option) => {
                                       if (option && option.value) {
                                         props.handleChange('currencyCode')(option.value)
                                       } else {

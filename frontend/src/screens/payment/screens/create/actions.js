@@ -9,9 +9,9 @@ export const createPayment = (obj) => {
       url: 'rest/payment/save',
       data: obj
     }
-    return authFileUploadApi(data).then(res => {
+    return authFileUploadApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

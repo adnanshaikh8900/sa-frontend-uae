@@ -21,6 +21,6 @@ import java.io.Serializable;
 
 @Data
 public class MailAttachment implements Serializable {
-    public String attachmentName;
-    public Object attachmentObject;
+    private String attachmentName;
+    private Object attachmentObject;
 }

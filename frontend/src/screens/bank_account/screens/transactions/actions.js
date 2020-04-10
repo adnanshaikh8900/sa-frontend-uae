@@ -6,8 +6,14 @@ import {
 import moment from 'moment'
 
 export const getTransactionList = (obj) => {
-  const { chartOfAccountId, transactionDate , id , pageNo , pageSize} = obj
-  let param = `/rest/transaction/list?bankId=${id}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}`
+  let id = obj.id ? obj.id : '';  
+  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId : '';  
+  let transactionDate = obj.transactionDate ? obj.transactionDate : '';  
+  let pageNo = obj.pageNo ? obj.pageNo : '';  
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false;
+  
+  let param = `/rest/transaction/list?bankId=${id}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
   if(transactionDate !== '') {
     let date = moment(transactionDate).format('DD-MM-YYYY')
     param = param +`&transactionDate=${date}`
@@ -17,16 +23,19 @@ export const getTransactionList = (obj) => {
       method: 'get',
       url: param
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
-        dispatch({
-          type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
-          payload: {
-            data: res.data
-          }
-        })
+        if(!obj.paginationDisable) {
+          dispatch({
+            type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
+            payload: {
+              data: res.data
+            }
+          })
+        }
+        return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -38,14 +47,15 @@ export const getTransactionCategoryList = () => {
       method: 'get',
       url: '/rest/transactioncategory/getList'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.TRANSACTION_CATEGORY_LIST,
           payload:  res.data
         })
       }
-    }).catch(err => {
+      return res
+    }).catch((err) => {
       throw err
     })
   }
@@ -57,7 +67,7 @@ export const getTransactionTypeList = () => {
       method: 'get',
       url: '/rest/datalist/getTransactionTypes'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.TRANSACTION_TYPE_LIST,
@@ -65,7 +75,7 @@ export const getTransactionTypeList = () => {
         })
       }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -77,14 +87,14 @@ export const getProjectList = () => {
       method: 'get',
       url: '/rest/project/getProjectsForDropdown'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.PROJECT_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -96,9 +106,58 @@ export const deleteTransactionById = (id) => {
       method: 'DELETE',
       url: `/rest/transaction/delete?id=${id}`,
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+
+export const getTransactionListForReconcile = (type) => {
+  return (dispatch) => {
+    let data ={
+      method: 'get',
+      url: `/rest/datalist/reconsileCategories?debitCreditFlag=${type}`
+    }
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+      return res
+      }
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+
+export const getCategoryListForReconcile = (code) => {
+  return (dispatch) => {
+    let data ={
+      method: 'get',
+      url: `/rest/reconsile/getByReconcilationCatCode?reconcilationCatCode=${code}`
+    }
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+      return res
+      }
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+
+export const reconcileTransaction = (obj) => {
+  return (dispatch) => {
+    let data ={
+      method: 'POST',
+      url: `/rest/reconsile/reconcile`,
+      data: obj
+    }
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+      return res
+      }
+    }).catch((err) => {
       throw err
     })
   }

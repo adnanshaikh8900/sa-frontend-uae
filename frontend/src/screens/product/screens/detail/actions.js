@@ -10,9 +10,9 @@ export const updateProduct = (obj) => {
       data: obj
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -25,9 +25,9 @@ export const getProductById = (id) => {
       url: `rest/product/getProductById?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -40,9 +40,9 @@ export const deleteProduct = (id) => {
       url: `/rest/product/delete?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

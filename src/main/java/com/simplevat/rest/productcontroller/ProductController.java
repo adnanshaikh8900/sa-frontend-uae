@@ -5,25 +5,15 @@
  */
 package com.simplevat.rest.productcontroller;
 
-import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
-import com.simplevat.constant.dbfilter.ProductFilterEnum;
-import com.simplevat.entity.Product;
-import com.simplevat.entity.ProductWarehouse;
-import com.simplevat.entity.VatCategory;
-import com.simplevat.service.ProductService;
-import com.simplevat.service.ProductWarehouseService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.productcontroller.ProductRequestModel;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +25,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simplevat.constant.dbfilter.ProductFilterEnum;
+import com.simplevat.entity.Product;
+import com.simplevat.entity.ProductWarehouse;
+import com.simplevat.entity.VatCategory;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.service.ProductService;
+import com.simplevat.service.ProductWarehouseService;
+import com.simplevat.service.VatCategoryService;
+
 /**
  *
  * @author Sonu
@@ -42,6 +41,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/rest/product")
 public class ProductController implements Serializable {
+
+	private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@Autowired
 	private ProductService productService;
@@ -55,14 +56,13 @@ public class ProductController implements Serializable {
 	private ProductModelHelper productModelHelper = new ProductModelHelper();
 
 	@GetMapping(value = "/getproduct")
-	private ResponseEntity<List<Product>> getProduct(ProductRequestFilterModel filterModel) {
+	public ResponseEntity<List<Product>> getProduct(ProductRequestFilterModel filterModel) {
 
 		Map<ProductFilterEnum, Object> filterDataMap = new HashMap();
 
 		filterDataMap.put(ProductFilterEnum.PRODUCT_NAME, filterModel.getName());
 		filterDataMap.put(ProductFilterEnum.PRODUCT_CODE, filterModel.getProductCode());
 		filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE, filterModel.getVatPercentage());
-		filterDataMap.put(ProductFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
 		PaginationResponseModel response = productService.getProductList(filterDataMap, filterModel);
 
@@ -71,13 +71,13 @@ public class ProductController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/deleteproduct")
-	private ResponseEntity deleteUser(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity deleteUser(@RequestParam(value = "id") Integer id) {
 		Product product = productService.findByPK(id);
 		if (product != null) {
 			product.setDeleteFlag(Boolean.TRUE);
@@ -88,7 +88,7 @@ public class ProductController implements Serializable {
 	}
 
 	@GetMapping(value = "/editproduct")
-	private ResponseEntity<Product> editProduct(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<Product> editProduct(@RequestParam(value = "id") Integer id) {
 		Product product = productService.findByPK(id);
 		if (product == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -98,36 +98,37 @@ public class ProductController implements Serializable {
 
 	}
 
-	@GetMapping(value = "/getvatpercentage")
-	private ResponseEntity<List<VatCategory>> vatCategorys() {
-		List<VatCategory> vatCategorys = vatCategoryService.getVatCategoryList();
-		if (vatCategorys == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<>(vatCategorys, HttpStatus.OK);
-	}
+	// TODO remove after checking proper working of earehouse functionity
+//	@GetMapping(value = "/getvatpercentage")
+//	public ResponseEntity<List<VatCategory>> vatCategorys() {
+//		List<VatCategory> vatCategorys = vatCategoryService.getVatCategoryList();
+//		if (vatCategorys == null) {
+//			return new ResponseEntity(HttpStatus.NOT_FOUND);
+//		}
+//		return new ResponseEntity<>(vatCategorys, HttpStatus.OK);
+//	}
+//
+//	@GetMapping(value = "/getwarehouse")
+//	public ResponseEntity<List<ProductWarehouse>> getProductWarehouse() {
+//		List<ProductWarehouse> productWarehouseList = productWarehouseService.getProductWarehouseList();
+//		if (productWarehouseList == null) {
+//			return new ResponseEntity(HttpStatus.NOT_FOUND);
+//		}
+//		return new ResponseEntity<>(productWarehouseList, HttpStatus.OK);
+//	}
 
-	@GetMapping(value = "/getwarehouse")
-	private ResponseEntity<List<ProductWarehouse>> getProductWarehouse() {
-		List<ProductWarehouse> productWarehouseList = productWarehouseService.getProductWarehouseList();
-		if (productWarehouseList == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<>(productWarehouseList, HttpStatus.OK);
-	}
-
-	@PostMapping(value = "/savewarehouse")
-	private ResponseEntity createNewWarehouse(@RequestBody ProductWarehouse productWarehouse) {
-
-		if (productWarehouse != null) {
-			productWarehouseService.persist(productWarehouse);
-		}
-		return new ResponseEntity(HttpStatus.OK);
-
-	}
+//	@PostMapping(value = "/savewarehouse")
+//	public ResponseEntity createNewWarehouse(@RequestBody ProductWarehouse productWarehouse) {
+//
+//		if (productWarehouse != null) {
+//			productWarehouseService.persist(productWarehouse);
+//		}
+//		return new ResponseEntity(HttpStatus.OK);
+//
+//	}
 
 	@PostMapping(value = "/saveproduct")
-	private ResponseEntity save(@RequestBody ProductRequestModel productModel, @RequestParam(value = "id") Integer id) {
+	public ResponseEntity save(@RequestBody ProductRequestModel productModel, @RequestParam(value = "id") Integer id) {
 		Product product = productModelHelper.convertToProduct(productModel, vatCategoryService, productWarehouseService,
 				productService);
 		if (product.getUnitPrice() == null) {

@@ -25,6 +25,7 @@ import { selectOptionsFactory } from 'utils'
 import {
   CommonActions
 } from 'services/global'
+import { CSVLink } from "react-csv";
 
 import './style.scss'
 
@@ -55,24 +56,10 @@ class ChartAccount extends React.Component {
         transactionCategoryName: '',
         chartOfAccountId: ''
       },
-      selectedTransactionType: ''
+      selectedTransactionType: '',
+      csvData: [],
+      view: false
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.goToDetailPage = this.goToDetailPage.bind(this)
-    this.goToCreatePage = this.goToCreatePage.bind(this)
-    this.typeFormatter = this.typeFormatter.bind(this);
-    this.bulkDelete = this.bulkDelete.bind(this);
-    this.removeBulk = this.removeBulk.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-
-    this.onPageChange = this.onPageChange.bind(this);
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
 
     this.options = {
       onRowClick: this.goToDetailPage,
@@ -81,6 +68,9 @@ class ChartAccount extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -90,43 +80,56 @@ class ChartAccount extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
+    this.props.chartOfAccountActions.getTransactionTypes();
     this.initializeData()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     this.setState({
       selectedRows: []
     })
   }
 
-  initializeData() {
+  initializeData = (search) => {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    filterData = { ...filterData, ...data }
-    this.props.chartOfAccountActions.getTransactionCategoryList(filterData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+    this.props.chartOfAccountActions.getTransactionCategoryList(postData).then((res) => {
       if (res.status === 200) {
-        this.props.chartOfAccountActions.getTransactionTypes();
-        this.setState({ loading: false });
+
+        this.setState({
+          loading: false
+        });
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err !== undefined ? err.data.message : '');
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({ loading: false })
     })
 
   }
 
-  goToDetailPage(row) {
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
+  }
+
+  goToDetailPage = (row) => {
     this.props.history.push(`/admin/master/chart-account/detail`, { id: row.transactionCategoryId })
   }
 
-  goToCreatePage() {
+  goToCreatePage = () => {
     this.props.history.push('/admin/master/chart-account/create')
   }
 
@@ -145,37 +148,37 @@ class ChartAccount extends React.Component {
   }
 
 
-  onRowSelect(row, isSelected, e) {
-    let temp_list = []
+  onRowSelect = (row, isSelected, e) => {
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.transactionCategoryId);
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.transactionCategoryId);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.transactionCategoryId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       });
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
-  onSelectAll(isSelected, rows) {
-    let temp_list = []
+  onSelectAll = (isSelected, rows) => {
+    let tempList = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.transactionCategoryId)
+      rows.map((item) => {
+        tempList.push(item.transactionCategoryId)
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
-  bulkDelete() {
+  bulkDelete = () => {
     const {
       selectedRows
     } = this.state
@@ -192,7 +195,7 @@ class ChartAccount extends React.Component {
     }
   }
 
-  removeBulk() {
+  removeBulk = () => {
     this.removeDialog()
     let { selectedRows } = this.state;
     const { transaction_category_list } = this.props
@@ -202,28 +205,28 @@ class ChartAccount extends React.Component {
     this.props.chartOfAccountActions.removeBulk(obj).then(() => {
       this.initializeData();
       this.props.commonActions.tostifyAlert('success', 'Chart of Accounts Deleted Successfully')
-      if (transaction_category_list && transaction_category_list.data &&  transaction_category_list.data.length > 0) {
+      if (transaction_category_list && transaction_category_list.data && transaction_category_list.data.length > 0) {
         this.setState({
           selectedRows: []
         })
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  typeFormatter(cell, row) {
+  typeFormatter = (cell, row) => {
     return row['transactionTypeName'] ? row['transactionTypeName'] : ''
 
   }
 
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -231,14 +234,42 @@ class ChartAccount extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData();
   }
 
+  getCsvData = () => {
+    if (this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.chartOfAccountActions.getTransactionCategoryList(obj).then((res) => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        transactionCategoryCode: '',
+        transactionCategoryName: '',
+        chartOfAccountId: ''
+      }
+    })
+  }
 
   render() {
 
-    const { loading, dialog, selectedRows } = this.state
+    const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { transaction_category_list, transaction_type_list } = this.props
 
     return (
@@ -272,13 +303,17 @@ class ChartAccount extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                            disabled={transaction_category_list && transaction_category_list.data && transaction_category_list.data.length === 0 ? true : false}
-
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                          {view && <CSVLink
+                            data={csvData}
+                            filename={'ChartOfAccount.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -303,10 +338,10 @@ class ChartAccount extends React.Component {
                         <form>
                           <Row>
                             <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Code" onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryCode') }} />
+                              <Input type="text" placeholder="Code" value={filterData.transactionCategoryCode} onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryCode') }} />
                             </Col>
                             <Col lg={3} className="mb-2">
-                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryName') }} />
+                              <Input type="text" placeholder="Name" value={filterData.transactionCategoryName} onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryName') }} />
                             </Col>
                             <Col lg={3} className="mb-1">
                               <FormGroup className="mb-3">
@@ -324,14 +359,17 @@ class ChartAccount extends React.Component {
                                   }}
                                   className="select-default-width"
                                   placeholder="Transaction Type"
-                                  value={this.state.selectedTransactionType}
+                                  value={filterData.chartOfAccountId}
                                 />
                               </FormGroup>
 
                             </Col>
-                            <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                            <Col lg={1} className="pl-0 pr-0">
+                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
+                              </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                                <i className="fa fa-remove"></i>
                               </Button>
                             </Col>
                           </Row>
@@ -352,7 +390,7 @@ class ChartAccount extends React.Component {
                           trClassName="cursor-pointer"
                           csvFileName="Chart_Of_Account.csv"
                           keyField="transactionCategoryId"
-                          ref={node => this.table = node}
+                          ref={(node) => this.table = node}
 
                         >
                           <TableHeaderColumn

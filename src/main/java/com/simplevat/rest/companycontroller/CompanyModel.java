@@ -2,8 +2,6 @@ package com.simplevat.rest.companycontroller;
 
 import java.math.BigDecimal;
 
-import javax.annotation.Nullable;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;

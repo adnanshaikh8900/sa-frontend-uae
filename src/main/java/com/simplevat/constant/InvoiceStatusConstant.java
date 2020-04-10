@@ -19,4 +19,7 @@ public final class InvoiceStatusConstant {
         }
     }
 
+	private InvoiceStatusConstant() {
+		// CREATED TO REMOVE SONAR ERROR
+	}
 }

@@ -11,6 +11,11 @@ package com.simplevat.constant;
  */
 public class TransactionCategoryConsatant {
 
-    public static final int TRANSACTION_CATEGORY_INVOICE_PAYMENT = 1;
-    public static final int TRANSACTION_CATEGORY_PURCHASE = 43;
+	public static final int TRANSACTION_CATEGORY_INVOICE_PAYMENT = 1;
+	public static final int TRANSACTION_CATEGORY_PURCHASE = 43;
+
+	private TransactionCategoryConsatant() {
+		// CREATED TO REMOVE SONAR ERROR
+	}
+
 }

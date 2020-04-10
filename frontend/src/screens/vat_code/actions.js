@@ -7,25 +7,35 @@ import {
 
 // Get Vat List
 export const getVatList = (obj) => {
+  let name = obj && obj.name ? obj.name : '';
+  let vatPercentage = obj &&  obj.vatPercentage ? obj.vatPercentage : '';
+  let pageNo = obj &&  obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj &&  obj.pageSize ? obj.pageSize : '';
+  let order = obj &&  obj.order ? obj.order : '';
+  let sortingCol = obj &&  obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj &&  obj.paginationDisable ? obj.paginationDisable : false
+
   let url;
   if(obj) {
-    url = `/rest/vat/getList?name=${obj.name}&vatPercentage=${obj.vatPercentage}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+    url = `/rest/vat/getList?name=${name}&vatPercentage=${vatPercentage}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
   } else {
     url=`/rest/vat/getList`
   }
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: url
+      url
     }
 
-    return authApi(data).then(res => {
-      dispatch({
-        type: VAT.VAT_LIST,
-        payload: res.data
-      })
+    return authApi(data).then((res) => {
+      if(obj && !obj.paginationDisable) {
+        dispatch({
+          type: VAT.VAT_LIST,
+          payload: res.data
+        })
+      }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -40,13 +50,13 @@ export const getVatByID = (id) => {
       url: `/rest/vat/getById?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: VAT.VAT_ROW,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -62,9 +72,9 @@ export const getVatByID = (id) => {
 //       data: bat
 //     }
 
-//     return authApi(data).then(res => {
+//     return authApi(data).then((res) => {
 //       return res
-//     }).catch(err => {
+//     }).catch((err) => {
 //       throw err
 //     })
 //   }
@@ -79,9 +89,9 @@ export const deleteVat = (obj) => {
       data: obj
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

@@ -9,8 +9,10 @@ import java.util.Optional;
 import javax.persistence.Query;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.UserFilterEnum;
 import com.simplevat.entity.User;
@@ -23,6 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository(value = "userDao")
 public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
+
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
 
 	public Optional<User> getUserByEmail(String emailAddress) {
 		Query query = this.getEntityManager().createQuery("SELECT u FROM User AS u WHERE u.userEmail =:email");
@@ -86,6 +91,7 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
+		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.USER));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}

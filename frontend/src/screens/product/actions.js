@@ -4,18 +4,30 @@ import {
 } from 'utils'
 
 export const getProductList = (obj) => {
+  let name = obj.name ? obj.name : '';
+  let productCode = obj.productCode ? obj.productCode : '';
+  let vatPercentage = obj.vatPercentage ? obj.vatPercentage : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+
+
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/product/getList?name=${obj.name}&productCode=${obj.productCode}&vatPercentage=${obj.vatPercentage}&pageNo=${obj.pageNo}&pageSize=${obj.pageSize}`
+      url: `/rest/product/getList?name=${name}&productCode=${productCode}&vatPercentage=${vatPercentage}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     }
-    return authApi(data).then(res => {
-      dispatch({
-        type: PRODUCT.PRODUCT_LIST,
-        payload: res.data
-      })
+    return authApi(data).then((res) => {
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: PRODUCT.PRODUCT_LIST,
+          payload: res.data
+        })
+      }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -35,9 +47,9 @@ export const createAndSaveProduct = (product) => {
       data: product
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -53,9 +65,9 @@ export const createWarehouse = (warehouse) => {
     data: warehouse
   }
 
-  return authApi(data).then(res => {
+  return authApi(data).then((res) => {
     return res
-  }).catch(err => {
+  }).catch((err) => {
     throw err
   })
 }
@@ -69,13 +81,13 @@ export const getProductWareHouseList = () => {
       url: '/rest/productwarehouse/getWareHouse'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: PRODUCT.PRODUCT_WHARE_HOUSE,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -90,13 +102,13 @@ export const getProductVatCategoryList = () => {
       url: 'rest/datalist/vatCategory'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: PRODUCT.PRODUCT_VAT_CATEGORY,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -111,13 +123,13 @@ export const getProductCategoryList = () => {
       url: '/rest/productcategory/getList'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: PRODUCT.PRODUCT_CATEGORY,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -130,11 +142,11 @@ export const removeBulk = (obj) => {
       url: 'rest/product/deletes',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

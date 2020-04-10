@@ -22,7 +22,7 @@ public interface CurrencyDao extends Dao<Integer, Currency> {
 
     CurrencyConversion getCurrencyRateFromCurrencyConversion(int currencyCode);
 
-    String getCountryCodeAsString(String CountryCode);
+    String getCountryCodeAsString(String countryCode);
 
     List<String> getCountryCodeString();
 

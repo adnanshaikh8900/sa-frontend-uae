@@ -17,13 +17,9 @@ public enum ProductCategoryFilterEnum {
     @Getter
     String condition;
 
-    private ProductCategoryFilterEnum(String dbColumnName) {
-        this.dbColumnName = dbColumnName;
-    }
-
-    private ProductCategoryFilterEnum(String dbColumnName, String condition) {
-        this.dbColumnName = dbColumnName;
-        this.condition = condition;
-    }
+	private ProductCategoryFilterEnum(String dbColumnName, String condition) {
+		this.dbColumnName = dbColumnName;
+		this.condition = condition;
+	}
 
 }

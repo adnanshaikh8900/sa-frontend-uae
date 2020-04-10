@@ -63,22 +63,20 @@ class CreateReceipt extends React.Component {
     }
 
     this.regEx = /^[0-9\d]+$/;
-
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.initializeData = this.initializeData.bind(this)
+    this.regExBoth = /[a-zA-Z0-9]+$/;
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.receiptActions.getContactList();
     this.props.receiptActions.getInvoiceList();
   }
 
-  handleSubmit(data, resetForm) {
-    this.props.receiptCreateActions.createReceipt(data).then(res => {
+  handleSubmit = (data, resetForm) => {
+    this.props.receiptCreateActions.createReceipt(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Receipt Created Successfully!')
         if (this.state.createMore) {
@@ -86,10 +84,10 @@ class CreateReceipt extends React.Component {
             createMore: false
           })
           resetForm()
-        } else this.props.history.push('/admin/revenue/receipt')
+        } else { this.props.history.push('/admin/revenue/receipt') }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -137,7 +135,7 @@ class CreateReceipt extends React.Component {
                               .matches(/^[0-9]+$/, { message: "Please enter valid Amount.", excludeEmptyString: false })
                           })}
                       >
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={4}>
@@ -149,8 +147,8 @@ class CreateReceipt extends React.Component {
                                     name="receiptNo"
                                     placeholder="Receipt Number"
                                     value={props.values.receiptNo}
-                                    onChange={(value) => {
-                                      props.handleChange("receiptNo")(value)
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('receiptNo')(option)}
                                     }}
                                   />
                                 </FormGroup>
@@ -189,7 +187,9 @@ class CreateReceipt extends React.Component {
                                     id="referenceCode"
                                     name="referenceCode"
                                     placeholder="Reference Number"
-                                    onChange={option => { props.handleChange('referenceCode')(option) }}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('referenceCode')(option)}
+                                    }}
                                     value={props.values.referenceCode}
                                     className={`form-control ${props.errors.referenceCode && props.touched.referenceCode ? "is-invalid" : ""}`}
                                   />
@@ -266,7 +266,7 @@ class CreateReceipt extends React.Component {
                                     id="amount"
                                     name="amount"
                                     placeholder="Amount"
-                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('amount')(option) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('amount')(option) }}}
                                     value={props.values.amount}
 
                                     className={`form-control ${props.errors.amount && props.touched.amount ? "is-invalid" : ""}`}
@@ -284,7 +284,7 @@ class CreateReceipt extends React.Component {
                                     id="unusedAmount"
                                     name="unusedAmount"
                                     placeholder="Unused Amount"
-                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('unusedAmount')(option) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('unusedAmount')(option) }}}
                                     value={props.values.unusedAmount}
 
                                   />

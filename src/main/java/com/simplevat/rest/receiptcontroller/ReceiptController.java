@@ -1,12 +1,15 @@
 package com.simplevat.rest.receiptcontroller;
 
 import java.time.LocalDateTime;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +39,9 @@ import java.time.ZoneId;
 @RestController
 @RequestMapping("/rest/receipt")
 public class ReceiptController {
-
+	
+	private final Logger LOGGER = LoggerFactory.getLogger(ReceiptController.class);
+	
 	@Autowired
 	private ReceiptService receiptService;
 
@@ -56,7 +61,7 @@ public class ReceiptController {
 	@GetMapping(value = "/getList")
 	public ResponseEntity getList(ReceiptRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
-			Map<ReceiptFilterEnum, Object> filterDataMap = new HashMap();
+			Map<ReceiptFilterEnum, Object> filterDataMap = new EnumMap<>(ReceiptFilterEnum.class);
 
 			filterDataMap.put(ReceiptFilterEnum.USER_ID, filterModel.getUserId());
 			if (filterModel.getContactId() != null) {
@@ -73,7 +78,6 @@ public class ReceiptController {
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 				filterDataMap.put(ReceiptFilterEnum.RECEIPT_DATE, dateTime);
 			}
-			filterDataMap.put(ReceiptFilterEnum.ORDER_BY, "DESC");
 
 			PaginationResponseModel response = receiptService.getReceiptList(filterDataMap, filterModel);
 			if (response == null) {
@@ -82,7 +86,7 @@ public class ReceiptController {
 			response.setData(receiptRestHelper.getListModel(response.getData()));
 			return new ResponseEntity(response, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -98,7 +102,7 @@ public class ReceiptController {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -110,7 +114,7 @@ public class ReceiptController {
 			receiptService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -127,7 +131,7 @@ public class ReceiptController {
 				return new ResponseEntity<>(receiptRestHelper.getRequestModel(receipt), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -144,7 +148,7 @@ public class ReceiptController {
 			receiptService.persist(receipt);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -160,7 +164,7 @@ public class ReceiptController {
 			receiptService.update(receipt);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

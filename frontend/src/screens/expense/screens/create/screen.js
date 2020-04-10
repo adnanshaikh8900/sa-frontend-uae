@@ -30,7 +30,7 @@ import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 
 import "./style.scss";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     currency_list: state.expense.currency_list,
     project_list: state.expense.project_list,
@@ -41,7 +41,7 @@ const mapStateToProps = state => {
     pay_mode_list: state.expense.pay_mode_list
   };
 };
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     commonActions: bindActionCreators(CommonActions, dispatch),
     expenseActions: bindActionCreators(ExpenseActions, dispatch),
@@ -65,6 +65,7 @@ class CreateExpense extends React.Component {
         expenseDescription: "",
         receiptNumber: "",
         attachmentFile: '',
+        employee: '',
         receiptAttachmentDescription: "",
         vatCategoryId: '',
         payMode: '',
@@ -75,14 +76,13 @@ class CreateExpense extends React.Component {
       payMode: '',
     };
 
-    this.initializeData = this.initializeData.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleFileChange = this.handleFileChange.bind(this);
-
     this.options = {
       paginationPosition: "top"
     };
     this.regEx = /^[0-9\b]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+
     this.file_size = 1024000;
     this.supported_format = [
       "",
@@ -99,11 +99,11 @@ class CreateExpense extends React.Component {
     ]
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.expenseActions.getVatList();
     this.props.expenseActions.getExpenseCategoriesList();
     this.props.expenseActions.getCurrencyList();
@@ -113,7 +113,7 @@ class CreateExpense extends React.Component {
     this.props.expenseActions.getPaymentMode();
   }
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) => {
     const {
       payee,
       expenseDate,
@@ -163,7 +163,7 @@ class CreateExpense extends React.Component {
     }
     this.props.expenseCreateActions
       .createExpense(formData)
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           resetForm();
           this.props.commonActions.tostifyAlert(
@@ -179,25 +179,15 @@ class CreateExpense extends React.Component {
           }
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.props.commonActions.tostifyAlert(
           "error",
-          err && err.data ? err.data.message : null
+          err && err.data ? err.data.message : 'Something Went Wrong' 
         );
       });
   }
 
-  // handleChange(e, name) {
-  //   this.setState({
-  //     currentData: _.set(
-  //       { ...this.state.currentData },
-  //       e.target.name && e.target.name !== '' ? e.target.name : name,
-  //       e.target.type === 'checkbox' ? e.target.checked : e.target.value
-  //     )
-  //   })
-  // }
-
-  handleFileChange(e, props) {
+  handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -278,7 +268,7 @@ class CreateExpense extends React.Component {
                             .test(
                               "fileType",
                               "*Unsupported File Format",
-                              value => {
+                              (value) => {
                                 value && this.setState({
                                   fileName: value.name
                                 });
@@ -295,7 +285,7 @@ class CreateExpense extends React.Component {
                             .test(
                               "fileSize",
                               "*File Size is too large",
-                              value => {
+                              (value) => {
                                 if (!value || (value && value.size <= this.file_size)) {
                                   return true;
                                 } else {
@@ -305,7 +295,7 @@ class CreateExpense extends React.Component {
                             )
                         })}
                       >
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={4}>
@@ -333,7 +323,7 @@ class CreateExpense extends React.Component {
                                         ? "is-invalid"
                                         : ""
                                     }
-                                    onChange={option =>
+                                    onChange={(option) =>
                                       props.handleChange("expenseCategory")(
                                         option
                                       )
@@ -354,11 +344,9 @@ class CreateExpense extends React.Component {
                                     type="text"
                                     name="payee"
                                     id="payee"
-                                    rows="5"
-                                    placeholder="Payee"
-                                    onChange={value => {
-                                      props.handleChange("payee")(value);
-                                    }}
+                                    placeholder="Enter Payee"
+                                    value={props.values.payee}
+                                    onChange={(option) => { if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('payee')(option) }}}
                                     className={
                                       props.errors.payee && props.touched.payee
                                         ? "is-invalid"
@@ -394,7 +382,7 @@ class CreateExpense extends React.Component {
                                     dropdownMode="select"
                                     dateFormat="dd/MM/yyyy"
                                     maxDate={new Date()}
-                                    onChange={value => {
+                                    onChange={(value) => {
                                       props.handleChange("expenseDate")(value);
                                     }}
                                   />
@@ -425,7 +413,7 @@ class CreateExpense extends React.Component {
                                         : []
                                     }
                                     value={props.values.currency}
-                                    onChange={option =>
+                                    onChange={(option) =>
                                       props.handleChange("currency")(option)
                                     }
                                     className={
@@ -461,7 +449,7 @@ class CreateExpense extends React.Component {
                                         : []
                                     }
                                     value={props.values.employee}
-                                    onChange={option =>
+                                    onChange={(option) =>
                                       props.handleChange("employee")(option)
                                     }
                                   />
@@ -485,7 +473,7 @@ class CreateExpense extends React.Component {
                                         : []
                                     }
                                     value={props.values.project}
-                                    onChange={option =>
+                                    onChange={(option) =>
                                       props.handleChange("project")(option)
                                     }
                                   />
@@ -507,7 +495,7 @@ class CreateExpense extends React.Component {
                                         ? "is-invalid"
                                         : ""
                                     }
-                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('expenseAmount')(option) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('expenseAmount')(option) }}}
                                     value={props.values.expenseAmount}
                                     placeholder="Amount"
                                   />
@@ -537,7 +525,7 @@ class CreateExpense extends React.Component {
                                         : []
                                     }
                                     value={props.values.vatCategoryId}
-                                    onChange={option =>
+                                    onChange={(option) =>
                                       props.handleChange("vatCategoryId")(option)
                                     }
                                   />
@@ -560,7 +548,7 @@ class CreateExpense extends React.Component {
                                         : []
                                     }
                                     value={props.values.payMode}
-                                    onChange={option => {
+                                    onChange={(option) => {
                                       props.handleChange("payMode")(option.value)
                                       if (option && option.value) {
                                         this.setState({
@@ -592,7 +580,7 @@ class CreateExpense extends React.Component {
                                     name="bankAccountId"
                                     options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}
                                     value={props.values.bankAccountId}
-                                    onChange={option => props.handleChange('bankAccountId')(option)}
+                                    onChange={(option) => props.handleChange('bankAccountId')(option)}
                                     className={
                                       props.errors.bankAccountId && props.touched.bankAccountId
                                         ? 'is-invalid'
@@ -621,7 +609,7 @@ class CreateExpense extends React.Component {
                                     id="expenseDescription"
                                     rows="5"
                                     placeholder="1024 characters..."
-                                    onChange={option =>
+                                    onChange={(option) =>
                                       props.handleChange("expenseDescription")(
                                         option
                                       )
@@ -645,11 +633,7 @@ class CreateExpense extends React.Component {
                                         id="receiptNumber"
                                         name="receiptNumber"
                                         placeholder="Enter Reciept Number"
-                                        onChange={option =>
-                                          props.handleChange("receiptNumber")(
-                                            option
-                                          )
-                                        }
+                                        onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('receiptNumber')(option) }}}
                                         value={props.values.receiptNumber}
                                       />
                                     </FormGroup>
@@ -667,7 +651,7 @@ class CreateExpense extends React.Component {
                                         id="receiptAttachmentDescription"
                                         rows="5"
                                         placeholder="1024 characters..."
-                                        onChange={option =>
+                                        onChange={(option) =>
                                           props.handleChange(
                                             "receiptAttachmentDescription"
                                           )(option)
@@ -705,12 +689,12 @@ class CreateExpense extends React.Component {
                                             </Button>
                                             <input
                                               id="fileInput"
-                                              ref={ref => {
+                                              ref={(ref) => {
                                                 this.uploadFile = ref;
                                               }}
                                               type="file"
                                               style={{ display: "none" }}
-                                              onChange={e => {
+                                              onChange={(e) => {
                                                 this.handleFileChange(e, props);
                                               }}
                                             />

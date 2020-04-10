@@ -4,10 +4,18 @@ import {
 } from 'utils'
 import moment from 'moment'
 
-export const getExpenseList = (expenseData) => {
-  const { expenseDate, payee, transactionCategoryId, pageNo, pageSize} = expenseData;
+export const getExpenseList = (obj) => {
+  let payee = obj.payee ? obj.payee : ''
+  let expenseDate =  obj.expenseDate ? obj.expenseDate : ''
+  let transactionCategoryId = obj.transactionCategoryId ?  obj.transactionCategoryId : '' 
+  let pageNo = obj.pageNo ? obj.pageNo : '';
+  let pageSize = obj.pageSize ? obj.pageSize : '';
+  let order = obj.order ? obj.order : '';
+  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+
   return (dispatch) => {
-    let param = `rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}`
+    let param = `rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     if (expenseDate) {
       let date = moment(expenseDate).format('DD-MM-YYYY')
       param = param + `&expenseDate=${date}`
@@ -16,13 +24,15 @@ export const getExpenseList = (expenseData) => {
       method: 'GET',
       url: param
     }
-    return authApi(data).then(res => {
-      dispatch({
-        type: EXPENSE.EXPENSE_LIST,
-        payload: res.data
-      })
+    return authApi(data).then((res) => {
+      if(!obj.paginationDisable) {
+        dispatch({
+          type: EXPENSE.EXPENSE_LIST,
+          payload: res.data
+        })
+      }
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -34,14 +44,14 @@ export const getSupplierList = () => {
       method: 'get',
       url: 'rest/contact/getContactsForDropdown?contactType=1'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.SUPPLIER_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -53,14 +63,14 @@ export const getCurrencyList = () => {
       method: 'get',
       url: 'rest/bank/getcurrenncy'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.CURRENCY_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -72,14 +82,14 @@ export const getProjectList = () => {
       method: 'get',
       url: 'rest/project/getProjectsForDropdown'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.PROJECT_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -92,11 +102,11 @@ export const removeBulkExpenses = (obj) => {
       url: 'rest/expense/deletes',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -109,14 +119,14 @@ export const getBankAccountList = () => {
       method: 'get',
       url: 'rest/bank/getbanklist'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.BANK_ACCOUNT_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -128,14 +138,14 @@ export const getCustomerList = () => {
       method: 'get',
       url: 'rest/contact/contactcustomerlist'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.CUSTOMER_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -147,7 +157,7 @@ export const getPaymentList = () => {
       method: 'get',
       url: 'rest/payment/getlist'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.PAYMENT_LIST,
@@ -155,7 +165,7 @@ export const getPaymentList = () => {
         })
       }
       return res;
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -167,14 +177,14 @@ export const getExpenseCategoriesList = () => {
       method: 'get',
       url: '/rest/transactioncategory/getForExpenses'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.EXPENSE_CATEGORIES_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -186,14 +196,14 @@ export const getVatList = () => {
       method: 'get',
       url: '/rest/vat/getList'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.VAT_LIST,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -206,13 +216,13 @@ export const getEmployeeList = () => {
       url: 'rest/employee/getEmployeesForDropdown'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: EXPENSE.EMPLOYEE_LIST,
         payload: res.data
       })
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -224,14 +234,14 @@ export const getBankList = () => {
       method: 'get',
       url: '/rest/bank/list'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.BANK_LIST,
           payload: res
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -244,11 +254,11 @@ export const postExpense = (obj) => {
       url: '/rest/expense/posting',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         return res
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -261,9 +271,9 @@ export const deleteExpense = (id) => {
       url: `/rest/expense/delete?expenseId=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -275,14 +285,14 @@ export const getPaymentMode = () => {
       method: 'get',
       url: '/rest/datalist/payMode'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: EXPENSE.PAY_MODE,
           payload: res.data
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

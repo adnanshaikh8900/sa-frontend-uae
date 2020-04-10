@@ -50,30 +50,26 @@ class BankAccount extends Component {
       activeTab: new Array(4).fill('1'),
       totalBalance: 0
     }
-
     this.bankAccountSelect = React.createRef();
     this.dateRangeSelect = React.createRef();
-
-    this.toggle = this.toggle.bind(this)
   }
 
-  toggle(tabPane, tab) {
+  toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
-    newArray[tabPane] = tab
+    newArray[parseInt(tabPane, 10)] = tab
     this.setState({
       activeTab: newArray,
     })
   }
 
-  componentDidMount() {
-    this.props.DashboardActions.getBankAccountTypes().then(res => {
+  componentDidMount = () => {
+    this.props.DashboardActions.getBankAccountTypes().then((res) => {
       if (res.status === 200) {
         let val = res.data && res.data.data ? res.data.data[0].bankAccountId : ''
         this.getBankAccountGraphData(val, 12)
-        this.props.DashboardActions.getTotalBalance().then(res => {
+        this.props.DashboardActions.getTotalBalance().then((res) => {
           if (res.status === 200) {
             this.setState({ totalBalance: res.data }, () => {
-              console.log("data = " + this.state.totalBalance);
             })
           }
         }
@@ -82,7 +78,7 @@ class BankAccount extends Component {
     })
   }
 
-  getBankAccountGraphData(account, dateRange) {
+  getBankAccountGraphData = (account, dateRange) => {
     this.props.DashboardActions.getBankAccountGraphData(account, dateRange)
   }
 
@@ -92,7 +88,7 @@ class BankAccount extends Component {
   //   }
   // }
 
-  handleChange(e) {
+  handleChange = (e) => {
     e.preventDefault()
     this.getBankAccountGraphData(this.bankAccountSelect.current.value, this.dateRangeSelect.current.value)
   }

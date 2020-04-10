@@ -14,10 +14,6 @@ public enum CompanyFilterEnum {
 	@Getter
 	String condition;
 
-	private CompanyFilterEnum(String dbColumnName) {
-		this.dbColumnName = dbColumnName;
-	}
-
 	private CompanyFilterEnum(String dbColumnName, String condition) {
 		this.dbColumnName = dbColumnName;
 		this.condition = condition;

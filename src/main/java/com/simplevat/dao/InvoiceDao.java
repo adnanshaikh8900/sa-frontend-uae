@@ -7,6 +7,7 @@ package com.simplevat.dao;
 
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
+import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
@@ -31,5 +32,7 @@ public interface InvoiceDao extends Dao<Integer, Invoice> {
 	public Invoice getLastInvoice();
 
 	public List<Invoice> getInvoiceList(Date startDate, Date endDate);
+
+	public OverDueAmountDetailsModel getOverDueAmountDetails(Integer type);
 
 }

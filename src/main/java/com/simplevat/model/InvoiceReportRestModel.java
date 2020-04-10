@@ -3,7 +3,6 @@ package com.simplevat.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.Data;
 
 /**
@@ -13,19 +12,21 @@ import lombok.Data;
 @Data
 public class InvoiceReportRestModel implements Serializable {
 
-    private Integer invoiceId;
+	private static final long serialVersionUID = 1L;
 
-    private String status;
+	private Integer invoiceId;
 
-    private String refNumber;
+	private String status;
 
-    private LocalDateTime invoiceDate;
+	private String refNumber;
 
-    private LocalDateTime invoiceDueDate;
+	private LocalDateTime invoiceDate;
 
-    private String contactName;
+	private LocalDateTime invoiceDueDate;
 
-    private Integer noOfItem;
+	private String contactName;
 
-    private BigDecimal totalCost;
+	private Integer noOfItem;
+
+	private BigDecimal totalCost;
 }

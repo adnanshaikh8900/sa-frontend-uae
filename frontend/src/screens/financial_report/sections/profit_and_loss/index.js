@@ -473,17 +473,14 @@ class ProfitAndLoss extends React.Component {
       selectedType: '',
       selectedCategory: ''
     }
-
-    this.changeType = this.changeType.bind(this)
-    this.changeCategory = this.changeCategory.bind(this)
   }
 
 
-  changeType(selectedType) {
+  changeType = (selectedType) => {
     this.setState({ selectedType })
   }
 
-  changeCategory(selectedCategory) {
+  changeCategory = (selectedCategory) => {
     this.setState({ selectedCategory })
   }
 

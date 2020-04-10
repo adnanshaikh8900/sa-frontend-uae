@@ -6,7 +6,6 @@
 package com.simplevat.rest;
 
 import com.simplevat.constant.ExpenseStatusEnum;
-import com.simplevat.constant.InvoicePurchaseStatusConstant;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
@@ -24,7 +23,6 @@ import io.swagger.annotations.ApiOperation;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public abstract class AbstractDoubleEntryRestController {
 
 	@Autowired
-	TransactionCategoryService transactionCategoryService;
+	TransactionCategoryService abstractDoubleEntryTransactionCategoryService;
 
 	@Autowired
 	JournalService journalService;
@@ -85,11 +83,11 @@ public abstract class AbstractDoubleEntryRestController {
 	}
 
 	private Journal invoicePosting(PostingRequestModel postingRequestModel, Integer userId) {
-		List<JournalLineItem> journalLineItemList = new ArrayList();
+		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
-		TransactionCategory transactionCategory = transactionCategoryService
+		TransactionCategory transactionCategory = abstractDoubleEntryTransactionCategoryService
 				.findTransactionCategoryByTransactionCategoryCode(
 						TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode());
 		journalLineItem1.setTransactionCategory(transactionCategory);
@@ -101,7 +99,7 @@ public abstract class AbstractDoubleEntryRestController {
 		journalLineItemList.add(journalLineItem1);
 
 		JournalLineItem journalLineItem2 = new JournalLineItem();
-		TransactionCategory saleTransactionCategory = transactionCategoryService
+		TransactionCategory saleTransactionCategory = abstractDoubleEntryTransactionCategoryService
 				.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.SALE.getCode());
 		journalLineItem2.setTransactionCategory(saleTransactionCategory);
 		journalLineItem2.setCreditAmount(postingRequestModel.getAmount());
@@ -123,7 +121,7 @@ public abstract class AbstractDoubleEntryRestController {
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
-		TransactionCategory transactionCategory = transactionCategoryService
+		TransactionCategory transactionCategory = abstractDoubleEntryTransactionCategoryService
 				.findTransactionCategoryByTransactionCategoryCode(
 						TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
 		journalLineItem1.setTransactionCategory(transactionCategory);
@@ -135,7 +133,7 @@ public abstract class AbstractDoubleEntryRestController {
 		journalLineItemList.add(journalLineItem1);
 
 		JournalLineItem journalLineItem2 = new JournalLineItem();
-		TransactionCategory saleTransactionCategory = transactionCategoryService
+		TransactionCategory saleTransactionCategory = abstractDoubleEntryTransactionCategoryService
 				.findTransactionCategoryByTransactionCategoryCode(postingRequestModel.getPostingChartOfAccountId());
 		journalLineItem2.setTransactionCategory(saleTransactionCategory);
 		journalLineItem2.setCreditAmount(postingRequestModel.getAmount());

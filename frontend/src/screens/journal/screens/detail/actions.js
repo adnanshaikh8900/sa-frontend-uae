@@ -9,9 +9,9 @@ export const getJournalById = (id) => {
       url: `/rest/journal/getById?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -24,9 +24,9 @@ export const updateJournal = (obj) => {
       url: 'rest/journal/update',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -39,9 +39,9 @@ export const deleteJournal = (id) => {
       url: `/rest/journal/delete?id=${id}`
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

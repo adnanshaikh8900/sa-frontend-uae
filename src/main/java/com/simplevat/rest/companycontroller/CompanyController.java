@@ -1,12 +1,15 @@
 package com.simplevat.rest.companycontroller;
 
 import java.time.LocalDateTime;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +38,8 @@ import java.io.IOException;
 @RequestMapping("/rest/company")
 public class CompanyController {
 
+	private final Logger LOGGER = LoggerFactory.getLogger(CompanyController.class);
+
 	@Autowired
 	private CompanyService companyService;
 
@@ -52,7 +57,7 @@ public class CompanyController {
 	@GetMapping(value = "/getList")
 	public ResponseEntity getCompanyList(HttpServletRequest request) {
 		try {
-			Map<CompanyFilterEnum, Object> filterMap = new HashMap<CompanyFilterEnum, Object>();
+			Map<CompanyFilterEnum, Object> filterMap = new EnumMap<>(CompanyFilterEnum.class);
 			filterMap.put(CompanyFilterEnum.DELETE_FLAG, false);
 			List<Company> companyList = companyService.getCompanyList(filterMap);
 			if (companyList == null) {
@@ -60,15 +65,14 @@ public class CompanyController {
 			}
 			return new ResponseEntity<>(companyRestHelper.getModelList(companyList), HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error = ", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@GetMapping(value = "/getCompaniesForDropdown")
-	public ResponseEntity getCompaniesForDropdown() throws IOException {
-		List<DropdownModel> dropdownModels = companyService.getCompaniesForDropdown();
-		return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
+	public ResponseEntity getCompaniesForDropdown() {
+		return new ResponseEntity<>(companyService.getCompaniesForDropdown(), HttpStatus.OK);
 	}
 
 	@Deprecated
@@ -83,7 +87,7 @@ public class CompanyController {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error = ", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -96,7 +100,7 @@ public class CompanyController {
 			companyService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error = ", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -115,7 +119,7 @@ public class CompanyController {
 				return new ResponseEntity<>(companyRestHelper.getModel(user.getCompany()), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error = ", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -132,7 +136,7 @@ public class CompanyController {
 			companyService.persist(company);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -142,13 +146,13 @@ public class CompanyController {
 	public ResponseEntity update(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			Company company = companyRestHelper.getEntity(companyModel,userId);
+			Company company = companyRestHelper.getEntity(companyModel, userId);
 			company.setLastUpdateDate(LocalDateTime.now());
 			company.setLastUpdatedBy(userId);
 			companyService.update(company);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR = ", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

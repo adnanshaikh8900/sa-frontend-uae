@@ -92,7 +92,7 @@ public abstract class SimpleVatService<PK, ENTITY> {
 
 	}
 
-	public List<ENTITY> findByAttributes(Map<String, String> attributes) {
+	public List<ENTITY> findByAttributes(Map<String, Object> attributes) {
 		List<ENTITY> listEntity = new ArrayList<>();
 
 		if (attributes != null && attributes.size() > 0) {

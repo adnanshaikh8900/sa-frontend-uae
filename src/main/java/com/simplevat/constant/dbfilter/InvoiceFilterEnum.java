@@ -29,10 +29,6 @@ public enum InvoiceFilterEnum {
     @Getter
     String condition;
 
-    private InvoiceFilterEnum(String dbColumnName) {
-        this.dbColumnName = dbColumnName;
-    }
-
     private InvoiceFilterEnum(String dbColumnName, String condition) {
         this.dbColumnName = dbColumnName;
         this.condition = condition;

@@ -53,19 +53,17 @@ class ProfitAndLoss extends Component {
     this.state = {
       activeTab: new Array(4).fill('1')
     }
-
-    this.toggle = this.toggle.bind(this)
   }
 
-  toggle(tabPane, tab) {
+  toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
-    newArray[tabPane] = tab
+    newArray[parseInt(tabPane, 10)] = tab
     this.setState({
       activeTab: newArray
     })
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.DashboardActions.getProfitAndLossData('2019-01-01', '2019-05-01')
   }
 

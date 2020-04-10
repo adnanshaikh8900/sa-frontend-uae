@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.VatCategoryDao;
-import com.simplevat.entity.Journal;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
@@ -20,11 +21,12 @@ import javax.transaction.Transactional;
 
 @Repository
 public class VatCategoryDaoImpl extends AbstractDao<Integer, VatCategory> implements VatCategoryDao {
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public List<VatCategory> getVatCategoryList() {
-		List<VatCategory> vatCategoryList = this.executeNamedQuery("allVatCategory");
-		return vatCategoryList;
+		return this.executeNamedQuery("allVatCategory");
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class VatCategoryDaoImpl extends AbstractDao<Integer, VatCategory> implem
 		if (vatCategorys != null && !vatCategorys.isEmpty()) {
 			return vatCategorys;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -71,6 +73,9 @@ public class VatCategoryDaoImpl extends AbstractDao<Integer, VatCategory> implem
 		filterDataMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
+		if (paginationModel != null && paginationModel.getSortingCol() != null)
+			paginationModel.setSortingCol(
+					dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.VAT_CATEGORY));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 

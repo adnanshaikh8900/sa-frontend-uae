@@ -10,7 +10,10 @@ package com.simplevat.constant;
  * @author uday
  */
 public final class CommonConstant {
-    
-    public static final String DROPDOWN_MODEL_PACKAGE = "com.simplevat.rest.DropdownModel";
-    
+
+	public static final String DROPDOWN_MODEL_PACKAGE = "com.simplevat.rest.DropdownModel";
+
+	private CommonConstant() {
+		// CREATED TO REMOVE SONAR ERROR
+	}
 }

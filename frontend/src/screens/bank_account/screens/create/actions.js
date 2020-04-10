@@ -9,7 +9,7 @@ export const getAccountTypeList = () => {
       method: 'get',
       url: 'rest/bank/getaccounttype'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.ACCOUNT_TYPE_LIST,
@@ -18,7 +18,7 @@ export const getAccountTypeList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -30,7 +30,7 @@ export const getCurrencyList = () => {
       method: 'get',
       url: 'rest/bank/getcurrenncy'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.CURRENCY_LIST,
@@ -39,7 +39,7 @@ export const getCurrencyList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -51,7 +51,7 @@ export const getCountryList = () => {
       method: 'get',
       url: 'rest/datalist/getcountry'
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
           type: BANK_ACCOUNT.COUNTRY_LIST,
@@ -60,7 +60,7 @@ export const getCountryList = () => {
           }
         })
       }
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -74,9 +74,9 @@ export const createBankAccount = (obj) => {
       url: '/rest/bank/save',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

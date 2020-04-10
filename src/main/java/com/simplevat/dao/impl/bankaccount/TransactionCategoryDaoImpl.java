@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.dao.AbstractDao;
@@ -22,6 +24,9 @@ import com.simplevat.dao.bankaccount.TransactionCategoryDao;
 @Repository(value = "transactionCategoryDao")
 public class TransactionCategoryDaoImpl extends AbstractDao<Integer, TransactionCategory>
 		implements TransactionCategoryDao {
+
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
 	public TransactionCategory getDefaultTransactionCategory() {
@@ -54,7 +59,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
 			return query.getResultList();
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -66,7 +71,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
 			return query.getResultList();
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -90,7 +95,8 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
 			return query.getResultList();
 		}
-		return null;
+		return new ArrayList<>();
+
 	}
 
 	@Override
@@ -125,6 +131,8 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		filterMap.forEach((transactionCategoryFilter, value) -> dbFilters
 				.add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
 						.condition(transactionCategoryFilter.getCondition()).value(value).build()));
+		paginationModel.setSortingCol(
+				dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.CHART_OF_ACCOUNT));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}

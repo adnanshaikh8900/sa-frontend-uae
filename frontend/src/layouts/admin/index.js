@@ -58,10 +58,10 @@ class AdminLayout extends React.Component {
   }
 
   componentDidMount () {
-    if (!window.sessionStorage.getItem('accessToken')) {
+    if (!window['sessionStorage'].getItem('accessToken')) {
       this.props.history.push('/login')
     } else {
-      this.props.authActions.checkAuthStatus().catch(err => {
+      this.props.authActions.checkAuthStatus().catch((err) => {
         this.props.authActions.logOut()
         this.props.history.push('/login')
       })
@@ -117,15 +117,18 @@ class AdminLayout extends React.Component {
               <AppSidebarMinimizer />
             </AppSidebar>
             <main className="main">
+              <div className="breadcrumb-container">
               <AppBreadcrumb appRoutes={adminRoutes} />
+              </div>
               <Container fluid>
                 <Suspense fallback={Loading()}>
                   <ToastContainer position="top-right" autoClose={5000} style={containerStyle} />
                   <Switch>
                     {
                       adminRoutes.map((prop, key) => {
-                        if (prop.redirect)
+                        if (prop.redirect) {
                           return <Redirect from={prop.path} to={prop.pathTo} key={key} />
+                       }
                         return (
                           <Route
                             path={prop.path}

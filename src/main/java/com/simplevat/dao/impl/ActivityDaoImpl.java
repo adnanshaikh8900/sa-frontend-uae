@@ -30,7 +30,7 @@ public class ActivityDaoImpl extends AbstractDao<Integer, Activity> implements A
 				.setMaxResults(maxActiviyCount)
 				.getResultList();
 		if(result == null) {
-			return new ArrayList<Activity>();
+			return new ArrayList<>();
 		}
 		return result;
 	}

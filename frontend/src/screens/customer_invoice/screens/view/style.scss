@@ -1,5 +1,15 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:700);
+@font-face {
+  font-family: 'Arial';
+  src:  url('../../../../assets//fonts/Arial/Arial.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'DejaVu Sans';
+  src:  url("../../../../assets//fonts/DejaVu_Sans/DejaVuSans.ttf") format('truetype');
+}
 .view-invoice-screen{
+  padding: 10px 30px;
+
 .box {
   position: relative;
   // max-width: 600px;
@@ -124,6 +134,9 @@
     }
 }
 #singlePage {
+  span{
+    font-family: Arial, DejaVu Sans;
+  }
   .companyDetails {
     text-align: left;
     margin: 20px 0;
@@ -137,38 +150,34 @@
     color: white;
     background-color: black;
   }
+  .currency-span{
+    unicode-bidi: embed;
+    direction: rtl;
+    font-family: Arial;
+    padding-right: 5px;
+  }
 }
-@media print {
 
-  html, body {
-    height: initial !important;
-    overflow: initial !important;
-    -webkit-print-color-adjust: exact;
-    visibility: hidden;
-
-  }
-
-  #singlePage, #singlePage * {
-    visibility: visible!important;
-    overflow-y: visible!important;
-  }
-
-  #singlePage *{
-    // position: absolute;
-    // left: 0;
-    // top: 0;
-  }
-  #singlePage {
-    .header-row{
-      color: white!important;
-      background-color: black!important;
+}
+  @media print {
+  
+    html, body {
+      height: initial !important;
+      overflow: initial !important;
+      -webkit-print-color-adjust: exact;
+      visibility: hidden;
+  
+    }
+  
+    #singlePage, #singlePage * {
+      visibility: visible!important;
+      overflow-y: visible!important;
+    }
+  
+    #singlePage {
+      .header-row{
+        // color: white!important;
+        background-color: black!important;
+      }
     }
   }
-  #singlePage .cal-table tbody tr{
-
-        margin-right:  !important;
-          }
-
-}
-
-}

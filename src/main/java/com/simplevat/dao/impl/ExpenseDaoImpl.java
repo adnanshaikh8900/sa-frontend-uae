@@ -8,15 +8,19 @@ import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ExpenseDao;
 import com.simplevat.entity.Expense;
-import com.simplevat.entity.Product;
+import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
@@ -28,10 +32,14 @@ import javax.persistence.TypedQuery;
 @Transactional
 public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements ExpenseDao {
 
+	private final static Logger LOGGER = LoggerFactory.getLogger(ExpenseDaoImpl.class);
+
+	@Autowired
+	private DatatableSortingFilterConstant dataTableUtil;
+
 	@Override
 	public List<Expense> getAllExpenses() {
-		List<Expense> expenses = this.executeNamedQuery("allExpenses");
-		return expenses;
+		return this.executeNamedQuery("allExpenses");
 	}
 
 	@Override
@@ -48,7 +56,7 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 					.setParameter("endDate", endDate, TemporalType.DATE);
 			expenses = query.getResultList();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return expenses;
 	}
@@ -66,7 +74,7 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 					.setParameter("endDate", endDate, TemporalType.DATE);
 			expenses = query.getResultList();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return expenses;
 	}
@@ -88,7 +96,7 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 					.setParameter("endDate", endDate, TemporalType.DATE);
 			expenses = query.getResultList();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return expenses;
 	}
@@ -107,7 +115,7 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 		if (expenseList != null && !expenseList.isEmpty()) {
 			return expenseList;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -123,12 +131,15 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 	}
 
 	@Override
-	public PaginationResponseModel getExpenseList(Map<ExpenseFIlterEnum, Object> filterMap, PaginationModel paginationModel) {
+	public PaginationResponseModel getExpenseList(Map<ExpenseFIlterEnum, Object> filterMap,
+			PaginationModel paginationModel) {
 
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
+		paginationModel
+				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), dataTableUtil.EXEPENSE));
 		PaginationResponseModel request = new PaginationResponseModel();
 		request.setData(this.executeQuery(dbFilters, paginationModel));
 		request.setCount(this.getResultCount(dbFilters));

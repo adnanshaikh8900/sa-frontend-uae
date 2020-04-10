@@ -327,14 +327,30 @@ th {
 .btn.disabled, .btn:disabled{
   opacity: 1!important;
 }
+.main .container-fluid{
+  padding: 0 !important;
+}
+
+.sidebar-minimized {
+  .sidebar-nav {
+    overflow: visible !important;
+  }
+      .sidebar .ps-container .nav-dropdown-items .nav-item .nav-link{
+        padding-left: 0 !important;
+      }
+  .main-table-panel{
+    width: 70%!important;
+    transition: width 3s;
+   }
+}
 
 
 //responsive 
 
 @media screen and (max-width: 767px){
   .react-bs-table table {
-    table-layout: auto;
-    width: 1200px;
+    table-layout: auto!important;
+    width: 1200px!important;
   }
   .form-action-btn {
     button {

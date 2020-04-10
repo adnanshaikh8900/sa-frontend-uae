@@ -2,35 +2,37 @@ package com.simplevat.model;
 
 import com.simplevat.utils.DateUtils;
 
-
 /*@Getter
 @Setter*/
 public class ChartData implements Comparable<ChartData> {
-	
-	public ChartData(int month_, int year_, Number amount_) {
-		this.month = month_;
-		this.year = year_;
-		this.amount = amount_;
+
+	public ChartData(int month, int year, Number amount) {
+		this.month = month;
+		this.year = year;
+		this.amount = amount;
 	}
 
 	private int month;
 	private int year;
 	private Number amount;
+
 	@Override
 	public int compareTo(ChartData chartData) {
-		if (chartData == null) return 1;
-		
+		if (chartData == null)
+			return 1;
+
 		if (this.getYear() == chartData.getYear()) {
 			return (this.getMonth() - chartData.getMonth());
-		}else {
+		} else {
 			return (this.getYear() - chartData.getYear());
 		}
 	}
-	
+
 	public String getKey() {
-		String key = DateUtils.getMonthForInt(this.month) +  "-" + String.valueOf(this.year).substring(2, 4);
+		String key = DateUtils.getMonthForInt(this.month) + "-" + String.valueOf(this.year).substring(2, 4);
 		return key;
 	}
+
 	public int getMonth() {
 		return month;
 	}
@@ -54,13 +56,20 @@ public class ChartData implements Comparable<ChartData> {
 	public void setAmount(Number amount) {
 		this.amount = amount;
 	}
+
 	@Override
 	public boolean equals(Object o) {
-	    if(o == null)                return false;
-	    if(!(o instanceof ChartData)) return false;	
-	    
+		if (o == null)
+			return false;
+		if (!(o instanceof ChartData))
+			return false;
+
 		ChartData chartData = (ChartData) o;
 		return this.getYear() == chartData.getYear() && this.getMonth() == chartData.getMonth();
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

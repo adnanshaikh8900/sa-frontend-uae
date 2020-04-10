@@ -1,6 +1,7 @@
 
 import LogIn from './log_in'
 import Register from './register'
+import ResetPassword from './reset_password'
 
 
 
@@ -13,7 +14,7 @@ import Dashboard from './dashboard'
 import Journal from './journal'
 import CreateJournal from './journal/screens/create'
 import DetailJournal from './journal/screens/detail'
-import BeginingBalance from './begining_balance'
+import OpeningBalance from './opening_balance'
 
 
 
@@ -128,7 +129,7 @@ import Faq from './help/screens/faq'
 export {
   LogIn,
   Register,
-
+  ResetPassword,
 
 
 
@@ -138,7 +139,7 @@ export {
   Journal,
   CreateJournal,
   DetailJournal,
-  BeginingBalance,
+  OpeningBalance,
 
 
   BankAccount,

@@ -76,29 +76,27 @@ class DetailProject extends React.Component {
       current_project_id: null,
       initValue: {},
     }
-
-    this.showContactModal = this.showContactModal.bind(this)
-    this.closeContactModal = this.closeContactModal.bind(this)
-
-    this.projectHandleSubmit = this.projectHandleSubmit.bind(this)
-    this.success = this.success.bind(this)
-    this.deleteProject = this.deleteProject.bind(this)
-    this.removeProject = this.removeProject.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
+    this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
   // Show Invite User Modal
-  showContactModal() {
+  showContactModal = () => {
     this.setState({ openContactModal: true })
   }
   // Cloase Confirm Modal
-  closeContactModal() {
+  closeContactModal = (res,data) => {
+    if (res) {
+      this.props.projectActions.getContactList();
+      this.formRef.current.setFieldValue('contactId', data.contactId, true)
+    }
     this.setState({ openContactModal: false })
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     if (this.props.location.state && this.props.location.state.id) {
-      this.props.detailProjectActions.getProjectById(this.props.location.state.id).then(res => {
+      this.props.detailProjectActions.getProjectById(this.props.location.state.id).then((res) => {
         this.props.projectActions.getContactList()
         this.props.projectActions.getCountryList()
         this.props.projectActions.getCurrencyList()
@@ -121,8 +119,8 @@ class DetailProject extends React.Component {
             loading: false,
           })
         }
-      }).catch(err => {
-        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      }).catch((err) => {
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
         this.setState({loading: false})
       })
     } else {
@@ -133,19 +131,19 @@ class DetailProject extends React.Component {
 
   
   // Show Success Toast
-  success(msg) {
+  success = (msg) => {
     toast.success(msg, {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
   // Create or Edit Vat
-  projectHandleSubmit(data) {
+  projectHandleSubmit = (data) => {
 
     const {current_project_id} = this.state;
     const {
       projectName,
-      invoiceLanguageCode,
+      // invoiceLanguageCode,
       contactId,
       contractPoNumber,
       vatRegistrationNumber,
@@ -157,7 +155,7 @@ class DetailProject extends React.Component {
     const postData = {
       projectId: current_project_id,
       projectName: projectName ? projectName: '',
-      invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
+      // invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
       contactId: contactId && contactId !== null ? contactId : '',
       contractPoNumber: contractPoNumber ? contractPoNumber : '',
       vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
@@ -166,17 +164,17 @@ class DetailProject extends React.Component {
       currencyCode: currencyCode && currencyCode!== null ? currencyCode : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
-    this.props.detailProjectActions.updateProject(postData).then(res => {
+    this.props.detailProjectActions.updateProject(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Project Updated successfully!')
          this.props.history.push('/admin/master/project')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
-  deleteProject() {
+  deleteProject = () => {
     this.setState({
       dialog: <ConfirmDeleteModal
         isOpen={true}
@@ -186,19 +184,19 @@ class DetailProject extends React.Component {
     })
   }
 
-  removeProject() {
+  removeProject = () => {
     const { current_project_id }= this.state;
-    this.props.detailProjectActions.deleteProject(current_project_id).then(res=>{
+    this.props.detailProjectActions.deleteProject(current_project_id).then((res) => {
       if(res.status === 200) {
         this.success('Project Deleted Successfully');
         this.props.history.push('/admin/master/project')
       }
-    }).catch(err=> {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
@@ -206,7 +204,7 @@ class DetailProject extends React.Component {
 
 
   render() {
-    const { currency_list, country_list,contact_list,title_list} = this.props
+    const { currency_list, country_list,contact_list} = this.props
     const { initValue , loading , dialog} = this.state;
     return (
       <div className="create-product-screen">
@@ -248,7 +246,7 @@ class DetailProject extends React.Component {
                           // invoiceLanguageCode: Yup.string()
                           //   .required("Invoice Language is Required")
                         })}>
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={4}>
@@ -258,7 +256,9 @@ class DetailProject extends React.Component {
                                     type="text"
                                     id="name"
                                     name="projectName"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('projectName')(option)}
+                                    }}
                                     placeholder="Enter Project Name"
                                     defaultValue={props.values.projectName}
                                     className={
@@ -317,8 +317,9 @@ class DetailProject extends React.Component {
                                     type="text"
                                     id="contractPoNumber"
                                     name="contractPoNumber"
-                                    onChange={props.handleChange}
-
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('contractPoNumber')(option)}
+                                    }}
                                     placeholder="Enter Contract PO Number"
                                     defaultValue={props.values.contractPoNumber}
                                     className={
@@ -339,7 +340,9 @@ class DetailProject extends React.Component {
                                     type="text"
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('vatRegistrationNumber')(option)}
+                                    }}
                                     placeholder="Enter VAT Registration Number"
                                     defaultValue={props.values.vatRegistrationNumber}
                                     className={
@@ -391,11 +394,12 @@ class DetailProject extends React.Component {
                                 <FormGroup className="">
                                   <Label htmlFor="expenseBudget">Expense Budget</Label>
                                   <Input
-                                    type="number"
+                                    type="text"
                                     id="expenseBudget"
                                     name="expenseBudget"
-                                    onChange={props.handleChange}
-
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('expenseBudget')(option)}
+                                    }}
                                     placeholder="Enter Expense Budgets"
                                     defaultValue={props.values.expenseBudget}
                                     className={
@@ -413,10 +417,12 @@ class DetailProject extends React.Component {
                                 <FormGroup className="">
                                   <Label htmlFor="revenueBudget">Revenue Budget</Label>
                                   <Input
-                                    type="number"
+                                    type="text"
                                     id="revenueBudget"
                                     name="revenueBudget"
-                                    onChange={props.handleChange}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('revenueBudget')(option)}
+                                    }}
                                     placeholder="Enter VAT Revenue Budget"
                                     defaultValue={props.values.revenueBudget}
                                     className={
@@ -490,11 +496,12 @@ class DetailProject extends React.Component {
         </div>
         <ContactModal
           openContactModal={this.state.openContactModal}
-          closeContactModal={(val)=>{this.closeContactModal(val)}}
-          currencyList={currency_list}
-          countryList={country_list}
+          closeContactModal={(val,data) => { this.closeContactModal(val,data) }}
           createContact={this.props.projectActions.createProjectContact}
-          titleList={title_list}
+          // titleList={title_list}
+          currencyList={currency_list}
+					countryList={country_list}
+					getStateList={this.props.projectActions.getStateList}
         />
 
       </div>

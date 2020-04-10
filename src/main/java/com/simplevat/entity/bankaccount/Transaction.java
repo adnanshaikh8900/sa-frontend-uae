@@ -1,6 +1,7 @@
 package com.simplevat.entity.bankaccount;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.simplevat.entity.Journal;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
@@ -12,6 +13,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
+
 import org.hibernate.annotations.ColumnDefault;
 
 /**
@@ -102,6 +105,10 @@ public class Transaction implements Serializable {
 	@Column(name = "CURRENT_BALANCE")
 	@ColumnDefault(value = "0.00")
 	private BigDecimal currentBalance;
+
+	@OneToMany
+	@JoinColumn(name = "RECONSILE_JOURNAL_ID")
+	private List<Journal> reconsileJournalList;
 
 	@Column(name = "CREATED_BY")
 	@Basic(optional = false)

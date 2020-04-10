@@ -7,14 +7,17 @@ package com.simplevat.rest.transactioncontroller;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
+import com.simplevat.constant.ReconsileCategoriesEnumConstant;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
+import com.simplevat.entity.bankaccount.ReconcileCategory;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.helper.TransactionHelper;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
@@ -43,6 +46,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +67,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/rest/transaction")
 public class TransactionController implements Serializable {
-
+	private final Logger LOGGER = LoggerFactory.getLogger(TransactionController.class);
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
@@ -106,7 +111,7 @@ public class TransactionController implements Serializable {
 				dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getTransactionDate()).getTime())
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 			} catch (ParseException e) {
-				e.printStackTrace();
+				LOGGER.error("Error", e);
 			}
 			dataMap.put(TransactionFilterEnum.TRANSACTION_DATE, dateTime);
 		}
@@ -154,7 +159,7 @@ public class TransactionController implements Serializable {
 			}
 			return new ResponseEntity<>(transaction.getTransactionId(), HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -180,7 +185,7 @@ public class TransactionController implements Serializable {
 			}
 			return new ResponseEntity<>(transaction.getTransactionId(), HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -204,7 +209,7 @@ public class TransactionController implements Serializable {
 			transactionService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -247,7 +252,7 @@ public class TransactionController implements Serializable {
 					transactionService.getCashOutData(monthNo, null));
 			return new ResponseEntity<>(obj, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

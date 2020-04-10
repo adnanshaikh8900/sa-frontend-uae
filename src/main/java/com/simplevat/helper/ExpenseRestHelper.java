@@ -5,21 +5,6 @@
  */
 package com.simplevat.helper;
 
-import com.simplevat.constant.ExpenseStatusEnum;
-import com.simplevat.entity.Expense;
-import com.simplevat.entity.User;
-import com.simplevat.rest.expenses.ExpenseListModel;
-import com.simplevat.rest.expenses.ExpenseModel;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.EmployeeService;
-import com.simplevat.service.ExpenseService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.utils.FileHelper;
-
-import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -32,12 +17,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.simplevat.constant.ExpenseStatusEnum;
+import com.simplevat.entity.Expense;
+import com.simplevat.rest.expensescontroller.ExpenseListModel;
+import com.simplevat.rest.expensescontroller.ExpenseModel;
+import com.simplevat.service.BankAccountService;
+import com.simplevat.service.CurrencyService;
+import com.simplevat.service.EmployeeService;
+import com.simplevat.service.ExpenseService;
+import com.simplevat.service.ProjectService;
+import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.FileHelper;
+
 /**
  *
  * @author daynil
  */
 @Component
-public class ExpenseRestHelper implements Serializable {
+public class ExpenseRestHelper {
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(ExpenseRestHelper.class);
 
@@ -58,13 +56,14 @@ public class ExpenseRestHelper implements Serializable {
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
+	
 	@Autowired
 	private BankAccountService bankAccountService;
 
 	@Autowired
 	private FileHelper fileHelper;
 
-	public Expense getExpenseEntity(ExpenseModel model, User user) throws Exception {
+	public Expense getExpenseEntity(ExpenseModel model) {
 		Expense expense = new Expense();
 		expense.setStatus(ExpenseStatusEnum.SAVED.getValue());
 		if (model.getExpenseId() != null) {
@@ -154,7 +153,7 @@ public class ExpenseRestHelper implements Serializable {
 
 			return expenseModel;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error = ", e);
 		}
 		return null;
 	}
@@ -163,7 +162,7 @@ public class ExpenseRestHelper implements Serializable {
 
 		if (expenseList != null) {
 
-			List<ExpenseListModel> expenseDtoList = new ArrayList<ExpenseListModel>();
+			List<ExpenseListModel> expenseDtoList = new ArrayList<>();
 
 			for (Expense expense : (List<Expense>) expenseList) {
 
@@ -188,16 +187,7 @@ public class ExpenseRestHelper implements Serializable {
 			}
 			return expenseDtoList;
 		}
-		return null;
+		return new ArrayList<>();
 
 	}
-	// private void updateSubTotal(@NonNull final ExpenseItemModel expenseItemModel)
-	// {
-//        final BigDecimal unitPrice = expenseItemModel.getUnitPrice();
-//        VatCategory vatCategory = vatCategoryService.findByPK(expenseItemModel.getVatCategoryId());
-//        if (null != unitPrice) {
-//            final BigDecimal amountWithoutTax = unitPrice.add(unitPrice.multiply(vatCategory.getVat()).divide(new BigDecimal(100)));
-//            expenseItemModel.setSubTotal(amountWithoutTax);
-//        }
-//    }
 }

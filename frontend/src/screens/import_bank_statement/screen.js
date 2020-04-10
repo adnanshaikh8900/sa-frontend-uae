@@ -58,21 +58,15 @@ class ImportBankStatement extends React.Component {
     this.options = {
       paginationPosition: 'top'
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.renderTransactionType = this.renderTransactionType.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleSave = this.handleSave.bind(this)
-    this.columnClassNameFormat = this.columnClassNameFormat.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     if(this.props.location.state && this.props.location.state.bankAccountId) {
-      this.props.importBankStatementActions.getTemplateList().then(res => {
+      this.props.importBankStatementActions.getTemplateList().then((res) => {
         if (res.status === 200) {
           let id;
           id = this.props.location.state && this.props.location.state.id ? id : ''
@@ -87,7 +81,7 @@ class ImportBankStatement extends React.Component {
     }
   }
 
-  renderTransactionType(cell, row) {
+  renderTransactionType = (cell, row) => {
     let classname = ''
     let value = ''
     if (row.status === 'Explained') {
@@ -105,7 +99,7 @@ class ImportBankStatement extends React.Component {
     )
   }
 
-  columnClassNameFormat(fieldValue, row, rowIdx, colIdx) {
+  columnClassNameFormat = (fieldValue, row, rowIdx, colIdx) => {
     // fieldValue is column value
     // row is whole row object
     // rowIdx is index of row
@@ -114,7 +108,7 @@ class ImportBankStatement extends React.Component {
     return this.state.errorIndexList.indexOf(index) > -1 ? 'invalid' : '';
   }
 
-  handleSubmit(data) {
+  handleSubmit = (data) => {
     this.setState({ loading: true })
     const {  selectedTemplate } = this.state
     let formData = new FormData()
@@ -126,31 +120,31 @@ class ImportBankStatement extends React.Component {
     //       // tableData: [...res.data],
     //       tableDataKey: ['a','b','c','d']
     //     })
-    this.props.importBankStatementActions.parseFile(formData).then(res => {
+    this.props.importBankStatementActions.parseFile(formData).then((res) => {
       this.setState({
         tableData: res.data['data'],
         tableDataKey: res.data.data[0] ? Object.keys(res.data.data[0]) : [],
         errorIndexList: res.data.error ? res.data.error : []
       })
       // })
-    }).catch(err => {
-      // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      // this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
       // this.setState({ loading: false })
     })
   }
 
-  handleSave() {
+  handleSave = () => {
     const { selectedTemplate, tableData } = this.state
     const postData = {
       bankId: this.props.location.state.bankAccountId ? this.props.location.state.bankAccountId : '',
       templateId: selectedTemplate ? +selectedTemplate : '',
       importDataMap: tableData
     }
-    this.props.importBankStatementActions.importTransaction(postData).then(res => {
+    this.props.importBankStatementActions.importTransaction(postData).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'Transaction  Imported Successfully')
       this.props.history.push('/admin/banking/bank-account')
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -271,7 +265,7 @@ class ImportBankStatement extends React.Component {
                             })}
                         >
                           {
-                            props => (
+                            (props) => (
                               <Form onSubmit={props.handleSubmit}>
                                 <Row>
                                   <Col md="2">
@@ -283,7 +277,7 @@ class ImportBankStatement extends React.Component {
                                       <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                         <i className="fa fa-upload"></i> Upload
                                                 </Button>
-                                      <input id="fileInput" ref={ref => {
+                                      <input id="fileInput" ref={(ref) => {
                                         this.uploadFile = ref;
                                       }}
                                         type="file" style={{ display: 'none' }} onChange={(e) => {
@@ -300,7 +294,7 @@ class ImportBankStatement extends React.Component {
                                       <Select
                                         options={templateList ? templateList : []}
                                         value={this.state.selectedTemplate}
-                                        onChange={option => {
+                                        onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('templateId')(option.value)
                                             this.setState({
@@ -411,7 +405,7 @@ class ImportBankStatement extends React.Component {
                             className="product-table"
                             trClassName="cursor-pointer"
                             csvFileName="product_list.csv"
-                            ref={node => this.table = node}
+                            ref={(node) => this.table = node}
                           >
                             <TableHeaderColumn
                               isKey

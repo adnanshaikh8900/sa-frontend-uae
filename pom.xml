@@ -6,7 +6,7 @@
 
 	<groupId>com.simplevat</groupId>
 	<artifactId>simplevat-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>simplevat-service</name>
@@ -26,6 +26,11 @@
 		<frontend-maven-plugin.version>1.8.0</frontend-maven-plugin.version>
 		<node.version>v12.11.1</node.version>
 		<yarn.version>v1.19.0</yarn.version>
+
+		<sonar.projectKey>gulftranstech_simplevat</sonar.projectKey>
+		<sonar.organization>gulftranstech</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.login>ec4b54cd00ee246b9ef1daa3d722954224df999a</sonar.login>
 	</properties>
 
 	<dependencies>

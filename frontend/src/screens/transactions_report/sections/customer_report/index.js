@@ -64,17 +64,10 @@ class CustomerReport extends React.Component {
       currentData : {},
       currentDate : {}
     }
-
-    this.handleChange = this.handleChange.bind(this)
   }
-
-
-
-  componentDidMount(){
-    this.getCustomerInvoice()
-    
+  componentDidMount = () => {
+    this.getCustomerInvoice() 
   }
-
   getCustomerInvoice = () => {
     this.props.customerReportData.getCustomerInvoiceReport();
     this.props.customerReportData.getContactNameList();
@@ -84,7 +77,7 @@ class CustomerReport extends React.Component {
   //   this.setState({ selectedOption })
   // }
 
-  getInvoiceStatus(cell, row) {
+  getInvoiceStatus = (cell, row) => {
     return(<Badge color={cell === 'Paid'?'success':'danger'}>{cell}</Badge>)
   }
 
@@ -111,12 +104,7 @@ class CustomerReport extends React.Component {
     // alert(picker.minDate, picker.maxDate)
   }
 
-
-
-
-
-
-  handleChange(e,picker) {
+  handleChange = (e,picker) => {
     let startingDate = picker ? moment(picker.startDate._d).format('L') : ''
     let endingDate = picker ? moment(picker.endDate._d).format('L') : ''
     this.setState({ startDate : startingDate ,endDate : endingDate })
@@ -124,7 +112,7 @@ class CustomerReport extends React.Component {
 
   render() {
   
-    const customerInvoice = this.props.customer_invoice_report ? this.props.customer_invoice_report.map(customer => 
+    const customerInvoice = this.props.customer_invoice_report ? this.props.customer_invoice_report.map((customer) => 
      
       ({
         status : customer.status,
@@ -158,6 +146,7 @@ class CustomerReport extends React.Component {
                         <Button
                           color="success"
                           className="btn-square"
+                          onClick={() => this.table.handleExportCSV()}
                         >
                           <i className="fa glyphicon glyphicon-export fa-download mr-1" />
                           Export to CSV
@@ -183,14 +172,14 @@ class CustomerReport extends React.Component {
                               type="text"
                               placeholder="Ref. Number" 
                               value={this.state.filter_refNumber}
-                              onChange={e => this.inputHandler('filter_refNumber', e.target.value)}
+                              onChange={(e) => this.inputHandler('filter_refNumber', e.target.value)}
                             />
                   </Col>
                   <Col lg={2} className="mb-1">
 
                     <DateRangePicker   id="payment_date"
                                         name="payment_date" 
-                                        // onChange={option => this.handleChange('payment_date')(option)}
+                                        // onChange={(option) => this.handleChange('payment_date')(option)}
                                        
                                         onApply={ this.handleChange}
                                         >
@@ -212,7 +201,7 @@ class CustomerReport extends React.Component {
                       // options={accountOptions}
                       options={contact_list ? selectOptionsFactory.renderOptions('firstName', 'contactId', contact_list) : []}
                       value={this.state.filter_contactName}
-                      onChange={option => this.setState({
+                      onChange={(option) => this.setState({
                         filter_contactName: option
                       })}
                       placeholder="contact Name"
@@ -237,7 +226,12 @@ class CustomerReport extends React.Component {
                 <BootstrapTable 
                   data={customerInvoice} 
                   hover
-                  pagination
+                  pagination={customerInvoice && customerInvoice.length > 0 ? true : false}
+                  fetchInfo={{ dataTotalSize: customerInvoice.count ? customerInvoice.count : 0 }}
+                  csvFileName="customerInvoice.csv"
+                  ref={(node) => {
+                    this.table = node
+                  }}
                   filter = {true}
                   responsive={true}
                   version="4"

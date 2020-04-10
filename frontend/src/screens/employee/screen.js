@@ -24,6 +24,7 @@ import * as EmployeeActions from './actions'
 import {
   CommonActions
 } from 'services/global'
+import { CSVLink } from "react-csv";
 
 
 import './style.scss'
@@ -46,27 +47,16 @@ class Employee extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false,
+      loading: true,
       selectedRows: [],
       dialog: null,
       filterData: {
         name: '',
         email: ''
-      }
+      },
+      csvData: [],
+      view: false
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
-    this.bulkDelete = this.bulkDelete.bind(this);
-    this.removeBulk = this.removeBulk.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-
-    this.onPageChange = this.onPageChange.bind(this)
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -75,6 +65,9 @@ class Employee extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -84,71 +77,81 @@ class Employee extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     this.setState({
       selectedRows: []
     })
   }
 
-  initializeData() {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
-    this.props.employeeActions.getEmployeeList(postData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+    this.props.employeeActions.getEmployeeList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
-  goToDetail(row) {
+  goToDetail = (row) => {
     this.props.history.push('/admin/master/employee/detail', { id: row.id })
   }
 
-  onRowSelect(row, isSelected, e) {
-    let temp_list = []
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
+  }
+
+  onRowSelect = (row, isSelected, e) => {
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.id);
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.id);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.id) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       });
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
-  onSelectAll(isSelected, rows) {
-    let temp_list = []
+  onSelectAll = (isSelected, rows) => {
+    let tempList = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.id)
+      rows.map((item) => {
+        tempList.push(item.id)
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
-  bulkDelete() {
+  bulkDelete = () => {
     const {
       selectedRows
     } = this.state
@@ -165,35 +168,35 @@ class Employee extends React.Component {
     }
   }
 
-  removeBulk() {
+  removeBulk = () => {
     this.removeDialog()
     let { selectedRows } = this.state;
     const { employee_list } = this.props
     let obj = {
       ids: selectedRows
     }
-    this.props.employeeActions.removeBulkEmployee(obj).then(res => {
+    this.props.employeeActions.removeBulkEmployee(obj).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Employees Deleted Successfully')
         this.initializeData();
-        if (employee_list && employee_list.data &&  employee_list.data.length > 0) {
+        if (employee_list && employee_list.data && employee_list.data.length > 0) {
           this.setState({
             selectedRows: []
           })
         }
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : 'Internal Server Error')
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -201,7 +204,7 @@ class Employee extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData();
     // this.setState({})
   }
@@ -220,9 +223,37 @@ class Employee extends React.Component {
     }
   }
 
+  getCsvData = () => {
+    if (this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.employeeActions.getEmployeeList(obj).then((res) => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        name: '',
+        email: ''
+      },
+    })
+  }
+
   render() {
 
-    const { loading, dialog , selectedRows } = this.state
+    const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { employee_list } = this.props
 
 
@@ -258,13 +289,17 @@ class Employee extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                            disabled={employee_list.length === 0}
-
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                          {view && <CSVLink
+                            data={csvData}
+                            filename={'Employee.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -289,14 +324,17 @@ class Employee extends React.Component {
                         <form>
                           <Row>
                             <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Name" onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
+                              <Input type="text" placeholder="Name" value={filterData.name} onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
                             </Col>
                             <Col lg={3} className="mb-2">
-                              <Input type="text" placeholder="Email" onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
+                              <Input type="text" placeholder="Email" value={filterData.email} onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
                             </Col>
-                            <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                            <Col lg={1} className="pl-0 pr-0">
+                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
+                              </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                                <i className="fa fa-remove"></i>
                               </Button>
                             </Col>
                           </Row>
@@ -310,14 +348,14 @@ class Employee extends React.Component {
                           data={employee_list && employee_list.data ? employee_list.data : []}
                           version="4"
                           hover
-                          pagination = {employee_list && employee_list.data && employee_list.data.length > 0 ? true : false}
+                          pagination={employee_list && employee_list.data && employee_list.data.length > 0 ? true : false}
                           keyField="id"
                           remote
                           fetchInfo={{ dataTotalSize: employee_list.count ? employee_list.count : 0 }}
                           className="employee-table"
                           trClassName="cursor-pointer"
                           csvFileName="employee_list.csv"
-                          ref={node => this.table = node}
+                          ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
 

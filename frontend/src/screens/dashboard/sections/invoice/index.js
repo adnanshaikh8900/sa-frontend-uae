@@ -54,23 +54,21 @@ class Invoice extends Component {
     this.state = {
       activeTab: new Array(4).fill('1')
     }
-
-    this.toggle = this.toggle.bind(this)
   }
 
-  toggle(tabPane, tab) {
+  toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
-    newArray[tabPane] = tab
+    newArray[parseInt(tabPane, 10)] = tab
     this.setState({
       activeTab: newArray
     })
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.DashboardActions.getInvoiceGraphData(12)
   }
 
-  handleChange(e) {
+  handleChange = (e) => {
     e.preventDefault()
     this.props.DashboardActions.getInvoiceGraphData(e.currentTarget.value)
   }
@@ -124,7 +122,7 @@ class Invoice extends Component {
               <TabPane tabId="1">
                 <div className="flex-wrapper" style={{paddingLeft: 20}}>
                   <div className="data-info">
-                  <button className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm">
+                  <button className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm" onClick={() => {this.props.history.push('/admin/revenue/customer-invoice/create')}}>
                     <i className="nav-icon icon-speech"></i><span>New Invoice</span>
                   </button>
                   </div>

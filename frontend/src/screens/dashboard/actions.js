@@ -5,7 +5,7 @@ import {
 
 export const initialData = (obj) => {
   return (dispatch) => {
-    
+
   }
 }
 
@@ -16,15 +16,15 @@ export const getCashFlowGraphData = (daterange) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/transaction/getCashFlow?monthNo='+daterange
+      url: '/rest/transaction/getCashFlow?monthNo=' + daterange
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: DASHBOARD.CASH_FLOW_GRAPH,
-         payload: res.data
+        payload: res.data
       })
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -37,16 +37,16 @@ export const getInvoiceGraphData = (daterange) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: 'rest/invoice/getChartData?monthCount='+daterange
+      url: 'rest/invoice/getChartData?monthCount=' + daterange
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: DASHBOARD.INVOICE_GRAPH,
         payload:
           res.data
       })
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -62,13 +62,15 @@ export const getBankAccountTypes = () => {
       url: '/rest/bank/list'
     }
 
-    return authApi(data).then(res => {
-      dispatch({
-        type: DASHBOARD.BANK_ACCOUNT_TYPE,
-        payload: res.data.data 
-      })
+    return authApi(data).then((res) => {
+      if(res.status === 200) {
+        dispatch({
+          type: DASHBOARD.BANK_ACCOUNT_TYPE,
+          payload: res.data.data
+        })
+      }
       return res;
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -78,14 +80,16 @@ export const getBankAccountGraphData = (account, daterange) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: '/rest/bank/getBankChart?bankId='+account+'&monthCount='+daterange
+      url: '/rest/bank/getBankChart?bankId=' + account + '&monthCount=' + daterange
     }
-    return authApi(data).then(res => {
-      dispatch({
-        type: DASHBOARD.BANK_ACCOUNT_GRAPH,
-        payload: res.data
-      })
-    }).catch(err => {
+    return authApi(data).then((res) => {
+      if(res.status === 200) {
+        dispatch({
+          type: DASHBOARD.BANK_ACCOUNT_GRAPH,
+          payload: res.data
+        })
+      }
+    }).catch((err) => {
       throw err
     })
   }
@@ -101,7 +105,7 @@ export const getProfitAndLossData = (startDate, endDate) => {
       url: '/rest/vat/getList'
     }
 
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       dispatch({
         type: DASHBOARD.PROFIT_LOSS,
         payload: {
@@ -110,7 +114,7 @@ export const getProfitAndLossData = (startDate, endDate) => {
         }
       })
       return '1'
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }
@@ -126,13 +130,14 @@ export const getExpensesGraphData = () => {
       url: '/rest/expense/getList'
     }
 
-    return authApi(data).then(res => {
-      console.log(res)
-      dispatch({
-        type: DASHBOARD.EXPENSE_GRAPH,
-        payload: res.data.data
-      })
-    }).catch(err => {
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+        dispatch({
+          type: DASHBOARD.EXPENSE_GRAPH,
+          payload: res.data.data
+        })
+      }
+    }).catch((err) => {
       throw err
     })
   }
@@ -145,12 +150,14 @@ export const getRevenuesGraphData = () => {
       url: '/rest/invoice/getList?type=2'
     }
 
-    return authApi(data).then(res => {
-      dispatch({
-        type: DASHBOARD.REVENUE_GRAPH,
-        payload: res.data.data
-      })
-    }).catch(err => {
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+        dispatch({
+          type: DASHBOARD.REVENUE_GRAPH,
+          payload: res.data.data
+        })
+      }
+    }).catch((err) => {
       throw err
     })
   }
@@ -162,9 +169,9 @@ export const getTotalBalance = () => {
       method: 'GET',
       url: `/rest/bank/getTotalBalance`
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

@@ -18,7 +18,7 @@ const cashBarOption = {
     yAxes: [{
       ticks: {
         // Include a dollar sign in the ticks
-        callback: function(value, index, values) {
+        callback(value, index, values) {
           return '$' + value
         },
         beginAtZero: true,
@@ -41,23 +41,21 @@ class CashFlow extends Component {
     this.state = {
       activeTab: new Array(4).fill('1')
     }
-
-    this.toggle = this.toggle.bind(this)
   }
 
-  toggle(tabPane, tab) {
+  toggle = (tabPane, tab) => {
     const newArray = this.state.activeTab.slice()
-    newArray[tabPane] = tab
+    newArray[parseInt(tabPane, 10)] = tab
     this.setState({
       activeTab: newArray
     })
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.DashboardActions.getCashFlowGraphData(12)
   }
 
-  handleChange(e) {
+  handleChange = (e) => {
     e.preventDefault()
     this.props.DashboardActions.getCashFlowGraphData(e.currentTarget.value)
   }

@@ -1,15 +1,17 @@
 package com.simplevat.rest.companycontroller;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.entity.Company;
 import com.simplevat.entity.User;
-import com.simplevat.service.CompanyService;
 import com.simplevat.service.CompanyTypeService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
@@ -17,11 +19,10 @@ import com.simplevat.service.IndustryTypeService;
 import com.simplevat.service.UserService;
 
 @Component
-public class CompanyRestHelper {
-
-	@Autowired
-	private CompanyService companyService;
-
+public class CompanyRestHelper implements Serializable{
+	
+	private final Logger LOGGER = LoggerFactory.getLogger(CompanyRestHelper.class);
+	
 	@Autowired
 	private IndustryTypeService industryTypeService;
 
@@ -39,7 +40,7 @@ public class CompanyRestHelper {
 
 	public List<CompanyListModel> getModelList(List<Company> companyList) {
 		List<CompanyListModel> coModelList = new ArrayList<>();
-		if (companyList != null && companyList.size() > 0) {
+		if (companyList != null && !companyList.isEmpty()) {
 			for (Company company : companyList) {
 
 				CompanyListModel companyModel = new CompanyListModel();
@@ -57,7 +58,7 @@ public class CompanyRestHelper {
 	public CompanyModel getModel(Company company) {
 
 		CompanyModel companyModel = new CompanyModel();
-		
+
 		companyModel.setCompanyName(company.getCompanyName());
 		companyModel.setCompanyRegistrationNumber(company.getCompanyRegistrationNumber());
 		companyModel.setVatRegistrationNumber(company.getVatNumber());
@@ -108,7 +109,7 @@ public class CompanyRestHelper {
 		return companyModel;
 	}
 
-	public Company getEntity(CompanyModel companyModel,Integer userId) {
+	public Company getEntity(CompanyModel companyModel, Integer userId) {
 		Company company = new Company();
 		if (userId != null) {
 			User user = userService.findByPK(userId);
@@ -164,7 +165,7 @@ public class CompanyRestHelper {
 			try {
 				company.setCompanyLogo(companyModel.getCompanyLogo().getBytes());
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("ERROR = ", e);
 			}
 		}
 		return company;

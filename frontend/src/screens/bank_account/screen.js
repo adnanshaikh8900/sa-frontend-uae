@@ -18,6 +18,7 @@ import {
 import Select from 'react-select'
 
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import { CSVLink } from "react-csv";
 
 import {
   Loader,
@@ -67,15 +68,20 @@ class BankAccount extends React.Component {
         transactionDate: '',
         accountNumber: '',
         currencyCode: '',
-      }
+      },
+      csvData: [],
+      view: false
     }
 
     this.options = {
       paginationPosition: 'top',
       page: 1,
       sizePerPage: 10,
+      sortName: '',
+      sortOrder: '',
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -85,33 +91,41 @@ class BankAccount extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
 
-  componentDidMount() {
+  componentDidMount = () => {
+    this.props.bankAccountActions.getAccountTypeList()
+    this.props.bankAccountActions.getCurrencyList()
     this.initializeData()
   }
 
   initializeData = () => {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    filterData = { ...filterData, ...data }
-    this.props.bankAccountActions.getBankAccountList(filterData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+
+    this.props.bankAccountActions.getBankAccountList(postData).then((res) => {
       if (res.status === 200) {
-        this.props.bankAccountActions.getAccountTypeList()
-        this.props.bankAccountActions.getCurrencyList()
-        this.setState({ loading: false });
+        this.setState({
+          loading: false,
+        });
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data !== undefined ? err.data.message : '');
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
       this.setState({ loading: false })
     })
 
   }
+
 
   inputHandler = (name, val) => {
     this.setState({
@@ -137,7 +151,7 @@ class BankAccount extends React.Component {
 
   //   data = filterFactory.filterDataList(filter_bank, 'bankName', 'contain', bank_account_list)
   //   let data_temp = []
-  //   data.map(item => {
+  //   data.map((item) => {
   //     let flag = true
   //     flag = filterFactory.compareString(
   //       filter_account_type ? filter_account_type.value : '',
@@ -152,7 +166,7 @@ class BankAccount extends React.Component {
   //   data = filterFactory.filterDataList(filter_account_name, 'bankAccountName', 'contain', data_temp)
   //   data_temp = filterFactory.filterDataList(filter_account_number, 'accountNumber', 'contain', data)
   //   data = []
-  //   data_temp.map(item => {
+  //   data_temp.map((item) => {
   //     let flag = true
   //     flag = filterFactory.compareString(
   //       filter_currency ? filter_currency.value : '',
@@ -167,20 +181,20 @@ class BankAccount extends React.Component {
   //   return data
   // }
 
-  renderAccountType  = (cell, row) => {
+  renderAccountType = (cell, row) => {
     if (row.bankAccountTypeName) {
       let data = null
-      switch (row.bankAccountTypeName ) {
+      switch (row.bankAccountTypeName) {
         case 'Saving':
-        case 'saving':  
+        case 'saving':
           data = <label className="badge badge-primary text-white mb-0">{row.bankAccountTypeName}</label>
           break
         case 'Current':
-        case 'current':  
+        case 'current':
           data = <label className="badge badge-info text-white mb-0">{row.bankAccountTypeName}</label>
           break
         case 'Checking':
-        case 'checking':  
+        case 'checking':
           data = <label className="badge badge-warning text-white mb-0">{row.bankAccountTypeName}</label>
           break
         case 'Credit Card':
@@ -209,10 +223,10 @@ class BankAccount extends React.Component {
 
   toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
-    if (temp[index]) {
-      temp[index] = false
+    if (temp[parseInt(index, 10)]) {
+      temp[parseInt(index, 10)] = false
     } else {
-      temp[index] = true
+      temp[parseInt(index, 10)] = true
     }
     this.setState({
       actionButtons: temp
@@ -245,12 +259,22 @@ class BankAccount extends React.Component {
     }
   }
 
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName
+    this.options.sortOrder = sortOrder
+    this.initializeData()
+  }
+
+  renderBalance(cell, row) {
+    return row.openingBalance ? (row.openingBalance).toFixed(2) : ''
+  }
+
   renderActions = (cell, row) => {
     return (
       <div>
         <ButtonDropdown
           isOpen={this.state.actionButtons[row.bankAccountId]}
-          toggle={() => this.toggleActionButton(row.bankAccountId)}
+          toggle={(e) => { e.preventDefault(); this.toggleActionButton(row.bankAccountId) }}
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
             {
@@ -274,10 +298,10 @@ class BankAccount extends React.Component {
               <i className="fas fa-eye" /> View Transactions
             </DropdownItem>
             <DropdownItem>
-              <i className="fa fa-connectdevelop" /> Reconcile
+              <i className="fas fa-sync" /> Synch
             </DropdownItem>
             <DropdownItem onClick={() => this.closeBankAccount(row.bankAccountId)}>
-              <i className="fa fa-trash" /> Close
+              <i className="fa fa-trash" /> Delete
             </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
@@ -300,18 +324,18 @@ class BankAccount extends React.Component {
     this.props.bankAccountActions.removeBankAccountByID(_id).then(() => {
       this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
       this.initializeData()
-      let temp_List = []
-      this.state.selected_id_list.map(item => {
+      let tempList = []
+      this.state.selected_id_list.map((item) => {
         if (item !== _id) {
-          temp_List.push(item)
+          tempList.push(item)
         }
         return item
       })
       this.setState({
-        selected_id_list: temp_List
+        selected_id_list: tempList
       })
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -325,7 +349,7 @@ class BankAccount extends React.Component {
     return (
       <div>
         <div>
-          <label className="font-weight-bold mr-2">Balance : </label>
+          <label className="font-weight-bold mr-2">Book Balance : </label>
           <label className="badge badge-success mb-0">2034234</label>
         </div>
         <div>
@@ -337,32 +361,33 @@ class BankAccount extends React.Component {
 
 
   onRowSelect = (row, isSelected, e) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selected_id_list)
-      temp_list.push(row.bankAccountId)
+      tempList = Object.assign([], this.state.selected_id_list)
+      tempList.push(row.bankAccountId)
     } else {
-      this.state.selected_id_list.map(item => {
+      this.state.selected_id_list.map((item) => {
         if (item !== row.bankAccountId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selected_id_list: tempList
     })
   }
+
   onSelectAll = (isSelected, rows) => {
-    let temp_list = []
+    let tempList = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.bankAccountId)
+      rows.map((item) => {
+        tempList.push(item.bankAccountId)
         return item
       })
     }
     this.setState({
-      selected_id_list: temp_list
+      selected_id_list: tempList
     })
   }
 
@@ -397,8 +422,8 @@ class BankAccount extends React.Component {
       this.setState({
         selected_id_list: []
       })
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -417,12 +442,46 @@ class BankAccount extends React.Component {
     }
   }
 
+  getCsvData = () => {
+    if (this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.bankAccountActions.getBankAccountList(obj).then((res) => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        bankName: '',
+        bankAccountTypeId: '',
+        bankAccountName: '',
+        transactionDate: '',
+        accountNumber: '',
+        currencyCode: '',
+      },
+    })
+  }
+
   render() {
 
     const {
       loading,
       filterData,
-      dialog
+      dialog,
+      csvData,
+      view
     } = this.state
     const {
       account_type_list,
@@ -461,11 +520,17 @@ class BankAccount extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                          {view && <CSVLink
+                            data={csvData}
+                            filename={'BankAccount.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -492,7 +557,7 @@ class BankAccount extends React.Component {
                               type="text"
                               placeholder="Bank"
                               value={filterData.bankName}
-                              onChange={e => this.inputHandler('bankName', e.target.value)}
+                              onChange={(e) => this.inputHandler('bankName', e.target.value)}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -500,7 +565,7 @@ class BankAccount extends React.Component {
                               className=""
                               options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, 'Account Type') : []}
                               value={filterData.bankAccountTypeId}
-                              onChange={option => this.inputHandler('bankAccountTypeId', option.value)}
+                              onChange={(option) => this.inputHandler('bankAccountTypeId', option.value)}
                               placeholder="Account Type"
                             />
                           </Col>
@@ -509,7 +574,7 @@ class BankAccount extends React.Component {
                               type="text"
                               placeholder="Account Name"
                               value={filterData.bankAccountName}
-                              onChange={e => this.inputHandler('bankAccountName', e.target.value)}
+                              onChange={(e) => this.inputHandler('bankAccountName', e.target.value)}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -517,7 +582,7 @@ class BankAccount extends React.Component {
                               type="text"
                               placeholder="Account Number"
                               value={filterData.accountNumber}
-                              onChange={e => this.inputHandler('accountNumber', e.target.value)}
+                              onChange={(e) => this.inputHandler('accountNumber', e.target.value)}
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
@@ -525,13 +590,16 @@ class BankAccount extends React.Component {
                               className=""
                               options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                               value={filterData.currencyCode}
-                              onChange={option => this.inputHandler('currencyCode', option.value)}
+                              onChange={(option) => this.inputHandler('currencyCode', option.value)}
                               placeholder="Currency"
                             />
                           </Col>
-                          <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>
@@ -544,15 +612,15 @@ class BankAccount extends React.Component {
                           data={bank_account_list && bank_account_list.data ? bank_account_list.data : []}
                           version="4"
                           hover
-                          transaction_category_list
                           // totalSize={bank_account_list ? bank_account_list.length : 0}
-                          pagination = {bank_account_list && bank_account_list.data && bank_account_list.data.length > 0 ? true : false}
+                          pagination={bank_account_list && bank_account_list.data && bank_account_list.data.length > 0 ? true : false}
                           remote
                           keyField="bankAccountId"
+                          multiColumnSort
                           fetchInfo={{ dataTotalSize: bank_account_list && bank_account_list.count ? bank_account_list.count : 0 }}
                           className="bank-account-table"
                           csvFileName="bank_account_list.csv"
-                          ref={node => {
+                          ref={(node) => {
                             this.table = node
                           }}
                         >
@@ -599,12 +667,15 @@ class BankAccount extends React.Component {
                             dataField="openingBalance"
                             dataSort
                             width="15%"
+                            dataFormat={this.renderBalance}
+                            dataAlign="right"
                           >
-                            Book Balance
+                            Bank Balance
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="swift_code"
                             export={false}
+                            dataSort={false}
                             dataFormat={this.renderLastReconciled}
                             width="20%"
                           >
@@ -614,6 +685,7 @@ class BankAccount extends React.Component {
                             className="text-right"
                             columnClassName="text-right"
                             width="5%"
+                            dataSort={false}
                             export={false}
                             dataFormat={this.renderActions}
                           >

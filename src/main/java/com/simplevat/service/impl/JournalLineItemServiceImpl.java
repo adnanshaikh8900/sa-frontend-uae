@@ -35,3 +35,4 @@ public class JournalLineItemServiceImpl extends JournalLineItemService {
 	}
 
 }
+

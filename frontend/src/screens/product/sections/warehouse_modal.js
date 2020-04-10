@@ -31,13 +31,11 @@ class WareHouseModal extends React.Component {
         warehouseName: '',
       },
     }
-
-    this.wareHouseHandleSubmit = this.wareHouseHandleSubmit.bind(this)
   }
 
   // Create or Contact
-  wareHouseHandleSubmit(data) {
-    ProductActions.createWarehouse(data).then(res => {
+  wareHouseHandleSubmit = (data) => {
+    ProductActions.createWarehouse(data).then((res) => {
       if (res.status === 200) {
       // this.success()
         this.props.closeWarehouseModal()
@@ -63,7 +61,7 @@ class WareHouseModal extends React.Component {
                 warehouseName: Yup.string()
                     .required('Warehouse Name is a required field'),
             })}>
-            {props => (
+            {(props) => (
               <Form name="simpleForm" onSubmit={props.handleSubmit}>
                 <ModalHeader toggle={this.toggleDanger}>New Warehouse</ModalHeader>
                   <ModalBody>

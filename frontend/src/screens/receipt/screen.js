@@ -24,6 +24,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css'
 import {
   CommonActions
 } from 'services/global'
+import { CSVLink } from "react-csv";
 
 
 import * as ReceiptActions from './actions'
@@ -58,21 +59,10 @@ class Receipt extends React.Component {
         invoiceId: '',
         receiptReferenceCode: '',
         receiptDate: '',
-      }
+      },
+      csvData: [],
+      view: false
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.renderMode = this.renderMode.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
-    this.bulkDelete = this.bulkDelete.bind(this)
-    this.removeBulk = this.removeBulk.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.onPageChange = this.onPageChange.bind(this);
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -81,6 +71,9 @@ class Receipt extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -90,44 +83,58 @@ class Receipt extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
+    this.props.receiptActions.getContactList();
+    this.props.receiptActions.getInvoiceList();
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = (search) => {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...data };
-    this.props.receiptActions.getContactList();
-    this.props.receiptActions.getInvoiceList();
-    this.props.receiptActions.getReceiptList(postData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+
+
+    this.props.receiptActions.getReceiptList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
     }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
-  goToDetail(row) {
+  goToDetail = (row) => {
     this.props.history.push('/admin/revenue/receipt/detail', { id: row.receiptId })
   }
 
-  renderMode(cell, row) {
+  renderMode = (cell, row) => {
     return (
       <span className="badge badge-success mb-0">Cash</span>
     )
   }
 
-  renderDate(cell, rows) {
+  renderDate = (cell, rows) => {
     return rows['receiptDate'] !== null ? moment(rows['receiptDate']).format('DD/MM/YYYY') : ''
+  }
+
+  renderAmount = (cell, row) => {
+    return row.amount ? (row.amount).toFixed(2) : ''
+  }
+
+  renderUnusedAmount = (cell, row) => {
+    return row.unusedAmount ? (row.unusedAmount).toFixed(2) : ''
   }
 
   onSizePerPageList = (sizePerPage) => {
@@ -144,34 +151,40 @@ class Receipt extends React.Component {
     }
   }
 
-  onRowSelect(row, isSelected, e) {
-    let temp_list = []
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName
+    this.options.sortOrder = sortOrder
+    this.initializeData()
+  }
+
+  onRowSelect = (row, isSelected, e) => {
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.receiptId);
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.receiptId);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.receiptId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       });
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
-  onSelectAll(isSelected, rows) {
-    let temp_list = []
+  onSelectAll = (isSelected, rows) => {
+    let tempList = []
     if (isSelected) {
-      rows.map(item => temp_list.push(item.receiptId))
+      rows.map((item) => tempList.push(item.receiptId))
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
-  bulkDelete() {
+  bulkDelete = () => {
     const {
       selectedRows
     } = this.state
@@ -188,7 +201,7 @@ class Receipt extends React.Component {
     }
   }
 
-  removeBulk() {
+  removeBulk = () => {
     let { selectedRows } = this.state;
     const { receipt_list } = this.props
     let obj = {
@@ -203,18 +216,18 @@ class Receipt extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -222,12 +235,43 @@ class Receipt extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData();
   }
 
+  getCsvData = () => {
+    if (this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.receiptActions.getReceiptList(obj).then((res) => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+              this.initializeData();
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        contactId: '',
+        invoiceId: '',
+        receiptReferenceCode: '',
+        receiptDate: '',
+      },
+    })
+  }
+
   render() {
-    const { loading, dialog, selectedRows, filterData } = this.state
+    const { loading, dialog, selectedRows, filterData, csvData, view } = this.state
     const { receipt_list, invoice_list, contact_list } = this.props;
 
     return (
@@ -262,12 +306,17 @@ class Receipt extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                            // disabled={receipt_list.length === 0}
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                          {view && <CSVLink
+                            data={csvData}
+                            filename={'Receipt.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -297,6 +346,7 @@ class Receipt extends React.Component {
                               name="receiptDate"
                               placeholderText="Receipt Date"
                               selected={filterData.receiptDate}
+                              autoComplete="off"
                               showMonthDropdown
                               showYearDropdown
                               dateFormat="dd/MM/yyyy"
@@ -307,43 +357,46 @@ class Receipt extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'receiptReferenceCode') }} />
+                            <Input type="text" placeholder="Reference Number" value={filterData.receiptReferenceCode} onChange={(e) => { this.handleChange(e.target.value, 'receiptReferenceCode') }} />
                           </Col>
                           <Col lg={3} className="mb-1">
-                              <Select
-                                options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
-                                className="select-default-width"
-                                placeholder="Invoice Number"
-                                value={filterData.invoiceId}
-                                onChange={(option) => {
-                                  if (option && option.value) {
-                                    this.handleChange(option.value, 'invoiceId')
-                                  } else {
-                                    this.handleChange('', 'invoiceId')
+                            <Select
+                              options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
+                              className="select-default-width"
+                              placeholder="Invoice Number"
+                              value={filterData.invoiceId}
+                              onChange={(option) => {
+                                if (option && option.value) {
+                                  this.handleChange(option.value, 'invoiceId')
+                                } else {
+                                  this.handleChange('', 'invoiceId')
 
-                                  }
-                                }}
-                              />
+                                }
+                              }}
+                            />
                           </Col>
                           <Col lg={3} className="mb-1">
-                              <Select
-                                options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer') : []}
-                                className="select-default-width"
-                                placeholder="Customer Name"
-                                value={filterData.contactId}
-                                onChange={(option) => {
-                                  if (option && option.value) {
-                                    this.handleChange(option.value, 'contactId')
-                                  } else {
-                                    this.handleChange('', 'contactId')
+                            <Select
+                              options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer') : []}
+                              className="select-default-width"
+                              placeholder="Customer Name"
+                              value={filterData.contactId}
+                              onChange={(option) => {
+                                if (option && option.value) {
+                                  this.handleChange(option.value, 'contactId')
+                                } else {
+                                  this.handleChange('', 'contactId')
 
-                                  }
-                                }}
-                              />
+                                }
+                              }}
+                            />
                           </Col>
-                          <Col lg={2} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>
@@ -353,17 +406,17 @@ class Receipt extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={receipt_list  && receipt_list.data ? receipt_list.data : []}
+                          data={receipt_list && receipt_list.data ? receipt_list.data : []}
                           version="4"
                           keyField="receiptId"
                           hover
-                          pagination = {receipt_list && receipt_list.data && receipt_list.data.length > 0 ? true : false}
+                          pagination={receipt_list && receipt_list.data && receipt_list.data.length > 0 ? true : false}
                           remote
                           fetchInfo={{ dataTotalSize: receipt_list.count ? receipt_list.count : 0 }}
                           className="receipt-table"
                           trClassName="cursor-pointer"
                           csvFileName="Receipt.csv"
-                          ref={node => this.table = node}
+                          ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
                             dataField="receiptDate"
@@ -400,12 +453,16 @@ class Receipt extends React.Component {
                           <TableHeaderColumn
                             dataField="amount"
                             dataSort
+                            dataAlign="right"
+                            dataFormat={this.renderAmount}
                           >
                             Amount
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="unusedAmount"
                             dataSort
+                            dataAlign="right"
+                            dataFormat={this.renderUnusedAmount}
                           >
                             Unused Amount
                           </TableHeaderColumn>

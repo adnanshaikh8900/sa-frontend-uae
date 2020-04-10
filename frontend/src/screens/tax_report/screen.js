@@ -1,20 +1,15 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import { bindActionCreators } from 'redux'
+// import { bindActionCreators } from 'redux'
 import {
   Card,
   CardHeader,
   CardBody,
-  Button,
-  Row,
-  Col,
   FormGroup,
   Label,
   Form,
-  Table 
 } from "reactstrap"
 
-import _ from "lodash"
 import Select from 'react-select'
 import { DateRangePicker2 } from 'components'
 import moment from 'moment'
@@ -119,22 +114,19 @@ class TaxReport extends React.Component {
       selectedVat: '',
       selectedStatus: ''
     }
-
-    this.changeVat = this.changeVat.bind(this)
-    this.changeStatus = this.changeStatus.bind(this)
   }
 
 
-  changeVat(selectedVat) {
+  changeVat = (selectedVat) => {
     this.setState({ selectedVat })
   }
 
-  changeStatus(selectedStatus) {
+  changeStatus = (selectedStatus) => {
     this.setState({ selectedStatus })
   }
 
-  getAction(cell, row) {
-    return(<a href="#">Detail</a>)
+  getAction = (cell, row) => {
+    return(<button>Detbuttonil</button>)
   }
 
   render() {

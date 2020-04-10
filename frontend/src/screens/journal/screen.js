@@ -13,6 +13,7 @@ import {
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
+import { CSVLink } from "react-csv";
 
 import { Loader, ConfirmDeleteModal } from 'components'
 
@@ -57,29 +58,9 @@ class Journal extends React.Component {
         journalReferenceNo: '',
         description: ''
       },
-      sortName: undefined,
-      sortOrder: undefined
+      csvData: [],
+      view: false
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    this.renderDate = this.renderDate.bind(this)
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.bulkDeleteJournal = this.bulkDeleteJournal.bind(this);
-    this.removeBulkJournal = this.removeBulkJournal.bind(this);
-    this.removeDialog = this.removeDialog.bind(this);
-
-    // this.renderActions = this.renderActions.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.goToDetail = this.goToDetail.bind(this);
-    this.renderAccount = this.renderAccount.bind(this)
-    this.renderCreditAmount = this.renderCreditAmount.bind(this)
-    this.renderDebitAmount = this.renderDebitAmount.bind(this)
-    this.sortColumn = this.sortColumn.bind(this)
-
-    this.toggleActionButton = this.toggleActionButton.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -88,8 +69,8 @@ class Journal extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
-      sortName: this.state.sortName,
-      sortOrder: this.state.sortOrder,
+      sortName: '',
+      sortOrder: '',
       onSortChange: this.sortColumn
     }
 
@@ -100,41 +81,45 @@ class Journal extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     this.setState({
       selectedRows: []
     })
   }
 
-  initializeData() {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
-    this.props.journalActions.getJournalList(postData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+
+    this.props.journalActions.getJournalList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
-  sortColumn(sortName, sortOrder) {
-    this.setState({
-      sortName,
-      sortOrder
-    });
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName
+    this.options.sortOrder = sortOrder
+    this.initializeData()
   }
 
   // renderStatus (cell, row) {
@@ -194,12 +179,12 @@ class Journal extends React.Component {
   //   )
   // }
 
-  toggleActionButton(index) {
+  toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
-    if (temp[index]) {
-      temp[index] = false
+    if (temp[parseInt(index, 10)]) {
+      temp[parseInt(index, 10)] = false
     } else {
-      temp[index] = true
+      temp[parseInt(index, 10)] = true
     }
     this.setState({
       actionButtons: temp
@@ -207,68 +192,69 @@ class Journal extends React.Component {
   }
 
 
-  goToDetail(row) {
+  goToDetail = (row) => {
     this.props.history.push('/admin/accountant/journal/detail', { id: row['journalId'] })
   }
 
-  onRowSelect(row, isSelected, e) {
-    let temp_list = []
+  onRowSelect = (row, isSelected, e) => {
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.journalId);
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.journalId);
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.journalId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       });
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
-  onSelectAll(isSelected, rows) {
-    let temp_list = []
+
+  onSelectAll = (isSelected, rows) => {
+    let tempList = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.journalId)
+      rows.map((item) => {
+        tempList.push(item.journalId)
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
-  renderDate(cell, rows) {
+  renderDate = (cell, rows) => {
     return rows.journalDate ? moment(rows.journalDate).format('DD/MM/YYYY') : ''
   }
 
-  renderAccount(cell, rows) {
-    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['transactionCategoryName']}) : []
-    const listItems = temp.map((number,index) =>
-    <li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>
-  );
-    return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
-    }
+  renderAccount = (cell, rows) => {
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => { return item['transactionCategoryName'] }) : []
+    const listItems = temp.map((number, index) =>
+      <li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>{number}</li>
+    );
+    return (<ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>)
+  }
 
-  renderCreditAmount(cell, rows) {
-    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['creditAmount']}) : []
-    const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>)
-  );
-  return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
+  renderCreditAmount = (cell, rows) => {
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => { return item['creditAmount'] }) : []
+    const listItems = temp.map((number, index) => (<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>{number.toFixed(2)}</li>)
+    );
+    return (<ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>)
 
-    }
+  }
 
-  renderDebitAmount(cell, rows) {
-    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map(item => {return item['debitAmount']}) : []
-    const listItems = temp.map((number,index) => (<li key={index} style={{listStyleType: 'none',paddingBottom: '5px'}}>{number}</li>)
-  );
-    return (<ul style={{padding: '0',marginBottom: '0px'}}>{listItems}</ul>)
-    }
+  renderDebitAmount = (cell, rows) => {
+    const temp = rows && rows.journalLineItems ? rows.journalLineItems.map((item) => { return item['debitAmount'] }) : []
+    const listItems = temp.map((number, index) => (<li key={index} style={{ listStyleType: 'none', paddingBottom: '5px' }}>{number.toFixed(2)}</li>)
+    );
+    return (<ul style={{ padding: '0', marginBottom: '0px' }}>{listItems}</ul>)
+  }
 
-  handleChange(val, name) {
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -276,11 +262,11 @@ class Journal extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData()
   }
 
-  bulkDeleteJournal() {
+  bulkDeleteJournal = () => {
     const {
       selectedRows
     } = this.state
@@ -297,7 +283,7 @@ class Journal extends React.Component {
     }
   }
 
-  removeBulkJournal() {
+  removeBulkJournal = () => {
     this.removeDialog()
     let { selectedRows } = this.state;
     const { journal_list } = this.props
@@ -314,12 +300,12 @@ class Journal extends React.Component {
           })
         }
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
@@ -339,12 +325,43 @@ class Journal extends React.Component {
     }
   }
 
+  getCsvData = () => {
+    if (this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.journalActions.getJournalList(obj).then((res) => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        journalDate: '',
+        journalReferenceNo: '',
+        description: ''
+      },
+    })
+  }
+
   render() {
 
     const { loading,
       dialog,
       filterData,
-      selectedRows
+      selectedRows,
+      csvData,
+      view
     } = this.state
     const { journal_list } = this.props
 
@@ -378,15 +395,19 @@ class Journal extends React.Component {
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
                           <Button
-                            type="button"
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                          // disabled={journal_list.length === 0}
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                          {view && <CSVLink
+                            data={csvData}
+                            filename={'Journal.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -415,11 +436,11 @@ class Journal extends React.Component {
                               id="date"
                               name="journalDate"
                               placeholderText="Post Date"
-                              // showMonthDropdown
-                              // showYearDropdown
-                              // dropdownMode="select"
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
                               dateFormat="dd/MM/yyyy"
-
+                              autoComplete="off"
                               selected={filterData.journalDate}
                               onChange={(value) => {
                                 this.handleChange(value, "journalDate")
@@ -427,14 +448,17 @@ class Journal extends React.Component {
                             />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder=" Reference Number" onChange={(e) => { this.handleChange(e.target.value, 'journalReferenceNo') }} />
+                            <Input type="text" placeholder="Reference Number" value={filterData.journalReferenceNo} onChange={(e) => { this.handleChange(e.target.value, 'journalReferenceNo') }} />
                           </Col>
                           <Col lg={2} className="mb-1">
-                            <Input type="text" placeholder="Description" onChange={(e) => { this.handleChange(e.target.value, 'description') }} />
+                            <Input type="text" placeholder="Description" value={filterData.description} onChange={(e) => { this.handleChange(e.target.value, 'description') }} />
                           </Col>
-                          <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>
@@ -454,7 +478,7 @@ class Journal extends React.Component {
                           // totalSize={journal_list ? journal_list.length : 0}
                           className="journal-table"
                           trClassName="cursor-pointer"
-                          ref={node => this.table = node}
+                          ref={(node) => this.table = node}
                         >
                           <TableHeaderColumn
                             dataField="journalDate"
@@ -467,7 +491,7 @@ class Journal extends React.Component {
                           <TableHeaderColumn
                             dataField="journalReferenceNo"
                             dataSort={true}
-                            width="12%"
+                            width="18%"
                           >
                             JOURNAL REFERENCE NO.
                           </TableHeaderColumn>
@@ -483,7 +507,7 @@ class Journal extends React.Component {
                             dataSort
                             width="18%"
                           >
-                            DESCRIPTION
+                            Notes
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="journalLineItems"
@@ -494,17 +518,18 @@ class Journal extends React.Component {
                             Account
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                             dataField="journalLineItems"
-                             dataFormat={this.renderDebitAmount}
-                             dataAlign="right"
-                             width="13%"
+                            dataField="journalLineItems"
+                            dataFormat={this.renderDebitAmount}
+                            dataAlign="right"
+                            width="13%"
                           >
                             DEBIT AMOUNT
                           </TableHeaderColumn>
                           <TableHeaderColumn
-                             dataField="journalLineItems"
-                             dataFormat={this.renderCreditAmount}
-                             dataAlign="right"
+                            dataField="journalLineItems"
+                            dataFormat={this.renderCreditAmount}
+                            dataAlign="right"
+                            width="14%"
                           >
                             CREDIT AMOUNT
                           </TableHeaderColumn>

@@ -12,18 +12,19 @@ import {
   ButtonGroup
 } from 'reactstrap'
 import { toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn,  } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn, } from 'react-bootstrap-table'
 import {
   CommonActions
 } from 'services/global'
 
-import { Loader , ConfirmDeleteModal} from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import './style.scss'
 
 import * as ProductCategoryActions from './actions'
+import { CSVLink } from "react-csv";
 
 
 const mapStateToProps = (state) => {
@@ -49,26 +50,10 @@ class ProductCategory extends React.Component {
       filterData: {
         productCategoryCode: '',
         productCategoryName: '',
-      }
+      },
+      csvData: [],
+      view: false
     }
-
-    this.initializeData = this.initializeData.bind(this)
-    // this.deleteProductCategory = this.deleteProductCategory.bind(this)
-    this.success = this.success.bind(this)
-    this.bulkDelete = this.bulkDelete.bind(this)
-    this.removeBulk = this.removeBulk.bind(this)
-    this.removeDialog = this.removeDialog.bind(this)
-    // this.showConfirmModal = this.showConfirmModal.bind(this)
-    // this.closeConfirmModal = this.closeConfirmModal.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
-
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-
-    this.handleFilterChange = this.handleFilterChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
-    this.onPageChange = this.onPageChange.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -77,6 +62,9 @@ class ProductCategory extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -86,26 +74,26 @@ class ProductCategory extends React.Component {
       onSelectAll: this.onSelectAll,
       clickToSelect: false,
     }
+    this.csvLink = React.createRef()
   }
 
 
-  onRowSelect(row, isSelected) {
+  onRowSelect = (row, isSelected) => {
     if (isSelected) {
       this.state.selectedRows.push(row.id)
-
       this.setState({
         selectedRows: this.state.selectedRows
       })
-    }
-    else
+    } else {
       this.setState({
-        selectedRows: this.state.selectedRows.filter(el => el !== row.id)
+        selectedRows: this.state.selectedRows.filter((el) => el !== row.id)
       })
+    }
   }
 
-  onSelectAll(isSelected, rows) {
+  onSelectAll = (isSelected, rows) => {
     this.setState({
-      selectedRows: isSelected ? rows.map(row => row.id) : []
+      selectedRows: isSelected ? rows.map((row) => row.id) : []
     })
   }
 
@@ -114,34 +102,38 @@ class ProductCategory extends React.Component {
   //--------------------------
 
 
-  goToDetail(row) {
+  goToDetail = (row) => {
     this.props.history.push(`/admin/master/product-category/detail`, { id: row.id })
   }
 
   // Show Success Toast
-  success() {
+  success = () => {
     return toast.success('Product Category Deleted Successfully... ', {
       position: toast.POSITION.TOP_RIGHT
     })
   }
 
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
-    this.props.productCategoryActions.getProductCategoryList(postData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+    this.props.productCategoryActions.getProductCategoryList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : '')
     })
@@ -161,12 +153,18 @@ class ProductCategory extends React.Component {
     }
   }
 
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
+  }
+
   // -------------------------
   // Actions
   //--------------------------
 
   // Delete Vat By ID
-  bulkDelete() {
+  bulkDelete = () => {
     const {
       selectedRows
     } = this.state
@@ -183,7 +181,7 @@ class ProductCategory extends React.Component {
     }
   }
 
-  removeBulk() {
+  removeBulk = () => {
     let { selectedRows } = this.state;
     const { product_category_list } = this.props
     let obj = {
@@ -198,12 +196,12 @@ class ProductCategory extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
@@ -214,12 +212,12 @@ class ProductCategory extends React.Component {
   //   const data = {
   //     ids: this.state.selectedRows
   //   }
-  //   this.props.productCategoryActions.deleteProductCategory(data).then(res => {
+  //   this.props.productCategoryActions.deleteProductCategory(data).then((res) => {
   //     if (res.status === 200) {
   //       // this.setState({ loading: false })
   //       this.initializeData()
   //     }
-  //   }).catch(err => {
+  //   }).catch((err) => {
   //     this.setState({ openDeleteModal: false })
   //   })
   // }
@@ -228,39 +226,53 @@ class ProductCategory extends React.Component {
   // showConfirmModal() {
   //   this.setState({ openDeleteModal: true })
   // }
-  // // Close Confirm Modal
+  // // Delete Confirm Modal
   // closeConfirmModal() {
   //   this.setState({ openDeleteModal: false })
   // }
 
 
-  handleFilterChange(e, name) {
+  handleFilterChange = (e, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: e.target.value
       })
     })
   }
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData()
   }
 
-  // filterVatList(vat_list) {
-  //   const {filters} = this.state
+  getCsvData = () => {
+    if (this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.productCategoryActions.getProductCategoryList(obj).then((res) => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
 
-  //   const data = vat_list.filter(item => {
-  //     for (var key in filters) {
-  //       if (item[key] === undefined || !item[key].toString().includes(filters[key]))
-  //         return false;
-  //     }
-  //     return true;
-  //   })
-
-  //   return data
-  // }
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        productCategoryCode: '',
+        productCategoryName: '',
+      },
+    })
+  }
 
   render() {
-    const { loading, selectedRows ,dialog} = this.state
+    const { loading, selectedRows, dialog, csvData, view, filterData } = this.state
     const { product_category_list } = this.props
 
     // let display_data = this.filterVatList(vatList)
@@ -287,12 +299,17 @@ class ProductCategory extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                            disabled={product_category_list.length === 0}
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
-                        </Button>
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
+                          </Button>
+                          {view && <CSVLink
+                            data={csvData}
+                            filename={'ProductCategory.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -320,6 +337,7 @@ class ProductCategory extends React.Component {
                               <Input type="text"
                                 name="code"
                                 placeholder="Product Category Code"
+                                value={filterData.productCategoryCode}
                                 // value={productCategoryCode ? productCategoryCode: ''}
                                 onChange={(e) => { this.handleFilterChange(e, 'productCategoryCode') }} />
                             </Col>
@@ -327,13 +345,18 @@ class ProductCategory extends React.Component {
                               <Input type="text"
                                 name="name"
                                 placeholder="Product Category Name"
+                                value={filterData.productCategoryName}
+                                autoComplete="off"
                                 // value={productCategoryName ?  productCategoryName : ''}
                                 onChange={(e) => { this.handleFilterChange(e, 'productCategoryName') }} />
                             </Col>
 
-                            <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                            <Col lg={1} className="pl-0 pr-0">
+                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
+                              </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                                <i className="fa fa-remove"></i>
                               </Button>
                             </Col>
                           </Row>
@@ -353,7 +376,7 @@ class ProductCategory extends React.Component {
                         className="product-table"
                         trClassName="cursor-pointer"
                         csvFileName="product_category.csv"
-                        ref={node => this.table = node}
+                        ref={(node) => this.table = node}
                       >
                         <TableHeaderColumn
                           dataField="productCategoryCode"

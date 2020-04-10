@@ -21,6 +21,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
 import './style.scss'
 
 import * as VatActions from './actions'
+import { CSVLink } from "react-csv";
+
 import {
   CommonActions
 } from 'services/global'
@@ -48,7 +50,9 @@ class VatCode extends React.Component {
       filterData: {
         name: '',
         vatPercentage: ''
-      }
+      },
+      csvData: [],
+      view: false
     }
 
     this.options = {
@@ -58,6 +62,9 @@ class VatCode extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
 
     this.selectRowProp = {
@@ -66,20 +73,26 @@ class VatCode extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
+
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData();
   }
 
-  initializeData() {
+  initializeData = (search) => {
     let { filterData } = this.state
-    const data = {
+    const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage ? this.options.sizePerPage : 10
     }
-    filterData = { ...filterData, ...data }
-    this.props.vatActions.getVatList(filterData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+    this.props.vatActions.getVatList(postData).then((res) => {
       if (res.status === 200) {
         this.setState({ loading: false })
       }
@@ -87,8 +100,15 @@ class VatCode extends React.Component {
       this.setState({
         loading: false
       })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
+  }
+
+
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData()
   }
 
   onRowSelect = (row, isSelected) => {
@@ -98,15 +118,16 @@ class VatCode extends React.Component {
         selectedRows: this.state.selectedRows
       })
     }
-    else
+    else {
       this.setState({
-        selectedRows: this.state.selectedRows.filter(el => el !== row.id)
+        selectedRows: this.state.selectedRows.filter((el) => el !== row.id)
       })
+    }
   }
 
   onSelectAll = (isSelected, rows) => {
     this.setState({
-      selectedRows: isSelected ? rows.map(row => row.id) : []
+      selectedRows: isSelected ? rows.map((row) => row.id) : []
     })
   }
 
@@ -180,8 +201,8 @@ class VatCode extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -203,8 +224,36 @@ class VatCode extends React.Component {
     this.initializeData();
   }
 
+  getCsvData = () => {
+    if (this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.vatActions.getVatList(obj).then((res) => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        name: '',
+        vatPercentage: ''
+      },
+    })
+  }
+
   render() {
-    const { loading, selectedRows, dialog } = this.state
+    const { loading, selectedRows, dialog, csvData, view, filterData } = this.state
     const { vat_list } = this.props
 
     return (
@@ -229,10 +278,17 @@ class VatCode extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                          Export to CSV
-                        </Button>
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
+                          </Button>
+                          {view && <CSVLink
+                            data={csvData}
+                            filename={'VatCode.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -256,20 +312,23 @@ class VatCode extends React.Component {
                         <h5>Filter : </h5>
                         <Row>
                           <Col lg={4} className="mb-1">
-                            <Input type="text" placeholder="Name" onChange={(e) => {
+                            <Input type="text" value={filterData.name} placeholder="Name" onChange={(e) => {
                               e.preventDefault()
                               this.handleChange(e.target.value, 'name')
                             }} />
                           </Col>
                           <Col lg={4} className="mb-1">
-                            <Input type="number" placeholder="Vat Percentage" onChange={(e) => {
+                            <Input type="text" value={filterData.vatPercentage} placeholder="Vat Percentage" onChange={(e) => {
                               e.preventDefault()
                               this.handleChange(e.target.value, 'vatPercentage')
                             }} />
                           </Col>
-                          <Col lg={2} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>
@@ -286,7 +345,7 @@ class VatCode extends React.Component {
                         fetchInfo={{ dataTotalSize: vat_list.count ? vat_list.count : 0 }}
                         trClassName="cursor-pointer"
                         csvFileName="vat_code.csv"
-                        ref={node => {
+                        ref={(node) => {
                           this.table = node
                         }}
                       >

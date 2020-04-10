@@ -15,7 +15,7 @@ import {
 import { selectOptionsFactory } from 'utils'
 import Select from 'react-select'
 // import { ToastContainer, toast } from 'react-toastify'
-import { BootstrapTable, TableHeaderColumn,  } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn, } from 'react-bootstrap-table'
 import {
   Loader,
   ConfirmDeleteModal
@@ -32,6 +32,7 @@ import {
 } from 'services/global'
 import * as PaymentActions from './actions'
 import moment from 'moment'
+import { CSVLink } from "react-csv";
 
 import './style.scss'
 
@@ -61,19 +62,10 @@ class Payment extends React.Component {
         supplierId: '',
         paymentDate: '',
         invoiceAmount: ''
-      }
+      },
+      csvData: [],
+      view: false
     }
-    this.removeDialog = this.removeDialog.bind(this)
-    this.bulkDeletePayments = this.bulkDeletePayments.bind(this)
-    this.removeBulkPayments = this.removeBulkPayments.bind(this)
-    this.initializeData = this.initializeData.bind(this)
-    this.onRowSelect = this.onRowSelect.bind(this)
-    this.onSelectAll = this.onSelectAll.bind(this)
-    this.goToDetail = this.goToDetail.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.onPageChange = this.onPageChange.bind(this)
-    this.onSizePerPageList = this.onSizePerPageList.bind(this)
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -82,8 +74,10 @@ class Payment extends React.Component {
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
+      sortName: '',
+      sortOrder: '',
+      onSortChange: this.sortColumn
     }
-
 
     this.selectRowProp = {
       mode: 'checkbox',
@@ -92,38 +86,42 @@ class Payment extends React.Component {
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll
     }
-
+    this.csvLink = React.createRef()
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
+    this.props.paymentActions.getSupplierContactList(this.state.contactType);
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
       pageSize: this.options.sizePerPage
     }
-    const postData = { ...filterData, ...paginationData }
-    this.props.paymentActions.getPaymentList(postData).then(res => {
+    const sortingData = {
+      order: this.options.sortOrder ? this.options.sortOrder : '',
+      sortingCol: this.options.sortName ? this.options.sortName : ''
+    }
+    const postData = { ...filterData, ...paginationData, ...sortingData }
+
+    this.props.paymentActions.getPaymentList(postData).then((res) => {
       if (res.status === 200) {
-        this.props.paymentActions.getSupplierContactList(this.state.contactType);
         this.setState({ loading: false })
       }
-    }).catch(err => {
+    }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
 
-  goToDetail(row) {
+  goToDetail = (row) => {
     this.props.history.push('/admin/expense/payment/detail', { id: row.paymentId })
   }
 
-  bulkDeletePayments() {
-
+  bulkDeletePayments = () => {
     let {
       selectedRows
     } = this.state
@@ -140,13 +138,13 @@ class Payment extends React.Component {
     }
   }
 
-  removeDialog() {
+  removeDialog = () => {
     this.setState({
       dialog: null
     })
   }
 
-  removeBulkPayments() {
+  removeBulkPayments = () => {
     this.removeDialog()
     let {
       selectedRows
@@ -163,47 +161,51 @@ class Payment extends React.Component {
           selectedRows: []
         })
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
 
-  onRowSelect(row, isSelected, e) {
-    let temp_list = []
+  onRowSelect = (row, isSelected, e) => {
+    let tempList = []
     if (isSelected) {
-      temp_list = Object.assign([], this.state.selectedRows)
-      temp_list.push(row.paymentId)
+      tempList = Object.assign([], this.state.selectedRows)
+      tempList.push(row.paymentId)
     } else {
-      this.state.selectedRows.map(item => {
+      this.state.selectedRows.map((item) => {
         if (item !== row.paymentId) {
-          temp_list.push(item)
+          tempList.push(item)
         }
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
-  onSelectAll(isSelected, rows) {
-    let temp_list = []
+  onSelectAll = (isSelected, rows) => {
+    let tempList = []
     if (isSelected) {
-      rows.map(item => {
-        temp_list.push(item.paymentId)
+      rows.map((item) => {
+        tempList.push(item.paymentId)
         return item
       })
     }
     this.setState({
-      selectedRows: temp_list
+      selectedRows: tempList
     })
   }
 
-  renderDate(cell, rows) {
+  renderDate = (cell, rows) => {
     return rows['paymentDate'] !== null ? moment(rows['paymentDate']).format('DD/MM/YYYY') : ''
   }
 
-  handleChange(val, name) {
+  renderAmount = (cell, row) => {
+    return row.invoiceAmount ? (row.invoiceAmount).toFixed(2) : ''
+  }
+
+  handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
         [name]: val
@@ -211,7 +213,7 @@ class Payment extends React.Component {
     })
   }
 
-  handleSearch() {
+  handleSearch = () => {
     this.initializeData()
   }
 
@@ -229,8 +231,43 @@ class Payment extends React.Component {
     }
   }
 
+  sortColumn = (sortName, sortOrder) => {
+    this.options.sortName = sortName
+    this.options.sortOrder = sortOrder
+    this.initializeData()
+  }
+
+  getCsvData = () => {
+    if (this.state.csvData.length === 0) {
+      let obj = {
+        paginationDisable: true
+      }
+      this.props.paymentActions.getPaymentList(obj).then((res) => {
+        if (res.status === 200) {
+          this.setState({ csvData: res.data.data, view: true }, () => {
+            setTimeout(() => {
+              this.csvLink.current.link.click()
+            }, 0)
+          });
+        }
+      })
+    } else {
+      this.csvLink.current.link.click()
+    }
+  }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        supplierId: '',
+        paymentDate: '',
+        invoiceAmount: ''
+      },
+    })
+  }
+
   render() {
-    const { loading, dialog, filterData, selectedRows } = this.state
+    const { loading, dialog, filterData, selectedRows, csvData, view } = this.state
     const { payment_list, supplier_list } = this.props
     // const containerStyle = {
     //   zIndex: 1999
@@ -267,12 +304,17 @@ class Payment extends React.Component {
                           <Button
                             color="success"
                             className="btn-square"
-                            onClick={() => this.table.handleExportCSV()}
-                            disabled={payment_list.length === 0}
+                            onClick={() => this.getCsvData()}
                           >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />
-                            Export to CSV
+                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
+                          {view && <CSVLink
+                            data={csvData}
+                            filename={'Payment.csv'}
+                            className="hidden"
+                            ref={this.csvLink}
+                            target="_blank"
+                          />}
                           <Button
                             color="primary"
                             className="btn-square"
@@ -321,6 +363,7 @@ class Payment extends React.Component {
                               selected={filterData.paymentDate}
                               showMonthDropdown
                               showYearDropdown
+                              autoComplete="off"
                               dateFormat="dd/MM/yyyy"
                               dropdownMode="select"
                               value={filterData.paymentDate}
@@ -334,12 +377,15 @@ class Payment extends React.Component {
                               type="text"
                               placeholder="Invoice Amount"
                               value={filterData.invoiceAmount}
-                              onChange={e => this.handleChange(e.target.value, 'invoiceAmount')}
+                              onChange={(e) => this.handleChange(e.target.value, 'invoiceAmount')}
                             />
                           </Col>
-                          <Col lg={1} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>
@@ -349,17 +395,17 @@ class Payment extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={payment_list && payment_list.data? payment_list.data : []}
+                          data={payment_list && payment_list.data ? payment_list.data : []}
                           version="4"
                           hover
                           keyField="paymentId"
-                          pagination = {payment_list && payment_list.data && payment_list.data.length > 0 ? true : false}
+                          pagination={payment_list && payment_list.data && payment_list.data.length > 0 ? true : false}
                           remote
                           fetchInfo={{ dataTotalSize: payment_list.count ? payment_list.count : 0 }}
                           className="payment-table"
                           trClassName="cursor-pointer"
-                          csvFileName="payment.csv"
-                          ref={node => {
+                          csvFileName="payment_list.csv"
+                          ref={(node) => {
                             this.table = node
                           }}
                         >
@@ -378,6 +424,9 @@ class Payment extends React.Component {
                           <TableHeaderColumn
                             dataField="invoiceAmount"
                             dataSort
+                            dataFormat={this.renderAmount}
+                            dataAlign="right"
+                            width="10%"
                           >
                             Amount
                           </TableHeaderColumn>
@@ -386,6 +435,7 @@ class Payment extends React.Component {
                             dataField="paymentDate"
                             dataSort
                             dataFormat={this.renderDate}
+                            dataAlign="center"
                           >
                             Date
                           </TableHeaderColumn>

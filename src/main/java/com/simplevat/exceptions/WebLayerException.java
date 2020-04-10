@@ -4,20 +4,17 @@ import com.simplevat.constant.WebLayerErrorCodeEnum;
 
 public class WebLayerException extends BaseException {
 
-	
-	private String errorMsg;
+	private static final long serialVersionUID = 1L;
+
+	//private String errorMsg;
 	private WebLayerErrorCodeEnum errorCode;
 	public static final String WEB = "WEB";
-	
-	public WebLayerException(String errorMsg_, WebLayerErrorCodeEnum errorCode_) {
-		super(errorMsg_);
-		this.errorMsg = errorMsg_;
-		this.errorCode = errorCode_;
+
+	public WebLayerException(String errorMsg, WebLayerErrorCodeEnum errorCode) {
+		super(errorMsg);
+		this.errorMsg = errorMsg;
+		this.errorCode = errorCode;
 	}
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	@Override
 	public String getSource() {

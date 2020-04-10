@@ -80,19 +80,16 @@ class CreateBankTransaction extends React.Component {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
     this.regEx = /^[0-9\d]+$/;
+    this.regExBoth = /[a-zA-Z0-9]+$/;
 
     this.formRef = React.createRef()
-
-    this.initializeData = this.initializeData.bind(this)
-    this.handleFileChange = this.handleFileChange.bind(this)
-
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
       if(this.props.location.state && this.props.location.state.bankAccountId) {
         this.setState({
           id: this.props.location.state.bankAccountId
@@ -103,7 +100,7 @@ class CreateBankTransaction extends React.Component {
       }
   }
 
-  handleFileChange(e, props) {
+  handleFileChange = (e, props) => {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -116,7 +113,7 @@ class CreateBankTransaction extends React.Component {
   }
 
 
-  handleSubmit(data, resetForm) {
+  handleSubmit = (data, resetForm) =>  {
     let bankAccountId = this.props.location.state && this.props.location.state.bankAccountId ? this.props.location.state.bankAccountId : ''
     const {
       transactionDate,
@@ -142,7 +139,7 @@ class CreateBankTransaction extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append("attachment", this.uploadFile.files[0]);
     }
-    this.props.transactionCreateActions.createTransaction(formData).then(res => {
+    this.props.transactionCreateActions.createTransaction(formData).then((res) => {
       if (res.status === 200) {
         resetForm()
         this.props.commonActions.tostifyAlert('success', 'New Transaction Created Successfully.')
@@ -151,11 +148,11 @@ class CreateBankTransaction extends React.Component {
             createMore: false
           })
         } else {
-          this.props.history.push('/admin/banking/bank-account/transaction',{'bankAccountId': bankAccountId})
+          this.props.history.push('/admin/banking/bank-account/transaction',{bankAccountId})
         }
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
@@ -200,7 +197,7 @@ class CreateBankTransaction extends React.Component {
 															.test(
 																"fileType",
 																"*Unsupported File Format",
-																value => {
+																(value) => {
 																	value && this.setState({
 																		fileName: value.name
 																	});
@@ -217,7 +214,7 @@ class CreateBankTransaction extends React.Component {
 															.test(
 																"fileSize",
 																"*File Size is too large",
-																value => {
+																(value) => {
 																	if (!value || (value && value.size <= this.file_size) || !value) {
 																		return true;
 																	} else {
@@ -227,7 +224,7 @@ class CreateBankTransaction extends React.Component {
 															)
                           })}
                       >
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit}>
                             <Row>
                               <Col lg={4}>
@@ -236,7 +233,7 @@ class CreateBankTransaction extends React.Component {
                                   <Select
                                     options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type') : ''}
                                     value={props.values.chartOfAccountId}
-                                    onChange={option => {
+                                    onChange={(option) => {
                                       if (option && option.value) {
                                         props.handleChange('chartOfAccountId')(option.value)
                                       } else {
@@ -288,7 +285,7 @@ class CreateBankTransaction extends React.Component {
                                     id="transactionAmount"
                                     name="transactionAmount"
                                     placeholder="Amount"
-                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) props.handleChange('transactionAmount')(option) }}
+                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) {props.handleChange('transactionAmount')(option)} }}
                                     value={props.values.transactionAmount}
                                     className={
                                       props.errors.transactionAmount && props.touched.transactionAmount
@@ -311,7 +308,7 @@ class CreateBankTransaction extends React.Component {
                                     options={transaction_category_list && transaction_category_list.data && transaction_category_list.data.length > 0? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list.data, 'Category') : []}
                                     id="transactionCategoryId"
                                     value={props.values.transactionCategoryId}
-                                    onChange={option => props.handleChange('transactionCategoryId')(option.value)}
+                                    onChange={(option) => props.handleChange('transactionCategoryId')(option.value)}
                                   />
                                 </FormGroup>
                               </Col>
@@ -326,7 +323,7 @@ class CreateBankTransaction extends React.Component {
                                     id="description"
                                     rows="6"
                                     placeholder="Description..."
-                                    onChange={option => props.handleChange('transactionDescription')(option)}
+                                    onChange={(option) => props.handleChange('transactionDescription')(option)}
                                     value={props.values.transactionDescription}
                                   />
                                 </FormGroup>
@@ -341,7 +338,7 @@ class CreateBankTransaction extends React.Component {
                                     options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                     id="projectId"
                                     name="projectId"
-                                    onChange={option => props.handleChange('projectId')(option.value)}
+                                    onChange={(option) => props.handleChange('projectId')(option.value)}
                                     value={props.values.projectId}
                                   />
                                 </FormGroup>
@@ -358,7 +355,7 @@ class CreateBankTransaction extends React.Component {
                                         id="receiptNumber"
                                         name="receiptNumber"
                                         placeholder="Reciept Number"
-                                        onChange={option => props.handleChange('receiptNumber')(option)}
+                                        onChange={(option) => { if (option.target.value === '' || this.regExBoth.test(option.target.value)) {props.handleChange('receiptNumber')(option)} }}
                                         value={props.values.receiptNumber}
                                       />
                                     </FormGroup>
@@ -374,7 +371,7 @@ class CreateBankTransaction extends React.Component {
                                         id="receiptAttachmentDescription"
                                         rows="5"
                                         placeholder="1024 characters..."
-                                        onChange={option => props.handleChange('receiptAttachmentDescription')(option)}
+                                        onChange={(option) => props.handleChange('receiptAttachmentDescription')(option)}
                                         value={props.values.receiptAttachmentDescription}
                                       />
                                     </FormGroup>
@@ -392,7 +389,7 @@ class CreateBankTransaction extends React.Component {
                                             <Button color="primary" onClick={() => { document.getElementById('fileInput').click() }} className="btn-square mr-3">
                                               <i className="fa fa-upload"></i> Upload
                                   </Button>
-                                            <input id="fileInput" ref={ref => {
+                                            <input id="fileInput" ref={(ref) => {
                                               this.uploadFile = ref;
                                             }} type="file" style={{ display: 'none' }} onChange={(e) => {
                                               this.handleFileChange(e, props)

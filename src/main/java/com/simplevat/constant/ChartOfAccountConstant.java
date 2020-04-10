@@ -11,6 +11,10 @@ package com.simplevat.constant;
  */
 public class ChartOfAccountConstant {
 
-    public static final int TRANSACTION_TYPE_EXPENSE = 8;
-    public static final int MONEY_IN = 1;
+	public static final int TRANSACTION_TYPE_EXPENSE = 8;
+	public static final int MONEY_IN = 1;
+
+	private ChartOfAccountConstant() {
+		// CREATED TO REMOVE SONAR ERROR
+	}
 }

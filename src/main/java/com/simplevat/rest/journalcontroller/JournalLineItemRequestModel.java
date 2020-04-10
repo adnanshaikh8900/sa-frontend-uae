@@ -1,5 +1,6 @@
 package com.simplevat.rest.journalcontroller;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.simplevat.constant.PostingReferenceTypeEnum;
@@ -7,7 +8,7 @@ import com.simplevat.constant.PostingReferenceTypeEnum;
 import lombok.Data;
 
 @Data
-public class JournalLineItemRequestModel {
+public class JournalLineItemRequestModel implements Serializable  {
 
 	private Integer id;
 	private String description;

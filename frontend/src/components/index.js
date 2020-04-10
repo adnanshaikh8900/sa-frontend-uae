@@ -7,6 +7,7 @@ import Message from './message'
 import DateRangePicker2 from './datepicker'
 import ConfirmDeleteModal from './confirm_delete_modal'
 import ImageUploader from './react-image-upload'
+import SidebarComponent from './sidebar'
 
 
 export {
@@ -18,5 +19,6 @@ export {
   Message,
   DateRangePicker2,
   ConfirmDeleteModal,
-  ImageUploader
+  ImageUploader,
+  SidebarComponent
 }

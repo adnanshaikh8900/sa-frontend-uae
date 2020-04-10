@@ -9,9 +9,9 @@ export const createReceipt = (obj) => {
       url: 'rest/receipt/save',
       data: obj
     }
-    return authApi(data).then(res => {
+    return authApi(data).then((res) => {
       return res
-    }).catch(err => {
+    }).catch((err) => {
       throw err
     })
   }

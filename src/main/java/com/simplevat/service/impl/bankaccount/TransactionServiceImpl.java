@@ -1,53 +1,47 @@
 package com.simplevat.service.impl.bankaccount;
 
-import com.simplevat.constant.dbfilter.TransactionFilterEnum;
-import com.simplevat.model.TransactionReportRestModel;
-
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.criteria.bankaccount.TransactionCriteria;
 import com.simplevat.criteria.bankaccount.TransactionFilter;
-import com.simplevat.dao.InvoiceDao;
 import com.simplevat.dao.bankaccount.BankAccountDao;
 import com.simplevat.dao.bankaccount.TransactionDao;
-import com.simplevat.dao.bankaccount.TransactionStatusDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionView;
+import com.simplevat.model.TransactionReportRestModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.util.ChartUtil;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Objects;
 
 @Service("transactionService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class TransactionServiceImpl extends TransactionService {
 
+	private final Logger LOGGER = LoggerFactory.getLogger(TransactionServiceImpl.class);
+
 	@Autowired
-	ChartUtil util;
+	private ChartUtil util;
 
 	@Autowired
 	private TransactionDao transactionDao;
-
-	@Autowired
-	private InvoiceDao invoiceDao;
-
-	@Autowired
-	private TransactionStatusDao transactionStatusDao;
 
 	@Autowired
 	private BankAccountDao bankAccountDao;
@@ -337,7 +331,7 @@ public class TransactionServiceImpl extends TransactionService {
 			}
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error", e);
 			return false;
 		}
 	}
@@ -365,11 +359,6 @@ public class TransactionServiceImpl extends TransactionService {
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,
 			PaginationModel paginationModel) {
 		return transactionDao.getAllTransactionList(filterModel, paginationModel);
-	}
-
-	@Override
-	public void getForDashBoardCashFlow() {
-		transactionDao.getForDashBoardCashFlow();
 	}
 
 }

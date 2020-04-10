@@ -55,18 +55,14 @@ class CreateChartAccount extends React.Component {
       loading: false,
       createMore: false
     }
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.initializeData = this.initializeData.bind(this)
-    // this.success = this.success.bind(this)
-
+    this.regExAlpha = /^[a-zA-Z]+$/
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.initializeData()
   }
 
-  initializeData() {
+  initializeData = () => {
     this.props.ChartOfAccontActions.getSubTransactionTypes();
   }
   // Show Success Toast
@@ -77,8 +73,8 @@ class CreateChartAccount extends React.Component {
   // }
 
   // Create or Edit Vat
-  handleSubmit(data, resetForm) {
-    this.props.createChartOfAccontActions.createTransactionCategory(data).then(res => {
+  handleSubmit = (data, resetForm) => {
+    this.props.createChartOfAccontActions.createTransactionCategory(data).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Chart of Account Created Successfully')
         if (this.state.createMore) {
@@ -90,13 +86,13 @@ class CreateChartAccount extends React.Component {
           this.props.history.push('/admin/master/chart-account')
         }
       }
-    }).catch(err => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : null)
+    }).catch((err) => {
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
     })
   }
 
-  renderOptions = options => {
-    return options.map(option => {
+  renderOptions = (options) => {
+    return options.map((option) => {
       return (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -139,7 +135,7 @@ class CreateChartAccount extends React.Component {
                               .required("Type is Required")
                           })}
                       >
-                        {props => (
+                        {(props) => (
                           <Form onSubmit={props.handleSubmit} name="simpleForm">
                             {/* <FormGroup>
                               <Label htmlFor="transactionCategoryCode">Code</Label>
@@ -167,7 +163,8 @@ class CreateChartAccount extends React.Component {
                                 id="transactionCategoryName"
                                 name="transactionCategoryName"
                                 placeholder="Enter Name"
-                                onChange={(value) => { props.handleChange('transactionCategoryName')(value) }}
+                                onChange={(option) => { 
+                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {props.handleChange('transactionCategoryName')(option)} }}
                                 value={props.values.transactionCategoryName}
                                 className={
                                   props.errors.transactionCategoryName && props.touched.transactionCategoryName
@@ -185,7 +182,7 @@ class CreateChartAccount extends React.Component {
                                 className="select-default-width"
                                 options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : ''}
                                 value={props.values.chartOfAccount}
-                                onChange={option => {
+                                onChange={(option) => {
                                   if(option && option.value) {
                                     props.handleChange('chartOfAccount')(option.value)
                                   } else {
@@ -210,14 +207,14 @@ class CreateChartAccount extends React.Component {
                                 name='chartOfAccount'
                                 value={props.values.chartOfAccount}
                                 // size="1"
-                                onChange={(e)=>{
+                                onChange={(e) => {
                                   props.handleChange('chartOfAccount')(e.target.value)
                                 }}
                               >
                                 {Object.keys(sub_transaction_type_list).map((group, index) => {
                                   return (
                                     <optgroup key={index} label={group}>
-                                      {this.renderOptions(sub_transaction_type_list[group])}
+                                      {this.renderOptions(sub_transaction_type_list[`${group}`])}
                                     </optgroup>
                                   );
                                 })}

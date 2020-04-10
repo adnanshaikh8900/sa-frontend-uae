@@ -15,6 +15,9 @@ public enum PostingReferenceTypeEnum {
     MANUAL("Manual"),
     INVOICE("Invoice"),
     EXPENSE("Expense"),
+    RECONSILE_TRANSACTION_INVOICE("Reconsile Transaction for Invoice"),
+    RECONSILE_TRANSACTION_EXPENSE("Reconsile Transaction for Expense"),
+    RECONSILE_TRANSACTION_REMAIN("Reconsile Transaction for REMAINING AMOUNT"),
     BANK_ACCOUNT("Bank Account"),
     PURCHASE("Purchase");
 	

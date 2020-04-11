@@ -4,7 +4,6 @@ ENV CATALINA_HOME /usr/local/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
 RUN mkdir -p "$CATALINA_HOME"
 WORKDIR $CATALINA_HOME
-COPY tomcat_home/conf/context.xml ${CATALINA_HOME}/conf/context.xml
 
 # let "Tomcat Native" live somewhere isolated
 ENV TOMCAT_NATIVE_LIBDIR $CATALINA_HOME/native-jni-lib
@@ -112,6 +111,9 @@ RUN set -eux; \
 	chmod -R +rX .; \
 	rm -rf ${CATALINA_HOME}/webapps/*; \
 	chmod 777 logs temp work
+
+RUN rm -rf ${CATALINA_HOME}/conf/context.xml
+COPY tomcat_home/conf/context.xml ${CATALINA_HOME}/conf/
 
 # verify Tomcat Native is working properly
 RUN set -e \

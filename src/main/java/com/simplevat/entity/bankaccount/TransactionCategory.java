@@ -25,7 +25,10 @@ import org.hibernate.annotations.ColumnDefault;
             query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (t.createdBy = :createdBy or t.createdBy = 1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC")
     ,
     @NamedQuery(name = "findMaxTnxCodeByChartOfAccId",
-    query = "SELECT t FROM TransactionCategory t where chartOfAccount =:chartOfAccountId ORDER BY  CAST(t.transactionCategoryCode as int) DESC")
+    query = "SELECT t FROM TransactionCategory t where chartOfAccount =:chartOfAccountId ORDER BY  CAST(t.transactionCategoryCode as int) DESC") 
+    ,
+    @NamedQuery(name = "findAllTransactionCategoryBychartOfAccountCategoryCode",
+    query = "SELECT t FROM TransactionCategory t where chartOfAccount.chartOfAccountCategoryCode =:chartOfAccountCategoryCode ORDER BY transactionCategoryId ASC")
 
 })
 @Entity

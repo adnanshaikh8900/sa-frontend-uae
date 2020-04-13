@@ -133,4 +133,9 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	public String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount) {
 		return dao.getNxtTransactionCatCodeByChartOfAccount(chartOfAccount);
 	}
+
+	@Override
+	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryCode(String chartOfAccountCategoryCode) {
+		return dao.getTransactionCatByChartOfAccountCategoryCode(chartOfAccountCategoryCode);
+	}
 }

@@ -1,6 +1,7 @@
 package com.simplevat.dao.impl.bankaccount;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -127,7 +128,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 	@Override
 	public PaginationResponseModel getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach((transactionCategoryFilter, value) -> dbFilters
 				.add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
 						.condition(transactionCategoryFilter.getCondition()).value(value).build()));
@@ -158,4 +159,10 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		return chartOfAccountCode + (d + 1);
 	}
 
+	@Override
+	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryCode(String chartOfAccountCategoryCode) {
+		return getEntityManager()
+				.createNamedQuery("findAllTransactionCategoryBychartOfAccountCategoryCode", TransactionCategory.class)
+				.setParameter("chartOfAccountCategoryCode", chartOfAccountCategoryCode).getResultList();
+	}
 }

@@ -36,7 +36,7 @@ class SidebarComponent extends React.Component {
               // width: "400px",
               position: "fixed",
               top: "101px",
-              left: "71%",
+              left: "65%",
               boxShadow: "rgba(0, 0, 0, 0)",
               borderLeftWidth: "1px",
               borderLeftColor: "#eee",

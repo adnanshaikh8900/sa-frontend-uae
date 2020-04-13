@@ -23,7 +23,7 @@
   .main-table-panel{
 
       // width: calc(100% - 400px) !important;
-      width: 66%;
+      width: 59%;
       // transition: width 9s ease-in-out;
     .card-body{
       // height: calc(100% - 400px) !important;
@@ -55,7 +55,7 @@
       cursor: pointer;
     }
     .remove-row {
-      width: 20%;
+      width: 5%;
       display: flex;
     button {
       width: 100%;
@@ -104,7 +104,17 @@
         overflow-y: auto;
         .detail-row {
           justify-content: space-between;
+          .sub-container{
+            display: flex;
+            width: 100%;
+          }
         }
+      }
+      .custom-select-box {
+        width: 100%;
+        padding: 6px 4px;
+        color: darkgray;
+        border: 1px solid lightgrey;
       }
     }
     .sidebar-main-data{

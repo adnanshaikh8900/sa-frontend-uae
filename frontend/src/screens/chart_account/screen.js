@@ -126,7 +126,9 @@ class ChartAccount extends React.Component {
   }
 
   goToDetailPage = (row) => {
+    if(!row.isEditable) {
     this.props.history.push(`/admin/master/chart-account/detail`, { id: row.transactionCategoryId })
+    }
   }
 
   goToCreatePage = () => {
@@ -265,6 +267,10 @@ class ChartAccount extends React.Component {
         chartOfAccountId: ''
       }
     })
+  }
+
+  editFormatter =  (cell, row) => {
+    return row['isEditable'] ? (<i className="fas fa-lock"></i>) : (<i className="fas fa-lock-open"></i>)
   }
 
   render() {
@@ -411,6 +417,11 @@ class ChartAccount extends React.Component {
                             dataFormat={this.typeFormatter}
                           >
                             Type
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
+                            dataField="isEditable"
+                            dataFormat={this.editFormatter}
+                          >
                           </TableHeaderColumn>
                         </BootstrapTable>
                       </div>

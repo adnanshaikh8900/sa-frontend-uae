@@ -1,10 +1,13 @@
 package com.simplevat.rest.datalistcontroller;
 
+import com.simplevat.entity.ChartOfAccountCategory;
 import com.simplevat.entity.Country;
 import com.simplevat.entity.IndustryType;
 import com.simplevat.entity.State;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.ReconcileCategory;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PayMode;
@@ -16,8 +19,10 @@ import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
+import com.simplevat.service.ChartOfAccountCategoryService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
@@ -79,6 +84,9 @@ public class DataListController {
 
 	@Autowired
 	private ReconcileCategoryService reconcileCategoryService;
+
+	@Autowired
+	private ChartOfAccountCategoryService chartOfAccountCategoryService;
 
 	@GetMapping(value = "/getcountry")
 	public ResponseEntity getCountry() {
@@ -272,14 +280,35 @@ public class DataListController {
 	@GetMapping(value = "/reconsileCategories")
 	public ResponseEntity getReconsilteCategories(@RequestParam("debitCreditFlag") String debitCreditFlag) {
 		try {
-			List<ReconcileCategory> reconcileCategoryList = reconcileCategoryService
-					.findByType(debitCreditFlag.equals("C") ? "1" : "2");
-			if (reconcileCategoryList != null && !reconcileCategoryList.isEmpty()) {
+			List<ChartOfAccountCategory> chartOfAccountCategoryList = chartOfAccountCategoryService.findAll();
+			if (chartOfAccountCategoryList != null && !chartOfAccountCategoryList.isEmpty()) {
+
 				List<DropdownModel> modelList = new ArrayList<DropdownModel>();
-				for (ReconcileCategory reconcileCategory : reconcileCategoryList)
-					modelList.add(new DropdownModel(Integer.valueOf(reconcileCategory.getReconcileCategoryCode()),
-							reconcileCategory.getReconcileCategoryName()));
-				return new ResponseEntity<>(modelList, HttpStatus.OK);
+
+				ChartOfAccountCategory parentCategory = null;
+				for (ChartOfAccountCategory chartOfAccountCategory : chartOfAccountCategoryList) {
+
+					if (debitCreditFlag.equals("C") && chartOfAccountCategory.getParentChartOfAccount() != null
+							&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
+									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId())) {
+
+						modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
+								chartOfAccountCategory.getChartOfAccountCategoryName()));
+					} else if (debitCreditFlag.equals("D") && chartOfAccountCategory.getParentChartOfAccount() != null
+							&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
+									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
+						modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
+								chartOfAccountCategory.getChartOfAccountCategoryName()));
+					} else if ((debitCreditFlag.equals("C") && chartOfAccountCategory.getChartOfAccountCategoryId()
+							.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId()))
+							|| debitCreditFlag.equals("D") && chartOfAccountCategory.getChartOfAccountCategoryId()
+									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
+						parentCategory = chartOfAccountCategory;
+					}
+				}
+				return new ResponseEntity<>(
+						new SingleLevelDropDownModel(parentCategory.getChartOfAccountCategoryName(), modelList),
+						HttpStatus.OK);
 			} else {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}

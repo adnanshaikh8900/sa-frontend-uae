@@ -112,6 +112,9 @@ RUN set -eux; \
 	rm -rf ${CATALINA_HOME}/webapps/*; \
 	chmod 777 logs temp work
 
+RUN rm -rf ${CATALINA_HOME}/conf/context.xml
+COPY tomcat_home/conf/context.xml ${CATALINA_HOME}/conf/
+
 # verify Tomcat Native is working properly
 RUN set -e \
 	&& nativeLines="$(catalina.sh configtest 2>&1)" \

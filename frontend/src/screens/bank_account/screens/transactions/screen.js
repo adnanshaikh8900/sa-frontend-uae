@@ -144,15 +144,6 @@ class BankTransactions extends React.Component {
         if (res.status === 200) {
           this.setState({
             loading: false
-          },()=>{
-            if(search) {
-              this.setState({
-                filterData: {
-                  transactionDate: '',
-                  chartOfAccountId: ''
-                },
-              })
-            }
           });
         }
       }).catch((err) => {
@@ -203,7 +194,7 @@ class BankTransactions extends React.Component {
         categoryLabel: ''
       }]
     }, () => {
-      this.setState({ sidebarOpen: open, transactionId: data.id, categoryDetails: {}, selectedRow: data.id, transaction_amount, currentBalance: transaction_amount,showAlert: false,submitBtnClick: false });
+      this.setState({ sidebarOpen: open, transactionId: data.id, categoryDetails: {}, selectedRow: data.id, transaction_amount, currentBalance: transaction_amount, showAlert: false, submitBtnClick: false });
       this.getTransactionListForReconcile(data.debitCreditFlag)
     })
   }
@@ -259,12 +250,12 @@ class BankTransactions extends React.Component {
   }
 
   checkChartOfAccount = () => {
-    const { transaction_amount, currentBalance, submitBtnClick,transaction_category_list} = this.state
+    const { transaction_amount, currentBalance, submitBtnClick, transaction_category_list } = this.state
     if (transaction_amount > currentBalance && currentBalance !== 0 && submitBtnClick) {
       this.setState({
         showChartOfAccount: true
       })
-      if(transaction_category_list.length === 0) {
+      if (transaction_category_list.length === 0) {
         this.props.transactionsActions.getTransactionCategoryList().then((res) => {
           if (res.status === 200) {
             this.setState({
@@ -303,7 +294,7 @@ class BankTransactions extends React.Component {
           })
         }
       } else {
-        if(!this.checkedRow()) {
+        if (!this.checkedRow()) {
           this.submitExplain(postData)
         }
       }
@@ -333,7 +324,7 @@ class BankTransactions extends React.Component {
   }
 
   closeSideBar = () => {
-    this.setState({ sidebarOpen: false, selectedRowData: '', selectedRow: '', explainList: [], showChartOfAccount: false, selectedTransactionCategoryType: '', submitBtnClick: false,showAlert: false })
+    this.setState({ sidebarOpen: false, selectedRowData: '', selectedRow: '', explainList: [], showChartOfAccount: false, selectedTransactionCategoryType: '', submitBtnClick: false, showAlert: false })
     let element = document.querySelector('body');
     element.className = element.className.replace('sidebar-minimized brand-minimized', '')
   }
@@ -355,7 +346,7 @@ class BankTransactions extends React.Component {
 
   checkCategory = (value, label) => {
     const { explainList } = this.state;
-    const temp = explainList.filter(item => item[`${label}`] === value)
+    const temp = explainList.filter((item) => item[`${label}`] === value)
     if (temp.length > 0) {
       return false
     } else {
@@ -364,7 +355,7 @@ class BankTransactions extends React.Component {
   }
 
   getSideBarContent = () => {
-    const { transaction_type_list_reconcile, categoryList, showChartOfAccount, transaction_amount, currentBalance, explainList, transaction_category_list ,submitBtnClick , showAlert} = this.state
+    const { transaction_type_list_reconcile, categoryList, showChartOfAccount, transaction_amount, currentBalance, explainList, transaction_category_list, submitBtnClick, showAlert } = this.state
     // const { date, amount, name, due_date } = this.state.categoryDetails
     return (
       <div className="sidebar-content">
@@ -375,9 +366,9 @@ class BankTransactions extends React.Component {
         {
           <div>
             <div className="content-details p-3">
-              { (this.checkedRow() && submitBtnClick) || showAlert ? ( <Alert color="danger">
+              {(this.checkedRow() && submitBtnClick) || showAlert ? (<Alert color="danger">
                 Please Select all the remaining fields.
-              </Alert> ) : null}
+              </Alert>) : null}
               <Row>
                 <Col lg={5}>
                   <label class="value">Transaction Amount</label>
@@ -523,12 +514,11 @@ class BankTransactions extends React.Component {
   }
 
   toggleActionButton = (index) => {
-    let val = index
     let temp = Object.assign({}, this.state.actionButtons)
-    if (temp[val]) {
-      temp[val] = false
+    if (temp[`${index}`]) {
+      temp[`${index}`] = false
     } else {
-      temp[val] = true
+      temp[`${index}`] = true
     }
     this.setState({
       actionButtons: temp
@@ -677,11 +667,13 @@ class BankTransactions extends React.Component {
     let amount = 0;
     this.state.explainList.map((obj) => {
       for (let item in this.state.categoryList) {
-        let tempAmount;
-        if (item === obj['categoryLabel']) {
-          temp = this.state.categoryList[`${obj['categoryLabel']}`].filter((item) => item.id === obj.reconcileRrefId);
-          tempAmount = temp.length ? temp[0]['amount'] : 0
-          amount = amount + tempAmount;
+        if (this.state.categoryList.hasOwnProperty(item)) {
+          let tempAmount;
+          if (item === obj['categoryLabel']) {
+            temp = this.state.categoryList[`${obj['categoryLabel']}`].filter((item) => item.id === obj.reconcileRrefId);
+            tempAmount = temp.length ? temp[0]['amount'] : 0
+            amount = amount + tempAmount;
+          }
         }
       }
       return obj
@@ -694,7 +686,7 @@ class BankTransactions extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData(true);
+    this.initializeData();
   }
 
   closeTransaction = (id) => {
@@ -742,6 +734,14 @@ class BankTransactions extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        transactionDate: '',
+        chartOfAccountId: ''
+      },
+    })
+  }
 
   render() {
 
@@ -881,9 +881,12 @@ class BankTransactions extends React.Component {
                               autoComplete="off"
                             />
                           </Col>
-                          <Col lg={2} className="mb-1">
-                            <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
+                            </Button>
+                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                              <i className="fa fa-remove"></i>
                             </Button>
                           </Col>
                         </Row>

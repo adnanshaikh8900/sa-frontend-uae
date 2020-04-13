@@ -109,21 +109,11 @@ class Product extends React.Component {
     const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.productActions.getProductList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false },()=>{
-          if(search) {
-            this.setState({
-              filterData: {
-                name: '',
-                productCode: '',
-                vatPercentage: ''
-              },
-            })
-          }
-        })
+        this.setState({ loading: false })
       }
     }).catch((err) => {
       this.setState({ loading: false })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -200,7 +190,7 @@ class Product extends React.Component {
         }
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -223,7 +213,7 @@ class Product extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData(true);
+    this.initializeData();
     // this.setState({})
   }
 
@@ -241,7 +231,7 @@ class Product extends React.Component {
     }
   }
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -258,9 +248,20 @@ class Product extends React.Component {
       this.csvLink.current.link.click()
     }
   }
+
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        name: '',
+        productCode: '',
+        vatPercentage: ''
+      },
+    })
+  }
+
   render() {
 
-    const { loading, dialog , filterData , selectedRows,csvData,view} = this.state
+    const { loading, dialog, filterData, selectedRows, csvData, view } = this.state
     const { product_list, vat_list } = this.props
 
 
@@ -293,14 +294,14 @@ class Product extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'Product.csv'}
                             className="hidden"
@@ -339,12 +340,12 @@ class Product extends React.Component {
                             <Col lg={3} className="mb-1">
                               <FormGroup className="mb-3">
                                 <Select
-                                  options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list,'Vat') : []}
+                                  options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list, 'Vat') : []}
                                   className="select-default-width"
                                   placeholder="Vat Percentage"
                                   value={filterData.vatPercentage}
                                   onChange={(option) => {
-                                    if(option && option.value) {
+                                    if (option && option.value) {
                                       this.handleChange(option.value, 'vatPercentage')
                                     } else {
                                       this.handleChange('', 'vatPercentage')
@@ -353,9 +354,12 @@ class Product extends React.Component {
                                 />
                               </FormGroup>
                             </Col>
-                            <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                            <Col lg={1} className="pl-0 pr-0">
+                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
+                              </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                                <i className="fa fa-remove"></i>
                               </Button>
                             </Col>
                           </Row>
@@ -369,7 +373,7 @@ class Product extends React.Component {
                           data={product_list && product_list.data ? product_list.data : []}
                           version="4"
                           hover
-                          pagination = {product_list && product_list.data && product_list.data.length > 0 ? true : false}    
+                          pagination={product_list && product_list.data && product_list.data.length > 0 ? true : false}
                           remote
                           fetchInfo={{ dataTotalSize: product_list.count ? product_list.count : 0 }}
                           className="product-table"

@@ -99,12 +99,12 @@ class Expense extends React.Component {
     this.csvLink = React.createRef()
   }
 
-  
+
   componentDidMount = () => {
     this.props.expenseActions.getExpenseCategoriesList();
     this.initializeData()
   }
-  
+
   initializeData = (search) => {
     const { filterData } = this.state
     const paginationData = {
@@ -116,27 +116,17 @@ class Expense extends React.Component {
       sortingCol: this.state.sortName ? this.state.sortName : ''
     }
     const postData = { ...filterData, ...paginationData, ...sortingData }
-    
+
     this.props.expenseActions.getExpenseList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false },()=>{
-          if(search) {
-            this.setState({
-              filterData: {
-                expenseDate: '',
-                transactionCategoryId: '',
-                payee: '',
-              },
-            })
-          }
-        })
+        this.setState({ loading: false })
       }
     }).catch((err) => {
       this.setState({ loading: false })
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
-  
+
   componentWillUnmount = () => {
     this.setState({
       selectedRows: []
@@ -278,7 +268,7 @@ class Expense extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData(true)
+    this.initializeData()
   }
 
   onSizePerPageList = (sizePerPage) => {
@@ -356,7 +346,7 @@ class Expense extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -376,7 +366,7 @@ class Expense extends React.Component {
       this.props.commonActions.tostifyAlert('success', 'Expense Deleted Successfully')
       this.initializeData()
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -387,7 +377,7 @@ class Expense extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -405,11 +395,21 @@ class Expense extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        expenseDate: '',
+        transactionCategoryId: '',
+        payee: '',
+      },
+    })
+  }
+
   render() {
     const { loading,
       dialog,
       filterData,
-      selectedRows,      
+      selectedRows,
       csvData,
       view
     } = this.state
@@ -532,9 +532,12 @@ class Expense extends React.Component {
                           />
                         </FormGroup>
                       </Col>
-                      <Col lg={1} className="mb-1">
-                        <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                      <Col lg={1} className="pl-0 pr-0">
+                        <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                           <i className="fa fa-search"></i>
+                        </Button>
+                        <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                          <i className="fa fa-remove"></i>
                         </Button>
                       </Col>
                     </Row>

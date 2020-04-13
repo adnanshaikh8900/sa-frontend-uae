@@ -96,24 +96,13 @@ class Project extends React.Component {
     const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.projectActions.getProjectList(postData).then((res) => {
       if (res.status === 200) {
-        this.setState({ loading: false },()=>{
-          if(search) {
-            this.setState({
-              filterData: {
-                projectName: '',
-                vatRegistrationNumber: '',
-                expenseBudget: '',
-                revenueBudget: '',
-              }
-            })
-          }
-        })
+        this.setState({ loading: false })
       }
     }).catch((err) => {
       this.setState({
         loading: false
       })
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -198,13 +187,13 @@ class Project extends React.Component {
     this.props.projectActions.removeBulk(obj).then((res) => {
       this.initializeData();
       this.props.commonActions.tostifyAlert('success', 'Projects Deleted Successfully')
-      if (project_list && project_list.data &&  project_list.data.length > 0) {
+      if (project_list && project_list.data && project_list.data.length > 0) {
         this.setState({
           selectedRows: []
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -223,7 +212,7 @@ class Project extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData(true);
+    this.initializeData();
   }
 
   contactFormatter = (cell, row) => {
@@ -235,7 +224,7 @@ class Project extends React.Component {
   }
 
   getCsvData = () => {
-       if(this.state.csvData.length === 0) {
+    if (this.state.csvData.length === 0) {
       let obj = {
         paginationDisable: true
       }
@@ -253,8 +242,19 @@ class Project extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        projectName: '',
+        vatRegistrationNumber: '',
+        expenseBudget: '',
+        revenueBudget: '',
+      }
+    })
+  }
+
   render() {
-    const { loading, dialog,selectedRows,csvData,view, filterData} = this.state
+    const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { project_list } = this.props
 
 
@@ -282,14 +282,14 @@ class Project extends React.Component {
                     <Col lg={12}>
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
-                        <Button
+                          <Button
                             color="success"
                             className="btn-square"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
                           </Button>
-                           {view && <CSVLink
+                          {view && <CSVLink
                             data={csvData}
                             filename={'Project.csv'}
                             className="hidden"
@@ -333,10 +333,13 @@ class Project extends React.Component {
                             <Col lg={2} className="mb-1">
                               <Input type="text" placeholder="VAT Number" value={filterData.vatRegistrationNumber} onChange={(e) => { this.handleChange(e.target.value, 'vatRegistrationNumber') }} />
                             </Col>
-                            <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                            <Col lg={1} className="pl-0 pr-0">
+                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
-                            </Button>
+                              </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                                <i className="fa fa-remove"></i>
+                              </Button>
                             </Col>
                           </Row>
                         </form>
@@ -350,7 +353,7 @@ class Project extends React.Component {
                           version="4"
                           hover
                           keyField="projectId"
-                          pagination = {project_list && project_list.data &&  project_list.data.length > 0  ? true : false}
+                          pagination={project_list && project_list.data && project_list.data.length > 0 ? true : false}
                           remote
                           fetchInfo={{ dataTotalSize: project_list.count ? project_list.count : 0 }}
                           className="product-table"

@@ -68,7 +68,6 @@ export const getTransactionCategoryList = (obj) => {
     }
 
     return authApi(data).then((res) => {
-      console.log(res)
       dispatch({
         type: JOURNAL.TRANSACTION_CATEGORY_LIST,
         payload: res

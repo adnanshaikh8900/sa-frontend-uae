@@ -107,17 +107,10 @@ class ChartAccount extends React.Component {
     const postData = { ...filterData, ...paginationData, ...sortingData }
     this.props.chartOfAccountActions.getTransactionCategoryList(postData).then((res) => {
       if (res.status === 200) {
-        if(search) {
-          this.setState({
-            filterData: {
-              transactionCategoryCode: '',
-              transactionCategoryName: '',
-              chartOfAccountId: ''
-            }
-          })
-        }
-        this.setState({ 
-          loading: false });
+
+        this.setState({
+          loading: false
+        });
       }
     }).catch((err) => {
       this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
@@ -218,7 +211,7 @@ class ChartAccount extends React.Component {
         })
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -242,7 +235,7 @@ class ChartAccount extends React.Component {
   }
 
   handleSearch = () => {
-    this.initializeData(true);
+    this.initializeData();
   }
 
   getCsvData = () => {
@@ -264,9 +257,19 @@ class ChartAccount extends React.Component {
     }
   }
 
+  clearAll = () => {
+    this.setState({
+      filterData: {
+        transactionCategoryCode: '',
+        transactionCategoryName: '',
+        chartOfAccountId: ''
+      }
+    })
+  }
+
   render() {
 
-    const { loading, dialog, selectedRows, csvData, view ,filterData} = this.state
+    const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
     const { transaction_category_list, transaction_type_list } = this.props
 
     return (
@@ -338,7 +341,7 @@ class ChartAccount extends React.Component {
                               <Input type="text" placeholder="Code" value={filterData.transactionCategoryCode} onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryCode') }} />
                             </Col>
                             <Col lg={3} className="mb-2">
-                              <Input type="text" placeholder="Name"  value={filterData.transactionCategoryName} onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryName') }} />
+                              <Input type="text" placeholder="Name" value={filterData.transactionCategoryName} onChange={(e) => { this.handleChange(e.target.value, 'transactionCategoryName') }} />
                             </Col>
                             <Col lg={3} className="mb-1">
                               <FormGroup className="mb-3">
@@ -361,9 +364,12 @@ class ChartAccount extends React.Component {
                               </FormGroup>
 
                             </Col>
-                            <Col lg={2} className="mb-1">
-                              <Button type="button" color="primary" className="btn-square" onClick={this.handleSearch}>
+                            <Col lg={1} className="pl-0 pr-0">
+                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                                 <i className="fa fa-search"></i>
+                              </Button>
+                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
+                                <i className="fa fa-remove"></i>
                               </Button>
                             </Col>
                           </Row>

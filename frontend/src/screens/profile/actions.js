@@ -172,7 +172,7 @@ export const getStateList = (countryCode,type) => {
     return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
-          type: PROFILE[types],
+          type: PROFILE[`${types}`],
           payload: res.data
         })
       }

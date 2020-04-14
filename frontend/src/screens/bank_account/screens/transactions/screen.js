@@ -208,23 +208,23 @@ class BankTransactions extends React.Component {
       element.className = element.className + ' sidebar-minimized brand-minimized'
     }
 
-    // this.props.transactionsActions.getChartOfCategoryList(type).then((res) => {
-    //   if (res.status === 200) {
+    this.props.transactionsActions.getChartOfCategoryList(type).then((res) => {
+      if (res.status === 200) {
         this.setState({
-          chartOfAccountCategoryList: {}
+          chartOfAccountCategoryList: res.data
         })
-    //   }
-    // })
+      }
+    })
   }
 
-  getTransactionCategoryList = () => {
-        // this.props.transactionsActions.getTransactionCategoryListForExplain(type).then((res) => {
-    //   if (res.status === 200) {
+  getTransactionCategoryList = (type) => {
+        this.props.transactionsActions.getTransactionCategoryListForExplain(type).then((res) => {
+      if (res.status === 200) {
       this.setState({
-        transactionCategoryList: {}
+        transactionCategoryList: res.data
       })
-  //   }
-  // })
+    }
+  })
   }
 
   getCategoryList = (label,value) => {
@@ -378,7 +378,7 @@ class BankTransactions extends React.Component {
   }
 
   getSideBarContent = () => {
-    const { chartOfAccountCategoryList, categoryList, showChartOfAccount, transaction_amount, currentBalance, explainList, transaction_category_list, submitBtnClick, showAlert } = this.state
+    const { chartOfAccountCategoryList, categoryList, showChartOfAccount, transaction_amount, currentBalance, explainList, transaction_category_list, submitBtnClick, showAlert,transactionCategoryList } = this.state
     // const { date, amount, name, due_date } = this.state.categoryDetails
     return (
       <div className="sidebar-content">
@@ -430,6 +430,7 @@ class BankTransactions extends React.Component {
                               this.handleChange('', 'transactionCategoryId', true, item)
                               this.handleChange('', 'reconcileRrefId', true, item)
                               // this.getCategoryList(text,e.target.value)
+                              this.getTransactionCategoryList(e.target.value)
                             } 
                           }}
                           // className="select-default-width"
@@ -466,10 +467,10 @@ class BankTransactions extends React.Component {
                           placeholder="Transaction Category"
                           value={item.transactionCategoryId}
                         >
-                          {Object.keys(transaction_category_list).map((group, index) => {
+                          {Object.keys(transactionCategoryList).map((group, index) => {
                             return (
                               <optgroup key={index} label={group}>
-                                {this.renderOptions(transaction_category_list[`${group}`])}
+                                {this.renderOptions(transactionCategoryList[`${group}`])}
                               </optgroup>
                             );
                           })}

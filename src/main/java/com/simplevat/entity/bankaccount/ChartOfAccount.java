@@ -47,6 +47,9 @@ public class ChartOfAccount implements Serializable {
 	@Basic(optional = false)
 	private String chartOfAccountCode;
 
+	@Column(name = "CHART_OF_ACCOUNT_CATEGORY_CODE")
+	private String chartOfAccountCategoryCode;
+
 	@Column(name = "DEFAULT_FLAG")
 	@ColumnDefault(value = "'N'")
 	@Basic(optional = false)

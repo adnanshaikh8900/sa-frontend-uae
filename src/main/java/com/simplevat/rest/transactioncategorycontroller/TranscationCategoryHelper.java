@@ -10,6 +10,7 @@ import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.ChartOfAccountDropdownModel;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
@@ -40,42 +41,6 @@ public class TranscationCategoryHelper {
 	@Autowired
 	private ChartOfAccountService transactionTypeService;
 
-//    public TransactionCategoryModel getCategory(TransactionCategory category) {
-//        TransactionCategoryModel model = new TransactionCategoryModel();
-//        model.setCreatedBy(category.getCreatedBy());
-//        model.setCreatedDate(category.getCreatedDate());
-//        model.setDefaltFlag(category.getDefaltFlag());
-//        model.setDeleteFlag(category.getDeleteFlag());
-//        model.setLastUpdateDate(category.getLastUpdateDate());
-//        model.setOrderSequence(category.getOrderSequence());
-//        model.setParentTransactionCategory(category.getParentTransactionCategory());
-//        model.setTransactionCategoryId(category.getTransactionCategoryId());
-//        model.setTransactionCategoryCode(category.getTransactionCategoryCode());
-//        model.setTransactionCategoryDescription(category.getTransactionCategoryDescription());
-//        model.setTransactionCategoryName(category.getTransactionCategoryName());
-//        model.setTransactionType(category.getTransactionType());
-//        model.setVatCategory(category.getVatCategory());
-//        model.setVersionNumber(category.getVersionNumber());
-//        return model;
-//    }
-//    public TransactionCategory getTrascationModel(TransactionCategoryModel categoryModel) {
-//        TransactionCategory transactionCategory = new TransactionCategory();
-//        transactionCategory.setCreatedBy(categoryModel.getCreatedBy());
-//        transactionCategory.setCreatedDate(categoryModel.getCreatedDate());
-//        transactionCategory.setDefaltFlag(categoryModel.getDefaltFlag());
-//        transactionCategory.setDeleteFlag(categoryModel.getDeleteFlag());
-//        transactionCategory.setLastUpdateDate(categoryModel.getLastUpdateDate());
-//        transactionCategory.setOrderSequence(categoryModel.getOrderSequence());
-//        transactionCategory.setParentTransactionCategory(categoryModel.getParentTransactionCategory());
-//        transactionCategory.setTransactionCategoryId(categoryModel.getTransactionCategoryId());
-//        transactionCategory.setTransactionCategoryCode(categoryModel.getTransactionCategoryCode());
-//        transactionCategory.setTransactionCategoryDescription(categoryModel.getTransactionCategoryDescription());
-//        transactionCategory.setTransactionCategoryName(categoryModel.getTransactionCategoryName());
-//        transactionCategory.setTransactionType(categoryModel.getTransactionType());
-//        transactionCategory.setVatCategory(categoryModel.getVatCategory());
-//        transactionCategory.setVersionNumber(categoryModel.getVersionNumber());
-//        return transactionCategory;
-//    }
 	public TransactionCategory getEntity(TransactionCategoryBean transactionCategoryBean) {
 		TransactionCategory transactionCategory = new TransactionCategory();
 		if (transactionCategoryBean.getDefaltFlag() != null && !transactionCategoryBean.getDefaltFlag().isEmpty()) {
@@ -115,7 +80,7 @@ public class TranscationCategoryHelper {
 	}
 
 	public List<TransactionCategoryModel> getListModel(Object transactionCategories) {
-		List<TransactionCategoryModel> transactionCategoryModelList = new ArrayList<TransactionCategoryModel>();
+		List<TransactionCategoryModel> transactionCategoryModelList = new ArrayList<>();
 
 		if (transactionCategories != null) {
 			for (TransactionCategory transactionCategory : (List<TransactionCategory>) transactionCategories) {
@@ -161,9 +126,9 @@ public class TranscationCategoryHelper {
 
 	public Object getDropDownModelList(List<ChartOfAccount> list) {
 		if (list != null && !list.isEmpty()) {
-			Map<Object, Object> chartOfAccountDropdownModelList = new HashMap<Object, Object>();
-			Map<Integer, List<ChartOfAccount>> idTrnxCatListMap = new HashMap<Integer, List<ChartOfAccount>>();
-			List<ChartOfAccount> categoryList = new ArrayList<ChartOfAccount>();
+			Map<Object, Object> chartOfAccountDropdownModelList = new HashMap<>();
+			Map<Integer, List<ChartOfAccount>> idTrnxCatListMap = new HashMap<>();
+			List<ChartOfAccount> categoryList = new ArrayList<>();
 			for (ChartOfAccount trnxCat : list) {
 				if (trnxCat.getParentChartOfAccount() != null) {
 					if (idTrnxCatListMap.containsKey(trnxCat.getParentChartOfAccount().getChartOfAccountId())) {
@@ -191,15 +156,43 @@ public class TranscationCategoryHelper {
 					dropDownModelList
 							.add(new DropdownModel(trnxCat.getChartOfAccountId(), trnxCat.getChartOfAccountName()));
 				}
-				// chartOfAccountDropdownModelList.add(new
-				// ChartOfAccountDropdownModel(parentCategory, dropDownModelList));
-//				Map<Object, Object> map = new HashMap<Object, Object>();
-//				map.put(parentCategory, dropDownModelList);
 
 				chartOfAccountDropdownModelList.put(parentCategory, dropDownModelList);
 			}
 			return chartOfAccountDropdownModelList;
 		}
 		return null;
+	}
+
+	public Object getSinleLevelDropDownModelList(List<TransactionCategory> transactionCatList) {
+		Map<Object, Object> chartOfAccountDropdownModelList = new HashMap<>();
+		Map<Integer, List<TransactionCategory>> idTrnxCatListMap = new HashMap<>();
+		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
+		for (TransactionCategory trnxCat : transactionCatList) {
+			if (trnxCat.getChartOfAccount() != null) {
+				if (idTrnxCatListMap.containsKey(trnxCat.getChartOfAccount().getChartOfAccountId())) {
+					transactionCategoryList = idTrnxCatListMap.get(trnxCat.getChartOfAccount().getChartOfAccountId());
+					transactionCategoryList.add(trnxCat);
+				} else {
+					transactionCategoryList = new ArrayList<>();
+					transactionCategoryList.add(trnxCat);
+					idTrnxCatListMap.put(trnxCat.getChartOfAccount().getChartOfAccountId(), transactionCategoryList);
+				}
+			}
+		}
+
+		for (Integer key : idTrnxCatListMap.keySet()) {
+
+			String parentCategory = "";
+			transactionCategoryList = idTrnxCatListMap.get(key);
+			List<DropdownModel> dropDownModelList = new ArrayList<DropdownModel>();
+			for (TransactionCategory trnxCat : transactionCategoryList) {
+				parentCategory = trnxCat.getChartOfAccount().getChartOfAccountName();
+				dropDownModelList.add(
+						new DropdownModel(trnxCat.getTransactionCategoryId(), trnxCat.getTransactionCategoryName()));
+			}
+			chartOfAccountDropdownModelList.put(parentCategory, dropDownModelList);
+		}
+		return chartOfAccountDropdownModelList;
 	}
 }

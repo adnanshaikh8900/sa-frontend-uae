@@ -35,4 +35,6 @@ public abstract class TransactionCategoryService extends SimpleVatService<Intege
     public abstract PaginationResponseModel  getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap,PaginationModel paginationModel);
     
     public abstract String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount);
+    
+	public  abstract List<TransactionCategory> getTransactionCatByChartOfAccountCategoryCode(String chartOfAccountCategoryCode);
 }

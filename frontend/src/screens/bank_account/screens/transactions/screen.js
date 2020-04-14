@@ -84,10 +84,11 @@ class BankTransactions extends React.Component {
       dialog: null,
       selectedRowData: {},
       sidebarOpen: false,
-      transaction_type_list_reconcile: [],
+      chartOfAccountCategoryList: {},
+      transactionCategoryList: {},
       categoryList: {},
       reconcileData: {
-        categoryType: '',
+        chartOfAccountCategoryId: '',
         reconcileRrefId: '',
       },
       categoryDetails: {},
@@ -106,7 +107,7 @@ class BankTransactions extends React.Component {
       selectedTransactionCategoryType: '',
       submitBtnClick: false,
       transactionId: '',
-      showAlert: false
+      showAlert: false,
     }
 
     this.options = {
@@ -165,7 +166,8 @@ class BankTransactions extends React.Component {
     this.setState({
       explainList: explainList.concat({
         id: this.state.idCount + 1,
-        categoryType: '',
+        chartOfAccountCategoryId: '',
+        transactionCategoryId: '',
         reconcileRrefId: '',
         categoryLabel: ''
       }), idCount: this.state.idCount + 1
@@ -189,33 +191,44 @@ class BankTransactions extends React.Component {
     this.setState({
       explainList: [{
         id: 0,
-        categoryType: '',
+        chartOfAccountCategoryId: '',
+        transactionCategoryId: '',
         reconcileRrefId: '',
         categoryLabel: ''
       }]
     }, () => {
       this.setState({ sidebarOpen: open, transactionId: data.id, categoryDetails: {}, selectedRow: data.id, transaction_amount, currentBalance: transaction_amount, showAlert: false, submitBtnClick: false });
-      this.getTransactionListForReconcile(data.debitCreditFlag)
+      this.getChartOfCategoryList(data.debitCreditFlag)
     })
   }
 
-  getTransactionListForReconcile = (type) => {
+  getChartOfCategoryList = (type) => {
     let element = document.querySelector('body');
     if (!element.className.includes('sidebar-minimized')) {
       element.className = element.className + ' sidebar-minimized brand-minimized'
     }
 
-    this.props.transactionsActions.getTransactionListForReconcile(type).then((res) => {
-      if (res.status === 200) {
+    // this.props.transactionsActions.getChartOfCategoryList(type).then((res) => {
+    //   if (res.status === 200) {
         this.setState({
-          transaction_type_list_reconcile: res.data
+          chartOfAccountCategoryList: {}
         })
-      }
-    })
+    //   }
+    // })
   }
 
-  getCategoryList = (options) => {
-    const { label, value } = options
+  getTransactionCategoryList = () => {
+        // this.props.transactionsActions.getTransactionCategoryListForExplain(type).then((res) => {
+    //   if (res.status === 200) {
+      this.setState({
+        transactionCategoryList: {}
+      })
+  //   }
+  // })
+  }
+
+  getCategoryList = (label,value) => {
+    // const { label, value } = options
     const { currentBalance, categoryList } = this.state
     let data = Object.assign({}, categoryList)
     let keys = Object.keys(data)
@@ -236,6 +249,16 @@ class BankTransactions extends React.Component {
       })
     }
   }
+
+  renderOptions = (options) => {
+    return options.map((option) => {
+      return (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      );
+    });
+  };
 
   getDetail = (val) => {
     const data = this.state.categoryList.filter((x) => x.id === val)
@@ -355,7 +378,7 @@ class BankTransactions extends React.Component {
   }
 
   getSideBarContent = () => {
-    const { transaction_type_list_reconcile, categoryList, showChartOfAccount, transaction_amount, currentBalance, explainList, transaction_category_list, submitBtnClick, showAlert } = this.state
+    const { chartOfAccountCategoryList, categoryList, showChartOfAccount, transaction_amount, currentBalance, explainList, transaction_category_list, submitBtnClick, showAlert } = this.state
     // const { date, amount, name, due_date } = this.state.categoryDetails
     return (
       <div className="sidebar-content">
@@ -391,25 +414,70 @@ class BankTransactions extends React.Component {
                 <div className="details-container">
                   {explainList && explainList.map((item, index) => (
                     <div className="d-flex detail-row">
-                      <div className="mb-3 mr-3" style={{ width: '40%' }}>
-                        <Label className="label">Transaction Type</Label>
-                        <Select
-                          options={transaction_type_list_reconcile ? selectOptionsFactory.renderOptions('label', 'value', transaction_type_list_reconcile, 'Transaction Type') : []}
-                          onChange={(val) => {
-                            if (val && val.value) {
-                              this.handleChange(val.label, 'categoryLabel', true, item)
-                              this.handleChange(val.value, 'categoryType', true, item)
-                              this.getCategoryList(val)
-                            } else {
-                              this.handleChange('', 'categoryType', true, item)
+                      <div class="sub-container">
+                      <div className="mb-3 mr-2" style={{ width: '30%' }}>
+                        <Label className="label">Chart Of Account Category</Label>
+                        <select
+                          className="custom-select-box"
+                          id="transaction_select"
+                          // options={chartOfAccountCategoryList ?  chartOfAccountCategoryList : []}
+                          onChange={(e) => {
+                            // var el = document.getElementById('transaction_select');
+                            // var text = el.options[el.selectedIndex].innerHTML;
+                            if (e && e.target.value) {
+                              // this.handleChange(text, 'categoryLabel', true, item)
+                              this.handleChange(e.target.value, 'chartOfAccountCategoryId', true, item)
+                              this.handleChange('', 'transactionCategoryId', true, item)
+                              this.handleChange('', 'reconcileRrefId', true, item)
+                              // this.getCategoryList(text,e.target.value)
+                            } 
+                          }}
+                          // className="select-default-width"
+                          placeholder="Chart Of Account"
+                          value={item.chartOfAccountCategoryId}
+                        >
+                          {Object.keys(chartOfAccountCategoryList).map((group, index) => {
+                            return (
+                              <optgroup key={index} label={group}>
+                                {this.renderOptions(chartOfAccountCategoryList[`${group}`])}
+                              </optgroup>
+                            );
+                          })}
+                        </select>
+                      </div>
+
+                      {explainList[`${index}`].chartOfAccountCategoryId &&  <div className="mb-3 mr-2" style={{ width: '30%' }}>
+                        <Label className="label">Transaction Category</Label>
+                        <select
+                          className="custom-select-box"
+                          id="transaction_category_select"
+                          // options={transaction_category_list ?  transaction_category_list : []}
+                          onChange={(e) => {
+                            var el = document.getElementById('transaction_category_select');
+                            var text = el.options[el.selectedIndex].innerHTML;
+                            if (e && e.target.value) {
+                              this.handleChange(text, 'categoryLabel', true, item)
+                              this.handleChange(e.target.value, 'transactionCategoryId', true, item)
+                              this.handleChange('', 'reconcileRrefId', true, item)
+                              this.getCategoryList(text,e.target.value)
                             }
                           }}
-                          className="select-default-width"
-                          placeholder="Transaction Type"
-                          value={item.categoryType}
-                        />
+                          // className="select-default-width"
+                          placeholder="Transaction Category"
+                          value={item.transactionCategoryId}
+                        >
+                          {Object.keys(transaction_category_list).map((group, index) => {
+                            return (
+                              <optgroup key={index} label={group}>
+                                {this.renderOptions(transaction_category_list[`${group}`])}
+                              </optgroup>
+                            );
+                          })}
+                        </select>
                       </div>
-                      {explainList[`${index}`].categoryType && <div className="mb-3" style={{ width: '40%' }}>
+                      }
+
+                      {explainList[`${index}`].transactionCategoryId && <div className="mb-3" style={{ width: '37%' }}>
                         <Label className="label">{explainList[`${index}`].categoryLabel}</Label>
                         <Select
                           options={categoryList[`${explainList[`${index}`].categoryLabel}`] ? selectOptionsFactory.renderOptions('label', 'id', categoryList[`${explainList[`${index}`].categoryLabel}`], explainList[`${index}`].categoryLabel, ['disabled']) : []}
@@ -453,6 +521,7 @@ class BankTransactions extends React.Component {
                                         <label className="value">{moment(due_date).format('DD/MM/YYYY')}</label>
                                       </> : ''
                                     } */}
+                                    </div>
                       <div className="remove-row">
                         <button className="btn" onClick={() => this.deleteRow(item.id)} disabled={explainList.length === 1}>
                           <i className="fa fa-close" ></i>
@@ -847,7 +916,7 @@ class BankTransactions extends React.Component {
                               placeholder="Transaction Status(TBD)"
                             />
                           </Col>
-                          <Col lg={2} className="mb-1">
+                          <Col lg={3} className="mb-1">
                             <Select
                               options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Transaction Type') : []}
                               onChange={(val) => {
@@ -864,7 +933,7 @@ class BankTransactions extends React.Component {
                               value={filterData.chartOfAccountId}
                             />
                           </Col>
-                          <Col lg={2} className="mb-1">
+                          <Col lg={3} className="mb-1">
                             <DatePicker
                               className="form-control"
                               id="date"
@@ -881,7 +950,7 @@ class BankTransactions extends React.Component {
                               autoComplete="off"
                             />
                           </Col>
-                          <Col lg={1} className="pl-0 pr-0">
+                          <Col lg={2} className="pl-0 pr-0">
                             <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
                             </Button>

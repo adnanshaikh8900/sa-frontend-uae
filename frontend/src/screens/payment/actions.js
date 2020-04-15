@@ -100,7 +100,7 @@ export const getProjectList = () => {
 }
 
 export const getPaymentList = (obj) => {
-  let supplierId = obj.supplierId ? obj.supplierId : ''
+  let supplierId = obj.supplierId ? obj.supplierId.value : ''
   let paymentDate = obj.paymentDate ?  obj.paymentDate : ''
   let invoiceAmount =  obj.invoiceAmount ? obj.invoiceAmount : ''
   let pageNo = obj.pageNo ? obj.pageNo : '';

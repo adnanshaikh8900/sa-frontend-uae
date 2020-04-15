@@ -48,9 +48,21 @@ class ContactModal extends React.Component {
     this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
+  getData = (data) => {
+    let temp = {}
+    for(let item in data) {
+      if(typeof data[item] !== 'object') {
+        temp[`${item}`] = data[item]
+      } else {
+        temp[`${item}`] = data[item].value
+      }
+    }
+    return temp
+  }
   // Create or Contact
   contactHandleSubmit = (data) => {
-    const request = this.props.createContact(data);
+    const postData = this.getData(data)
+    const request = this.props.createContact(postData);
     request.then((res) => {
       if (res.status === 200) {
         this.props.closeContactModal(true,res.data)
@@ -59,13 +71,19 @@ class ContactModal extends React.Component {
   }
 
   getStateList = (countryCode) => {
-    this.props.getStateList(countryCode).then((res) => {
-      if (res.status === 200) {
-        this.setState({
-          stateList: res.data
-        })
-      }
-    })
+    if(countryCode) {
+      this.props.getStateList(countryCode).then((res) => {
+        if (res.status === 200) {
+          this.setState({
+            stateList: res.data
+          })
+        }
+      })
+    } else {
+      this.setState({
+        stateList: []
+      })
+    }
   }
 
   render() {
@@ -302,12 +320,14 @@ class ContactModal extends React.Component {
                           value={props.values.countryId}
                           onChange={(option) => {
                             if (option && option.value) {
-                              props.handleChange("countryId")(option.value);
+                              props.handleChange("countryId")(option);
                               this.getStateList(option.value)
+
                             } else {
                               props.handleChange("countryId")("");
                               this.getStateList(option.value)
                             }
+                            props.handleChange('stateId')('')                          
                           }}
                           placeholder="Select Country"
                           id="countryId"
@@ -334,7 +354,7 @@ class ContactModal extends React.Component {
                           value={props.values.stateId}
                           onChange={(option) => {
                             if (option && option.value) {
-                              props.handleChange('stateId')(option.value)
+                              props.handleChange('stateId')(option)
                             } else {
                               props.handleChange('stateId')('')
                             }
@@ -399,7 +419,7 @@ class ContactModal extends React.Component {
                           onChange={(option) => {
                             if (option && option.value) {
                               props.handleChange("currencyCode")(
-                                option.value
+                                option
                               );
                             } else {
                               props.handleChange("currencyCode")("");

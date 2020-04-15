@@ -256,7 +256,7 @@ class Product extends React.Component {
         productCode: '',
         vatPercentage: ''
       },
-    })
+    }, () => { this.initializeData() })
   }
 
   render() {
@@ -346,7 +346,7 @@ class Product extends React.Component {
                                   value={filterData.vatPercentage}
                                   onChange={(option) => {
                                     if (option && option.value) {
-                                      this.handleChange(option.value, 'vatPercentage')
+                                      this.handleChange(option, 'vatPercentage')
                                     } else {
                                       this.handleChange('', 'vatPercentage')
                                     }
@@ -359,7 +359,7 @@ class Product extends React.Component {
                                 <i className="fa fa-search"></i>
                               </Button>
                               <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                                <i className="fa fa-remove"></i>
+                                <i className="fa fa-refresh"></i>
                               </Button>
                             </Col>
                           </Row>

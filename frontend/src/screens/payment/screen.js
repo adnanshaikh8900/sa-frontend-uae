@@ -263,7 +263,7 @@ class Payment extends React.Component {
         paymentDate: '',
         invoiceAmount: ''
       },
-    })
+    }, () => { this.initializeData() })
   }
 
   render() {
@@ -347,7 +347,7 @@ class Payment extends React.Component {
                               value={filterData.supplierId}
                               onChange={(option) => {
                                 if (option && option.value) {
-                                  this.handleChange(option.value, 'supplierId')
+                                  this.handleChange(option, 'supplierId')
                                 } else {
                                   this.handleChange('', 'supplierId')
                                 }
@@ -385,7 +385,7 @@ class Payment extends React.Component {
                               <i className="fa fa-search"></i>
                             </Button>
                             <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                              <i className="fa fa-remove"></i>
+                              <i className="fa fa-refresh"></i>
                             </Button>
                           </Col>
                         </Row>

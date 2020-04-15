@@ -47,10 +47,10 @@ export const getCurrencyList = () => {
 
 export const getBankAccountList = (obj) => {
   let bankName = obj.bankName ? obj.bankName : '';
-  let bankAccountTypeId = obj.bankAccountTypeId ? obj.bankAccountTypeId : '';  
+  let bankAccountTypeId = obj.bankAccountTypeId ? obj.bankAccountTypeId.value : '';  
   let bankAccountName = obj.bankAccountName ? obj.bankAccountName : '';
   let accountNumber = obj.accountNumber ? obj.accountNumber : '';  
-  let currencyCode = obj.currencyCode ? obj.currencyCode : '';  
+  let currencyCode = obj.currencyCode ? obj.currencyCode.value : '';  
   let pageNo = obj.pageNo ? obj.pageNo : '';  
   let pageSize = obj.pageSize ? obj.pageSize : '';  
   let order = obj.order ? obj.order : '';  

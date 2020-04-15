@@ -55,7 +55,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const INVOICE_LANGUAGE_OPTIONS = [
   { value: 1, label: 'English' },
-  { value: 2, label: 'Arabic' }
+  // { value: 2, label: 'Arabic' }
 ]
 
 class DetailProject extends React.Component {
@@ -88,8 +88,9 @@ class DetailProject extends React.Component {
   // Cloase Confirm Modal
   closeContactModal = (res,data) => {
     if (res) {
+      let val = {label: data.fullName,value: data.id}
       this.props.projectActions.getContactList();
-      this.formRef.current.setFieldValue('contactId', data.contactId, true)
+      this.formRef.current.setFieldValue('contactId', val, true)
     }
     this.setState({ openContactModal: false })
   }
@@ -109,7 +110,7 @@ class DetailProject extends React.Component {
               //   label: res.data.invoiceLanguageCode.id,
               //   value: res.data.invoiceLanguageCode.value
               // } : '',
-              contactId: res.data.contactId ? res.data.contactId: '',
+              contactId:  res.data.contactId ? res.data.contactId : '',
               contractPoNumber: res.data.contractPoNumber,
               vatRegistrationNumber: res.data.vatRegistrationNumber,
               expenseBudget: res.data.expenseBudget,
@@ -240,9 +241,9 @@ class DetailProject extends React.Component {
                           projectName: Yup.string()
                             .required("Project Name is Required"),
                           contactId: Yup.string()
-                            .required("Contact is Required"),
+                            .required("Contact Name is Required"),
                           currencyCode: Yup.string()
-                            .required("currencyCode is Required"),
+                            .required("Currency is Required"),
                           // invoiceLanguageCode: Yup.string()
                           //   .required("Invoice Language is Required")
                         })}>
@@ -290,7 +291,7 @@ class DetailProject extends React.Component {
                                     id="contactId"
                                     name="contactId"
                                     placeholder="Select Contact"
-                                    value={props.values.contactId}
+                                    value={contact_list && contact_list.find(option => option.value === +props.values.contactId)}
                                     className={
                                       props.errors.contactId && props.touched.contactId
                                         ? "is-invalid"
@@ -359,7 +360,7 @@ class DetailProject extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="currencyCode">
-                                    <span className="text-danger">*</span>currencyCode
+                                    <span className="text-danger">*</span>Currency
                                       </Label>
                                   <Select
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
@@ -374,7 +375,7 @@ class DetailProject extends React.Component {
                                       }
                                     }}
                                     placeholder="Select currencyCode"
-                                    value={props.values.currencyCode}
+                                    value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currencyCode)}
                                     id="currencyCode"
                                     name="currencyCode"
                                     className={

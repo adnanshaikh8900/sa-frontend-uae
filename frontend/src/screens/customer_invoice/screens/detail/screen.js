@@ -504,11 +504,11 @@ class DetailCustomerInvoice extends React.Component {
 		if (contactId) {
 			formData.append("contactId", contactId);
 		}
-		if (currency !== null && currency.value) {
-			formData.append("currencyCode", currency.value);
+		if (currency) {
+			formData.append("currencyCode", currency);
 		}
-		if (project !== null && project.value) {
-			formData.append("projectId", project.value);
+		if (project) {
+			formData.append("projectId", project);
 		}
 		if (this.uploadFile.files[0]) {
 			formData.append("attachmentFile", this.uploadFile.files[0]);
@@ -533,8 +533,8 @@ class DetailCustomerInvoice extends React.Component {
 			option = data
 		} else {
 			option = {
-				label: `${data.firstName} ${data.middleName} ${data.lastName}`,
-				value: data.contactId,
+				label: `${data.fullName}`,
+				value: data.id,
 			}
 		}
 		// this.setState({
@@ -725,8 +725,8 @@ class DetailCustomerInvoice extends React.Component {
 																				options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
 																				id="project"
 																				name="project"
-																				value={props.values.project}
-																				onChange={(option) => props.handleChange('project')(option)}
+																				value={project_list && project_list.find(option => option.value === +props.values.project)}
+																				onChange={(option) => props.handleChange('project')(option.value)}
 																			/>
 																		</FormGroup>
 																	</Col>
@@ -740,7 +740,7 @@ class DetailCustomerInvoice extends React.Component {
 																				id="contactId"
 																				name="contactId"
 																				options={customer_list ? selectOptionsFactory.renderOptions('label', 'value', customer_list, 'Customer') : []}
-																				value={props.values.contactId}
+																				value={customer_list && customer_list.find(option => option.value === +props.values.contactId)}
 																				onChange={(option) => {
 																					if (option && option.value) {
 																						props.handleChange('contactId')(option.value)
@@ -775,9 +775,9 @@ class DetailCustomerInvoice extends React.Component {
 																				options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
 																				id="term"
 																				name="term"
-																				value={this.state.term}
+																				value={this.termList && this.termList.find(option => option.value === props.values.term)}
 																				onChange={(option) => {
-																					props.handleChange('term')(option)
+																					props.handleChange('term')(option.value)
 																					if (option.value === '') {
 																						this.setState({
 																							term: option.value
@@ -856,8 +856,8 @@ class DetailCustomerInvoice extends React.Component {
 																				options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
 																				id="currency"
 																				name="currency"
-																				value={props.values.currency}
-																				onChange={(option) => props.handleChange('currency')(option)}
+																				value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currency)}
+																				onChange={(option) => props.handleChange('currency')(option.value)}
 																				className={`${props.errors.currency && props.touched.currency ? "is-invalid" : ""}`}
 																			/>
 																			{props.errors.currency && props.touched.currency && (
@@ -1057,7 +1057,7 @@ class DetailCustomerInvoice extends React.Component {
 																										options={discountOptions}
 																										id="discountType"
 																										name="discountType"
-																										value={props.values.discountType}
+																										value={discountOptions && discountOptions.find(option => option.value === props.values.discountType)}
 																										onChange={(item) => {
 																											props.handleChange('discountPercentage')('')
 																											props.handleChange('discountType')(item.value)

@@ -527,7 +527,7 @@ class DetailJournal extends React.Component {
         journalDate: values.journalDate ? values.journalDate : "",
         journalReferenceNo: values.journalReferenceNo ? values.journalReferenceNo : "",
         description: values.description ? values.description : "",
-        currencyCode: values.currencyCode ? values.currencyCode : "",
+        currencyCode: values.currencyCode ? values.currencyCode.value : "",
         subTotalCreditAmount: initValue.subTotalCreditAmount,
         subTotalDebitAmount: initValue.subTotalDebitAmount,
         totalCreditAmount: initValue.totalCreditAmount,
@@ -701,11 +701,11 @@ class DetailJournal extends React.Component {
                                         id="currencyCode"
                                         name="currencyCode"
                                         disabled={props.values.postingReferenceType === "MANUAL" ? false : true}
-                                        value={props.values.currencyCode}
+                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currencyCode)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange("currencyCode")(
-                                              option.value
+                                              option
                                             );
                                           } else {
                                             props.handleChange("currencyCode")(

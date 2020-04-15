@@ -407,7 +407,7 @@ class CreateJournal extends React.Component {
         journalDate: values.journalDate ? values.journalDate : '',
         journalReferenceNo: values.journalReferenceNo ? values.journalReferenceNo : '',
         description: values.description ? values.description : '',
-        currencyCode: values.currencyCode ? values.currencyCode : '',
+        currencyCode: values.currencyCode ? values.currencyCode.value : '',
         subTotalCreditAmount: initValue.subTotalCreditAmount,
         subTotalDebitAmount: initValue.subTotalDebitAmount,
         totalCreditAmount: initValue.totalCreditAmount,
@@ -416,7 +416,6 @@ class CreateJournal extends React.Component {
       }
       this.props.journalCreateActions.createJournal(postData).then((res) => {
         if (res.status === 200) {
-          resetForm({});
           this.props.commonActions.tostifyAlert('success', 'New Journal Created Successfully')
           if (this.state.createMore) {
             this.setState({
@@ -460,7 +459,7 @@ class CreateJournal extends React.Component {
                   subTotalCreditAmount: 0,
                 }
               }
-            });
+            },()=>{resetForm(this.state.initValue)});
           } else {
             this.props.history.push('/admin/accountant/journal');
           }
@@ -593,7 +592,7 @@ class CreateJournal extends React.Component {
                                     value={props.values.currencyCode}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('currencyCode')(option.value)
+                                        props.handleChange('currencyCode')(option)
                                       } else {
                                         props.handleChange('currencyCode')('')
                                       }

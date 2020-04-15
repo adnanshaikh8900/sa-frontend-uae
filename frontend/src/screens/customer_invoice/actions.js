@@ -5,12 +5,12 @@ import {
 import moment from 'moment'
 
 export const getCustomerInvoiceList = (postObj) => {
-  let customerName = postObj.customerId ? postObj.customerId : ''
+  let customerName = postObj.customerId ? postObj.customerId.value : ''
   let referenceNumber = postObj.referenceNumber ? postObj.referenceNumber : ''
   let invoiceDate = postObj.invoiceDate ? postObj.invoiceDate : ''
   let invoiceDueDate = postObj.invoiceDueDate ? postObj.invoiceDueDate : ''
   let amount = postObj.amount ? postObj.amount : ''
-  let status = postObj.status ? postObj.status : ''
+  let status = postObj.status ? postObj.status.value : ''
   let contactType = 2;//postObj.contactType ? postObj.contactType : ''  
   let pageNo = postObj.pageNo ? postObj.pageNo : '';
   let pageSize = postObj.pageSize ? postObj.pageSize : '';

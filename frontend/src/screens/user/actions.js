@@ -8,7 +8,7 @@ export const getUserList = (obj) => {
   // const value = (obj.active)  ? obj.active : true
   let name = obj.name ? obj.name : '';
   let roleId = obj.roleId ? obj.roleId : '';
-  let active = obj.active ? obj.active : '';
+  let active = obj.active ? obj.active.value : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';

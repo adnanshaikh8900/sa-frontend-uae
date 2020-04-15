@@ -134,7 +134,7 @@ public abstract class AbstractDoubleEntryRestController {
 
 		JournalLineItem journalLineItem2 = new JournalLineItem();
 		TransactionCategory saleTransactionCategory = abstractDoubleEntryTransactionCategoryService
-				.findTransactionCategoryByTransactionCategoryCode(postingRequestModel.getPostingChartOfAccountId());
+				.findByPK(postingRequestModel.getPostingChartOfAccountId());
 		journalLineItem2.setTransactionCategory(saleTransactionCategory);
 		journalLineItem2.setCreditAmount(postingRequestModel.getAmount());
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);

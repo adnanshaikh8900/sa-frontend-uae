@@ -195,7 +195,7 @@ public class TransactionCategoryRestController implements Serializable {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		User user = userServiceNew.findByPK(userId);
 		List<TransactionCategory> transactionCategories = transactionCategoryService
-				.findAllTransactionCategoryByChartOfAccount(ChartOfAccountConstant.TRANSACTION_TYPE_EXPENSE);
+				.findAllTransactionCategoryByChartOfAccount(ChartOfAccountConstant.EXPENSE);
 		if (transactionCategories != null) {
 			return new ResponseEntity(transactionCategories, HttpStatus.OK);
 		}

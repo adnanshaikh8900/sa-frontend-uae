@@ -213,7 +213,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 		try {
 			List<Invoice> invList = invoiceService.getInvoiceList(monthCount);
 			if (invList == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
 			return new ResponseEntity(chartUtil.getinvoiceData(invList, monthCount), HttpStatus.OK);
 		} catch (Exception e) {

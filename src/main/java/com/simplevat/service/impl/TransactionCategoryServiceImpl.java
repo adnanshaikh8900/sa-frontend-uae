@@ -46,7 +46,7 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	}
 
 	@Override
-	public TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode) {
+	public TransactionCategory findTransactionCategoryByTransactionCategoryCode(String transactionCategoryCode) {
 		return getDao().findTransactionCategoryByTransactionCategoryCode(transactionCategoryCode);
 	}
 

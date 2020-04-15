@@ -66,7 +66,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 	@Override
 	public List<TransactionCategory> findAllTransactionCategoryByChartOfAccount(Integer chartOfAccountId) {
 		TypedQuery<TransactionCategory> query = getEntityManager().createQuery(
-				"SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.chartOfAccount.chartOfAccountId =:chartOfAccountId ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC",
+				"SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND (t.chartOfAccount.chartOfAccountId =:chartOfAccountId  or t.chartOfAccount.parentChartOfAccount.chartOfAccountId =:chartOfAccountId) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC",
 				TransactionCategory.class);
 		query.setParameter("chartOfAccountId", chartOfAccountId);
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
@@ -76,7 +76,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 	}
 
 	@Override
-	public TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode) {
+	public TransactionCategory findTransactionCategoryByTransactionCategoryCode(String transactionCategoryCode) {
 		TypedQuery<TransactionCategory> query = getEntityManager().createQuery(
 				"SELECT t FROM TransactionCategory t where t.transactionCategoryCode =:transactionCategoryCode",
 				TransactionCategory.class);

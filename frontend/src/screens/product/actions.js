@@ -6,7 +6,7 @@ import {
 export const getProductList = (obj) => {
   let name = obj.name ? obj.name : '';
   let productCode = obj.productCode ? obj.productCode : '';
-  let vatPercentage = obj.vatPercentage ? obj.vatPercentage : '';
+  let vatPercentage = obj.vatPercentage ? obj.vatPercentage.value : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';

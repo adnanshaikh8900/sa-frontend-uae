@@ -24,7 +24,7 @@ import {
 
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
- import 'react-select/dist/react-select.css'
+// import 'react-select/dist/react-select.css'
  import 'bootstrap-daterangepicker/daterangepicker.css'
 import './style.scss'
 

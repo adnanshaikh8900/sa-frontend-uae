@@ -279,7 +279,7 @@ class User extends React.Component {
         active: '',
         roleId: ''
       },
-    })
+    } , () => { this.initializeData()})
   }
 
   render() {
@@ -384,7 +384,7 @@ class User extends React.Component {
                               value={filterData.roleId}
                               onChange={(option) => {
                                 if (option && option.value) {
-                                  this.handleChange(option.value, 'roleId')
+                                  this.handleChange(option, 'roleId')
                                 } else {
                                   this.handleChange('', 'roleId')
                                 }
@@ -401,9 +401,10 @@ class User extends React.Component {
                               // value={filterData.supplierId}
                               value={filterData.active}
                               onChange={(option) => {
+                                console.log(option)
                                 if (option) {
-                                  this.handleChange(option.value, 'active')
-                                  this.setState({ selectedStatus: option.value })
+                                  this.handleChange(option, 'active')
+                                  this.setState({ selectedStatus: option })
                                 } else {
                                   this.handleChange('1', 'active')
                                   this.setState({ selectedStatus: '1' })
@@ -427,7 +428,7 @@ class User extends React.Component {
                               <i className="fa fa-search"></i>
                             </Button>
                             <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                              <i className="fa fa-remove"></i>
+                              <i className="fa fa-refresh"></i>
                             </Button>
                           </Col>
                         </Row>

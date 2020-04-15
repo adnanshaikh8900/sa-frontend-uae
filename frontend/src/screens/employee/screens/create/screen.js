@@ -76,14 +76,18 @@ class CreateEmployee extends React.Component {
   }
 
   handleSubmit = (data, resetForm) => {
-    this.props.employeeCreateActions.createEmployee(data).then((res) => {
+    let postData = Object.assign({},data)
+    if(postData.currencyCode.value) {
+      postData = {...postData,...{currencyCode: postData.currencyCode.value}}
+    }
+    this.props.employeeCreateActions.createEmployee(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Employee Created Successfully')
         if (this.state.createMore) {
           this.setState({
             createMore: false
           })
-          resetForm()
+          resetForm(this.state.initValue)
         } else {
           this.props.history.push('/admin/master/employee')
         }
@@ -405,7 +409,7 @@ class CreateEmployee extends React.Component {
                                     value={props.values.currencyCode}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('currencyCode')(option.value)
+                                        props.handleChange('currencyCode')(option)
                                       } else {
                                         props.handleChange('currencyCode')('')
                                       }

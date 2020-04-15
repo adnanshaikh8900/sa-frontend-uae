@@ -6,12 +6,12 @@ import moment from 'moment'
 
 
 export const getSupplierInvoiceList = (postObj) => {
-  let supplierId = postObj.supplierId ? postObj.supplierId : ''
+  let supplierId = postObj.supplierId ? postObj.supplierId.value : ''
   let referenceNumber =  postObj.referenceNumber ? postObj.referenceNumber : ''
   let invoiceDate = postObj.invoiceDate ?  postObj.invoiceDate : ''
   let invoiceDueDate = postObj.invoiceDueDate ?   postObj.invoiceDueDate : ''
   let amount =  postObj.amount ? postObj.amount : ''
-  let status =  postObj.status ? postObj.status : ''
+  let status =  postObj.status ? postObj.status.value : ''
   let contactType = 1;//postObj.contactType ? postObj.contactType : ''  
   let pageNo = postObj.pageNo ? postObj.pageNo : '';
   let pageSize = postObj.pageSize ? postObj.pageSize : '';

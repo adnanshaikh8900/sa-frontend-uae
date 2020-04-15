@@ -171,7 +171,7 @@ class DetailExpense extends React.Component {
     formData.append('expenseAmount', expenseAmount);
     formData.append("payMode", payMode);
     if (expenseCategory && expenseCategory.value) {
-      formData.append("expenseCategoryId", expenseCategory.value);
+      formData.append("expenseCategory", expenseCategory.value);
     }
     if (employee && employee.value) {
       formData.append("employeeId", employee.value);
@@ -343,8 +343,8 @@ class DetailExpense extends React.Component {
                                       <Select
                                         id="expenseCategory"
                                         name="expenseCategory"
-                                        options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
-                                        value={props.values.expenseCategory}
+                                        options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
+                                        value={expense_categories_list && selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', expense_categories_list, 'Expense Category').find(option => option.value === +props.values.expenseCategory)}
                                         className={props.errors.expenseCategory && props.touched.expenseCategory ? "is-invalid" : ""}
                                         onChange={(option) => props.handleChange('expenseCategory')(option)}
                                       />
@@ -407,7 +407,7 @@ class DetailExpense extends React.Component {
                                         id="currencyCode"
                                         name="currencyCode"
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                        value={props.values.currency}
+                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currency)}
                                         onChange={(option) => props.handleChange('currency')(option)}
                                         className={
                                           props.errors.currency &&
@@ -432,7 +432,7 @@ class DetailExpense extends React.Component {
                                         id="employee"
                                         name="employee"
                                         options={employee_list ? selectOptionsFactory.renderOptions('label', 'value', employee_list, 'Employee') : []}
-                                        value={props.values.employee}
+                                        value={employee_list && employee_list.find(option => option.value === +props.values.employee)}
                                         onChange={(option) => props.handleChange('employee')(option)}
                                       />
                                     </FormGroup>
@@ -445,7 +445,7 @@ class DetailExpense extends React.Component {
                                         id="project"
                                         name="project"
                                         options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
-                                        value={props.values.projectId}
+                                        value={project_list && project_list.find(option => option.value === +props.values.projectId)}
                                         onChange={(option) => props.handleChange('projectId')(option)}
                                       />
                                     </FormGroup>
@@ -487,7 +487,7 @@ class DetailExpense extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={props.values.vatCategoryId}
+                                        value={vat_list && selectOptionsFactory.renderOptions('name', 'id', vat_list, 'Tax').find(option => option.value === +props.values.vatCategoryId)}
                                         onChange={(option) =>
                                           props.handleChange("vatCategoryId")(option)
                                         }
@@ -511,7 +511,7 @@ class DetailExpense extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={props.values.payMode}
+                                        value={pay_mode_list && pay_mode_list.find(option => option.value === props.values.payMode)}
                                         onChange={(option) => {
                                           props.handleChange("payMode")(option.value)
                                           if (option && option.value) {
@@ -544,7 +544,7 @@ class DetailExpense extends React.Component {
                                         id="bankAccountId"
                                         name="bankAccountId"
                                         options={bank_list && bank_list.data ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank') : []}
-                                        value={props.values.bankAccountId}
+                                        value={bank_list && bank_list.data && selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank').find(option => option.value === +props.values.bankAccountId)}
                                         onChange={(option) => props.handleChange('bankAccountId')(option)}
                                         className={
                                           props.errors.bankAccountId && props.touched.bankAccountId

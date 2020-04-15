@@ -129,10 +129,10 @@ class DetailProduct extends React.Component {
       productName,
       productDescription,
       productCode,
-      vatCategoryId,
+      vatCategoryId : typeof vatCategoryId === 'object' ? vatCategoryId.value : vatCategoryId,
       unitPrice,
-      productCategoryId,
-      productWarehouseId,
+      productCategoryId : typeof productCategoryId === 'object' ? productCategoryId.value : productCategoryId,
+      productWarehouseId : typeof productWarehouseId === 'object' ? productWarehouseId.value : productWarehouseId,
       vatIncluded,
     }
     this.props.detailProductActions.updateProduct(postData).then((res) => {
@@ -214,7 +214,7 @@ class DetailProduct extends React.Component {
                             onSubmit={(values, { resetForm }) => {
 
                               this.handleSubmit(values)
-                              resetForm(this.state.initValue)
+                              // resetForm(this.state.initValue)
 
                               // this.setState({
                               //   selectedWareHouse: null,
@@ -283,13 +283,13 @@ class DetailProduct extends React.Component {
                                         options={product_category_list && product_category_list.data ? selectOptionsFactory.renderOptions('productCategoryName', 'id', product_category_list.data, 'Product Category') : []}
                                         id="productCategoryId"
                                         name="productCategoryId"
-                                        value={props.values.productCategoryId || ''}
+                                        value={product_category_list && product_category_list.data && selectOptionsFactory.renderOptions('productCategoryName', 'id', product_category_list.data, 'Product Category').find(option => option.value === +props.values.productCategoryId)}
                                         onChange={(option) => {
                                           // this.setState({
                                           //   selectedParentProduct: option.value
                                           // })
                                           if (option && option.value) {
-                                            props.handleChange("productCategoryId")(option.value)
+                                            props.handleChange("productCategoryId")(option)
                                           } else {
                                             props.handleChange("productCategoryId")('')
                                           }
@@ -320,14 +320,14 @@ class DetailProduct extends React.Component {
                                         options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list, 'Vat') : []}
                                         id="vatCategoryId"
                                         name="vatCategoryId"
-                                        value={props.values.vatCategoryId}
+                                        value={vat_list && selectOptionsFactory.renderOptions('name', 'id', vat_list, 'Vat').find(option => option.value === +props.values.vatCategoryId)}
                                         onChange={(option) => {
                                           this.setState({
                                             selectedVatCategory: option.value
                                           })
 
                                           if (option && option.value) {
-                                            props.handleChange("vatCategoryId")(option.value)
+                                            props.handleChange("vatCategoryId")(option)
                                           } else {
                                             props.handleChange("vatCategoryId")('')
                                           }
@@ -370,13 +370,13 @@ class DetailProduct extends React.Component {
                                         options={product_warehouse_list ? selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list, 'WareHouse') : []}
                                         id="productWarehouseId"
                                         name="productWarehouseId"
-                                        value={props.values.productWarehouseId}
+                                        value={product_warehouse_list && selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list, 'WareHouse').find(option => option.value === +props.values.productWarehouseId)}
                                         onChange={(option) => {
                                           // this.setState({
                                           //   selectedWareHouse: option.value
                                           // })
                                           if (option && option.value) {
-                                            props.handleChange("productWarehouseId")(option.value)
+                                            props.handleChange("productWarehouseId")(option)
                                           } else {
                                             props.handleChange("productWarehouseId")('')
                                           }

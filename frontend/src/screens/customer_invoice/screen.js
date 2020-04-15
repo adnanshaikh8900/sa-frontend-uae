@@ -461,7 +461,7 @@ class CustomerInvoice extends React.Component {
         status: '',
         contactType: 2,
       },
-    })
+    }, () => { this.initializeData()})
   }
 
   render() {
@@ -580,7 +580,7 @@ class CustomerInvoice extends React.Component {
                           value={filterData.customerId}
                           onChange={(option) => {
                             if (option && option.value) {
-                              this.handleChange(option.value, 'customerId')
+                              this.handleChange(option, 'customerId')
                             } else {
                               this.handleChange('', 'customerId')
                             }
@@ -635,7 +635,7 @@ class CustomerInvoice extends React.Component {
                           value={filterData.status}
                           onChange={(option) => {
                             if (option && option.value) {
-                              this.handleChange(option.value, 'status')
+                              this.handleChange(option, 'status')
                             } else {
                               this.handleChange('', 'status')
                             }
@@ -648,7 +648,7 @@ class CustomerInvoice extends React.Component {
                           <i className="fa fa-search"></i>
                         </Button>
                         <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                          <i className="fa fa-remove"></i>
+                          <i className="fa fa-refresh"></i>
                         </Button>
                       </Col>
                     </Row>

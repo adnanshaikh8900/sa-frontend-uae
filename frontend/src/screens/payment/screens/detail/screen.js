@@ -63,6 +63,7 @@ class DetailPayment extends React.Component {
     };
 
     this.regEx = /^[0-9\d]+$/;
+    this.formRef = React.createRef()
   }
 
   componentDidMount = () => {
@@ -75,7 +76,7 @@ class DetailPayment extends React.Component {
         .getPaymentById(this.props.location.state.id)
         .then((res) => {
           if (res.status === 200) {
-            this.getCurrentUser({ value: res.data.supplierId });
+            // this.getCurrentUser({ value: res.data.supplierId });
             this.props.paymentActions.getCurrencyList();
             this.props.paymentActions.getBankList();
             this.props.paymentActions.getSupplierContactList(
@@ -127,16 +128,12 @@ class DetailPayment extends React.Component {
       paymentId: this.state.initValue.paymentId,
       paymentDate: payment_date !== null ? payment_date : "",
       description,
-      invoiceId: invoiceId && invoiceId.value ? invoiceId.value : "",
+      invoiceId: invoiceId ? invoiceId : "",
       invoiceAmount,
-      bankAccountId: bank && bank.value ? bank.value : "",
-      contactId: this.state.selectedSupplier.value
-        ? this.state.selectedSupplier.value
-        : supplier && supplier.value
-          ? supplier.value
-          : "",
-      currencyCode: currency && currency.value ? currency.value : "",
-      projectId: project && project.value ? project.value : ""
+      bankAccountId: bank ? bank : "",
+      contactId: supplier ? supplier : "",
+      currencyCode: currency ? currency : "",
+      projectId: project ? project : ""
     };
     this.props.detailPaymentActions
       .updatePayment(postData)
@@ -150,7 +147,7 @@ class DetailPayment extends React.Component {
       .catch((err) => {
         this.props.commonActions.tostifyAlert(
           "error",
-          err && err.data ? err.data.message : 'Something Went Wrong' 
+          err && err.data ? err.data.message : 'Something Went Wrong'
         );
       });
   }
@@ -166,13 +163,11 @@ class DetailPayment extends React.Component {
       option = data;
     } else {
       option = {
-        label: `${data.firstName} ${data.middleName} ${data.lastName}`,
-        value: data.contactId
+        label: `${data.fullName}`,
+        value: data.id
       };
     }
-    this.setState({
-      selectedSupplier: option
-    });
+    this.formRef.current.setFieldValue('supplier', option.value, true)
   }
 
   closeSupplierModal = (res) => {
@@ -210,7 +205,7 @@ class DetailPayment extends React.Component {
       .catch((err) => {
         this.props.commonActions.tostifyAlert(
           "error",
-          err && err.data ? err.data.message : 'Something Went Wrong' 
+          err && err.data ? err.data.message : 'Something Went Wrong'
         );
       });
   }
@@ -231,7 +226,7 @@ class DetailPayment extends React.Component {
   }
 
   render() {
-    const { loading, initValue, dialog, selectedSupplier } = this.state;
+    const { loading, initValue, dialog } = this.state;
     const {
       currency_list,
       bank_list,
@@ -263,9 +258,10 @@ class DetailPayment extends React.Component {
                     <CardBody>
                       <Formik
                         initialValues={initValue}
+                        ref={this.formRef}
                         onSubmit={(values, { resetForm }) => {
                           this.handleSubmit(values);
-                          resetForm(initValue);
+                          // resetForm(initValue);
                         }}
                         // validationSchema={Yup.object().shape({
                         //   currency: Yup.object().shape({
@@ -310,7 +306,7 @@ class DetailPayment extends React.Component {
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="supplier">
-                                      <span className="text-danger">*</span>
+                                        <span className="text-danger">*</span>
                                         Supplier Name
                                     </Label>
                                       <Select
@@ -326,10 +322,10 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={selectedSupplier}
+                                        value={supplier_list && supplier_list.find(option => option.value === +props.values.supplier)}
                                         onChange={(option) => {
-                                          props.handleChange("supplier")(option);
-                                          this.getCurrentUser(option);
+                                          props.handleChange("supplier")(option.value);
+                                          // this.getCurrentUser(option);
                                         }}
                                         className={
                                           props.errors.supplier &&
@@ -368,11 +364,11 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={props.values.invoiceId}
+                                        value={invoice_list && invoice_list.find(option => option.value === +props.values.invoiceId)}
                                         onChange={(option) => {
                                           // data = invoice_list.filter((item) => item.invoiceId === option.value);
                                           // props.handleChange('amount')(data[0]['invoiceAmount'])
-                                          props.handleChange("invoiceId")(option);
+                                          props.handleChange("invoiceId")(option.value);
                                         }}
                                         className={
                                           props.errors.invoiceId &&
@@ -389,7 +385,7 @@ class DetailPayment extends React.Component {
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="invoiceAmount">
-                                      <span className="text-danger">*</span>
+                                        <span className="text-danger">*</span>
                                         Invoice Amount
                                     </Label>
                                       <Input
@@ -434,9 +430,9 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={props.values.currency}
+                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currency)}
                                         onChange={(option) =>
-                                          props.handleChange("currency")(option)
+                                          props.handleChange("currency")(option.value)
                                         }
                                         className={
                                           props.errors.currency &&
@@ -469,9 +465,9 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={props.values.project}
+                                        value={project_list && project_list.find(option => option.value === +props.values.project)}
                                         onChange={(option) =>
-                                          props.handleChange("project")(option)
+                                          props.handleChange("project")(option.value)
                                         }
                                         className={
                                           props.errors.project &&
@@ -485,7 +481,7 @@ class DetailPayment extends React.Component {
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="payment_date">
-                                      <span className="text-danger">*</span>
+                                        <span className="text-danger">*</span>
                                         Payment Date
                                     </Label>
                                       <div>
@@ -529,9 +525,9 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={props.values.bank}
+                                        value={bank_list && bank_list.data && selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank').find(option => option.value === +props.values.bank)}
                                         onChange={(option) =>
-                                          props.handleChange("bank")(option)
+                                          props.handleChange("bank")(option.value)
                                         }
                                         className={
                                           props.errors.bank && props.touched.bank

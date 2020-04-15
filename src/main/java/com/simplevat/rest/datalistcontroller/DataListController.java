@@ -35,6 +35,7 @@ import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
 import com.simplevat.service.ChartOfAccountCategoryService;
@@ -306,9 +307,11 @@ public class DataListController {
 						parentCategory = chartOfAccountCategory;
 					}
 				}
-				HashMap<String, Object> response = new HashMap<>();
-				response.put(parentCategory.getChartOfAccountCategoryName(), modelList);
-				return new ResponseEntity<>(response, HttpStatus.OK);
+//				HashMap<String, Object> response = new HashMap<>();
+//				response.put(parentCategory.getChartOfAccountCategoryName(), modelList);
+				return new ResponseEntity<>(Arrays.asList(
+						new SingleLevelDropDownModel(parentCategory.getChartOfAccountCategoryName(), modelList)),
+						HttpStatus.OK);
 			} else {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}

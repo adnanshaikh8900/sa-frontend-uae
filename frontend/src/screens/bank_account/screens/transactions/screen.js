@@ -437,6 +437,7 @@ class BankTransactions extends React.Component {
                           placeholder="Chart Of Account"
                           value={item.chartOfAccountCategoryId}
                         >
+                          <option disabled="disabled" selected="selected" value="">Select</option>
                           {Object.keys(chartOfAccountCategoryList).map((group, index) => {
                             return (
                               <optgroup key={index} label={group}>
@@ -467,6 +468,7 @@ class BankTransactions extends React.Component {
                           placeholder="Transaction Category"
                           value={item.transactionCategoryId}
                         >
+                          <option disabled="disabled" selected="selected" value="">Select</option>
                           {Object.keys(transactionCategoryList).map((group, index) => {
                             return (
                               <optgroup key={index} label={group}>

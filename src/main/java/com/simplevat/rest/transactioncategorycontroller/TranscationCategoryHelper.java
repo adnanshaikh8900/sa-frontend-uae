@@ -164,7 +164,8 @@ public class TranscationCategoryHelper {
 		return null;
 	}
 
-	public Object getSinleLevelDropDownModelList(List<TransactionCategory> transactionCatList) {
+	public List<SingleLevelDropDownModel> getSinleLevelDropDownModelList(List<TransactionCategory> transactionCatList) {
+		List<SingleLevelDropDownModel> modelList = new ArrayList<>();
 		Map<Object, Object> chartOfAccountDropdownModelList = new HashMap<>();
 		Map<Integer, List<TransactionCategory>> idTrnxCatListMap = new HashMap<>();
 		List<TransactionCategory> transactionCategoryList = new ArrayList<>();
@@ -192,7 +193,9 @@ public class TranscationCategoryHelper {
 						new DropdownModel(trnxCat.getTransactionCategoryId(), trnxCat.getTransactionCategoryName()));
 			}
 			chartOfAccountDropdownModelList.put(parentCategory, dropDownModelList);
+			modelList.add(new SingleLevelDropDownModel(parentCategory, dropDownModelList));
 		}
-		return chartOfAccountDropdownModelList;
+		return modelList;
+//		return chartOfAccountDropdownModelList;
 	}
 }

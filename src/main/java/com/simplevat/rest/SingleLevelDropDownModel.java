@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SingleLevelDropDownModel implements Serializable {
 
-	private String mainLabel;
-	private List<DropdownModel> dataList;
+	private String label;
+	private List<DropdownModel> options;
 }

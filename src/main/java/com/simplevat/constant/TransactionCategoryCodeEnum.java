@@ -12,16 +12,17 @@ import lombok.Getter;
  * @author uday
  */
 public enum TransactionCategoryCodeEnum {
-    ACCOUNT_PAYABLE(2101),
-    ACCOUNT_RECEIVABLE(1101),
-    ACCOUNTANCY_FEE(4102),
-    SALE(3106),
-    BANK(1201);
-
+    ACCOUNT_PAYABLE("02-01-001"),
+    ACCOUNT_RECEIVABLE("01-01-001"),
+    ACCOUNTANCY_FEE("04-01-002"),
+    SALE("3106"),
+    BANK("04-01-007"),
+	EXPENSE("04");
+	
     @Getter
-    private final Integer code;
+    private final String code;
 
-    private TransactionCategoryCodeEnum(Integer code) {
+    private TransactionCategoryCodeEnum(String  code) {
         this.code = code;
     }
 }

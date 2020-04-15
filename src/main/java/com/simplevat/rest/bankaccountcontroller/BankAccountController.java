@@ -277,6 +277,11 @@ public class BankAccountController implements Serializable {
 	@GetMapping(value = "/getBankChart")
 	public ResponseEntity getCurrency(@RequestParam Integer bankId, Integer monthCount) {
 		try {
+
+			if (bankId == null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+
 			return new ResponseEntity<>(bankAccountService.getBankBalanceList(bankAccountService.findByPK(bankId),
 					transactionService.getCashInData(monthCount, bankId),
 					transactionService.getCashOutData(monthCount, bankId)), HttpStatus.OK);

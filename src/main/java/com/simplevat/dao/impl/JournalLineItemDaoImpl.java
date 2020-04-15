@@ -80,7 +80,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
 				&& reportRequestModel.getReportBasis().equals("CASH")) {
 			query.setParameter("transactionCategoryIdList",
-					Arrays.asList(new Integer[] { TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
+					Arrays.asList(new String[] { TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
 							TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode() }));
 		}
 		List<JournalLineItem> list = query.getResultList();

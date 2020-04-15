@@ -18,7 +18,7 @@ public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory
 
     public List<TransactionCategory> findAllTransactionCategory();
     
-    public TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode);
+    public TransactionCategory findTransactionCategoryByTransactionCategoryCode(String transactionCategoryCode);
     
     public List<TransactionCategory> findAllTransactionCategoryByChartOfAccountIdAndName(Integer chartOfAccountId, String name);
 

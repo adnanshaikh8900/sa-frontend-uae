@@ -309,7 +309,7 @@ class CreateExpense extends React.Component {
                                     options={
                                       expense_categories_list
                                         ? selectOptionsFactory.renderOptions(
-                                          "transactionCategoryDescription",
+                                          "transactionCategoryName",
                                           "transactionCategoryId",
                                           expense_categories_list,
                                           "Expense Category"

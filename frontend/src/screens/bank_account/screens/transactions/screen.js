@@ -205,13 +205,23 @@ class BankTransactions extends React.Component {
       element.className = element.className + ' sidebar-minimized brand-minimized'
     }
 
-    this.props.transactionsActions.getTransactionListForReconcile(type).then((res) => {
+    this.props.transactionsActions.getChartOfCategoryList(type).then((res) => {
       if (res.status === 200) {
         this.setState({
-          transaction_type_list_reconcile: res.data
+          chartOfAccountCategoryList: res.data
         })
       }
     })
+  }
+
+  getTransactionCategoryList = (type) => {
+        this.props.transactionsActions.getTransactionCategoryListForExplain(type).then((res) => {
+      if (res.status === 200) {
+      this.setState({
+        transactionCategoryList: res.data
+      })
+    }
+  })
   }
 
   getCategoryList = (options) => {
@@ -355,7 +365,7 @@ class BankTransactions extends React.Component {
   }
 
   getSideBarContent = () => {
-    const { transaction_type_list_reconcile, categoryList, showChartOfAccount, transaction_amount, currentBalance, explainList, transaction_category_list, submitBtnClick, showAlert } = this.state
+    const { chartOfAccountCategoryList, categoryList, showChartOfAccount, transaction_amount, currentBalance, explainList, transaction_category_list, submitBtnClick, showAlert,transactionCategoryList } = this.state
     // const { date, amount, name, due_date } = this.state.categoryDetails
     return (
       <div className="sidebar-content">
@@ -391,23 +401,67 @@ class BankTransactions extends React.Component {
                 <div className="details-container">
                   {explainList && explainList.map((item, index) => (
                     <div className="d-flex detail-row">
-                      <div className="mb-3 mr-3" style={{ width: '40%' }}>
-                        <Label className="label">Transaction Type</Label>
-                        <Select
-                          options={transaction_type_list_reconcile ? selectOptionsFactory.renderOptions('label', 'value', transaction_type_list_reconcile, 'Transaction Type') : []}
-                          onChange={(val) => {
-                            if (val && val.value) {
-                              this.handleChange(val.label, 'categoryLabel', true, item)
-                              this.handleChange(val.value, 'categoryType', true, item)
-                              this.getCategoryList(val)
-                            } else {
-                              this.handleChange('', 'categoryType', true, item)
+                      <div class="sub-container">
+                      <div className="mb-3 mr-2" style={{ width: '30%' }}>
+                        <Label className="label">Chart Of Account Category</Label>
+                        <select
+                          className="custom-select-box"
+                          id="transaction_select"
+                          // options={chartOfAccountCategoryList ?  chartOfAccountCategoryList : []}
+                          onChange={(e) => {
+                            // var el = document.getElementById('transaction_select');
+                            // var text = el.options[el.selectedIndex].innerHTML;
+                            if (e && e.target.value) {
+                              // this.handleChange(text, 'categoryLabel', true, item)
+                              this.handleChange(e.target.value, 'chartOfAccountCategoryId', true, item)
+                              this.handleChange('', 'transactionCategoryId', true, item)
+                              this.handleChange('', 'reconcileRrefId', true, item)
+                              // this.getCategoryList(text,e.target.value)
+                              this.getTransactionCategoryList(e.target.value)
+                            } 
+                          }}
+                          // className="select-default-width"
+                          placeholder="Chart Of Account"
+                          value={item.chartOfAccountCategoryId}
+                        >
+                          {Object.keys(chartOfAccountCategoryList).map((group, index) => {
+                            return (
+                              <optgroup key={index} label={group}>
+                                {this.renderOptions(chartOfAccountCategoryList[`${group}`])}
+                              </optgroup>
+                            );
+                          })}
+                        </select>
+                      </div>
+
+                      {explainList[`${index}`].chartOfAccountCategoryId &&  <div className="mb-3 mr-2" style={{ width: '30%' }}>
+                        <Label className="label">Transaction Category</Label>
+                        <select
+                          className="custom-select-box"
+                          id="transaction_category_select"
+                          // options={transaction_category_list ?  transaction_category_list : []}
+                          onChange={(e) => {
+                            var el = document.getElementById('transaction_category_select');
+                            var text = el.options[el.selectedIndex].innerHTML;
+                            if (e && e.target.value) {
+                              this.handleChange(text, 'categoryLabel', true, item)
+                              this.handleChange(e.target.value, 'transactionCategoryId', true, item)
+                              this.handleChange('', 'reconcileRrefId', true, item)
+                              this.getCategoryList(text,e.target.value)
                             }
                           }}
-                          className="select-default-width"
-                          placeholder="Transaction Type"
-                          value={item.categoryType}
-                        />
+                          // className="select-default-width"
+                          placeholder="Transaction Category"
+                          value={item.transactionCategoryId}
+                        >
+                          {Object.keys(transactionCategoryList).map((group, index) => {
+                            return (
+                              <optgroup key={index} label={group}>
+                                {this.renderOptions(transactionCategoryList[`${group}`])}
+                              </optgroup>
+                            );
+                          })}
+                        </select>
                       </div>
                       {explainList[`${index}`].categoryType && <div className="mb-3" style={{ width: '40%' }}>
                         <Label className="label">{explainList[`${index}`].categoryLabel}</Label>

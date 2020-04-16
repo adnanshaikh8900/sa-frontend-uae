@@ -68,7 +68,7 @@ public class InvoiceServiceImpl extends InvoiceService {
 				return 0;
 			}
 		}
-		return 0;
+		return 1;
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public abstract class TransactionCategoryService extends SimpleVatService<Intege
 
     public abstract List<TransactionCategory> findAllTransactionCategory();
     
-    public abstract TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode);
+    public abstract TransactionCategory findTransactionCategoryByTransactionCategoryCode(String transactionCategoryCode);
     
     public abstract List<TransactionCategory> findAllTransactionCategoryByUserId(Integer userId);
 

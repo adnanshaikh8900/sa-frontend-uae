@@ -171,7 +171,7 @@ class DetailExpense extends React.Component {
     formData.append('expenseAmount', expenseAmount);
     formData.append("payMode", payMode);
     if (expenseCategory && expenseCategory.value) {
-      formData.append("expenseCategoryId", expenseCategory.value);
+      formData.append("expenseCategory", expenseCategory.value);
     }
     if (employee && employee.value) {
       formData.append("employeeId", employee.value);
@@ -343,8 +343,9 @@ class DetailExpense extends React.Component {
                                       <Select
                                         id="expenseCategory"
                                         name="expenseCategory"
-                                        options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
-                                        value={expense_categories_list && selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category').find(option => option.value === +props.values.expenseCategory)}
+
+                                        options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
+                                        value={expense_categories_list && selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', expense_categories_list, 'Expense Category').find(option => option.value === +props.values.expenseCategory)}
                                         className={props.errors.expenseCategory && props.touched.expenseCategory ? "is-invalid" : ""}
                                         onChange={(option) => props.handleChange('expenseCategory')(option)}
                                       />

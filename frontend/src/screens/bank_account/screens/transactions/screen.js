@@ -327,17 +327,17 @@ class BankTransactions extends React.Component {
         transactionDate: '',
         chartOfAccountId: ''
       },
-    },() => { this.initializeData() })
+    }, () => { this.initializeData() })
   }
 
   openExplainTransactionModal = (row) => {
+    this.setState({
+      selectedData: row
+    }, () => {
       this.setState({
-          selectedData: row
-      },() => {
-        this.setState({
-          openExplainTransactionModal: true
-        })
+        openExplainTransactionModal: true
       })
+    })
   }
 
   closeExplainTransactionModal = (res) => {
@@ -578,10 +578,10 @@ class BankTransactions extends React.Component {
           </Card>
         </div>
 
-         <ExplainTransactionModal
+        <ExplainTransactionModal
           openExplainTransactionModal={this.state.openExplainTransactionModal}
           closeExplainTransactionModal={(e) => { this.closeExplainTransactionModal(e) }}
-          selectedData  = { this.state.selectedData }
+          selectedData={this.state.selectedData}
         />
 
       </div>

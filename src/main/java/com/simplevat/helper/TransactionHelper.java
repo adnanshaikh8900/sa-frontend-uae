@@ -193,13 +193,21 @@ public class TransactionHelper {
 	public Journal getByTransaction(Transaction transaction) {
 		List<JournalLineItem> journalLineItemList = new ArrayList();
 
-		ChartOfAccount transactionType = transaction.getChartOfAccount();
+		ChartOfAccount chartOfAccount = transaction.getChartOfAccount();
 
-		boolean isdebitFromBank = transactionType.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
-				|| (transactionType.getParentChartOfAccount() != null
-						&& transactionType.getParentChartOfAccount().getChartOfAccountId() != null
-						&& transactionType.getParentChartOfAccount().getChartOfAccountId()
-								.equals(ChartOfAccountConstant.MONEY_IN)) ? Boolean.TRUE : Boolean.FALSE;
+		boolean isdebitFromBank = false;
+		if (chartOfAccount.getParentChartOfAccount() != null) {
+			isdebitFromBank = ChartOfAccountConstant
+					.isDebitedFromBank(chartOfAccount.getParentChartOfAccount().getChartOfAccountId());
+		} else {
+			isdebitFromBank = ChartOfAccountConstant.isDebitedFromBank(chartOfAccount.getChartOfAccountId());
+		}
+
+//		 = transactionType.getChartOfAccountId().equals(ChartOfAccountConstant.ASSET)
+//				|| (transactionType.getParentChartOfAccount() != null
+//						&& transactionType.getParentChartOfAccount().getChartOfAccountId() != null
+//						&& transactionType.getParentChartOfAccount().getChartOfAccountId()
+//								.equals(ChartOfAccountConstant.ASSET)) ? Boolean.TRUE : Boolean.FALSE;
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();

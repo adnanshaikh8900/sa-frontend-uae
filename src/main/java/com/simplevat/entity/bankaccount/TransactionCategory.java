@@ -1,15 +1,35 @@
 package com.simplevat.entity.bankaccount;
 
-import com.simplevat.entity.VatCategory;
-import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
-
-import lombok.Data;
-import javax.persistence.*;
-
 import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.ColumnDefault;
+
+import com.simplevat.entity.CoaCoaCategory;
+import com.simplevat.entity.CoaTransactionCategory;
+import com.simplevat.entity.VatCategory;
+import com.simplevat.entity.converter.DateConverter;
+
+import lombok.Data;
 
 /**
  * Created by mohsinh on 2/26/2017.
@@ -46,11 +66,11 @@ public class TransactionCategory implements Serializable {
 	@Column(name = "TRANSACTION_CATEGORY_CODE")
 	private String transactionCategoryCode;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CHART_OF_ACCOUNT_ID")
 	private ChartOfAccount chartOfAccount;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "PARENT_TRANSACTION_CATEGORY_CODE")
 	private TransactionCategory parentTransactionCategory;
 
@@ -104,5 +124,8 @@ public class TransactionCategory implements Serializable {
 	@Basic(optional = false)
 	@Version
 	private Integer versionNumber;
+
+	@OneToMany(mappedBy = "chartOfAccountCategory", fetch = FetchType.LAZY)
+	private List<CoaTransactionCategory> coaTransactionCategoryList;
 
 }

@@ -131,6 +131,11 @@ public class DataListController {
 		try {
 			List<ChartOfAccount> transactionTypes = transactionTypeService.findAll();
 			if (transactionTypes != null && !transactionTypes.isEmpty()) {
+
+				for (ChartOfAccount ac : transactionTypes) {
+					ac.setTransactionChartOfAccountCategoryList(null);
+					// TODO Make it dropdown Model
+				}
 				return new ResponseEntity<>(transactionTypes, HttpStatus.OK);
 			} else {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);

@@ -344,7 +344,11 @@ class DetailExpense extends React.Component {
                                         id="expenseCategory"
                                         name="expenseCategory"
                                         options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
+<<<<<<< HEAD
                                            value={expense_categories_list && selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', expense_categories_list, 'Expense Category').find(option => option.value === +props.values.expenseCategory)}
+=======
+                                        value={props.values.expenseCategory}
+>>>>>>> 62fc1d6ef758c67d8396d82d2b01a23bdff8ce73
                                         className={props.errors.expenseCategory && props.touched.expenseCategory ? "is-invalid" : ""}
                                         onChange={(option) => props.handleChange('expenseCategory')(option)}
                                       />

@@ -46,7 +46,6 @@ class SupplierModal extends React.Component {
         this.props.getCurrentUser(res.data)
       }
     }).catch((err) => {
-      console.log(err)
       this.displayMsg();
       this.formikRef.current.setSubmitting(false);
     })

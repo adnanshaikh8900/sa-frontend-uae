@@ -625,7 +625,7 @@ class Profile extends React.Component {
                                               <Label htmlFor="roleId">Role</Label>
                                               <Select
                                                 options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
-                                                value={role_list && selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role').find(option => option.value === +props.values.roleId)}
+                                                value={role_list && selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role').find((option) => option.value === +props.values.roleId)}
                                                 onChange={(option) => {
                                                   if (option.value) {
                                                     props.handleChange('roleId')(option.value)
@@ -935,7 +935,7 @@ class Profile extends React.Component {
                                               <Label htmlFor="companyId">Company Type Code</Label>
                                               <Select
                                                 options={company_type_list ? selectOptionsFactory.renderOptions('label', 'value', company_type_list, 'Company Type Code') : []}
-                                                value={company_type_list && company_type_list.find(option => option.value === +props.values.companyTypeCode)}
+                                                value={company_type_list && company_type_list.find((option) => option.value === +props.values.companyTypeCode)}
                                                 onChange={(option) => {
                                                   if (option && option.value) {
                                                     props.handleChange('companyTypeCode')(option.value)
@@ -963,7 +963,7 @@ class Profile extends React.Component {
                                               <Label htmlFor="industryTypeCode">Industry Type Code</Label>
                                               <Select
                                                 options={industry_type_list ? selectOptionsFactory.renderOptions('label', 'value', industry_type_list, 'Industry Type') : []}
-                                                value={industry_type_list && industry_type_list.find(option => option.value === +props.values.industryTypeCode)}
+                                                value={industry_type_list && industry_type_list.find((option) => option.value === +props.values.industryTypeCode)}
                                                 onChange={(option) => {
                                                   if (option && option.value) {
                                                     props.handleChange('industryTypeCode')(option.value)
@@ -991,7 +991,7 @@ class Profile extends React.Component {
                                               <Label htmlFor="currencyCode">Currency Code</Label>
                                               <Select
                                                 options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                                value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currencyCode)}
+                                                value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                                 onChange={(option) => {
                                                   if (option && option.value) {
                                                     props.handleChange('currencyCode')(option.value)
@@ -1179,7 +1179,7 @@ class Profile extends React.Component {
                                           <Label htmlFor="invoicingCountryCode">Country Code</Label>
                                           <Select
                                             options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
-                                            value={country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find(option => option.value === +props.values.invoicingCountryCode)}
+                                            value={country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find((option) => option.value === +props.values.invoicingCountryCode)}
                                             onChange={(option) => {
                                               if (option && option.value) {
                                                 props.handleChange('invoicingCountryCode')(option.value)
@@ -1243,7 +1243,7 @@ class Profile extends React.Component {
                                           /> */}
                                           <Select
                                             options={invoicing_state_list ? selectOptionsFactory.renderOptions('label', 'value', invoicing_state_list, 'State') : []}
-                                            value={invoicing_state_list && invoicing_state_list.find(option => option.value === +props.values.invoicingStateRegion)}
+                                            value={invoicing_state_list && invoicing_state_list.find((option) => option.value === +props.values.invoicingStateRegion)}
                                             onChange={(option) => {
                                               if (option && option.value) {
                                                 props.handleChange('invoicingStateRegion')(option.value)
@@ -1459,8 +1459,8 @@ class Profile extends React.Component {
                                           <Label htmlFor="companyCountryCode">Country Code</Label>
                                           <Select
                                             options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
-                                            value={isSame ? country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find(option => option.value === +this.state.companyAddress.companyCountryCode) : 
-                                            country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find(option => option.value === +props.values.companyCountryCode)}
+                                            value={isSame ? country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find((option) => option.value === +this.state.companyAddress.companyCountryCode) : 
+                                            country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find((option) => option.value === +props.values.companyCountryCode)}
                                             onChange={(option) => {
                                               if (option && option.value) {
                                                 props.handleChange('companyCountryCode')(option.value, 'company')
@@ -1502,8 +1502,8 @@ class Profile extends React.Component {
                                           /> */}
                                           <Select
                                             options={selectOptionsFactory.renderOptions('label', 'value', isSame ? invoicing_state_list : company_state_list, 'State')}
-                                            value={isSame ? invoicing_state_list.find(option => option.value === +this.state.companyAddress.companyStateRegion) : 
-                                              company_state_list.find(option => option.value === +props.values.companyStateRegion)}
+                                            value={isSame ? invoicing_state_list.find((option) => option.value === +this.state.companyAddress.companyStateRegion) : 
+                                              company_state_list.find((option) => option.value === +props.values.companyStateRegion)}
                                             onChange={(option) => {
                                               if (option && option.value) {
                                                 props.handleChange('companyStateRegion')(option.value)

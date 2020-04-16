@@ -148,7 +148,6 @@ class DetailBankTransaction extends React.Component {
       receiptNumber,
       attachementDescription,
     } = data
-    console.log(data)
     const { transaction_id } = this.state;
     let formData = new FormData();
     formData.append("bankAccountId ", bankAccountId ? bankAccountId : '');
@@ -259,7 +258,7 @@ class DetailBankTransaction extends React.Component {
                                       <Label htmlFor="chartOfAccountId"><span className="text-danger">*</span>Transaction Type</Label>
                                       <Select
                                         options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type') : ''}
-                                        value={transaction_type_list && selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type').find(option => option.value === props.values.chartOfAccountId)}
+                                        value={transaction_type_list && selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type').find((option) => option.value === props.values.chartOfAccountId)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('chartOfAccountId')(option)
@@ -334,7 +333,7 @@ class DetailBankTransaction extends React.Component {
                                         className="select-default-width"
                                         options={transaction_category_list && transaction_category_list.data ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list.data, 'Category') : []}
                                         id="transactionCategoryId"
-                                        value={transaction_category_list && transaction_category_list.data && selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list.data, 'Category').find(option => option.value === props.values.transactionCategoryId)}
+                                        value={transaction_category_list && transaction_category_list.data && selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list.data, 'Category').find((option) => option.value === props.values.transactionCategoryId)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('transactionCategoryId')(option)
@@ -371,7 +370,7 @@ class DetailBankTransaction extends React.Component {
                                         options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                         id="projectId"
                                         name="projectId"
-                                        value={project_list && project_list.find(option => option.value === +props.values.projectId)}
+                                        value={project_list && project_list.find((option) => option.value === +props.values.projectId)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('projectId')(option)

@@ -283,7 +283,7 @@ class DetailProduct extends React.Component {
                                         options={product_category_list && product_category_list.data ? selectOptionsFactory.renderOptions('productCategoryName', 'id', product_category_list.data, 'Product Category') : []}
                                         id="productCategoryId"
                                         name="productCategoryId"
-                                        value={product_category_list && product_category_list.data && selectOptionsFactory.renderOptions('productCategoryName', 'id', product_category_list.data, 'Product Category').find(option => option.value === +props.values.productCategoryId)}
+                                        value={product_category_list && product_category_list.data && selectOptionsFactory.renderOptions('productCategoryName', 'id', product_category_list.data, 'Product Category').find((option) => option.value === +props.values.productCategoryId)}
                                         onChange={(option) => {
                                           // this.setState({
                                           //   selectedParentProduct: option.value
@@ -320,7 +320,7 @@ class DetailProduct extends React.Component {
                                         options={vat_list ? selectOptionsFactory.renderOptions('name', 'id', vat_list, 'Vat') : []}
                                         id="vatCategoryId"
                                         name="vatCategoryId"
-                                        value={vat_list && selectOptionsFactory.renderOptions('name', 'id', vat_list, 'Vat').find(option => option.value === +props.values.vatCategoryId)}
+                                        value={vat_list && selectOptionsFactory.renderOptions('name', 'id', vat_list, 'Vat').find((option) => option.value === +props.values.vatCategoryId)}
                                         onChange={(option) => {
                                           this.setState({
                                             selectedVatCategory: option.value
@@ -370,7 +370,7 @@ class DetailProduct extends React.Component {
                                         options={product_warehouse_list ? selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list, 'WareHouse') : []}
                                         id="productWarehouseId"
                                         name="productWarehouseId"
-                                        value={product_warehouse_list && selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list, 'WareHouse').find(option => option.value === +props.values.productWarehouseId)}
+                                        value={product_warehouse_list && selectOptionsFactory.renderOptions('warehouseName', 'warehouseId', product_warehouse_list, 'WareHouse').find((option) => option.value === +props.values.productWarehouseId)}
                                         onChange={(option) => {
                                           // this.setState({
                                           //   selectedWareHouse: option.value

@@ -266,7 +266,7 @@ class DetailBankAccount extends React.Component {
                                       id="currency"
                                       name="currency"
                                       options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                      value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currency)}
+                                      value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
                                       onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('currency')(option.value)
@@ -309,7 +309,6 @@ class DetailBankAccount extends React.Component {
                               </Row>
                               <Row>
                                 <Col lg={4}>
-                                  {console.log(props.values)}
                                   <FormGroup className="">
                                     <Label htmlFor="account_type">
                                       <span className="text-danger">*</span>
@@ -319,7 +318,7 @@ class DetailBankAccount extends React.Component {
                                       id="account_type"
                                       name="account_type"
                                       options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, 'Account Type') : []}
-                                      value={account_type_list && selectOptionsFactory.renderOptions('name', 'id', account_type_list, 'Account Type').find(option => option.value === props.values.account_type)}
+                                      value={account_type_list && selectOptionsFactory.renderOptions('name', 'id', account_type_list, 'Account Type').find((option) => option.value === props.values.account_type)}
                                       onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('account_type')(option.value)
@@ -440,7 +439,7 @@ class DetailBankAccount extends React.Component {
                                       id="country"
                                       name="country"
                                       options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
-                                      value={country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find(option => option.value === props.values.country)}
+                                      value={country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find((option) => option.value === props.values.country)}
                                       onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('country')(option.value)
@@ -465,7 +464,7 @@ class DetailBankAccount extends React.Component {
                                       id="account_is_for"
                                       name="account_is_for"
                                       options={this.account_for ? selectOptionsFactory.renderOptions('label', 'value', this.account_for, 'Type') : []}
-                                      value={this.account_for && this.account_for.find(option => option.value === props.values.account_is_for)}
+                                      value={this.account_for && this.account_for.find((option) => option.value === props.values.account_is_for)}
                                       onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('account_is_for')(option.value)

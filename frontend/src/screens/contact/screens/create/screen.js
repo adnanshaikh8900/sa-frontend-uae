@@ -98,10 +98,10 @@ class CreateContact extends React.Component {
   getData = (data) => {
     let temp = {}
     for(let item in data) {
-      if(typeof data[item] !== 'object') {
-        temp[`${item}`] = data[item]
+      if(typeof data[`${item}`] !== 'object') {
+        temp[`${item}`] = data[`${item}`]
       } else {
-        temp[`${item}`] = data[item].value
+        temp[`${item}`] = data[`${item}`].value
       }
     }
     return temp

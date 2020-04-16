@@ -328,11 +328,11 @@ class DetailSupplierInvoice extends React.Component {
       return obj
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
-      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true)
       this.updateAmount(data, props);
     } else {
       this.setState({ data }, () => {
-        form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
+        form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true)
       });
     }
 
@@ -722,7 +722,7 @@ class DetailSupplierInvoice extends React.Component {
                                         options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                         id="project"
                                         name="project"
-                                        value={project_list && project_list.find(option => option.value === +props.values.project)}
+                                        value={project_list && project_list.find((option) => option.value === +props.values.project)}
                                         onChange={(option) => props.handleChange('project')(option.value)}
                                       />
                                     </FormGroup>
@@ -737,7 +737,7 @@ class DetailSupplierInvoice extends React.Component {
                                         name="contactId"
                                         onBlur={props.handlerBlur}
                                         options={supplier_list ? selectOptionsFactory.renderOptions('label', 'value', supplier_list, 'Supplier Name') : []}
-                                        value={supplier_list && supplier_list.find(option => option.value === +props.values.contactId)}
+                                        value={supplier_list && supplier_list.find((option) => option.value === +props.values.contactId)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('contactId')(option.value)
@@ -771,7 +771,7 @@ class DetailSupplierInvoice extends React.Component {
                                         options={this.termList ? selectOptionsFactory.renderOptions('label', 'value', this.termList, 'Terms') : []}
                                         id="term"
                                         name="term"
-                                        value={this.termList && this.termList.find(option => option.value === props.values.term)}
+                                        value={this.termList && this.termList.find((option) => option.value === props.values.term)}
                                         onChange={(option) => {
                                           props.handleChange('term')(option.value)
                                           if (option.value === '') {
@@ -855,7 +855,7 @@ class DetailSupplierInvoice extends React.Component {
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         id="currency"
                                         name="currency"
-                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currency)}
+                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
                                         onChange={(option) => props.handleChange('currency')(option.value)}
                                         className={`${props.errors.currency && props.touched.currency ? "is-invalid" : ""}`}
                                       />
@@ -1056,7 +1056,7 @@ class DetailSupplierInvoice extends React.Component {
                                                     options={discountOptions}
                                                     id="discountType"
                                                     name="discountType"
-                                                    value={discountOptions && discountOptions.find(option => option.value === props.values.discountType)}
+                                                    value={discountOptions && discountOptions.find((option) => option.value === props.values.discountType)}
                                                     onChange={(item) => {
                                                       props.handleChange('discountPercentage')('')
                                                       props.handleChange('discountType')(item.value)

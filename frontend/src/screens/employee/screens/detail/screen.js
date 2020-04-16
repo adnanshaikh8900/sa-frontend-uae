@@ -443,7 +443,7 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="currencyCode">Currency Code</Label>
                                       <Select
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currencyCode)}
+                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('currencyCode')(option)

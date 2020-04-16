@@ -339,15 +339,15 @@ class CreateJournal extends React.Component {
     });
     if (name === 'debitAmount') {
       form.setFieldValue(`journalLineItems.[${idx}].creditAmount`, 0, true)
-      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true)
       this.updateAmount(data);
     } else if (name === 'creditAmount') {
-      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true)
       form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
       this.updateAmount(data)
     } else {
       this.setState({ data }, () => {
-        this.formRef.current.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
+        this.formRef.current.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true)
       });
     }
 
@@ -459,7 +459,7 @@ class CreateJournal extends React.Component {
                   subTotalCreditAmount: 0,
                 }
               }
-            },()=>{resetForm(this.state.initValue)});
+            },() => { resetForm(this.state.initValue) });
           } else {
             this.props.history.push('/admin/accountant/journal');
           }

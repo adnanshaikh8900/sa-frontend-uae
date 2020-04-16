@@ -291,7 +291,7 @@ class DetailProject extends React.Component {
                                     id="contactId"
                                     name="contactId"
                                     placeholder="Select Contact"
-                                    value={contact_list && contact_list.find(option => option.value === +props.values.contactId)}
+                                    value={contact_list && contact_list.find((option) => option.value === +props.values.contactId)}
                                     className={
                                       props.errors.contactId && props.touched.contactId
                                         ? "is-invalid"
@@ -375,7 +375,7 @@ class DetailProject extends React.Component {
                                       }
                                     }}
                                     placeholder="Select currencyCode"
-                                    value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currencyCode)}
+                                    value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                     id="currencyCode"
                                     name="currencyCode"
                                     className={

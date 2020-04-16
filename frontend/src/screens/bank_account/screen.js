@@ -471,7 +471,7 @@ class BankAccount extends React.Component {
         accountNumber: '',
         currencyCode: '',
       },
-    })
+    },() => {this.initializeData()})
   }
 
   render() {
@@ -565,7 +565,7 @@ class BankAccount extends React.Component {
                               className=""
                               options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, 'Account Type') : []}
                               value={filterData.bankAccountTypeId}
-                              onChange={(option) => this.inputHandler('bankAccountTypeId', option.value)}
+                              onChange={(option) => this.inputHandler('bankAccountTypeId', option)}
                               placeholder="Account Type"
                             />
                           </Col>
@@ -590,7 +590,7 @@ class BankAccount extends React.Component {
                               className=""
                               options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                               value={filterData.currencyCode}
-                              onChange={(option) => this.inputHandler('currencyCode', option.value)}
+                              onChange={(option) => this.inputHandler('currencyCode', option)}
                               placeholder="Currency"
                             />
                           </Col>
@@ -599,7 +599,7 @@ class BankAccount extends React.Component {
                               <i className="fa fa-search"></i>
                             </Button>
                             <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                              <i className="fa fa-remove"></i>
+                              <i className="fa fa-refresh"></i>
                             </Button>
                           </Col>
                         </Row>

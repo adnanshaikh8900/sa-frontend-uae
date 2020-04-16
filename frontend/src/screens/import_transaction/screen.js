@@ -111,12 +111,14 @@ class ImportTransaction extends React.Component {
   validateForm = () => {
     const { initValue,fileName } = this.state
     let temp = {}
+    console.log(initValue)
     for (let val in initValue) {
       if(initValue.hasOwnProperty(val)) {
-        if (val === 'name' && !initValue.val) {
+        if (val === 'name' && !initValue['name']) {
+          console.log(initValue.val)
           temp['name'] = '*Template Name is Required'
         }
-        if (val === 'dateFormatId' && !initValue.val) {
+        if (val === 'dateFormatId' && !initValue['dateFormatId']) {
           temp['dateFormatId'] = '*Date Format is Required'
         }
       }
@@ -369,8 +371,7 @@ class ImportTransaction extends React.Component {
                                 <Col lg={3} md={7}>
                                   <FormGroup>
                                     <Select
-                                      className="select-default-width"
-                                      value={this.state.selectedConfiguration || ''}
+                                      value={configurationList && selectOptionsFactory.renderOptions('name', 'id', configurationList, 'Tax').find(option => option.value === +this.state.selectedConfiguration)}
                                       options={configurationList ? selectOptionsFactory.renderOptions('name', 'id', configurationList, 'Configuration') : []}
                                       onChange={(e) => {
                                         let data = configurationList.filter((item) => item.id === e.value);
@@ -529,7 +530,7 @@ class ImportTransaction extends React.Component {
                                               <Select
                                                 type=""
                                                 options={date_format_list ? selectOptionsFactory.renderOptions('format', 'id', date_format_list, 'Date Format') : []}
-                                                value={this.state.selectedDateFormat || ''}
+                                                value={date_format_list && selectOptionsFactory.renderOptions('format', 'id', date_format_list, 'Date Format').find(option => option.value === +this.state.selectedDateFormat)}
                                                 onChange={(option) => {
                                                   if (option && option.value) {
                                                     this.handleInputChange('dateFormatId', option.value)
@@ -568,7 +569,7 @@ class ImportTransaction extends React.Component {
                                 </Col>
                               </Row>
                               {/* <Row className="mt-5"> */}
-
+                                            {console.log(this.d)}
                               {/* </Row> */}
                             </Form>
                             {/* )

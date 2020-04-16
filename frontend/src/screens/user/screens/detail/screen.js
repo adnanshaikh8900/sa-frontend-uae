@@ -162,7 +162,7 @@ class DetailUser extends React.Component {
     formData.append("lastName", lastName ? lastName : '');
     formData.append("email", email ? email : '');
     formData.append("dob", dob ? moment(dob).format('DD-MM-YYYY') : (''));
-    formData.append("roleId", roleId ? roleId : '');
+    formData.append("roleId", typeof roleId !== 'object' ? roleId : roleId.value);
     formData.append("active", this.state.selectedStatus);
     formData.append("password", password ? password : '');
     formData.append("companyId", companyId ? companyId : '');
@@ -231,6 +231,8 @@ class DetailUser extends React.Component {
                               email: Yup.string()
                                 .required("Email is Required")
                                 .email("Invalid Email"),
+                                roleId: Yup.string()
+                                .required("Role Name is Required"),
                               password: Yup.string()
                                 // .required("Password is Required")
                                 // .min(8, "Password Too Short")
@@ -372,10 +374,10 @@ class DetailUser extends React.Component {
                                           <Label htmlFor="roleId">Role</Label>
                                           <Select
                                             options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
-                                            value={props.values.roleId}
+                                            value={role_list && selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role').find(option => option.value === +props.values.roleId)}
                                             onChange={(option) => {
                                               if (option && option.value) {
-                                                props.handleChange('roleId')(option.value)
+                                                props.handleChange('roleId')(option)
                                               } else {
                                                 props.handleChange('roleId')('')
                                               }

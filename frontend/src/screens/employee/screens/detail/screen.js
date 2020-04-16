@@ -99,7 +99,11 @@ class DetailEmployee extends React.Component {
   }
 
   handleSubmit = (data) => {
-    this.props.employeeDetailActions.updateEmployee(data).then((res) => {
+    const postData = Object.assign({},data)
+    if(typeof postData.currencyCode === 'object') {
+      postData.currencyCode = data.currencyCode.value
+    }
+    this.props.employeeDetailActions.updateEmployee(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'Employee Updated Successfully')
         this.props.history.push('/admin/master/employee')
@@ -439,10 +443,10 @@ class DetailEmployee extends React.Component {
                                       <Label htmlFor="currencyCode">Currency Code</Label>
                                       <Select
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                        value={props.values.currencyCode}
+                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currencyCode)}
                                         onChange={(option) => {
                                           if (option && option.value) {
-                                            props.handleChange('currencyCode')(option.value)
+                                            props.handleChange('currencyCode')(option)
                                           } else {
                                             props.handleChange('currencyCode')('')
                                           }

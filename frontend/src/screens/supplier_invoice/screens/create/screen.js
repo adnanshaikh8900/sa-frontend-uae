@@ -102,7 +102,7 @@ class CreateSupplierInvoice extends React.Component {
         notes: '',
         discount: 0,
         discountPercentage: 0,
-        discountType: 'FIXED'
+        discountType: { value: 'FIXED', label: 'Fixed' }
       },
       currentData: {},
       contactType: 1,
@@ -111,7 +111,7 @@ class CreateSupplierInvoice extends React.Component {
       createMore: false,
       fileName: '',
       term: '',
-      selectedType: 'FIXED',
+      selectedType: { value: 'FIXED', label: 'Fixed' },
       discountPercentage: '',
       discountAmount: 0
     }
@@ -385,7 +385,7 @@ class CreateSupplierInvoice extends React.Component {
 
   setDate = (props, value) => {
     const { term } = this.state
-    const val = term.split('_')
+    const val = term.value.split('_')
     const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1]
     const values = value ? value : moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate()
     if (temp && values) {
@@ -413,7 +413,7 @@ class CreateSupplierInvoice extends React.Component {
       total = (total_vat + total_net);
       return obj
     })
-    const discount = props.values.discountType === 'PERCENTAGE' ? (total_net * discountPercentage) / 100 : discountAmount
+    const discount = props.values.discountType.value === 'PERCENTAGE' ? (total_net * discountPercentage) / 100 : discountAmount
 
     this.setState({
       data,
@@ -426,7 +426,7 @@ class CreateSupplierInvoice extends React.Component {
         }
       }
     }, () => {
-      if (props.values.discountType === 'PERCENTAGE') {
+      if (props.values.discountType.value === 'PERCENTAGE') {
         this.formRef.current.setFieldValue('discount', discount)
       }
     })
@@ -464,14 +464,19 @@ class CreateSupplierInvoice extends React.Component {
     formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
     formData.append('totalAmount', this.state.initValue.totalAmount);
     formData.append('discount', discount);
-    formData.append('discountType', discountType);
-    formData.append('term', term);
 
-    if (discountType === 'PERCENTAGE') {
+    if(discountType && discountType.value) {
+			formData.append('discountType', discountType.value);
+		}
+		if(term && term.value) {
+			formData.append('term', term.value);
+		}
+
+    if (discountType.value === 'PERCENTAGE') {
       formData.append('discountPercentage', discountPercentage);
     }
-    if (contactId) {
-      formData.append("contactId", contactId);
+    if (contactId && contactId.value) {
+      formData.append("contactId", contactId.value);
     }
     if (currency !== null && currency.value) {
       formData.append("currencyCode", currency.value);
@@ -543,14 +548,14 @@ class CreateSupplierInvoice extends React.Component {
       option = data
     } else {
       option = {
-        label: `${data.firstName} ${data.middleName} ${data.lastName}`,
-        value: data.contactId,
+        label: `${data.fullName}`,
+        value: data.id,
       }
     }
     // this.setState({
     //   selectedContact: option
     // })
-    this.formRef.current.setFieldValue('contactId', option.value, true)
+    this.formRef.current.setFieldValue('contactId', option, true)
   }
 
   closeSupplierModal = (res) => {
@@ -735,7 +740,7 @@ class CreateSupplierInvoice extends React.Component {
                                     value={props.values.contactId}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('contactId')(option.value)
+                                        props.handleChange('contactId')(option)
                                       } else {
                                         props.handleChange('contactId')('')
                                       }
@@ -771,12 +776,12 @@ class CreateSupplierInvoice extends React.Component {
                                       props.handleChange('term')(option)
                                       if (option.value === '') {
                                         this.setState({
-                                          term: option.value
+                                          term: option
                                         })
                                         props.setFieldValue('invoiceDueDate', '');
                                       } else {
                                         this.setState({
-                                          term: option.value
+                                          term: option
                                         }, () => {
                                           this.setDate(props, '')
                                         })
@@ -1054,7 +1059,7 @@ class CreateSupplierInvoice extends React.Component {
                                                 name="discountType"
                                                 value={props.values.discountType}
                                                 onChange={(item) => {
-                                                  props.handleChange('discountType')(item.value)
+                                                  props.handleChange('discountType')(item)
                                                   props.handleChange('discountPercentage')('')
                                                   props.setFieldValue('discount', 0)
                                                   this.setState({
@@ -1068,7 +1073,7 @@ class CreateSupplierInvoice extends React.Component {
                                             </FormGroup>
                                           </Col>
                                           {
-                                            props.values.discountType === 'PERCENTAGE' ?
+                                            props.values.discountType.value === 'PERCENTAGE' ?
                                               <Col lg={6}>
                                                 <FormGroup>
                                                   <Label htmlFor="discountPercentage">Percentage</Label>
@@ -1102,7 +1107,7 @@ class CreateSupplierInvoice extends React.Component {
                                                 id="discount"
                                                 name="discount"
                                                 type="text"
-                                                disabled={props.values.discountType && props.values.discountType === 'Percentage' ? true : false}
+                                                disabled={props.values.discountType && props.values.discountType.value === 'Percentage' ? true : false}
                                                 placeholder="Discount Amounts"
                                                 value={props.values.discount}
                                                 onChange={(option) => {

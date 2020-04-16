@@ -109,15 +109,15 @@ class CreateBankAccount extends React.Component {
     } = data
     let obj = {
       bankAccountName: account_name,
-      bankAccountCurrency: currency,
+      bankAccountCurrency: currency ? currency.value : '',
       openingBalance: opening_balance,
-      bankAccountType: account_type,
+      bankAccountType: account_type ? account_type.value: '',
       bankName: bank_name,
       accountNumber: account_number,
       ifscCode: ifsc_code,
       swiftCode: swift_code,
-      bankCountry: country,
-      personalCorporateAccountInd: account_is_for
+      bankCountry: country ? country.value : '',
+      personalCorporateAccountInd: account_is_for ? account_is_for.value : ''
     }
     this.props.createBankAccountActions.createBankAccount(obj).then((res) => {
       this.props.commonActions.tostifyAlert('success', 'New Bank Account Created Successfully.')
@@ -228,7 +228,7 @@ class CreateBankAccount extends React.Component {
                                       value={props.values.currency}
                                       onChange={(option) => {
                                         if (option && option.value) {
-                                          props.handleChange('currency')(option.value)
+                                          props.handleChange('currency')(option)
                                         } else {
                                           props.handleChange('currency')('')
                                         }
@@ -279,7 +279,7 @@ class CreateBankAccount extends React.Component {
                                       value={props.values.account_type}
                                       onChange={(option) => {
                                         if (option && option.value) {
-                                          props.handleChange('account_type')(option.value)
+                                          props.handleChange('account_type')(option)
                                         } else {
                                           props.handleChange('account_type')('')
                                         }
@@ -398,7 +398,7 @@ class CreateBankAccount extends React.Component {
                                       value={props.values.country}
                                       onChange={(option) => {
                                         if (option && option.value) {
-                                          props.handleChange('country')(option.value)
+                                          props.handleChange('country')(option)
                                         } else {
                                           props.handleChange('country')('')
                                         }
@@ -423,7 +423,7 @@ class CreateBankAccount extends React.Component {
                                       value={props.values.account_is_for}
                                       onChange={(option) => {
                                         if (option && option.value) {
-                                          props.handleChange('account_is_for')(option.value)
+                                          props.handleChange('account_is_for')(option)
                                         } else {
                                           props.handleChange('account_is_for')('')
                                         }

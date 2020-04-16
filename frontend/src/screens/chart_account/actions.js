@@ -44,7 +44,7 @@ export const getTransactionTypes = () => {
 export const getTransactionCategoryList = (obj) => {
   let transactionCategoryCode = obj.transactionCategoryCode ? obj.transactionCategoryCode : '';
   let transactionCategoryName = obj.transactionCategoryName ? obj.transactionCategoryName : '';
-  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId : '';
+  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId.value : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';

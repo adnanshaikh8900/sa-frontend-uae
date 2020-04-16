@@ -402,7 +402,7 @@ class Expense extends React.Component {
         transactionCategoryId: '',
         payee: '',
       },
-    })
+    }, () => { this.initializeData() })
   }
 
   render() {
@@ -523,7 +523,7 @@ class Expense extends React.Component {
                             options={expense_categories_list ? selectOptionsFactory.renderOptions('transactionCategoryDescription', 'transactionCategoryId', expense_categories_list, 'Expense Category') : []}
                             onChange={(option) => {
                               if (option && option.value) {
-                                this.handleChange(option.value, 'transactionCategoryId')
+                                this.handleChange(option, 'transactionCategoryId')
                               } else {
                                 this.handleChange('', 'transactionCategoryId')
                               }
@@ -537,7 +537,7 @@ class Expense extends React.Component {
                           <i className="fa fa-search"></i>
                         </Button>
                         <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                          <i className="fa fa-remove"></i>
+                          <i className="fa fa-refresh"></i>
                         </Button>
                       </Col>
                     </Row>

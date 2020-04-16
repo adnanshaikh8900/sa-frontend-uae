@@ -75,15 +75,26 @@ class CreateReceipt extends React.Component {
     this.props.receiptActions.getInvoiceList();
   }
 
+  
+
   handleSubmit = (data, resetForm) => {
-    this.props.receiptCreateActions.createReceipt(data).then((res) => {
+    const postData = {
+      receiptDate: data.receiptDate ,
+      receiptNo: data.receiptNo,
+      referenceCode: data.referenceCode,
+      contactId: data.contactId && data.contactId.value ? data.contactId.value : '',
+      invoiceId: data.invoiceId && data.invoiceId.value ? data.invoiceId.value : '',
+      amount: data.amount,
+      unusedAmount: data.unusedAmount,
+    }
+    this.props.receiptCreateActions.createReceipt(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Receipt Created Successfully!')
         if (this.state.createMore) {
           this.setState({
             createMore: false
           })
-          resetForm()
+          resetForm(this.state.initValue)
         } else { this.props.history.push('/admin/revenue/receipt') }
       }
     }).catch((err) => {
@@ -157,7 +168,6 @@ class CreateReceipt extends React.Component {
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="receipt_date"><span className="text-danger">*</span>Receipt Date</Label>
                                   <DatePicker
-
                                     id="date"
                                     name="receiptDate"
                                     placeholderText="Receipt Date"
@@ -208,7 +218,7 @@ class CreateReceipt extends React.Component {
                                     value={props.values.contactId}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('contactId')(option.value)
+                                        props.handleChange('contactId')(option)
                                       } else {
                                         props.handleChange('contactId')('')
                                       }
@@ -233,7 +243,7 @@ class CreateReceipt extends React.Component {
                                     value={props.values.invoiceId}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('invoiceId')(option.value)
+                                        props.handleChange('invoiceId')(option)
                                       } else {
                                         props.handleChange('invoiceId')('')
 
@@ -253,6 +263,7 @@ class CreateReceipt extends React.Component {
                                     options={[]}
                                     id="mode"
                                     name="mode"
+                                    value=""
                                   />
                                 </FormGroup>
                               </Col>
@@ -315,7 +326,7 @@ class CreateReceipt extends React.Component {
                                   >
                                     <i className="fa fa-repeat"></i> Create and More
                                     </Button>
-                                  <Button color="secondary" className="btn-square"
+                                  <Button type="button" color="secondary" className="btn-square"
                                     onClick={() => { this.props.history.push('/admin/revenue/receipt') }}>
                                     <i className="fa fa-ban"></i> Cancel
                                     </Button>

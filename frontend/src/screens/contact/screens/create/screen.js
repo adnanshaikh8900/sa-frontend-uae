@@ -95,12 +95,25 @@ class CreateContact extends React.Component {
 
   }
 
+  getData = (data) => {
+    let temp = {}
+    for(let item in data) {
+      if(typeof data[item] !== 'object') {
+        temp[`${item}`] = data[item]
+      } else {
+        temp[`${item}`] = data[item].value
+      }
+    }
+    return temp
+  }
+
   handleSubmit = (data, resetForm) => {
-    this.props.createContactActions.createContact(data).then((res) => {
+    const postData = this.getData(data)
+    this.props.createContactActions.createContact(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Contact Created Successfully')
-        resetForm();
         if (this.state.createMore) {
+          resetForm(this.state.initValue);
           this.setState({ createMore: false });
         } else {
           this.props.history.push('/admin/master/contact');
@@ -279,7 +292,7 @@ class CreateContact extends React.Component {
                                     value={props.values.contactType}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('contactType')(option.value)
+                                        props.handleChange('contactType')(option)
                                       } else {
                                         props.handleChange('contactType')('')
                                       }
@@ -466,7 +479,7 @@ class CreateContact extends React.Component {
                                     name="addressLine2"
                                     placeholder="Enter Address Line2"
                                     onChange={(value) => { props.handleChange("addressLine2")(value) }}
-
+                                    value={props.values.addressLine2}
                                   />
                                 </FormGroup>
                               </Col>
@@ -479,7 +492,7 @@ class CreateContact extends React.Component {
                                     name="addressLine3"
                                     placeholder="Enter Address Line3"
                                     onChange={(value) => { props.handleChange("addressLine3")(value) }}
-
+                                    value={props.values.addressLine3}
                                   />
                                 </FormGroup>
                               </Col>
@@ -493,12 +506,13 @@ class CreateContact extends React.Component {
                                     value={props.values.countryId}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('countryId')(option.value)
+                                        props.handleChange('countryId')(option)
                                         this.getStateList(option.value)
                                       } else {
                                         props.handleChange('countryId')('')
-                                        props.handleChange('stateId')('')
+                                        this.getStateList('')
                                       }
+                                      props.handleChange('stateId')({label: 'Select State',value: ''})
                                     }}
                                     placeholder="Select Country"
                                     id="countryId"
@@ -523,7 +537,7 @@ class CreateContact extends React.Component {
                                     value={props.values.stateId}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('stateId')(option.value)
+                                        props.handleChange('stateId')(option)
                                       } else {
                                         props.handleChange('stateId')('')
                                       }
@@ -677,7 +691,7 @@ class CreateContact extends React.Component {
                                     value={props.values.currencyCode}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('currencyCode')(option.value)
+                                        props.handleChange('currencyCode')(option)
                                       } else {
                                         props.handleChange('currencyCode')('')
                                       }

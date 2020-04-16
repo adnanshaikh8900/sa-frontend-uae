@@ -267,7 +267,7 @@ class Receipt extends React.Component {
         receiptReferenceCode: '',
         receiptDate: '',
       },
-    })
+    }, () => { this.initializeData()})
   }
 
   render() {
@@ -367,7 +367,7 @@ class Receipt extends React.Component {
                               value={filterData.invoiceId}
                               onChange={(option) => {
                                 if (option && option.value) {
-                                  this.handleChange(option.value, 'invoiceId')
+                                  this.handleChange(option, 'invoiceId')
                                 } else {
                                   this.handleChange('', 'invoiceId')
 
@@ -383,7 +383,7 @@ class Receipt extends React.Component {
                               value={filterData.contactId}
                               onChange={(option) => {
                                 if (option && option.value) {
-                                  this.handleChange(option.value, 'contactId')
+                                  this.handleChange(option, 'contactId')
                                 } else {
                                   this.handleChange('', 'contactId')
 
@@ -396,7 +396,7 @@ class Receipt extends React.Component {
                               <i className="fa fa-search"></i>
                             </Button>
                             <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                              <i className="fa fa-remove"></i>
+                              <i className="fa fa-refresh"></i>
                             </Button>
                           </Col>
                         </Row>

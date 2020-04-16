@@ -13,16 +13,13 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Label,
-  FormGroup,
-  Alert
 } from 'reactstrap'
 import Select from 'react-select'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import DatePicker from 'react-datepicker'
 
 
-import { Loader, ConfirmDeleteModal, SidebarComponent } from 'components'
+import { Loader, ConfirmDeleteModal } from 'components'
 
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
@@ -35,10 +32,9 @@ import {
 } from 'services/global'
 import { selectOptionsFactory } from 'utils'
 import { CSVLink } from "react-csv";
-
+import { ExplainTransactionModal } from './sections'
 
 import './style.scss'
-// import moment from 'moment'
 
 const mapStateToProps = (state) => {
   return ({
@@ -78,35 +74,17 @@ class BankTransactions extends React.Component {
         transactionDate: '',
         chartOfAccountId: ''
       },
-      selectedData: null,
+      selectedData: '',
       selectedreconcileRrefId: '',
       id: '',
       dialog: null,
       selectedRowData: {},
       sidebarOpen: false,
-      transaction_type_list_reconcile: [],
-      categoryList: {},
-      reconcileData: {
-        categoryType: '',
-        reconcileRrefId: '',
-      },
-      categoryDetails: {},
-      selectedReconcilereconcileRrefId: '',
-      selectedReconcileCategoryType: '',
-      // categoryLabel: '',
       csvData: [],
       view: false,
       selectedRow: '',
-      explainList: [],
-      transaction_amount: 0,
-      currentBalance: 0,
-      idCount: 0,
-      showChartOfAccount: false,
-      transaction_category_list: [],
-      selectedTransactionCategoryType: '',
-      submitBtnClick: false,
       transactionId: '',
-      showAlert: false
+      openExplainTransactionModal: false,
     }
 
     this.options = {
@@ -160,393 +138,6 @@ class BankTransactions extends React.Component {
   //     openDeleteModal: !this.state.openDeleteModal
   //   })
   // }
-  addRow = () => {
-    const explainList = [...this.state.explainList]
-    this.setState({
-      explainList: explainList.concat({
-        id: this.state.idCount + 1,
-        chartOfAccountCategoryId: '',
-        categoryType: '',
-        reconcileRrefId: '',
-        categoryLabel: ''
-      }), idCount: this.state.idCount + 1
-    })
-  }
-
-  deleteRow = (id) => {
-    const ids = id;
-    let newData = []
-    const data = this.state.explainList
-    newData = data.filter((obj) => obj.id !== ids);
-    this.setState({
-      explainList: newData
-    }, () => {
-      this.calculateCurrentBalance()
-    })
-  }
-
-  onSetSidebarOpen = (open, data) => {
-    let transaction_amount = data.withdrawalAmount ? data.withdrawalAmount : data.depositeAmount;
-    this.setState({
-      explainList: [{
-        id: 0,
-        chartOfAccountCategoryId:'',
-        categoryType: '',
-        reconcileRrefId: '',
-        categoryLabel: ''
-      }]
-    }, () => {
-      this.setState({ sidebarOpen: open, transactionId: data.id, categoryDetails: {}, selectedRow: data.id, transaction_amount, currentBalance: transaction_amount, showAlert: false, submitBtnClick: false });
-      this.getTransactionListForReconcile(data.debitCreditFlag)
-    })
-  }
-
-  getTransactionListForReconcile = (type) => {
-    let element = document.querySelector('body');
-    if (!element.className.includes('sidebar-minimized')) {
-      element.className = element.className + ' sidebar-minimized brand-minimized'
-    }
-
-    this.props.transactionsActions.getChartOfCategoryList(type).then((res) => {
-      if (res.status === 200) {
-        this.setState({
-          chartOfAccountCategoryList: res.data
-        })
-      }
-    })
-  }
-
-  getTransactionCategoryList = (type) => {
-    this.props.transactionsActions.getTransactionCategoryListForExplain(type).then((res) => {
-      if (res.status === 200) {
-        this.setState({
-          transactionCategoryList: res.data
-        })
-      }
-    })
-  }
-
-  getCategoryList = (label,value) => {
-    // const { label, value } = options
-    const { currentBalance, categoryList } = this.state
-    let data = Object.assign({}, categoryList)
-    let keys = Object.keys(data)
-    // console.log(options)
-    if (!keys.includes(label)) {
-      this.props.transactionsActions.getCategoryListForReconcile(value).then((res) => {
-        if (res.status === 200) {
-          res.data.map((x) => {
-            x['name'] = x.label
-            x['label'] = `${x['label']} (${x['amount']} ${x['currencySymbol']})`
-            x['disabled'] = x['amount'] <= currentBalance ? false : true
-            return x
-          })
-          data[`${label}`] = res.data
-          this.setState({
-            categoryList: data
-          })
-        }
-      })
-    }
-  }
-
-  getDetail = (val) => {
-    const data = this.state.categoryList.filter((x) => x.id === val)
-    this.setState({
-      categoryDetails: {
-        name: data[0].name,
-        date: data[0].date,
-        amount: `${data[0].currencySymbol} ${(data[0].amount).toFixed(2)}`,
-        due_date: data[0].dueDate,
-      },
-    })
-  }
-
-  checkChartOfAccount = () => {
-    const { transaction_amount, currentBalance, submitBtnClick, transaction_category_list } = this.state
-    if (transaction_amount > currentBalance && currentBalance !== 0 && submitBtnClick) {
-      this.setState({
-        showChartOfAccount: true
-      })
-      if (transaction_category_list.length === 0) {
-        this.props.transactionsActions.getTransactionCategoryList().then((res) => {
-          if (res.status === 200) {
-            this.setState({
-              transaction_category_list: res.data.data
-            })
-          }
-        })
-      }
-      return true
-    } else {
-      this.setState({
-        showChartOfAccount: false,
-        selectedTransactionCategoryType: ''
-      })
-      return false
-    }
-  }
-
-  handleSubmit = () => {
-    const { selectedTransactionCategoryType } = this.state
-    const postData = {
-      'transactionCategory': selectedTransactionCategoryType,
-    }
-    this.setState({
-      submitBtnClick: true
-    }, () => {
-      if (this.checkChartOfAccount()) {
-        if (postData.transactionCategory && !this.checkedRow()) {
-          this.setState({
-            showAlert: false
-          })
-          this.submitExplain(postData)
-        } else {
-          this.setState({
-            showAlert: true
-          })
-        }
-      } else {
-        if (!this.checkedRow()) {
-          this.submitExplain(postData)
-        }
-      }
-    })
-  }
-
-  submitExplain = (postData) => {
-    const { transactionId, explainList, currentBalance } = this.state
-    let data = [...explainList]
-    data = JSON.parse(JSON.stringify(data));
-    const temp = data.map((item) => {
-      delete item['id']
-      delete item['categoryLabel']
-      return item
-    })
-    let obj = { ...{ explainData: temp }, transactionId, ...{ 'remainingBalance': currentBalance } };
-    if (postData.transactionCategory) {
-      obj = { ...obj, ...postData }
-    }
-    this.props.transactionsActions.reconcileTransaction(obj).then((res) => {
-      if (res.status === 200) {
-        this.setState({
-          sidebarOpen: false
-        })
-      }
-    })
-  }
-
-  closeSideBar = () => {
-    this.setState({ sidebarOpen: false, selectedRowData: '', selectedRow: '', explainList: [], showChartOfAccount: false, selectedTransactionCategoryType: '', submitBtnClick: false, showAlert: false })
-    let element = document.querySelector('body');
-    element.className = element.className.replace('sidebar-minimized brand-minimized', '')
-  }
-
-  checkedRow = () => {
-    const { explainList } = this.state
-    if (explainList.length > 0) {
-      let length = explainList.length - 1
-      let temp = Object.values(explainList[length]).indexOf('');
-      if (temp > -1) {
-        return true
-      } else {
-        return false
-      }
-    } else {
-      return false
-    }
-  }
-
-  checkCategory = (value, label) => {
-    const { explainList } = this.state;
-    const temp = explainList.filter((item) => item[`${label}`] === value)
-    if (temp.length > 0) {
-      return false
-    } else {
-      return true
-    }
-  }
-
-  getSideBarContent = () => {
-    const { chartOfAccountCategoryList, categoryList, showChartOfAccount, transaction_amount, currentBalance, explainList, transaction_category_list, submitBtnClick, showAlert, transactionCategoryList } = this.state
-    // const { date, amount, name, due_date } = this.state.categoryDetails
-    return (
-      <div className="sidebar-content">
-        <div className="header text">
-          <h2>Explain</h2>
-          <i className="fa fa-close close-btn" onClick={() => this.closeSideBar()}></i>
-        </div>
-        {
-          <div>
-            <div className="content-details p-3">
-              {(this.checkedRow() && submitBtnClick) || showAlert ? (<Alert color="danger">
-                Please Select all the remaining fields.
-              </Alert>) : null}
-              <Row>
-                <Col lg={5}>
-                  <label class="value">Transaction Amount</label>
-                  <label class="value">{transaction_amount}</label>
-                </Col>
-                <Col lg={5} className="p-0">
-                  <label class="value">Current Balance</label>
-                  <label class="value">{currentBalance}</label>
-                </Col>
-                <Col lg={2}>
-                  <div className="text-right">
-                    <Button color="primary" className="btn-square" onClick={this.addRow} disabled={currentBalance === 0 ? true : false}
-                    >
-                      <i className="fa fa-plus"></i>
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-              <form>
-                <div className="details-container">
-                  {explainList && explainList.map((item, index) => (
-                    <div className="d-flex detail-row">
-                      <div class="sub-container">
-                        <div className="mb-3 mr-2" style={{ width: '30%' }}>
-                          <Label className="label">Chart Of Account Category</Label>
-                          <Select
-                            // className="custom-select-box"
-                            id="transaction_select"
-                            options={chartOfAccountCategoryList ?  chartOfAccountCategoryList : []}
-                            onChange={(option) => {
-                                // this.handleChange(text, 'categoryLabel', true, item)
-                                this.handleChange(option, 'chartOfAccountCategoryId', true, item)
-                                this.handleChange('', 'transactionCategoryId', true, item)
-                                this.handleChange('', 'reconcileRrefId', true, item)
-                                // this.getCategoryList(text,e.target.value)
-                                this.getTransactionCategoryList(option.value)
-                            }}
-                            // className="select-default-width"
-                            placeholder="Chart Of Account"
-                            value={item.chartOfAccountCategoryId}
-                          />
-                        </div>
-
-                        {explainList[`${index}`].chartOfAccountCategoryId && <div className="mb-3 mr-2" style={{ width: '30%' }}>
-                          <Label className="label">Transaction Category</Label>
-                          <Select
-                            // className="custom-select-box"
-                            id="transaction_category_select"
-                            options={transactionCategoryList ?  transactionCategoryList : []}
-                            onChange={(option) => {
-                              console.log(option)
-                                this.handleChange(option.label, 'categoryLabel', true, item)
-                                this.handleChange(option, 'transactionCategoryId', true, item)
-                                this.handleChange('', 'reconcileRrefId', true, item)
-                                this.getCategoryList(option.label, option.value)
-                            }}
-                            // className="select-default-width"
-                            placeholder="Transaction Category"
-                            value={item.transactionCategoryId}
-                          />
-                        </div>}
-                        {explainList[`${index}`].categoryType.value && <div className="mb-3" style={{ width: '40%' }}>
-                          <Label className="label">{explainList[`${index}`].categoryLabel}</Label>
-                          <Select
-                            options={categoryList[`${explainList[`${index}`].categoryLabel}`] ? selectOptionsFactory.renderOptions('label', 'id', categoryList[`${explainList[`${index}`].categoryLabel}`], explainList[`${index}`].categoryLabel, ['disabled']) : []}
-                            onChange={(val) => {
-                              if (val && val.value) {
-                                // this.getDetail(val.value)
-                                if (this.checkCategory(val.value, 'reconcileRrefId')) {
-                                  this.handleChange(val.value, 'reconcileRrefId', true, item, explainList[`${index}`].categoryLabel)
-                                } else {
-                                  this.handleChange('', 'reconcileRrefId', true, item, explainList[`${index}`].categoryLabel)
-                                }
-                              } else {
-                                this.handleChange('', 'reconcileRrefId', true, item, explainList[`${index}`].categoryLabel)
-                              }
-                            }}
-                            className="select-default-width"
-                            value={item.reconcileRrefId}
-                          />
-                        </div>}
-                        {/* {name ?
-                                      <>
-                                        <label className="label">Name</label>
-                                        <label className="value">{name}</label>
-                                      </> : ''
-                                    }
-                                    {amount ?
-                                      <>
-                                        <label className="label">Amount</label>
-                                        <label className="value">{amount}</label>
-                                      </> : ''
-                                    }
-                                    {date ?
-                                      <>
-                                        <label className="label">Date</label>
-                                        <label className="value">{moment(date).format('DD/MM/YYYY')}</label>
-                                      </> : ''
-                                    }
-                                    {due_date ?
-                                      <>
-                                        <label className="label">Due Date</label>
-                                        <label className="value">{moment(due_date).format('DD/MM/YYYY')}</label>
-                                      </> : ''
-                                    } */}
-                      </div>
-                        <div className="remove-row">
-                          <button className="btn" onClick={() => this.deleteRow(item.id)} disabled={explainList.length === 1}>
-                            <i className="fa fa-close" ></i>
-                          </button>
-                        </div>
-                    </div>
-                  ))}
-                  {transaction_amount > currentBalance && showChartOfAccount && (
-                    <Row className="m-0">
-                      <Col lg={5} className="pl-0">
-                        <label class="value">Remaining Balance</label>
-                        <label class="value">{currentBalance}</label>
-                      </Col>
-                      <Col lg={5} className="p-0">
-                        <Label className="label">Transaction Category</Label>
-                        <Select
-                          options={transaction_category_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list, 'Type') : ''}
-                          value={this.state.selectedTransactionCategoryType}
-                          onChange={(option) => {
-                            if (option && option.value) {
-                              this.setState({
-                                selectedTransactionCategoryType: option.value,
-                                showAlert: false
-                              })
-                            } else {
-                              this.setState({
-                                selectedTransactionCategoryType: option.value,
-                                showAlert: true
-                              })
-                            }
-                          }}
-                          placeholder="Select Type"
-                          id="chartOfAccountId"
-                          name="chartOfAccountId"
-                        />
-                      </Col>
-                    </Row>
-
-                  )}
-                </div>
-                <Row>
-                  <Col lg={12}>
-                    <FormGroup className="text-right">
-                      <Button type="button" color="primary" className="btn-square" onClick={() => { this.handleSubmit() }}
-                        disabled={currentBalance === transaction_amount ? true : false}
-                      >
-                        <i className="fa fa-dot-circle-o"></i> Explain
-                        </Button>
-                    </FormGroup>
-                  </Col>
-                </Row>
-              </form>
-            </div>
-          </div>
-          // :
-          // <Loader />
-        }
-      </div>)
-  }
 
   toggleActionButton = (index) => {
     let temp = Object.assign({}, this.state.actionButtons)
@@ -635,7 +226,7 @@ class BankTransactions extends React.Component {
             <DropdownItem>
               <i className="fas fa-wrench" /> Archive
             </DropdownItem>
-            <DropdownItem onClick={() => { this.onSetSidebarOpen(true, row) }}>
+            <DropdownItem onClick={() => { this.openExplainTransactionModal(row) }}>
               <i className="fa fa-connectdevelop" /> Explain
             </DropdownItem>
             <DropdownItem onClick={() => this.closeTransaction(row.id)}>
@@ -680,45 +271,6 @@ class BankTransactions extends React.Component {
     }
   }
 
-  handleExplain = (val, name, reconcile, row, label) => {
-    let data = [...this.state.explainList];
-    data.map((item, index) => {
-      if (item.id === row.id) {
-        data[`${index}`][`${name}`] = val
-      }
-      return item
-    })
-    this.setState({
-      explainList: data
-    }, () => {
-      // if (name === 'reconcileRrefId') {
-      this.calculateCurrentBalance();
-      // }
-    })
-  }
-
-  calculateCurrentBalance = () => {
-    let temp;
-    let amount = 0;
-    this.state.explainList.map((obj) => {
-      for (let item in this.state.categoryList) {
-        if (this.state.categoryList.hasOwnProperty(item)) {
-          let tempAmount;
-          if (item === obj['categoryLabel']) {
-            temp = this.state.categoryList[`${obj['categoryLabel']}`].filter((item) => item.id === obj.reconcileRrefId);
-            tempAmount = temp.length ? temp[0]['amount'] : 0
-            amount = amount + tempAmount;
-          }
-        }
-      }
-      return obj
-    })
-    this.setState({
-      currentBalance: this.state.transaction_amount - amount
-    }, () => {
-      this.checkChartOfAccount()
-    })
-  }
 
   handleSearch = () => {
     this.initializeData();
@@ -775,7 +327,21 @@ class BankTransactions extends React.Component {
         transactionDate: '',
         chartOfAccountId: ''
       },
-    },() => { this.initializeData() })
+    }, () => { this.initializeData() })
+  }
+
+  openExplainTransactionModal = (row) => {
+    this.setState({
+      selectedData: row
+    }, () => {
+      this.setState({
+        openExplainTransactionModal: true
+      })
+    })
+  }
+
+  closeExplainTransactionModal = (res) => {
+    this.setState({ openExplainTransactionModal: false })
   }
 
   render() {
@@ -806,10 +372,6 @@ class BankTransactions extends React.Component {
               </Row>
             </CardHeader>
             <CardBody>
-              <SidebarComponent
-                sidebar={this.getSideBarContent()}
-                pullRight
-                sidebarOpen={this.state.sidebarOpen} />
               {dialog}
               {
                 loading ?
@@ -1015,6 +577,13 @@ class BankTransactions extends React.Component {
             </CardBody>
           </Card>
         </div>
+
+        <ExplainTransactionModal
+          openExplainTransactionModal={this.state.openExplainTransactionModal}
+          closeExplainTransactionModal={(e) => { this.closeExplainTransactionModal(e) }}
+          selectedData={this.state.selectedData}
+        />
+
       </div>
     )
   }

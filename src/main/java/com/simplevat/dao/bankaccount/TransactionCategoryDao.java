@@ -18,7 +18,7 @@ public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory
 
     public List<TransactionCategory> findAllTransactionCategory();
     
-    public TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode);
+    public TransactionCategory findTransactionCategoryByTransactionCategoryCode(String transactionCategoryCode);
     
     public List<TransactionCategory> findAllTransactionCategoryByChartOfAccountIdAndName(Integer chartOfAccountId, String name);
 
@@ -33,4 +33,6 @@ public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory
 	public PaginationResponseModel getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap,PaginationModel paginationModel);
 
 	public String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount);
+
+	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryCode(String chartOfAccountCategoryCode);
 }

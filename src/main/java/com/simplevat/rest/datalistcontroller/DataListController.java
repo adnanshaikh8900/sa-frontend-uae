@@ -1,31 +1,5 @@
 package com.simplevat.rest.datalistcontroller;
 
-import com.simplevat.entity.Country;
-import com.simplevat.entity.IndustryType;
-import com.simplevat.entity.State;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
-import com.simplevat.entity.bankaccount.ReconcileCategory;
-import com.simplevat.constant.ContactTypeEnum;
-import com.simplevat.constant.InvoiceStatusEnum;
-import com.simplevat.constant.PayMode;
-import com.simplevat.constant.dbfilter.CurrencyFilterEnum;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
-import com.simplevat.constant.dbfilter.StateFilterEnum;
-import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
-import com.simplevat.rest.DropdownModel;
-import com.simplevat.rest.EnumDropdownModel;
-import com.simplevat.rest.PaginationModel;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
-import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
-import com.simplevat.service.CountryService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.IndustryTypeService;
-import com.simplevat.service.ReconcileCategoryService;
-import com.simplevat.service.StateService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
-import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -42,6 +16,38 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
+import com.simplevat.constant.ContactTypeEnum;
+import com.simplevat.constant.InvoiceStatusEnum;
+import com.simplevat.constant.PayMode;
+import com.simplevat.constant.dbfilter.CurrencyFilterEnum;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
+import com.simplevat.constant.dbfilter.StateFilterEnum;
+import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
+import com.simplevat.entity.ChartOfAccountCategory;
+import com.simplevat.entity.Country;
+import com.simplevat.entity.IndustryType;
+import com.simplevat.entity.State;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.EnumDropdownModel;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.SingleLevelDropDownModel;
+import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
+import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
+import com.simplevat.service.ChartOfAccountCategoryService;
+import com.simplevat.service.CountryService;
+import com.simplevat.service.CurrencyService;
+import com.simplevat.service.IndustryTypeService;
+import com.simplevat.service.StateService;
+import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.VatCategoryService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  *
@@ -78,7 +84,10 @@ public class DataListController {
 	private StateService stateService;
 
 	@Autowired
-	private ReconcileCategoryService reconcileCategoryService;
+	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
 
 	@GetMapping(value = "/getcountry")
 	public ResponseEntity getCountry() {
@@ -122,6 +131,11 @@ public class DataListController {
 		try {
 			List<ChartOfAccount> transactionTypes = transactionTypeService.findAll();
 			if (transactionTypes != null && !transactionTypes.isEmpty()) {
+
+				for (ChartOfAccount ac : transactionTypes) {
+					ac.setTransactionChartOfAccountCategoryList(null);
+					// TODO Make it dropdown Model
+				}
 				return new ResponseEntity<>(transactionTypes, HttpStatus.OK);
 			} else {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -272,16 +286,60 @@ public class DataListController {
 	@GetMapping(value = "/reconsileCategories")
 	public ResponseEntity getReconsilteCategories(@RequestParam("debitCreditFlag") String debitCreditFlag) {
 		try {
-			List<ReconcileCategory> reconcileCategoryList = reconcileCategoryService
-					.findByType(debitCreditFlag.equals("C") ? "1" : "2");
-			if (reconcileCategoryList != null && !reconcileCategoryList.isEmpty()) {
+			List<ChartOfAccountCategory> chartOfAccountCategoryList = chartOfAccountCategoryService.findAll();
+			if (chartOfAccountCategoryList != null && !chartOfAccountCategoryList.isEmpty()) {
+
 				List<DropdownModel> modelList = new ArrayList<DropdownModel>();
-				for (ReconcileCategory reconcileCategory : reconcileCategoryList)
-					modelList.add(new DropdownModel(Integer.valueOf(reconcileCategory.getReconcileCategoryCode()),
-							reconcileCategory.getReconcileCategoryName()));
-				return new ResponseEntity<>(modelList, HttpStatus.OK);
+
+				ChartOfAccountCategory parentCategory = null;
+				for (ChartOfAccountCategory chartOfAccountCategory : chartOfAccountCategoryList) {
+
+					if (debitCreditFlag.equals("C") && chartOfAccountCategory.getParentChartOfAccount() != null
+							&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
+									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId())) {
+
+						modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
+								chartOfAccountCategory.getChartOfAccountCategoryName()));
+					} else if (debitCreditFlag.equals("D") && chartOfAccountCategory.getParentChartOfAccount() != null
+							&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
+									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
+						modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
+								chartOfAccountCategory.getChartOfAccountCategoryName()));
+					} else if ((debitCreditFlag.equals("C") && chartOfAccountCategory.getChartOfAccountCategoryId()
+							.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId()))
+							|| debitCreditFlag.equals("D") && chartOfAccountCategory.getChartOfAccountCategoryId()
+									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
+						parentCategory = chartOfAccountCategory;
+					}
+				}
+//				HashMap<String, Object> response = new HashMap<>();
+//				response.put(parentCategory.getChartOfAccountCategoryName(), modelList);
+				return new ResponseEntity<>(Arrays.asList(
+						new SingleLevelDropDownModel(parentCategory.getChartOfAccountCategoryName(), modelList)),
+						HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			LOGGER.error("Error", e);
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@GetMapping(value = "/reconsile/getTransactionCat")
+	public ResponseEntity getTransactionCategory(@RequestParam Integer chartOfAccountCategoryId) {
+		try {
+			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);
+			if (category == null) {
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+			}
+			List<TransactionCategory> transactionCatList = transactionCategoryService
+					.getTransactionCatByChartOfAccountCategoryCode(category.getChartOfAccountCategoryCode());
+			if (transactionCatList != null && !transactionCatList.isEmpty()) {
+				return new ResponseEntity<>(
+						transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList), HttpStatus.OK);
+			} else {
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			LOGGER.error("Error", e);

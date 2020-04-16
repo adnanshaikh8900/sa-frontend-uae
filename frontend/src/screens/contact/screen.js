@@ -247,7 +247,7 @@ class Contact extends React.Component {
         email: '',
         contactType: '',
       },
-    })
+    }, () => { this.initializeData() })
   }
 
   render() {
@@ -335,8 +335,8 @@ class Contact extends React.Component {
                                 options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                 onChange={(val) => {
                                   if (val && val.value) {
-                                    this.handleChange(val['value'], 'contactType')
-                                    this.setState({ 'selectedContactType': val['value'] })
+                                    this.handleChange(val, 'contactType')
+                                    this.setState({ 'selectedContactType': val })
                                   } else {
                                     this.handleChange('', 'contactType')
                                     this.setState({ 'selectedContactType': '' })
@@ -353,7 +353,7 @@ class Contact extends React.Component {
                                 <i className="fa fa-search"></i>
                               </Button>
                               <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                                <i className="fa fa-remove"></i>
+                                <i className="fa fa-refresh"></i>
                               </Button>
                             </Col>
 

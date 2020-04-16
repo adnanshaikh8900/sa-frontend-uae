@@ -28,7 +28,7 @@ import * as CreateChartOfAccontActions from './actions'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
-
+import Select from 'react-select'
 
 const mapStateToProps = (state) => {
   return ({
@@ -53,7 +53,8 @@ class CreateChartAccount extends React.Component {
         chartOfAccount: ''
       },
       loading: false,
-      createMore: false
+      createMore: false,
+      chartOfAccountCategory: []
     }
     this.regExAlpha = /^[a-zA-Z]+$/
   }
@@ -63,7 +64,22 @@ class CreateChartAccount extends React.Component {
   }
 
   initializeData = () => {
-    this.props.ChartOfAccontActions.getSubTransactionTypes();
+    this.props.ChartOfAccontActions.getSubTransactionTypes().then(res =>{
+      if(res.status === 200) {
+        let val = Object.assign({},res.data)
+        let temp = []
+        Object.keys(val).map(item => {
+          temp.push({
+            label: item,
+            options : val[`${item}`]
+          })
+          return item
+        })
+        this.setState({
+          chartOfAccountCategory: temp,
+        })
+      }
+    });
   }
   // Show Success Toast
   // success() {
@@ -74,7 +90,11 @@ class CreateChartAccount extends React.Component {
 
   // Create or Edit Vat
   handleSubmit = (data, resetForm) => {
-    this.props.createChartOfAccontActions.createTransactionCategory(data).then((res) => {
+    const postData = {
+      transactionCategoryName: data.transactionCategoryName,
+      chartOfAccount: data.chartOfAccount.value
+    }
+    this.props.createChartOfAccontActions.createTransactionCategory(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Chart of Account Created Successfully')
         if (this.state.createMore) {
@@ -103,7 +123,7 @@ class CreateChartAccount extends React.Component {
 
   render() {
     const { loading } = this.state
-    const { sub_transaction_type_list } = this.props
+    // const { sub_transaction_type_list } = this.props
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
@@ -201,24 +221,21 @@ class CreateChartAccount extends React.Component {
                               {props.errors.chartOfAccount && props.touched.chartOfAccount && (
                                 <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                               )} */}
-                              <select
+                              <Select
                                 id='chartOfAccount'
-                                className="form-control select-coa"
                                 name='chartOfAccount'
                                 value={props.values.chartOfAccount}
                                 // size="1"
-                                onChange={(e) => {
-                                  props.handleChange('chartOfAccount')(e.target.value)
+                                onChange={(val) => {
+                                  props.handleChange('chartOfAccount')(val)
                                 }}
-                              >
-                                {Object.keys(sub_transaction_type_list).map((group, index) => {
-                                  return (
-                                    <optgroup key={index} label={group}>
-                                      {this.renderOptions(sub_transaction_type_list[`${group}`])}
-                                    </optgroup>
-                                  );
-                                })}
-                              </select>
+                                options={this.state.chartOfAccountCategory}
+                                className={`
+                                 ${props.errors.chartOfAccount && props.touched.chartOfAccount
+                                    ? "is-invalid"
+                                    : ""}`
+                                }
+                                />
                               {props.errors.chartOfAccount && props.touched.chartOfAccount && (
                                 <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                               )}

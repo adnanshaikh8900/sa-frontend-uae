@@ -131,9 +131,9 @@ class CreateBankTransaction extends React.Component {
     formData.append("transactionDate", transactionDate ? moment(transactionDate).toString() : '');
     formData.append("transactionDescription", transactionDescription ? transactionDescription : '');
     formData.append("transactionAmount", transactionAmount ? transactionAmount : '');
-    formData.append("chartOfAccountId", chartOfAccountId ? chartOfAccountId : '');
-    formData.append("transactionCategoryId", transactionCategoryId ? transactionCategoryId : '');
-    formData.append("projectId", projectId ? projectId : '');
+    formData.append("chartOfAccountId", chartOfAccountId ? chartOfAccountId.value : '');
+    formData.append("transactionCategoryId", transactionCategoryId ? transactionCategoryId.value : '');
+    formData.append("projectId", projectId ? projectId.value : '');
     formData.append("receiptNumber", receiptNumber ? receiptNumber : '');
     formData.append("attachementDescription", attachementDescription ? attachementDescription : '');
     if (this.uploadFile.files[0]) {
@@ -235,7 +235,7 @@ class CreateBankTransaction extends React.Component {
                                     value={props.values.chartOfAccountId}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('chartOfAccountId')(option.value)
+                                        props.handleChange('chartOfAccountId')(option)
                                       } else {
                                         props.handleChange('chartOfAccountId')('')
                                       }
@@ -308,7 +308,7 @@ class CreateBankTransaction extends React.Component {
                                     options={transaction_category_list && transaction_category_list.data && transaction_category_list.data.length > 0? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list.data, 'Category') : []}
                                     id="transactionCategoryId"
                                     value={props.values.transactionCategoryId}
-                                    onChange={(option) => props.handleChange('transactionCategoryId')(option.value)}
+                                    onChange={(option) => props.handleChange('transactionCategoryId')(option)}
                                   />
                                 </FormGroup>
                               </Col>
@@ -338,7 +338,7 @@ class CreateBankTransaction extends React.Component {
                                     options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
                                     id="projectId"
                                     name="projectId"
-                                    onChange={(option) => props.handleChange('projectId')(option.value)}
+                                    onChange={(option) => props.handleChange('projectId')(option)}
                                     value={props.values.projectId}
                                   />
                                 </FormGroup>
@@ -364,15 +364,15 @@ class CreateBankTransaction extends React.Component {
                                 <Row>
                                   <Col lg={12}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="receiptAttachmentDescription">Attachment Description</Label>
+                                      <Label htmlFor="attachementDescription">Attachment Description</Label>
                                       <Input
                                         type="textarea"
-                                        name="receiptAttachmentDescription"
-                                        id="receiptAttachmentDescription"
+                                        name="attachementDescription"
+                                        id="attachementDescription"
                                         rows="5"
                                         placeholder="1024 characters..."
-                                        onChange={(option) => props.handleChange('receiptAttachmentDescription')(option)}
-                                        value={props.values.receiptAttachmentDescription}
+                                        onChange={(option) => props.handleChange('attachementDescription')(option)}
+                                        value={props.values.attachementDescription}
                                       />
                                     </FormGroup>
                                   </Col>

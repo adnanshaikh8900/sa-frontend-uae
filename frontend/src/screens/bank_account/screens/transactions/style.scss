@@ -23,92 +23,12 @@
   .main-table-panel{
 
       // width: calc(100% - 400px) !important;
-      width: 66%;
+      width: 59%;
       // transition: width 9s ease-in-out;
     .card-body{
       // height: calc(100% - 400px) !important;
       overflow-x: hidden !important;
       // overflow-y: auto !important;
-    }
-  }
-  .sidebar-content{
-    .header{
-      min-height: 4.2rem;
-      padding: 10px !important;
-      border-bottom: 1px solid #ccc;
-    }
-    .my-display{
-      i.fa{
-        float: right;
-      }
-    }
-  
-    .close-btn {
-      // border: 1px solid #9b9393;
-      color: #9b9393;
-      border-radius: 50%;
-      width: 16px;
-      position: absolute;
-      right: 1%;
-      top: 2%;
-      text-align: center;
-      cursor: pointer;
-    }
-    .remove-row {
-      width: 20%;
-      display: flex;
-    button {
-      width: 100%;
-      padding: 0;
-      .fa-close {
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        color: darkgray;
-      }
-    }
-    }
-
-    .content{
-      span{
-        color: #549d06;
-        font-weight: 500;
-        font-size: 1.4rem;
-      }
-      border-bottom: 1px solid #eee;
-    }
-    .content-details{
-      .label{
-        font-size: 0.75rem;
-        color: #9b9393;
-        display: block;
-        margin-bottom: 0.2rem;
-      }
-      .value{
-        color: #23282c;
-        display: block;
-        font-size: 0.75rem;
-      }
-      .link{
-        color: #ef7101 ;
-        margin-bottom: 0.5rem;
-        font-size: 1rem;
-      }
-      .Select{
-        font-size: 0.75rem!important;
-      }
-      .details-container{
-        height: 310px;
-        padding-right: 10px;
-        overflow-y: auto;
-        .detail-row {
-          justify-content: space-between;
-        }
-      }
-    }
-    .sidebar-main-data{
-      padding: 1rem;
     }
   }
 }

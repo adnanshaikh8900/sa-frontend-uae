@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 import com.simplevat.dao.UserDao;
 
 @Service("userService")
-public class UserServiceImpl extends UserService implements Serializable {
+public class UserServiceImpl extends UserService{
 
 	private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 

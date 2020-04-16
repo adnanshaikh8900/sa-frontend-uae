@@ -126,7 +126,9 @@ class ChartAccount extends React.Component {
   }
 
   goToDetailPage = (row) => {
+    if(!row.isEditable) {
     this.props.history.push(`/admin/master/chart-account/detail`, { id: row.transactionCategoryId })
+    }
   }
 
   goToCreatePage = () => {
@@ -264,7 +266,11 @@ class ChartAccount extends React.Component {
         transactionCategoryName: '',
         chartOfAccountId: ''
       }
-    })
+    }, () => { this.initializeData()})
+  }
+
+  editFormatter =  (cell, row) => {
+    return row['isEditable'] ? (<i className="fas fa-lock"></i>) : (<i className="fas fa-lock-open"></i>)
   }
 
   render() {
@@ -350,8 +356,8 @@ class ChartAccount extends React.Component {
                                   options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list, 'Type') : []}
                                   onChange={(val) => {
                                     if (val && val['value']) {
-                                      this.handleChange(val['value'], 'chartOfAccountId')
-                                      this.setState({ 'selectedTransactionType': val['value'] })
+                                      this.handleChange(val, 'chartOfAccountId')
+                                      this.setState({ 'selectedTransactionType': val })
                                     } else {
                                       this.handleChange('', 'chartOfAccountId')
                                       this.setState({ 'selectedTransactionType': '' })
@@ -369,7 +375,7 @@ class ChartAccount extends React.Component {
                                 <i className="fa fa-search"></i>
                               </Button>
                               <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                                <i className="fa fa-remove"></i>
+                                <i className="fa fa-refresh"></i>
                               </Button>
                             </Col>
                           </Row>
@@ -411,6 +417,11 @@ class ChartAccount extends React.Component {
                             dataFormat={this.typeFormatter}
                           >
                             Type
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
+                            dataField="isEditable"
+                            dataFormat={this.editFormatter}
+                          >
                           </TableHeaderColumn>
                         </BootstrapTable>
                       </div>

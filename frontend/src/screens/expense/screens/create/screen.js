@@ -134,12 +134,14 @@ class CreateExpense extends React.Component {
     formData.append("expenseDate", expenseDate !== null ? expenseDate : "");
     formData.append("expenseDescription", expenseDescription);
     formData.append("receiptNumber", receiptNumber);
-    formData.append("payMode", payMode);
     formData.append(
       "receiptAttachmentDescription",
       receiptAttachmentDescription
     );
     formData.append("expenseAmount", expenseAmount);
+    if(payMode && payMode.value) {
+    formData.append("payMode", payMode.value);
+    }
     if (expenseCategory && expenseCategory.value) {
       formData.append("expenseCategory", expenseCategory.value);
     }
@@ -152,7 +154,7 @@ class CreateExpense extends React.Component {
     if (vatCategoryId && vatCategoryId.value) {
       formData.append("vatCategoryId", vatCategoryId.value);
     }
-    if (bankAccountId && bankAccountId.value && payMode === 'BANK') {
+    if (bankAccountId && bankAccountId.value && payMode.value === 'BANK') {
       formData.append("bankAccountId", bankAccountId.value);
     }
     if (project && project.value) {
@@ -165,7 +167,7 @@ class CreateExpense extends React.Component {
       .createExpense(formData)
       .then((res) => {
         if (res.status === 200) {
-          resetForm();
+          resetForm(this.state.initValue);
           this.props.commonActions.tostifyAlert(
             "success",
             "New Expense Created Successfully."
@@ -260,7 +262,7 @@ class CreateExpense extends React.Component {
                            .required('Pay Through is Required'), 
                              bankAccountId: Yup.string()
                              .when('payMode', {
-                               is: (val) => val === 'BANK' ? true : false,
+                               is: (val) => val['value'] === 'BANK' ? true : false,
                                then: Yup.string()
                                  .required('Bank Account is Required')
                              }),
@@ -309,7 +311,7 @@ class CreateExpense extends React.Component {
                                     options={
                                       expense_categories_list
                                         ? selectOptionsFactory.renderOptions(
-                                          "transactionCategoryDescription",
+                                          "transactionCategoryName",
                                           "transactionCategoryId",
                                           expense_categories_list,
                                           "Expense Category"
@@ -549,10 +551,10 @@ class CreateExpense extends React.Component {
                                     }
                                     value={props.values.payMode}
                                     onChange={(option) => {
-                                      props.handleChange("payMode")(option.value)
+                                      props.handleChange("payMode")(option)
                                       if (option && option.value) {
                                         this.setState({
-                                          payMode: option.value
+                                          payMode: option
                                         })
                                       } else {
                                         this.setState({ payMode: '' })
@@ -572,7 +574,7 @@ class CreateExpense extends React.Component {
                                     )}
                                 </FormGroup>
                               </Col>
-                              {payMode === 'BANK' && (<Col lg={4}>
+                              {payMode.value === 'BANK' && (<Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="bankAccountId"><span className="text-danger">*</span>Bank</Label>
                                   <Select

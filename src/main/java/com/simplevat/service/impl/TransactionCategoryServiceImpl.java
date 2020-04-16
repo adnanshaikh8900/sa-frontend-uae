@@ -46,7 +46,7 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	}
 
 	@Override
-	public TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode) {
+	public TransactionCategory findTransactionCategoryByTransactionCategoryCode(String transactionCategoryCode) {
 		return getDao().findTransactionCategoryByTransactionCategoryCode(transactionCategoryCode);
 	}
 
@@ -132,5 +132,10 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	@Override
 	public String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount) {
 		return dao.getNxtTransactionCatCodeByChartOfAccount(chartOfAccount);
+	}
+
+	@Override
+	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryCode(String chartOfAccountCategoryCode) {
+		return dao.getTransactionCatByChartOfAccountCategoryCode(chartOfAccountCategoryCode);
 	}
 }

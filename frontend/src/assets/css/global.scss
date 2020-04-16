@@ -23,13 +23,17 @@ body, span, label, h1, h2, h3, h4, p, em {
 
 // form styles
 .form-control {
-  border-radius: 0 !important;
+  border-radius: 4px !important;
   border-color: #ccc !important;
 }
 
 .was-validated .form-control:invalid, .form-control.is-invalid {
   border-color: #f86c6b !important;
   background: none!important;
+}
+
+.is-invalid .css-yk16xz-control {
+  border-color: #f86c6b;
 }
 
 .input-group-text {
@@ -107,6 +111,9 @@ div.Select.is-invalid {
     0px 3px 3px -2px rgba(0,0,0,0.12) !important;
 }
 
+button {
+  border-radius: 4px !important;
+}
 
 
 
@@ -339,7 +346,7 @@ th {
         padding-left: 0 !important;
       }
   .main-table-panel{
-    width: 70%!important;
+    width: 63.7%!important;
     transition: width 3s;
    }
 }

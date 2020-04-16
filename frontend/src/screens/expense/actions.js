@@ -7,7 +7,7 @@ import moment from 'moment'
 export const getExpenseList = (obj) => {
   let payee = obj.payee ? obj.payee : ''
   let expenseDate =  obj.expenseDate ? obj.expenseDate : ''
-  let transactionCategoryId = obj.transactionCategoryId ?  obj.transactionCategoryId : '' 
+  let transactionCategoryId = obj.transactionCategoryId ?  obj.transactionCategoryId.value : '' 
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';

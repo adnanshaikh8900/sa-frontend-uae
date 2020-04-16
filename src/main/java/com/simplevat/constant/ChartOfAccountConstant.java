@@ -11,10 +11,22 @@ package com.simplevat.constant;
  */
 public class ChartOfAccountConstant {
 
-	public static final int TRANSACTION_TYPE_EXPENSE = 8;
 	public static final int MONEY_IN = 1;
+	public static final int ASSET = 1;
+	public static final int LIABILITY = 2;
+	public static final int REVENUE = 3;
+	public static final int EXPENSE = 4;
+	public static final int EQUITY = 5;
 
 	private ChartOfAccountConstant() {
 		// CREATED TO REMOVE SONAR ERROR
+	}
+
+	public static boolean isDebitedFromBank(Integer id) {
+
+		if (id.equals(ASSET) || id.equals(REVENUE) || id.equals(EQUITY))
+			return true;
+
+		return false;
 	}
 }

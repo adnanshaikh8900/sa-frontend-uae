@@ -1,6 +1,7 @@
 package com.simplevat.dao.impl.bankaccount;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 	@Override
 	public List<TransactionCategory> findAllTransactionCategoryByChartOfAccount(Integer chartOfAccountId) {
 		TypedQuery<TransactionCategory> query = getEntityManager().createQuery(
-				"SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.chartOfAccount.chartOfAccountId =:chartOfAccountId ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC",
+				"SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND (t.chartOfAccount.chartOfAccountId =:chartOfAccountId  or t.chartOfAccount.parentChartOfAccount.chartOfAccountId =:chartOfAccountId) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC",
 				TransactionCategory.class);
 		query.setParameter("chartOfAccountId", chartOfAccountId);
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
@@ -75,7 +76,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 	}
 
 	@Override
-	public TransactionCategory findTransactionCategoryByTransactionCategoryCode(Integer transactionCategoryCode) {
+	public TransactionCategory findTransactionCategoryByTransactionCategoryCode(String transactionCategoryCode) {
 		TypedQuery<TransactionCategory> query = getEntityManager().createQuery(
 				"SELECT t FROM TransactionCategory t where t.transactionCategoryCode =:transactionCategoryCode",
 				TransactionCategory.class);
@@ -127,7 +128,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 	@Override
 	public PaginationResponseModel getTransactionCategoryList(Map<TransactionCategoryFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach((transactionCategoryFilter, value) -> dbFilters
 				.add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
 						.condition(transactionCategoryFilter.getCondition()).value(value).build()));
@@ -158,4 +159,10 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		return chartOfAccountCode + (d + 1);
 	}
 
+	@Override
+	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryCode(String chartOfAccountCategoryCode) {
+		return getEntityManager()
+				.createNamedQuery("findAllTransactionCategoryBychartOfAccountCategoryCode", TransactionCategory.class)
+				.setParameter("chartOfAccountCategoryCode", chartOfAccountCategoryCode).getResultList();
+	}
 }

@@ -52,7 +52,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const INVOICE_LANGUAGE_OPTIONS = [
   { value: 1, label: 'English' },
-  { value: 2, label: 'Arabic' }
+  // { value: 2, label: 'Arabic' }
 ]
 
 class CreateProject extends React.Component {
@@ -96,8 +96,9 @@ class CreateProject extends React.Component {
   // Cloase Confirm Modal
   closeContactModal = (res, data) => {
     if (res) {
+      let val = {label: data.fullName,value: data.id}
       this.props.projectActions.getContactList();
-      this.formRef.current.setFieldValue('contactId', data.contactId, true)
+      this.formRef.current.setFieldValue('contactId', val, true)
     }
     this.setState({ openContactModal: false })
   }
@@ -127,12 +128,12 @@ class CreateProject extends React.Component {
     const postData = {
       projectName: projectName ? projectName : '',
       // invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
-      contactId: contactId && contactId !== null ? contactId : '',
+      contactId: contactId && contactId !== null ? contactId.value : '',
       contractPoNumber: contractPoNumber ? contractPoNumber : '',
       vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
       expenseBudget: expenseBudget ? expenseBudget : '',
       revenueBudget: revenueBudget ? revenueBudget : '',
-      currencyCode: currency && currency !== null ? currency : ''
+      currencyCode: currency && currency !== null ? currency.value : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
     this.props.createProjectActions.createAndSaveProject(postData).then((res) => {
@@ -229,10 +230,10 @@ class CreateProject extends React.Component {
                                     options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Contact Name') : []}
                                     onChange={(option) => {
                                       this.setState({
-                                        selectedContact: option.value
+                                        selectedContact: option
                                       })
                                       if (option && option.value) {
-                                        props.handleChange("contactId")(option.value)
+                                        props.handleChange("contactId")(option)
                                       } else {
                                         props.handleChange("contactId")('')
                                       }
@@ -315,10 +316,10 @@ class CreateProject extends React.Component {
                                     options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     onChange={(option) => {
                                       this.setState({
-                                        selectedCurrency: option.value
+                                        selectedCurrency: option
                                       })
                                       if (option && option.value) {
-                                        props.handleChange('currency')(option.value)
+                                        props.handleChange('currency')(option)
                                       } else {
                                         props.handleChange('currency')('')
                                       }
@@ -396,9 +397,9 @@ class CreateProject extends React.Component {
                                     id="invoiceLanguageCode"
                                     onChange={(option) => {
                                       this.setState({
-                                        selectedInvoiceLanguage: option.value
+                                        selectedInvoiceLanguage: option
                                       })
-                                      props.handleChange("invoiceLanguageCode")(option.value);
+                                      props.handleChange("invoiceLanguageCode")(option);
                                     }}
                                     placeholder="Select invoiceLanguageCode"
                                     value={this.state.selectedInvoiceLanguage}

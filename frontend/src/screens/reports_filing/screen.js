@@ -21,7 +21,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 
 import "react-bootstrap-table/dist/react-bootstrap-table-all.min.css"
 import "react-toastify/dist/ReactToastify.css"
- import 'react-select/dist/react-select.css'
+// import 'react-select/dist/react-select.css'
  import './style.scss'
 
 const mapStateToProps = (state) => {

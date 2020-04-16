@@ -91,10 +91,23 @@ class CreateProduct extends React.Component {
     this.props.productActions.getProductWareHouseList()
   }
 
+  getData = (data) => {
+    let temp = {}
+    for(let item in data) {
+      if(typeof data[item] !== 'object') {
+        temp[`${item}`] = data[item]
+      } else {
+        temp[`${item}`] = data[item].value
+      }
+    }
+    return temp
+  }
+
 
   // Create or Edit Product
   handleSubmit = (data,resetForm) => {
-    this.props.productActions.createAndSaveProduct(data).then((res) => {
+    const postData = this.getData(data)
+    this.props.productActions.createAndSaveProduct(postData).then((res) => {
       if (res.status === 200) {
         this.props.commonActions.tostifyAlert('success', 'New Product created successfully!')
         if(this.state.createMore){
@@ -214,7 +227,7 @@ class CreateProduct extends React.Component {
                                         //   selectedParentProduct: option.value
                                         // })
                                        if(option && option.value) {
-                                        props.handleChange("productCategoryId")(option.value)
+                                        props.handleChange("productCategoryId")(option)
                                        } else {
                                         props.handleChange("productCategoryId")('')
                                        }
@@ -255,7 +268,7 @@ class CreateProduct extends React.Component {
                                         //   selectedVatCategory: option.value
                                         // })
                                         if(option && option.value) {
-                                          props.handleChange("vatCategoryId")(option.value)
+                                          props.handleChange("vatCategoryId")(option)
                                         } else {
                                           props.handleChange("vatCategoryId")('')
                                         }
@@ -303,7 +316,7 @@ class CreateProduct extends React.Component {
                                         //   selectedWareHouse: option.value
                                         // })
                                         if(option && option.value) {
-                                          props.handleChange("productWarehouseId")(option.value)
+                                          props.handleChange("productWarehouseId")(option)
                                         } else {
                                           props.handleChange("productWarehouseId")('')
                                         }

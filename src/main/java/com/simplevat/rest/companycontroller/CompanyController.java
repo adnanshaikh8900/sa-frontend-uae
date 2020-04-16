@@ -2,7 +2,6 @@ package com.simplevat.rest.companycontroller;
 
 import java.time.LocalDateTime;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,13 +25,11 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.CompanyFilterEnum;
 import com.simplevat.entity.Company;
 import com.simplevat.entity.User;
-import com.simplevat.rest.DropdownModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.CompanyService;
 import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
 
 @Component
 @RequestMapping("/rest/company")

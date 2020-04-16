@@ -13,13 +13,14 @@ import {
   Row,
   Col
 } from 'reactstrap'
-import {  toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import _ from 'lodash'
 import { Loader, ConfirmDeleteModal } from 'components'
 import 'react-toastify/dist/ReactToastify.css'
 import './style.scss'
 import * as ChartOfAccontActions from '../../actions'
 import * as DetailChartOfAccontActions from './actions'
+import Select from 'react-select'
 
 import { Formik } from 'formik';
 import * as Yup from "yup";
@@ -51,7 +52,8 @@ class DetailChartAccount extends React.Component {
       loading: true,
       createMore: false,
       dialog: false,
-      currentData: {}
+      currentData: {},
+      chartOfAccountCategory: []
     }
     this.regExAlpha = /^[a-zA-Z]+$/
   }
@@ -65,24 +67,44 @@ class DetailChartAccount extends React.Component {
     if (this.props.location.state && id) {
       this.props.detailChartOfAccontActions.getTransactionCategoryById(id).then((res) => {
         if (res.status === 200) {
-          this.props.chartOfAccontActions.getSubTransactionTypes();
+          this.getSubTransactionTypes()
           this.setState({
             loading: false,
             initValue: {
               // transactionCategoryCode: res.data.transactionCategoryCode,
               transactionCategoryName: res.data.transactionCategoryName,
-              chartOfAccount: res.data.transactionTypeId ? res.data.transactionTypeId : '',
+              chartOfAccount: res.data.transactionTypeId ? {label: res.data.transactionTypeName,value: res.data.transactionTypeId} : '',
             }
           })
         }
       }).catch((err) => {
-        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' );
+        console.log(err)
+        this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
         this.setState({ loading: false })
-        this.props.history.push('/admin/master/chart-account')
+        // this.props.history.push('/admin/master/chart-account')
       })
     } else {
-      this.props.history.push('/admin/master/chart-account')
+      // this.props.history.push('/admin/master/chart-account')
     }
+  }
+
+  getSubTransactionTypes = () => {
+    this.props.chartOfAccontActions.getSubTransactionTypes().then(res => {
+      if (res.status === 200) {
+        let val = Object.assign({}, res.data)
+        let temp = []
+        Object.keys(val).map(item => {
+          temp.push({
+            label: item,
+            options: val[`${item}`]
+          })
+          return item
+        })
+        this.setState({
+          chartOfAccountCategory: temp,
+        })
+      }
+    });
   }
 
   handleChange = (e, name) => {
@@ -119,7 +141,7 @@ class DetailChartAccount extends React.Component {
         this.props.history.push('/admin/master/chart-account')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -132,7 +154,11 @@ class DetailChartAccount extends React.Component {
   // Create or Edit Vat
   handleSubmit = (data, resetForm) => {
     const id = this.props.location.state.id
-    const postData = Object.assign(data, { transactionCategoryId: id })
+    const postData = {
+      transactionCategoryName: data.transactionCategoryName,
+      chartOfAccount: data.chartOfAccount.value,
+      transactionCategoryId: id
+    }
     this.props.detailChartOfAccontActions.updateTransactionCategory(postData).then((res) => {
       if (res.status === 200) {
         resetForm()
@@ -140,7 +166,7 @@ class DetailChartAccount extends React.Component {
         this.props.history.push('/admin/master/chart-account')
       }
     }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
+      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
     })
   }
 
@@ -157,7 +183,7 @@ class DetailChartAccount extends React.Component {
 
   render() {
     const { loading, dialog } = this.state
-    const { sub_transaction_type_list } = this.props
+    // const { sub_transaction_type_list } = this.props
 
     return (
       <div className="chart-account-screen">
@@ -222,8 +248,9 @@ class DetailChartAccount extends React.Component {
                                     id="transactionCategoryName"
                                     name="transactionCategoryName"
                                     placeholder="Enter Name"
-                                    onChange={(option) => { 
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {props.handleChange('transactionCategoryName')(option)} }}
+                                    onChange={(option) => {
+                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('transactionCategoryName')(option) }
+                                    }}
                                     value={props.values.transactionCategoryName}
                                     className={
                                       props.errors.transactionCategoryName && props.touched.transactionCategoryName
@@ -257,24 +284,21 @@ class DetailChartAccount extends React.Component {
                                         : ""
                                     }
                                   /> */}
-                                   <select
-                                id='chartOfAccount'
-                                className="form-control select-coa"
-                                name='chartOfAccount'
-                                value={props.values.chartOfAccount}
-                                // size="1"
-                                onChange={(e) => {
-                                  props.handleChange('chartOfAccount')(e.target.value)
-                                }}
-                              >
-                                {sub_transaction_type_list && Object.keys(sub_transaction_type_list).map((group, index) => {
-                                  return (
-                                    <optgroup key={index} label={group}>
-                                      {this.renderOptions(sub_transaction_type_list[`${group}`])}
-                                    </optgroup>
-                                  );
-                                })}
-                              </select>
+                                  <Select
+                                    id='chartOfAccount'
+                                    name='chartOfAccount'
+                                    value={props.values.chartOfAccount}
+                                    // size="1"
+                                    onChange={(val) => {
+                                      props.handleChange('chartOfAccount')(val)
+                                    }}
+                                    options={this.state.chartOfAccountCategory}
+                                    className={`
+                                   ${props.errors.chartOfAccount && props.touched.chartOfAccount
+                                        ? "is-invalid"
+                                        : ""}`
+                                    }
+                                  />
                                   {props.errors.chartOfAccount && props.touched.chartOfAccount && (
                                     <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                                   )}

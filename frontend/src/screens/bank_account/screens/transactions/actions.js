@@ -7,7 +7,7 @@ import moment from 'moment'
 
 export const getTransactionList = (obj) => {
   let id = obj.id ? obj.id : '';  
-  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId : '';  
+  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId.value : '';  
   let transactionDate = obj.transactionDate ? obj.transactionDate : '';  
   let pageNo = obj.pageNo ? obj.pageNo : '';  
   let pageSize = obj.pageSize ? obj.pageSize : '';
@@ -114,11 +114,27 @@ export const deleteTransactionById = (id) => {
   }
 }
 
-export const getTransactionListForReconcile = (type) => {
+export const getChartOfCategoryList = (type) => {
   return (dispatch) => {
     let data ={
       method: 'get',
       url: `/rest/datalist/reconsileCategories?debitCreditFlag=${type}`
+    }
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+      return res
+      }
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+
+export const getTransactionCategoryListForExplain = (id) => {
+  return (dispatch) => {
+    let data ={
+      method: 'get',
+      url: `rest/datalist/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {

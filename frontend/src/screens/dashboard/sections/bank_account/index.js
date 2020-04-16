@@ -65,7 +65,7 @@ class BankAccount extends Component {
   componentDidMount = () => {
     this.props.DashboardActions.getBankAccountTypes().then((res) => {
       if (res.status === 200) {
-        let val = res.data && res.data.data ? res.data.data[0].bankAccountId : ''
+        let val = res.data && res.data.data  && res.data.data[0] ? res.data.data[0].bankAccountId : ''
         this.getBankAccountGraphData(val, 12)
         this.props.DashboardActions.getTotalBalance().then((res) => {
           if (res.status === 200) {

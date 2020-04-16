@@ -9,8 +9,8 @@ import moment from 'moment'
 export const getReceiptList = (obj) => {
   let receiptDate = obj.receiptDate ? obj.receiptDate : '';
   let receiptReferenceCode = obj.receiptReferenceCode ? obj.receiptReferenceCode : '';
-  let contactId = obj.contactId ? obj.contactId : '';
-  let invoiceId = obj.invoiceId ? obj.invoiceId : '';
+  let contactId = obj.contactId ? obj.contactId.value : '';
+  let invoiceId = obj.invoiceId ? obj.invoiceId.value : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';

@@ -59,10 +59,23 @@ class CustomerModal extends React.Component {
     this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
+  getData = (data) => {
+    let temp = {}
+    for(let item in data) {
+      if(typeof data[item] !== 'object') {
+        temp[`${item}`] = data[item]
+      } else {
+        temp[`${item}`] = data[item].value
+      }
+    }
+    return temp
+  }
+
   // Create or Contact
   handleSubmit = (data, resetForm, setSubmitting) => {
+    const postData = this.getData(data)
     this.props
-      .createCustomer(data)
+      .createCustomer(postData)
       .then((res) => {
         if (res.status === 200) {
           resetForm();
@@ -83,13 +96,19 @@ class CustomerModal extends React.Component {
   }
 
   getStateList = (countryCode) => {
-    this.props.getStateList(countryCode).then((res) => {
-      if(res.status === 200) {
-        this.setState({
-          state_list: res.data
-        })
-      }
-    })
+    if(countryCode) {
+      this.props.getStateList(countryCode).then((res) => {
+        if(res.status === 200) {
+          this.setState({
+            state_list: res.data
+          })
+        }
+      })
+    } else {
+      this.setState({
+        state_list: []
+      })
+    }
   }
 
   render() {
@@ -259,6 +278,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter First Name"
                           />
                           {props.errors.firstName &&
                             props.touched.firstName && (
@@ -285,6 +305,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter Middle Name"
                           />
                           {props.errors.middleName &&
                             props.touched.middleName && (
@@ -312,6 +333,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter Last Name"
                           />
                           {props.errors.lastName && props.touched.lastName && (
                             <div className="invalid-feedback">
@@ -343,6 +365,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter Organization Name"
                           />
                           {props.errors.organization &&
                             props.touched.organization && (
@@ -369,6 +392,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter PO Box Number"
                           />
                           {props.errors.poBoxNumber &&
                             props.touched.poBoxNumber && (
@@ -398,6 +422,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter Email"
                           />
                           {props.errors.email && props.touched.email && (
                             <div className="invalid-feedback">
@@ -420,6 +445,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter Telephone Number"
                           />
                           {props.errors.telephone &&
                             props.touched.telephone && (
@@ -547,6 +573,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter AddressLine 1"
                           />
                           {props.errors.addressLine1 &&
                             props.touched.addressLine1 && (
@@ -566,6 +593,7 @@ class CustomerModal extends React.Component {
                             onChange={(value) => {
                               props.handleChange("addressLine2")(value);
                             }}
+                            placeholder="Enter AddressLine 2"
                           />
                         </FormGroup>
                       </Col>
@@ -579,6 +607,7 @@ class CustomerModal extends React.Component {
                             onChange={(value) => {
                               props.handleChange("addressLine3")(value);
                             }}
+                            placeholder="Enter AddressLine 3"
                           />
                         </FormGroup>
                       </Col>
@@ -603,12 +632,13 @@ class CustomerModal extends React.Component {
                             value={props.values.countryId}
                             onChange={(option) => {
                               if (option && option.value) {
-                                props.handleChange("countryId")(option.value);
+                                props.handleChange("countryId")(option);
                                 this.getStateList(option.value)
                               } else {
                                 props.handleChange("countryId")("");
                                 this.getStateList(option.value)
                               }
+                              props.handleChange('stateId')({label: 'Select State',value: ''})
                             }}
                             placeholder="Select Country"
                             id="countryId"
@@ -635,7 +665,7 @@ class CustomerModal extends React.Component {
                             value={props.values.stateId}
                             onChange={(option) => {
                               if (option && option.value) {
-                                props.handleChange('stateId')(option.value)
+                                props.handleChange('stateId')(option)
                               } else {
                                 props.handleChange('stateId')('')
                               }
@@ -663,7 +693,7 @@ class CustomerModal extends React.Component {
                             onChange={(option) => {
                               if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('city')(option)}
                             }}
-                            placeholder=""
+                            placeholder="Enter City"
                             id="city"
                             name="city"
                             className={
@@ -698,6 +728,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter Postal ZipCode"
                           />
                           {props.errors.postZipCode &&
                             props.touched.postZipCode && (
@@ -729,6 +760,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter Billing Email"
                           />
                           {props.billingEmail && props.touched.billingEmail && (
                             <div className="invalid-feedback">
@@ -756,6 +788,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter Contract PoNumber"
                           />
                           {props.errors.contractPoNumber &&
                             props.touched.contractPoNumber && (
@@ -786,6 +819,7 @@ class CustomerModal extends React.Component {
                                 ? "is-invalid"
                                 : ""
                             }
+                            placeholder="Enter Tax Registration Number"
                           />
                           {props.errors.vatRegistrationNumber &&
                             props.touched.vatRegistrationNumber && (
@@ -813,7 +847,7 @@ class CustomerModal extends React.Component {
                             onChange={(option) => {
                               if (option && option.value) {
                                 props.handleChange("currencyCode")(
-                                  option.value
+                                  option
                                 );
                               } else {
                                 props.handleChange("currencyCode")("");

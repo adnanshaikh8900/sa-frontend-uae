@@ -6,7 +6,7 @@ import {
 export const getContactList = (obj) => {
   let name = obj.name ? obj.name : '';
   let email = obj.email ? obj.email : '';
-  let contactType = obj.contactType ? obj.contactType : '';
+  let contactType = obj.contactType ? obj.contactType.value : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let order = obj.order ? obj.order : '';
@@ -113,15 +113,22 @@ export const getStateList = (countryCode) => {
       method: 'get',
       url: '/rest/datalist/getstate?countryCode=' + countryCode
     }
-    return authApi(data).then((res) => {
-      if (res.status === 200) {
-        dispatch({
-          type: CONTACT.STATE_LIST,
-          payload: res.data
-        })
-      }
-    }).catch((err) => {
-      throw err
-    })
+    if(countryCode) {
+      return authApi(data).then((res) => {
+        if (res.status === 200) {
+          dispatch({
+            type: CONTACT.STATE_LIST,
+            payload: res.data
+          })
+        }
+      }).catch((err) => {
+        throw err
+      })
+    } else {
+      dispatch({
+        type: CONTACT.STATE_LIST,
+        payload: []
+      })
+    }
   }
 }

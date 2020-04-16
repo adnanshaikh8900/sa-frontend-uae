@@ -364,15 +364,15 @@ class CreateBankTransaction extends React.Component {
                                 <Row>
                                   <Col lg={12}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor="receiptAttachmentDescription">Attachment Description</Label>
+                                      <Label htmlFor="attachementDescription">Attachment Description</Label>
                                       <Input
                                         type="textarea"
-                                        name="receiptAttachmentDescription"
-                                        id="receiptAttachmentDescription"
+                                        name="attachementDescription"
+                                        id="attachementDescription"
                                         rows="5"
                                         placeholder="1024 characters..."
-                                        onChange={(option) => props.handleChange('receiptAttachmentDescription')(option)}
-                                        value={props.values.receiptAttachmentDescription}
+                                        onChange={(option) => props.handleChange('attachementDescription')(option)}
+                                        value={props.values.attachementDescription}
                                       />
                                     </FormGroup>
                                   </Col>

@@ -9,15 +9,13 @@ import {
   Button,
   Row,
   Col,
-  Input,
 } from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import {
   CommonActions
 } from 'services/global'
 import * as OpeningBalanceActions from './actions'
-
-
+import OpeningBalanceModal from './sections/opening_balance_modal'
 import './style.scss'
 
 const mapStateToProps = (state) => {
@@ -38,23 +36,12 @@ class OpeningBalance extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: [{
-        id: 0,
-        description: '',
-        quantity: '',
-        unitPrice: '',
-        vatCategoryId: '',
-        subTotal: 0
-      }],
       idCount: 0,
+      showOpeningBalanceModal: false,
+      selectedRowData: ""
     }
     this.regEx = /^[0-9\d]+$/;
 
-  }
-
-  componentDidMount = () => {
-    this.props.openingBalanceActions.getCurrencyList()
-    this.props.openingBalanceActions.getBankList()
   }
 
   renderActions = (cell, rows, props) => {
@@ -70,89 +57,44 @@ class OpeningBalance extends React.Component {
     )
   }
 
-  renderAccount = (cell, row) => {
-    let { bank_account_list } = this.props
-    // let idx = ''
-    bank_account_list = [...bank_account_list,...[{bankAccountId: '',accounName: 'Select Account'}]]
-    this.state.data.map((obj, index) => {
-      if (obj.id === row.id) {
-        // idx = index
-      }
-      return obj
-    });
+  showOpeningBalanceModal = () => {
+    if (this.props.bank_account_list && this.props.currency_list) {
+      this.props.openingBalanceActions.getCurrencyList()
+      this.props.openingBalanceActions.getBankList()
+    }
+    this.setState({ showOpeningBalanceModal: true })
+  }
+  // Cloase Confirm Modal
+  closeOpeningBalanceModal = () => {
+    this.setState({ showOpeningBalanceModal: false })
+  }
+
+  goToDetail = (row) => {
+    this.setState({
+      selectedRowData: row
+    }, () => {
+      this.showOpeningBalanceModal()
+    })
+  }
+
+  resetData = () => {
+    if (this.state.selectedRowData) {
+      this.setState({
+        selectedRowData: ''
+      }, () => { this.showOpeningBalanceModal() })
+    } else {
+      this.showOpeningBalanceModal()
+    }
+  }
+
+  renderEdit = (cell, row) => {
     return (
-      <Input type="select" onChange={(e) => {
-        // this.selectItem(e, row, 'bankAccountId')
-        // this.formRef.current.props.handleChange(field.name)(e.value)
-      }} value={row.bankAccountId}
-        className={`form-control `}
-      >
-        {bank_account_list ? bank_account_list.map((obj) => {
-          // obj.name = obj.name === 'default' ? '0' : obj.name
-          return <option value={obj.bankAccountId} key={obj.bankAccountId}>{obj.accounName}</option>
-        }) : []}
-      </Input>
+      <i className="fas fa-edit" onClick={() => { this.goToDetail(row) }}></i>
     )
   }
-
-  renderOpeningBalance = (cell, row, props) => {
-    // let idx
-    this.state.data.map((obj, index) => {
-      if (obj.id === row.id) {
-        // idx = index
-      }
-      return obj
-    });
-
-    return (
-
-      <Input
-        type="text"
-        value={row['openingBalance'] !== 0 ? row['openingBalance'] : 0}
-        // onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'openingBalance') }}
-        placeholder="Opening Balance"
-        className={`form-control`}
-      />
-    )
-  }
-
-  renderCurrency = (cell, row, props) => {
-    // let idx
-    this.state.data.map((obj, index) => {
-      if (obj.id === row.id) {
-        // idx = index
-      }
-      return obj
-    });
-
-    return 'AED'
-
-      // <Input
-      //   type="text"
-      //   value={row['currency'] !== 0 ? row['currency'] : 0}
-      //   // onChange={(e) => { if (e.target.value === '' || this.regEx.test(e.target.value)) this.selectItem(e, row, 'currency') }}
-      //   placeholder="Currency"
-      //   className={`form-control`}
-      // />
-    // )
-  }
-
-  addRow = () => {
-		const data = [...this.state.data]
-		this.setState({
-			data: data.concat({
-				id: this.state.idCount + 1,
-				description: '',
-				quantity: '',
-				unitPrice: '',
-				vatCategoryId: '',
-				subTotal: 0
-			}), idCount: this.state.idCount + 1
-		})
-	}
 
   render() {
-    const { data } = this.state
+    const { bank_account_list } = this.props;
     return (
       <div className="opening-balance-screen">
         <div className="animated fadeIn">
@@ -172,7 +114,7 @@ class OpeningBalance extends React.Component {
                 <Col lg={12}>
                   <BootstrapTable
                     options={this.options}
-                    data={data ? data : []}
+                    data={[]}
                     version="4"
                     hover
                     keyField="id"
@@ -185,37 +127,44 @@ class OpeningBalance extends React.Component {
                     >
                     </TableHeaderColumn> */}
                     <TableHeaderColumn
-                      dataField="description"
-                      dataFormat={(cell, rows) => this.renderAccount(cell, rows)}
+                      dataField="accountName"
                     >
                       Account
-                              </TableHeaderColumn>
+                    </TableHeaderColumn>
                     <TableHeaderColumn
-                      dataField="quantity"
-                      dataFormat={(cell, rows) => this.renderOpeningBalance(cell, rows)}
+                      dataField="openingBalance"
                     >
                       Opening Balance
-                              </TableHeaderColumn>
+                    </TableHeaderColumn>
                     <TableHeaderColumn
-                      dataField="unitPrice"
-                      dataFormat={(cell, rows) => this.renderCurrency(cell, rows)}
-
+                      dataField="currency"
                     >
                       Currency
-                              </TableHeaderColumn>
+                    </TableHeaderColumn>
+                    <TableHeaderColumn
+                      dataFormat={this.renderEdit}
+                    >
+                    </TableHeaderColumn>
                   </BootstrapTable>
                 </Col>
               </Row>
               <Row>
                 <Col lg={12} className="mb-3">
-                  <Button color="primary" className={`btn-square mr-3 `} onClick={this.addRow} disabled
-                  >
+                  <Button color="primary" className={`btn-square mr-3 `} onClick={this.resetData}>
                     <i className="fa fa-plus"></i> Add More
-                            </Button>
+                </Button>
                 </Col>
               </Row>
             </CardBody>
           </Card>
+
+          <OpeningBalanceModal
+            showOpeningBalanceModal={this.state.showOpeningBalanceModal}
+            closeOpeningBalanceModal={this.closeOpeningBalanceModal}
+            bankAccountList={bank_account_list}
+            createOpeningBalance={this.props.openingBalanceActions.createOpeningBalance}
+            selectedRowData={this.state.selectedRowData}
+          />
         </div>
       </div>
     )

@@ -34,6 +34,7 @@ public class TransactionCategoryModel {
     private LocalDateTime createdDate;
     private Integer lastUpdatedBy;
     private LocalDateTime lastUpdateDate;
+    private Boolean editableFlag = Boolean.FALSE;  
     private Boolean deleteFlag = Boolean.FALSE;
     private Integer versionNumber;
 }

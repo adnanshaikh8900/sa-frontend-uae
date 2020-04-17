@@ -57,6 +57,8 @@ public class TranscationCategoryHelper {
 		transactionCategory
 				.setTransactionCategoryDescription(transactionCategoryBean.getTransactionCategoryDescription());
 		transactionCategory.setTransactionCategoryName(transactionCategoryBean.getTransactionCategoryName());
+		transactionCategory.setEditableFlag(Boolean.TRUE);
+		transactionCategory.setSelectableFlag(Boolean.TRUE);
 		if (transactionCategoryBean.getChartOfAccount() != null) {
 			ChartOfAccount chartOfAccount = transactionTypeService
 					.findByPK(transactionCategoryBean.getChartOfAccount());
@@ -97,6 +99,8 @@ public class TranscationCategoryHelper {
 				if (transactionCategory.getVatCategory() != null) {
 					transactionCategoryModel.setVatCategoryId(transactionCategory.getVatCategory().getId());
 				}
+				
+				transactionCategoryModel.setEditableFlag(transactionCategory.getEditableFlag());
 				transactionCategoryModelList.add(transactionCategoryModel);
 			}
 		}

@@ -34,5 +34,5 @@ public interface TransactionCategoryDao extends Dao<Integer, TransactionCategory
 
 	public String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount);
 
-	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryCode(String chartOfAccountCategoryCode);
+	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryId(Integer chartOfAccountCategoryId);
 }

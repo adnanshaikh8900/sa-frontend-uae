@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,13 +19,15 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
 
-import com.simplevat.entity.CoaCoaCategory;
-import com.simplevat.entity.CoaTransactionCategory;
+import com.simplevat.entity.CoacTransactionCategory;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.converter.DateConverter;
 
@@ -39,9 +41,9 @@ import lombok.Data;
 		@NamedQuery(name = "findAllTransactionCategoryBychartOfAccount", query = "SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.chartOfAccount.chartOfAccountId =:chartOfAccountId ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC"),
 		@NamedQuery(name = "findAllTransactionCategoryByUserId", query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (t.createdBy = :createdBy or t.createdBy = 1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC"),
 		@NamedQuery(name = "findMaxTnxCodeByChartOfAccId", query = "SELECT t FROM TransactionCategory t where chartOfAccount =:chartOfAccountId ORDER BY  CAST(t.transactionCategoryCode as int) DESC"),
-		@NamedQuery(name = "findAllTransactionCategoryBychartOfAccountCategoryCode", query = "SELECT t FROM TransactionCategory t where chartOfAccount.chartOfAccountCategoryCode =:chartOfAccountCategoryCode ORDER BY transactionCategoryId ASC")
 
 })
+
 @Entity
 @Table(name = "TRANSACTION_CATEGORY")
 @Data
@@ -70,7 +72,7 @@ public class TransactionCategory implements Serializable {
 	@JoinColumn(name = "CHART_OF_ACCOUNT_ID")
 	private ChartOfAccount chartOfAccount;
 
-	@OneToOne (fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PARENT_TRANSACTION_CATEGORY_CODE")
 	private TransactionCategory parentTransactionCategory;
 
@@ -125,7 +127,7 @@ public class TransactionCategory implements Serializable {
 	@Version
 	private Integer versionNumber;
 
-	@OneToMany(mappedBy = "chartOfAccountCategory", fetch = FetchType.LAZY)
-	private List<CoaTransactionCategory> coaTransactionCategoryList;
+//	@OneToMany(mappedBy = "chartOfAccountCategory", fetch = FetchType.LAZY)
+//	private List<CoacTransactionCategory> coaTransactionCategoryList;
 
 }

@@ -35,6 +35,5 @@ public class CoaCoaCategory implements Serializable{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CHART_OF_ACCOUNT_CATEGORY_ID ")
 	private ChartOfAccountCategory chartOfAccountCategory;
-	
 
 }

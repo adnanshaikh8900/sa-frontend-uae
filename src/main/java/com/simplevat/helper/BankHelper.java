@@ -84,7 +84,7 @@ public class BankHelper {
 			BankAccountStatus bankAccountStatus = bankAccountStatusService.getBankAccountStatusByName("ACTIVE");
 			bankAccount.setBankAccountStatus(bankAccountStatus);
 		}
-
+		//create transaction category with bankname-accout name	
 		bankAccount.setTransactionCategory(transactionCategoryService
 				.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.BANK.getCode()));
 

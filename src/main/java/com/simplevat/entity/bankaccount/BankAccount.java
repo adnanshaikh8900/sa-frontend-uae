@@ -105,6 +105,7 @@ public class BankAccount implements Serializable {
 	@Column(name = "LAST_UPDATED_BY")
 	private Integer lastUpdatedBy;
 
+	//need to remove
 	@OneToOne
 	@JoinColumn(name = "TRANSACTION_CATEGORY_CODE")
 	private TransactionCategory transactionCategory;

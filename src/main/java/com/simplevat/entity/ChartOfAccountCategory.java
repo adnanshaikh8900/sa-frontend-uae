@@ -71,6 +71,6 @@ public class ChartOfAccountCategory implements Serializable {
 	private List<CoaCoaCategory> coacoaCategoryList;
 
 	@OneToMany(mappedBy = "chartOfAccountCategory", fetch = FetchType.LAZY)
-	private List<CoaTransactionCategory> coatransactionCategoryList;
+	private List<CoacTransactionCategory> coatransactionCategoryList;
 
 }

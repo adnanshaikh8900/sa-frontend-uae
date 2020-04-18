@@ -672,7 +672,6 @@ class CustomerInvoice extends React.Component {
                         this.table = node
                       }}
                     >
-
                       <TableHeaderColumn
                         width="130"
                         dataField="status"
@@ -684,6 +683,7 @@ class CustomerInvoice extends React.Component {
                       <TableHeaderColumn
                         dataField="customerName"
                         dataSort
+                        width="15%"
                       >
                         Customer Name
                           </TableHeaderColumn>
@@ -697,12 +697,14 @@ class CustomerInvoice extends React.Component {
                       <TableHeaderColumn
                         dataField="invoiceDate"
                         dataSort
+                        width="13%"
                       >
                         Invoice Date
                           </TableHeaderColumn>
                       <TableHeaderColumn
                         dataField="invoiceDueDate"
                         dataSort
+                        width="10%"
                       >
                         Due Date
                           </TableHeaderColumn>

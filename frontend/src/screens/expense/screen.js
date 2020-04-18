@@ -561,13 +561,20 @@ class Expense extends React.Component {
                       csvFileName="expense_list.csv"
                     >
                       <TableHeaderColumn
+                        dataField="expenseDate"
+                        dataSort
+                        dataFormat={this.renderDate}
+                      >
+                        Expense Date
+                          </TableHeaderColumn>
+                      <TableHeaderColumn
                         dataField="payee"
                         dataSort
                       >
                         Payee
                       </TableHeaderColumn>
                       <TableHeaderColumn
-                        width="130"
+                        width="10%"
                         dataField="expenseStatus"
                         dataFormat={this.renderInvoiceStatus}
                         dataSort
@@ -584,16 +591,8 @@ class Expense extends React.Component {
                         dataField="receiptNumber"
                         dataSort
                       >
-                        Receipt Number
+                        Receipt No
                       </TableHeaderColumn>
-                      <TableHeaderColumn
-                        dataField="expenseAmount"
-                        dataSort
-                        dataFormat={this.renderAmount}
-                        dataAlign="right"
-                      >
-                        Expense Amount
-                          </TableHeaderColumn>
                       <TableHeaderColumn
                         dataField="transactionCategoryName"
                         dataSort
@@ -602,11 +601,13 @@ class Expense extends React.Component {
                         Transaction Category
                           </TableHeaderColumn>
                       <TableHeaderColumn
-                        dataField="expenseDate"
+                        dataField="expenseAmount"
                         dataSort
-                        dataFormat={this.renderDate}
+                        dataFormat={this.renderAmount}
+                        dataAlign="right"
+                        width="15%"
                       >
-                        Expense Date
+                        Expense Amount
                           </TableHeaderColumn>
                       <TableHeaderColumn
                         className="text-right"

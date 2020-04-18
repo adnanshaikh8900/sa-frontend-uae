@@ -700,7 +700,7 @@ class DetailJournal extends React.Component {
                                         }
                                         id="currencyCode"
                                         name="currencyCode"
-                                        disabled={props.values.postingReferenceType === "MANUAL" ? false : true}
+                                        isDisabled={props.values.postingReferenceType === "MANUAL" ? false : true}
                                         value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                         onChange={(option) => {
                                           if (option && option.value) {

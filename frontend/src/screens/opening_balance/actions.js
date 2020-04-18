@@ -3,35 +3,16 @@ import {
   authApi
 } from 'utils'
 
-export const getCurrencyList = () => {
+export const getTransactionCategoryList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/bank/getcurrenncy'
+      url: '/rest/transactioncategory/getList?paginationDisable=true'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
         dispatch({
-          type: OPENING_BALANCE.CURRENCY_LIST,
-          payload: res
-        })
-      }
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
-
-export const getBankList = () => {
-  return (dispatch) => {
-    let data = {
-      method: 'get',
-      url: '/rest/bank/list'
-    }
-    return authApi(data).then((res) => {
-      if (res.status === 200) {
-        dispatch({
-          type: OPENING_BALANCE.BANK_ACCOUNT_LIST,
+          type: OPENING_BALANCE.TRANSACTION_CATEGORY_LIST,
           payload: res.data
         })
       }

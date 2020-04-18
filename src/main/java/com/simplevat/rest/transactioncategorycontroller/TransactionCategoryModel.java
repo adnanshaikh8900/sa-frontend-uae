@@ -5,10 +5,8 @@
  */
 package com.simplevat.rest.transactioncategorycontroller;
 
-import com.simplevat.entity.VatCategory;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
 import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 

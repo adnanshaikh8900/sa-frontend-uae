@@ -2,11 +2,9 @@ package com.simplevat.entity.bankaccount;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.ColumnResult;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,17 +15,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
 
-import com.simplevat.entity.CoacTransactionCategory;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.converter.DateConverter;
 

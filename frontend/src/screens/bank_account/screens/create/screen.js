@@ -63,7 +63,7 @@ class CreateBankAccount extends React.Component {
       },
       currentData: {}
     }
-    this.regExAlpha = /^[a-zA-Z]+$/
+    this.regExAlpha = /^[a-zA-Z_ ]+$/
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.swiftRegex = /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/

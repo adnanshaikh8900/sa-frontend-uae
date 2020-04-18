@@ -149,12 +149,8 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		String trnxCatCode = result != null && result.size() > 0 && result.get(0).getTransactionCategoryCode() != null
 				? result.get(0).getTransactionCategoryCode()
 				: "0";
-//		trnxCatCode = !trnxCatCode.equals("0")
-//				? result.get(0).getTransactionCategoryCode().replaceFirst(chartOfAccountCode + "-", "")
-//				: "0";
 
 		String[] arr = trnxCatCode.split("-");
-
 		trnxCatCode = arr.length > 0 ? arr[arr.length - 1] : "0";
 
 		// considered valid no

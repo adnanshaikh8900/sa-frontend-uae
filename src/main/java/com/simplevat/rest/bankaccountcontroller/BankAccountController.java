@@ -34,7 +34,6 @@ import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;
 import com.simplevat.entity.bankaccount.BankAccountType;
-import com.simplevat.helper.BankHelper;
 import com.simplevat.model.BankModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
@@ -55,11 +54,6 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/bank")
 public class BankAccountController implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(BankAccountController.class);
 
@@ -88,7 +82,7 @@ public class BankAccountController implements Serializable {
 	JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private BankHelper bankRestHelper;
+	private BankAccountRestHelper bankRestHelper;
 
 	@Autowired
 	private TransactionService transactionService;
@@ -132,6 +126,7 @@ public class BankAccountController implements Serializable {
 	public ResponseEntity saveBankAccount(@RequestBody BankModel bankModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			bankModel.setCreatedBy(userId);
 			BankAccount bankAccount = bankRestHelper.getEntity(bankModel);
 			User user = userServiceNew.findByPK(userId);
 			if (bankModel.getBankAccountId() == null) {

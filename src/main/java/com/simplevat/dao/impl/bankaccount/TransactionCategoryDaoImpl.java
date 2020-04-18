@@ -1,26 +1,25 @@
 package com.simplevat.dao.impl.bankaccount;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.dao.AbstractDao;
+import com.simplevat.dao.bankaccount.TransactionCategoryDao;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-
-import javax.persistence.TypedQuery;
-import org.springframework.transaction.annotation.Transactional;
-import com.simplevat.dao.bankaccount.TransactionCategoryDao;
 
 @Repository(value = "transactionCategoryDao")
 public class TransactionCategoryDaoImpl extends AbstractDao<Integer, TransactionCategory>

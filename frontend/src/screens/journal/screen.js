@@ -493,7 +493,7 @@ class Journal extends React.Component {
                             dataSort={true}
                             width="20%"
                           >
-                            JOURNAL REFERENCE NO.
+                            JOURNAL REFERENCE NO
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="postingReferenceTypeDisplayName"

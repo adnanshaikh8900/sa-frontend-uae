@@ -23,20 +23,20 @@ export const getTransactionCategoryList = () => {
 }
 
 export const getOpeningBalanceList = (obj) => {
-  let pageNo = obj.pageNo ? obj.pageNo : '';
-  let pageSize = obj.pageSize ? obj.pageSize : '';
-  let order = obj.order ? obj.order : '';
-  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
+  // let pageNo = obj.pageNo ? obj.pageNo : '';
+  // let pageSize = obj.pageSize ? obj.pageSize : '';
+  // let order = obj.order ? obj.order : '';
+  // let sortingCol = obj.sortingCol ? obj.sortingCol : '';
+  // let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
 
 
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `/rest/openingbalance/getList?pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
+      url: `/rest/transactionCategoryBalance/list`
     }
     return authApi(data).then((res) => {
-      if(!obj.paginationDisable) {
+      if(true) {
         dispatch({
           type: OPENING_BALANCE.OPENING_BALANCE_LIST,
           payload: res.data
@@ -49,11 +49,11 @@ export const getOpeningBalanceList = (obj) => {
   }
 }
 
-export const createOpeningBalance = (obj) => {
+export const addOpeningBalance = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: 'rest/openingbalance/save',
+      url: '/rest/transactionCategoryBalance/save',
       data: obj
     }
     return authApi(data).then((res) => {

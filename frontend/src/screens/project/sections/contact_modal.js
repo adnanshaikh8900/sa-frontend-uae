@@ -29,6 +29,7 @@ class ContactModal extends React.Component {
       loading: false,
 
       initContactValue: {
+        contactType: 2,
         billingEmail: '',
         city: '',
         countryId: '',

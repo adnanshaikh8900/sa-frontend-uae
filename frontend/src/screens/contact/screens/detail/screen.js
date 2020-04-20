@@ -222,8 +222,8 @@ class DetailContact extends React.Component {
                                 lastName: Yup.string().required("Last Name is Required"),
                                 middleName: Yup.string()
                                   .required("Middle Name is Required"),
-                                // contactType: Yup.string()
-                                // .required("Please Select Contact Type"),
+                                contactType: Yup.string()
+                                .required("Contact Type is Required"),
                                 //       organization: Yup.string()
                                 //       .required("Organization Name is Required"),
                                 //     poBoxNumber: Yup.number()
@@ -350,7 +350,7 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="contactType">Contact Type</Label>
+                                      <Label htmlFor="contactType"><span className="text-danger">*</span>Contact Type</Label>
                                       <Select
                                         options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                         value={contact_type_list && contact_type_list.find((option) => option.value === +props.values.contactType)}

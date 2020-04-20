@@ -60,4 +60,16 @@ public class DateFormatUtil {
 		return dob;
 
 	}
+
+	public Date getDateStrAsDate(String strDate, String format) {
+		SimpleDateFormat dateFormatter = new SimpleDateFormat(format);
+		Date d;
+		try {
+			d = dateFormatter.parse(strDate);
+		} catch (ParseException e) {
+			d = new Date();
+			LOGGER.error("Error", e);
+		}
+		return d;
+	}
 }

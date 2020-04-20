@@ -37,7 +37,7 @@ public class UserRestHelper {
 				userModel.setLastName(user.getLastName());
 				userModel.setActive(user.getIsActive());
 				if (user.getDateOfBirth() != null) {
-					userModel.setDob(dateUtil.getDateAsString(user.getDateOfBirth(), "dd-MM-yyyy"));
+					userModel.setDob(dateUtil.getLocalDateTimeAsString(user.getDateOfBirth(), "dd-MM-yyyy"));
 				}
 				if (user.getRole() != null) {
 					userModel.setRoleId(user.getRole().getRoleCode());
@@ -97,7 +97,7 @@ public class UserRestHelper {
 			userModel.setEmail(user.getUserEmail());
 			userModel.setActive(user.getIsActive());
 			if (user.getDateOfBirth() != null) {
-				userModel.setDob(dateUtil.getDateAsString(user.getDateOfBirth(), "dd-MM-yyyy"));
+				userModel.setDob(dateUtil.getLocalDateTimeAsString(user.getDateOfBirth(), "dd-MM-yyyy"));
 			}
 			if (user.getRole() != null) {
 				userModel.setRoleId(user.getRole().getRoleCode());

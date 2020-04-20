@@ -113,7 +113,7 @@ public class BankAccountServiceImpl extends BankAccountService {
 		model.setData(number);
 		model.setBalance(bank.getCurrentBalance());
 		model.setUpdatedDate(bank.getLastUpdateDate() != null
-				? dateFormatUtil.getDateAsString(bank.getLastUpdateDate(), "dd/MM/yyyy")
+				? dateFormatUtil.getLocalDateTimeAsString(bank.getLastUpdateDate(), "dd/MM/yyyy")
 				: null);
 		model.setLabels(months);
 		model.setAccount_name(bank.getBankAccountName());

@@ -5,10 +5,8 @@
  */
 package com.simplevat.rest.transactioncategorycontroller;
 
-import com.simplevat.entity.VatCategory;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
 import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +32,7 @@ public class TransactionCategoryModel {
     private LocalDateTime createdDate;
     private Integer lastUpdatedBy;
     private LocalDateTime lastUpdateDate;
+    private Boolean editableFlag = Boolean.FALSE;  
     private Boolean deleteFlag = Boolean.FALSE;
     private Integer versionNumber;
 }

@@ -36,5 +36,5 @@ public abstract class TransactionCategoryService extends SimpleVatService<Intege
     
     public abstract String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount);
     
-	public  abstract List<TransactionCategory> getTransactionCatByChartOfAccountCategoryCode(String chartOfAccountCategoryCode);
+	public  abstract List<TransactionCategory> getTransactionCatByChartOfAccountCategoryId(Integer chartOfAccountCategoryId);
 }

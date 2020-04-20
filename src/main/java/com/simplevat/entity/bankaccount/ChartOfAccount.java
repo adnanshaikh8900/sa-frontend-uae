@@ -1,13 +1,27 @@
 package com.simplevat.entity.bankaccount;
 
 import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.ColumnDefault;
+
+import com.simplevat.entity.CoaCoaCategory;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-
-import org.hibernate.annotations.ColumnDefault;
 
 /**
  * Created by mohsinh on 2/26/2017.
@@ -64,6 +78,9 @@ public class ChartOfAccount implements Serializable {
 	@Basic(optional = false)
 	private boolean deleteFlag;
 
+	@OneToMany(mappedBy = "chartOfAccount", fetch = FetchType.LAZY)
+	private List<CoaCoaCategory> transactionChartOfAccountCategoryList;
+	
 	public ChartOfAccount(Integer chartOfAccountId) {
 		this.chartOfAccountId = chartOfAccountId;
 	}

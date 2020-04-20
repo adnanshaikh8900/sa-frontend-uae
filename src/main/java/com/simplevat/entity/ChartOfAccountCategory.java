@@ -1,5 +1,8 @@
 package com.simplevat.entity;
 
+import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -22,7 +26,7 @@ import lombok.Data;
 @Data
 @NamedQueries({
 		@NamedQuery(name = "allChartOfAccountCategory", query = "SELECT c FROM ChartOfAccountCategory c where c.deleteFlag = FALSE") })
-public class ChartOfAccountCategory {
+public class ChartOfAccountCategory implements Serializable {
 
 	@Id
 	@Column(name = "CHART_OF_ACCOUNT_CATEGORY_ID")
@@ -62,5 +66,11 @@ public class ChartOfAccountCategory {
 	@ColumnDefault(value = "0")
 	@Basic(optional = false)
 	private boolean deleteFlag;
+
+	@OneToMany(mappedBy = "chartOfAccountCategory", fetch = FetchType.LAZY)
+	private List<CoaCoaCategory> coacoaCategoryList;
+
+	@OneToMany(mappedBy = "chartOfAccountCategory", fetch = FetchType.LAZY)
+	private List<CoacTransactionCategory> coatransactionCategoryList;
 
 }

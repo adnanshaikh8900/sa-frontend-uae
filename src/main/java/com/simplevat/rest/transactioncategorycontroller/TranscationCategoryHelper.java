@@ -5,16 +5,6 @@
  */
 package com.simplevat.rest.transactioncategorycontroller;
 
-import com.simplevat.constant.DefaultTypeConstant;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.rest.ChartOfAccountDropdownModel;
-import com.simplevat.rest.DropdownModel;
-import com.simplevat.rest.SingleLevelDropDownModel;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +13,15 @@ import java.util.Map;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
+
+import com.simplevat.constant.DefaultTypeConstant;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.SingleLevelDropDownModel;
+import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.VatCategoryService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 /**
  *
@@ -59,6 +57,8 @@ public class TranscationCategoryHelper {
 		transactionCategory
 				.setTransactionCategoryDescription(transactionCategoryBean.getTransactionCategoryDescription());
 		transactionCategory.setTransactionCategoryName(transactionCategoryBean.getTransactionCategoryName());
+		transactionCategory.setEditableFlag(Boolean.TRUE);
+		transactionCategory.setSelectableFlag(Boolean.TRUE);
 		if (transactionCategoryBean.getChartOfAccount() != null) {
 			ChartOfAccount chartOfAccount = transactionTypeService
 					.findByPK(transactionCategoryBean.getChartOfAccount());
@@ -99,6 +99,8 @@ public class TranscationCategoryHelper {
 				if (transactionCategory.getVatCategory() != null) {
 					transactionCategoryModel.setVatCategoryId(transactionCategory.getVatCategory().getId());
 				}
+				
+				transactionCategoryModel.setEditableFlag(transactionCategory.getEditableFlag());
 				transactionCategoryModelList.add(transactionCategoryModel);
 			}
 		}
@@ -183,7 +185,6 @@ public class TranscationCategoryHelper {
 		}
 
 		for (Integer key : idTrnxCatListMap.keySet()) {
-
 			String parentCategory = "";
 			transactionCategoryList = idTrnxCatListMap.get(key);
 			List<DropdownModel> dropDownModelList = new ArrayList<DropdownModel>();
@@ -196,6 +197,5 @@ public class TranscationCategoryHelper {
 			modelList.add(new SingleLevelDropDownModel(parentCategory, dropDownModelList));
 		}
 		return modelList;
-//		return chartOfAccountDropdownModelList;
 	}
 }

@@ -1,26 +1,25 @@
 package com.simplevat.dao.impl.bankaccount;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.TransactionCategoryFilterEnum;
 import com.simplevat.dao.AbstractDao;
+import com.simplevat.dao.bankaccount.TransactionCategoryDao;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-
-import javax.persistence.TypedQuery;
-import org.springframework.transaction.annotation.Transactional;
-import com.simplevat.dao.bankaccount.TransactionCategoryDao;
 
 @Repository(value = "transactionCategoryDao")
 public class TransactionCategoryDaoImpl extends AbstractDao<Integer, TransactionCategory>
@@ -149,20 +148,20 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		String trnxCatCode = result != null && result.size() > 0 && result.get(0).getTransactionCategoryCode() != null
 				? result.get(0).getTransactionCategoryCode()
 				: "0";
-		trnxCatCode = !trnxCatCode.equals("0")
-				? result.get(0).getTransactionCategoryCode().replaceFirst(chartOfAccountCode, "")
-				: "0";
+
+		String[] arr = trnxCatCode.split("-");
+		trnxCatCode = arr.length > 0 ? arr[arr.length - 1] : "0";
 
 		// considered valid no
 		Integer d = Integer.valueOf(trnxCatCode);
 
-		return chartOfAccountCode + (d + 1);
+		return chartOfAccountCode + "-" + String.format("%03d", (d + 1));
 	}
 
 	@Override
-	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryCode(String chartOfAccountCategoryCode) {
-		return getEntityManager()
-				.createNamedQuery("findAllTransactionCategoryBychartOfAccountCategoryCode", TransactionCategory.class)
-				.setParameter("chartOfAccountCategoryCode", chartOfAccountCategoryCode).getResultList();
+	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryId(Integer chartOfAccountCategoryId) {
+		return getEntityManager().createNativeQuery(
+				"SELECT * FROM TRANSACTION_CATEGORY INNER JOIN CHART_OF_ACCOUNT on TRANSACTION_CATEGORY.CHART_OF_ACCOUNT_ID= CHART_OF_ACCOUNT.CHART_OF_ACCOUNT_ID INNER JOIN COA_COA_CATEGORY ON COA_COA_CATEGORY.CHART_OF_ACCOUNT_ID= CHART_OF_ACCOUNT.CHART_OF_ACCOUNT_ID WHERE COA_COA_CATEGORY.CHART_OF_ACCOUNT_CATEGORY_ID = :coaCategoryId",
+				TransactionCategory.class).setParameter("coaCategoryId", chartOfAccountCategoryId).getResultList();
 	}
 }

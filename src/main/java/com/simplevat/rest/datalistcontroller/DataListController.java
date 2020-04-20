@@ -131,6 +131,11 @@ public class DataListController {
 		try {
 			List<ChartOfAccount> transactionTypes = transactionTypeService.findAll();
 			if (transactionTypes != null && !transactionTypes.isEmpty()) {
+
+				for (ChartOfAccount ac : transactionTypes) {
+					ac.setTransactionChartOfAccountCategoryList(null);
+					// TODO Make it dropdown Model
+				}
 				return new ResponseEntity<>(transactionTypes, HttpStatus.OK);
 			} else {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -325,14 +330,17 @@ public class DataListController {
 	public ResponseEntity getTransactionCategory(@RequestParam Integer chartOfAccountCategoryId) {
 		try {
 			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);
+			String chartOfAccountCatCode = category.getChartOfAccountCategoryCode();
+
 			if (category == null) {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
 			List<TransactionCategory> transactionCatList = transactionCategoryService
-					.getTransactionCatByChartOfAccountCategoryCode(category.getChartOfAccountCategoryCode());
+					.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
 			if (transactionCatList != null && !transactionCatList.isEmpty()) {
-				return new ResponseEntity<>(
-						transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList), HttpStatus.OK);
+				
+				return new ResponseEntity<>(transcationCategoryHelper.getSinleLevelDropDownModelList(
+						transactionCatList), HttpStatus.OK);
 			} else {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}

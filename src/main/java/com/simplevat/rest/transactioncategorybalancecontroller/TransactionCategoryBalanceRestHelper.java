@@ -1,5 +1,8 @@
 package com.simplevat.rest.transactioncategorybalancecontroller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,5 +50,25 @@ public class TransactionCategoryBalanceRestHelper {
 				.setEffectiveDate(dateUtil.getDateStrAsDate(persistModel.getEffectiveDate(), "dd/MM/yyyy"));
 
 		return transactionCategoryBalance;
+	}
+
+	public List<TransactionCategoryBalanceListModel> getList(List<TransactionCategoryBalance> balaneList) {
+
+		if (balaneList != null && !balaneList.isEmpty()) {
+
+			List<TransactionCategoryBalanceListModel> modelList = new ArrayList<>();
+
+			for (TransactionCategoryBalance balance : balaneList) {
+				TransactionCategoryBalanceListModel model = new TransactionCategoryBalanceListModel();
+				model.setTransactionCategoryId(balance.getTransactionCategory().getTransactionCategoryId());
+				model.setTransactionCategoryBalanceId(balance.getId());
+				model.setEffectiveDate(dateUtil.getDateAsString(balance.getEffectiveDate(), "dd/MM/yyyy"));
+				model.setOpeningBalance(balance.getOpeningBalance());
+				model.setTransactionCategoryName(balance.getTransactionCategory().getTransactionCategoryName());
+				modelList.add(model);
+			}
+			return modelList;
+		}
+		return new ArrayList<>();
 	}
 }

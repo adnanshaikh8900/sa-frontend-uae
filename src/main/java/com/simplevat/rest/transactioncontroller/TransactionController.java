@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +100,7 @@ public class TransactionController implements Serializable {
 	@GetMapping(value = "/list")
 	public ResponseEntity getAllTransaction(TransactionRequestFilterModel filterModel) {
 
-		Map<TransactionFilterEnum, Object> dataMap = new HashMap<TransactionFilterEnum, Object>();
+		Map<TransactionFilterEnum, Object> dataMap = new EnumMap<>(TransactionFilterEnum.class);
 
 		if (filterModel.getBankId() != null) {
 			dataMap.put(TransactionFilterEnum.BANK_ID, bankAccountService.findByPK(filterModel.getBankId()));

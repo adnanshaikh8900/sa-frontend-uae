@@ -126,7 +126,7 @@ public class DetailedGeneralLedgerRestHelper {
 					LocalDateTime date = journal.getJournalDate();
 					if (data == null)
 						date = LocalDateTime.now();
-					model.setDate(dateUtil.getDateAsString(date, "dd/MM/yyyy"));
+					model.setDate(dateUtil.getLocalDateTimeAsString(date, "dd/MM/yyyy"));
 					model.setTransactionTypeName(data.getTransactionCategory().getTransactionCategoryName());
 
 					PostingReferenceTypeEnum postingType = data.getReferenceType();

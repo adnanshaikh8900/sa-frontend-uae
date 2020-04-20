@@ -40,7 +40,7 @@ public class DateFormatUtil {
 		return dateFormats;
 	}
 
-	public String getDateAsString(LocalDateTime localDateTimeDate, String format) {
+	public String getLocalDateTimeAsString(LocalDateTime localDateTimeDate, String format) {
 		Date date = Date.from(localDateTimeDate.atZone(ZoneId.systemDefault()).toInstant());
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(format);
 		return dateFormatter.format(date);
@@ -71,5 +71,10 @@ public class DateFormatUtil {
 			LOGGER.error("Error", e);
 		}
 		return d;
+	}
+
+	public String getDateAsString(Date date, String format) {
+		SimpleDateFormat dateFormatter = new SimpleDateFormat(format);
+		return dateFormatter.format(date);
 	}
 }

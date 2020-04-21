@@ -15,6 +15,7 @@
     background-color: transparent;
     border: none;
     padding: 0;
+    color: hsl(207, 11%, 16%);
   }
   select.form-control:disabled {
     -webkit-appearance: none;
@@ -23,7 +24,22 @@
     text-overflow: "";
   }
   option:disabled {
-    background-color: gray !important;
+    background-color: lightgray !important;
     color: black;
+  }
+  .selectField{
+    .css-1fhf3k1-control{
+      border-color: transparent;
+      background-color: transparent;
+      .css-107lb6w-singleValue{
+        color: hsl(207, 11%, 16%);
+      }
+      .css-1hb7zxy-IndicatorsContainer{
+        display: none;
+      }
+    }
+  }
+  .is-invalid{
+    border-color: #f86c6b;
   }
 }

@@ -49,11 +49,12 @@ export const getOpeningBalanceList = (obj) => {
   }
 }
 
-export const addOpeningBalance = (obj) => {
+export const addOpeningBalance = (obj,save) => {
+  let url = save ? `/rest/transactionCategoryBalance/save` : `/rest/transactionCategoryBalance/update`;
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: '/rest/transactionCategoryBalance/save',
+      url,
       data: obj
     }
     return authApi(data).then((res) => {
@@ -68,7 +69,7 @@ export const updateOpeningBalance = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: 'rest/openingbalance/update',
+      url: '/rest/transactionCategoryBalance/update',
       data: obj
     }
     return authApi(data).then((res) => {

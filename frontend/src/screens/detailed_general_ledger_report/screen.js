@@ -297,10 +297,11 @@ class DetailedGeneralLedgerReport extends React.Component {
                           <tr className="header-row">
                             {this.columnHeader.map((column, index) => {
                               return <th key={index} style={{ fontWeight: '600' }} className={column.align ? 'text-right' : ''}
-                                onClick={() => { column.sort && this.onSort(column.value) }}>{column.label}
-                                {column.sort && <span className="fa fa-sort sort-container">
+                              ><span>{column.label}</span>
+                                {/* // onClick={() => { column.sort && this.onSort(column.value) }} */}
+                                {/* {column.sort && <span className="fa fa-sort sort-container">
                                 <span className={column.sort ? this.setArrow(column.value) : ''}></span>
-                                </span>}
+                                </span>} */}
                               </th>
                             })}
                           </tr>
@@ -326,8 +327,8 @@ class DetailedGeneralLedgerReport extends React.Component {
                                       <td style={{ width: '10%' }}>{row["postingReferenceTypeEnum"]}</td>
                                       <td style={{ width: '12%' }}>{row["transactonRefNo"]}</td>
                                       <td style={{ width: '8%' }}>{row["referenceNo"]}</td>
-                                      <td style={{ width: '12%' }}>{row.debitAmount > 0 ? <p className="text-right" onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{(row.debitAmount).toFixed(2)}</p> : ''}</td>
-                                      <td style={{ width: '15%' }}>{row.creditAmount > 0 ? <p className="text-right" onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{(row.creditAmount).toFixed(2)}</p> : ''}</td>
+                                      <td style={{ width: '12%' }}>{row.debitAmount > 0 && <p className="text-right" onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{(row.debitAmount).toFixed(2)}</p>}</td>
+                                      <td style={{ width: '15%' }}>{row.creditAmount > 0 && <p className="text-right" onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{(row.creditAmount).toFixed(2)}</p>}</td>
                                       <td className="amount-col text-right" style={{ width: '15%' }} onClick={() => this.getInvoice(row['postingReferenceType'], row['invoiceType'], row['referenceId'])}>{`${(row.amount).toFixed(2)}`}{`${row.debitAmount}` > 0 ? 'Dr' : 'Cr'}</td>
                                     </tr>
                                   )

@@ -72,7 +72,7 @@ public class TransactionCategoryBalanceController {
 
 	@ApiOperation(value = "/Update")
 	@PostMapping(value = "update")
-	public ResponseEntity update(TransactioncategoryBalancePersistModel persistmodel, HttpServletRequest request) {
+	public ResponseEntity update(@RequestBody TransactioncategoryBalancePersistModel persistmodel, HttpServletRequest request)  {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);

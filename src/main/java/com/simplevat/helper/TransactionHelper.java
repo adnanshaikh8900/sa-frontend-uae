@@ -127,7 +127,7 @@ public class TransactionHelper {
 
 			transactionModel.setId(transaction.getTransactionId());
 			transactionModel.setTransactionDate(transaction.getTransactionDate() != null
-					? dateUtil.getDateAsString(transaction.getTransactionDate(), "dd-MM-yyyy")
+					? dateUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), "dd-MM-yyyy")
 					: "-");
 			transactionModel.setReferenceNo(transaction.getReceiptNumber());
 			transactionModel.setRunningAmount(

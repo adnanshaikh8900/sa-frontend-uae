@@ -623,6 +623,7 @@ class BankAccount extends React.Component {
                           ref={(node) => {
                             this.table = node
                           }}
+
                         >
                           <TableHeaderColumn
                             dataField="name"
@@ -650,7 +651,7 @@ class BankAccount extends React.Component {
                             dataField="bankAccountNo"
                             dataFormat={this.renderAccountNumber}
                             dataSort
-                            width="15%"
+                            width="18%"
                           >
                             Account Number
                           </TableHeaderColumn>
@@ -659,7 +660,7 @@ class BankAccount extends React.Component {
                             dataFormat={this.renderCurrency}
                             dataSort
                             dataField="currancyName"
-                            width="10%"
+                            width="12%"
                           >
                             Currency
                           </TableHeaderColumn>

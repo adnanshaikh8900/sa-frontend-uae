@@ -322,7 +322,7 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={supplier_list && supplier_list.find(option => option.value === +props.values.supplier)}
+                                        value={supplier_list && supplier_list.find((option) => option.value === +props.values.supplier)}
                                         onChange={(option) => {
                                           props.handleChange("supplier")(option.value);
                                           // this.getCurrentUser(option);
@@ -364,7 +364,7 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={invoice_list && invoice_list.find(option => option.value === +props.values.invoiceId)}
+                                        value={invoice_list && invoice_list.find((option) => option.value === +props.values.invoiceId)}
                                         onChange={(option) => {
                                           // data = invoice_list.filter((item) => item.invoiceId === option.value);
                                           // props.handleChange('amount')(data[0]['invoiceAmount'])
@@ -430,7 +430,7 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currency)}
+                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
                                         onChange={(option) =>
                                           props.handleChange("currency")(option.value)
                                         }
@@ -465,7 +465,7 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={project_list && project_list.find(option => option.value === +props.values.project)}
+                                        value={project_list && project_list.find((option) => option.value === +props.values.project)}
                                         onChange={(option) =>
                                           props.handleChange("project")(option.value)
                                         }
@@ -525,7 +525,7 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={bank_list && bank_list.data && selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank').find(option => option.value === +props.values.bank)}
+                                        value={bank_list && bank_list.data && selectOptionsFactory.renderOptions('name', 'bankAccountId', bank_list.data, 'Bank').find((option) => option.value === +props.values.bank)}
                                         onChange={(option) =>
                                           props.handleChange("bank")(option.value)
                                         }

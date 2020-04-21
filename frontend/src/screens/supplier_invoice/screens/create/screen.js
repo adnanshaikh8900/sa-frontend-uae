@@ -297,11 +297,11 @@ class CreateSupplierInvoice extends React.Component {
       return obj
     });
     if (name === 'unitPrice' || name === 'vatCategoryId' || name === 'quantity') {
-      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true)
       this.updateAmount(data, props);
     } else {
       this.setState({ data }, () => {
-        form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
+        form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true)
       });
     }
 

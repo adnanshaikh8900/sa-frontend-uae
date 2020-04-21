@@ -491,21 +491,22 @@ class Journal extends React.Component {
                           <TableHeaderColumn
                             dataField="journalReferenceNo"
                             dataSort={true}
-                            width="18%"
+                            width="20%"
                           >
-                            JOURNAL REFERENCE NO.
+                            JOURNAL REFERENCE NO
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="postingReferenceTypeDisplayName"
                             dataSort
-                            width="10%"
+                            width="15%"
+                            tdStyle={{'whiteSpace': "unset"}}
                           >
                             Type
                           </TableHeaderColumn>
                           <TableHeaderColumn
                             dataField="description"
                             dataSort
-                            width="18%"
+                            width="15%"
                           >
                             Notes
                           </TableHeaderColumn>

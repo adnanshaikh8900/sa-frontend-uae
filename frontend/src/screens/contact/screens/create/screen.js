@@ -98,10 +98,10 @@ class CreateContact extends React.Component {
   getData = (data) => {
     let temp = {}
     for(let item in data) {
-      if(typeof data[item] !== 'object') {
-        temp[`${item}`] = data[item]
+      if(typeof data[`${item}`] !== 'object') {
+        temp[`${item}`] = data[`${item}`]
       } else {
-        temp[`${item}`] = data[item].value
+        temp[`${item}`] = data[`${item}`].value
       }
     }
     return temp
@@ -162,8 +162,8 @@ class CreateContact extends React.Component {
                             lastName: Yup.string().required("Last Name is Required"),
                             middleName: Yup.string()
                               .required("Middle Name is Required"),
-                            // contactType: Yup.string()
-                            // .required("Please Select Contact Type"),
+                            contactType: Yup.string()
+                            .required("Contact Type is Required"),
                             //       organization: Yup.string()
                             //       .required("Organization Name is Required"),
                             //     poBoxNumber: Yup.number()
@@ -286,7 +286,7 @@ class CreateContact extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="countryId">Contact Type</Label>
+                                  <Label htmlFor="countryId"><span className="text-danger">*</span>Contact Type</Label>
                                   <Select
                                     options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                     value={props.values.contactType}

@@ -247,7 +247,7 @@ public class ChartUtil {
 
 		Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
 		for (Invoice inv : invList) {
-			String mnt = dateFormatUtil.getDateAsString(inv.getInvoiceDate(), "MMM yyyy");
+			String mnt = dateFormatUtil.getLocalDateTimeAsString(inv.getInvoiceDate(), "MMM yyyy");
 			if (map.containsKey(mnt)) {
 				BigDecimal totalAmt = map.get(mnt);
 				totalAmt = totalAmt.add(inv.getTotalAmount());

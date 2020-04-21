@@ -4,7 +4,8 @@ public enum ServiceErrorCode {
 	
 	
 	RecordAlreadyExists("Record Already Exists", true), 
-	RecordDoesntExists("Record does not Exists", true);
+	RecordDoesntExists("Record does not Exists", true),
+	BadRequest("Bad Request", true);
 
 	
 	ServiceErrorCode(String errorDescription_, boolean businessException_) {

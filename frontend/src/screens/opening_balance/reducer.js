@@ -1,8 +1,7 @@
 import { OPENING_BALANCE } from 'constants/types'
 
 const initState = {
-  bank_account_list: [],
-  currency_list: [],
+  transaction_category_list: [],
   opening_balance_list: []
 }
 
@@ -11,16 +10,10 @@ const OpeningBalanceReducer = (state = initState, action) => {
 
   switch (type) {
 
-    case OPENING_BALANCE.CURRENCY_LIST:
+    case OPENING_BALANCE.TRANSACTION_CATEGORY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data)
-      }
-
-    case OPENING_BALANCE.BANK_ACCOUNT_LIST:
-      return {
-        ...state,
-        bank_account_list: Object.assign([], payload.data)
+        transaction_category_list: Object.assign([], payload.data)
       }
 
     case OPENING_BALANCE.OPENING_BALANCE_LIST:

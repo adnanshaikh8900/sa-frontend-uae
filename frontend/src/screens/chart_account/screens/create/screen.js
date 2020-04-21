@@ -64,11 +64,11 @@ class CreateChartAccount extends React.Component {
   }
 
   initializeData = () => {
-    this.props.ChartOfAccontActions.getSubTransactionTypes().then(res =>{
+    this.props.ChartOfAccontActions.getSubTransactionTypes().then((res) => {
       if(res.status === 200) {
         let val = Object.assign({},res.data)
         let temp = []
-        Object.keys(val).map(item => {
+        Object.keys(val).map((item) => {
           temp.push({
             label: item,
             options : val[`${item}`]

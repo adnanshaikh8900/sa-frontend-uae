@@ -401,7 +401,6 @@ class User extends React.Component {
                               // value={filterData.supplierId}
                               value={filterData.active}
                               onChange={(option) => {
-                                console.log(option)
                                 if (option) {
                                   this.handleChange(option, 'active')
                                   this.setState({ selectedStatus: option })

@@ -16,10 +16,12 @@ import {
   CommonActions
 } from 'services/global'
 import * as OpeningBalanceActions from './actions'
-import OpeningBalanceModal from './sections/opening_balance_modal'
 import './style.scss'
 import DatePicker from "react-datepicker"
 import moment from 'moment'
+import Select from "react-select"
+import { selectOptionsFactory } from "utils";
+
 
 const mapStateToProps = (state) => {
   return ({
@@ -40,8 +42,6 @@ class OpeningBalance extends React.Component {
     super(props)
     this.state = {
       idCount: 0,
-      // showOpeningBalanceModal: false,
-      // selectedRowData: ""
       data: [],
       create: false,
       edit: false,
@@ -60,7 +60,6 @@ class OpeningBalance extends React.Component {
   }
 
   componentDidMount = () => {
-    // const { data } = this.state;
     this.props.openingBalanceActions.getTransactionCategoryList()
     this.initializeData()
   }
@@ -73,6 +72,7 @@ class OpeningBalance extends React.Component {
           tempData = res.data.data.map(item => {
             item['id'] = item.transactionCategoryBalanceId
             item['disabled'] = true
+            item['transactionCategory'] = {label: item.transactionCategoryName,value: item.transactionCategoryId}
             return item
           })
         }
@@ -100,10 +100,6 @@ class OpeningBalance extends React.Component {
   
 }
 
-  deleteRow = () => {
-
-  }
-
   renderActions = (cell, rows, props) => {
     return (
       <Button
@@ -117,71 +113,30 @@ class OpeningBalance extends React.Component {
     )
   }
 
-  // showOpeningBalanceModal = () => {
-  //   if (this.props.bank_account_list && this.props.currency_list) {
-  //     this.props.openingBalanceActions.getCurrencyList()
-  //     this.props.openingBalanceActions.getBankList()
-  //   }
-  //   this.setState({ showOpeningBalanceModal: true })
-  // }
-  // Cloase Confirm Modal
-  // closeOpeningBalanceModal = () => {
-  //   this.setState({ showOpeningBalanceModal: false })
-  // }
-
-  // goToDetail = (row) => {
-  //   this.setState({
-  //     selectedRowData: row
-  //   }, () => {
-  //     this.showOpeningBalanceModal()
-  //   })
-  // }
-
-  // resetData = () => {
-  //   if (this.state.selectedRowData) {
-  //     this.setState({
-  //       selectedRowData: ''
-  //     }, () => { this.showOpeningBalanceModal() })
-  //   } else {
-  //     this.showOpeningBalanceModal()
-  //   }
-  // }
   renderTransactionCategory = (cell, row) => {
     const { transaction_category_list } = this.props;
     const { submitBtnClick } = this.state
-    let transactionCategoryList = transaction_category_list && transaction_category_list && transaction_category_list.length ? [{ transactionCategoryId: '', transactionCategoryName: 'Select Account' }, ...transaction_category_list] : transaction_category_list
-    let idx
-    this.state.data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index
-      }
-      return obj
-    });
-
+    let value = typeof row.transactionCategory === 'string' ? row.transactionCategory : row.transactionCategory.value
     return (
-
-      <Input type="select" onChange={(e) => {
-        this.selectItem(e, row, 'transactionCategoryId')
-      }} value={row.transactionCategoryId} disabled={row['disabled']}
-        className={`form-control ${row.transactionCategoryId === "" && submitBtnClick ? "is-invalid" : ""}`}
-      >
-        {transactionCategoryList ? transactionCategoryList.map((obj) => {
-          return <option value={obj.transactionCategoryId} key={obj.transactionCategoryId} disabled={this.checkCategory(obj.transactionCategoryId)}>{obj.transactionCategoryName}</option>
-        }) : ''}
-      </Input>
+      <Select
+      id="chart_of_account"
+      name="chart_of_account_list"
+      options={transaction_category_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list, 'Chart of Account') : []}
+      value={row.transactionCategory}
+      isDisabled={row['disabled']}
+      menuPosition="fixed"
+      maxMenuHeight="250px"
+      className={`${value === "" && submitBtnClick ? "is-invalid" : ""} ${row.disabled ? 'selectField' : ''}`}
+      isOptionDisabled={(option) => this.checkCategory(option.value)}
+      onChange={(option) => {
+        this.selectItem(option, row, 'transactionCategory')
+      }}
+      />
     )
   }
 
   renderOpeningBalance = (cell, row) => {
     const { submitBtnClick } = this.state
-    let idx
-    this.state.data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index
-      }
-      return obj
-    });
-
     return (
       <Input
         type="text"
@@ -201,7 +156,6 @@ class OpeningBalance extends React.Component {
   }
 
   addMore = () => {
-    // const currency = this.props.profile.company.currencyCode.currencyIsoCode;
     let tempArr = [...this.state.tempArr]
     tempArr = JSON.parse(JSON.stringify(tempArr));
     this.setState({
@@ -211,7 +165,7 @@ class OpeningBalance extends React.Component {
       this.setState({
         data: [{
           id: 0,
-          transactionCategoryId: '',
+          transactionCategory: '',
           openingBalance: '',
           effectiveDate: new Date(),
           create: true
@@ -223,12 +177,10 @@ class OpeningBalance extends React.Component {
   }
 
   selectItem = (e, row, name) => {
-    const data = this.state.data
-    // let idx;
+    const data = [...this.state.data]
     data.map((obj, index) => {
       if (obj.id === row.id) {
-        obj[`${name}`] = name === 'effectiveDate' ? e : e.target.value;
-        // idx = index
+        obj[`${name}`] = name === 'effectiveDate' ? e : (name === 'transactionCategory') ? e : e.target.value;
       }
       return obj
     })
@@ -238,13 +190,6 @@ class OpeningBalance extends React.Component {
   }
 
   renderEdit = (cell, row) => {
-    // let idx
-    // this.state.data.map((obj, index) => {
-    //   if (obj.id === row.id) {
-    //     idx = index
-    //   }
-    //   return obj
-    // });
     return (
       <div>
         {row['disabled'] ? <Button type="button" color="primary" className="btn-square mr-1" onClick={(e) => { this.enableEdit(row) }}>
@@ -252,9 +197,6 @@ class OpeningBalance extends React.Component {
         </Button> : <Button type="button" color="primary" className="btn-square mr-1" onClick={(e) => { this.handleSave(row) }}>
             <i className={`fa fa-save`}></i>
           </Button>}
-        {/* <Button type="button" color="secondary" className="btn-square mr-1" onClick={() => { this.deleteRow(row) }}>
-          <i className="fa fa-trash"></i>
-        </Button> */}
         {!row['disabled'] && !row['create'] ? (
           <Button type="button" color="secondary" className="btn-square mr-1" onClick={() => { this.refreshRow(row) }}>
             <i className="fa fa-refresh"></i>
@@ -298,15 +240,21 @@ class OpeningBalance extends React.Component {
   }
 
   handleSave = (row) => {
+    let save = true;
     if (this.validateRow(row)) {
       const postData = {
-        transactionCategoryId: row.transactionCategoryId,
+        transactionCategoryId: row.transactionCategory.value,
         openingBalance: row.openingBalance,
-        effectiveDate: moment(row.effectiveDate).format('DD/MM/YYYY')
+        effectiveDate: typeof row.effectiveDate === 'string' ? row.effectiveDate : moment(row.effectiveDate).format('DD/MM/YYYY')
       }
-      this.props.openingBalanceActions.addOpeningBalance(postData).then(res => {
+      if(row.transactionCategoryBalanceId) {
+        save = false
+        postData['transactionCategoryBalanceId'] = row.transactionCategoryBalanceId
+      }
+      this.props.openingBalanceActions.addOpeningBalance(postData,save).then(res => {
         if (res.status === 200) {
-          this.props.commonActions.tostifyAlert("success","Opening Balance added Successfully.");
+          let text = save ? 'added' : 'updated'
+          this.props.commonActions.tostifyAlert("success",`Opening Balance ${text} Successfully.`);
           this.initializeData()
           this.setState({
             submitBtnClick: false
@@ -328,33 +276,14 @@ class OpeningBalance extends React.Component {
       }
       return obj
     })
-    data[idx] = temp
+    data[`${idx}`] = temp
     this.setState({
       data
     })
   }
 
   renderDate = (cell, row) => {
-    const { submitBtnClick } = this.state
-    let idx
-    this.state.data.map((obj, index) => {
-      if (obj.id === row.id) {
-        idx = index
-      }
-      return obj
-    });
-
     return (
-      // <Input
-      //   type="date"
-      //   value={row['date'] !== '' ? row['date'] : ''}
-      //   disabled={row['disabled']}
-      //   onChange={(e) => {
-      //     if (e.target.value === '' || this.regEx.test(e.target.value)) { this.selectItem(e, row, 'date') }
-      //   }}
-      //   placeholder="Opening Balance"
-      //   className={`form-control ${row.date === "" && submitBtnClick ? "is-invalid" : ""}`}
-      // />
       <DatePicker
         id={row['id']}
         name="endDate"
@@ -376,7 +305,7 @@ class OpeningBalance extends React.Component {
 
   checkCategory = (id) => {
     const { data } = this.state
-    let temp = data.filter(item => item.transactionCategoryId === id)
+    let temp = data.filter(item => item.transactionCategory.value === id)
     if (temp.length > 0) {
       return true
     } else {
@@ -385,7 +314,6 @@ class OpeningBalance extends React.Component {
   }
 
   render() {
-    const { bank_account_list } = this.props;
     return (
       <div className="opening-balance-screen">
         <div className="animated fadeIn">
@@ -411,7 +339,6 @@ class OpeningBalance extends React.Component {
               <Row>
                 <Col lg={12}>
                   <BootstrapTable
-                    // selectRow={this.selectRowProp}
                     options={this.options}
                     data={this.state.data ? this.state.data : []}
                     version="4"
@@ -419,16 +346,10 @@ class OpeningBalance extends React.Component {
                     keyField="id"
                     className="invoice-create-table"
                   >
-                    {/* <TableHeaderColumn
-                      width="55"
-                      dataAlign="center"
-                      dataFormat={(cell, rows) => this.renderActions(cell, rows)}
-                    >
-                    </TableHeaderColumn> */}
                     <TableHeaderColumn
                       dataField="accountName"
                       dataFormat={this.renderTransactionCategory}
-                      width="20%"
+                      width="25%"
                     >
                       Account
                     </TableHeaderColumn>
@@ -463,14 +384,6 @@ class OpeningBalance extends React.Component {
               </Row>
             </CardBody>
           </Card>
-
-          <OpeningBalanceModal
-            showOpeningBalanceModal={this.state.showOpeningBalanceModal}
-            closeOpeningBalanceModal={this.closeOpeningBalanceModal}
-            bankAccountList={bank_account_list}
-            createOpeningBalance={this.props.openingBalanceActions.createOpeningBalance}
-            selectedRowData={this.state.selectedRowData}
-          />
         </div>
       </div>
     )

@@ -97,19 +97,34 @@
       margin: 0!important;
     }
   }
-  .sort-direction {
-    display: inline-block;
-    height: 0;
-    width: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
+
+  .sort-container {
+    position: relative;
+    color: lightgray;
     margin: 0 5px;
-    &.asc {
-      border-bottom: 5px solid black;
+    &::before {
+      font-size: 1rem;
     }
-    
-    &.desc {
-      border-top: 5px solid black;
+    .sort-direction {
+      position: absolute;
+      display: inline-block;
+      height: 0;
+      width: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      margin: 0 3px;
+
+      &.asc {
+        border-top: 5px solid black;
+        left: -3px;
+        bottom: 1.5px;
+      }
+      
+      &.desc {
+        border-bottom: 5px solid black;
+        left: -3px;
+        top: 1.5px;
+      }
     }
   }
 }

@@ -8,7 +8,7 @@ spec:
     serviceName: simplevat-service-dev
     servicePort: 80
   rules:
-    - host: gtt.test.simplevat.com
+    - host: k8s.dev.simplevat.com
       http:
         paths:
           - backend:

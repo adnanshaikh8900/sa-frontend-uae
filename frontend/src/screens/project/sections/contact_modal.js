@@ -18,8 +18,9 @@ import { Formik } from 'formik';
 import * as Yup from "yup";
 
 import { selectOptionsFactory } from 'utils'
-
-
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+import { isValidPhoneNumber } from 'react-phone-number-input'
 
 class ContactModal extends React.Component {
 
@@ -40,7 +41,15 @@ class ContactModal extends React.Component {
         email: '',
         stateId: '',
         addressLine1: '',
-        addressLine2: ''
+        addressLine2: '',
+        mobileNumber: '',
+        organization: '',
+        poBoxNumber: '',
+        postZipCode: '',
+        telephone: '',
+        vatRegistrationNumber: '',
+        contractPoNumber: '',
+        addressLine3: '',
       },
       stateList: []
     }
@@ -51,8 +60,8 @@ class ContactModal extends React.Component {
 
   getData = (data) => {
     let temp = {}
-    for(let item in data) {
-      if(typeof data[`${item}`] !== 'object') {
+    for (let item in data) {
+      if (typeof data[`${item}`] !== 'object') {
         temp[`${item}`] = data[`${item}`]
       } else {
         temp[`${item}`] = data[`${item}`].value
@@ -66,13 +75,13 @@ class ContactModal extends React.Component {
     const request = this.props.createContact(postData);
     request.then((res) => {
       if (res.status === 200) {
-        this.props.closeContactModal(true,res.data)
+        this.props.closeContactModal(true, res.data)
       }
     })
   }
 
   getStateList = (countryCode) => {
-    if(countryCode) {
+    if (countryCode) {
       this.props.getStateList(countryCode).then((res) => {
         if (res.status === 200) {
           this.setState({
@@ -104,19 +113,21 @@ class ContactModal extends React.Component {
             validationSchema={Yup.object().shape({
               // title: Yup.string()
               //   .required('Title is a required field'),
-              billingEmail: Yup.string()
-                .email('Billing Email must be a valid email')
-                .required('Billing Email is a required field'),
-              city: Yup.string()
-                .required('City is a required field'),
+              // billingEmail: Yup.string()
+              //   .email('Billing Email must be a valid email')
+              //   .required('Billing Email is a required field'),
+              // city: Yup.string()
+              //   .required('City is a required field'),
               countryId: Yup.string()
                 .required('Country is a required field'),
-              currencyCode: Yup.string()
-                .required('Currency is a required field'),
+              // currencyCode: Yup.string()
+              //   .required('Currency is a required field'),
               firstName: Yup.string()
                 .required('First Name is a required field'),
               lastName: Yup.string()
                 .required('Last Name is a required field'),
+              middleName: Yup.string()
+                .required("Middle Name is Required"),
               email: Yup.string()
                 .email('Email must be a valid email')
                 .required('Email is a required field'),
@@ -126,10 +137,25 @@ class ContactModal extends React.Component {
                   then: Yup.string()
                     .required('State is Required')
                 }),
-              addressLine1: Yup.string()
-                .required('Address1 is a required field'),
-              addressLine2: Yup.string()
-                .required('Address2 is a required field')
+              // addressLine1: Yup.string()
+              //   .required('Address1 is a required field'),
+              // addressLine2: Yup.string()
+              //   .required('Address2 is a required field'),
+              telephone: Yup.number()
+                .required("Telephone Number is Required"),
+              mobileNumber: Yup.string()
+                .required("Mobile Number is required")
+                .test('quantity', 'Invalid Mobile Number', (value) => {
+                  if (isValidPhoneNumber(value)) {
+                    return true
+                  } else {
+                    return false
+                  }
+                }),
+              postZipCode: Yup.string()
+                .required("Postal Code is Required"),
+              vatRegistrationNumber: Yup.string()
+                .required("Tax Registration Number is Required"),
             })}>
             {(props) => (
               <Form name="simpleForm" onSubmit={props.handleSubmit}>
@@ -234,7 +260,66 @@ class ContactModal extends React.Component {
                       </FormGroup>
                     </Col>
                   </Row>
-
+                  <hr />
+                  <h4 className="mb-3 mt-3">Contact Details</h4>
+                  <Row className="row-wrapper">
+                    <Col md="4">
+                      <FormGroup>
+                        <Label htmlFor="organization ">
+                          Organization Name
+                          </Label>
+                        <Input
+                          type="text"
+                          id="organization"
+                          name="organization"
+                          onChange={(value) => {
+                            props.handleChange("organization")(value);
+                          }}
+                          value={props.values.organization}
+                          className={
+                            props.errors.organization &&
+                              props.touched.organization
+                              ? "is-invalid"
+                              : ""
+                          }
+                          placeholder="Enter Organization Name"
+                        />
+                        {props.errors.organization &&
+                          props.touched.organization && (
+                            <div className="invalid-feedback">
+                              {props.errors.organization}
+                            </div>
+                          )}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label htmlFor="select">PO Box Number</Label>
+                        <Input
+                          type="text"
+                          id="poBoxNumber"
+                          name="poBoxNumber"
+                          onChange={(value) => {
+                            props.handleChange("poBoxNumber")(value);
+                          }}
+                          value={props.values.poBoxNumber}
+                          className={
+                            props.errors.poBoxNumber &&
+                              props.touched.poBoxNumber
+                              ? "is-invalid"
+                              : ""
+                          }
+                          placeholder="Enter PO Box Number"
+                        />
+                        {props.errors.poBoxNumber &&
+                          props.touched.poBoxNumber && (
+                            <div className="invalid-feedback">
+                              {props.errors.poBoxNumber}
+                            </div>
+                          )}
+                      </FormGroup>
+                    </Col>
+                  </Row>
                   <Row>
                     <Col>
                       <FormGroup>
@@ -257,6 +342,55 @@ class ContactModal extends React.Component {
                         )}
                       </FormGroup>
                     </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label htmlFor="telephone"> <span className="text-danger">*</span>Telephone</Label>
+                        <Input
+                          type="text"
+                          id="telephone"
+                          name="telephone"
+                          onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('telephone')(option) } }}
+                          value={props.values.telephone}
+                          className={
+                            props.errors.telephone && props.touched.telephone
+                              ? "is-invalid"
+                              : ""
+                          }
+                          placeholder="Enter Telephone Number"
+                        />
+                        {props.errors.telephone &&
+                          props.touched.telephone && (
+                            <div className="invalid-feedback">
+                              {props.errors.telephone}
+                            </div>
+                          )}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label htmlFor="mobileNumber"> <span className="text-danger">*</span>Mobile Number</Label>
+                        <PhoneInput
+                          defaultCountry="AE"
+                          international
+                          value={props.values.mobileNumber}
+                          onChange={(option) => { props.handleChange('mobileNumber')(option) }}
+                          className={
+                            props.errors.mobileNumber &&
+                              props.touched.mobileNumber
+                              ? "is-invalid"
+                              : ""
+                          }
+                        />
+                        {props.errors.mobileNumber &&
+                          props.touched.mobileNumber && (
+                            <div className="invalid-feedback">
+                              {props.errors.mobileNumber}
+                            </div>
+                          )}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
                     <Col>
                       <FormGroup>
                         <Label htmlFor="categoryName"><span className="text-danger">*</span>Address Line 1</Label>
@@ -299,8 +433,21 @@ class ContactModal extends React.Component {
                         )}
                       </FormGroup>
                     </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label htmlFor="addressLine3">Address Line3</Label>
+                        <Input
+                          type="text"
+                          id="addressLine3"
+                          name="addressLine3"
+                          onChange={(value) => {
+                            props.handleChange("addressLine3")(value);
+                          }}
+                          placeholder="Enter AddressLine 3"
+                        />
+                      </FormGroup>
+                    </Col>
                   </Row>
-
                   <Row className="row-wrapper">
                     <Col md="4">
                       <FormGroup>
@@ -328,7 +475,7 @@ class ContactModal extends React.Component {
                               props.handleChange("countryId")("");
                               this.getStateList(option.value)
                             }
-                            props.handleChange('stateId')('')                          
+                            props.handleChange('stateId')('')
                           }}
                           placeholder="Select Country"
                           id="countryId"
@@ -381,7 +528,7 @@ class ContactModal extends React.Component {
                           // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                           value={props.values.city}
                           onChange={(option) => {
-                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('city')(option)}
+                            if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('city')(option) }
                           }}
                           placeholder=""
                           id="city"
@@ -400,8 +547,119 @@ class ContactModal extends React.Component {
                       </FormGroup>
                     </Col>
                   </Row>
-
+                  <Row className="row-wrapper">
+                      <Col md="4">
+                        <FormGroup>
+                          <Label htmlFor="postZipCode"><span className="text-danger">*</span>Post Zip Code</Label>
+                          <Input
+                            type="text"
+                            id="postZipCode"
+                            name="postZipCode"
+                            onChange={(option) => {
+                              if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('postZipCode')(option)}
+                            }}
+                            value={props.values.postZipCode}
+                            className={
+                              props.errors.postZipCode &&
+                                props.touched.postZipCode
+                                ? "is-invalid"
+                                : ""
+                            }
+                            placeholder="Enter Postal ZipCode"
+                          />
+                          {props.errors.postZipCode &&
+                            props.touched.postZipCode && (
+                              <div className="invalid-feedback">
+                                {props.errors.postZipCode}
+                              </div>
+                            )}
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  <hr />
+                  <h4 className="mb-3 mt-3">Invoicing Details</h4>
                   <Row>
+                    <Col lg={4}>
+                      <FormGroup>
+                        <Label htmlFor="categoryName"><span className="text-danger">*</span>Billing Email</Label>
+                        <Input
+                          type="text"
+                          id="billingEmail"
+                          name="billingEmail"
+                          onChange={props.handleChange}
+                          placeholder="Enter billingEmail"
+                          value={props.values.billingEmail}
+                          className={
+                            props.errors.billingEmail && props.touched.billingEmail
+                              ? "is-invalid"
+                              : ""
+                          }
+                        />
+                        {props.errors.billingEmail && props.touched.billingEmail && (
+                          <div className="invalid-feedback">{props.errors.billingEmail}</div>
+                        )}
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label htmlFor="contractPoNumber">
+                          Contract PO Number
+                          </Label>
+                        <Input
+                          type="text"
+                          id="contractPoNumber"
+                          name="contractPoNumber"
+                          onChange={(value) => {
+                            props.handleChange("contractPoNumber")(value);
+                          }}
+                          value={props.values.contractPoNumber}
+                          className={
+                            props.errors.contractPoNumber &&
+                              props.touched.contractPoNumber
+                              ? "is-invalid"
+                              : ""
+                          }
+                          placeholder="Enter Contract PoNumber"
+                        />
+                        {props.errors.contractPoNumber &&
+                          props.touched.contractPoNumber && (
+                            <div className="invalid-feedback">
+                              {props.errors.contractPoNumber}
+                            </div>
+                          )}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label htmlFor="vatRegistrationNumber">
+                          <span className="text-danger">*</span>Tax Registration Number
+                          </Label>
+                        <Input
+                          type="text"
+                          id="vatRegistrationNumber"
+                          name="vatRegistrationNumber"
+                          onChange={(option) => {
+                            if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('vatRegistrationNumber')(option) }
+                          }}
+                          value={props.values.vatRegistrationNumber}
+                          className={
+                            props.errors.vatRegistrationNumber &&
+                              props.touched.vatRegistrationNumber
+                              ? "is-invalid"
+                              : ""
+                          }
+                          placeholder="Enter Tax Registration Number"
+                        />
+                        {props.errors.vatRegistrationNumber &&
+                          props.touched.vatRegistrationNumber && (
+                            <div className="invalid-feedback">
+                              {props.errors.vatRegistrationNumber}
+                            </div>
+                          )}
+                      </FormGroup>
+                    </Col>
                     <Col md="4">
                       <FormGroup>
                         <Label htmlFor="currencyCode">Currency Code</Label>
@@ -442,27 +700,6 @@ class ContactModal extends React.Component {
                               {props.errors.currencyCode}
                             </div>
                           )}
-                      </FormGroup>
-                    </Col>
-                    <Col lg={4}>
-                      <FormGroup>
-                        <Label htmlFor="categoryName"><span className="text-danger">*</span>Billing Email</Label>
-                        <Input
-                          type="text"
-                          id="billingEmail"
-                          name="billingEmail"
-                          onChange={props.handleChange}
-                          placeholder="Enter billingEmail"
-                          value={props.values.billingEmail}
-                          className={
-                            props.errors.billingEmail && props.touched.billingEmail
-                              ? "is-invalid"
-                              : ""
-                          }
-                        />
-                        {props.errors.billingEmail && props.touched.billingEmail && (
-                          <div className="invalid-feedback">{props.errors.billingEmail}</div>
-                        )}
                       </FormGroup>
                     </Col>
                   </Row>

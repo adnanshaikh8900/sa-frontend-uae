@@ -118,22 +118,22 @@ class CreateProject extends React.Component {
       projectName,
       // invoiceLanguageCode,
       contactId,
-      contractPoNumber,
-      vatRegistrationNumber,
+      // contractPoNumber,
+      // vatRegistrationNumber,
       expenseBudget,
       revenueBudget,
-      currency,
+      // currency,
     } = data
 
     const postData = {
       projectName: projectName ? projectName : '',
       // invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
       contactId: contactId && contactId !== null ? contactId.value : '',
-      contractPoNumber: contractPoNumber ? contractPoNumber : '',
-      vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
+      // contractPoNumber: contractPoNumber ? contractPoNumber : '',
+      // vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
       expenseBudget: expenseBudget ? expenseBudget : '',
       revenueBudget: revenueBudget ? revenueBudget : '',
-      currencyCode: currency && currency !== null ? currency.value : ''
+      // currencyCode: currency && currency !== null ? currency.value : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
     this.props.createProjectActions.createAndSaveProject(postData).then((res) => {
@@ -191,9 +191,9 @@ class CreateProject extends React.Component {
                             .required("Project Name is Required"),
                           contactId: Yup.string()
                             .required("Contact is Required"),
-                          currency: Yup.string()
-                            .required("Currency is Required")
-                            .nullable(),
+                          // currency: Yup.string()
+                          //   .required("Currency is Required")
+                          //   .nullable(),
                           // invoiceLanguageCode: Yup.string()
                           //   .required("Invoice Language is Required")
                         })}>
@@ -252,7 +252,7 @@ class CreateProject extends React.Component {
                                     <div className="invalid-feedback">{props.errors.contactId}</div>
                                   )}
                                 </FormGroup>
-                                <FormGroup className="mb-5 text-right">
+                                <FormGroup className="mb-1 text-right">
                                   <Button color="primary" className="btn-square " onClick={this.showContactModal}>
                                     <i className="fa fa-plus"></i> Add a Contact
                                       </Button>
@@ -260,7 +260,7 @@ class CreateProject extends React.Component {
                               </Col>
 
                             </Row>
-                            <Row>
+                            {/* <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="contractPoNumber">Contract PO Number</Label>
@@ -339,7 +339,7 @@ class CreateProject extends React.Component {
                                   )}
                                 </FormGroup>
                               </Col>
-                            </Row>
+                            </Row> */}
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="">

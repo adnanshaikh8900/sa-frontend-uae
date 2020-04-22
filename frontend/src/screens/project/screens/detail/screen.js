@@ -111,11 +111,11 @@ class DetailProject extends React.Component {
               //   value: res.data.invoiceLanguageCode.value
               // } : '',
               contactId:  res.data.contactId ? res.data.contactId : '',
-              contractPoNumber: res.data.contractPoNumber,
-              vatRegistrationNumber: res.data.vatRegistrationNumber,
+              // contractPoNumber: res.data.contractPoNumber,
+              // vatRegistrationNumber: res.data.vatRegistrationNumber,
               expenseBudget: res.data.expenseBudget,
               revenueBudget: res.data.revenueBudget,
-              currencyCode: res.data.currencyCode ? res.data.currencyCode : ''
+              // currencyCode: res.data.currencyCode ? res.data.currencyCode : ''
             },
             loading: false,
           })
@@ -146,11 +146,11 @@ class DetailProject extends React.Component {
       projectName,
       // invoiceLanguageCode,
       contactId,
-      contractPoNumber,
-      vatRegistrationNumber,
+      // contractPoNumber,
+      // vatRegistrationNumber,
       expenseBudget,
       revenueBudget,
-      currencyCode,
+      // currencyCode,
     } = data
 
     const postData = {
@@ -158,11 +158,11 @@ class DetailProject extends React.Component {
       projectName: projectName ? projectName: '',
       // invoiceLanguageCode: invoiceLanguageCode ? invoiceLanguageCode : '',
       contactId: contactId && contactId !== null ? contactId : '',
-      contractPoNumber: contractPoNumber ? contractPoNumber : '',
-      vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
+      // contractPoNumber: contractPoNumber ? contractPoNumber : '',
+      // vatRegistrationNumber: vatRegistrationNumber ? vatRegistrationNumber : '',
       expenseBudget: expenseBudget ? expenseBudget : '',
       revenueBudget: revenueBudget ? revenueBudget : '',
-      currencyCode: currencyCode && currencyCode!== null ? currencyCode : ''
+      // currencyCode: currencyCode && currencyCode!== null ? currencyCode : ''
       // contractPoNumber: contractPoNumber ? contractPoNumber : ''
     }
     this.props.detailProjectActions.updateProject(postData).then((res) => {
@@ -231,7 +231,7 @@ class DetailProject extends React.Component {
                   <Row>
                     <Col lg={12}>
                       <Formik
-                        enableReinitialize={true}
+                        // enableReinitialize={true}
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
                           this.projectHandleSubmit(values)
@@ -242,8 +242,8 @@ class DetailProject extends React.Component {
                             .required("Project Name is Required"),
                           contactId: Yup.string()
                             .required("Contact Name is Required"),
-                          currencyCode: Yup.string()
-                            .required("Currency is Required"),
+                          // currencyCode: Yup.string()
+                          //   .required("Currency is Required"),
                           // invoiceLanguageCode: Yup.string()
                           //   .required("Invoice Language is Required")
                         })}>
@@ -261,7 +261,7 @@ class DetailProject extends React.Component {
                                       if (option.target.value === '' || this.regExAlpha.test(option.target.value)){ props.handleChange('projectName')(option)}
                                     }}
                                     placeholder="Enter Project Name"
-                                    defaultValue={props.values.projectName}
+                                    value={props.values.projectName || ''}
                                     className={
                                       props.errors.projectName && props.touched.projectName
                                         ? "is-invalid"
@@ -302,15 +302,15 @@ class DetailProject extends React.Component {
                                     <div className="invalid-feedback">{props.errors.contactId}</div>
                                   )}
                                 </FormGroup>
-                                <FormGroup className="mb-5 text-right">
-                                  <Button color="primary" className="btn-square " onClick={this.showContactModel}>
+                                <FormGroup className="mb-1 text-right">
+                                  <Button color="primary" type="button" className="btn-square " onClick={()=> {this.showContactModal()}}>
                                     <i className="fa fa-plus"></i> Add a Contact
                                       </Button>
                                 </FormGroup>
                               </Col>
 
                             </Row>
-                            <Row>
+                            {/* <Row>
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="contractPoNumber">Contract PO Number</Label>
@@ -322,7 +322,7 @@ class DetailProject extends React.Component {
                                       if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('contractPoNumber')(option)}
                                     }}
                                     placeholder="Enter Contract PO Number"
-                                    defaultValue={props.values.contractPoNumber}
+                                    value={props.values.contractPoNumber}
                                     className={
                                       props.errors.contractPoNumber && props.touched.contractPoNumber
                                         ? "is-invalid"
@@ -345,7 +345,7 @@ class DetailProject extends React.Component {
                                       if (option.target.value === '' || this.regExBoth.test(option.target.value)){ props.handleChange('vatRegistrationNumber')(option)}
                                     }}
                                     placeholder="Enter VAT Registration Number"
-                                    defaultValue={props.values.vatRegistrationNumber}
+                                    value={props.values.vatRegistrationNumber}
                                     className={
                                       props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber
                                         ? "is-invalid"
@@ -389,7 +389,7 @@ class DetailProject extends React.Component {
                                   )}
                                 </FormGroup>
                               </Col>
-                            </Row>
+                            </Row> */}
                             <Row>
                               <Col lg={4}>
                                 <FormGroup className="">
@@ -402,7 +402,7 @@ class DetailProject extends React.Component {
                                       if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('expenseBudget')(option)}
                                     }}
                                     placeholder="Enter Expense Budgets"
-                                    defaultValue={props.values.expenseBudget}
+                                    value={props.values.expenseBudget}
                                     className={
                                       props.errors.expenseBudget && props.touched.expenseBudget
                                         ? "is-invalid"
@@ -425,7 +425,7 @@ class DetailProject extends React.Component {
                                       if (option.target.value === '' || this.regEx.test(option.target.value)){ props.handleChange('revenueBudget')(option)}
                                     }}
                                     placeholder="Enter VAT Revenue Budget"
-                                    defaultValue={props.values.revenueBudget}
+                                    value={props.values.revenueBudget}
                                     className={
                                       props.errors.revenueBudget && props.touched.revenueBudget
                                         ? "is-invalid"

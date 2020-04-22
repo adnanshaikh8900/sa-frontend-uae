@@ -42,7 +42,8 @@ const mapStateToProps = (state) => {
     currency_list: state.payment.currency_list,
     supplier_list: state.payment.supplier_list,
     project_list: state.payment.project_list,
-    invoice_list: state.payment.invoice_list
+    invoice_list: state.payment.invoice_list,
+    country_list: state.payment.country_list
   })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -93,6 +94,7 @@ class CreatePayment extends React.Component {
     this.props.paymentActions.getSupplierContactList(this.state.contactType)
     this.props.paymentActions.getProjectList()
     this.props.paymentActions.getSupplierInvoiceList()
+    this.props.paymentActions.getCountryList();
 
   }
 
@@ -570,6 +572,9 @@ class CreatePayment extends React.Component {
           closeSupplierModal={(e) => { this.closeSupplierModal(e) }}
           getCurrentUser={(e) => this.getCurrentUser(e)}
           createSupplier={this.props.paymentActions.createSupplier}
+          getStateList={this.props.paymentActions.getStateList}
+          currency_list={this.props.currency_list}
+          country_list={this.props.country_list}
         />
       </div >
     )

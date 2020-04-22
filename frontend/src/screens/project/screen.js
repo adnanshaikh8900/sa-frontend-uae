@@ -381,12 +381,12 @@ class Project extends React.Component {
                           >
                             Revenue Budget
                           </TableHeaderColumn>
-                          <TableHeaderColumn
+                          {/* <TableHeaderColumn
                             dataField="vatRegistrationNumber"
                             dataSort
                           >
                             Tax Registration Number
-                          </TableHeaderColumn>
+                          </TableHeaderColumn> */}
                         </BootstrapTable>
                       </div>
                     </Col>

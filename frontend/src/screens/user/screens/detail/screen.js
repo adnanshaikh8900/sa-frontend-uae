@@ -371,7 +371,7 @@ class DetailUser extends React.Component {
                                     <Row>
                                       <Col lg={6}>
                                         <FormGroup>
-                                          <Label htmlFor="roleId">Role</Label>
+                                          <Label htmlFor="roleId"><span className="text-danger">*</span>Role</Label>
                                           <Select
                                             options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                                             value={role_list && selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role').find((option) => option.value === +props.values.roleId)}

@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: simplevat
+build:
+  artifacts:
+  - image: gcr.io/simplevat-dev/simplevat
+deploy:
+  kubectl:
+    manifests:
+    - deploy/simplevat-replicationcontroller-dev.yaml
+    - kubernetes/simplevat-ingress-dev.yaml
+    - kubernetes/simplevat-replicationcontroller-dev-template.yaml
+    - kubernetes/simplevat-replicationcontroller-dev.yaml
+    - kubernetes/simplevat-service-dev.yaml

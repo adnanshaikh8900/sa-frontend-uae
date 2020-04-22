@@ -13,16 +13,16 @@ steps:
   id: docker-push
   waitFor:
   - docker-build
-#- name: 'gcr.io/cloud-builders/kubectl'
-#  args:
-#    - 'rolling-update'
-#    - 'simplevat-dev-rep'
-#    - '--image=gcr.io/gtt-project-prod/simplevat:$TAG_NAME'
-#    - '--namespace=simplevat-dev'
-#  env:
-#    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
-#    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s-prod'
-#  waitFor:
-#  - docker-push
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+    - 'rolling-update'
+    - 'simplevat-dev-rep'
+    - '--image=gcr.io/gtt-project-prod/simplevat:$TAG_NAME'
+    - '--namespace=simplevat-dev'
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s-prod'
+  waitFor:
+  - docker-push
 images: ['gcr.io/gtt-project-prod/simplevat:$TAG_NAME']
 timeout: 2400s

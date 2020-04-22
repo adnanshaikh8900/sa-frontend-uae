@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -40,8 +41,15 @@ public class TransactionCategoryBalance {
 	@Column(name = "OPENING_BALANCE")
 	@ColumnDefault(value = "0")
 	@Basic(optional = false)
-	private double openingBalance;
+	private BigDecimal openingBalance;
 
+	
+	@Column(name = "RUNNING_BALANCE")
+	@ColumnDefault(value = "0")
+	@Basic(optional = false)
+	private BigDecimal runningBalance;
+
+	
 	@Column(name = "EFFECTIVE_DATE")
 	@ColumnDefault(value = "CURRENT_TIMESTAMP")
 	@Basic(optional = false)

@@ -11,11 +11,11 @@ import com.simplevat.dao.AbstractFilter;
 import com.simplevat.dao.ActivityDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.Activity;
-import com.simplevat.service.exceptions.ServiceErrorCode;
 import com.simplevat.exceptions.ServiceException;
+import com.simplevat.service.exceptions.ServiceErrorCode;
 
 public abstract class SimpleVatService<PK, ENTITY> {
-	
+
 	@Autowired
 	private ActivityDao activityDao;
 
@@ -32,12 +32,12 @@ public abstract class SimpleVatService<PK, ENTITY> {
 	}
 
 	public void persist(ENTITY entity, PK pk) {
-		persist(entity,pk,null);
+		persist(entity, pk, null);
 
 	}
-	
-	protected void persist(ENTITY entity,  PK pk, Activity activity) {
-		if(pk != null) {
+
+	protected void persist(ENTITY entity, PK pk, Activity activity) {
+		if (pk != null) {
 			ENTITY returnEntity = getDao().findByPK(pk);
 			if (returnEntity != null) {
 				throw new ServiceException("", ServiceErrorCode.RecordAlreadyExists);
@@ -47,45 +47,44 @@ public abstract class SimpleVatService<PK, ENTITY> {
 		getDao().persist(entity);
 		persistActivity(entity, activity, " Created ");
 	}
-	
+
 	public void persist(ENTITY entity) {
 		persist(entity, null);
 	}
+
 	public ENTITY update(ENTITY entity, PK pk) {
-		return update(entity,  pk, null);
+		return update(entity, pk, null);
 	}
-	
+
 	public ENTITY update(ENTITY entity) {
-		return update(entity,null);
+		return update(entity, null);
 	}
-	
-	protected ENTITY update(ENTITY entity,  PK pk, Activity activity) {
+
+	protected ENTITY update(ENTITY entity, PK pk, Activity activity) {
 		// commenting this as we are calling update for save and update method both
 		// ENTITY returnEntity = getDao().findByPK(pk);
 		// if(returnEntity == null) {
 		// throw new ServiceException("", ServiceErrorCode.RecordDoesntExists);
 		// }
 		entity = getDao().update(entity);
-		persistActivity(entity,activity, " Updated ");
+		persistActivity(entity, activity, " Updated ");
 		return entity;
 	}
 
 	public void delete(ENTITY entity) {
-		delete(entity,null);
+		delete(entity, null);
 	}
-
 
 	public void delete(ENTITY entity, PK pk) {
 		delete(entity, pk, null);
 	}
 
-
 	protected void delete(ENTITY entity, PK pk, Activity activity) {
-		if(pk != null) {
+		if (pk != null) {
 			ENTITY returnEntity = getDao().findByPK(pk);
 			if (returnEntity == null) {
 				throw new ServiceException("", ServiceErrorCode.RecordDoesntExists);
-			}		
+			}
 		}
 		getDao().delete(entity);
 		persistActivity(entity, activity, " Removed ");
@@ -112,11 +111,11 @@ public abstract class SimpleVatService<PK, ENTITY> {
 	}
 
 	protected abstract Dao<PK, ENTITY> getDao();
-	
+
 	protected Activity getActivity(ENTITY entity) {
 		return null;
 	}
-	
+
 	private Activity getDefaultLogActivity(ENTITY entity, String activityCode) {
 		String moduleCode = entity.getClass().getSimpleName();
 		Activity activity = new Activity();
@@ -129,15 +128,23 @@ public abstract class SimpleVatService<PK, ENTITY> {
 		activity.setLastUpdateDate(LocalDateTime.now());
 		return activity;
 	}
-	
-	
+
 	private void persistActivity(ENTITY entity, Activity activity, String activityCode) {
-		if( activity == null) {
+		if (activity == null) {
 			activity = getDefaultLogActivity(entity, activityCode);
 		}
-		if(activity.isLoggingRequired()) {
+		if (activity.isLoggingRequired()) {
 			activityDao.persist(activity);
 		}
+	}
+
+	public ENTITY getFirstElement(List<ENTITY> list) {
+
+		if (list != null && !list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
 	}
 
 }

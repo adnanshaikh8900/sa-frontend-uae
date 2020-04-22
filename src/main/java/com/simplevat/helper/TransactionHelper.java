@@ -191,7 +191,7 @@ public class TransactionHelper {
 	}
 
 	public Journal getByTransaction(Transaction transaction) {
-		List<JournalLineItem> journalLineItemList = new ArrayList();
+		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		ChartOfAccount chartOfAccount = transaction.getChartOfAccount();
 

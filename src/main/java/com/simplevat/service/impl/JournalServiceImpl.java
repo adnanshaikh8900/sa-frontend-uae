@@ -13,12 +13,16 @@ import com.simplevat.entity.Journal;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.JournalService;
+import com.simplevat.service.TransactionCategoryBalanceService;
 
 @Service("JournalServiceImpl")
 public class JournalServiceImpl extends JournalService {
 
 	@Autowired
 	private JournalDao journalDao;
+
+	@Autowired
+	private TransactionCategoryBalanceService transactionCategoryBalanceService;
 
 	@Override
 	public PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,
@@ -36,4 +40,9 @@ public class JournalServiceImpl extends JournalService {
 		return journalDao;
 	}
 
+	@Override
+	public void persist(Journal journal) {
+		transactionCategoryBalanceService.updateRunningBalance(journal.getJournalLineItems());
+		super.persist(journal);
+	}
 }

@@ -169,8 +169,8 @@ public class DetailedGeneralLedgerRestHelper {
 
 						model.setReferenceNo(journal.getJournlReferencenNo());
 						model.setAmount(invoice.getTotalAmount());
-						model.setCreditAmount(invoice.getTotalAmount());
-						model.setDebitAmount(new BigDecimal(0));
+						model.setCreditAmount(!isDebit ? invoice.getTotalAmount() : BigDecimal.ZERO);
+						model.setDebitAmount(isDebit ? invoice.getTotalAmount() : BigDecimal.ZERO);
 						model.setName(data.getContact() != null
 								? data.getContact().getFirstName() + " " + data.getContact().getLastName()
 								: "");

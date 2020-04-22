@@ -1,5 +1,11 @@
 package com.simplevat.service.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +14,9 @@ import org.springframework.stereotype.Service;
 import com.simplevat.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.TransactionCategoryBalanceDao;
+import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.TransactionCategoryBalance;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.TransactionCategoryBalanceService;
 
@@ -28,4 +36,46 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 		return transactionCategoryBalanceDao.getAll(filterMap);
 	}
 
+	@Override
+	public synchronized void updateRunningBalance(Collection<JournalLineItem> lineItems) {
+		List<TransactionCategoryBalance> balanceList = new ArrayList<>();
+		if (lineItems != null && !lineItems.isEmpty()) {
+			for (JournalLineItem lineItem : lineItems) {
+				TransactionCategory category = lineItem.getTransactionCategory();
+
+				Map<String, Object> param = new HashMap<>();
+				param.put("transactionCategory", category);
+
+				TransactionCategoryBalance balance = getFirstElement(findByAttributes(param));
+
+				if (balance == null) {
+					balance = new TransactionCategoryBalance();
+					balance.setTransactionCategory(category);
+					balance.setCreatedBy(lineItem.getCreatedBy());
+					balance.setOpeningBalance(BigDecimal.ZERO);
+					balance.setEffectiveDate(new Date());
+				}
+
+				boolean isDebit = lineItem.getDebitAmount() != null
+						|| (lineItem.getDebitAmount() != null && new BigDecimal(0).equals(lineItem.getDebitAmount()))
+								? Boolean.TRUE
+								: Boolean.FALSE;
+
+				BigDecimal runningBalance = balance.getRunningBalance() != null ? balance.getRunningBalance()
+						: BigDecimal.ZERO;
+				if (isDebit) {
+					runningBalance = runningBalance.subtract(lineItem.getDebitAmount());
+				} else {
+					runningBalance = runningBalance.add(lineItem.getCreditAmount());
+				}
+				balance.setRunningBalance(runningBalance);
+				balanceList.add(balance);
+			}
+		}
+
+		for (TransactionCategoryBalance transactionCategoryBalance : balanceList) {
+			transactionCategoryBalanceDao.update(transactionCategoryBalance);
+		}
+
+	}
 }

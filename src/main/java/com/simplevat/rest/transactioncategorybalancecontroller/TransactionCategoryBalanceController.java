@@ -1,10 +1,5 @@
 package com.simplevat.rest.transactioncategorybalancecontroller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -17,20 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
-import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.TransactionCategoryBalance;
 import com.simplevat.entity.User;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.transactioncategorycontroller.TransactionCategoryRestController;
-import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.TransactionCategoryBalanceService;
 import com.simplevat.service.UserService;

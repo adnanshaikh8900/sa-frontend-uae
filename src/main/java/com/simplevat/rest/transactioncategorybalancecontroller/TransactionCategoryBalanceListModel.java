@@ -1,5 +1,7 @@
 package com.simplevat.rest.transactioncategorybalancecontroller;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data
@@ -8,5 +10,5 @@ public class TransactionCategoryBalanceListModel {
 	private Integer transactionCategoryId;
 	private String transactionCategoryName;
 	private String effectiveDate; // dd/MM/yyyy
-	private Double openingBalance;
+	private BigDecimal openingBalance;
 }

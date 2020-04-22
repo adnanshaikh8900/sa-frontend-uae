@@ -218,7 +218,7 @@ public class UserController implements Serializable {
 			if (userModel.getPassword() != null && !userModel.getPassword().trim().isEmpty()) {
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				String encodedPassword = passwordEncoder.encode(userModel.getPassword());
-				userModel.setPassword(encodedPassword);
+				user.setPassword(encodedPassword);
 			}
 			user.setLastUpdateDate(LocalDateTime.now());
 			user.setLastUpdatedBy(userId);

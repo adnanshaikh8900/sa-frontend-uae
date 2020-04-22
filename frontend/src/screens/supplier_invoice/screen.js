@@ -470,7 +470,7 @@ class SupplierInvoice extends React.Component {
         status: '',
         contactType: 1
       },
-    } , () => { this.initializeData()})
+    }, () => { this.initializeData() })
   }
 
   render() {
@@ -695,6 +695,7 @@ class SupplierInvoice extends React.Component {
                       <TableHeaderColumn
                         dataField="customerName"
                         dataSort
+                        width="15%"
                       >
                         Supplier Name
                           </TableHeaderColumn>
@@ -708,12 +709,14 @@ class SupplierInvoice extends React.Component {
                       <TableHeaderColumn
                         dataField="invoiceDate"
                         dataSort
+                        width="13%"
                       >
                         Invoice Date
                           </TableHeaderColumn>
                       <TableHeaderColumn
                         dataField="invoiceDueDate"
                         dataSort
+                        width="10%"
                       >
                         Due Date
                           </TableHeaderColumn>

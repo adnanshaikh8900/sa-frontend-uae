@@ -337,7 +337,7 @@ class Payment extends React.Component {
                       <div className="py-3">
                         <h5>Filter : </h5>
                         <Row>
-                          <Col lg={2} className="mb-1">
+                          <Col lg={3} className="mb-1">
                             <Select
                               className="select-default-width"
                               placeholder="Select Supplier"

@@ -7,7 +7,7 @@ import moment from 'moment'
 export const getUserList = (obj) => {
   // const value = (obj.active)  ? obj.active : true
   let name = obj.name ? obj.name : '';
-  let roleId = obj.roleId ? obj.roleId : '';
+  let roleId = obj.roleId ? obj.roleId.value : '';
   let active = obj.active ? obj.active.value : '';
   let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';

@@ -118,10 +118,10 @@ class DetailContact extends React.Component {
   getData = (data) => {
     let temp = {}
     for(let item in data) {
-      if(typeof data[item] !== 'object') {
-        temp[`${item}`] = data[item]
+      if(typeof data[`${item}`] !== 'object') {
+        temp[`${item}`] = data[`${item}`]
       } else {
-        temp[`${item}`] = data[item].value
+        temp[`${item}`] = data[`${item}`].value
       }
     }
     return temp
@@ -222,8 +222,8 @@ class DetailContact extends React.Component {
                                 lastName: Yup.string().required("Last Name is Required"),
                                 middleName: Yup.string()
                                   .required("Middle Name is Required"),
-                                // contactType: Yup.string()
-                                // .required("Please Select Contact Type"),
+                                contactType: Yup.string()
+                                .required("Contact Type is Required"),
                                 //       organization: Yup.string()
                                 //       .required("Organization Name is Required"),
                                 //     poBoxNumber: Yup.number()
@@ -350,10 +350,10 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="contactType">Contact Type</Label>
+                                      <Label htmlFor="contactType"><span className="text-danger">*</span>Contact Type</Label>
                                       <Select
                                         options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
-                                        value={contact_type_list && contact_type_list.find(option => option.value === +props.values.contactType)}
+                                        value={contact_type_list && contact_type_list.find((option) => option.value === +props.values.contactType)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('contactType')(option.value)
@@ -568,7 +568,7 @@ class DetailContact extends React.Component {
                                       <Label htmlFor="countryId"><span className="text-danger">*</span>Country</Label>
                                       <Select
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
-                                        value={country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find(option => option.value === +props.values.countryId)  }
+                                        value={country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find((option) => option.value === +props.values.countryId)  }
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('countryId')(option)
@@ -599,7 +599,7 @@ class DetailContact extends React.Component {
                                       <Label htmlFor="stateId">State Region</Label>
                                       <Select
                                         options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
-                                        value={state_list && selectOptionsFactory.renderOptions('label', 'value', state_list, 'State').find(option => option.value === props.values.stateId)}
+                                        value={state_list && selectOptionsFactory.renderOptions('label', 'value', state_list, 'State').find((option) => option.value === props.values.stateId)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('stateId')(option.value)
@@ -753,7 +753,7 @@ class DetailContact extends React.Component {
                                       <Label htmlFor="currencyCode">Currency Code</Label>
                                       <Select
                                         options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currencyCode)}
+                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('currencyCode')(option)

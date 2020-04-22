@@ -144,7 +144,7 @@ class DetailJournal extends React.Component {
   checkedRow = () => {
     if (this.state.data.length > 0) {
       let length = this.state.data.length - 1;
-      let temp = Object.values(this.state.data[length]).indexOf("");
+      let temp = Object.values(this.state.data[`${length}`]).indexOf("");
       if (temp > -1) {
         return true;
       } else {
@@ -420,15 +420,15 @@ class DetailJournal extends React.Component {
     });
     if (name === 'debitAmount') {
       form.setFieldValue(`journalLineItems.[${idx}].creditAmount`, 0, true)
-      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true)
       this.updateAmount(data);
     } else if (name === 'creditAmount') {
-      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
+      form.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true)
       form.setFieldValue(`journalLineItems.[${idx}].debitAmount`, 0, true)
       this.updateAmount(data);
     }  else {
       this.setState({ data }, () => {
-        this.formRef.current.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][name], true)
+        this.formRef.current.setFieldValue(field.name, this.state.data[parseInt(idx, 10)][`${name}`], true)
       });
     }
   }
@@ -700,8 +700,8 @@ class DetailJournal extends React.Component {
                                         }
                                         id="currencyCode"
                                         name="currencyCode"
-                                        disabled={props.values.postingReferenceType === "MANUAL" ? false : true}
-                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find(option => option.value === +props.values.currencyCode)}
+                                        isDisabled={props.values.postingReferenceType === "MANUAL" ? false : true}
+                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange("currencyCode")(

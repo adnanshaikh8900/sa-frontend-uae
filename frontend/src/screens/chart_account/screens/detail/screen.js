@@ -78,7 +78,6 @@ class DetailChartAccount extends React.Component {
           })
         }
       }).catch((err) => {
-        console.log(err)
         this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
         this.setState({ loading: false })
         // this.props.history.push('/admin/master/chart-account')
@@ -89,11 +88,11 @@ class DetailChartAccount extends React.Component {
   }
 
   getSubTransactionTypes = () => {
-    this.props.chartOfAccontActions.getSubTransactionTypes().then(res => {
+    this.props.chartOfAccontActions.getSubTransactionTypes().then((res) => {
       if (res.status === 200) {
         let val = Object.assign({}, res.data)
         let temp = []
-        Object.keys(val).map(item => {
+        Object.keys(val).map((item) => {
           temp.push({
             label: item,
             options: val[`${item}`]

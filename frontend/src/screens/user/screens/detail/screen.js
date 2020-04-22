@@ -374,7 +374,7 @@ class DetailUser extends React.Component {
                                           <Label htmlFor="roleId">Role</Label>
                                           <Select
                                             options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
-                                            value={role_list && selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role').find(option => option.value === +props.values.roleId)}
+                                            value={role_list && selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role').find((option) => option.value === +props.values.roleId)}
                                             onChange={(option) => {
                                               if (option && option.value) {
                                                 props.handleChange('roleId')(option)

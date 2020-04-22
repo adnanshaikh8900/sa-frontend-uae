@@ -277,7 +277,7 @@ class DetailReceipt extends React.Component {
                                       <Select
                                         options={contact_list ? selectOptionsFactory.renderOptions('label', 'value', contact_list, 'Customer Name') : []}
                                         placeholder="Customer Name"
-                                        value={contact_list && contact_list.find(option => option.value === +props.values.contactId)}
+                                        value={contact_list && contact_list.find((option) => option.value === +props.values.contactId)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('contactId')(option.value)
@@ -301,7 +301,7 @@ class DetailReceipt extends React.Component {
                                         options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
                                         className="select-default-width"
                                         placeholder="Invoice Number"
-                                        value={invoice_list && invoice_list.find(option => option.value === +props.values.invoiceId)}
+                                        value={invoice_list && invoice_list.find((option) => option.value === +props.values.invoiceId)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('invoiceId')(option.value)

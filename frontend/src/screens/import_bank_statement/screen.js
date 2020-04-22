@@ -293,7 +293,7 @@ class ImportBankStatement extends React.Component {
                                     <FormGroup>
                                       <Select
                                         options={templateList ? templateList : []}
-                                        value={templateList && templateList.find(option => option.value === +props.values.templateId)}
+                                        value={templateList && templateList.find((option) => option.value === +props.values.templateId)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('templateId')(option.value)

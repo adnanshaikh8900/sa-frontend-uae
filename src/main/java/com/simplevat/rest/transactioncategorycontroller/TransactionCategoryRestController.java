@@ -197,6 +197,9 @@ public class TransactionCategoryRestController implements Serializable {
 		List<TransactionCategory> transactionCategories = transactionCategoryService
 				.findAllTransactionCategoryByChartOfAccount(ChartOfAccountConstant.EXPENSE);
 		if (transactionCategories != null) {
+			for (TransactionCategory cat : transactionCategories) {
+				cat.setChartOfAccount(null);
+			}
 			return new ResponseEntity(transactionCategories, HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);

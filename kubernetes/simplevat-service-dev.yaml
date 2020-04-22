@@ -7,7 +7,7 @@ metadata:
   namespace: simplevat-dev
 spec:
   ports:
-    - nodePort: 30768
+    - nodePort: 30769
       port: 80
       protocol: TCP
       targetPort: 8080

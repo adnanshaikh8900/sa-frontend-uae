@@ -116,6 +116,11 @@ public class JournalLineItem implements Serializable {
 	@Enumerated(value = EnumType.STRING)
 	private PostingReferenceTypeEnum referenceType;
 
+	@Basic(optional = false)
+	@Column(name = "CURRENT_BALANCE")
+	@ColumnDefault(value = "0.00")
+	private BigDecimal currentBalance;
+
 	@PrePersist
 	public void updateDates() {
 		createdDate = LocalDateTime.now();

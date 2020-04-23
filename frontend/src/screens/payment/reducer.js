@@ -7,6 +7,7 @@ const initState = {
   supplier_list: [],
   invoice_list: [],
   project_list: [],
+  country_list: [],
 }
 
 const PaymentReducer = (state = initState, action) => {
@@ -44,7 +45,11 @@ const PaymentReducer = (state = initState, action) => {
         ...state,
         project_list: Object.assign([], payload.data)
       }
-
+      case PAYMENT.COUNTRY_LIST:
+        return {
+          ...state,
+          country_list: Object.assign([], payload.data)
+        }
     default:
       return state
   }

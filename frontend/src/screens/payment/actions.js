@@ -179,3 +179,39 @@ export const getInvoiceById = (id) => {
     })
   }
 }
+
+
+export const getCountryList = () => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: 'rest/datalist/getcountry'
+    }
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+        dispatch({
+          type: PAYMENT.COUNTRY_LIST,
+          payload: res
+        })
+      }
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
+
+export const getStateList = (countryCode) => {
+  return (dispatch) => {
+    let data = {
+      method: 'get',
+      url: '/rest/datalist/getstate?countryCode=' + countryCode
+    }
+    return authApi(data).then((res) => {
+      if (res.status === 200) {
+        return res
+      }
+    }).catch((err) => {
+      throw err
+    })
+  }
+}

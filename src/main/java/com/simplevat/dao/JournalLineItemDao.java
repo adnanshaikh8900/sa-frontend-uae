@@ -8,6 +8,7 @@ package com.simplevat.dao;
 import java.util.List;
 
 import com.simplevat.entity.JournalLineItem;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 
 /**
@@ -20,4 +21,5 @@ public interface JournalLineItemDao extends Dao<Integer, JournalLineItem> {
 
 	public List<JournalLineItem> getList(ReportRequestModel reportRequestModel);
 
+	public List<JournalLineItem> getListByTransactionCategory(TransactionCategory transactionCategory);
 }

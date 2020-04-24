@@ -64,6 +64,7 @@ public class TransactionCategoryBalanceRestHelper {
 				model.setTransactionCategoryBalanceId(balance.getId());
 				model.setEffectiveDate(dateUtil.getDateAsString(balance.getEffectiveDate(), "dd/MM/yyyy"));
 				model.setOpeningBalance(balance.getOpeningBalance());
+				model.setRunningBalance(balance.getRunningBalance());
 				model.setTransactionCategoryName(balance.getTransactionCategory().getTransactionCategoryName());
 				modelList.add(model);
 			}

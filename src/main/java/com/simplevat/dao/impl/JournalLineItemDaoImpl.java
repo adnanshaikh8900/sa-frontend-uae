@@ -9,6 +9,7 @@ import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.JournalLineItemDao;
 import com.simplevat.entity.JournalLineItem;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.utils.DateFormatUtil;
 
@@ -85,5 +86,11 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		}
 		List<JournalLineItem> list = query.getResultList();
 		return list != null && !list.isEmpty() ? list : null;
+	}
+
+	@Override
+	public List<JournalLineItem> getListByTransactionCategory(TransactionCategory transactionCategory) {
+		return getEntityManager().createNamedQuery("getListByTransactionCategory")
+				.setParameter("transactionCategory", transactionCategory).getResultList();
 	}
 }

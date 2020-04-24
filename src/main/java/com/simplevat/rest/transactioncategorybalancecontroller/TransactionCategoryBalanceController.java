@@ -1,5 +1,6 @@
 package com.simplevat.rest.transactioncategorybalancecontroller;
 
+import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.simplevat.entity.User;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.transactioncategorycontroller.TransactionCategoryRestController;
 import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.TransactionCategoryBalanceService;
 import com.simplevat.service.UserService;
 
@@ -45,9 +47,13 @@ public class TransactionCategoryBalanceController {
 	@Autowired
 	private TransactionCategoryBalanceRestHelper transactionCategoryBalanceRestHelper;
 
+	@Autowired
+	private JournalLineItemService journalLineItemService;
+
 	@ApiOperation(value = "Save")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody TransactioncategoryBalancePersistModel persistmodel, HttpServletRequest request) {
+	public ResponseEntity save(@RequestBody TransactioncategoryBalancePersistModel persistmodel,
+			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
@@ -63,11 +69,15 @@ public class TransactionCategoryBalanceController {
 
 	@ApiOperation(value = "/Update")
 	@PostMapping(value = "update")
-	public ResponseEntity update(@RequestBody TransactioncategoryBalancePersistModel persistmodel, HttpServletRequest request)  {
+	public ResponseEntity update(@RequestBody TransactioncategoryBalancePersistModel persistmodel,
+			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
 			TransactionCategoryBalance openingBalance = transactionCategoryBalanceRestHelper.getEntity(persistmodel);
+			BigDecimal currentRunnigBalance = journalLineItemService
+					.updateCurrentBalance(openingBalance.getTransactionCategory(), openingBalance.getOpeningBalance());
+			openingBalance.setRunningBalance(currentRunnigBalance);
 			openingBalance.setLastUpdateBy(user.getUserId());
 			transactionCategoryBalanceService.persist(openingBalance);
 			return new ResponseEntity(HttpStatus.OK);

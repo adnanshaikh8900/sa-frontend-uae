@@ -1,28 +1,8 @@
 steps:
-# Copy Maven dependencies to volume mavenrepo
-- name: gcr.io/cloud-builders/gsutil
-  volumes:
-    - name: 'mavenrepo'
-      path: '/root/.m2'
-  args: ['cp', '-r', 'gs://com-simplevat-mavenrepo', '/root/.m2']
-  id: copy-mvn-repo
-- name: 'maven:3.6.3-jdk-8-slim'
-  volumes:
-    - name: 'mavenrepo'
-      path: '/root/.m2'
+- name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
   entrypoint: 'mvn'
   args: ['verify', 'sonar:sonar','clean', 'package']
   id: mvn-build
-  waitFor:
-  - copy-mvn-repo
-# Preserve the Maven dependencies into the bucket
-- name: gcr.io/cloud-builders/gsutil
-  volumes:
-    - name: 'mavenrepo'
-      path: '/root/.m2'
-  args: ['cp', '-r', '/root/.m2', 'gs://com-simplevat-mavenrepo']
-  waitFor:
-    - mvn-build
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '--tag=gcr.io/gtt-project-prod/simplevat:$TAG_NAME', '.']
   id: docker-build

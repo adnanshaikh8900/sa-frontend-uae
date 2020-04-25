@@ -8,6 +8,6 @@
 
 	<include file="databaseChangeLogs/ddl.sql" relativeToChangelogFile="true"/>
 	<include file="databaseChangeLogs/dml.sql" relativeToChangelogFile="true"/>
-<!--	<include file="databaseChangeLogs/storedprocedure.sql" relativeToChangelogFile="true"/>-->
+	<include file="databaseChangeLogs/storedprocedure.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

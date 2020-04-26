@@ -8,17 +8,8 @@ steps:
   entrypoint: 'mvn'
   args: ['verify', 'sonar:sonar','-X']
   id: mvn-verify-sonar
-  waitFor: ['-']
-#- name: 'gcr.io/cloud-builders/docker'
-#  args: ['build', '--tag=gcr.io/gtt-project-prod/simplevat:$TAG_NAME', '.']
-#  id: docker-build
-#  waitFor:
-#  - mvn-build
-#- name: 'gcr.io/cloud-builders/docker'
-#  args: ['push', 'gcr.io/gtt-project-prod/simplevat:$TAG_NAME']
-#  id: docker-push
-#  waitFor:
-#  - docker-build
+  waitFor:
+  - mvn-build
 - name: 'gcr.io/kaniko-project/executor:latest'
   args:
     - --destination=gcr.io/gtt-project-prod/simplevat:$TAG_NAME

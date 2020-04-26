@@ -3,9 +3,12 @@ steps:
   entrypoint: 'mvn'
   args: ['clean', 'package']
   id: mvn-build
+  waitFor: ['-']
 - name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
   entrypoint: 'mvn'
   args: ['verify', 'sonar:sonar']
+  id: mvn-verify-sonar
+  waitFor: ['-']
 #- name: 'gcr.io/cloud-builders/docker'
 #  args: ['build', '--tag=gcr.io/gtt-project-prod/simplevat:$TAG_NAME', '.']
 #  id: docker-build
@@ -34,7 +37,6 @@ steps:
     - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s-prod'
   waitFor:
   - docker-build-push
-images: ['gcr.io/gtt-project-prod/simplevat:$TAG_NAME']
 timeout: 2400s
 options:
   machineType: 'N1_HIGHCPU_8'

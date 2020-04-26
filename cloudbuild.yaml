@@ -30,4 +30,4 @@ steps:
 images: ['gcr.io/gtt-project-prod/simplevat:$TAG_NAME']
 timeout: 2400s
 options:
-  machineType: 'N1_HIGHCPU_32'
+  machineType: 'N1_HIGHCPU_8'

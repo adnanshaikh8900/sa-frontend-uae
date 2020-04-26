@@ -6,16 +6,24 @@ steps:
 - name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
   entrypoint: 'mvn'
   args: ['verify', 'sonar:sonar']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--tag=gcr.io/gtt-project-prod/simplevat:$TAG_NAME', '.']
-  id: docker-build
+#- name: 'gcr.io/cloud-builders/docker'
+#  args: ['build', '--tag=gcr.io/gtt-project-prod/simplevat:$TAG_NAME', '.']
+#  id: docker-build
+#  waitFor:
+#  - mvn-build
+#- name: 'gcr.io/cloud-builders/docker'
+#  args: ['push', 'gcr.io/gtt-project-prod/simplevat:$TAG_NAME']
+#  id: docker-push
+#  waitFor:
+#  - docker-build
+- name: 'gcr.io/kaniko-project/executor:latest'
+  args:
+    - --destination=gcr.io/gtt-project-prod/simplevat:$TAG_NAME
+    - --cache=true
+    - --cache-ttl=XXh
+  id: docker-build-push
   waitFor:
   - mvn-build
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/gtt-project-prod/simplevat:$TAG_NAME']
-  id: docker-push
-  waitFor:
-  - docker-build
 - name: 'gcr.io/cloud-builders/kubectl'
   args:
     - 'rolling-update'
@@ -26,7 +34,7 @@ steps:
     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
     - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s-prod'
   waitFor:
-  - docker-push
+  - docker-build-push
 images: ['gcr.io/gtt-project-prod/simplevat:$TAG_NAME']
 timeout: 2400s
 options:

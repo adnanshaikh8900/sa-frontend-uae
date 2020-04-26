@@ -1,8 +1,11 @@
 steps:
 - name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
   entrypoint: 'mvn'
-  args: ['verify', 'sonar:sonar','clean', 'package']
+  args: ['clean', 'package']
   id: mvn-build
+- name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
+  entrypoint: 'mvn'
+  args: ['verify', 'sonar:sonar']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '--tag=gcr.io/gtt-project-prod/simplevat:$TAG_NAME', '.']
   id: docker-build

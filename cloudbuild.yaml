@@ -4,11 +4,11 @@ steps:
   args: ['package', '-X']
   id: mvn-build
   waitFor: ['-']
-#- name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
-#  entrypoint: 'mvn'
-#  args: ['verify', 'sonar:sonar','-X']
-#  id: mvn-verify-sonar
-#  waitFor: ['-']
+- name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
+  entrypoint: 'mvn'
+  args: ['verify', 'sonar:sonar','-X']
+  id: mvn-verify-sonar
+  waitFor: ['-']
 #- name: 'gcr.io/cloud-builders/docker'
 #  args: ['build', '--tag=gcr.io/gtt-project-prod/simplevat:$TAG_NAME', '.']
 #  id: docker-build

@@ -20,7 +20,6 @@ steps:
   args:
     - --destination=gcr.io/gtt-project-prod/simplevat:$TAG_NAME
     - --cache=true
-    - --cache-ttl=XXh
   id: docker-build-push
   waitFor:
   - mvn-build

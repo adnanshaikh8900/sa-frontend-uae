@@ -1,5 +1,6 @@
 package com.simplevat.rest.transactioncategorybalancecontroller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,9 @@ public class TransactionCategoryBalanceRestHelper {
 
 		transactionCategoryBalance.setTransactionCategory(category);
 		transactionCategoryBalance.setOpeningBalance(persistModel.getOpeningBalance());
+		transactionCategoryBalance.setRunningBalance(
+				transactionCategoryBalance.getRunningBalance() != null ? transactionCategoryBalance.getRunningBalance()
+						: persistModel.getOpeningBalance());
 		transactionCategoryBalance
 				.setEffectiveDate(dateUtil.getDateStrAsDate(persistModel.getEffectiveDate(), "dd/MM/yyyy"));
 
@@ -64,6 +68,7 @@ public class TransactionCategoryBalanceRestHelper {
 				model.setTransactionCategoryBalanceId(balance.getId());
 				model.setEffectiveDate(dateUtil.getDateAsString(balance.getEffectiveDate(), "dd/MM/yyyy"));
 				model.setOpeningBalance(balance.getOpeningBalance());
+				model.setRunningBalance(balance.getRunningBalance());
 				model.setTransactionCategoryName(balance.getTransactionCategory().getTransactionCategoryName());
 				modelList.add(model);
 			}

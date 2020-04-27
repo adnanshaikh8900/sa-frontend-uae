@@ -1,6 +1,6 @@
 package com.simplevat.service;
 
-import java.util.Collection;
+import java.math.BigDecimal;
 import java.util.Map;
 
 import com.simplevat.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
@@ -12,6 +12,6 @@ public abstract class TransactionCategoryBalanceService extends SimpleVatService
 
 	public abstract PaginationResponseModel getAll(Map<TransactionCategoryBalanceFilterEnum, Object> dataMap);
 
-	public abstract void updateRunningBalance(Collection<JournalLineItem> lineItems);
+	public abstract BigDecimal updateRunningBalance(JournalLineItem lineItems);
 
 }

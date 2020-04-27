@@ -2,6 +2,7 @@ package com.simplevat.service;
 
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.entity.VatCategory;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
@@ -19,4 +20,6 @@ public abstract class VatCategoryService extends SimpleVatService<Integer, VatCa
     public abstract void deleteByIds(List<Integer> ids);
 
 	public abstract PaginationResponseModel getVatCategoryList(Map<VatCategoryFilterEnum, Object> filterDataMap,PaginationModel paginationModel );
+	
+	public abstract List<DropdownModel> getVatCategoryForDropDown();
 }

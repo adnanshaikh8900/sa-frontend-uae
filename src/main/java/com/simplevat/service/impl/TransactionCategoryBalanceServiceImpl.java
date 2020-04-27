@@ -37,45 +37,42 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 	}
 
 	@Override
-	public synchronized void updateRunningBalance(Collection<JournalLineItem> lineItems) {
+	public synchronized BigDecimal updateRunningBalance(JournalLineItem lineItem) {
 		List<TransactionCategoryBalance> balanceList = new ArrayList<>();
-		if (lineItems != null && !lineItems.isEmpty()) {
-			for (JournalLineItem lineItem : lineItems) {
-				TransactionCategory category = lineItem.getTransactionCategory();
+		if (lineItem != null) {
+			TransactionCategory category = lineItem.getTransactionCategory();
 
-				Map<String, Object> param = new HashMap<>();
-				param.put("transactionCategory", category);
+			Map<String, Object> param = new HashMap<>();
+			param.put("transactionCategory", category);
 
-				TransactionCategoryBalance balance = getFirstElement(findByAttributes(param));
+			TransactionCategoryBalance balance = getFirstElement(findByAttributes(param));
 
-				if (balance == null) {
-					balance = new TransactionCategoryBalance();
-					balance.setTransactionCategory(category);
-					balance.setCreatedBy(lineItem.getCreatedBy());
-					balance.setOpeningBalance(BigDecimal.ZERO);
-					balance.setEffectiveDate(new Date());
-				}
-
-				boolean isDebit = lineItem.getDebitAmount() != null
-						|| (lineItem.getDebitAmount() != null && new BigDecimal(0).equals(lineItem.getDebitAmount()))
-								? Boolean.TRUE
-								: Boolean.FALSE;
-
-				BigDecimal runningBalance = balance.getRunningBalance() != null ? balance.getRunningBalance()
-						: BigDecimal.ZERO;
-				if (isDebit) {
-					runningBalance = runningBalance.subtract(lineItem.getDebitAmount());
-				} else {
-					runningBalance = runningBalance.add(lineItem.getCreditAmount());
-				}
-				balance.setRunningBalance(runningBalance);
-				balanceList.add(balance);
+			if (balance == null) {
+				balance = new TransactionCategoryBalance();
+				balance.setTransactionCategory(category);
+				balance.setCreatedBy(lineItem.getCreatedBy());
+				balance.setOpeningBalance(BigDecimal.ZERO);
+				balance.setEffectiveDate(new Date());
 			}
+
+			boolean isDebit = lineItem.getDebitAmount() != null
+					|| (lineItem.getDebitAmount() != null && new BigDecimal(0).equals(lineItem.getDebitAmount()))
+							? Boolean.TRUE
+							: Boolean.FALSE;
+
+			BigDecimal runningBalance = balance.getRunningBalance() != null ? balance.getRunningBalance()
+					: BigDecimal.ZERO;
+			if (isDebit) {
+				runningBalance = runningBalance.subtract(lineItem.getDebitAmount());
+			} else {
+				runningBalance = runningBalance.add(lineItem.getCreditAmount());
+			}
+			balance.setRunningBalance(runningBalance);
+			balanceList.add(balance);
+			transactionCategoryBalanceDao.update(balance);
+			return balance.getRunningBalance();
 		}
 
-		for (TransactionCategoryBalance transactionCategoryBalance : balanceList) {
-			transactionCategoryBalanceDao.update(transactionCategoryBalance);
-		}
-
+		return null;
 	}
 }

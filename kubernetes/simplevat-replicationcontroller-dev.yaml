@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: simplevat
-          image: gcr.io/gtt-project-prod/simplevat:0-0-2-beta-3-47
+          image: gcr.io/gtt-project-prod/simplevat:0-0-2-beta-3-55
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -49,13 +49,13 @@ spec:
             - name: SIMPLEVAT_TOKEN
               value: XXXX
             - name: SIMPLEVAT_RELEASE
-              value: 0-0-2-beta-2-11
+              value: 0-0-2-beta-3-55
             - name: SIMPLEVAT_DB_HOST
-              value: 34.68.185.169
+              value: 34.76.60.58
             - name: SIMPLEVAT_DB
-              value: simplevat_v1
+              value: simplevat_db
             - name: SIMPLEVAT_DB_USER
-              value: proxyuser
+              value: simplevat_db_user
             - name: SIMPLEVAT_DB_PASSWORD
               value: SimpleVat123$
             # These secrets are required to start the pod.

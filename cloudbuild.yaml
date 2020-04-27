@@ -1,18 +1,16 @@
 steps:
-- name: 'maven:3.6.1-jdk-8-slim'
+- name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
   entrypoint: 'mvn'
-  args: ['verify', 'sonar:sonar','clean', 'package']
+  args: ['verify', 'sonar:sonar','package']
   id: mvn-build
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--tag=gcr.io/gtt-project-prod/simplevat:$TAG_NAME', '.']
-  id: docker-build
+  waitFor: ['-']
+- name: 'gcr.io/kaniko-project/executor:latest'
+  args:
+    - --destination=gcr.io/gtt-project-prod/simplevat:$TAG_NAME
+    - --cache=true
+  id: docker-build-push
   waitFor:
   - mvn-build
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/gtt-project-prod/simplevat:$TAG_NAME']
-  id: docker-push
-  waitFor:
-  - docker-build
 - name: 'gcr.io/cloud-builders/kubectl'
   args:
     - 'rolling-update'
@@ -23,6 +21,7 @@ steps:
     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
     - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s-prod'
   waitFor:
-  - docker-push
-images: ['gcr.io/gtt-project-prod/simplevat:$TAG_NAME']
+  - docker-build-push
 timeout: 2400s
+options:
+  machineType: 'N1_HIGHCPU_8'

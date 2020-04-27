@@ -6,9 +6,12 @@
 package com.simplevat.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
+import com.simplevat.rest.financialreport.CreditDebitAggregator;
+import com.simplevat.rest.financialreport.FinancialReportRequestModel;
 
 /**
  *
@@ -19,5 +22,6 @@ public interface JournalLineItemDao extends Dao<Integer, JournalLineItem> {
 	public void deleteByJournalId(Integer journalId);
 
 	public List<JournalLineItem> getList(ReportRequestModel reportRequestModel);
+	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(FinancialReportRequestModel financialReportRequestModel);
 
 }

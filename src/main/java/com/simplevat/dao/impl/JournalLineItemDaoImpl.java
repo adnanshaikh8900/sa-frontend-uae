@@ -102,6 +102,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 				.setParameter("transactionCategory", transactionCategory).getResultList();
 	}
 
+	@Override
 	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
 			FinancialReportRequestModel financialReportRequestModel) {
 		LocalDateTime fromDate = null;

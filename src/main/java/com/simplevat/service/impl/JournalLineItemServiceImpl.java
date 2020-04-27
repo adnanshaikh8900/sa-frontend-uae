@@ -1,10 +1,14 @@
 package com.simplevat.service.impl;
 
 import java.math.BigDecimal;
+
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.simplevat.rest.financialreport.CreditDebitAggregator;
+import com.simplevat.rest.financialreport.FinancialReportRequestModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +17,6 @@ import com.simplevat.dao.JournalLineItemDao;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
-import com.simplevat.rest.transactioncategorycontroller.TransactionCategoryRestController;
 import com.simplevat.service.JournalLineItemService;
 
 @Service("JournalLineItemService")
@@ -64,4 +67,8 @@ public class JournalLineItemServiceImpl extends JournalLineItemService {
 		return currentBalance;
 	}
 
+	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
+			FinancialReportRequestModel financialReportRequestModel) {
+		return journalLineItemDao.getAggregateTransactionCategoryMap(financialReportRequestModel);
+	}
 }

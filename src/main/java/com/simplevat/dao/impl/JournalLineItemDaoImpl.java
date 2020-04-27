@@ -1,5 +1,8 @@
 package com.simplevat.dao.impl;
 
+import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
+import com.simplevat.rest.financialreport.CreditDebitAggregator;
+import com.simplevat.rest.financialreport.FinancialReportRequestModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +16,16 @@ import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.utils.DateFormatUtil;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.persistence.ParameterMode;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +53,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		try {
 			fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), "dd/MM/yyyy");
 		} catch (Exception e) {
-			LOGGER.error("Error is ", e);
+			LOGGER.error("Exception is ", e);
 		}
 		try {
 			toDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), "dd/MM/yyyy");
@@ -92,5 +100,63 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 	public List<JournalLineItem> getListByTransactionCategory(TransactionCategory transactionCategory) {
 		return getEntityManager().createNamedQuery("getListByTransactionCategory")
 				.setParameter("transactionCategory", transactionCategory).getResultList();
+	}
+
+	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
+			FinancialReportRequestModel financialReportRequestModel) {
+		LocalDateTime fromDate = null;
+		LocalDateTime toDate = null;
+		Map<Integer, CreditDebitAggregator> aggregatedTransactionMap = new HashMap<>();
+		try {
+			fromDate = dateUtil.getDateStrAsLocalDateTime(financialReportRequestModel.getStartDate(), "dd/MM/yyyy");
+		} catch (Exception e) {
+			LOGGER.error("Error is ", e);
+		}
+		try {
+			toDate = dateUtil.getDateStrAsLocalDateTime(financialReportRequestModel.getEndDate(), "dd/MM/yyyy");
+		} catch (Exception e) {
+			LOGGER.error("Error is ", e);
+		}
+		try {
+
+			StoredProcedureQuery storedProcedureQuery = getEntityManager()
+					.createStoredProcedureQuery("profitAndLossStoredProcedure");
+			storedProcedureQuery.registerStoredProcedureParameter("incomeCode", String.class, ParameterMode.IN);
+			storedProcedureQuery.registerStoredProcedureParameter("costOfGoodsSoldCode", String.class,
+					ParameterMode.IN);
+			storedProcedureQuery.registerStoredProcedureParameter("adminExpenseCode", String.class, ParameterMode.IN);
+			storedProcedureQuery.registerStoredProcedureParameter("otherExpenseCode", String.class, ParameterMode.IN);
+			storedProcedureQuery.registerStoredProcedureParameter("startDate", LocalDateTime.class, ParameterMode.IN);
+			storedProcedureQuery.registerStoredProcedureParameter("endDate", LocalDateTime.class, ParameterMode.IN);
+
+			storedProcedureQuery.setParameter("incomeCode", ChartOfAccountCategoryCodeEnum.INCOME.getCode());
+			storedProcedureQuery.setParameter("costOfGoodsSoldCode",
+					ChartOfAccountCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode());
+			storedProcedureQuery.setParameter("adminExpenseCode",
+					ChartOfAccountCategoryCodeEnum.ADMIN_EXPENSE.getCode());
+			storedProcedureQuery.setParameter("otherExpenseCode",
+					ChartOfAccountCategoryCodeEnum.OTHER_EXPENSE.getCode());
+			storedProcedureQuery.setParameter("startDate", fromDate);
+			storedProcedureQuery.setParameter("endDate", toDate);
+			storedProcedureQuery.execute();
+			List<Object[]> resultList = storedProcedureQuery.getResultList();
+			int code = 0;
+			for (Object[] object : resultList) {
+				String transactionCategoryName = (String) object[0];
+				BigDecimal creditAmountBD = (BigDecimal) object[1];
+				BigDecimal debitAmountBD = (BigDecimal) object[2];
+				String transactionCategoryCode = (String) object[3];
+				Double creditAmount = creditAmountBD != null ? creditAmountBD.doubleValue() : (double) 0;
+				Double debitAmount = debitAmountBD != null ? debitAmountBD.doubleValue() : (double) 0;
+				CreditDebitAggregator creditDebitAggregator = new CreditDebitAggregator(creditAmount, debitAmount,
+						transactionCategoryCode, transactionCategoryName);
+				aggregatedTransactionMap.put(code++, creditDebitAggregator);
+			}
+			return aggregatedTransactionMap;
+		} catch (Exception e) {
+			LOGGER.error(
+					"Error occurred while calling stored procedure profitAndLossStoredProcedure " + e.getStackTrace());
+		}
+		return aggregatedTransactionMap;
 	}
 }

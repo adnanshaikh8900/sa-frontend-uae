@@ -67,6 +67,7 @@ public class JournalLineItemServiceImpl extends JournalLineItemService {
 		return currentBalance;
 	}
 
+	@Override
 	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
 			FinancialReportRequestModel financialReportRequestModel) {
 		return journalLineItemDao.getAggregateTransactionCategoryMap(financialReportRequestModel);

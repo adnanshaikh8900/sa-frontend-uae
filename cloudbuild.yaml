@@ -1,35 +1,27 @@
 steps:
-- name: 'maven:3.6.1-jdk-8-slim'
+- name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
   entrypoint: 'mvn'
-  args: ['verify', 'sonar:sonar','clean', 'package']
+  args: ['verify', 'sonar:sonar','package']
   id: mvn-build
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--tag=gcr.io/simplevat-dev/simplevat:$TAG_NAME', '.']
-  id: docker-build
+  waitFor: ['-']
+- name: 'gcr.io/kaniko-project/executor:latest'
+  args:
+    - --destination=gcr.io/gtt-project-prod/simplevat:$TAG_NAME
+    - --cache=true
+  id: docker-build-push
   waitFor:
   - mvn-build
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/simplevat-dev/simplevat:$TAG_NAME']
-  id: docker-push
-  waitFor:
-  - docker-build
-#- name: 'gcr.io/cloud-builders/gcloud'
-#  args: ['app', 'deploy', '--image-url', 'gcr.io/simplevat-dev/simplevat:$TAG_NAME', '--project', 'simplevat-dev', '--version', '$TAG_NAME', '--promote','--stop-previous-version']
-#  id: gae-deploy
-#  waitFor:
-#  - docker-push
-- name: 'gcr.io/simplevat-dev/simplevat-bash-kube'
+- name: 'gcr.io/cloud-builders/kubectl'
   args:
-  - 'bash'
-  - './deploy/rolling-update-new-release.bash'
-  - '$TAG_NAME'
-  - 'dev'
+    - 'rolling-update'
+    - 'simplevat-dev-rep'
+    - '--image=gcr.io/gtt-project-prod/simplevat:$TAG_NAME'
+    - '--namespace=simplevat-dev'
   env:
-  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=simplevat-dev'
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s-prod'
   waitFor:
-  - docker-push
-images: ['gcr.io/simplevat-dev/simplevat:$TAG_NAME']
+  - docker-build-push
 timeout: 2400s
 options:
-  machineType: 'N1_HIGHCPU_32'
+  machineType: 'N1_HIGHCPU_8'

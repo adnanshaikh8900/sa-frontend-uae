@@ -3,22 +3,22 @@ kind: ReplicationController
 metadata:
   labels:
     app: simplevat
-  name: simplevat-dev-rep
+  name: simplevat-dev-rep-{RELEASE-TAG}
   namespace: simplevat-dev
 spec:
   replicas: 3
   selector:
     app: simplevat
-    deployment: v-1
+    deployment: v-{RELEASE-TAG}
   template:
     metadata:
       labels:
         app: simplevat
-        deployment: v-1
+        deployment: v-{RELEASE-TAG}
     spec:
       containers:
         - name: simplevat
-          image: gcr.io/gtt-project-prod/simplevat:0-0-2-beta-3-55
+          image: gcr.io/simplevat-dev/simplevat:{RELEASE-TAG}
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -49,13 +49,13 @@ spec:
             - name: SIMPLEVAT_TOKEN
               value: XXXX
             - name: SIMPLEVAT_RELEASE
-              value: 0-0-2-beta-3-55
+              value: {RELEASE-TAG}
             - name: SIMPLEVAT_DB_HOST
-              value: 34.76.60.58
+              value: 34.68.185.169
             - name: SIMPLEVAT_DB
               value: simplevat_db
             - name: SIMPLEVAT_DB_USER
-              value: simplevat_db_user
+              value: proxyuser
             - name: SIMPLEVAT_DB_PASSWORD
               value: SimpleVat123$
             # These secrets are required to start the pod.

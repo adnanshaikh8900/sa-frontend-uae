@@ -28,23 +28,20 @@ import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.ReconsileCategoriesEnumConstant;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.ChartOfAccountCategory;
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.Employee;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
-import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.ReconsileLineItemModel;
 import com.simplevat.rest.ReconsileRequestModel;
 import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
-import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.ChartOfAccountCategoryService;
@@ -53,7 +50,6 @@ import com.simplevat.service.EmployeeService;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
-import com.simplevat.service.StateService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
@@ -294,32 +290,55 @@ public class ReconsilationController {
 		return journal;
 	}
 
-	@GetMapping(value = "/reconsile/getTransactionCat")
+	@GetMapping(value = "/getTransactionCat")
 	public ResponseEntity getTransactionCategory(@RequestParam Integer chartOfAccountCategoryId) {
 		try {
 			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);
 			Map<String, Object> param = new HashMap<>();
 			List<DropdownModel> dropDownModelList = new ArrayList<DropdownModel>();
 			List<TransactionCategory> transactionCatList = new ArrayList<>();
+			List<Object> list = new ArrayList<>();
 
 			switch (ChartOfAccountCategoryIdEnumConstant.get(category.getChartOfAccountCategoryId())) {
 			case SALES:
-				List<SingleLevelDropDownModel> list = new ArrayList<>();
+				param = new HashMap<>();
+				param.put("deleteFlag", false);
+				List<Invoice> invList = invoiceService.findByAttributes(param);
+				List<InviceSingleLevelDropdownModel> invModelList = new ArrayList<>();
+
+				for (Invoice invice : invList) {
+					invModelList.add(new InviceSingleLevelDropdownModel(invice.getId(), invice.getReceiptNumber(),
+							invice.getTotalAmount()));
+				}
+
 				list.add(new SingleLevelDropDownModel("Customer", contactService.getContactForDropdown(2)));
-				list.add(new SingleLevelDropDownModel("Sales Invoice", invoiceService.getInvoicesForDropdown()));
+				param = new HashMap<>();
+				param.put("Sales Invoice", invModelList);
+				list.add(param);
 				return new ResponseEntity<>(new ReconsilationCatDataModel(list, null), HttpStatus.OK);
 
 			case EXPENSE:
 				transactionCatList = transactionCategoryService
 						.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
+				list.add(new SingleLevelDropDownModel("Vat Included", vatCategoryService.getVatCategoryForDropDown()));
+				list.add(new SingleLevelDropDownModel("Customer", contactService.getContactForDropdown(2)));
+				list.add(new SingleLevelDropDownModel("Vendor", contactService.getContactForDropdown(1)));
 				return new ResponseEntity<>(
-						new ReconsilationCatDataModel(
-								Arrays.asList(new SingleLevelDropDownModel("Vat Included",
-										vatCategoryService.getVatCategoryForDropDown())),
+						new ReconsilationCatDataModel(list,
 								transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
 						HttpStatus.OK);
 
 			case MONEY_PAID_TO_USER:
+				transactionCatList = transactionCategoryService
+						.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
+				return new ResponseEntity<>(
+						new ReconsilationCatDataModel(
+								Arrays.asList(
+										new SingleLevelDropDownModel("User", contactService.getContactForDropdown(2))),
+								transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
+						HttpStatus.OK);
+
+			case MONEY_RECEIVED_FROM_USER:
 				transactionCatList = transactionCategoryService
 						.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
 				return new ResponseEntity<>(
@@ -338,8 +357,8 @@ public class ReconsilationController {
 				for (BankAccount bank : bankList) {
 					dropDownModelList.add(new DropdownModel(bank.getBankAccountId(), bank.getBankName()));
 				}
-
-				return new ResponseEntity<>(new SingleLevelDropDownModel("Bank", dropDownModelList), HttpStatus.OK);
+				list.add(new SingleLevelDropDownModel("Bank", dropDownModelList));
+				return new ResponseEntity<>(new ReconsilationCatDataModel(list, null), HttpStatus.OK);
 
 			case DEFAULT:
 				transactionCatList = transactionCategoryService

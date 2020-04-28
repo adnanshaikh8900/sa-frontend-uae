@@ -39,6 +39,8 @@ import com.simplevat.service.PaymentService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.DateFormatUtil;
+import com.simplevat.utils.DateUtils;
 import com.simplevat.utils.FileHelper;
 import com.simplevat.utils.MailUtility;
 
@@ -77,6 +79,12 @@ public class InvoiceRestHelper {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private DateUtils dateUtils;
+
+	@Autowired
+	private DateFormatUtil dateFormatUtil;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -286,7 +294,11 @@ public class InvoiceRestHelper {
 				model.setTotalVatAmount(invoice.getTotalVatAmount());
 
 				if (invoice.getStatus() != null) {
-					model.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
+					if (invoice.getStatus() > 2 && invoice.getStatus() < 5) {
+						model.setStatus(getInvoceStatus(dateUtils.get(invoice.getInvoiceDueDate())));
+					} else {
+						model.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
+					}
 				}
 				invoiceListModels.add(model);
 			}
@@ -453,5 +465,20 @@ public class InvoiceRestHelper {
 			}
 		}
 		return invoiceDataMap;
+	}
+
+	public String getInvoceStatus(Date dueDate) {
+		String status = "";
+		Date today = new Date();
+		int dueDays = dateUtils.diff(today, dueDate);
+		int dueDay = Math.abs(dueDays);
+		if (dueDays > 0) {
+			status = ("Over Due by " + dueDay + " Days");
+		} else if (dueDays < 0) {
+			status = (" Due in " + dueDay + " Days");
+		} else if (dueDays == 0) {
+			status = ("Due Today");
+		}
+		return status;
 	}
 }

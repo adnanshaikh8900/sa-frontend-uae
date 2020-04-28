@@ -15,6 +15,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ReconsilationCatDataModel {
 
-	private List<SingleLevelDropDownModel> dataList;
+	private List<Object> dataList;
 	private List<SingleLevelDropDownModel> categoriesList;
 }

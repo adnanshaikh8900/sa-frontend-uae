@@ -1,183 +1,201 @@
-import { BANK_ACCOUNT } from 'constants/types'
+import { BANK_ACCOUNT } from 'constants/types';
 import {
   // api,
-  authApi
-} from 'utils'
-import moment from 'moment'
+  authApi,
+} from 'utils';
+import moment from 'moment';
 
 export const getTransactionList = (obj) => {
-  let id = obj.id ? obj.id : '';  
-  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId.value : '';  
-  let transactionDate = obj.transactionDate ? obj.transactionDate : '';  
-  let pageNo = obj.pageNo ? obj.pageNo : '';  
+  let id = obj.id ? obj.id : '';
+  let chartOfAccountId = obj.chartOfAccountId ? obj.chartOfAccountId.value : '';
+  let transactionDate = obj.transactionDate ? obj.transactionDate : '';
+  let pageNo = obj.pageNo ? obj.pageNo : '';
   let pageSize = obj.pageSize ? obj.pageSize : '';
   let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false;
-  
-  let param = `/rest/transaction/list?bankId=${id}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`
-  if(transactionDate !== '') {
-    let date = moment(transactionDate).format('DD-MM-YYYY')
-    param = param +`&transactionDate=${date}`
+
+  let param = `/rest/transaction/list?bankId=${id}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`;
+  if (transactionDate !== '') {
+    let date = moment(transactionDate).format('DD-MM-YYYY');
+    param = param + `&transactionDate=${date}`;
   }
   return (dispatch) => {
-    let data ={
+    let data = {
       method: 'get',
-      url: param
-    }
-    return authApi(data).then((res) => {
-      if (res.status === 200) {
-        if(!obj.paginationDisable) {
-          dispatch({
-            type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
-            payload: {
-              data: res.data
-            }
-          })
+      url: param,
+    };
+    return authApi(data)
+      .then((res) => {
+        if (res.status === 200) {
+          if (!obj.paginationDisable) {
+            dispatch({
+              type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
+              payload: {
+                data: res.data,
+              },
+            });
+          }
+          return res;
         }
-        return res
-      }
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};
 
 export const getTransactionCategoryList = () => {
   return (dispatch) => {
-    let data ={
+    let data = {
       method: 'get',
-      url: '/rest/transactioncategory/getList'
-    }
-    return authApi(data).then((res) => {
-      if (res.status === 200) {
-        dispatch({
-          type: BANK_ACCOUNT.TRANSACTION_CATEGORY_LIST,
-          payload:  res.data
-        })
-      }
-      return res
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+      url: '/rest/transactioncategory/getList',
+    };
+    return authApi(data)
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch({
+            type: BANK_ACCOUNT.TRANSACTION_CATEGORY_LIST,
+            payload: res.data,
+          });
+        }
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};
 
 export const getTransactionTypeList = () => {
   return (dispatch) => {
-    let data ={
+    let data = {
       method: 'get',
-      url: '/rest/datalist/getTransactionTypes'
-    }
-    return authApi(data).then((res) => {
-      if (res.status === 200) {
-        dispatch({
-          type: BANK_ACCOUNT.TRANSACTION_TYPE_LIST,
-          payload: res.data
-        })
-      }
-      return res
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+      url: '/rest/datalist/getTransactionTypes',
+    };
+    return authApi(data)
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch({
+            type: BANK_ACCOUNT.TRANSACTION_TYPE_LIST,
+            payload: res.data,
+          });
+        }
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};
 
 export const getProjectList = () => {
   return (dispatch) => {
-    let data ={
+    let data = {
       method: 'get',
-      url: '/rest/project/getProjectsForDropdown'
-    }
-    return authApi(data).then((res) => {
-      if (res.status === 200) {
-        dispatch({
-          type: BANK_ACCOUNT.PROJECT_LIST,
-          payload: res.data
-        })
-      }
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+      url: '/rest/project/getProjectsForDropdown',
+    };
+    return authApi(data)
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch({
+            type: BANK_ACCOUNT.PROJECT_LIST,
+            payload: res.data,
+          });
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};
 
 export const deleteTransactionById = (id) => {
   return (dispatch) => {
     let data = {
       method: 'DELETE',
       url: `/rest/transaction/delete?id=${id}`,
-    }
-    return authApi(data).then((res) => {
-      return res
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+    };
+    return authApi(data)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};
 
 export const getChartOfCategoryList = (type) => {
   return (dispatch) => {
-    let data ={
+    let data = {
       method: 'get',
-      url: `/rest/datalist/reconsileCategories?debitCreditFlag=${type}`
-    }
-    return authApi(data).then((res) => {
-      if (res.status === 200) {
-      return res
-      }
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+      url: `/rest/datalist/reconsileCategories?debitCreditFlag=${type}`,
+    };
+    return authApi(data)
+      .then((res) => {
+        if (res.status === 200) {
+          return res;
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};
 
 export const getTransactionCategoryListForExplain = (id) => {
   return (dispatch) => {
-    let data ={
+    let data = {
       method: 'get',
-      url: `rest/datalist/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`
-    }
-    return authApi(data).then((res) => {
-      if (res.status === 200) {
-      return res
-      }
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+      url: `rest/reconsile/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`,
+    };
+    return authApi(data)
+      .then((res) => {
+        if (res.status === 200) {
+          return res;
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};
 
 export const getCategoryListForReconcile = (code) => {
   return (dispatch) => {
-    let data ={
+    let data = {
       method: 'get',
-      url: `/rest/reconsile/getByReconcilationCatCode?reconcilationCatCode=${code}`
-    }
-    return authApi(data).then((res) => {
-      if (res.status === 200) {
-      return res
-      }
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+      url: `/rest/reconsile/getByReconcilationCatCode?reconcilationCatCode=${code}`,
+    };
+    return authApi(data)
+      .then((res) => {
+        if (res.status === 200) {
+          return res;
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};
 
 export const reconcileTransaction = (obj) => {
   return (dispatch) => {
-    let data ={
+    let data = {
       method: 'POST',
       url: `/rest/reconsile/reconcile`,
-      data: obj
-    }
-    return authApi(data).then((res) => {
-      if (res.status === 200) {
-      return res
-      }
-    }).catch((err) => {
-      throw err
-    })
-  }
-}
+      data: obj,
+    };
+    return authApi(data)
+      .then((res) => {
+        if (res.status === 200) {
+          return res;
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+};
 
 // data: [{
 //   transaction_type: 'Debit',

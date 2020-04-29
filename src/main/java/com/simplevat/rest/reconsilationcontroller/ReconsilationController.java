@@ -334,28 +334,14 @@ public class ReconsilationController {
 
 			case MONEY_PAID_TO_USER:
 			case MONEY_RECEIVED_FROM_USER:
-			case MONEY_RECEIVED_FROM_OTHER:
 				transactionCatList = transactionCategoryService
 						.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
 				return new ResponseEntity<>(
 						new ReconsilationCatDataModel(
-								Arrays.asList(
-										new SingleLevelDropDownModel("User", contactService.getContactForDropdown(2))),
+								Arrays.asList(new SingleLevelDropDownModel("User",
+										employeeService.getEmployeesForDropdown())),
 								transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
 						HttpStatus.OK);
-
-//			case TRANSFERED_TO:
-//			case TRANSFERED_FROM:
-//				param = new HashMap<>();
-//				param.put("deleteFlag", Boolean.FALSE);
-//				List<BankAccount> bankList = bankService.findByAttributes(param);
-//				dropDownModelList = new ArrayList<DropdownModel>();
-//				for (BankAccount bank : bankList) {
-//					dropDownModelList.add(new DropdownModel(bank.getBankAccountId(), bank.getBankName()));
-//				}
-//				List<SingleLevelDropDownModel> bankModelList =  new ArrayList<>();
-//				bankModelList.add(new SingleLevelDropDownModel("Bank", dropDownModelList));
-//				return new ResponseEntity<>(new ReconsilationCatDataModel(), HttpStatus.OK);
 
 			case DEFAULT:
 				transactionCatList = transactionCategoryService

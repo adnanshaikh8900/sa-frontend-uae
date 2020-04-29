@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InviceSingleLevelDropdownModel {
-	private Integer value;
+	private Integer options;
 	private String label;
 	private BigDecimal amount;
 

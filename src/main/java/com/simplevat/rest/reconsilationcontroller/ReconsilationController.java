@@ -307,13 +307,17 @@ public class ReconsilationController {
 				List<InviceSingleLevelDropdownModel> invModelList = new ArrayList<>();
 
 				for (Invoice invice : invList) {
-					invModelList.add(new InviceSingleLevelDropdownModel(invice.getId(), invice.getReceiptNumber(),
-							invice.getTotalAmount()));
+					invModelList
+							.add(new InviceSingleLevelDropdownModel(
+									invice.getId(), "Ref No. " + invice.getReferenceNumber() + " "
+											+ invice.getTotalAmount() + " " + invice.getCurrency().getCurrencyName(),
+									invice.getTotalAmount()));
 				}
 
 				list.add(new SingleLevelDropDownModel("Customer", contactService.getContactForDropdown(2)));
 				param = new HashMap<>();
-				param.put("Sales Invoice", invModelList);
+				param.put("label", "Sales Invoice");
+				param.put("options", invModelList);
 				list.add(param);
 				return new ResponseEntity<>(new ReconsilationCatDataModel(list, null), HttpStatus.OK);
 
@@ -329,16 +333,8 @@ public class ReconsilationController {
 						HttpStatus.OK);
 
 			case MONEY_PAID_TO_USER:
-				transactionCatList = transactionCategoryService
-						.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
-				return new ResponseEntity<>(
-						new ReconsilationCatDataModel(
-								Arrays.asList(
-										new SingleLevelDropDownModel("User", contactService.getContactForDropdown(2))),
-								transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
-						HttpStatus.OK);
-
 			case MONEY_RECEIVED_FROM_USER:
+			case MONEY_RECEIVED_FROM_OTHER:
 				transactionCatList = transactionCategoryService
 						.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
 				return new ResponseEntity<>(
@@ -348,17 +344,18 @@ public class ReconsilationController {
 								transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
 						HttpStatus.OK);
 
-			case TRANSFERED_TO:
-			case TRANSFERED_FROM:
-				param = new HashMap<>();
-				param.put("deleteFlag", Boolean.FALSE);
-				List<BankAccount> bankList = bankService.findByAttributes(param);
-				dropDownModelList = new ArrayList<DropdownModel>();
-				for (BankAccount bank : bankList) {
-					dropDownModelList.add(new DropdownModel(bank.getBankAccountId(), bank.getBankName()));
-				}
-				list.add(new SingleLevelDropDownModel("Bank", dropDownModelList));
-				return new ResponseEntity<>(new ReconsilationCatDataModel(list, null), HttpStatus.OK);
+//			case TRANSFERED_TO:
+//			case TRANSFERED_FROM:
+//				param = new HashMap<>();
+//				param.put("deleteFlag", Boolean.FALSE);
+//				List<BankAccount> bankList = bankService.findByAttributes(param);
+//				dropDownModelList = new ArrayList<DropdownModel>();
+//				for (BankAccount bank : bankList) {
+//					dropDownModelList.add(new DropdownModel(bank.getBankAccountId(), bank.getBankName()));
+//				}
+//				List<SingleLevelDropDownModel> bankModelList =  new ArrayList<>();
+//				bankModelList.add(new SingleLevelDropDownModel("Bank", dropDownModelList));
+//				return new ResponseEntity<>(new ReconsilationCatDataModel(), HttpStatus.OK);
 
 			case DEFAULT:
 				transactionCatList = transactionCategoryService

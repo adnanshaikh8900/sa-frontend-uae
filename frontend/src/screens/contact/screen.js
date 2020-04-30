@@ -1,6 +1,6 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -9,39 +9,38 @@ import {
   Row,
   Col,
   ButtonGroup,
-  Input
-} from 'reactstrap'
-import Select from 'react-select'
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
-import { Loader, ConfirmDeleteModal } from 'components'
+  Input,
+} from 'reactstrap';
+import Select from 'react-select';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { Loader, ConfirmDeleteModal } from 'components';
 
-import 'react-toastify/dist/ReactToastify.css'
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
-import * as ContactActions from './actions'
-import { CommonActions } from 'services/global'
-import { selectOptionsFactory } from 'utils'
-import { CSVLink } from "react-csv";
+import * as ContactActions from './actions';
+import { CommonActions } from 'services/global';
+import { selectOptionsFactory } from 'utils';
+import { CSVLink } from 'react-csv';
 
-import './style.scss'
+import './style.scss';
 
 const mapStateToProps = (state) => {
-  return ({
+  return {
     contact_list: state.contact.contact_list,
-    contact_type_list: state.contact.contact_type_list
-  })
-}
+    contact_type_list: state.contact.contact_type_list,
+  };
+};
 const mapDispatchToProps = (dispatch) => {
-  return ({
+  return {
     contactActions: bindActionCreators(ContactActions, dispatch),
     commonActions: bindActionCreators(CommonActions, dispatch),
-  })
-}
+  };
+};
 
 class Contact extends React.Component {
-
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       loading: true,
       selectedRows: [],
@@ -53,8 +52,8 @@ class Contact extends React.Component {
       },
       selectedContactType: '',
       csvData: [],
-      view: false
-    }
+      view: false,
+    };
 
     this.options = {
       onRowClick: this.goToDetail,
@@ -65,195 +64,234 @@ class Contact extends React.Component {
       onPageChange: this.onPageChange,
       sortName: '',
       sortOrder: '',
-      onSortChange: this.sortColumn
-    }
+      onSortChange: this.sortColumn,
+    };
 
     this.selectRowProp = {
       mode: 'checkbox',
       bgColor: 'rgba(0,0,0, 0.05)',
       clickToSelect: false,
       onSelect: this.onRowSelect,
-      onSelectAll: this.onSelectAll
-    }
-    this.csvLink = React.createRef()
+      onSelectAll: this.onSelectAll,
+    };
+    this.csvLink = React.createRef();
   }
 
   componentDidMount = () => {
     this.props.contactActions.getContactTypeList();
-    this.initializeData()
-  }
+    this.initializeData();
+  };
 
   componentWillUnmount = () => {
     this.setState({
-      selectedRows: []
-    })
-  }
+      selectedRows: [],
+    });
+  };
 
   initializeData = (search) => {
-    let { filterData } = this.state
+    let { filterData } = this.state;
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
-      pageSize: this.options.sizePerPage
-    }
+      pageSize: this.options.sizePerPage,
+    };
     const sortingData = {
       order: this.options.sortOrder ? this.options.sortOrder : '',
-      sortingCol: this.options.sortName ? this.options.sortName : ''
-    }
-    const postData = { ...filterData, ...paginationData, ...sortingData }
-    this.props.contactActions.getContactList(postData).then((res) => {
-      if (res.status === 200) {
-        this.setState({
-          loading: false,
-        });
-      }
-    }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
-      this.setState({ loading: false })
-    })
-  }
-
+      sortingCol: this.options.sortName ? this.options.sortName : '',
+    };
+    const postData = { ...filterData, ...paginationData, ...sortingData };
+    this.props.contactActions
+      .getContactList(postData)
+      .then((res) => {
+        if (res.status === 200) {
+          this.setState({
+            loading: false,
+          });
+        }
+      })
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong',
+        );
+        this.setState({ loading: false });
+      });
+  };
 
   onSizePerPageList = (sizePerPage) => {
     if (this.options.sizePerPage !== sizePerPage) {
-      this.options.sizePerPage = sizePerPage
-      this.initializeData()
+      this.options.sizePerPage = sizePerPage;
+      this.initializeData();
     }
-  }
+  };
 
   onPageChange = (page, sizePerPage) => {
     if (this.options.page !== page) {
-      this.options.page = page
-      this.initializeData()
+      this.options.page = page;
+      this.initializeData();
     }
-  }
+  };
 
   sortColumn = (sortName, sortOrder) => {
     this.options.sortName = sortName;
     this.options.sortOrder = sortOrder;
-    this.initializeData()
-  }
+    this.initializeData();
+  };
 
   onRowSelect = (row, isSelected, e) => {
-    let tempList = []
+    let tempList = [];
     if (isSelected) {
-      tempList = Object.assign([], this.state.selectedRows)
+      tempList = Object.assign([], this.state.selectedRows);
       tempList.push(row.id);
     } else {
       this.state.selectedRows.map((item) => {
         if (item !== row.id) {
-          tempList.push(item)
+          tempList.push(item);
         }
-        return item
+        return item;
       });
     }
     this.setState({
-      selectedRows: tempList
-    })
-  }
+      selectedRows: tempList,
+    });
+  };
 
   onSelectAll = (isSelected, rows) => {
-    let tempList = []
+    let tempList = [];
     if (isSelected) {
-      rows.map((item) => tempList.push(item.id))
+      rows.map((item) => tempList.push(item.id));
     }
     this.setState({
-      selectedRows: tempList
-    })
-  }
+      selectedRows: tempList,
+    });
+  };
 
   goToDetail = (row) => {
-    this.props.history.push('/admin/master/contact/detail', { id: row.id })
-  }
+    this.props.history.push('/admin/master/contact/detail', { id: row.id });
+  };
 
   bulkDelete = () => {
-    const {
-      selectedRows
-    } = this.state
+    const { selectedRows } = this.state;
     if (selectedRows.length > 0) {
       this.setState({
-        dialog: <ConfirmDeleteModal
-          isOpen={true}
-          okHandler={this.removeBulk}
-          cancelHandler={this.removeDialog}
-        />
-      })
+        dialog: (
+          <ConfirmDeleteModal
+            isOpen={true}
+            okHandler={this.removeBulk}
+            cancelHandler={this.removeDialog}
+          />
+        ),
+      });
     } else {
-      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
+      this.props.commonActions.tostifyAlert(
+        'info',
+        'Please select the rows of the table and try again.',
+      );
     }
-  }
+  };
 
   removeBulk = () => {
-    this.removeDialog()
+    this.removeDialog();
     let { selectedRows } = this.state;
-    const { contact_list } = this.props
+    const { contact_list } = this.props;
     let obj = {
-      ids: selectedRows
-    }
-    this.props.contactActions.removeBulk(obj).then((res) => {
-      this.initializeData();
-      this.props.commonActions.tostifyAlert('success', 'Contacts Deleted Successfully')
-      if (contact_list && contact_list.data && contact_list.data.length > 0) {
-        this.setState({
-          selectedRows: []
-        })
-      }
-    }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err !== null ? err.data.message : 'Something Went Wrong')
-      this.setState({ isLoading: false })
-    })
-  }
+      ids: selectedRows,
+    };
+    this.props.contactActions
+      .removeBulk(obj)
+      .then((res) => {
+        this.initializeData();
+        this.props.commonActions.tostifyAlert(
+          'success',
+          'Contacts Deleted Successfully',
+        );
+        if (contact_list && contact_list.data && contact_list.data.length > 0) {
+          this.setState({
+            selectedRows: [],
+          });
+        }
+      })
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          'error',
+          err && err !== null ? err.data.message : 'Something Went Wrong',
+        );
+        this.setState({ isLoading: false });
+      });
+  };
 
   removeDialog = () => {
     this.setState({
-      dialog: null
-    })
-  }
+      dialog: null,
+    });
+  };
 
   handleChange = (val, name) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
-        [name]: val
-      })
-    })
-  }
+        [name]: val,
+      }),
+    });
+  };
 
   handleSearch = () => {
     this.initializeData();
-  }
+  };
 
   getCsvData = () => {
     if (this.state.csvData.length === 0) {
       let obj = {
-        paginationDisable: true
-      }
+        paginationDisable: true,
+      };
       this.props.contactActions.getContactList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
-              this.csvLink.current.link.click()
-            }, 0)
+              this.csvLink.current.link.click();
+            }, 0);
           });
         }
-      })
+      });
     } else {
-      this.csvLink.current.link.click()
+      this.csvLink.current.link.click();
+    }
+  };
+
+  clearAll = () => {
+    this.setState(
+      {
+        filterData: {
+          name: '',
+          email: '',
+          contactType: '',
+        },
+      },
+      () => {
+        this.initializeData();
+      },
+    );
+  };
+
+  customEmail(cell, row) {
+    if (row.email.length > 15) {
+      return `${cell}`;
+    }
+  }
+  customName(cell, row) {
+    if (row.firstName.length > 15) {
+      return `${cell}`;
     }
   }
 
-  clearAll = () => {
-    this.setState({
-      filterData: {
-        name: '',
-        email: '',
-        contactType: '',
-      },
-    }, () => { this.initializeData() })
-  }
-
   render() {
-
-    const { loading, dialog, selectedRows, csvData, view, filterData } = this.state
-    const { contact_list, contact_type_list } = this.props
+    const {
+      loading,
+      dialog,
+      selectedRows,
+      csvData,
+      view,
+      filterData,
+    } = this.state;
+    const { contact_list, contact_type_list } = this.props;
 
     return (
       <div className="contact-screen">
@@ -272,137 +310,190 @@ class Contact extends React.Component {
               </Row>
             </CardHeader>
             <CardBody>
-              {
-                loading ?
-                  <Row>
-                    <Col lg={12}>
-                      <Loader />
-                    </Col>
-                  </Row>
-                  :
-                  <Row>
-                    <Col lg={12}>
-                      <div className="d-flex justify-content-end">
-                        <ButtonGroup size="sm">
-                          <Button
-                            color="success"
-                            className="btn-square"
-                            onClick={() => this.getCsvData()}
-                          >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
-                          </Button>
-                          {view && <CSVLink
+              {loading ? (
+                <Row>
+                  <Col lg={12}>
+                    <Loader />
+                  </Col>
+                </Row>
+              ) : (
+                <Row>
+                  <Col lg={12}>
+                    <div className="d-flex justify-content-end">
+                      <ButtonGroup size="sm">
+                        <Button
+                          color="success"
+                          className="btn-square"
+                          onClick={() => this.getCsvData()}
+                        >
+                          <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                          Export To CSV
+                        </Button>
+                        {view && (
+                          <CSVLink
                             data={csvData}
                             filename={'Contact.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"
-                          />}
-                          <Button
-                            color="primary"
-                            className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/master/contact/create`)}
-                          >
-                            <i className="fas fa-plus mr-1" />
-                            New Contact
-                          </Button>
-                          <Button
-                            color="warning"
-                            className="btn-square"
-                            onClick={this.bulkDelete}
-                            disabled={selectedRows.length === 0}
-                          >
-                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-                            Bulk Delete
-                          </Button>
-                        </ButtonGroup>
-                      </div>
-                      <div className="py-3">
-                        <h5>Filter : </h5>
-                        <form>
-                          <Row>
-
-                            <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Name" value={filterData.name} onChange={(e) => { this.handleChange(e.target.value, 'name') }} />
-                            </Col>
-
-                            <Col lg={3} className="mb-1">
-                              <Input type="text" placeholder="Email" value={filterData.email} onChange={(e) => { this.handleChange(e.target.value, 'email') }} />
-                            </Col>
-
-                            <Col lg={3} className="mb-1">
-                              <Select
-                                options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
-                                onChange={(val) => {
-                                  if (val && val.value) {
-                                    this.handleChange(val, 'contactType')
-                                    this.setState({ 'selectedContactType': val })
-                                  } else {
-                                    this.handleChange('', 'contactType')
-                                    this.setState({ 'selectedContactType': '' })
-                                  }
-                                }}
-                                className="select-default-width"
-                                placeholder="Contact Type"
-                                value={filterData.contactType}
-                              />
-                            </Col>
-
-                            <Col lg={1} className="pl-0 pr-0">
-                              <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
-                                <i className="fa fa-search"></i>
-                              </Button>
-                              <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                                <i className="fa fa-refresh"></i>
-                              </Button>
-                            </Col>
-
-                          </Row>
-                        </form>
-                      </div>
-                      <div>
+                          />
+                        )}
+                        <Button
+                          color="primary"
+                          className="btn-square"
+                          onClick={() =>
+                            this.props.history.push(
+                              `/admin/master/contact/create`,
+                            )
+                          }
+                        >
+                          <i className="fas fa-plus mr-1" />
+                          New Contact
+                        </Button>
+                        <Button
+                          color="warning"
+                          className="btn-square"
+                          onClick={this.bulkDelete}
+                          disabled={selectedRows.length === 0}
+                        >
+                          <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+                          Bulk Delete
+                        </Button>
+                      </ButtonGroup>
+                    </div>
+                    <div className="py-3">
+                      <h5>Filter : </h5>
+                      <form>
                         <Row>
-                          <Col xs="12" lg="12">
-                            <BootstrapTable
-                              selectRow={this.selectRowProp}
-                              search={false}
-                              options={this.options}
-                              data={contact_list && contact_list.data ? contact_list.data : []}
-                              version="4"
-                              hover
-                              pagination={contact_list && contact_list.data && contact_list.data.length > 0 ? true : false}
-                              remote
-                              fetchInfo={{ dataTotalSize: contact_list.count ? contact_list.count : 0 }}
-                              className="product-table"
-                              trClassName="cursor-pointer"
-                              csvFileName="Contact.csv"
-                              ref={(node) => {
-                                this.table = node
+                          <Col lg={3} className="mb-1">
+                            <Input
+                              type="text"
+                              placeholder="Name"
+                              value={filterData.name}
+                              onChange={(e) => {
+                                this.handleChange(e.target.value, 'name');
                               }}
-                            >
-                              <TableHeaderColumn
-                                isKey
-                                dataField="firstName"
-                                dataSort
-                              >
-                                Name
-                              </TableHeaderColumn>
-                              <TableHeaderColumn
-                                dataField="email"
-                                dataSort
-                              >
-                                email
-                              </TableHeaderColumn>
-                              <TableHeaderColumn
-                                dataField="contactTypeString"
-                                dataSort
-                              // dataFormat={this.typeFormatter}
-                              >
-                                Type
-                              </TableHeaderColumn>
-                            </BootstrapTable>
+                            />
                           </Col>
-                          {/* <Col xs="12" lg="4">
+
+                          <Col lg={3} className="mb-1">
+                            <Input
+                              type="text"
+                              placeholder="Email"
+                              value={filterData.email}
+                              onChange={(e) => {
+                                this.handleChange(e.target.value, 'email');
+                              }}
+                            />
+                          </Col>
+
+                          <Col lg={3} className="mb-1">
+                            <Select
+                              options={
+                                contact_type_list
+                                  ? selectOptionsFactory.renderOptions(
+                                      'label',
+                                      'value',
+                                      contact_type_list,
+                                      'Contact Type',
+                                    )
+                                  : []
+                              }
+                              onChange={(val) => {
+                                if (val && val.value) {
+                                  this.handleChange(val, 'contactType');
+                                  this.setState({ selectedContactType: val });
+                                } else {
+                                  this.handleChange('', 'contactType');
+                                  this.setState({ selectedContactType: '' });
+                                }
+                              }}
+                              className="select-default-width"
+                              placeholder="Contact Type"
+                              value={filterData.contactType}
+                            />
+                          </Col>
+
+                          <Col lg={1} className="pl-0 pr-0">
+                            <Button
+                              type="button"
+                              color="primary"
+                              className="btn-square mr-1"
+                              onClick={this.handleSearch}
+                            >
+                              <i className="fa fa-search"></i>
+                            </Button>
+                            <Button
+                              type="button"
+                              color="primary"
+                              className="btn-square"
+                              onClick={this.clearAll}
+                            >
+                              <i className="fa fa-refresh"></i>
+                            </Button>
+                          </Col>
+                        </Row>
+                      </form>
+                    </div>
+                    <div>
+                      <Row>
+                        <Col xs="12" lg="12">
+                          <BootstrapTable
+                            selectRow={this.selectRowProp}
+                            search={false}
+                            options={this.options}
+                            data={
+                              contact_list && contact_list.data
+                                ? contact_list.data
+                                : []
+                            }
+                            version="4"
+                            hover
+                            pagination={
+                              contact_list &&
+                              contact_list.data &&
+                              contact_list.data.length > 0
+                                ? true
+                                : false
+                            }
+                            remote
+                            fetchInfo={{
+                              dataTotalSize: contact_list.count
+                                ? contact_list.count
+                                : 0,
+                            }}
+                            className="product-table"
+                            trClassName="cursor-pointer"
+                            csvFileName="Contact.csv"
+                            ref={(node) => {
+                              this.table = node;
+                            }}
+                          >
+                            <TableHeaderColumn
+                              isKey
+                              dataField="firstName"
+                              dataSort
+                              columnTitle={this.customName}
+                            >
+                              Name
+                            </TableHeaderColumn>
+                            <TableHeaderColumn
+                              dataField="email"
+                              columnTitle={this.customEmail}
+                              dataSort
+                            >
+                              email
+                            </TableHeaderColumn>
+                            <TableHeaderColumn
+                              dataField="contactTypeString"
+                              dataSort
+                              // dataFormat={this.typeFormatter}
+                            >
+                              Type
+                            </TableHeaderColumn>
+                          </BootstrapTable>
+                        </Col>
+                        {/* <Col xs="12" lg="4">
                             <div className="contact-info p-4">
                               <h4>Mr. Admin Admin</h4>
                               <hr />
@@ -430,17 +521,17 @@ class Contact extends React.Component {
                               </div>
                             </div>
                           </Col> */}
-                        </Row>
-                      </div>
-                    </Col>
-                  </Row>
-              }
+                      </Row>
+                    </div>
+                  </Col>
+                </Row>
+              )}
             </CardBody>
           </Card>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Contact)
+export default connect(mapStateToProps, mapDispatchToProps)(Contact);

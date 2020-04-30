@@ -1,6 +1,6 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -11,46 +11,41 @@ import {
   Form,
   FormGroup,
   Input,
-  Label
-} from 'reactstrap'
-import Select from 'react-select'
-import { selectOptionsFactory } from 'utils'
+  Label,
+} from 'reactstrap';
+import Select from 'react-select';
+import { selectOptionsFactory } from 'utils';
 
-
-import './style.scss'
+import './style.scss';
 import { Formik } from 'formik';
-import * as Yup from "yup";
+import * as Yup from 'yup';
 
-import {
-  CommonActions
-} from 'services/global'
-import * as ContactActions from '../../actions'
-import * as CreateContactActions from './actions'
-import 'react-phone-number-input/style.css'
-import PhoneInput from 'react-phone-number-input'
-import { isValidPhoneNumber } from 'react-phone-number-input'
-
+import { CommonActions } from 'services/global';
+import * as ContactActions from '../../actions';
+import * as CreateContactActions from './actions';
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
+import { isValidPhoneNumber } from 'react-phone-number-input';
 
 const mapStateToProps = (state) => {
-  return ({
+  return {
     country_list: state.contact.country_list,
     state_list: state.contact.state_list,
     currency_list: state.contact.currency_list,
-    contact_type_list: state.contact.contact_type_list
-  })
-}
+    contact_type_list: state.contact.contact_type_list,
+  };
+};
 const mapDispatchToProps = (dispatch) => {
-  return ({
+  return {
     contactActions: bindActionCreators(ContactActions, dispatch),
     createContactActions: bindActionCreators(CreateContactActions, dispatch),
-    commonActions: bindActionCreators(CommonActions, dispatch)
-  })
-}
+    commonActions: bindActionCreators(CommonActions, dispatch),
+  };
+};
 
 class CreateContact extends React.Component {
-
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       loading: true,
       initValue: {
@@ -75,66 +70,82 @@ class CreateContact extends React.Component {
         stateId: '',
         telephone: '',
         vatRegistrationNumber: '',
+        disabled: false,
       },
-      createMore: false
-    }
+      createMore: false,
+    };
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
     this.regExAlpha = /^[a-zA-Z ]+$/;
+    this.regExAddress = /^[a-zA-Z0-9\s,'-]+$/;
   }
-
 
   componentDidMount = () => {
-    this.initializeData()
-  }
+    this.initializeData();
+  };
 
   initializeData = () => {
     this.props.contactActions.getContactTypeList();
     this.props.contactActions.getCountryList();
     this.props.contactActions.getCurrencyList();
-
-  }
+  };
 
   getData = (data) => {
-    let temp = {}
-    for(let item in data) {
-      if(typeof data[`${item}`] !== 'object') {
-        temp[`${item}`] = data[`${item}`]
+    let temp = {};
+    for (let item in data) {
+      if (typeof data[`${item}`] !== 'object') {
+        temp[`${item}`] = data[`${item}`];
       } else {
-        temp[`${item}`] = data[`${item}`].value
+        temp[`${item}`] = data[`${item}`].value;
       }
     }
-    return temp
-  }
+    return temp;
+  };
 
   handleSubmit = (data, resetForm) => {
-    const postData = this.getData(data)
-    this.props.createContactActions.createContact(postData).then((res) => {
-      if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'New Contact Created Successfully')
-        if (this.state.createMore) {
-          resetForm(this.state.initValue);
-          this.setState({ createMore: false });
-        } else {
-          this.props.history.push('/admin/master/contact');
+    this.setState({ disabled: true });
+    const postData = this.getData(data);
+    this.props.createContactActions
+      .createContact(postData)
+      .then((res) => {
+        if (res.status === 200) {
+          this.setState({ disabled: false });
+          this.props.commonActions.tostifyAlert(
+            'success',
+            'New Contact Created Successfully',
+          );
+          if (this.state.createMore) {
+            resetForm(this.state.initValue);
+            this.setState({ createMore: false });
+          } else {
+            this.props.history.push('/admin/master/contact');
+          }
         }
-      }
-    }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
-    })
-  }
+      })
+      .catch((err) => {
+        this.setState({ disabled: true });
+        this.props.commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong',
+        );
+      });
+  };
 
   getStateList = (countryCode) => {
     this.props.contactActions.getStateList(countryCode);
-  }
+  };
 
   render() {
-    const { currency_list, country_list, contact_type_list, state_list } = this.props;
+    const {
+      currency_list,
+      country_list,
+      contact_type_list,
+      state_list,
+    } = this.props;
     const { initValue } = this.state;
     return (
       <div className="create-contact-screen">
         <div className="animated fadeIn">
-
           <Row>
             <Col lg={12} className="mx-auto">
               <Card>
@@ -154,58 +165,86 @@ class CreateContact extends React.Component {
                       <Formik
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values, resetForm)
+                          this.handleSubmit(values, resetForm);
                         }}
-                        validationSchema={
-                          Yup.object().shape({
-                            firstName: Yup.string().required("First Name is Required"),
-                            lastName: Yup.string().required("Last Name is Required"),
-                            middleName: Yup.string()
-                              .required("Middle Name is Required"),
-                            contactType: Yup.string()
-                            .required("Contact Type is Required"),
-                            //       organization: Yup.string()
-                            //       .required("Organization Name is Required"),
-                            //     poBoxNumber: Yup.number()
-                            //       .required("PO Box Number is Required"),
-                            email: Yup.string()
-                              .required("Email is Required")
-                              .email("Invalid Email"),
-                            telephone: Yup.number()
-                              .required("Telephone Number is Required"),
-                            mobileNumber: Yup.string()
-                              .required("Mobile Number is required")
-                              .test('quantity', 'Invalid Mobile Number', (value) => {
+                        validationSchema={Yup.object().shape({
+                          firstName: Yup.string().required(
+                            'First Name is Required',
+                          ),
+                          lastName: Yup.string().required(
+                            'Last Name is Required',
+                          ),
+                          middleName: Yup.string().required(
+                            'Middle Name is Required',
+                          ),
+                          contactType: Yup.string().required(
+                            'Contact Type is Required',
+                          ),
+                          //       organization: Yup.string()
+                          //       .required("Organization Name is Required"),
+                          //     poBoxNumber: Yup.number()
+                          //       .required("PO Box Number is Required"),
+                          email: Yup.string()
+                            .required('Email is Required')
+                            .email('Invalid Email'),
+                          telephone: Yup.number().required(
+                            'Telephone Number is Required',
+                          ),
+                          mobileNumber: Yup.string()
+                            .required('Mobile Number is required')
+                            .test(
+                              'quantity',
+                              'Invalid Mobile Number',
+                              (value) => {
                                 if (isValidPhoneNumber(value)) {
-                                  return true
+                                  return true;
                                 } else {
-                                  return false
+                                  return false;
                                 }
-                              }),
-                            //     addressLine1: Yup.string()
-                            //       .required("Address is required"),
-                            countryId: Yup.string().required("Country is Required")
-                              .nullable(),
-                            stateId: Yup.string()
-                              .when('countryId', {
-                                is: (val) => val ? true : false,
-                                then: Yup.string()
-                                  .required('State is Required')
-                              }),
-                            postZipCode: Yup.string()
-                              .required("Postal Code is Required"),
-                            //     billingEmail: Yup.string()
-                            //       .required("Billing Email is Required")
-                            //       .email('Invalid Email'),
-                            //     contractPoNumber: Yup.number()
-                            //       .required("Contract PoNumber is Required"),
-                            vatRegistrationNumber: Yup.string()
-                              .required("Tax Registration Number is Required"),
-                            //       currencyCode: Yup.string()
-                            //       .required("Please Select Currency")
-                            //       .nullable(),
-                          })
-                        }
+                              },
+                            ),
+                          //     addressLine1: Yup.string()
+                          //       .required("Address is required"),
+                          countryId: Yup.string()
+                            .required('Country is Required')
+                            .nullable(),
+                          stateId: Yup.string().when('countryId', {
+                            is: (val) => (val ? true : false),
+                            then: Yup.string().required('State is Required'),
+                          }),
+                          postZipCode: Yup.string().required(
+                            'Postal Code is Required',
+                          ),
+                          addressLine1: Yup.string()
+                            .min(2, 'Must be at least 2 characters.')
+                            .matches(
+                              this.regExAddress,
+                              'May only contain hyphens, periods, commas or alphanumeric characters.',
+                            ),
+                          addressLine2: Yup.string()
+                            .min(2, 'Must be at least 2 characters.')
+                            .matches(
+                              this.regExAddress,
+                              'May only contain hyphens, periods, commas or alphanumeric characters.',
+                            ),
+                          addressLine3: Yup.string()
+                            .min(2, 'Must be at least 2 characters.')
+                            .matches(
+                              this.regExAddress,
+                              'May only contain hyphens, periods, commas or alphanumeric characters.',
+                            ),
+                          //     billingEmail: Yup.string()
+                          //       .required("Billing Email is Required")
+                          //       .email('Invalid Email'),
+                          //     contractPoNumber: Yup.number()
+                          //       .required("Contract PoNumber is Required"),
+                          vatRegistrationNumber: Yup.string().required(
+                            'Tax Registration Number is Required',
+                          ),
+                          //       currencyCode: Yup.string()
+                          //       .required("Please Select Currency")
+                          //       .nullable(),
+                        })}
                       >
                         {(props) => (
                           <Form onSubmit={props.handleSubmit}>
@@ -213,71 +252,115 @@ class CreateContact extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
+                                  <Label htmlFor="select">
+                                    <span className="text-danger">*</span>First
+                                    Name
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="firstName"
                                     name="firstName"
                                     placeholder="Enter First Name"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('firstName')(option) }
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExAlpha.test(
+                                          option.target.value,
+                                        )
+                                      ) {
+                                        props.handleChange('firstName')(option);
+                                      }
                                     }}
                                     value={props.values.firstName}
                                     className={
-                                      props.errors.firstName && props.touched.firstName
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.firstName &&
+                                      props.touched.firstName
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.firstName && props.touched.firstName && (
-                                    <div className="invalid-feedback">{props.errors.firstName}</div>
-                                  )}
+                                  {props.errors.firstName &&
+                                    props.touched.firstName && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.firstName}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="middleName "><span className="text-danger">*</span>Middle Name</Label>
+                                  <Label htmlFor="middleName ">
+                                    <span className="text-danger">*</span>Middle
+                                    Name
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="middleName "
                                     name="middleName "
                                     placeholder="Enter Middle Name"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('middleName')(option) }
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExAlpha.test(
+                                          option.target.value,
+                                        )
+                                      ) {
+                                        props.handleChange('middleName')(
+                                          option,
+                                        );
+                                      }
                                     }}
                                     value={props.values.middleName}
                                     className={
-                                      props.errors.middleName && props.touched.middleName
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.middleName &&
+                                      props.touched.middleName
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.middleName && props.touched.middleName && (
-                                    <div className="invalid-feedback">{props.errors.middleName}</div>
-                                  )}
+                                  {props.errors.middleName &&
+                                    props.touched.middleName && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.middleName}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="lastName"><span className="text-danger">*</span>Last Name</Label>
+                                  <Label htmlFor="lastName">
+                                    <span className="text-danger">*</span>Last
+                                    Name
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="lastName"
                                     name="lastName"
                                     placeholder="Enter Last Name"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('lastName')(option) }
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExAlpha.test(
+                                          option.target.value,
+                                        )
+                                      ) {
+                                        props.handleChange('lastName')(option);
+                                      }
                                     }}
                                     value={props.values.lastName}
                                     className={
-                                      props.errors.lastName && props.touched.lastName
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.lastName &&
+                                      props.touched.lastName
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.lastName && props.touched.lastName && (
-                                    <div className="invalid-feedback">{props.errors.lastName}</div>
-                                  )}
+                                  {props.errors.lastName &&
+                                    props.touched.lastName && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.lastName}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -286,54 +369,85 @@ class CreateContact extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="countryId"><span className="text-danger">*</span>Contact Type</Label>
+                                  <Label htmlFor="countryId">
+                                    <span className="text-danger">*</span>
+                                    Contact Type
+                                  </Label>
                                   <Select
-                                    options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
+                                    options={
+                                      contact_type_list
+                                        ? selectOptionsFactory.renderOptions(
+                                            'label',
+                                            'value',
+                                            contact_type_list,
+                                            'Contact Type',
+                                          )
+                                        : []
+                                    }
                                     value={props.values.contactType}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('contactType')(option)
+                                        props.handleChange('contactType')(
+                                          option,
+                                        );
                                       } else {
-                                        props.handleChange('contactType')('')
+                                        props.handleChange('contactType')('');
                                       }
                                     }}
                                     placeholder="Select Contact Type"
                                     id="contactType"
                                     name="contactType"
                                     className={
-                                      props.errors.contactType && props.touched.contactType
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.contactType &&
+                                      props.touched.contactType
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.contactType && props.touched.contactType && (
-                                    <div className="invalid-feedback">{props.errors.contactType}</div>
-                                  )}
-
+                                  {props.errors.contactType &&
+                                    props.touched.contactType && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.contactType}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="organization ">Organization Name</Label>
+                                  <Label htmlFor="organization ">
+                                    Organization Name
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="organization"
                                     name="organization"
                                     placeholder="Enter Organization Name"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('organization')(option) }
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExAlpha.test(
+                                          option.target.value,
+                                        )
+                                      ) {
+                                        props.handleChange('organization')(
+                                          option,
+                                        );
+                                      }
                                     }}
                                     value={props.values.organization}
                                     className={
-                                      props.errors.organization && props.touched.organization
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.organization &&
+                                      props.touched.organization
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.organization && props.touched.organization && (
-                                    <div className="invalid-feedback">{props.errors.organization}</div>
-                                  )}
-
+                                  {props.errors.organization &&
+                                    props.touched.organization && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.organization}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -345,70 +459,102 @@ class CreateContact extends React.Component {
                                     name="poBoxNumber"
                                     placeholder="Enter PO Box Number"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('poBoxNumber')(option) }
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExBoth.test(option.target.value)
+                                      ) {
+                                        props.handleChange('poBoxNumber')(
+                                          option,
+                                        );
+                                      }
                                     }}
                                     value={props.values.poBoxNumber}
                                     className={
-                                      props.errors.poBoxNumber && props.touched.poBoxNumber
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.poBoxNumber &&
+                                      props.touched.poBoxNumber
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.poBoxNumber && props.touched.poBoxNumber && (
-                                    <div className="invalid-feedback">{props.errors.poBoxNumber}</div>
-                                  )}
-
+                                  {props.errors.poBoxNumber &&
+                                    props.touched.poBoxNumber && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.poBoxNumber}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </Row>
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="email"><span className="text-danger">*</span>Email</Label>
+                                  <Label htmlFor="email">
+                                    <span className="text-danger">*</span>Email
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="email"
                                     name="email"
                                     placeholder="Enter Email Address"
-                                    onChange={(value) => { props.handleChange("email")(value) }}
+                                    onChange={(value) => {
+                                      props.handleChange('email')(value);
+                                    }}
                                     value={props.values.email}
                                     className={
                                       props.errors.email && props.touched.email
-                                        ? "is-invalid"
-                                        : ""
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.email && props.touched.email && (
-                                    <div className="invalid-feedback">{props.errors.email}</div>
-                                  )}
-
+                                  {props.errors.email &&
+                                    props.touched.email && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.email}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="telephone"><span className="text-danger">*</span>Telephone</Label>
+                                  <Label htmlFor="telephone">
+                                    <span className="text-danger">*</span>
+                                    Telephone
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="telephone"
                                     name="telephone"
                                     placeholder="Enter Telephone Number"
-                                    onChange={(option) => { if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('telephone')(option) }}}
+                                    onChange={(option) => {
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regEx.test(option.target.value)
+                                      ) {
+                                        props.handleChange('telephone')(option);
+                                      }
+                                    }}
                                     value={props.values.telephone}
                                     className={
-                                      props.errors.telephone && props.touched.telephone
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.telephone &&
+                                      props.touched.telephone
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.telephone && props.touched.telephone && (
-                                    <div className="invalid-feedback">{props.errors.telephone}</div>
-                                  )}
-
+                                  {props.errors.telephone &&
+                                    props.touched.telephone && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.telephone}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="mobileNumber"><span className="text-danger">*</span>Mobile Number</Label>
+                                  <Label htmlFor="mobileNumber">
+                                    <span className="text-danger">*</span>Mobile
+                                    Number
+                                  </Label>
                                   {/* <Input
                                     type="text"
                                     id="mobileNumber"
@@ -430,12 +576,16 @@ class CreateContact extends React.Component {
                                     international
                                     value={props.values.mobileNumber}
                                     placeholder="Enter Mobile Number"
-                                    onChange={(option) => { props.handleChange('mobileNumber')(option) }}
+                                    onChange={(option) => {
+                                      props.handleChange('mobileNumber')(
+                                        option,
+                                      );
+                                    }}
                                     className={
                                       props.errors.mobileNumber &&
-                                        props.touched.mobileNumber
-                                        ? "is-invalid"
-                                        : ""
+                                      props.touched.mobileNumber
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
                                   {props.errors.mobileNumber &&
@@ -450,48 +600,90 @@ class CreateContact extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="addressLine1">Address Line1</Label>
+                                  <Label htmlFor="addressLine1">
+                                    Address Line1
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="addressLine1"
                                     name="addressLine1"
                                     placeholder="Enter Address Line1"
-                                    onChange={(value) => { props.handleChange("addressLine1")(value) }}
+                                    onChange={(option) => {
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExAddress.test(
+                                          option.target.value,
+                                        )
+                                      ) {
+                                        props.handleChange('addressLine1')(
+                                          option,
+                                        );
+                                      }
+                                    }}
                                     value={props.values.addressLine1}
                                     className={
-                                      props.errors.addressLine1 && props.touched.addressLine1
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.addressLine1 &&
+                                      props.touched.addressLine1
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.addressLine1 && props.touched.addressLine1 && (
-                                    <div className="invalid-feedback">{props.errors.addressLine1}</div>
-                                  )}
-
+                                  {props.errors.addressLine1 &&
+                                    props.touched.addressLine1 && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.addressLine1}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="addressLine2">Address Line2</Label>
+                                  <Label htmlFor="addressLine2">
+                                    Address Line2
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="addressLine2"
                                     name="addressLine2"
                                     placeholder="Enter Address Line2"
-                                    onChange={(value) => { props.handleChange("addressLine2")(value) }}
+                                    onChange={(option) => {
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExAddress.test(
+                                          option.target.value,
+                                        )
+                                      ) {
+                                        props.handleChange('addressLine2')(
+                                          option,
+                                        );
+                                      }
+                                    }}
                                     value={props.values.addressLine2}
                                   />
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="addressLine3">Address Line3</Label>
+                                  <Label htmlFor="addressLine3">
+                                    Address Line3
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="addressLine3"
                                     name="addressLine3"
                                     placeholder="Enter Address Line3"
-                                    onChange={(value) => { props.handleChange("addressLine3")(value) }}
+                                    onChange={(option) => {
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExAddress.test(
+                                          option.target.value,
+                                        )
+                                      ) {
+                                        props.handleChange('addressLine3')(
+                                          option,
+                                        );
+                                      }
+                                    }}
                                     value={props.values.addressLine3}
                                   />
                                 </FormGroup>
@@ -500,61 +692,91 @@ class CreateContact extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="countryId"><span className="text-danger">*</span>Country</Label>
+                                  <Label htmlFor="countryId">
+                                    <span className="text-danger">*</span>
+                                    Country
+                                  </Label>
                                   <Select
-                                    options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
+                                    options={
+                                      country_list
+                                        ? selectOptionsFactory.renderOptions(
+                                            'countryName',
+                                            'countryCode',
+                                            country_list,
+                                            'Country',
+                                          )
+                                        : []
+                                    }
                                     value={props.values.countryId}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('countryId')(option)
-                                        this.getStateList(option.value)
+                                        props.handleChange('countryId')(option);
+                                        this.getStateList(option.value);
                                       } else {
-                                        props.handleChange('countryId')('')
-                                        this.getStateList('')
+                                        props.handleChange('countryId')('');
+                                        this.getStateList('');
                                       }
-                                      props.handleChange('stateId')({label: 'Select State',value: ''})
+                                      props.handleChange('stateId')({
+                                        label: 'Select State',
+                                        value: '',
+                                      });
                                     }}
                                     placeholder="Select Country"
                                     id="countryId"
                                     name="countryId"
                                     className={
-                                      props.errors.countryId && props.touched.countryId
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.countryId &&
+                                      props.touched.countryId
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.countryId && props.touched.countryId && (
-                                    <div className="invalid-feedback">{props.errors.countryId}</div>
-                                  )}
-
+                                  {props.errors.countryId &&
+                                    props.touched.countryId && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.countryId}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
                                   <Label htmlFor="stateId">State Region</Label>
                                   <Select
-                                    options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
+                                    options={
+                                      state_list
+                                        ? selectOptionsFactory.renderOptions(
+                                            'label',
+                                            'value',
+                                            state_list,
+                                            'State',
+                                          )
+                                        : []
+                                    }
                                     value={props.values.stateId}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('stateId')(option)
+                                        props.handleChange('stateId')(option);
                                       } else {
-                                        props.handleChange('stateId')('')
+                                        props.handleChange('stateId')('');
                                       }
                                     }}
                                     placeholder="Select State"
                                     id="stateId"
                                     name="stateId"
                                     className={
-                                      props.errors.stateId && props.touched.stateId
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.stateId &&
+                                      props.touched.stateId
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.stateId && props.touched.stateId && (
-                                    <div className="invalid-feedback">{props.errors.stateId}</div>
-                                  )}
-
+                                  {props.errors.stateId &&
+                                    props.touched.stateId && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.stateId}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
@@ -564,47 +786,68 @@ class CreateContact extends React.Component {
                                     // options={city ? selectOptionsFactory.renderOptions('cityName', 'cityCode', cityRegion) : ''}
                                     value={props.values.city}
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExAlpha.test(option.target.value)) { props.handleChange('city')(option) }
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExAlpha.test(
+                                          option.target.value,
+                                        )
+                                      ) {
+                                        props.handleChange('city')(option);
+                                      }
                                     }}
                                     placeholder="Enter City"
                                     id="city"
                                     name="city"
                                     className={
                                       props.errors.city && props.touched.city
-                                        ? "is-invalid"
-                                        : ""
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
                                   {props.errors.city && props.touched.city && (
-                                    <div className="invalid-feedback">{props.errors.city}</div>
+                                    <div className="invalid-feedback">
+                                      {props.errors.city}
+                                    </div>
                                   )}
-
                                 </FormGroup>
                               </Col>
                             </Row>
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="postZipCode"><span className="text-danger">*</span>Post Zip Code</Label>
+                                  <Label htmlFor="postZipCode">
+                                    <span className="text-danger">*</span>Post
+                                    Zip Code
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="postZipCode"
                                     name="postZipCode"
                                     placeholder="Enter Postal Zip Code"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('postZipCode')(option) }
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExBoth.test(option.target.value)
+                                      ) {
+                                        props.handleChange('postZipCode')(
+                                          option,
+                                        );
+                                      }
                                     }}
                                     value={props.values.postZipCode}
                                     className={
-                                      props.errors.postZipCode && props.touched.postZipCode
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.postZipCode &&
+                                      props.touched.postZipCode
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.postZipCode && props.touched.postZipCode && (
-                                    <div className="invalid-feedback">{props.errors.postZipCode}</div>
-                                  )}
-
+                                  {props.errors.postZipCode &&
+                                    props.touched.postZipCode && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.postZipCode}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -614,126 +857,204 @@ class CreateContact extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="billingEmail">Billing Email</Label>
+                                  <Label htmlFor="billingEmail">
+                                    Billing Email
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="billingEmail"
                                     name="billingEmail"
                                     placeholder="Enter Billing Email Address"
-                                    onChange={(value) => { props.handleChange("billingEmail")(value) }}
+                                    onChange={(value) => {
+                                      props.handleChange('billingEmail')(value);
+                                    }}
                                     value={props.values.billingEmail}
                                     className={
-                                      props.errors.billingEmail && props.touched.billingEmail
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.billingEmail &&
+                                      props.touched.billingEmail
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.billingEmail && props.touched.billingEmail && (
-                                    <div className="invalid-feedback">{props.errors.billingEmail}</div>
-                                  )}
+                                  {props.billingEmail &&
+                                    props.touched.billingEmail && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.billingEmail}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="contractPoNumber">Contract PO Number</Label>
+                                  <Label htmlFor="contractPoNumber">
+                                    Contract PO Number
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="contractPoNumber"
                                     name="contractPoNumber"
                                     placeholder="Enter Contract PO Number"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('contractPoNumber')(option) }
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExAddress.test(
+                                          option.target.value,
+                                        )
+                                      ) {
+                                        props.handleChange('contractPoNumber')(
+                                          option,
+                                        );
+                                      }
                                     }}
                                     value={props.values.contractPoNumber}
                                     className={
-                                      props.errors.contractPoNumber && props.touched.contractPoNumber
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.contractPoNumber &&
+                                      props.touched.contractPoNumber
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.contractPoNumber && props.touched.contractPoNumber && (
-                                    <div className="invalid-feedback">{props.errors.contractPoNumber}</div>
-                                  )}
-
+                                  {props.errors.contractPoNumber &&
+                                    props.touched.contractPoNumber && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.contractPoNumber}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </Row>
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="vatRegistrationNumber"><span className="text-danger">*</span>Tax Registration Number</Label>
+                                  <Label htmlFor="vatRegistrationNumber">
+                                    <span className="text-danger">*</span>Tax
+                                    Registration Number
+                                  </Label>
                                   <Input
                                     type="text"
                                     id="vatRegistrationNumber"
                                     name="vatRegistrationNumber"
                                     placeholder="Enter Tax Registration Number"
                                     onChange={(option) => {
-                                      if (option.target.value === '' || this.regExBoth.test(option.target.value)) { props.handleChange('vatRegistrationNumber')(option) }
+                                      if (
+                                        option.target.value === '' ||
+                                        this.regExBoth.test(option.target.value)
+                                      ) {
+                                        props.handleChange(
+                                          'vatRegistrationNumber',
+                                        )(option);
+                                      }
                                     }}
                                     value={props.values.vatRegistrationNumber}
                                     className={
-                                      props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.vatRegistrationNumber &&
+                                      props.touched.vatRegistrationNumber
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.vatRegistrationNumber && props.touched.vatRegistrationNumber && (
-                                    <div className="invalid-feedback">{props.errors.vatRegistrationNumber}</div>
-                                  )}
-
+                                  {props.errors.vatRegistrationNumber &&
+                                    props.touched.vatRegistrationNumber && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.vatRegistrationNumber}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="currencyCode">Currency Code</Label>
+                                  <Label htmlFor="currencyCode">
+                                    Currency Code
+                                  </Label>
                                   <Select
-                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                                    options={
+                                      currency_list
+                                        ? selectOptionsFactory.renderOptions(
+                                            'currencyName',
+                                            'currencyCode',
+                                            currency_list,
+                                            'Currency',
+                                          )
+                                        : []
+                                    }
                                     value={props.values.currencyCode}
                                     onChange={(option) => {
                                       if (option && option.value) {
-                                        props.handleChange('currencyCode')(option)
+                                        props.handleChange('currencyCode')(
+                                          option,
+                                        );
                                       } else {
-                                        props.handleChange('currencyCode')('')
+                                        props.handleChange('currencyCode')('');
                                       }
                                     }}
                                     placeholder="Select Currency"
                                     id="currencyCode"
                                     name="currencyCode"
                                     className={
-                                      props.errors.currencyCode && props.touched.currencyCode
-                                        ? "is-invalid"
-                                        : ""
+                                      props.errors.currencyCode &&
+                                      props.touched.currencyCode
+                                        ? 'is-invalid'
+                                        : ''
                                     }
                                   />
-                                  {props.errors.currencyCode && props.touched.currencyCode && (
-                                    <div className="invalid-feedback">{props.errors.currencyCode}</div>
-                                  )}
-
+                                  {props.errors.currencyCode &&
+                                    props.touched.currencyCode && (
+                                      <div className="invalid-feedback">
+                                        {props.errors.currencyCode}
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </Row>
                             <Row>
                               <Col lg={12} className="mt-5">
                                 <FormGroup className="text-right">
-                                  <Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
-                                    this.setState({ createMore: false }, () => {
-                                      props.handleSubmit();
-                                    })
-                                  }}>
-                                    <i className="fa fa-dot-circle-o"></i> Create
-                                </Button>
-                                  <Button type="button" color="primary" className="btn-square mr-3"
+                                  <Button
+                                    type="button"
+                                    color="primary"
+                                    className="btn-square mr-3"
+                                    disabled={this.state.disabled}
                                     onClick={() => {
-                                      this.setState({ createMore: true }, () => {
-                                        props.handleSubmit();
-                                      })
-                                    }}>
-                                    <i className="fa fa-repeat"></i> Create and More
-                                </Button>
-                                  <Button color="secondary" className="btn-square"
-                                    onClick={() => { this.props.history.push('/admin/master/contact') }}>
+                                      this.setState(
+                                        { createMore: false },
+                                        () => {
+                                          props.handleSubmit();
+                                        },
+                                      );
+                                    }}
+                                  >
+                                    <i className="fa fa-dot-circle-o"></i>{' '}
+                                    {this.state.disabled
+                                      ? 'Creating...'
+                                      : 'Create'}
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    color="primary"
+                                    className="btn-square mr-3"
+                                    onClick={() => {
+                                      this.setState(
+                                        { createMore: true },
+                                        () => {
+                                          props.handleSubmit();
+                                        },
+                                      );
+                                    }}
+                                  >
+                                    <i className="fa fa-repeat"></i> Create and
+                                    More
+                                  </Button>
+                                  <Button
+                                    color="secondary"
+                                    className="btn-square"
+                                    onClick={() => {
+                                      this.props.history.push(
+                                        '/admin/master/contact',
+                                      );
+                                    }}
+                                  >
                                     <i className="fa fa-ban"></i> Cancel
-                                </Button>
+                                  </Button>
                                 </FormGroup>
                               </Col>
                             </Row>
@@ -747,9 +1068,9 @@ class CreateContact extends React.Component {
             </Col>
           </Row>
         </div>
-      </div >
-    )
+      </div>
+    );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateContact)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateContact);

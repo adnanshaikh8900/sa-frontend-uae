@@ -1,6 +1,6 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -11,38 +11,36 @@ import {
   FormGroup,
   Label,
   Row,
-  Col
-} from 'reactstrap'
-import { Loader } from 'components'
+  Col,
+} from 'reactstrap';
+import { Loader } from 'components';
 
-import 'react-toastify/dist/ReactToastify.css'
-import './style.scss'
-import {
-  CommonActions
-} from 'services/global'
+import 'react-toastify/dist/ReactToastify.css';
+import './style.scss';
+import { CommonActions } from 'services/global';
 
-
-import * as ChartOfAccontActions from '../../actions'
-import * as CreateChartOfAccontActions from './actions'
-
+import * as ChartOfAccontActions from '../../actions';
+import * as CreateChartOfAccontActions from './actions';
 
 import { Formik } from 'formik';
-import * as Yup from "yup";
-import Select from 'react-select'
+import * as Yup from 'yup';
+import Select from 'react-select';
 
 const mapStateToProps = (state) => {
-  return ({
-    sub_transaction_type_list: state.chart_account.sub_transaction_type_list
-  })
-}
+  return {
+    sub_transaction_type_list: state.chart_account.sub_transaction_type_list,
+  };
+};
 const mapDispatchToProps = (dispatch) => {
-  return ({
+  return {
     ChartOfAccontActions: bindActionCreators(ChartOfAccontActions, dispatch),
-    createChartOfAccontActions: bindActionCreators(CreateChartOfAccontActions, dispatch),
+    createChartOfAccontActions: bindActionCreators(
+      CreateChartOfAccontActions,
+      dispatch,
+    ),
     commonActions: bindActionCreators(CommonActions, dispatch),
-
-  })
-}
+  };
+};
 class CreateChartAccount extends React.Component {
   constructor(props) {
     super(props);
@@ -50,37 +48,37 @@ class CreateChartAccount extends React.Component {
       initValue: {
         // transactionCategoryCode: '',
         transactionCategoryName: '',
-        chartOfAccount: ''
+        chartOfAccount: '',
       },
       loading: false,
       createMore: false,
-      chartOfAccountCategory: []
-    }
-    this.regExAlpha = /^[a-zA-Z]+$/
+      chartOfAccountCategory: [],
+    };
+    this.regExAlpha = /^[a-zA-Z]+$/;
   }
 
   componentDidMount = () => {
-    this.initializeData()
-  }
+    this.initializeData();
+  };
 
   initializeData = () => {
     this.props.ChartOfAccontActions.getSubTransactionTypes().then((res) => {
-      if(res.status === 200) {
-        let val = Object.assign({},res.data)
-        let temp = []
+      if (res.status === 200) {
+        let val = Object.assign({}, res.data);
+        let temp = [];
         Object.keys(val).map((item) => {
           temp.push({
             label: item,
-            options : val[`${item}`]
-          })
-          return item
-        })
+            options: val[`${item}`],
+          });
+          return item;
+        });
         this.setState({
           chartOfAccountCategory: temp,
-        })
+        });
       }
     });
-  }
+  };
   // Show Success Toast
   // success() {
   //   toast.success('Chart Of Account Created Successfully... ', {
@@ -92,24 +90,33 @@ class CreateChartAccount extends React.Component {
   handleSubmit = (data, resetForm) => {
     const postData = {
       transactionCategoryName: data.transactionCategoryName,
-      chartOfAccount: data.chartOfAccount.value
-    }
-    this.props.createChartOfAccontActions.createTransactionCategory(postData).then((res) => {
-      if (res.status === 200) {
-        this.props.commonActions.tostifyAlert('success', 'New Chart of Account Created Successfully')
-        if (this.state.createMore) {
-          this.setState({
-            createMore: false
-          })
-          resetForm()
-        } else {
-          this.props.history.push('/admin/master/chart-account')
+      chartOfAccount: data.chartOfAccount.value,
+    };
+    this.props.createChartOfAccontActions
+      .createTransactionCategory(postData)
+      .then((res) => {
+        if (res.status === 200) {
+          this.props.commonActions.tostifyAlert(
+            'success',
+            'New Chart of Account Created Successfully',
+          );
+          if (this.state.createMore) {
+            this.setState({
+              createMore: false,
+            });
+            resetForm();
+          } else {
+            this.props.history.push('/admin/master/chart-account');
+          }
         }
-      }
-    }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong' )
-    })
-  }
+      })
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong',
+        );
+      });
+  };
 
   renderOptions = (options) => {
     return options.map((option) => {
@@ -122,12 +129,11 @@ class CreateChartAccount extends React.Component {
   };
 
   render() {
-    const { loading } = this.state
+    const { loading } = this.state;
     // const { sub_transaction_type_list } = this.props
     return (
       <div className="chart-account-screen">
         <div className="animated fadeIn">
-
           <Row>
             <Col lg={12}>
               <Card>
@@ -143,17 +149,18 @@ class CreateChartAccount extends React.Component {
                       <Formik
                         initialValues={this.state.initValue}
                         onSubmit={(values, { resetForm }) => {
-                          this.handleSubmit(values, resetForm)
+                          this.handleSubmit(values, resetForm);
                         }}
-                        validationSchema={
-                          Yup.object().shape({
-                            // transactionCategoryCode: Yup.string()
-                            //   .required("Code Name is Required"),
-                            transactionCategoryName: Yup.string()
-                              .required("Account is Required"),
-                            chartOfAccount: Yup.string()
-                              .required("Type is Required")
-                          })}
+                        validationSchema={Yup.object().shape({
+                          // transactionCategoryCode: Yup.string()
+                          //   .required("Code Name is Required"),
+                          transactionCategoryName: Yup.string().required(
+                            'Account is Required',
+                          ),
+                          chartOfAccount: Yup.string().required(
+                            'Type is Required',
+                          ),
+                        })}
                       >
                         {(props) => (
                           <Form onSubmit={props.handleSubmit} name="simpleForm">
@@ -177,27 +184,38 @@ class CreateChartAccount extends React.Component {
                               )}
                             </FormGroup> */}
                             <FormGroup>
-                              <Label htmlFor="name"><span className="text-danger">*</span>Name</Label>
+                              <Label htmlFor="name">
+                                <span className="text-danger">*</span>Name
+                              </Label>
                               <Input
                                 type="text"
                                 id="transactionCategoryName"
                                 name="transactionCategoryName"
                                 placeholder="Enter Name"
-                                onChange={(option) => { 
-                                  if (option.target.value === '' || this.regExAlpha.test(option.target.value)) {props.handleChange('transactionCategoryName')(option)} }}
+                                onChange={(option) => {
+                                  props.handleChange('transactionCategoryName')(
+                                    option,
+                                  );
+                                }}
                                 value={props.values.transactionCategoryName}
                                 className={
-                                  props.errors.transactionCategoryName && props.touched.transactionCategoryName
-                                    ? "is-invalid"
-                                    : ""
+                                  props.errors.transactionCategoryName &&
+                                  props.touched.transactionCategoryName
+                                    ? 'is-invalid'
+                                    : ''
                                 }
                               />
-                              {props.errors.transactionCategoryName && props.touched.transactionCategoryName && (
-                                <div className="invalid-feedback">{props.errors.transactionCategoryName}</div>
-                              )}
+                              {props.errors.transactionCategoryName &&
+                                props.touched.transactionCategoryName && (
+                                  <div className="invalid-feedback">
+                                    {props.errors.transactionCategoryName}
+                                  </div>
+                                )}
                             </FormGroup>
                             <FormGroup>
-                              <Label htmlFor="name"><span className="text-danger">*</span>Type</Label>
+                              <Label htmlFor="name">
+                                <span className="text-danger">*</span>Type
+                              </Label>
                               {/* <Select
                                 className="select-default-width"
                                 options={transaction_type_list ? selectOptionsFactory.renderOptions('chartOfAccountName', 'chartOfAccountId', transaction_type_list,'Type') : ''}
@@ -222,42 +240,66 @@ class CreateChartAccount extends React.Component {
                                 <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                               )} */}
                               <Select
-                                id='chartOfAccount'
-                                name='chartOfAccount'
+                                id="chartOfAccount"
+                                name="chartOfAccount"
                                 value={props.values.chartOfAccount}
                                 // size="1"
                                 onChange={(val) => {
-                                  props.handleChange('chartOfAccount')(val)
+                                  props.handleChange('chartOfAccount')(val);
                                 }}
                                 options={this.state.chartOfAccountCategory}
                                 className={`
-                                 ${props.errors.chartOfAccount && props.touched.chartOfAccount
-                                    ? "is-invalid"
-                                    : ""}`
-                                }
-                                />
-                              {props.errors.chartOfAccount && props.touched.chartOfAccount && (
-                                <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
-                              )}
+                                 ${
+                                   props.errors.chartOfAccount &&
+                                   props.touched.chartOfAccount
+                                     ? 'is-invalid'
+                                     : ''
+                                 }`}
+                              />
+                              {props.errors.chartOfAccount &&
+                                props.touched.chartOfAccount && (
+                                  <div className="invalid-feedback">
+                                    {props.errors.chartOfAccount}
+                                  </div>
+                                )}
                             </FormGroup>
                             <FormGroup className="text-right mt-5">
-                              <Button type="button" name="submit" color="primary" className="btn-square mr-3" onClick={() => {
-                                this.setState({ createMore: false })
-                                props.handleSubmit()
-                              }}>
-                                <i className="fa fa-dot-circle-o"></i> Create
-                                </Button>
-                              <Button name="button" color="primary" className="btn-square mr-3"
+                              <Button
+                                type="button"
+                                name="submit"
+                                color="primary"
+                                className="btn-square mr-3"
                                 onClick={() => {
-                                  this.setState({ createMore: true })
-                                  props.handleSubmit()
-                                }}>
-                                <i className="fa fa-refresh"></i> Create and More
-                                </Button>
-                              <Button type="submit" color="secondary" className="btn-square"
-                                onClick={() => { this.props.history.push('/admin/master/chart-account') }}>
+                                  this.setState({ createMore: false });
+                                  props.handleSubmit();
+                                }}
+                              >
+                                <i className="fa fa-dot-circle-o"></i> Create
+                              </Button>
+                              <Button
+                                name="button"
+                                color="primary"
+                                className="btn-square mr-3"
+                                onClick={() => {
+                                  this.setState({ createMore: true });
+                                  props.handleSubmit();
+                                }}
+                              >
+                                <i className="fa fa-refresh"></i> Create and
+                                More
+                              </Button>
+                              <Button
+                                type="submit"
+                                color="secondary"
+                                className="btn-square"
+                                onClick={() => {
+                                  this.props.history.push(
+                                    '/admin/master/chart-account',
+                                  );
+                                }}
+                              >
                                 <i className="fa fa-ban"></i> Cancel
-                                </Button>
+                              </Button>
                             </FormGroup>
                           </Form>
                         )}
@@ -268,15 +310,11 @@ class CreateChartAccount extends React.Component {
               </Card>
             </Col>
           </Row>
-          {loading ? (
-            <Loader></Loader>
-          ) : (
-              ""
-            )}
+          {loading ? <Loader></Loader> : ''}
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateChartAccount)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateChartAccount);

@@ -602,7 +602,9 @@ class CreateBankAccount extends React.Component {
                                     disabled={this.state.disabled}
                                   >
                                     <i className="fa fa-dot-circle-o"></i>{' '}
-                                    Create
+                                    {this.state.disabled
+                                      ? 'Creating...'
+                                      : 'Create'}
                                   </Button>
                                   <Button
                                     type="button"

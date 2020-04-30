@@ -146,7 +146,7 @@ export const getTransactionCategoryListForExplain = (id) => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: `rest/reconsile/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`,
+      url: `rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`,
     };
     return authApi(data)
       .then((res) => {

@@ -1,6 +1,8 @@
 package com.simplevat.entity.bankaccount;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.simplevat.constant.TransactionCreationMode;
+import com.simplevat.entity.Contact;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.converter.DateConverter;
@@ -13,7 +15,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -106,9 +107,27 @@ public class Transaction implements Serializable {
 	@ColumnDefault(value = "0.00")
 	private BigDecimal currentBalance;
 
-	@OneToMany
+	@OneToOne
 	@JoinColumn(name = "RECONSILE_JOURNAL_ID")
-	private List<Journal> reconsileJournalList;
+	private Journal reconsileJournal;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EXPLINTION_BANK_ACCOUNT_ID")
+	private BankAccount explinationBankAccount;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EXPLINTION_VENDOR_CONTACT_ID")
+	private Contact explinationVendor;
+
+	@Basic
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EXPLINTION_CUSTOMER_CONTACT_ID")
+	private Contact explinationCustomer;
+
+	@Basic
+	@Column(name = "TRANSACTIN_CREATION_MODE", columnDefinition = "varchar(32) default 'MANUAL'")
+	@Enumerated(EnumType.STRING)
+	private TransactionCreationMode creationMode;
 
 	@Column(name = "CREATED_BY")
 	@Basic(optional = false)

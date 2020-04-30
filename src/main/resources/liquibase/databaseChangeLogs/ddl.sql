@@ -82,3 +82,14 @@ ALTER TABLE `STATE` CHANGE `CREATED_BY` `CREATED_BY` INT(11) NULL;
 
 --changeset 27/04/2020 SAURABH:ddl-2
 ALTER TABLE JOURNAL_LINE_ITEM ADD column CURRENT_BALANCE decimal(19,2) default 0.00 not null
+
+--changeset 30/04/2020 SAURABH:ddl-3
+alter table TRANSACTON add column EXPLINTION_BANK_ACCOUNT_ID integer;
+alter table TRANSACTON add column EXPLINTION_CUSTOMER_CONTACT_ID integer;
+alter table TRANSACTON add column EXPLINTION_VENDOR_CONTACT_ID integer;
+alter table TRANSACTON add column RECONSILE_JOURNAL_ID integer;
+alter table TRANSACTON add constraint FKinfcruhes0vn2l7aan90fw2xu foreign key (EXPLINTION_BANK_ACCOUNT_ID) references BANK_ACCOUNT (BANK_ACCOUNT_ID);
+alter table TRANSACTON add constraint FKn0ptk14chjd7sig1hce277m9a foreign key (EXPLINTION_CUSTOMER_CONTACT_ID) references CONTACT (CONTACT_ID);
+alter table TRANSACTON add constraint FK9bxc5njntwhpd9vdjb02pdc24 foreign key (EXPLINTION_VENDOR_CONTACT_ID) references CONTACT (CONTACT_ID);
+alter table TRANSACTON add constraint FK6akb0jbeki4mw33b2x6b0xh47 foreign key (RECONSILE_JOURNAL_ID) references JOURNAL (ID);
+alter table TRANSACTON add column TRANSACTIN_CREATION_MODE varchar(32) default 'MANUAL';

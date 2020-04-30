@@ -3,6 +3,7 @@ package com.simplevat.helper;
 import com.simplevat.model.TransactionViewRestModel;
 import com.simplevat.model.TransactionRestModel;
 import com.simplevat.model.BankAccountRestModel;
+import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionRefrenceTypeConstant;
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.entity.Invoice;
@@ -70,6 +71,7 @@ public class TransactionRestControllerHelper {
 		transaction.setParentTransaction(model.getParentTransaction());
 		transaction.setReferenceId(model.getReferenceId());
 		transaction.setReferenceType(model.getReferenceType());
+		transaction.setCreationMode(TransactionCreationMode.MANUAL);
 		if (model.getChildTransactionList() != null && !model.getChildTransactionList().isEmpty()) {
 			model.getChildTransactionList().remove(model.getChildTransactionList().size() - 1);
 		}

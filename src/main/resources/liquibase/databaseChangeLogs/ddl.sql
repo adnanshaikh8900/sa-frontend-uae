@@ -93,3 +93,20 @@ alter table TRANSACTON add constraint FKn0ptk14chjd7sig1hce277m9a foreign key (E
 alter table TRANSACTON add constraint FK9bxc5njntwhpd9vdjb02pdc24 foreign key (EXPLINTION_VENDOR_CONTACT_ID) references CONTACT (CONTACT_ID);
 alter table TRANSACTON add constraint FK6akb0jbeki4mw33b2x6b0xh47 foreign key (RECONSILE_JOURNAL_ID) references JOURNAL (ID);
 alter table TRANSACTON add column TRANSACTIN_CREATION_MODE varchar(32) default 'MANUAL';
+
+
+--changeset 30/04/2020 SAURABH:ddl-4
+ALTER TABLE TRANSACTON DROP FOREIGN KEY FK6akb0jbeki4mw33b2x6b0xh47;
+ALTER TABLE TRANSACTON DROP COLUMN RECONSILE_JOURNAL_ID;
+ALTER TABLE EXPLANATION_STATUS add column TRANSACTIN_CREATION_MODE varchar(32) default 'NOT_EXPLAIN';
+ALTER TABLE EXPLANATION_STATUS add column RECONSILE_JOURNAL_ID integer;
+ALTER TABLE EXPLANATION_STATUS add constraint FK6akb0jbeki4mw33b2x6b0xh47 foreign key (RECONSILE_JOURNAL_ID) references JOURNAL (ID);
+ALTER TABLE EXPLANATION_STATUS ADD column REMANING_TO_EXLAIN_BALANCE decimal(19,2) default 0.00 not null;
+ALTER TABLE EXPLANATION_STATUS add column TRANSACTION_ID integer;
+ALTER TABLE TRANSACTON add column TRANSACTIN_EXPLINATION_STATUS varchar(32) default 'NOT_EXPLAIN';
+ALTER TABLE EXPLANATION_STATUS add constraint FKkj46hmgdeim6nqbsk4uujt0ql foreign key (RECONSILE_JOURNAL_ID) references JOURNAL (ID);
+ALTER TABLE EXPLANATION_STATUS add constraint FKqieicwxm9x7q9vs1mcqve5tgu foreign key (TRANSACTION_ID) references TRANSACTON (TRANSACTION_ID);
+ALTER TABLE EXPLANATION_STATUS add constraint FKkqa1qa44ytiu2vs2my3h700ss foreign key (EXPLANATION_STATUS_CODE) references TRANSACTON (TRANSACTION_ID);
+alter TABLE TRANSACTON add column EXPLINTION_EMPLOYEE_ID integer;
+alter TABLE TRANSACTON add constraint FK34ln1pxogaxkhp2ws2e8dq9my foreign key (EXPLINTION_EMPLOYEE_ID) references EMPLOYEE (ID);
+

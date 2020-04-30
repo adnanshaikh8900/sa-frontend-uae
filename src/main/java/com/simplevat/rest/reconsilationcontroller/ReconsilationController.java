@@ -1,7 +1,6 @@
 package com.simplevat.rest.reconsilationcontroller;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,19 +22,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.ChartOfAccountConstant;
-import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.ReconsileCategoriesEnumConstant;
-import com.simplevat.constant.TransactionCategoryCodeEnum;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.entity.ChartOfAccountCategory;
-import com.simplevat.entity.Expense;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
-import com.simplevat.entity.JournalLineItem;
-import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.entity.bankaccount.TransactionStatus;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.ReconsileRequestModel;
@@ -46,12 +40,12 @@ import com.simplevat.service.BankAccountService;
 import com.simplevat.service.ChartOfAccountCategoryService;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.EmployeeService;
-import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
+import com.simplevat.service.bankaccount.TransactionStatusService;
 
 @RestController
 @RequestMapping("/rest/reconsile")
@@ -76,10 +70,7 @@ public class ReconsilationController {
 
 	@Autowired
 	private InvoiceService invoiceService;
-
-	@Autowired
-	private ExpenseService expenseService;
-
+	
 	@Autowired
 	private TranscationCategoryHelper transcationCategoryHelper;
 
@@ -98,6 +89,9 @@ public class ReconsilationController {
 	@Autowired
 	private ContactService contactService;
 
+	@Autowired
+	private TransactionStatusService transactionStatusService;
+
 	@GetMapping(value = "/getByReconcilationCatCode")
 	public ResponseEntity getByReconcilationCatCode(@RequestParam int reconcilationCatCode) {
 		try {
@@ -113,62 +107,75 @@ public class ReconsilationController {
 	@PostMapping(value = "/reconcile")
 	public ResponseEntity reconcile(@RequestBody ReconsileRequestModel reconsileRequestModel,
 			HttpServletRequest request) {
-		return null;
-//		try {
-//
-//			Journal journal = null;
-//
-//			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//			List<Journal> journalList = new ArrayList<Journal>();
-//
-//			if (reconsileRequestModel != null && reconsileRequestModel.getTransactionId()() != null) {
-//
-//				for (ReconsileLineItemModel reconsileLineItemModel : reconsileRequestModel.getExplainData()) {
-//					ReconsileCategoriesEnumConstant cat = ReconsileCategoriesEnumConstant
-//							.get(reconsileLineItemModel.getCategoryType());
-//
-//					switch (cat) {
-//					case EXPENSE:
-//						journal = expenseReconsile(reconsileLineItemModel, userId);
-//						break;
-//
-//					case SUPPLIER_INVOICE:
-//						journal = invoiceReconsile(reconsileLineItemModel, userId);
-//						break;
-//
-//					default:
-//						break;
-//					}
-//					if (journal != null) {
-//						journalList.add(journal);
-//					}
-//				}
-//
-//				Transaction trnx = transactionService.findByPK(reconsileRequestModel.getTransactionId());
-//
-//				if (reconsileRequestModel.getTransactionCategory() != null
-//						&& reconsileRequestModel.getRemainingBalance() != null) {
-//					journal = getByTransactionType(reconsileRequestModel.getTransactionCategory(),
-//							reconsileRequestModel.getRemainingBalance(), userId, trnx);
-//					if (journal != null) {
-//						journalList.add(journal);
-//					}
-//				}
-//
-//				if (!journalList.isEmpty()) {
-//
-//					for (Journal journal1 : journalList) {
-//						journalService.persist(journal1);
-//					}
-//					trnx.setReconsileJournalList(journalList);
-//					transactionService.persist(trnx);
-//				}
-//			}
-//			return new ResponseEntity<>(HttpStatus.OK);
-//		} catch (Exception e) {
-//			LOGGER.error("Error", e);
-//		}
-//		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+		try {
+			List<Journal> journalList = null;
+
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			Transaction trnx = transactionService.findByPK(reconsileRequestModel.getTransactionId());
+
+			if (reconsileRequestModel != null && reconsileRequestModel.getTransactionId() != null) {
+
+				if (reconsileRequestModel.getTransactionCategoryId() != null) {
+					trnx.setExplainedTransactionCategory(
+							transactionCategoryService.findByPK(reconsileRequestModel.getTransactionCategoryId()));
+				}
+				if (reconsileRequestModel.getDescription() != null) {
+					trnx.setExplainedTransactionDescription(reconsileRequestModel.getDescription());
+				}
+				if (reconsileRequestModel.getAttachmentFile() != null) {
+					trnx.setExplainedTransactionAttachement(reconsileRequestModel.getAttachmentFile().getBytes());
+				}
+				if (reconsileRequestModel.getCustomerId() != null) {
+					trnx.setExplinationCustomer(contactService.findByPK(reconsileRequestModel.getCustomerId()));
+				}
+				if (reconsileRequestModel.getVatId() != null) {
+					// vat
+					// trnx.set(contactService.findByPK(reconsileRequestModel.getCustomerId()));
+				}
+				if (reconsileRequestModel.getVendorId() != null) {
+					trnx.setExplinationVendor((contactService.findByPK(reconsileRequestModel.getVendorId())));
+				}
+				if (reconsileRequestModel.getEmployeeId() != null) {
+					// employee remaining
+					trnx.setExplinationEmployee(employeeService.findByPK(reconsileRequestModel.getEmployeeId()));
+				}
+				if (reconsileRequestModel.getBankId() != null) {
+					trnx.setExplinationBankAccount(bankService.findByPK(reconsileRequestModel.getBankId()));
+				}
+
+				journalList = reconsilationRestHelper.get(
+						ChartOfAccountCategoryIdEnumConstant.get(reconsileRequestModel.getCoaCategoryId()),
+						reconsileRequestModel.getTransactionCategoryId(), reconsileRequestModel.getAmount(), userId,
+						trnx, reconsileRequestModel.getInvoiceIdList());
+
+				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
+				if (reconsileRequestModel.getInvoiceIdList() != null) {
+					for (ReconsileRequestModel.lineItem invoice : reconsileRequestModel.getInvoiceIdList()) {
+						invoiceIdAmtMap.put(invoice.getInvoiceId(), invoice.getRemainingInvoiceAmount());
+					}
+				}
+
+				if (journalList != null && !journalList.isEmpty()) {
+					for (Journal journal : journalList) {
+						journalService.persist(journal);
+						TransactionStatus status = new TransactionStatus();
+						status.setCreatedBy(userId);
+						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+						status.setTransaction(trnx);
+						transactionStatusService.persist(status);
+					}
+				}
+				transactionService.persist(trnx);
+
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+		} catch (
+
+		Exception e) {
+			LOGGER.error("Error", e);
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@GetMapping(value = "/getTransactionCat")

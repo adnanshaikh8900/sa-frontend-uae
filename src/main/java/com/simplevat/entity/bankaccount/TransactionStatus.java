@@ -1,31 +1,35 @@
 package com.simplevat.entity.bankaccount;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import lombok.Data;
-
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.converter.DateConverter;
-import java.io.Serializable;
 import org.hibernate.annotations.ColumnDefault;
 
+import com.simplevat.constant.TransactionExplinationStatusEnum;
+import com.simplevat.entity.Journal;
+import com.simplevat.entity.converter.DateConverter;
+
+import lombok.Data;
+
 @NamedQueries({
-		@NamedQuery(name = "findAllTransactionStatues", query = "SELECT t FROM TransactionStatus t where t.deleteFlag = FALSE order by t.defaltFlag DESC, t.orderSequence,t.explainationStatusName ASC") })
+		@NamedQuery(name = "findAllTransactionStatues", query = "SELECT t FROM TransactionStatus t where t.deleteFlag = FALSE order by t.defaltFlag DESC, t.orderSequence,t.explinationStatus ASC") })
 @Entity
 @Table(name = "EXPLANATION_STATUS")
 @Data
@@ -38,25 +42,26 @@ public class TransactionStatus implements Serializable {
 	private int explainationStatusCode;
 
 	@Basic(optional = false)
-	@Column(name = "EXPLANATION_STATUS_NAME")
-	private String explainationStatusName;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "EXPLANATION_STATUS")
+	private TransactionExplinationStatusEnum explinationStatus;
 
 	@Basic
 	@Column(name = "EXPLANATION_STATUS_DESCRIPTION")
 	private String explainationStatusDescriptions;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLINTION_BANK_ACCOUNT_ID")
-	private BankAccount explinationBankAccount;
+	@Basic(optional = false)
+	@Column(name = "REMANING_TO_EXLAIN_BALANCE")
+	@ColumnDefault(value = "0.00")
+	private BigDecimal remainingToExplain;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLINTION_VENDOR_CONTACT_ID")
-	private Contact explinationVendor;
+	@OneToOne
+	@JoinColumn(name = "RECONSILE_JOURNAL_ID")
+	private Journal reconsileJournal;
 
-	@Basic
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLINTION_CUSTOMER_CONTACT_ID")
-	private Contact explinationCustomer;
+	@OneToOne
+	@JoinColumn(name = "TRANSACTION_ID")
+	private Transaction transaction;
 
 	@Column(name = "DEFAULT_FLAG")
 	@ColumnDefault(value = "'N'")

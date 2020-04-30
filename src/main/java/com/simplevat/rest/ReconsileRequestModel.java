@@ -1,6 +1,7 @@
 package com.simplevat.rest;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,8 +21,7 @@ public class ReconsileRequestModel {
 	// EXPENSE
 	private Integer vatId;
 	private Integer vendorId;
-	private Integer customerId; 
-	
+	private Integer customerId;
 
 	// MONEY PAID TO USER
 	// MONEY RECEIVED FROM OTHER
@@ -30,4 +30,12 @@ public class ReconsileRequestModel {
 	// Transafer To
 	private Integer bankId;
 
+	// SALES
+	private List<lineItem> invoiceIdList;
+
+	@Data
+	public class lineItem {
+		private Integer invoiceId;
+		private BigDecimal remainingInvoiceAmount;
+	}
 }

@@ -26,7 +26,7 @@ import * as Yup from "yup";
 import moment from "moment";
 
 import { CommonActions } from "services/global";
-import { selectOptionsFactory } from "utils";
+import {selectCurrencyFactory, selectOptionsFactory} from "utils";
 import * as JournalActions from "../../actions";
 import * as JournalDetailActions from "./actions";
 import { Loader, ConfirmDeleteModal } from "components";
@@ -690,7 +690,7 @@ class DetailJournal extends React.Component {
                                         className="select-default-width"
                                         options={
                                           currency_list
-                                            ? selectOptionsFactory.renderOptions(
+                                            ? selectCurrencyFactory.renderOptions(
                                               "currencyName",
                                               "currencyCode",
                                               currency_list,
@@ -701,7 +701,7 @@ class DetailJournal extends React.Component {
                                         id="currencyCode"
                                         name="currencyCode"
                                         isDisabled={props.values.postingReferenceType === "MANUAL" ? false : true}
-                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
+                                        value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange("currencyCode")(

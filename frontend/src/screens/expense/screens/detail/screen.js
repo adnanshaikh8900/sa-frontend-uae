@@ -26,7 +26,7 @@ import * as Yup from 'yup'
 import { Loader, ConfirmDeleteModal } from 'components'
 import { ViewExpenseDetails } from './sections'
 
-import { selectOptionsFactory } from 'utils'
+import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
 
 import * as ExpenseDetailsAction from './actions';
 import * as ExpenseActions from '../../actions';
@@ -407,8 +407,8 @@ class DetailExpense extends React.Component {
                                       <Select
                                         id="currencyCode"
                                         name="currencyCode"
-                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
+                                        options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                                        value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
                                         onChange={(option) => props.handleChange('currency')(option)}
                                         className={
                                           props.errors.currency &&

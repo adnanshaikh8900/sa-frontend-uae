@@ -363,7 +363,7 @@ class DetailProject extends React.Component {
                                     <span className="text-danger">*</span>Currency
                                       </Label>
                                   <Select
-                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                                    options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedCurrency: option.value ? option.value : ''
@@ -375,7 +375,7 @@ class DetailProject extends React.Component {
                                       }
                                     }}
                                     placeholder="Select currencyCode"
-                                    value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
+                                    value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                     id="currencyCode"
                                     name="currencyCode"
                                     className={

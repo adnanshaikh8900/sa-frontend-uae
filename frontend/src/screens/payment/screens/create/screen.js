@@ -16,6 +16,7 @@ import {
 import Select from 'react-select'
 import _ from 'lodash'
 import {
+  selectCurrencyFactory,
   selectOptionsFactory
 } from 'utils'
 import { Formik } from 'formik'
@@ -398,7 +399,7 @@ class CreatePayment extends React.Component {
                                         <Select
                                           id="currency"
                                           name="currency"
-                                          options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                                          options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                           value={props.values.currency}
                                           onChange={(option) => {
                                             if (option && option.value) {

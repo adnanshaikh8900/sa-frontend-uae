@@ -14,7 +14,7 @@ import {
   Label,
 } from 'reactstrap';
 import Select from 'react-select';
-import { selectOptionsFactory } from 'utils';
+import { selectOptionsFactory, selectCurrencyFactory } from 'utils';
 
 import './style.scss';
 import { Formik } from 'formik';
@@ -969,7 +969,7 @@ class CreateContact extends React.Component {
                                   <Select
                                     options={
                                       currency_list
-                                        ? selectOptionsFactory.renderOptions(
+                                        ? selectCurrencyFactory.renderOptions(
                                             'currencyName',
                                             'currencyCode',
                                             currency_list,

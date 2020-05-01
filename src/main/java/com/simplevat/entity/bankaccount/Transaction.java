@@ -36,9 +36,11 @@ import org.hibernate.annotations.ColumnDefault;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
+import com.simplevat.entity.ChartOfAccountCategory;
 import com.simplevat.entity.Contact;
 import com.simplevat.entity.Employee;
 import com.simplevat.entity.Project;
+import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.converter.DateConverter;
 
 import lombok.Data;
@@ -122,7 +124,6 @@ public class Transaction implements Serializable {
 	@JoinColumn(name = "BANK_ACCOUNT_ID")
 	private BankAccount bankAccount;
 
-	@Basic(optional = false)
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EXPLANATION_STATUS_CODE")
 	private List<TransactionStatus> transactionStatus;
@@ -203,6 +204,17 @@ public class Transaction implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "parentTransaction")
 	private Collection<Transaction> childTransactionList;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "VAT_ID")
+	private VatCategory vatCategory;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "COA_CATEGORY_ID")
+	private ChartOfAccountCategory coaCategory;
+
+	@Column(name = "REFERENCE_STR")
+	private String referenceStr;
 
 	@PrePersist
 	public void updateDates() {

@@ -22,6 +22,7 @@ import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.ReconsileRequestLineItemModel;
 import com.simplevat.rest.ReconsileRequestModel;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
@@ -74,7 +75,7 @@ public class ReconsilationRestHelper {
 
 	public List<Journal> get(ChartOfAccountCategoryIdEnumConstant chartOfAccountCategoryIdEnumConstant,
 			Integer transactionCategoryCode, BigDecimal amount, int userId, Transaction transaction,
-			List<ReconsileRequestModel.lineItem> invoiceIdList) {
+			List<ReconsileRequestLineItemModel> invoiceIdList) {
 
 		List<Journal> journalList = new ArrayList<Journal>();
 
@@ -87,7 +88,7 @@ public class ReconsilationRestHelper {
 
 		case SALES:
 
-			for (ReconsileRequestModel.lineItem invoice : invoiceIdList) {
+			for (ReconsileRequestLineItemModel invoice : invoiceIdList) {
 				journal = invoiceReconsile(invoice.getInvoiceId(), userId);
 				journalList.add(journal);
 			}

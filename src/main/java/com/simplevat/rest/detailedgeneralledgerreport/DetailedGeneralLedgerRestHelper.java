@@ -141,8 +141,8 @@ public class DetailedGeneralLedgerRestHelper {
 
 					switch (postingType) {
 					case BANK_ACCOUNT:
-					case RECONSILE_TRANSACTION_EXPENSE:
-					case RECONSILE_TRANSACTION_INVOICE:
+					case TRANSACTION_RECONSILE:
+					case TRANSACTION_RECONSILE_INVOICE:
 						transactionMap = findOrGetFromDbTr(transactionMap, lineItem.getReferenceId());
 						Transaction tr = transactionMap.get(lineItem.getReferenceId());
 

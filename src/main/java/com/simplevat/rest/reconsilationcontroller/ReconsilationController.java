@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,11 +28,13 @@ import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.entity.ChartOfAccountCategory;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
+import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.bankaccount.TransactionStatus;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.InviceSingleLevelDropdownModel;
+import com.simplevat.rest.ReconsileRequestLineItemModel;
 import com.simplevat.rest.ReconsileRequestModel;
 import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
@@ -46,6 +49,7 @@ import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
+import com.simplevat.utils.DateFormatUtil;
 
 @RestController
 @RequestMapping("/rest/reconsile")
@@ -70,7 +74,7 @@ public class ReconsilationController {
 
 	@Autowired
 	private InvoiceService invoiceService;
-	
+
 	@Autowired
 	private TranscationCategoryHelper transcationCategoryHelper;
 
@@ -92,6 +96,9 @@ public class ReconsilationController {
 	@Autowired
 	private TransactionStatusService transactionStatusService;
 
+	@Autowired
+	private DateFormatUtil dateFormatUtil;
+
 	@GetMapping(value = "/getByReconcilationCatCode")
 	public ResponseEntity getByReconcilationCatCode(@RequestParam int reconcilationCatCode) {
 		try {
@@ -105,7 +112,7 @@ public class ReconsilationController {
 	}
 
 	@PostMapping(value = "/reconcile")
-	public ResponseEntity reconcile(@RequestBody ReconsileRequestModel reconsileRequestModel,
+	public ResponseEntity reconcile(@ModelAttribute ReconsileRequestModel reconsileRequestModel,
 			HttpServletRequest request) {
 
 		try {
@@ -130,8 +137,7 @@ public class ReconsilationController {
 					trnx.setExplinationCustomer(contactService.findByPK(reconsileRequestModel.getCustomerId()));
 				}
 				if (reconsileRequestModel.getVatId() != null) {
-					// vat
-					// trnx.set(contactService.findByPK(reconsileRequestModel.getCustomerId()));
+					trnx.setVatCategory(vatCategoryService.findByPK(reconsileRequestModel.getVatId()));
 				}
 				if (reconsileRequestModel.getVendorId() != null) {
 					trnx.setExplinationVendor((contactService.findByPK(reconsileRequestModel.getVendorId())));
@@ -143,6 +149,13 @@ public class ReconsilationController {
 				if (reconsileRequestModel.getBankId() != null) {
 					trnx.setExplinationBankAccount(bankService.findByPK(reconsileRequestModel.getBankId()));
 				}
+				if (reconsileRequestModel.getReference() != null && !reconsileRequestModel.getReference().isEmpty()) {
+					trnx.setReferenceStr(reconsileRequestModel.getReference());
+				}
+				if (reconsileRequestModel.getCoaCategoryId() != null) {
+					trnx.setCoaCategory(
+							chartOfAccountCategoryService.findByPK(reconsileRequestModel.getCoaCategoryId()));
+				}
 
 				journalList = reconsilationRestHelper.get(
 						ChartOfAccountCategoryIdEnumConstant.get(reconsileRequestModel.getCoaCategoryId()),
@@ -151,21 +164,35 @@ public class ReconsilationController {
 
 				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
 				if (reconsileRequestModel.getInvoiceIdList() != null) {
-					for (ReconsileRequestModel.lineItem invoice : reconsileRequestModel.getInvoiceIdList()) {
+					for (ReconsileRequestLineItemModel invoice : reconsileRequestModel.getInvoiceIdList()) {
 						invoiceIdAmtMap.put(invoice.getInvoiceId(), invoice.getRemainingInvoiceAmount());
 					}
 				}
 
 				if (journalList != null && !journalList.isEmpty()) {
+					List<TransactionStatus> transationStatusList = new ArrayList<>();
 					for (Journal journal : journalList) {
+
+						JournalLineItem item = journal.getJournalLineItems().iterator().next();
+
+						journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(reconsileRequestModel.getDate(),
+								reconsileRequestModel.getDATE_FORMAT()));
 						journalService.persist(journal);
 						TransactionStatus status = new TransactionStatus();
 						status.setCreatedBy(userId);
 						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
 						status.setTransaction(trnx);
+						status.setRemainingToExplain(invoiceIdAmtMap.containsKey(item.getReferenceId())
+								? invoiceIdAmtMap.get(item.getReferenceId())
+								: BigDecimal.ZERO);
+						status.setReconsileJournal(journal);
 						transactionStatusService.persist(status);
+
+						transationStatusList.add(status);
 					}
+					// trnx.setTransactionStatus(transationStatusList);
 				}
+				trnx.setTransactionExplinationStatusEnum(reconsileRequestModel.getExplinationStatusEnum());
 				transactionService.persist(trnx);
 
 				return new ResponseEntity<>(HttpStatus.OK);

@@ -5,10 +5,18 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.simplevat.constant.TransactionExplinationStatusEnum;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReconsileRequestModel {
+
+	private String DATE_FORMAT = "dd/MM/yyyy";
 
 	private Integer transactionId;
 	private Integer coaCategoryId;;
@@ -17,6 +25,7 @@ public class ReconsileRequestModel {
 	private String date;
 	private String description;
 	private MultipartFile attachmentFile;
+	private String reference;
 
 	// EXPENSE
 	private Integer vatId;
@@ -31,11 +40,7 @@ public class ReconsileRequestModel {
 	private Integer bankId;
 
 	// SALES
-	private List<lineItem> invoiceIdList;
+	private List<ReconsileRequestLineItemModel> invoiceIdList;
 
-	@Data
-	public class lineItem {
-		private Integer invoiceId;
-		private BigDecimal remainingInvoiceAmount;
-	}
+	TransactionExplinationStatusEnum explinationStatusEnum;
 }

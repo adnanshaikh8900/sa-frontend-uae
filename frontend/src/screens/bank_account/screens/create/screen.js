@@ -17,7 +17,7 @@ import Select from 'react-select';
 import _ from 'lodash';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { selectOptionsFactory } from 'utils';
+import {selectCurrencyFactory, selectOptionsFactory} from 'utils';
 import { CommonActions } from 'services/global';
 import * as createBankAccountActions from './actions';
 
@@ -256,7 +256,7 @@ class CreateBankAccount extends React.Component {
                                     name="currency"
                                     options={
                                       currency_list
-                                        ? selectOptionsFactory.renderOptions(
+                                        ? selectCurrencyFactory.renderOptions(
                                             'currencyName',
                                             'currencyCode',
                                             currency_list,

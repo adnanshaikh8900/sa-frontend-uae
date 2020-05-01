@@ -24,7 +24,7 @@ import { Loader, ConfirmDeleteModal } from 'components'
 import {
   CommonActions
 } from 'services/global'
-import { selectOptionsFactory } from 'utils'
+import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
 import * as EmployeeActions from '../../actions';
 import * as EmployeeDetailActions from './actions';
 
@@ -442,8 +442,8 @@ class DetailEmployee extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="currencyCode">Currency Code</Label>
                                       <Select
-                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
+                                        options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                                        value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('currencyCode')(option)

@@ -24,7 +24,7 @@ import * as Yup from "yup";
 import {
   CommonActions
 } from 'services/global'
-import { selectOptionsFactory } from 'utils'
+import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
 import * as JournalActions from '../../actions';
 import * as JournalCreateActions from './actions';
 
@@ -586,7 +586,7 @@ class CreateJournal extends React.Component {
                                   <Label htmlFor="currencyCode">Currency</Label>
                                   <Select
                                     className="select-default-width"
-                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                                    options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     id="currencyCode"
                                     name="currencyCode"
                                     value={props.values.currencyCode}

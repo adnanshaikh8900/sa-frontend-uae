@@ -1,7 +1,6 @@
 package com.simplevat.rest.reconsilationcontroller;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,22 +23,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.ChartOfAccountConstant;
-import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.ReconsileCategoriesEnumConstant;
-import com.simplevat.constant.TransactionCategoryCodeEnum;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.entity.ChartOfAccountCategory;
-import com.simplevat.entity.Expense;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
-import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.entity.bankaccount.TransactionStatus;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.InviceSingleLevelDropdownModel;
-import com.simplevat.rest.ReconsileLineItemModel;
+import com.simplevat.rest.ReconsileRequestLineItemModel;
 import com.simplevat.rest.ReconsileRequestModel;
 import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
@@ -47,12 +43,13 @@ import com.simplevat.service.BankAccountService;
 import com.simplevat.service.ChartOfAccountCategoryService;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.EmployeeService;
-import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
+import com.simplevat.service.bankaccount.TransactionStatusService;
+import com.simplevat.utils.DateFormatUtil;
 
 @RestController
 @RequestMapping("/rest/reconsile")
@@ -64,7 +61,7 @@ public class ReconsilationController {
 	private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	TransactionCategoryService transactionCategoryService;
+	private TransactionCategoryService transactionCategoryService;
 
 	@Autowired
 	private JournalService journalService;
@@ -77,9 +74,6 @@ public class ReconsilationController {
 
 	@Autowired
 	private InvoiceService invoiceService;
-
-	@Autowired
-	private ExpenseService expenseService;
 
 	@Autowired
 	private TranscationCategoryHelper transcationCategoryHelper;
@@ -99,6 +93,12 @@ public class ReconsilationController {
 	@Autowired
 	private ContactService contactService;
 
+	@Autowired
+	private TransactionStatusService transactionStatusService;
+
+	@Autowired
+	private DateFormatUtil dateFormatUtil;
+
 	@GetMapping(value = "/getByReconcilationCatCode")
 	public ResponseEntity getByReconcilationCatCode(@RequestParam int reconcilationCatCode) {
 		try {
@@ -112,182 +112,97 @@ public class ReconsilationController {
 	}
 
 	@PostMapping(value = "/reconcile")
-	public ResponseEntity reconcile(@RequestBody ReconsileRequestModel reconsileRequestModel,
+	public ResponseEntity reconcile(@ModelAttribute ReconsileRequestModel reconsileRequestModel,
 			HttpServletRequest request) {
-		try {
 
-			Journal journal = null;
+		try {
+			List<Journal> journalList = null;
 
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			List<Journal> journalList = new ArrayList<Journal>();
+			Transaction trnx = transactionService.findByPK(reconsileRequestModel.getTransactionId());
 
-			if (reconsileRequestModel != null && reconsileRequestModel.getExplainData() != null
-					&& !reconsileRequestModel.getExplainData().isEmpty()) {
+			if (reconsileRequestModel != null && reconsileRequestModel.getTransactionId() != null) {
 
-				for (ReconsileLineItemModel reconsileLineItemModel : reconsileRequestModel.getExplainData()) {
-					ReconsileCategoriesEnumConstant cat = ReconsileCategoriesEnumConstant
-							.get(reconsileLineItemModel.getCategoryType());
+				if (reconsileRequestModel.getTransactionCategoryId() != null) {
+					trnx.setExplainedTransactionCategory(
+							transactionCategoryService.findByPK(reconsileRequestModel.getTransactionCategoryId()));
+				}
+				if (reconsileRequestModel.getDescription() != null) {
+					trnx.setExplainedTransactionDescription(reconsileRequestModel.getDescription());
+				}
+				if (reconsileRequestModel.getAttachmentFile() != null) {
+					trnx.setExplainedTransactionAttachement(reconsileRequestModel.getAttachmentFile().getBytes());
+				}
+				if (reconsileRequestModel.getCustomerId() != null) {
+					trnx.setExplinationCustomer(contactService.findByPK(reconsileRequestModel.getCustomerId()));
+				}
+				if (reconsileRequestModel.getVatId() != null) {
+					trnx.setVatCategory(vatCategoryService.findByPK(reconsileRequestModel.getVatId()));
+				}
+				if (reconsileRequestModel.getVendorId() != null) {
+					trnx.setExplinationVendor((contactService.findByPK(reconsileRequestModel.getVendorId())));
+				}
+				if (reconsileRequestModel.getEmployeeId() != null) {
+					// employee remaining
+					trnx.setExplinationEmployee(employeeService.findByPK(reconsileRequestModel.getEmployeeId()));
+				}
+				if (reconsileRequestModel.getBankId() != null) {
+					trnx.setExplinationBankAccount(bankService.findByPK(reconsileRequestModel.getBankId()));
+				}
+				if (reconsileRequestModel.getReference() != null && !reconsileRequestModel.getReference().isEmpty()) {
+					trnx.setReferenceStr(reconsileRequestModel.getReference());
+				}
+				if (reconsileRequestModel.getCoaCategoryId() != null) {
+					trnx.setCoaCategory(
+							chartOfAccountCategoryService.findByPK(reconsileRequestModel.getCoaCategoryId()));
+				}
 
-					switch (cat) {
-					case EXPENSE:
-						journal = expenseReconsile(reconsileLineItemModel, userId);
-						break;
+				journalList = reconsilationRestHelper.get(
+						ChartOfAccountCategoryIdEnumConstant.get(reconsileRequestModel.getCoaCategoryId()),
+						reconsileRequestModel.getTransactionCategoryId(), reconsileRequestModel.getAmount(), userId,
+						trnx, reconsileRequestModel.getInvoiceIdList());
 
-					case SUPPLIER_INVOICE:
-						journal = invoiceReconsile(reconsileLineItemModel, userId);
-						break;
-
-					default:
-						break;
-					}
-					if (journal != null) {
-						journalList.add(journal);
+				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
+				if (reconsileRequestModel.getInvoiceIdList() != null) {
+					for (ReconsileRequestLineItemModel invoice : reconsileRequestModel.getInvoiceIdList()) {
+						invoiceIdAmtMap.put(invoice.getInvoiceId(), invoice.getRemainingInvoiceAmount());
 					}
 				}
 
-				Transaction trnx = transactionService.findByPK(reconsileRequestModel.getTransactionId());
+				if (journalList != null && !journalList.isEmpty()) {
+					List<TransactionStatus> transationStatusList = new ArrayList<>();
+					for (Journal journal : journalList) {
 
-				if (reconsileRequestModel.getTransactionCategory() != null
-						&& reconsileRequestModel.getRemainingBalance() != null) {
-					journal = getByTransactionType(reconsileRequestModel.getTransactionCategory(),
-							reconsileRequestModel.getRemainingBalance(), userId, trnx);
-					if (journal != null) {
-						journalList.add(journal);
+						JournalLineItem item = journal.getJournalLineItems().iterator().next();
+
+						journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(reconsileRequestModel.getDate(),
+								reconsileRequestModel.getDATE_FORMAT()));
+						journalService.persist(journal);
+						TransactionStatus status = new TransactionStatus();
+						status.setCreatedBy(userId);
+						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+						status.setTransaction(trnx);
+						status.setRemainingToExplain(invoiceIdAmtMap.containsKey(item.getReferenceId())
+								? invoiceIdAmtMap.get(item.getReferenceId())
+								: BigDecimal.ZERO);
+						status.setReconsileJournal(journal);
+						transactionStatusService.persist(status);
+
+						transationStatusList.add(status);
 					}
+					// trnx.setTransactionStatus(transationStatusList);
 				}
+				trnx.setTransactionExplinationStatusEnum(reconsileRequestModel.getExplinationStatusEnum());
+				transactionService.persist(trnx);
 
-				if (!journalList.isEmpty()) {
-
-					for (Journal journal1 : journalList) {
-						journalService.persist(journal1);
-					}
-					trnx.setReconsileJournalList(journalList);
-					transactionService.persist(trnx);
-				}
+				return new ResponseEntity<>(HttpStatus.OK);
 			}
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
-	private Journal expenseReconsile(ReconsileLineItemModel reconsileLineItemModel, Integer userId) {
-		List<JournalLineItem> journalLineItemList = new ArrayList();
-
-		Expense expence = expenseService.findByPK(reconsileLineItemModel.getReconcileRrefId());
-
-		Journal journal = new Journal();
-		JournalLineItem journalLineItem1 = new JournalLineItem();
-		TransactionCategory transactionCategory = transactionCategoryService
-				.findTransactionCategoryByTransactionCategoryCode(
-						TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode());
-		journalLineItem1.setTransactionCategory(transactionCategory);
-		journalLineItem1.setCreditAmount(expence.getExpenseAmount());
-		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_INVOICE);
-		journalLineItem1.setReferenceId(reconsileLineItemModel.getReconcileRrefId());
-		journalLineItem1.setCreatedBy(userId);
-		journalLineItem1.setJournal(journal);
-		journalLineItemList.add(journalLineItem1);
-
-		JournalLineItem journalLineItem2 = new JournalLineItem();
-		journalLineItem2.setTransactionCategory(expence.getTransactionCategory());
-		journalLineItem2.setDebitAmount(expence.getExpenseAmount());
-		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_INVOICE);
-		journalLineItem2.setReferenceId(reconsileLineItemModel.getReconcileRrefId());
-		journalLineItem2.setCreatedBy(userId);
-		journalLineItem2.setJournal(journal);
-		journalLineItemList.add(journalLineItem2);
-
-		journal.setJournalLineItems(journalLineItemList);
-		journal.setCreatedBy(userId);
-		journal.setPostingReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_INVOICE);
-		journal.setJournalDate(LocalDateTime.now());
-		return journal;
-	}
-
-	private Journal invoiceReconsile(ReconsileLineItemModel reconsileLineItemModel, Integer userId) {
-		List<JournalLineItem> journalLineItemList = new ArrayList<>();
-
-		Invoice invoice = invoiceService.findByPK(reconsileLineItemModel.getReconcileRrefId());
-
-		Journal journal = new Journal();
-		JournalLineItem journalLineItem1 = new JournalLineItem();
-		TransactionCategory transactionCategory = transactionCategoryService
-				.findTransactionCategoryByTransactionCategoryCode(
-						TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
-		journalLineItem1.setTransactionCategory(transactionCategory);
-		journalLineItem1.setCreditAmount(invoice.getTotalAmount());
-		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.INVOICE);
-		journalLineItem1.setReferenceId(invoice.getId());
-		journalLineItem1.setCreatedBy(userId);
-		journalLineItem1.setJournal(journal);
-		journalLineItemList.add(journalLineItem1);
-
-		JournalLineItem journalLineItem2 = new JournalLineItem();
-		TransactionCategory saleTransactionCategory = transactionCategoryService
-				.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.SALE.getCode());
-		journalLineItem2.setTransactionCategory(saleTransactionCategory);
-		journalLineItem2.setDebitAmount(invoice.getTotalAmount());
-		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_EXPENSE);
-		journalLineItem2.setReferenceId(invoice.getId());
-		journalLineItem2.setCreatedBy(userId);
-		journalLineItem2.setJournal(journal);
-		journalLineItemList.add(journalLineItem2);
-		journal.setJournalLineItems(journalLineItemList);
-
-		journal.setCreatedBy(userId);
-		journal.setPostingReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_EXPENSE);
-		journal.setJournalDate(LocalDateTime.now());
-		return journal;
-	}
-
-	private Journal getByTransactionType(Integer transactionCategoryCode, BigDecimal amount, int userId,
-			Transaction transaction) {
-		List<JournalLineItem> journalLineItemList = new ArrayList();
-
-		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
-
-		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
-
-		boolean isdebitFromBank = transactionType.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
-				|| (transactionType.getParentChartOfAccount() != null
-						&& transactionType.getParentChartOfAccount().getChartOfAccountId() != null
-						&& transactionType.getParentChartOfAccount().getChartOfAccountId()
-								.equals(ChartOfAccountConstant.MONEY_IN)) ? Boolean.TRUE : Boolean.FALSE;
-
-		Journal journal = new Journal();
-		JournalLineItem journalLineItem1 = new JournalLineItem();
-		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
-		if (!isdebitFromBank) {
-			journalLineItem1.setDebitAmount(amount);
-		} else {
-			journalLineItem1.setCreditAmount(amount);
-		}
-		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_REMAIN);
-		journalLineItem1.setReferenceId(transaction.getTransactionId());
-		journalLineItem1.setCreatedBy(userId);
-		journalLineItem1.setJournal(journal);
-		journalLineItemList.add(journalLineItem1);
-
-		JournalLineItem journalLineItem2 = new JournalLineItem();
-		journalLineItem2.setTransactionCategory(transaction.getBankAccount().getTransactionCategory());
-		if (isdebitFromBank) {
-			journalLineItem2.setDebitAmount(transaction.getTransactionAmount());
-		} else {
-			journalLineItem2.setCreditAmount(transaction.getTransactionAmount());
-		}
-		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_REMAIN);
-		journalLineItem2.setReferenceId(transaction.getTransactionId());
-		journalLineItem2.setCreatedBy(transaction.getCreatedBy());
-		journalLineItem2.setJournal(journal);
-		journalLineItemList.add(journalLineItem2);
-
-		journal.setJournalLineItems(journalLineItemList);
-		journal.setCreatedBy(transaction.getCreatedBy());
-		journal.setPostingReferenceType(PostingReferenceTypeEnum.RECONSILE_TRANSACTION_REMAIN);
-		journal.setJournalDate(LocalDateTime.now());
-		return journal;
 	}
 
 	@GetMapping(value = "/getTransactionCat")

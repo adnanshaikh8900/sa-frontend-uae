@@ -7,6 +7,7 @@ package com.simplevat.helper;
 
 import com.simplevat.constant.ChartOfAccountConstant;
 import com.simplevat.constant.PostingReferenceTypeEnum;
+import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Project;
@@ -115,7 +116,7 @@ public class TransactionHelper {
 		transaction.setTransactionAmount(transactionModel.getTransactionAmount());
 		transaction.setReceiptNumber(transactionModel.getReceiptNumber());
 		transaction.setExplainedTransactionAttachementDescription(transactionModel.getAttachementDescription());
-
+		transaction.setCreationMode(TransactionCreationMode.MANUAL);
 		return transaction;
 	}
 

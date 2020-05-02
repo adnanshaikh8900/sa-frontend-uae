@@ -124,7 +124,8 @@ RUN set -e \
 		echo >&2 "$nativeLines"; \
 		exit 1; \
 	fi
+COPY /target/ROOT.war ${CATALINA_HOME}/webapps/
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
-COPY target/ROOT.war ${CATALINA_HOME}/webapps/
+

@@ -1,21 +1,49 @@
 package com.simplevat.entity.bankaccount;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.simplevat.entity.Journal;
-import com.simplevat.entity.Project;
-import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
-
-import lombok.Data;
-
-import javax.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Version;
+
 import org.hibernate.annotations.ColumnDefault;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.simplevat.constant.TransactionCreationMode;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
+import com.simplevat.entity.ChartOfAccountCategory;
+import com.simplevat.entity.Contact;
+import com.simplevat.entity.Employee;
+import com.simplevat.entity.Project;
+import com.simplevat.entity.VatCategory;
+import com.simplevat.entity.converter.DateConverter;
+
+import lombok.Data;
 
 /**
  * Created by mohsinh on 2/26/2017.
@@ -96,19 +124,41 @@ public class Transaction implements Serializable {
 	@JoinColumn(name = "BANK_ACCOUNT_ID")
 	private BankAccount bankAccount;
 
-	@Basic(optional = false)
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EXPLANATION_STATUS_CODE")
-	private TransactionStatus transactionStatus;
+	private List<TransactionStatus> transactionStatus;
 
 	@Basic(optional = false)
 	@Column(name = "CURRENT_BALANCE")
 	@ColumnDefault(value = "0.00")
 	private BigDecimal currentBalance;
 
-	@OneToMany
-	@JoinColumn(name = "RECONSILE_JOURNAL_ID")
-	private List<Journal> reconsileJournalList;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EXPLINTION_BANK_ACCOUNT_ID")
+	private BankAccount explinationBankAccount;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EXPLINTION_VENDOR_CONTACT_ID")
+	private Contact explinationVendor;
+
+	@Basic
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EXPLINTION_CUSTOMER_CONTACT_ID")
+	private Contact explinationCustomer;
+
+	@Basic
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EXPLINTION_EMPLOYEE_ID")
+	private Employee explinationEmployee;
+
+	@Basic
+	@Column(name = "TRANSACTIN_CREATION_MODE", columnDefinition = "varchar(32) default 'MANUAL'")
+	@Enumerated(EnumType.STRING)
+	private TransactionCreationMode creationMode;
+
+	@Column(name = "TRANSACTIN_EXPLINATION_STATUS", columnDefinition = "varchar(32) default 'NOT_EXPLAIN'")
+	@Enumerated(EnumType.STRING)
+	private TransactionExplinationStatusEnum transactionExplinationStatusEnum;
 
 	@Column(name = "CREATED_BY")
 	@Basic(optional = false)
@@ -154,6 +204,17 @@ public class Transaction implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "parentTransaction")
 	private Collection<Transaction> childTransactionList;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "VAT_ID")
+	private VatCategory vatCategory;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "COA_CATEGORY_ID")
+	private ChartOfAccountCategory coaCategory;
+
+	@Column(name = "REFERENCE_STR")
+	private String referenceStr;
 
 	@PrePersist
 	public void updateDates() {

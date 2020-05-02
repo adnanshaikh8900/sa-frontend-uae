@@ -11,4 +11,5 @@ public class TransactionCategoryBalanceListModel {
 	private String transactionCategoryName;
 	private String effectiveDate; // dd/MM/yyyy
 	private BigDecimal openingBalance;
+	private BigDecimal runningBalance;
 }

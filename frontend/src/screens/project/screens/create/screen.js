@@ -313,7 +313,7 @@ class CreateProject extends React.Component {
                                     <span className="text-danger">*</span>Currency
                                       </Label>
                                   <Select
-                                    options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                                    options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                     onChange={(option) => {
                                       this.setState({
                                         selectedCurrency: option

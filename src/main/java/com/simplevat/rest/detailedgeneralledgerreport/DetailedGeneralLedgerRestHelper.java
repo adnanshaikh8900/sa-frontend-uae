@@ -11,9 +11,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.BeanProperty.Bogus;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.entity.Expense;
@@ -22,6 +25,7 @@ import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.invoicecontroller.InvoiceRestController;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalLineItemService;
@@ -32,8 +36,7 @@ import com.simplevat.utils.DateFormatUtil;
 @Component
 public class DetailedGeneralLedgerRestHelper {
 
-	@Autowired
-	private JournalService journalService;
+	private final Logger logger = LoggerFactory.getLogger(InvoiceRestController.class);
 
 	@Autowired
 	private JournalLineItemService journalLineItemService;
@@ -118,32 +121,30 @@ public class DetailedGeneralLedgerRestHelper {
 
 				Collections.sort(journalLineItemList, dateComparator);
 
-				for (JournalLineItem data : journalLineItemList) {
+				for (JournalLineItem lineItem : journalLineItemList) {
 
 					DetailedGeneralLedgerReportListModel model = new DetailedGeneralLedgerReportListModel();
 
-					Journal journal = data.getJournal();
+					Journal journal = lineItem.getJournal();
 					LocalDateTime date = journal.getJournalDate();
-					if (data == null)
+					if (lineItem == null)
 						date = LocalDateTime.now();
 					model.setDate(dateUtil.getLocalDateTimeAsString(date, "dd/MM/yyyy"));
-					model.setTransactionTypeName(data.getTransactionCategory().getTransactionCategoryName());
+					model.setTransactionTypeName(lineItem.getTransactionCategory().getTransactionCategoryName());
 
-					PostingReferenceTypeEnum postingType = data.getReferenceType();
+					PostingReferenceTypeEnum postingType = lineItem.getReferenceType();
 					model.setPostingReferenceTypeEnum(postingType.getDisplayName());
 					model.setPostingReferenceType(postingType);
-					model.setReferenceId(data.getReferenceId());
-					boolean isDebit = data.getDebitAmount() != null
-							|| (data.getDebitAmount() != null && new BigDecimal(0).equals(data.getDebitAmount()))
-									? Boolean.TRUE
-									: Boolean.FALSE;
+					model.setReferenceId(lineItem.getReferenceId());
+					boolean isDebit = lineItem.getDebitAmount() != null || (lineItem.getDebitAmount() != null
+							&& new BigDecimal(0).equals(lineItem.getDebitAmount())) ? Boolean.TRUE : Boolean.FALSE;
 
 					switch (postingType) {
 					case BANK_ACCOUNT:
-					case RECONSILE_TRANSACTION_EXPENSE:
-					case RECONSILE_TRANSACTION_INVOICE:
-						transactionMap = findOrGetFromDbTr(transactionMap, data.getReferenceId());
-						Transaction tr = transactionMap.get(data.getReferenceId());
+					case TRANSACTION_RECONSILE:
+					case TRANSACTION_RECONSILE_INVOICE:
+						transactionMap = findOrGetFromDbTr(transactionMap, lineItem.getReferenceId());
+						Transaction tr = transactionMap.get(lineItem.getReferenceId());
 
 						model.setAmount(tr.getTransactionAmount());
 						model.setDebitAmount(isDebit ? tr.getTransactionAmount() : new BigDecimal(0));
@@ -153,8 +154,8 @@ public class DetailedGeneralLedgerRestHelper {
 
 					case EXPENSE:
 
-						expenseMap = findOrGetFromDbEx(expenseMap, data.getReferenceId());
-						Expense expense = expenseMap.get(data.getReferenceId());
+						expenseMap = findOrGetFromDbEx(expenseMap, lineItem.getReferenceId());
+						Expense expense = expenseMap.get(lineItem.getReferenceId());
 						model.setAmount(expense.getExpenseAmount());
 						model.setDebitAmount(expense.getExpenseAmount());
 						model.setCreditAmount(new BigDecimal(0));
@@ -164,15 +165,15 @@ public class DetailedGeneralLedgerRestHelper {
 
 					case INVOICE:
 
-						invoiceMap = findOrGetFromDbIn(invoiceMap, data.getReferenceId());
-						Invoice invoice = invoiceMap.get(data.getReferenceId());
+						invoiceMap = findOrGetFromDbIn(invoiceMap, lineItem.getReferenceId());
+						Invoice invoice = invoiceMap.get(lineItem.getReferenceId());
 
 						model.setReferenceNo(journal.getJournlReferencenNo());
 						model.setAmount(invoice.getTotalAmount());
 						model.setCreditAmount(!isDebit ? invoice.getTotalAmount() : BigDecimal.ZERO);
 						model.setDebitAmount(isDebit ? invoice.getTotalAmount() : BigDecimal.ZERO);
-						model.setName(data.getContact() != null
-								? data.getContact().getFirstName() + " " + data.getContact().getLastName()
+						model.setName(lineItem.getContact() != null
+								? lineItem.getContact().getFirstName() + " " + lineItem.getContact().getLastName()
 								: "");
 						model.setTransactonRefNo(invoice.getReferenceNumber());
 						model.setInvoiceType(invoice.getType());
@@ -180,17 +181,22 @@ public class DetailedGeneralLedgerRestHelper {
 
 					case MANUAL:
 						model.setReferenceNo(journal.getJournlReferencenNo());
-						model.setAmount(isDebit ? data.getDebitAmount() : data.getCreditAmount());
-						model.setCreditAmount(data.getCreditAmount());
-						model.setDebitAmount(data.getDebitAmount());
-						model.setName(data.getContact() != null
-								? data.getContact().getFirstName() + " " + data.getContact().getLastName()
+						model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
+						model.setCreditAmount(lineItem.getCreditAmount());
+						model.setDebitAmount(lineItem.getDebitAmount());
+						model.setName(lineItem.getContact() != null
+								? lineItem.getContact().getFirstName() + " " + lineItem.getContact().getLastName()
 								: "");
 						break;
 
 					case PURCHASE:
 						break;
 					}
+
+					model.setAmount(lineItem.getCurrentBalance() != null
+							&& lineItem.getCurrentBalance().compareTo(BigDecimal.ZERO) == 0 ? model.getAmount()
+									: lineItem.getCurrentBalance());
+
 					dataList.add(model);
 				}
 				resposneList.add(dataList);

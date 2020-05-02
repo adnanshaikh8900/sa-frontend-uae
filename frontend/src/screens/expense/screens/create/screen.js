@@ -21,7 +21,7 @@ import { Formik, Field } from "formik";
 import * as Yup from "yup";
 
 import { CommonActions } from "services/global";
-import { selectOptionsFactory } from "utils";
+import {selectCurrencyFactory, selectOptionsFactory} from "utils";
 import * as ExpenseActions from "../../actions";
 import * as ExpenseCreateActions from "./actions";
 
@@ -406,7 +406,7 @@ class CreateExpense extends React.Component {
                                     name="currencyCode"
                                     options={
                                       currency_list
-                                        ? selectOptionsFactory.renderOptions(
+                                        ? selectCurrencyFactory.renderOptions(
                                           "currencyName",
                                           "currencyCode",
                                           currency_list,

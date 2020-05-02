@@ -30,7 +30,6 @@ import com.simplevat.entity.Country;
 import com.simplevat.entity.IndustryType;
 import com.simplevat.entity.State;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
-import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.rest.PaginationModel;
@@ -43,7 +42,6 @@ import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
 import com.simplevat.service.StateService;
-import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
 
@@ -85,9 +83,6 @@ public class DataListController {
 
 	@Autowired
 	private ChartOfAccountCategoryService chartOfAccountCategoryService;
-
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
 
 	@GetMapping(value = "/getcountry")
 	public ResponseEntity getCountry() {
@@ -325,29 +320,4 @@ public class DataListController {
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
-	@GetMapping(value = "/reconsile/getTransactionCat")
-	public ResponseEntity getTransactionCategory(@RequestParam Integer chartOfAccountCategoryId) {
-		try {
-			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);
-			String chartOfAccountCatCode = category.getChartOfAccountCategoryCode();
-
-			if (category == null) {
-				return new ResponseEntity(HttpStatus.BAD_REQUEST);
-			}
-			List<TransactionCategory> transactionCatList = transactionCategoryService
-					.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
-			if (transactionCatList != null && !transactionCatList.isEmpty()) {
-				
-				return new ResponseEntity<>(transcationCategoryHelper.getSinleLevelDropDownModelList(
-						transactionCatList), HttpStatus.OK);
-			} else {
-				return new ResponseEntity(HttpStatus.BAD_REQUEST);
-			}
-		} catch (Exception e) {
-			LOGGER.error("Error", e);
-		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
 }

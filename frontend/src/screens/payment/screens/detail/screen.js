@@ -14,7 +14,7 @@ import {
   Label
 } from "reactstrap";
 import Select from "react-select";
-import { selectOptionsFactory } from "utils";
+import {selectCurrencyFactory, selectOptionsFactory} from "utils";
 import { Formik } from "formik";
 
 import DatePicker from "react-datepicker";
@@ -425,7 +425,7 @@ class DetailPayment extends React.Component {
                                         name="currency"
                                         options={
                                           currency_list
-                                            ? selectOptionsFactory.renderOptions(
+                                            ? selectCurrencyFactory.renderOptions(
                                               "currencyName",
                                               "currencyCode",
                                               currency_list,
@@ -433,7 +433,7 @@ class DetailPayment extends React.Component {
                                             )
                                             : []
                                         }
-                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
+                                        value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
                                         onChange={(option) =>
                                           props.handleChange("currency")(option.value)
                                         }

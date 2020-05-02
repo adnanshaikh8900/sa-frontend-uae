@@ -1,5 +1,6 @@
 package com.simplevat.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import com.simplevat.dao.Dao;
 import com.simplevat.dao.VatCategoryDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.VatCategory;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.VatCategoryService;
@@ -71,8 +73,20 @@ public class VatCategoryServiceImpl extends VatCategoryService {
 	}
 
 	@Override
-	public PaginationResponseModel getVatCategoryList(Map<VatCategoryFilterEnum, Object> filterDataMap,PaginationModel pagiantionModel) {
-		return vatCategoryDao.getVatCategoryList(filterDataMap,pagiantionModel);
+	public PaginationResponseModel getVatCategoryList(Map<VatCategoryFilterEnum, Object> filterDataMap,
+			PaginationModel pagiantionModel) {
+		return vatCategoryDao.getVatCategoryList(filterDataMap, pagiantionModel);
+	}
+
+	@Override
+	public List<DropdownModel> getVatCategoryForDropDown() {
+		List<VatCategory> list = vatCategoryDao.getVatCategoryList();
+
+		List<DropdownModel> modelList = new ArrayList<>();
+		for (VatCategory vat : list) {
+			modelList.add(new DropdownModel(vat.getId(), vat.getVatLabel()));
+		}
+		return modelList;
 	}
 
 }

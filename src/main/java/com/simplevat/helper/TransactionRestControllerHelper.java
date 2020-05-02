@@ -3,6 +3,7 @@ package com.simplevat.helper;
 import com.simplevat.model.TransactionViewRestModel;
 import com.simplevat.model.TransactionRestModel;
 import com.simplevat.model.BankAccountRestModel;
+import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionRefrenceTypeConstant;
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.entity.Invoice;
@@ -58,7 +59,7 @@ public class TransactionRestControllerHelper {
 				.setExplainedTransactionAttachementDescription(model.getExplainedTransactionAttachementDescription());
 		transaction.setExplainedTransactionAttachement(model.getExplainedTransactionAttachement());
 		transaction.setBankAccount(model.getBankAccount());
-		transaction.setTransactionStatus(model.getTransactionStatus());
+		//transaction.setTransactionStatus(model.getTransactionStatus());
 		transaction.setCurrentBalance(model.getCurrentBalance());
 		transaction.setCreatedBy(model.getCreatedBy());
 		transaction.setCreatedDate(model.getCreatedDate());
@@ -70,6 +71,7 @@ public class TransactionRestControllerHelper {
 		transaction.setParentTransaction(model.getParentTransaction());
 		transaction.setReferenceId(model.getReferenceId());
 		transaction.setReferenceType(model.getReferenceType());
+		transaction.setCreationMode(TransactionCreationMode.MANUAL);
 		if (model.getChildTransactionList() != null && !model.getChildTransactionList().isEmpty()) {
 			model.getChildTransactionList().remove(model.getChildTransactionList().size() - 1);
 		}
@@ -98,7 +100,7 @@ public class TransactionRestControllerHelper {
 		transactionModel
 				.setExplainedTransactionAttachementDescription(entity.getExplainedTransactionAttachementDescription());
 		transactionModel.setExplainedTransactionAttachement(entity.getExplainedTransactionAttachement());
-		transactionModel.setTransactionStatus(entity.getTransactionStatus());
+		//transactionModel.setTransactionStatus(entity.getTransactionStatus());
 		transactionModel.setBankAccount(entity.getBankAccount());
 		transactionModel.setCurrentBalance(entity.getCurrentBalance());
 		transactionModel.setCreatedBy(entity.getCreatedBy());
@@ -178,7 +180,7 @@ public class TransactionRestControllerHelper {
 						model.getExplainedTransactionAttachementDescription());
 				transaction.setExplainedTransactionAttachement(model.getExplainedTransactionAttachement());
 				transaction.setBankAccount(model.getBankAccount());
-				transaction.setTransactionStatus(model.getTransactionStatus());
+			//	transaction.setTransactionStatus(model.getTransactionStatus());
 				transaction.setCurrentBalance(model.getCurrentBalance());
 				transaction.setCreatedBy(model.getCreatedBy());
 				transaction.setCreatedDate(model.getCreatedDate());
@@ -221,7 +223,7 @@ public class TransactionRestControllerHelper {
 				transactionModel.setExplainedTransactionAttachementDescription(
 						transaction.getExplainedTransactionAttachementDescription());
 				transactionModel.setExplainedTransactionAttachement(transaction.getExplainedTransactionAttachement());
-				transactionModel.setTransactionStatus(transaction.getTransactionStatus());
+			//	transactionModel.setTransactionStatus(transaction.getTransactionStatus());
 				transactionModel.setBankAccount(transaction.getBankAccount());
 				transactionModel.setCurrentBalance(transaction.getCurrentBalance());
 				transactionModel.setCreatedBy(transaction.getCreatedBy());

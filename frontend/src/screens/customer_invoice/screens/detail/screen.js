@@ -31,6 +31,7 @@ import {
 	CommonActions
 } from 'services/global'
 import {
+	selectCurrencyFactory,
 	selectOptionsFactory
 } from 'utils'
 
@@ -853,10 +854,10 @@ class DetailCustomerInvoice extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
 																			<Select
-																				options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+																				options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
 																				id="currency"
 																				name="currency"
-																				value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
+																				value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
 																				onChange={(option) => props.handleChange('currency')(option.value)}
 																				className={`${props.errors.currency && props.touched.currency ? "is-invalid" : ""}`}
 																			/>

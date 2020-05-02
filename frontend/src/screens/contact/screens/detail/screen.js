@@ -14,7 +14,7 @@ import {
   Label
 } from 'reactstrap'
 import Select from 'react-select'
-import { selectOptionsFactory } from 'utils'
+import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
 import { Loader, ConfirmDeleteModal } from 'components'
 
 import { toast } from 'react-toastify'
@@ -753,8 +753,8 @@ class DetailContact extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="currencyCode">Currency Code</Label>
                                       <Select
-                                        options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                        value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
+                                        options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                                        value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                         onChange={(option) => {
                                           if (option && option.value) {
                                             props.handleChange('currencyCode')(option)

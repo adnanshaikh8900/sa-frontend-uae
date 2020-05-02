@@ -12,6 +12,7 @@ import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.JournalLineItemDao;
 import com.simplevat.entity.JournalLineItem;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.utils.DateFormatUtil;
 
@@ -96,7 +97,14 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 	}
 
 	@Override
-	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(FinancialReportRequestModel financialReportRequestModel) {
+	public List<JournalLineItem> getListByTransactionCategory(TransactionCategory transactionCategory) {
+		return getEntityManager().createNamedQuery("getListByTransactionCategory")
+				.setParameter("transactionCategory", transactionCategory).getResultList();
+	}
+
+	@Override
+	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
+			FinancialReportRequestModel financialReportRequestModel) {
 		LocalDateTime fromDate = null;
 		LocalDateTime toDate = null;
 		Map<Integer, CreditDebitAggregator> aggregatedTransactionMap = new HashMap<>();
@@ -112,19 +120,23 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		}
 		try {
 
-			StoredProcedureQuery storedProcedureQuery = getEntityManager().createStoredProcedureQuery("profitAndLossStoredProcedure");
+			StoredProcedureQuery storedProcedureQuery = getEntityManager()
+					.createStoredProcedureQuery("profitAndLossStoredProcedure");
 			storedProcedureQuery.registerStoredProcedureParameter("incomeCode", String.class, ParameterMode.IN);
-			storedProcedureQuery.registerStoredProcedureParameter("costOfGoodsSoldCode", String.class, ParameterMode.IN);
+			storedProcedureQuery.registerStoredProcedureParameter("costOfGoodsSoldCode", String.class,
+					ParameterMode.IN);
 			storedProcedureQuery.registerStoredProcedureParameter("adminExpenseCode", String.class, ParameterMode.IN);
 			storedProcedureQuery.registerStoredProcedureParameter("otherExpenseCode", String.class, ParameterMode.IN);
 			storedProcedureQuery.registerStoredProcedureParameter("startDate", LocalDateTime.class, ParameterMode.IN);
 			storedProcedureQuery.registerStoredProcedureParameter("endDate", LocalDateTime.class, ParameterMode.IN);
 
 			storedProcedureQuery.setParameter("incomeCode", ChartOfAccountCategoryCodeEnum.INCOME.getCode());
-			storedProcedureQuery.setParameter("costOfGoodsSoldCode", ChartOfAccountCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode());
-			storedProcedureQuery.setParameter("adminExpenseCode", ChartOfAccountCategoryCodeEnum.ADMIN_EXPENSE.getCode())
-			;
-			storedProcedureQuery.setParameter("otherExpenseCode",ChartOfAccountCategoryCodeEnum.OTHER_EXPENSE.getCode());
+			storedProcedureQuery.setParameter("costOfGoodsSoldCode",
+					ChartOfAccountCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode());
+			storedProcedureQuery.setParameter("adminExpenseCode",
+					ChartOfAccountCategoryCodeEnum.ADMIN_EXPENSE.getCode());
+			storedProcedureQuery.setParameter("otherExpenseCode",
+					ChartOfAccountCategoryCodeEnum.OTHER_EXPENSE.getCode());
 			storedProcedureQuery.setParameter("startDate", fromDate);
 			storedProcedureQuery.setParameter("endDate", toDate);
 			storedProcedureQuery.execute();
@@ -137,12 +149,14 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 				String transactionCategoryCode = (String) object[3];
 				Double creditAmount = creditAmountBD != null ? creditAmountBD.doubleValue() : (double) 0;
 				Double debitAmount = debitAmountBD != null ? debitAmountBD.doubleValue() : (double) 0;
-				CreditDebitAggregator creditDebitAggregator = new CreditDebitAggregator(creditAmount, debitAmount, transactionCategoryCode, transactionCategoryName);
+				CreditDebitAggregator creditDebitAggregator = new CreditDebitAggregator(creditAmount, debitAmount,
+						transactionCategoryCode, transactionCategoryName);
 				aggregatedTransactionMap.put(code++, creditDebitAggregator);
 			}
 			return aggregatedTransactionMap;
 		} catch (Exception e) {
-			LOGGER.error("Error occurred while calling stored procedure profitAndLossStoredProcedure "+ e.getStackTrace());
+			LOGGER.error(
+					"Error occurred while calling stored procedure profitAndLossStoredProcedure " + e.getStackTrace());
 		}
 		return aggregatedTransactionMap;
 	}

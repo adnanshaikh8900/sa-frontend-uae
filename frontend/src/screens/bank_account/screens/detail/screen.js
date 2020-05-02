@@ -24,6 +24,7 @@ import {
   ConfirmDeleteModal
 } from 'components'
 import {
+  selectCurrencyFactory,
   selectOptionsFactory
 } from 'utils'
 import {
@@ -265,8 +266,8 @@ class DetailBankAccount extends React.Component {
                                     <Select
                                       id="currency"
                                       name="currency"
-                                      options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                      value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
+                                      options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                                      value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currency)}
                                       onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('currency')(option.value)

@@ -10,6 +10,7 @@ import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.JournalDao;
 import com.simplevat.entity.Journal;
+import com.simplevat.entity.JournalLineItem;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.JournalService;
@@ -42,7 +43,9 @@ public class JournalServiceImpl extends JournalService {
 
 	@Override
 	public void persist(Journal journal) {
-		transactionCategoryBalanceService.updateRunningBalance(journal.getJournalLineItems());
+		for (JournalLineItem lineItem : journal.getJournalLineItems()) {
+			lineItem.setCurrentBalance(transactionCategoryBalanceService.updateRunningBalance(lineItem));
+		}
 		super.persist(journal);
 	}
 }

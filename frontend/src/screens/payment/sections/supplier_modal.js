@@ -22,6 +22,7 @@ import PhoneInput from 'react-phone-number-input'
 import { isValidPhoneNumber } from 'react-phone-number-input'
 import Select from 'react-select'
 import {
+  selectCurrencyFactory,
   selectOptionsFactory
 } from 'utils'
 
@@ -680,7 +681,7 @@ class SupplierModal extends React.Component {
                           <Select
                             options={
                               currency_list
-                                ? selectOptionsFactory.renderOptions(
+                                ? selectCurrencyFactory.renderOptions(
                                   "currencyName",
                                   "currencyCode",
                                   currency_list,

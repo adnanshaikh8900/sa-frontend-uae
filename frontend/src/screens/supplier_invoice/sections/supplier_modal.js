@@ -17,7 +17,7 @@ import Select from 'react-select'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
-import { selectOptionsFactory } from 'utils'
+import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
 import { toast } from 'react-toastify'
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
@@ -771,7 +771,7 @@ class SupplierModal extends React.Component {
                           <Select
                             options={
                               currency_list
-                                ? selectOptionsFactory.renderOptions(
+                                ? selectCurrencyFactory.renderOptions(
                                   "currencyName",
                                   "currencyCode",
                                   currency_list,

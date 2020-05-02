@@ -25,7 +25,8 @@
 		<java.version>1.8</java.version>
 		<frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
 		<node.version>v12.16.3</node.version>
-		<npm.version>6.14.4</npm.version>
+<!--		<npm.version>6.14.4</npm.version>-->
+		<yarn.version>v1.22.4</yarn.version>
 
 		<sonar.projectKey>gulftranstech_simplevat</sonar.projectKey>
 		<sonar.organization>gulftranstech</sonar.organization>
@@ -219,24 +220,27 @@
 					<execution>
 						<id>install node</id>
 						<goals>
-							<goal>install-node-and-npm</goal>
+							<goal>install-node-and-yarn</goal>
 						</goals>
 						<configuration>
 							<nodeVersion>${node.version}</nodeVersion>
-							<npmVersion>${npm.version}</npmVersion>
+							<yarnVersion>${yarn.version}</yarnVersion>
 						</configuration>
 					</execution>
 					<execution>
-						<id>npm install</id>
+						<id>yarn install</id>
 						<goals>
-							<goal>npm</goal>
+							<goal>yarn</goal>
 						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
 						<phase>generate-resources</phase>
 					</execution>
 					<execution>
-						<id>npm run build</id>
+						<id>yarn build</id>
 						<goals>
-							<goal>npm</goal>
+							<goal>yarn</goal>
 						</goals>
 						<phase>compile</phase>
 						<configuration>

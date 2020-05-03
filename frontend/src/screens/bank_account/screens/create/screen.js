@@ -17,7 +17,7 @@ import Select from 'react-select';
 import _ from 'lodash';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import {selectCurrencyFactory, selectOptionsFactory} from 'utils';
+import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 import { CommonActions } from 'services/global';
 import * as createBankAccountActions from './actions';
 
@@ -611,6 +611,7 @@ class CreateBankAccount extends React.Component {
                                     name="button"
                                     color="primary"
                                     className="btn-square mr-3"
+                                    disabled={this.state.disabled}
                                     onClick={() => {
                                       this.setState(
                                         { createMore: true },
@@ -620,8 +621,10 @@ class CreateBankAccount extends React.Component {
                                       );
                                     }}
                                   >
-                                    <i className="fa fa-repeat"></i> Create and
-                                    More
+                                    <i className="fa fa-repeat"></i>
+                                    {this.state.disabled
+                                      ? ' Creating...'
+                                      : ' Create and More'}
                                   </Button>
                                   <Button
                                     type="button"

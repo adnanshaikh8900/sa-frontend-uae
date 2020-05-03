@@ -20,7 +20,7 @@ export const renderOptions = (
   } else {
     data.map((item) => {
       return result.push({
-        label: item[`${label_key}`] + ' ' + item.currencyIsoCode,
+        label: item[`${label_key}`] + ' - ' + item.currencyIsoCode,
         value: item[`${value_key}`],
         ...a,
       });

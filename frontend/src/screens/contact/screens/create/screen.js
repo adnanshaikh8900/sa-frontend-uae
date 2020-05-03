@@ -171,11 +171,14 @@ class CreateContact extends React.Component {
                           firstName: Yup.string().required(
                             'First Name is Required',
                           ),
-                          lastName: Yup.string().required(
-                            'Last Name is Required',
-                          ),
-                          middleName: Yup.string().required(
-                            'Middle Name is Required',
+                          // lastName: Yup.string().required(
+                          //   'Last Name is Required',
+                          // ),
+                          // middleName: Yup.string().required(
+                          //   'Middle Name is Required',
+                          // ),
+                          currencyCode: Yup.string().required(
+                            'Currency is Required',
                           ),
                           contactType: Yup.string().required(
                             'Contact Type is Required',
@@ -187,9 +190,9 @@ class CreateContact extends React.Component {
                           email: Yup.string()
                             .required('Email is Required')
                             .email('Invalid Email'),
-                          telephone: Yup.number().required(
-                            'Telephone Number is Required',
-                          ),
+                          // telephone: Yup.number().required(
+                          //   'Telephone Number is Required',
+                          // ),
                           mobileNumber: Yup.string()
                             .required('Mobile Number is required')
                             .test(
@@ -205,42 +208,42 @@ class CreateContact extends React.Component {
                             ),
                           //     addressLine1: Yup.string()
                           //       .required("Address is required"),
-                          countryId: Yup.string()
-                            .required('Country is Required')
-                            .nullable(),
-                          stateId: Yup.string().when('countryId', {
-                            is: (val) => (val ? true : false),
-                            then: Yup.string().required('State is Required'),
-                          }),
-                          postZipCode: Yup.string().required(
-                            'Postal Code is Required',
-                          ),
-                          addressLine1: Yup.string()
-                            .min(2, 'Must be at least 2 characters.')
-                            .matches(
-                              this.regExAddress,
-                              'May only contain hyphens, periods, commas or alphanumeric characters.',
-                            ),
-                          addressLine2: Yup.string()
-                            .min(2, 'Must be at least 2 characters.')
-                            .matches(
-                              this.regExAddress,
-                              'May only contain hyphens, periods, commas or alphanumeric characters.',
-                            ),
-                          addressLine3: Yup.string()
-                            .min(2, 'Must be at least 2 characters.')
-                            .matches(
-                              this.regExAddress,
-                              'May only contain hyphens, periods, commas or alphanumeric characters.',
-                            ),
+                          // countryId: Yup.string()
+                          //   .required('Country is Required')
+                          //   .nullable(),
+                          // stateId: Yup.string().when('countryId', {
+                          //   is: (val) => (val ? true : false),
+                          //   then: Yup.string().required('State is Required'),
+                          // }),
+                          // postZipCode: Yup.string().required(
+                          //   'Postal Code is Required',
+                          // ),
+                          // addressLine1: Yup.string()
+                          //   .min(2, 'Must be at least 2 characters.')
+                          //   .matches(
+                          //     this.regExAddress,
+                          //     'May only contain hyphens, periods, commas or alphanumeric characters.',
+                          //   ),
+                          // addressLine2: Yup.string()
+                          //   .min(2, 'Must be at least 2 characters.')
+                          //   .matches(
+                          //     this.regExAddress,
+                          //     'May only contain hyphens, periods, commas or alphanumeric characters.',
+                          //   ),
+                          // addressLine3: Yup.string()
+                          //   .min(2, 'Must be at least 2 characters.')
+                          //   .matches(
+                          //     this.regExAddress,
+                          //     'May only contain hyphens, periods, commas or alphanumeric characters.',
+                          //   ),
                           //     billingEmail: Yup.string()
                           //       .required("Billing Email is Required")
                           //       .email('Invalid Email'),
                           //     contractPoNumber: Yup.number()
                           //       .required("Contract PoNumber is Required"),
-                          vatRegistrationNumber: Yup.string().required(
-                            'Tax Registration Number is Required',
-                          ),
+                          // vatRegistrationNumber: Yup.string().required(
+                          //   'Tax Registration Number is Required',
+                          // ),
                           //       currencyCode: Yup.string()
                           //       .required("Please Select Currency")
                           //       .nullable(),
@@ -290,8 +293,7 @@ class CreateContact extends React.Component {
                               <Col md="4">
                                 <FormGroup>
                                   <Label htmlFor="middleName ">
-                                    <span className="text-danger">*</span>Middle
-                                    Name
+                                    Middle Name
                                   </Label>
                                   <Input
                                     type="text"
@@ -328,10 +330,7 @@ class CreateContact extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="lastName">
-                                    <span className="text-danger">*</span>Last
-                                    Name
-                                  </Label>
+                                  <Label htmlFor="lastName">Last Name</Label>
                                   <Input
                                     type="text"
                                     id="lastName"
@@ -516,10 +515,7 @@ class CreateContact extends React.Component {
                               </Col>
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="telephone">
-                                    <span className="text-danger">*</span>
-                                    Telephone
-                                  </Label>
+                                  <Label htmlFor="telephone">Telephone</Label>
                                   <Input
                                     type="text"
                                     id="telephone"
@@ -692,10 +688,7 @@ class CreateContact extends React.Component {
                             <Row className="row-wrapper">
                               <Col md="4">
                                 <FormGroup>
-                                  <Label htmlFor="countryId">
-                                    <span className="text-danger">*</span>
-                                    Country
-                                  </Label>
+                                  <Label htmlFor="countryId">Country</Label>
                                   <Select
                                     options={
                                       country_list
@@ -816,8 +809,7 @@ class CreateContact extends React.Component {
                               <Col md="4">
                                 <FormGroup>
                                   <Label htmlFor="postZipCode">
-                                    <span className="text-danger">*</span>Post
-                                    Zip Code
+                                    Post Zip Code
                                   </Label>
                                   <Input
                                     type="text"
@@ -927,8 +919,7 @@ class CreateContact extends React.Component {
                               <Col md="4">
                                 <FormGroup>
                                   <Label htmlFor="vatRegistrationNumber">
-                                    <span className="text-danger">*</span>Tax
-                                    Registration Number
+                                    Tax Registration Number
                                   </Label>
                                   <Input
                                     type="text"
@@ -964,7 +955,8 @@ class CreateContact extends React.Component {
                               <Col md="4">
                                 <FormGroup>
                                   <Label htmlFor="currencyCode">
-                                    Currency Code
+                                    <span className="text-danger">*</span>
+                                    Currency
                                   </Label>
                                   <Select
                                     options={
@@ -1032,6 +1024,7 @@ class CreateContact extends React.Component {
                                     type="button"
                                     color="primary"
                                     className="btn-square mr-3"
+                                    disabled={this.state.disabled}
                                     onClick={() => {
                                       this.setState(
                                         { createMore: true },
@@ -1041,8 +1034,10 @@ class CreateContact extends React.Component {
                                       );
                                     }}
                                   >
-                                    <i className="fa fa-repeat"></i> Create and
-                                    More
+                                    <i className="fa fa-repeat"></i>{' '}
+                                    {this.state.disabled
+                                      ? 'Creating...'
+                                      : 'Create and More'}
                                   </Button>
                                   <Button
                                     color="secondary"

@@ -1,6 +1,5 @@
 package com.simplevat.service.impl.bankaccount;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,6 @@ import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 @Service("transactionTypeService")
 public class ChartOfAccountImpl extends ChartOfAccountService {
-
-	List<ChartOfAccount> dataList = new ArrayList<>();
 
 	@Autowired
 	private ChartOfAccountDao chartOfAccountDao;
@@ -38,10 +35,7 @@ public class ChartOfAccountImpl extends ChartOfAccountService {
 
 	@Override
 	public List<ChartOfAccount> findAll() {
-		if (dataList.isEmpty())
-			dataList = chartOfAccountDao.findAll();
-
-		return dataList;
+		return chartOfAccountDao.findAll();
 	}
 
 	@Override

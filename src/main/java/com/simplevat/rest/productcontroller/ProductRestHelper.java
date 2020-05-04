@@ -1,5 +1,10 @@
 package com.simplevat.rest.productcontroller;
 
+import java.math.BigDecimal;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.simplevat.entity.Product;
 import com.simplevat.entity.ProductCategory;
 import com.simplevat.entity.ProductWarehouse;
@@ -8,11 +13,6 @@ import com.simplevat.service.ProductCategoryService;
 import com.simplevat.service.ProductService;
 import com.simplevat.service.ProductWarehouseService;
 import com.simplevat.service.VatCategoryService;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ProductRestHelper {

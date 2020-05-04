@@ -24,7 +24,7 @@ import com.simplevat.model.DashBoardBankDataModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.BankAccountService;
-import com.simplevat.util.ChartUtil;
+import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.DateUtils;
 

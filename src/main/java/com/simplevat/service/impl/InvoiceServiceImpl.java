@@ -7,13 +7,13 @@ import java.util.Date;
 import java.util.List;
 
 import com.simplevat.model.OverDueAmountDetailsModel;
+import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.simplevat.dao.Dao;
 import com.simplevat.entity.Invoice;
 import com.simplevat.service.InvoiceService;
-import com.simplevat.util.ChartUtil;
 
 import java.util.Map;
 

@@ -25,8 +25,8 @@ import com.simplevat.service.BankAccountService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
-import com.simplevat.util.ChartUtil;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
+import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.FileHelper;
 

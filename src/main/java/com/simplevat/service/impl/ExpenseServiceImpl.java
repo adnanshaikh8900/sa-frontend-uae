@@ -20,7 +20,7 @@ import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.report.model.BankAccountTransactionReportModel;
-import com.simplevat.util.ChartUtil;
+import com.simplevat.utils.ChartUtil;
 
 @Service("expenseService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

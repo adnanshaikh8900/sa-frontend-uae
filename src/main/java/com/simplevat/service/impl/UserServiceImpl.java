@@ -19,9 +19,9 @@ import com.simplevat.entity.User;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.UserService;
-import com.simplevat.util.EmailSender;
-import com.simplevat.util.RandomString;
 import com.simplevat.utils.DateUtils;
+import com.simplevat.utils.EmailSender;
+import com.simplevat.utils.RandomString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

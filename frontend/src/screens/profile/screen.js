@@ -21,7 +21,7 @@ import {
 import Select from 'react-select'
 // import ImagesUploader from 'react-images-uploader'
 import { Loader, ImageUploader } from 'components'
-import { selectOptionsFactory, cryptoService } from 'utils'
+import {selectOptionsFactory, cryptoService, selectCurrencyFactory} from 'utils'
 
 
 import DatePicker from 'react-datepicker'
@@ -990,8 +990,8 @@ class Profile extends React.Component {
                                             <FormGroup>
                                               <Label htmlFor="currencyCode">Currency Code</Label>
                                               <Select
-                                                options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                                                value={currency_list && selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
+                                                options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                                                value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                                 onChange={(option) => {
                                                   if (option && option.value) {
                                                     props.handleChange('currencyCode')(option.value)

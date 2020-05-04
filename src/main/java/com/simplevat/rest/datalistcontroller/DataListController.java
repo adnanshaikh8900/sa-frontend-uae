@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.simplevat.utils.ChartOfAccountCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -243,11 +244,25 @@ public class DataListController {
 	@GetMapping(value = "/getsubChartofAccount")
 	public ResponseEntity getsubChartofAccount() {
 		try {
-			List<ChartOfAccount> transactionTypes = transactionTypeService.findAll();
-			if (transactionTypes != null && !transactionTypes.isEmpty()) {
-				return new ResponseEntity<>(transcationCategoryHelper.getDropDownModelList(transactionTypes),
+			//Check if the chartOf Account result is already cached.
+			Map<String, List<DropdownModel>> chartOfAccountMap =  ChartOfAccountCacheService.getInstance().getChartOfAccountCacheMap();
+
+			if (chartOfAccountMap != null && !chartOfAccountMap.isEmpty()) {
+				//If cached return the result
+				return new ResponseEntity<>(chartOfAccountMap,
 						HttpStatus.OK);
-			} else {
+			}
+			else if(chartOfAccountMap != null && chartOfAccountMap.isEmpty() )
+			{
+				//If result not cached read all the chart of accounts from the from db/
+				List<ChartOfAccount> chartOfAccountList = transactionTypeService.findAll();
+				// Process them to get the desired result.
+				chartOfAccountMap = ChartOfAccountCacheService.getInstance().loadChartOfAccountCacheMap(chartOfAccountList);
+				//return the result.
+				return new ResponseEntity<>(chartOfAccountMap,
+						HttpStatus.OK);
+			}
+			else {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {

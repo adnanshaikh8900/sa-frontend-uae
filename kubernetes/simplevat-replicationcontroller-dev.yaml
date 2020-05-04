@@ -18,12 +18,12 @@ spec:
     spec:
       containers:
         - name: simplevat
-          image: gcr.io/gtt-project-prod/simplevat:0-0-2-beta-3-55
+          image: gcr.io/gtt-project-prod/simplevat:0-0-2-beta-3-91
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /
+              path: /login
               port: 8080
             periodSeconds: 1
             timeoutSeconds: 1

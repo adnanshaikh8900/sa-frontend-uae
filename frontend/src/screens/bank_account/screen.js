@@ -25,6 +25,7 @@ import {
   ConfirmDeleteModal
 } from 'components'
 import {
+  selectCurrencyFactory,
   selectOptionsFactory,
 } from 'utils'
 
@@ -588,7 +589,7 @@ class BankAccount extends React.Component {
                           <Col lg={2} className="mb-1">
                             <Select
                               className=""
-                              options={currency_list ? selectOptionsFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
+                              options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                               value={filterData.currencyCode}
                               onChange={(option) => this.inputHandler('currencyCode', option)}
                               placeholder="Currency"

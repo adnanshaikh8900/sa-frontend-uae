@@ -3,4 +3,3 @@ WORKDIR /build
 COPY ./maven/settings.xml $MAVEN_HOME/conf/settings.xml
 COPY ./pom.xml ./
 RUN mvn dependency:go-offline
-

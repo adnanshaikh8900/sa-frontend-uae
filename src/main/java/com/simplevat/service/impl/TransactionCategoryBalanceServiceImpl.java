@@ -55,7 +55,7 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 				balance.setEffectiveDate(new Date());
 			}
 
-			boolean isDebit = lineItem.getDebitAmount() != null
+			boolean isDebit = lineItem.getDebitAmount() == null
 					|| (lineItem.getDebitAmount() != null && new BigDecimal(0).equals(lineItem.getDebitAmount()))
 							? Boolean.TRUE
 							: Boolean.FALSE;
@@ -63,9 +63,11 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 			BigDecimal runningBalance = balance.getRunningBalance() != null ? balance.getRunningBalance()
 					: BigDecimal.ZERO;
 			if (isDebit) {
-				runningBalance = runningBalance.subtract(lineItem.getDebitAmount());
+				runningBalance = runningBalance
+						.subtract(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
 			} else {
-				runningBalance = runningBalance.add(lineItem.getCreditAmount());
+				runningBalance = runningBalance
+						.add(lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
 			}
 			balance.setRunningBalance(runningBalance);
 			balanceList.add(balance);

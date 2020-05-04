@@ -1,4 +1,4 @@
-package com.simplevat.util;
+package com.simplevat.utils;
 
 import org.hibernate.boot.model.naming.*;
 

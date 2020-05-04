@@ -1,28 +1,13 @@
 package com.simplevat.rest.invoicecontroller;
 
-import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.FileTypeEnum;
-import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
-import com.simplevat.entity.Invoice;
-import com.simplevat.model.OverDueAmountDetailsModel;
-import com.simplevat.rest.AbstractDoubleEntryRestController;
-import com.simplevat.rest.DropdownModel;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.ContactService;
-import com.simplevat.service.InvoiceService;
-import com.simplevat.util.ChartUtil;
-import com.simplevat.utils.FileHelper;
-import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -38,6 +23,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.FileTypeEnum;
+import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.entity.Invoice;
+import com.simplevat.model.OverDueAmountDetailsModel;
+import com.simplevat.rest.AbstractDoubleEntryRestController;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.ContactService;
+import com.simplevat.service.InvoiceService;
+import com.simplevat.utils.ChartUtil;
+import com.simplevat.utils.FileHelper;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  *

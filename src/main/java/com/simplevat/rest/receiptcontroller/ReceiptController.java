@@ -1,9 +1,10 @@
 package com.simplevat.rest.receiptcontroller;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.entity.Receipt;
 import com.simplevat.rest.PaginationResponseModel;
@@ -32,9 +32,6 @@ import com.simplevat.service.InvoiceService;
 import com.simplevat.service.ReceiptService;
 
 import io.swagger.annotations.ApiOperation;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.ZoneId;
 
 @RestController
 @RequestMapping("/rest/receipt")

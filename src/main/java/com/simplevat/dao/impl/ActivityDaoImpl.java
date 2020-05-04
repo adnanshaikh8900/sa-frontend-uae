@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ActivityDao;
 import com.simplevat.entity.Activity;
-import com.simplevat.util.ChartUtil;
+import com.simplevat.utils.ChartUtil;
 
 @Repository(value = "activityDao")
 public class ActivityDaoImpl extends AbstractDao<Integer, Activity> implements ActivityDao {

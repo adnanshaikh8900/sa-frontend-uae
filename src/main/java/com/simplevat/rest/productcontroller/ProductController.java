@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.Product;
-import com.simplevat.entity.ProductWarehouse;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ProductService;

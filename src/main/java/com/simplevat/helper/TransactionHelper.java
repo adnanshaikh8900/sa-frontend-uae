@@ -178,7 +178,8 @@ public class TransactionHelper {
 		if (transaction.getExplainedTransactionCategory() != null)
 			model.setCoaCategoryId(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
 		model.setAmount(transaction.getTransactionAmount());
-		model.setDate(dateUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), model.getDATE_FORMAT()));
+		if (transaction.getTransactionDate() != null)
+			model.setDate(dateUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), model.getDATE_FORMAT()));
 		model.setDescription(transaction.getExplainedTransactionDescription());
 		// TODO : work on attachement
 		model.setReference(transaction.getReferenceStr());

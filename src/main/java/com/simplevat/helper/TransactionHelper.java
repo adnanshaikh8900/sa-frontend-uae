@@ -162,6 +162,7 @@ public class TransactionHelper {
 					transaction.getChartOfAccount() != null ? transaction.getChartOfAccount().getChartOfAccountName()
 							: "-");
 			transactionModel.setDebitCreditFlag(transaction.getDebitCreditFlag());
+			transactionModel.setDescription(transaction.getExplainedTransactionDescription());
 			transactionModelList.add(transactionModel);
 		}
 

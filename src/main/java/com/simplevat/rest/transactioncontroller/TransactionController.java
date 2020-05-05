@@ -170,7 +170,7 @@ public class TransactionController implements Serializable {
 				List<Journal> journalList = null;
 
 				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-				Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId()); 
+				Transaction trnx = new Transaction();
 				trnx.setCreatedBy(userId);
 				trnx.setExplainedTransactionCategory(
 						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
@@ -269,7 +269,7 @@ public class TransactionController implements Serializable {
 				List<Journal> journalList = null;
 
 				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-				Transaction trnx = new Transaction();
+				Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId()); 
 				trnx.setCreatedBy(userId);
 				trnx.setExplainedTransactionCategory(
 						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));

@@ -150,7 +150,7 @@ public class TransactionController implements Serializable {
 					chartOfAccountService.findByPK(filterModel.getChartOfAccountId()));
 		}
 		dataMap.put(TransactionFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
-
+		dataMap.put(TransactionFilterEnum.DELETE_FLAG, false);
 		PaginationResponseModel response = transactionService.getAllTransactionList(dataMap, filterModel);
 		if (response == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -179,6 +179,8 @@ public class TransactionController implements Serializable {
 				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
 				trnx.setTransactionAmount(transactionPresistModel.getAmount());
 				trnx.setCreationMode(TransactionCreationMode.MANUAL);
+				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));		
 				if (transactionPresistModel.getDescription() != null) {
 					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
 				}
@@ -269,7 +271,7 @@ public class TransactionController implements Serializable {
 				List<Journal> journalList = null;
 
 				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-				Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId()); 
+				Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId());
 				trnx.setCreatedBy(userId);
 				trnx.setExplainedTransactionCategory(
 						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
@@ -278,6 +280,8 @@ public class TransactionController implements Serializable {
 				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
 				trnx.setTransactionAmount(transactionPresistModel.getAmount());
 				trnx.setCreationMode(TransactionCreationMode.MANUAL);
+				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
 				if (transactionPresistModel.getDescription() != null) {
 					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
 				}
@@ -295,9 +299,6 @@ public class TransactionController implements Serializable {
 				}
 				if (transactionPresistModel.getEmployeeId() != null) {
 					trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
-				}
-				if (transactionPresistModel.getBankId() != null) {
-					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
 				}
 				if (transactionPresistModel.getReconsileBankId() != null) {
 					trnx.setExplinationBankAccount(bankService.findByPK(transactionPresistModel.getReconsileBankId()));

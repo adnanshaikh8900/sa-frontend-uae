@@ -24,4 +24,5 @@ public class TransactionViewModel implements Serializable {
 	private Double withdrawalAmount;
 	private Double runningAmount;
 	private Character debitCreditFlag;
+	private String description;
 }

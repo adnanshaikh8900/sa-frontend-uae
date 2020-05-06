@@ -176,39 +176,49 @@ public class TransactionController implements Serializable {
 						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
 				boolean isDebit = ChartOfAccountConstant.isDebitedFromBank(
 						trnx.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountId());
-				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
+				trnx.setDebitCreditFlag(!isDebit ? 'D' : 'C');
 				trnx.setTransactionAmount(transactionPresistModel.getAmount());
 				trnx.setCreationMode(TransactionCreationMode.MANUAL);
 				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));		
+	
 				if (transactionPresistModel.getDescription() != null) {
 					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
 				}
+				
 				if (transactionPresistModel.getAttachmentFile() != null) {
 					trnx.setExplainedTransactionAttachement(transactionPresistModel.getAttachmentFile().getBytes());
 				}
+				
 				if (transactionPresistModel.getCustomerId() != null) {
 					trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
 				}
+				
 				if (transactionPresistModel.getVatId() != null) {
 					trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
 				}
+				
 				if (transactionPresistModel.getVendorId() != null) {
 					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
 				}
+				
 				if (transactionPresistModel.getEmployeeId() != null) {
 					trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
 				}
+				
 				if (transactionPresistModel.getBankId() != null) {
 					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
 				}
+				
 				if (transactionPresistModel.getReconsileBankId() != null) {
 					trnx.setExplinationBankAccount(bankService.findByPK(transactionPresistModel.getReconsileBankId()));
 				}
+				
 				if (transactionPresistModel.getReference() != null
 						&& !transactionPresistModel.getReference().isEmpty()) {
 					trnx.setReferenceStr(transactionPresistModel.getReference());
 				}
+				
 				if (transactionPresistModel.getCoaCategoryId() != null) {
 					trnx.setCoaCategory(
 							chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
@@ -277,7 +287,7 @@ public class TransactionController implements Serializable {
 						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
 				boolean isDebit = ChartOfAccountConstant.isDebitedFromBank(
 						trnx.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountId());
-				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
+				trnx.setDebitCreditFlag(!isDebit ? 'D' : 'C');
 				trnx.setTransactionAmount(transactionPresistModel.getAmount());
 				trnx.setCreationMode(TransactionCreationMode.MANUAL);
 				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),

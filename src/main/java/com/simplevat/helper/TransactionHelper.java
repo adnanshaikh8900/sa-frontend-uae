@@ -176,7 +176,7 @@ public class TransactionHelper {
 		if (transaction.getCoaCategory() != null)
 			model.setCoaCategoryId(transaction.getCoaCategory().getChartOfAccountCategoryId());
 		if (transaction.getExplainedTransactionCategory() != null)
-			model.setCoaCategoryId(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
+			model.setTransactionCategoryId(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
 		model.setAmount(transaction.getTransactionAmount());
 		if (transaction.getTransactionDate() != null)
 			model.setDate(dateUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), model.getDATE_FORMAT()));
@@ -200,17 +200,20 @@ public class TransactionHelper {
 		// Transafer To
 		if (transaction.getExplinationEmployee() != null)
 			model.setVendorId(transaction.getBankAccount().getBankAccountId());
+		if (transaction.getCoaCategory().getChartOfAccountCategoryId()
+				.equals(ChartOfAccountCategoryIdEnumConstant.SALES.id)) {
+			// SALES
+			List<ReconsileRequestLineItemModel> invoiceIdList = new ArrayList<>();
+			List<TransactionStatus> trnxStatusList = transactionStatusService
+					.findAllTransactionStatuesByTrnxId(transaction.getTransactionId());
 
-		// SALES
-		List<ReconsileRequestLineItemModel> invoiceIdList = new ArrayList<>();
-		List<TransactionStatus> trnxStatusList = transactionStatusService
-				.findAllTransactionStatuesByTrnxId(transaction.getTransactionId());
-		for (TransactionStatus status : trnxStatusList) {
-			invoiceIdList.add(new ReconsileRequestLineItemModel(
-					status.getReconsileJournal().getJournalLineItems().stream().findFirst().get().getReferenceId(),
-					status.getRemainingToExplain()));
+			for (TransactionStatus status : trnxStatusList) {
+				invoiceIdList.add(new ReconsileRequestLineItemModel(
+						status.getReconsileJournal().getJournalLineItems().stream().findFirst().get().getReferenceId(),
+						status.getRemainingToExplain()));
+			}
+			model.setInvoiceIdList(invoiceIdList);
 		}
-		model.setInvoiceIdList(invoiceIdList);
 		model.setExplinationStatusEnum(transaction.getTransactionExplinationStatusEnum());
 
 		return model;

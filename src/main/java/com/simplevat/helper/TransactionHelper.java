@@ -163,6 +163,7 @@ public class TransactionHelper {
 							: "-");
 			transactionModel.setDebitCreditFlag(transaction.getDebitCreditFlag());
 			transactionModel.setDescription(transaction.getExplainedTransactionDescription());
+			transactionModel.setExplinationStatusEnum(transaction.getTransactionExplinationStatusEnum());
 			transactionModelList.add(transactionModel);
 		}
 
@@ -200,7 +201,7 @@ public class TransactionHelper {
 		// Transafer To
 		if (transaction.getExplinationEmployee() != null)
 			model.setVendorId(transaction.getBankAccount().getBankAccountId());
-		if (transaction.getCoaCategory().getChartOfAccountCategoryId()
+		if (transaction.getCoaCategory() != null && transaction.getCoaCategory().getChartOfAccountCategoryId()
 				.equals(ChartOfAccountCategoryIdEnumConstant.SALES.id)) {
 			// SALES
 			List<ReconsileRequestLineItemModel> invoiceIdList = new ArrayList<>();

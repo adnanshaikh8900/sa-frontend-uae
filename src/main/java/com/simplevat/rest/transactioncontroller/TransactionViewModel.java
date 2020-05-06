@@ -7,6 +7,8 @@ package com.simplevat.rest.transactioncontroller;
 
 import java.io.Serializable;
 
+import com.simplevat.constant.TransactionExplinationStatusEnum;
+
 import lombok.Data;
 
 /**
@@ -25,4 +27,5 @@ public class TransactionViewModel implements Serializable {
 	private Double runningAmount;
 	private Character debitCreditFlag;
 	private String description;
+	private TransactionExplinationStatusEnum explinationStatusEnum;
 }

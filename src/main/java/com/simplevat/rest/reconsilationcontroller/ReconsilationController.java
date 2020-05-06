@@ -190,7 +190,6 @@ public class ReconsilationController {
 
 						transationStatusList.add(status);
 					}
-					// trnx.setTransactionStatus(transationStatusList);
 				}
 				trnx.setTransactionExplinationStatusEnum(reconsileRequestModel.getExplinationStatusEnum());
 				transactionService.persist(trnx);
@@ -234,7 +233,12 @@ public class ReconsilationController {
 				param.put("label", "Sales Invoice");
 				param.put("options", invModelList);
 				list.add(param);
-				return new ResponseEntity<>(new ReconsilationCatDataModel(list, null), HttpStatus.OK);
+				transactionCatList = transactionCategoryService
+						.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
+				return new ResponseEntity<>(
+						new ReconsilationCatDataModel(list,
+								transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
+						HttpStatus.OK);
 
 			case EXPENSE:
 				transactionCatList = transactionCategoryService

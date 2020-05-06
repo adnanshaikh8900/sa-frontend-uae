@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.ChartOfAccountConstant;
+import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
@@ -62,6 +63,7 @@ import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
 import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.DateFormatUtil;
+import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -121,6 +123,9 @@ public class TransactionController implements Serializable {
 	@Autowired
 	private DateFormatUtil dateFormatUtil;
 
+	@Autowired
+	private FileHelper fileHelper;
+
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
 	public ResponseEntity getAllTransaction(TransactionRequestFilterModel filterModel) {
@@ -172,59 +177,51 @@ public class TransactionController implements Serializable {
 				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 				Transaction trnx = new Transaction();
 				trnx.setCreatedBy(userId);
-				trnx.setExplainedTransactionCategory(
-						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
-				boolean isDebit = ChartOfAccountConstant.isDebitedFromBank(
-						trnx.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountId());
-				trnx.setDebitCreditFlag(!isDebit ? 'D' : 'C');
+				trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
+				boolean isDebit = ChartOfAccountCategoryIdEnumConstant.isDebitedFromBank(
+						trnx.getCoaCategory().getParentChartOfAccount().getChartOfAccountCategoryId());
+				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
 				trnx.setTransactionAmount(transactionPresistModel.getAmount());
 				trnx.setCreationMode(TransactionCreationMode.MANUAL);
+				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
 				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));		
-	
+						transactionPresistModel.getDATE_FORMAT()));
+				trnx.setExplainedTransactionCategory(
+						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
+
 				if (transactionPresistModel.getDescription() != null) {
 					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
 				}
-				
-				if (transactionPresistModel.getAttachmentFile() != null) {
-					trnx.setExplainedTransactionAttachement(transactionPresistModel.getAttachmentFile().getBytes());
-				}
-				
 				if (transactionPresistModel.getCustomerId() != null) {
 					trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
 				}
-				
 				if (transactionPresistModel.getVatId() != null) {
 					trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
 				}
-				
 				if (transactionPresistModel.getVendorId() != null) {
 					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
 				}
-				
 				if (transactionPresistModel.getEmployeeId() != null) {
 					trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
 				}
-				
 				if (transactionPresistModel.getBankId() != null) {
 					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
 				}
-				
 				if (transactionPresistModel.getReconsileBankId() != null) {
 					trnx.setExplinationBankAccount(bankService.findByPK(transactionPresistModel.getReconsileBankId()));
 				}
-				
 				if (transactionPresistModel.getReference() != null
 						&& !transactionPresistModel.getReference().isEmpty()) {
 					trnx.setReferenceStr(transactionPresistModel.getReference());
 				}
-				
-				if (transactionPresistModel.getCoaCategoryId() != null) {
-					trnx.setCoaCategory(
-							chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
+				if (transactionPresistModel.getAttachmentFile() != null
+						&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+					String filePath = fileHelper.saveFile(transactionPresistModel.getAttachmentFile(),
+							FileTypeEnum.TRANSATION);
+					trnx.setExplainedTransactionAttachmentFileName(
+							transactionPresistModel.getAttachmentFile().getOriginalFilename());
+					trnx.setExplainedTransactionAttachmentPath(filePath);
 				}
-
-				trnx.setTransactionExplinationStatusEnum(transactionPresistModel.getExplinationStatusEnum());
 				transactionService.persist(trnx);
 
 				journalList = reconsilationRestHelper.get(
@@ -283,20 +280,19 @@ public class TransactionController implements Serializable {
 				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 				Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId());
 				trnx.setCreatedBy(userId);
-				trnx.setExplainedTransactionCategory(
-						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
-				boolean isDebit = ChartOfAccountConstant.isDebitedFromBank(
-						trnx.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountId());
-				trnx.setDebitCreditFlag(!isDebit ? 'D' : 'C');
+				trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
+				boolean isDebit = ChartOfAccountCategoryIdEnumConstant.isDebitedFromBank(
+						trnx.getCoaCategory().getParentChartOfAccount().getChartOfAccountCategoryId());
+				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
 				trnx.setTransactionAmount(transactionPresistModel.getAmount());
-				trnx.setCreationMode(TransactionCreationMode.MANUAL);
+				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
 				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
+				trnx.setExplainedTransactionCategory(
+						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
+
 				if (transactionPresistModel.getDescription() != null) {
 					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
-				}
-				if (transactionPresistModel.getAttachmentFile() != null) {
-					trnx.setExplainedTransactionAttachement(transactionPresistModel.getAttachmentFile().getBytes());
 				}
 				if (transactionPresistModel.getCustomerId() != null) {
 					trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
@@ -310,6 +306,9 @@ public class TransactionController implements Serializable {
 				if (transactionPresistModel.getEmployeeId() != null) {
 					trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
 				}
+				if (transactionPresistModel.getBankId() != null) {
+					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+				}
 				if (transactionPresistModel.getReconsileBankId() != null) {
 					trnx.setExplinationBankAccount(bankService.findByPK(transactionPresistModel.getReconsileBankId()));
 				}
@@ -317,13 +316,15 @@ public class TransactionController implements Serializable {
 						&& !transactionPresistModel.getReference().isEmpty()) {
 					trnx.setReferenceStr(transactionPresistModel.getReference());
 				}
-				if (transactionPresistModel.getCoaCategoryId() != null) {
-					trnx.setCoaCategory(
-							chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
+				if (transactionPresistModel.getAttachmentFile() != null
+						&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+					String filePath = fileHelper.saveFile(transactionPresistModel.getAttachmentFile(),
+							FileTypeEnum.TRANSATION);
+					trnx.setExplainedTransactionAttachmentFileName(
+							transactionPresistModel.getAttachmentFile().getOriginalFilename());
+					trnx.setExplainedTransactionAttachmentPath(filePath);
 				}
-
-				trnx.setTransactionExplinationStatusEnum(transactionPresistModel.getExplinationStatusEnum());
-				transactionService.persist(trnx);
+				transactionService.update(trnx);
 
 				// remove old entries
 				List<TransactionStatus> trnxStatusList = transactionStatusService

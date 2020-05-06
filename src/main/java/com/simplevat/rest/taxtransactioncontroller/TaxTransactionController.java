@@ -5,37 +5,12 @@
  */
 package com.simplevat.rest.taxtransactioncontroller;
 
-import com.simplevat.entity.Purchase;
-import com.simplevat.entity.PurchaseLineItem;
-import com.simplevat.entity.TaxTransaction;
-import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.rest.PaginationModel;
-import com.simplevat.service.PurchaseService;
-import com.simplevat.service.TaxTransactionService;
-import com.simplevat.service.bankaccount.TransactionService;
-
-import io.swagger.annotations.ApiOperation;
-
-import com.simplevat.constant.TaxTransactionStatusConstant;
-import com.simplevat.constant.TransactionCreditDebitConstant;
-import com.simplevat.constant.TransactionRefrenceTypeConstant;
-import com.simplevat.entity.Invoice;
-import com.simplevat.entity.InvoiceLineItem;
-import com.simplevat.service.InvoiceService;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +19,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.simplevat.constant.TaxTransactionStatusConstant;
+import com.simplevat.entity.TaxTransaction;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.service.TaxTransactionService;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  *

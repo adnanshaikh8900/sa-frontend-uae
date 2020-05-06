@@ -32,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.simplevat.constant.TransactionCreditDebitConstant;
 import com.simplevat.constant.TransactionEntryTypeConstant;
-import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.entity.TransactionParsingSetting;
 import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.BankAccount;
@@ -46,9 +45,7 @@ import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.TransactionParsingSettingService;
 import com.simplevat.service.UserService;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.service.bankaccount.TransactionStatusService;
 import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.FileHelper;
 
@@ -76,9 +73,6 @@ public class TransactionImportController implements Serializable {
 
 	@Autowired
 	private TransactionService transactionService;
-
-	@Autowired
-	private TransactionStatusService transactionStatusService;
 
 	@Autowired
 	private UserService userServiceNew;

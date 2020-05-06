@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.BeanProperty.Bogus;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.entity.Expense;
@@ -24,12 +23,10 @@ import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.invoicecontroller.InvoiceRestController;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalLineItemService;
-import com.simplevat.service.JournalService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.utils.DateFormatUtil;
 

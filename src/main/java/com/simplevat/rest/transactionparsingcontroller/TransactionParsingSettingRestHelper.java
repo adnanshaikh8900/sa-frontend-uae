@@ -1,6 +1,5 @@
 package com.simplevat.rest.transactionparsingcontroller;
 
-import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,16 +8,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.simplevat.constant.dbfilter.TransactionParsingSettingFilterEnum;
+import com.simplevat.constant.ExcellDelimiterEnum;
 import com.simplevat.criteria.enums.TransactionEnum;
 import com.simplevat.entity.TransactionDataColMapping;
 import com.simplevat.entity.TransactionParsingSetting;
-import com.simplevat.constant.ExcellDelimiterEnum;
 import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.service.DateFormatService;
 import com.simplevat.service.TransactionParsingSettingService;
-
-import io.swagger.models.auth.In;
 
 @Component
 public class TransactionParsingSettingRestHelper {

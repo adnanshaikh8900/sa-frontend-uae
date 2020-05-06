@@ -23,7 +23,6 @@ import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
-import com.simplevat.rest.ReconsileRequestModel;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.TransactionCategoryService;

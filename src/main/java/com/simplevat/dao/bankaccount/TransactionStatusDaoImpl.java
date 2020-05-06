@@ -15,6 +15,9 @@ public class TransactionStatusDaoImpl extends AbstractDao<Integer, TransactionSt
 		return this.executeNamedQuery("findAllTransactionStatues");
 	}
 
-
-
+	@Override
+	public List<TransactionStatus> findAllTransactionStatuesByTrnxId(Integer transactionId) {
+		return getEntityManager().createNamedQuery("findAllTransactionStatuesByTrnxId")
+				.setParameter("transactionId", transactionId).getResultList();
+	}
 }

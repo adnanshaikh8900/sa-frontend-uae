@@ -79,7 +79,8 @@ class BankTransactions extends React.Component {
       openExplainTransactionModal: false,
       rowId: null,
       show: false,
-      bankId: this.props.location.state.bankAccountId,
+      bankId: '',
+      expanded: [],
     };
 
     this.options = {
@@ -103,6 +104,7 @@ class BankTransactions extends React.Component {
   componentDidMount = () => {
     this.props.transactionsActions.getTransactionTypeList();
     this.initializeData();
+    //this.setState({ bankId: this.props.location.state.bankAccountId });
   };
 
   initializeData = (search) => {
@@ -425,6 +427,21 @@ class BankTransactions extends React.Component {
 
   closeExplainTransactionModal = (res) => {
     this.componentDidMount();
+    if (!this.state.expanded.includes(res)) {
+      this.setState(() => ({
+        expanded: [...this.state.expanded, res],
+      }));
+    } else {
+      this.setState(() => ({
+        expanded: this.state.expanded.filter((x) => x !== res),
+      }));
+    }
+  };
+
+  handleOnExpand = (row) => {
+    this.setState(() => ({
+      expanded: [...this.state.expanded, row.id],
+    }));
   };
 
   isExpandableRow(row) {
@@ -482,6 +499,8 @@ class BankTransactions extends React.Component {
           selectedData={row}
         />
       ),
+      expanded: this.state.expanded,
+      onExpand: this.handleOnExpand,
       showExpandColumn: true,
     };
     return (

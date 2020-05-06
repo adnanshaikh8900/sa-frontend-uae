@@ -78,7 +78,6 @@ class ExplainTrasactionDetail extends React.Component {
     this.props.transactionDetailActions
       .getTransactionDetail(selectedData.id)
       .then((res) => {
-        console.log(res.data);
         this.getChartOfAccountCategoryList(selectedData.debitCreditFlag);
         this.setState(
           {
@@ -104,7 +103,7 @@ class ExplainTrasactionDetail extends React.Component {
             },
           },
           () => {
-            console.log(this.state.initValue);
+            //console.log(this.state.initValue);
           },
         );
       })
@@ -213,30 +212,31 @@ class ExplainTrasactionDetail extends React.Component {
     if (this.uploadFile.files[0]) {
       formData.append('attachment', this.uploadFile.files[0]);
     }
-    // this.props.transactionDetailActions
-    //   .updateTransaction(formData)
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //       console.log(bankId);
-    //       resetForm();
-    //       this.props.commonActions.tostifyAlert(
-    //         'success',
-    //         'Transaction Detail Updated Successfully.',
-    //       );
-    //       this.props.closeExplainTransactionModal();
-    //       //this.initializeData();
-    //       // this.props.history.push('/admin/banking/bank-account/transaction', {
-    //       //   bankId,
-    //       // });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     this.props.commonActions.tostifyAlert(
-    //       'error',
-    //       err && err.data ? err.data.message : 'Something Went Wrong',
-    //     );
-    //   });
+
+    this.props.transactionDetailActions
+      .updateTransaction(formData)
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(bankId);
+          resetForm();
+          this.props.commonActions.tostifyAlert(
+            'success',
+            'Transaction Detail Updated Successfully.',
+          );
+          this.props.closeExplainTransactionModal(this.state.id);
+          //this.initializeData();
+          // this.props.history.push('/admin/banking/bank-account/transaction', {
+          //   bankId,
+          // });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        this.props.commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong',
+        );
+      });
   };
 
   render() {

@@ -499,8 +499,8 @@ class BankTransactions extends React.Component {
           selectedData={row}
         />
       ),
-      expanded: this.state.expanded,
-      onExpand: this.handleOnExpand,
+      //expanded: this.state.expanded,
+      //onExpand: this.handleOnExpand,
       showExpandColumn: true,
     };
     return (

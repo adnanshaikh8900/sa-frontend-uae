@@ -68,6 +68,6 @@ public class TransactionPresistModel implements Serializable {
 	// SALES
 	private List<ReconsileRequestLineItemModel> invoiceIdList;
 
-	TransactionExplinationStatusEnum explinationStatusEnum;
+	private TransactionExplinationStatusEnum explinationStatusEnum;
 
 }

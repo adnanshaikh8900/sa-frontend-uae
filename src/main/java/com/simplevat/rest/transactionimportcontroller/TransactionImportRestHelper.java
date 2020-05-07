@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.simplevat.constant.TransactionCreationMode;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.model.TransactionModel;
 import com.simplevat.criteria.enums.TransactionEnum;
@@ -368,6 +369,7 @@ public class TransactionImportRestHelper {
 				trnx.setCreatedBy(transactionImportModel.getCreatedBy());
 				trnx.setCreatedDate(LocalDateTime.now());
 				trnx.setCreationMode(TransactionCreationMode.IMPORT);
+				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.NOT_EXPLAIN);
 				transactions.add(trnx);
 				System.out.println(trnx.toString());
 			}

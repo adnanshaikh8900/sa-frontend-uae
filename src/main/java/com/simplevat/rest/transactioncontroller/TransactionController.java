@@ -380,7 +380,7 @@ public class TransactionController implements Serializable {
 		Transaction trnx = transactionService.findByPK(id);
 		if (trnx != null) {
 			trnx.setDeleteFlag(Boolean.TRUE);
-			transactionService.update(trnx, trnx.getTransactionId());
+			transactionService.deleteTransaction(trnx);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 

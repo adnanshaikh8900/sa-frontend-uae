@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Configuration;
 
 import com.simplevat.utils.OSValidator;
 
+/**
+ * @author S@urabh
+ */
 @Configuration
 public class FileUploadConfig {
 
@@ -19,9 +22,9 @@ public class FileUploadConfig {
 	@Value("${simplevat.filelocation.linux}")
 	private String fileLocationLinux;
 
-	/*
-	 * set basePath for uploading file based upon system specify path in properties
-	 * file
+	/**
+	 * set basePath for uploading file based upon system specify path in application.properties
+	 * file 
 	 */
 	@Bean(name = { "basePath" })
 	public String getFileBaseLocation() {

@@ -99,7 +99,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 			}
 		}
 		if (paginationModel != null && paginationModel.getSortingCol() != null
-				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ")) {
+				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ") && !paginationModel.getSortingCol().contains("-1") ) {
 			queryBuilder.append(" order by " + paginationModel.getSortingCol() + " " + paginationModel.getOrder());
 		}
 

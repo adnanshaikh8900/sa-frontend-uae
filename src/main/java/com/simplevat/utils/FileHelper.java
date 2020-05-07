@@ -23,6 +23,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,13 +37,14 @@ import com.simplevat.constant.FileTypeEnum;
 @Component
 public class FileHelper {
 
-	@Value("${simplevat.filelocation}")
-	private String fileLocation;
+	// @Value("${simplevat.filelocation}")
+	@Autowired
+	private String basePath;
 
 	private final String LOGO_IMAGE_PATH = "images/SimpleVatLogoFinalFinal.png";
 
 	public String readFile(String fileName) throws IOException {
-		try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
 
@@ -89,7 +91,7 @@ public class FileHelper {
 
 	public String saveFile(MultipartFile multipartFile, FileTypeEnum fileTypeEnum) throws IOException {
 		String filePath = "";
-		String storagePath = fileLocation;
+		String storagePath = basePath;
 		createFolderIfNotExist(storagePath);
 		Map<String, String> map = getFileName(multipartFile, fileTypeEnum);
 		for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -98,6 +100,9 @@ public class FileHelper {
 				folder.mkdirs();
 			}
 			File file = new File(storagePath + entry.getValue());
+			if(!file.exists()) {
+				file.createNewFile();
+			}
 			multipartFile.transferTo(file);
 			filePath = entry.getValue();
 		}

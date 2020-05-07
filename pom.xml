@@ -232,6 +232,9 @@
 						<goals>
 							<goal>yarn</goal>
 						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
 						<phase>generate-resources</phase>
 					</execution>
 					<execution>

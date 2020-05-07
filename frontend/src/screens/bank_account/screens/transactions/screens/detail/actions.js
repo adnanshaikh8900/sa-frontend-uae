@@ -17,7 +17,6 @@ export const getTransactionDetail = (id) => {
 };
 
 export const updateTransaction = (obj) => {
-  console.log(obj);
   return (dispatch) => {
     let data = {
       method: 'post',

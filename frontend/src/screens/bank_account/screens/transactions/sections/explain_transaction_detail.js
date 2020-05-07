@@ -142,7 +142,9 @@ class ExplainTrasactionDetail extends React.Component {
             {
               transactionCategoryList: res.data,
             },
-            () => {},
+            () => {
+              console.log(this.state.transactionCategoryList);
+            },
           );
         }
       });
@@ -164,7 +166,7 @@ class ExplainTrasactionDetail extends React.Component {
       vatId,
       transactionId,
     } = data;
-    console.log(transactionCategoryId);
+    console.log(coaCategoryId);
     console.log(data);
     //const { transaction_id } = this.state;
     let formData = new FormData();
@@ -223,7 +225,7 @@ class ExplainTrasactionDetail extends React.Component {
             'success',
             'Transaction Detail Updated Successfully.',
           );
-          this.props.closeExplainTransactionModal(this.state.id);
+          //this.props.closeExplainTransactionModal(this.state.id);
           //this.initializeData();
           // this.props.history.push('/admin/banking/bank-account/transaction', {
           //   bankId,
@@ -246,6 +248,8 @@ class ExplainTrasactionDetail extends React.Component {
       chartOfAccountCategoryList,
       transactionCategoryList,
     } = this.state;
+    console.log(transactionCategoryList);
+    console.log(this.state.initValue.coaCategoryId);
     // if (transactionCategoryList.dataList) {
     //   const result = transactionCategoryList.dataList[1].options.find(
     //     (option) => option.value === parseInt(this.state.initValue.customerId),
@@ -363,13 +367,16 @@ class ExplainTrasactionDetail extends React.Component {
                                       onChange={(option) => {
                                         if (option && option.value) {
                                           props.handleChange('coaCategoryId')(
-                                            option,
+                                            option.value,
                                           );
                                         } else {
                                           props.handleChange('coaCategoryId')(
                                             '',
                                           );
                                         }
+                                        this.getTransactionCategoryList(
+                                          option.value,
+                                        );
                                       }}
                                       placeholder="Select Type"
                                       id="coaCategoryId"
@@ -588,7 +595,7 @@ class ExplainTrasactionDetail extends React.Component {
                                           if (option && option.value) {
                                             props.handleChange(
                                               'transactionCategoryId',
-                                            )(option);
+                                            )(option.value);
                                           } else {
                                             props.handleChange(
                                               'transactionCategoryId',

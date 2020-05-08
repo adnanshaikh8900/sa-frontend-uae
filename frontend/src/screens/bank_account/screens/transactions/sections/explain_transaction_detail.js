@@ -22,8 +22,9 @@ import * as TransactionsActions from '../actions';
 import * as transactionDetailActions from '../screens/detail/actions';
 import { CommonActions } from 'services/global';
 import './style.scss';
-import { Loader } from 'components';
+import { Loader, ConfirmDeleteModal } from 'components';
 import moment from 'moment';
+import { selectOptionsFactory } from 'utils';
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -48,6 +49,7 @@ class ExplainTrasactionDetail extends React.Component {
       chartOfAccountCategoryList: [],
       transactionCategoryList: [],
       id: '',
+      dialog: null,
     };
 
     this.file_size = 1024000;
@@ -91,15 +93,17 @@ class ExplainTrasactionDetail extends React.Component {
                 ? res.data.transactionCategoryId
                 : '',
               transactionId: selectedData.id,
-              vatId: 2,
-              vendorId: 1505,
-              customerId: 1001,
-              explinationStatusEnum: 'FULL',
+              vatId: res.data.vatId ? res.data.vatId : '',
+              vendorId: res.data.vatId ? res.data.vendorId : '',
+              customerId: res.data.customerId ? res.data.customerId : '',
+              explinationStatusEnum: res.data.explinationStatusEnum,
               reference: res.data.reference ? res.data.reference : '',
               coaCategoryId: res.data.coaCategoryId
                 ? res.data.coaCategoryId
                 : '',
-              invoiceId: 1002,
+              invoiceIdList: res.data.invoiceIdList
+                ? res.data.invoiceIdList
+                : '',
             },
           },
           () => {
@@ -123,17 +127,26 @@ class ExplainTrasactionDetail extends React.Component {
           },
           () => {
             //console.log(this.state.chartOfAccountCategoryList);
-            const id = this.state.chartOfAccountCategoryList[0].options.find(
-              (option) => option.value === this.state.initValue.coaCategoryId,
-            );
-            this.getTransactionCategoryList(id.value);
+            if (this.props.selectedData.explinationStatusEnum == 'FULL') {
+              const id = this.state.chartOfAccountCategoryList[0].options.find(
+                (option) => option.value === this.state.initValue.coaCategoryId,
+              );
+              this.getTransactionCategoryList(id.value);
+            }
           },
         );
       }
     });
   };
+  setValue = (value) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      transactionCategoryList: [],
+    }));
+  };
 
   getTransactionCategoryList = (type) => {
+    this.setValue(null);
     this.props.transactionsActions
       .getTransactionCategoryListForExplain(type)
       .then((res) => {
@@ -143,7 +156,7 @@ class ExplainTrasactionDetail extends React.Component {
               transactionCategoryList: res.data,
             },
             () => {
-              console.log(this.state.transactionCategoryList);
+              //console.log(this.state.transactionCategoryList);
             },
           );
         }
@@ -166,8 +179,6 @@ class ExplainTrasactionDetail extends React.Component {
       vatId,
       transactionId,
     } = data;
-    console.log(coaCategoryId);
-    console.log(data);
     //const { transaction_id } = this.state;
     let formData = new FormData();
     formData.append('transactionId', transactionId ? transactionId : '');
@@ -207,7 +218,7 @@ class ExplainTrasactionDetail extends React.Component {
       console.log('ss');
       formData.append(
         'invoiceIdList',
-        invoiceIdList ? JSON.stringify(invoiceIdList) : '',
+        invoiceIdList ? JSON.stringify(invoiceIdList.value) : '',
       );
     }
     formData.append('reference', reference ? reference : '');
@@ -241,6 +252,38 @@ class ExplainTrasactionDetail extends React.Component {
       });
   };
 
+  closeTransaction = (id) => {
+    alert();
+    this.setState({
+      dialog: (
+        <ConfirmDeleteModal
+          okHandler={() => this.removeTransaction(id)}
+          cancelHandler={this.removeDialog}
+        />
+      ),
+    });
+  };
+  removeTransaction = (id) => {
+    this.props.transactionsActions
+      .deleteTransactionById(id)
+      .then((res) => {
+        this.props.commonActions.tostifyAlert(
+          'success',
+          'Transaction Deleted Successfully',
+        );
+      })
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : null,
+        );
+      });
+  };
+  removeDialog = () => {
+    this.setState({
+      dialog: null,
+    });
+  };
   render() {
     const {
       initValue,
@@ -248,19 +291,6 @@ class ExplainTrasactionDetail extends React.Component {
       chartOfAccountCategoryList,
       transactionCategoryList,
     } = this.state;
-    console.log(transactionCategoryList);
-    console.log(this.state.initValue.coaCategoryId);
-    // if (transactionCategoryList.dataList) {
-    //   const result = transactionCategoryList.dataList[1].options.find(
-    //     (option) => option.value === parseInt(this.state.initValue.customerId),
-    //   );
-    //   console.log(transactionCategoryList.dataList[1].options);
-    //   // transactionCategoryList.dataList[1].options.find(
-    //   //   (option) => option.value === +this.state.initValue.customerId,
-    //   // );
-    //   console.log(result);
-    //   console.log(typeof this.state.initValue.customerId.toString());
-    // }
     return (
       <div className="detail-bank-transaction-screen">
         <div className="animated fadeIn">
@@ -401,7 +431,7 @@ class ExplainTrasactionDetail extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="amount">
                                       <span className="text-danger">*</span>
-                                      Total Amount
+                                      Amount
                                     </Label>
                                     <Input
                                       type="text"
@@ -485,13 +515,13 @@ class ExplainTrasactionDetail extends React.Component {
                                   props.values.coaCategoryId === 2 && (
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
-                                        <Label htmlFor="invoiceId">
+                                        <Label htmlFor="invoiceIdList">
                                           Invoice
                                         </Label>
                                         <Select
                                           isMulti
                                           options={
-                                            transactionCategoryList
+                                            transactionCategoryList.dataList
                                               ? transactionCategoryList
                                                   .dataList[1].options
                                               : []
@@ -501,26 +531,26 @@ class ExplainTrasactionDetail extends React.Component {
                                             transactionCategoryList.dataList[1].options.find(
                                               (option) =>
                                                 option.value ===
-                                                +props.values.invoiceId,
+                                                +props.values.invoiceIdList,
                                             )
                                           }
                                           onChange={(option) => {
                                             if (option && option.value) {
-                                              props.handleChange('invoiceId')(
-                                                option,
-                                              );
+                                              props.handleChange(
+                                                'invoiceIdList',
+                                              )(option);
                                             } else {
-                                              props.handleChange('invoiceId')(
-                                                '',
-                                              );
+                                              props.handleChange(
+                                                'invoiceIdList',
+                                              )('');
                                             }
                                           }}
                                           placeholder="Select Type"
-                                          id="invoiceId"
-                                          name="invoiceId"
+                                          id="invoiceIdList"
+                                          name="invoiceIdList"
                                           className={
-                                            props.errors.invoiceId &&
-                                            props.touched.invoiceId
+                                            props.errors.invoiceIdList &&
+                                            props.touched.invoiceIdList
                                               ? 'is-invalid'
                                               : ''
                                           }
@@ -535,18 +565,19 @@ class ExplainTrasactionDetail extends React.Component {
                                         <Label htmlFor="vatId">Vat</Label>
                                         <Select
                                           options={
-                                            transactionCategoryList.dataList[0]
+                                            transactionCategoryList.dataList
                                               ? transactionCategoryList
                                                   .dataList[0].options
                                               : []
                                           }
                                           value={
-                                            transactionCategoryList.dataList &&
-                                            transactionCategoryList.dataList[0].options.find(
-                                              (option) =>
-                                                option.value ===
-                                                +props.values.vatId,
-                                            )
+                                            transactionCategoryList.dataList
+                                              ? transactionCategoryList.dataList[0].options.find(
+                                                  (option) =>
+                                                    option.value ===
+                                                    +props.values.vatId,
+                                                )
+                                              : []
                                           }
                                           onChange={(option) => {
                                             if (option && option.value) {
@@ -583,13 +614,14 @@ class ExplainTrasactionDetail extends React.Component {
                                             : []
                                         }
                                         value={
-                                          transactionCategoryList.categoriesList &&
-                                          transactionCategoryList.categoriesList[0].options.find(
-                                            (option) =>
-                                              option.value ===
-                                              +props.values
-                                                .transactionCategoryId,
-                                          )
+                                          transactionCategoryList.categoriesList
+                                            ? transactionCategoryList.categoriesList[0].options.find(
+                                                (option) =>
+                                                  option.value ===
+                                                  +props.values
+                                                    .transactionCategoryId,
+                                              )
+                                            : ''
                                         }
                                         onChange={(option) => {
                                           if (option && option.value) {
@@ -602,7 +634,7 @@ class ExplainTrasactionDetail extends React.Component {
                                             )('');
                                           }
                                         }}
-                                        placeholder="Select Type"
+                                        placeholder="Select Category"
                                         id="transactionCategoryId"
                                         name="transactionCategoryId"
                                         className={
@@ -775,7 +807,7 @@ class ExplainTrasactionDetail extends React.Component {
                                         </Label>
                                         <Select
                                           options={
-                                            transactionCategoryList.dataList[0]
+                                            transactionCategoryList.dataList
                                               ? transactionCategoryList
                                                   .dataList[1].options
                                               : []
@@ -812,13 +844,102 @@ class ExplainTrasactionDetail extends React.Component {
                                       </FormGroup>
                                     </Col>
                                   )}
+                                  {props.values.coaCategoryId === 12 ||
+                                    (props.values.coaCategoryId === 6 && (
+                                      <Col lg={4}>
+                                        <FormGroup className="mb-3">
+                                          <Label htmlFor="employeeId">
+                                            User
+                                          </Label>
+                                          <Select
+                                            options={
+                                              transactionCategoryList.dataList
+                                                ? transactionCategoryList
+                                                    .dataList[0].options
+                                                : []
+                                            }
+                                            value={
+                                              transactionCategoryList.dataList &&
+                                              transactionCategoryList.dataList[0].options.find(
+                                                (option) =>
+                                                  option.value ===
+                                                  +props.values.employeeId,
+                                              )
+                                            }
+                                            onChange={(option) => {
+                                              if (option && option.value) {
+                                                props.handleChange(
+                                                  'employeeId',
+                                                )(option);
+                                              } else {
+                                                props.handleChange(
+                                                  'employeeId',
+                                                )('');
+                                              }
+                                            }}
+                                            placeholder="Select Type"
+                                            id="employeeId"
+                                            name="employeeId"
+                                            className={
+                                              props.errors.employeeId &&
+                                              props.touched.employeeId
+                                                ? 'is-invalid'
+                                                : ''
+                                            }
+                                          />
+                                        </FormGroup>
+                                      </Col>
+                                    ))}
+                                  {props.values.coaCategoryId === 12 && (
+                                    <Col lg={4}>
+                                      <FormGroup className="mb-3">
+                                        <Label htmlFor="employeeId">User</Label>
+                                        <Select
+                                          options={
+                                            transactionCategoryList.dataList
+                                              ? transactionCategoryList
+                                                  .dataList[0].options
+                                              : []
+                                          }
+                                          value={
+                                            transactionCategoryList.dataList &&
+                                            transactionCategoryList.dataList[0].options.find(
+                                              (option) =>
+                                                option.value ===
+                                                +props.values.employeeId,
+                                            )
+                                          }
+                                          onChange={(option) => {
+                                            if (option && option.value) {
+                                              props.handleChange('employeeId')(
+                                                option,
+                                              );
+                                            } else {
+                                              props.handleChange('employeeId')(
+                                                '',
+                                              );
+                                            }
+                                          }}
+                                          placeholder="Select Type"
+                                          id="employeeId"
+                                          name="employeeId"
+                                          className={
+                                            props.errors.employeeId &&
+                                            props.touched.employeeId
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                  )}
                                   {props.values.coaCategoryId === 10 && (
                                     <Col lg={4}>
                                       <FormGroup className="mb-3">
                                         <Label htmlFor="vendorId">Vendor</Label>
                                         <Select
                                           options={
-                                            transactionCategoryList.dataList[0]
+                                            transactionCategoryList.dataList
                                               ? transactionCategoryList
                                                   .dataList[2].options
                                               : []
@@ -870,21 +991,17 @@ class ExplainTrasactionDetail extends React.Component {
                                       <i className="fa fa-dot-circle-o"></i>{' '}
                                       Explain
                                     </Button>
-                                    {/* <Button
+                                    <Button
                                       color="secondary"
                                       className="btn-square"
                                       onClick={() =>
-                                        this.props.history.push(
-                                          '/admin/banking/bank-account/transaction',
-                                          {
-                                            bankAccountId:
-                                              initValue.bankAccountId,
-                                          },
+                                        this.removeTransaction(
+                                          props.values.transactionId,
                                         )
                                       }
                                     >
-                                      <i className="fa fa-ban"></i> Cancel
-                                    </Button> */}
+                                      <i className="fa fa-ban"></i> Delete
+                                    </Button>
                                   </FormGroup>
                                 </Col>
                               </Row>

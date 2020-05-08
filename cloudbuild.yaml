@@ -4,7 +4,7 @@ steps:
   args: ['clean','package']
   id: mvn-build
   waitFor: ['-']
-- name: 'gcr.io/kaniko-project/executor:latest'
+- name: 'gcr.io/kaniko-project/executor:debug-edge'
   args:
     - --destination=gcr.io/gtt-project-prod/simplevat:$TAG_NAME
     - --cache=true

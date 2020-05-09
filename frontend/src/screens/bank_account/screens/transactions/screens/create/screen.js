@@ -94,25 +94,6 @@ class CreateBankTransaction extends React.Component {
     this.initializeData();
   };
 
-  // handleChange = (val, name, row) => {
-  //   let data = [...this.state.initValue];
-  //   data.map((item, index) => {
-  //     if (item.id === row.id) {
-  //       data[`${index}`][`${name}`] = val;
-  //     }
-  //     return item;
-  //   });
-  //   this.setState(
-  //     {
-  //       initValue: data,
-  //     },
-  //     () => {
-  //       console.log(this.state.initValue);
-  //       //this.calculateCurrentBalance();
-  //     },
-  //   );
-  // };
-
   initializeData = () => {
     if (this.props.location.state && this.props.location.state.bankAccountId) {
       this.setState(
@@ -158,6 +139,13 @@ class CreateBankTransaction extends React.Component {
       vendorId,
       employeeId,
     } = data;
+    if (
+      invoiceIdList &&
+      coaCategoryId.value &&
+      coaCategoryId.label == 'Sales'
+    ) {
+      var result = invoiceIdList.map((o) => ({ invoiceId: o.value }));
+    }
     let formData = new FormData();
     formData.append('bankId ', bankAccountId ? bankAccountId : '');
     formData.append(
@@ -195,17 +183,15 @@ class CreateBankTransaction extends React.Component {
       coaCategoryId.value &&
       coaCategoryId.label == 'Sales'
     ) {
-      console.log('ss');
       formData.append(
         'invoiceIdList',
-        invoiceIdList ? JSON.stringify(invoiceIdList) : '',
+        invoiceIdList ? JSON.stringify(result) : '',
       );
     }
     formData.append('reference', reference ? reference : '');
     if (this.uploadFile.files[0]) {
       formData.append('attachmentFile', this.uploadFile.files[0]);
     }
-    console.log(this.uploadFile.files[0]);
     this.props.transactionCreateActions
       .createTransaction(formData)
       .then((res) => {
@@ -233,7 +219,22 @@ class CreateBankTransaction extends React.Component {
         );
       });
   };
+
+  setValue = (value) => {
+    this.setState({
+      transactionCategoryList: [],
+    });
+    // this.setState(
+    //   (prevState) => ({
+    //     ...prevState,
+    //     transactionCategoryList: [],
+    //   }),
+    //   () => {},
+    // );
+  };
+
   getTransactionCategoryList = (type) => {
+    this.setValue(null);
     try {
       this.props.transactionCreateActions
         .getTransactionCategoryListForExplain(type)
@@ -315,6 +316,7 @@ class CreateBankTransaction extends React.Component {
       ],
     };
     const { initValue, id, transactionCategoryList } = this.state;
+    console.log(transactionCategoryList);
     return (
       <div className="create-bank-transaction-screen">
         <div className="animated fadeIn">
@@ -472,7 +474,7 @@ class CreateBankTransaction extends React.Component {
                               <Col lg={4}>
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="transactionAmount">
-                                    <span className="text-danger">*</span>Total
+                                    <span className="text-danger">*</span>
                                     Amount
                                   </Label>
                                   <Input
@@ -517,9 +519,15 @@ class CreateBankTransaction extends React.Component {
                                     <Select
                                       className="select-default-width"
                                       options={
-                                        transactionCategoryList.categoriesList
+                                        transactionCategoryList
+                                          ? transactionCategoryList.categoriesList
+                                          : []
                                       }
-                                      value={props.values.transactionCategoryId}
+                                      // value={
+                                      //   transactionCategoryList
+                                      //     ? props.values.transactionCategoryId
+                                      //     : ''
+                                      // }
                                       id="transactionCategoryId"
                                       onChange={(option) => {
                                         if (option && option.value) {
@@ -593,7 +601,7 @@ class CreateBankTransaction extends React.Component {
                                   <Col lg={4}>
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="customerId">
-                                        customerId
+                                        Customer
                                       </Label>
                                       <Select
                                         className="select-default-width"
@@ -671,12 +679,17 @@ class CreateBankTransaction extends React.Component {
                                         className="select-default-width"
                                         options={
                                           transactionCategoryList.dataList[1]
-                                            ? transactionCategoryList
-                                                .dataList[1].options
+                                            ? selectOptionsFactory.renderOptions(
+                                                'label',
+                                                'value',
+                                                transactionCategoryList
+                                                  .dataList[1].options,
+                                                'Type',
+                                              )
                                             : []
                                         }
                                         id="invoiceIdList"
-                                        value={props.values.invoiceIdList}
+                                        value={props.values.invoiceIdList.value}
                                         onChange={(option) => {
                                           props.handleChange('invoiceIdList')(
                                             option,

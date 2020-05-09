@@ -19,6 +19,7 @@ import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
@@ -81,10 +82,10 @@ class BankTransactions extends React.Component {
       show: false,
       bankId: '',
       expanded: [],
+      page: 1,
     };
 
     this.options = {
-      paginationPosition: 'top',
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
@@ -94,7 +95,7 @@ class BankTransactions extends React.Component {
     this.selectRowProp = {
       mode: 'checkbox',
       bgColor: 'rgba(0,0,0, 0.05)',
-      clickToSelect: false,
+      clickToSelect: true,
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll,
     };
@@ -233,57 +234,6 @@ class BankTransactions extends React.Component {
       show: !this.state.show,
     });
   }
-
-  renderActions = (cell, row) => {
-    return (
-      <div>
-        <div onClick={() => this.toggleActionButton(row)}>
-          {this.state.actionButtons[row.id] === true ? (
-            <i className="fas fa-chevron-up" />
-          ) : (
-            <i className="fas fa-chevron-down" />
-          )}
-        </div>
-        {/* <ButtonDropdown
-					isOpen={this.state.actionButtons[row.id]}
-					toggle={() => this.toggleActionButton(row.id)}
-				>
-					<DropdownToggle size="sm" color="primary" className="btn-brand icon">
-						{this.state.actionButtons[row.reference_number] === true ? (
-							<i className="fas fa-chevron-up" />
-						) : (
-							<i className="fas fa-chevron-down" />
-						)}
-					</DropdownToggle>
-					<DropdownMenu right>
-						<DropdownItem
-							onClick={() =>
-								this.props.history.push(
-									'/admin/banking/bank-account/transaction/detail',
-									{ id: row.id },
-								)
-							}
-						>
-							<i className="fas fa-edit" /> Edit
-						</DropdownItem>
-						<DropdownItem>
-							<i className="fas fa-wrench" /> Archive
-						</DropdownItem>
-						<DropdownItem
-							onClick={() => {
-								this.openExplainTransactionModal(row);
-							}}
-						>
-							<i className="fa fa-connectdevelop" /> Explain
-						</DropdownItem>
-						<DropdownItem onClick={() => this.closeTransaction(row.id)}>
-							<i className="fa fa-trash" /> Delete
-						</DropdownItem>
-					</DropdownMenu>
-				</ButtonDropdown> */}
-      </div>
-    );
-  };
 
   onRowSelect = (row, isSelected, e) => {
     console.log(isSelected);
@@ -453,6 +403,18 @@ class BankTransactions extends React.Component {
     return <div className="transition">{row.id}</div>;
   }
 
+  handleTableChange = (type, { page, sizePerPage }) => {
+    this.setState(
+      {
+        page,
+        sizePerPage,
+      },
+      () => {
+        this.onPageChange(page, sizePerPage);
+      },
+    );
+  };
+
   render() {
     const {
       loading,
@@ -463,13 +425,15 @@ class BankTransactions extends React.Component {
       view,
     } = this.state;
     const { bank_transaction_list, transaction_type_list } = this.props;
-    // const products = [...Array(5).keys()].map((p) => {
-    // 	return {
-    // 		id: p,
-    // 		name: 'Item name ' + p,
-    // 		price: 2100 + p,
-    // 	};
-    // });
+
+    function statusFormatter(cell, row) {
+      if (row.explinationStatusEnum == 'FULL') {
+        return <div>Explained</div>;
+      } else {
+        return <div>Not Explained</div>;
+      }
+    }
+
     const columns = [
       {
         dataField: 'transactionDate',
@@ -487,6 +451,11 @@ class BankTransactions extends React.Component {
         dataField: 'withdrawalAmount',
         text: 'Withdrawal Amount',
       },
+      {
+        dataField: 'explinationStatusEnum',
+        text: 'Status',
+        formatter: statusFormatter,
+      },
     ];
     const expandRow = {
       onlyOneExpanding: true,
@@ -499,14 +468,12 @@ class BankTransactions extends React.Component {
           selectedData={row}
         />
       ),
-      //expanded: this.state.expanded,
-      //onExpand: this.handleOnExpand,
       showExpandColumn: true,
     };
+
     return (
       <div className="bank-transaction-screen">
         <div className="animated fadeIn">
-          {/* <ToastContainer position="top-right" autoClose={5000} style={containerStyle} /> */}
           <Card className={this.state.sidebarOpen ? `main-table-panel` : ''}>
             <CardHeader>
               <Row>
@@ -695,17 +662,20 @@ class BankTransactions extends React.Component {
                         }
                         columns={columns}
                         expandRow={expandRow}
+                        noDataIndication="There is no data to display"
+                        remote
+                        fetchInfo={{
+                          dataTotalSize: bank_transaction_list.count
+                            ? bank_transaction_list.count
+                            : 0,
+                        }}
+                        onTableChange={this.handleTableChange}
+                        pagination={paginationFactory({
+                          page: this.state.page,
+                          sizePerPage: 10,
+                          totalSize: bank_transaction_list.count,
+                        })}
                       />
-
-                      <div className="editTransactions">
-                        <ExplainTrasactionDetail
-                          bankId={this.state.bankId}
-                          closeExplainTransactionModal={(e) => {
-                            this.closeExplainTransactionModal(e);
-                          }}
-                          //selectedData={this.state.selectedData}
-                        />
-                      </div>
                     </div>
                   </Col>
                 </Row>
@@ -714,13 +684,6 @@ class BankTransactions extends React.Component {
           </Card>
           <div className="overlay"></div>
         </div>
-        {/* <ExplainTransactionModal
-					openExplainTransactionModal={this.state.openExplainTransactionModal}
-					closeExplainTransactionModal={(e) => {
-						this.closeExplainTransactionModal(e);
-					}}
-					selectedData={this.state.selectedData}
-				/> */}
       </div>
     );
   }

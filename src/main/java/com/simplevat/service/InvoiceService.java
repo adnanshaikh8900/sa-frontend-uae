@@ -7,7 +7,6 @@ import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

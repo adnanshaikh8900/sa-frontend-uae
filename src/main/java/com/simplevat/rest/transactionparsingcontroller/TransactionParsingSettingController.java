@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiOperation;;
 @RequestMapping(value = "/rest/transactionParsing")
 public class TransactionParsingSettingController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionParsingSettingController.class);
+	private final Logger logger = LoggerFactory.getLogger(TransactionParsingSettingController.class);
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -109,11 +109,11 @@ public class TransactionParsingSettingController {
 				mapping.setCreatedDate(LocalDateTime.now());
 			}
 			transactionParsingSettingService.persist(transactionParsigSetting);
-			Map<String, Object> responseMap = new HashMap<String, Object>();
+			Map<String, Object> responseMap = new HashMap<>();
 			responseMap.put("id", transactionParsigSetting.getId());
 			return new ResponseEntity(responseMap, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -135,7 +135,7 @@ public class TransactionParsingSettingController {
 			transactionParsingSettingService.persist(transactionParsigSetting);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -156,7 +156,7 @@ public class TransactionParsingSettingController {
 					HttpStatus.OK);
 
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -184,7 +184,7 @@ public class TransactionParsingSettingController {
 			return new ResponseEntity(model, HttpStatus.OK);
 
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -205,7 +205,7 @@ public class TransactionParsingSettingController {
 					HttpStatus.OK);
 
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

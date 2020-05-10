@@ -55,7 +55,7 @@ import com.simplevat.utils.DateFormatUtil;
 @RequestMapping("/rest/reconsile")
 public class ReconsilationController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(ReconsilationController.class);
+	private final Logger logger = LoggerFactory.getLogger(ReconsilationController.class);
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -106,7 +106,7 @@ public class ReconsilationController {
 					reconsilationRestHelper.getList(ReconsileCategoriesEnumConstant.get(reconcilationCatCode)),
 					HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -199,7 +199,7 @@ public class ReconsilationController {
 		} catch (
 
 		Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -274,7 +274,7 @@ public class ReconsilationController {
 
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

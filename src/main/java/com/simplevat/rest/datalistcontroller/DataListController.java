@@ -56,7 +56,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/rest/datalist")
 public class DataListController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(DataListController.class);
+	private final Logger logger = LoggerFactory.getLogger(DataListController.class);
 
 	@Autowired
 	private CountryService countryService;
@@ -96,7 +96,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -116,7 +116,7 @@ public class DataListController {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -130,14 +130,13 @@ public class DataListController {
 
 				for (ChartOfAccount ac : transactionTypes) {
 					ac.setTransactionChartOfAccountCategoryList(null);
-					// TODO Make it dropdown Model
 				}
 				return new ResponseEntity<>(transactionTypes, HttpStatus.OK);
 			} else {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -157,7 +156,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -177,7 +176,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -197,7 +196,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -216,7 +215,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -235,7 +234,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -266,7 +265,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -287,7 +286,7 @@ public class DataListController {
 				return new ResponseEntity(modelList, HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -322,8 +321,6 @@ public class DataListController {
 						parentCategory = chartOfAccountCategory;
 					}
 				}
-//				HashMap<String, Object> response = new HashMap<>();
-//				response.put(parentCategory.getChartOfAccountCategoryName(), modelList);
 				return new ResponseEntity<>(Arrays.asList(
 						new SingleLevelDropDownModel(parentCategory.getChartOfAccountCategoryName(), modelList)),
 						HttpStatus.OK);
@@ -331,7 +328,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

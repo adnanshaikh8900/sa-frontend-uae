@@ -1,7 +1,6 @@
 package com.simplevat.rest.productcontroller;
 
 import com.simplevat.entity.Product;
-import com.simplevat.rest.productcontroller.ProductRequestModel;
 import com.simplevat.service.ProductService;
 import com.simplevat.service.ProductWarehouseService;
 import com.simplevat.service.VatCategoryService;
@@ -9,7 +8,7 @@ import com.simplevat.service.VatCategoryService;
 public class ProductModelHelper {
 
 	public Product convertToProduct(ProductRequestModel productModel, VatCategoryService vatCategoryService,
-			ProductWarehouseService productWarehouseService, ProductService productService) {
+									ProductWarehouseService productWarehouseService, ProductService productService) {
 		Product product = new Product();
 		product.setProductID(productModel.getProductID());
 		product.setProductName(productModel.getProductName());

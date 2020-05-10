@@ -46,7 +46,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/invoice")
 public class InvoiceRestController extends AbstractDoubleEntryRestController {
-	private final Logger LOGGER = LoggerFactory.getLogger(InvoiceRestController.class);
+	private final Logger logger = LoggerFactory.getLogger(InvoiceRestController.class);
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -103,7 +103,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			responseModel.setData(invoiceRestHelper.getListModel(responseModel.getData()));
 			return new ResponseEntity(responseModel, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -132,7 +132,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			invoiceService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -166,7 +166,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			invoiceService.persist(invoice);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -187,7 +187,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			invoiceService.update(invoice);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -202,7 +202,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			}
 			return new ResponseEntity(nxtInvoiceNo, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -217,7 +217,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			}
 			return new ResponseEntity(chartUtil.getinvoiceData(invList, monthCount), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -230,7 +230,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			invoiceRestHelper.send(invoiceService.findByPK(id),userId);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -247,7 +247,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			OverDueAmountDetailsModel overDueAmountDetails = invoiceService.getOverDueAmountDetails(type);
 			return new ResponseEntity(overDueAmountDetails, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

@@ -1,7 +1,5 @@
 package com.simplevat.rest.transactioncontroller;
 
-import java.util.Date;
-
 import com.simplevat.rest.PaginationModel;
 
 import lombok.Data;

@@ -3,7 +3,6 @@ package com.simplevat.service.impl;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import com.simplevat.model.OverDueAmountDetailsModel;
@@ -16,8 +15,6 @@ import com.simplevat.entity.Invoice;
 import com.simplevat.service.InvoiceService;
 
 import java.util.Map;
-
-import javax.persistence.TypedQuery;
 
 import com.simplevat.dao.InvoiceDao;
 import com.simplevat.rest.DropdownModel;
@@ -62,9 +59,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 		Invoice invoice = supplierInvoiceDao.getLastInvoice();
 		if (invoice != null) {
 			try {
-				return new Integer(invoice.getReferenceNumber()) + 1;
+				return Integer.parseInt(invoice.getReferenceNumber()) + 1;
 			} catch (Exception e) {
-				// TODO: handle exception
+
 				return 0;
 			}
 		}

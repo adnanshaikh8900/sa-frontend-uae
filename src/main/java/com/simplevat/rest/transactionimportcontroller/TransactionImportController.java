@@ -58,32 +58,33 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/transactionimport")
 public class TransactionImportController implements Serializable {
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionImportController.class);
+
+	private transient final Logger logger = LoggerFactory.getLogger(TransactionImportController.class);
 	@Autowired
-	private CsvParser csvParser;
+	private transient CsvParser csvParser;
 
 	@Autowired
-	private ExcelParser excelParser;
+	private transient ExcelParser excelParser;
 
 	@Autowired
-	private FileHelper fileHelper;
+	private transient FileHelper fileHelper;
 
 	@Autowired
-	private BankAccountService bankAccountService;
+	private transient BankAccountService bankAccountService;
 
 	@Autowired
-	private TransactionService transactionService;
+	private transient TransactionService transactionService;
 
 	@Autowired
-	private UserService userServiceNew;
+	private transient UserService userServiceNew;
 
 	@Autowired
-	private TransactionParsingSettingService transactionParsingSettingService;
+	private transient TransactionParsingSettingService transactionParsingSettingService;
 	@Autowired
-	private TransactionParsingSettingRestHelper transactionParsingSettingRestHelper;
+	private transient TransactionParsingSettingRestHelper transactionParsingSettingRestHelper;
 
 	@Autowired
-	TransactionImportRestHelper transactionImportRestHelper;
+	private transient	TransactionImportRestHelper transactionImportRestHelper;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -127,7 +128,6 @@ public class TransactionImportController implements Serializable {
 		}
 	}
 
-	@Deprecated
 	@ApiOperation(value = "Save Import Transaction")
 	@PostMapping(value = "/saveimporttransaction")
 	public ResponseEntity<Integer> saveTransactions(@RequestBody List<TransactionModel> transactionList,
@@ -154,18 +154,17 @@ public class TransactionImportController implements Serializable {
 			transaction1.setTransactionDate(LocalDateTime.of(date, time));
 			if (transaction.getDebit() != null && !transaction.getDebit().trim().isEmpty()) {
 				transaction1.setTransactionAmount(
-						BigDecimal.valueOf(Double.parseDouble(transaction.getDebit().replaceAll(",", ""))));
+						BigDecimal.valueOf(Double.parseDouble(transaction.getDebit().replace(",", ""))));
 				transaction1.setDebitCreditFlag(TransactionCreditDebitConstant.DEBIT);
 			}
 			if (transaction.getCredit() != null && !transaction.getCredit().trim().isEmpty()) {
 				transaction1.setTransactionAmount(
-						BigDecimal.valueOf(Double.parseDouble(transaction.getCredit().replaceAll(",", ""))));
+						BigDecimal.valueOf(Double.parseDouble(transaction.getCredit().replace(",", ""))));
 				transaction1.setDebitCreditFlag(TransactionCreditDebitConstant.CREDIT);
 			}
-			//transaction1.setTransactionStatus(transactionStatusService.findByPK(TransactionStatusConstant.UNEXPLAINED));
 			transactionService.persist(transaction1);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 	}
 
@@ -211,6 +210,7 @@ public class TransactionImportController implements Serializable {
 		case "xlx":
 			dataMap = excelParser.parseImportData(model, file);
 			break;
+			default:
 		}
 
 		if (dataMap == null) {

@@ -19,14 +19,15 @@ import java.util.List;
 public class FinancialPeriodHolderRest {
 
     private static final int INITIALYEAR = 2015;
+    /*for sonar error*/
+    private FinancialPeriodHolderRest() {
+    }
 
     public static List<FinancialPeriodRestModel> getFinancialPeriodList() {
         List<FinancialPeriodRestModel> financialPeriodList = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int id = 1;
-        int monthCount = 2;
-        int monthDecrement = 0;
         if (year >= INITIALYEAR) {
             financialPeriodList.clear();
             FinancialPeriodRestModel financialCustomPeriod = new FinancialPeriodRestModel();
@@ -92,10 +93,9 @@ public class FinancialPeriodHolderRest {
                 } else {
                     name = "Current Year";
                 }
-                // name = new SimpleDateFormat("MM/dd/yyyy").format(startDate) + " To " + new SimpleDateFormat("MM/dd/yyyy").format(endDate);
                 financialPeriod.setName(name);
                 financialPeriodList.add(financialPeriod);
-
+                /* name = new SimpleDateFormat("MM/dd/yyyy").format(startDate) + " To " + new SimpleDateFormat("MM/dd/yyyy").format(endDate);*/
             }
         }
         return financialPeriodList;

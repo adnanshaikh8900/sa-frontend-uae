@@ -23,34 +23,16 @@ import lombok.Data;
 @Data
 public class TransactionPresistModel implements Serializable {
 
-	// TODO : REMOVE AFTER TESTING 4-5-2020
-
-//	private Integer id;
-//    private Date transactionDate;
-//    private String transactionDescription;
-//    private BigDecimal transactionAmount;
-//    @NotNull
-//    private Integer chartOfAccountId;
-//    private Integer transactionCategoryId;
-//    @NotNull
-//    private Integer bankAccountId;
-//    private Integer projectId;
-//    private String receiptNumber;
-//    private String attachementDescription;
-//    private MultipartFile attachment;
-//    private String receiptAttachmentPath;
-//    private String receiptAttachmentFileName;
-
 	private String DATE_FORMAT = "dd/MM/yyyy";
 
 	private Integer bankId;
 	private Integer transactionId;
-	private Integer coaCategoryId;;
+	private Integer coaCategoryId;
 	private Integer transactionCategoryId;
 	private BigDecimal amount;
 	private String date;
 	private String description;
-	private MultipartFile attachmentFile;
+	private transient MultipartFile attachmentFile;
 	private String reference;
 
 	// EXPENSE
@@ -66,7 +48,7 @@ public class TransactionPresistModel implements Serializable {
 	private Integer reconsileBankId;
 
 	// SALES
-	private List<ReconsileRequestLineItemModel> invoiceIdList;
+	private transient List<ReconsileRequestLineItemModel> invoiceIdList;
 
 	private TransactionExplinationStatusEnum explinationStatusEnum;
 

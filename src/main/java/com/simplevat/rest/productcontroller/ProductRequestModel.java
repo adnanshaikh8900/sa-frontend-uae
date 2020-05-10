@@ -1,8 +1,5 @@
 package com.simplevat.rest.productcontroller;
 
-import com.simplevat.entity.Product;
-import com.simplevat.entity.VatCategory;
-import com.simplevat.entity.ProductWarehouse;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Data;

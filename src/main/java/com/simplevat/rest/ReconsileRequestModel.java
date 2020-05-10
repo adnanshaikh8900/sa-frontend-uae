@@ -19,7 +19,7 @@ public class ReconsileRequestModel {
 	private String DATE_FORMAT = "dd/MM/yyyy";
 
 	private Integer transactionId;
-	private Integer coaCategoryId;;
+	private Integer coaCategoryId;
 	private Integer transactionCategoryId;
 	private BigDecimal amount;
 	private String date;

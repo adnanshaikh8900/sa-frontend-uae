@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.ChartOfAccountConstant;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
@@ -74,57 +73,57 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/transaction")
 public class TransactionController implements Serializable {
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionController.class);
+	 final transient Logger logger = LoggerFactory.getLogger(TransactionController.class);
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private TransactionService transactionService;
+	private transient TransactionService transactionService;
 
 	@Autowired
-	private BankAccountService bankAccountService;
+	private transient BankAccountService bankAccountService;
 
 	@Autowired
-	private ChartOfAccountService chartOfAccountService;
+	private transient ChartOfAccountService chartOfAccountService;
 
 	@Autowired
-	private TransactionHelper transactionHelper;
+	private transient TransactionHelper transactionHelper;
 
 	@Autowired
-	private ChartUtil chartUtil;
+	private transient ChartUtil chartUtil;
 
 	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private transient TransactionCategoryService transactionCategoryService;
 
 	@Autowired
-	private ReconsilationRestHelper reconsilationRestHelper;
+	private transient ReconsilationRestHelper reconsilationRestHelper;
 
 	@Autowired
-	private JournalService journalService;
+	private transient JournalService journalService;
 
 	@Autowired
-	private BankAccountService bankService;
+	private transient BankAccountService bankService;
 
 	@Autowired
-	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+	private transient ChartOfAccountCategoryService chartOfAccountCategoryService;
 
 	@Autowired
-	private VatCategoryService vatCategoryService;
+	private transient VatCategoryService vatCategoryService;
 
 	@Autowired
-	private EmployeeService employeeService;
+	private transient EmployeeService employeeService;
 
 	@Autowired
-	private ContactService contactService;
+	private transient ContactService contactService;
 
 	@Autowired
-	private TransactionStatusService transactionStatusService;
+	private transient TransactionStatusService transactionStatusService;
 
 	@Autowired
-	private DateFormatUtil dateFormatUtil;
+	private transient DateFormatUtil dateFormatUtil;
 
 	@Autowired
-	private FileHelper fileHelper;
+	private transient FileHelper fileHelper;
 
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
@@ -142,7 +141,7 @@ public class TransactionController implements Serializable {
 				dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getTransactionDate()).getTime())
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 			} catch (ParseException e) {
-				LOGGER.error("Error", e);
+				logger.error("Error", e);
 			}
 			dataMap.put(TransactionFilterEnum.TRANSACTION_DATE, dateTime);
 		}
@@ -262,7 +261,7 @@ public class TransactionController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -369,7 +368,7 @@ public class TransactionController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -393,7 +392,7 @@ public class TransactionController implements Serializable {
 			transactionService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -436,7 +435,7 @@ public class TransactionController implements Serializable {
 					transactionService.getCashOutData(monthNo, null));
 			return new ResponseEntity<>(obj, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

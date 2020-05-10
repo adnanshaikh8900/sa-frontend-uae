@@ -39,13 +39,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rest/contact")
 public class ContactController implements Serializable {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
+	private final transient Logger logger = LoggerFactory.getLogger(ContactController.class);
 
 	@Autowired
-	private ContactService contactService;
+	private transient ContactService contactService;
 
 	@Autowired
-	private ContactHelper contactHelper;
+	private transient ContactHelper contactHelper;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -71,7 +71,7 @@ public class ContactController implements Serializable {
 			}
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error =", e);
+			logger.error("Error =", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -101,7 +101,7 @@ public class ContactController implements Serializable {
 			contactService.persist(contact);
 			return new ResponseEntity<>(contactHelper.getModel(contact), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error =", e);
+			logger.error("Error =", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -120,7 +120,7 @@ public class ContactController implements Serializable {
 			}
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error =", e);
+			logger.error("Error =", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -149,7 +149,7 @@ public class ContactController implements Serializable {
 			contactService.deleleByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error =", e);
+			logger.error("Error =", e);
 		}
 
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

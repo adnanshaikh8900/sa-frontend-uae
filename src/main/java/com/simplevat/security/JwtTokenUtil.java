@@ -33,7 +33,7 @@ public class JwtTokenUtil implements Serializable {
 	private String secret;
 
 	@Autowired
-	UserService userServiceNew;
+	transient UserService userServiceNew;
 
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);

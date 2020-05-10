@@ -48,21 +48,21 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/transactioncategory")
 public class TransactionCategoryRestController implements Serializable {
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryRestController.class);
+	private final transient Logger logger = LoggerFactory.getLogger(TransactionCategoryRestController.class);
 	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private transient TransactionCategoryService transactionCategoryService;
 
 	@Autowired
-	private ChartOfAccountService chartOfAccountService;
+	private transient ChartOfAccountService chartOfAccountService;
 
 	@Autowired
-	private UserService userServiceNew;
+	private transient UserService userServiceNew;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private TranscationCategoryHelper transcationCategoryHelper;
+	private transient TranscationCategoryHelper transcationCategoryHelper;
 
 	@ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/gettransactioncategory")
@@ -135,7 +135,7 @@ public class TransactionCategoryRestController implements Serializable {
 			transactionCategoryService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -155,7 +155,7 @@ public class TransactionCategoryRestController implements Serializable {
 			transactionCategoryService.persist(selectedTransactionCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -184,7 +184,7 @@ public class TransactionCategoryRestController implements Serializable {
 			transactionCategoryService.update(selectedTransactionCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

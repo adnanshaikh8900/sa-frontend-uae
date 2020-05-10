@@ -55,37 +55,37 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/rest/bank")
 public class BankAccountController implements Serializable {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(BankAccountController.class);
+	private  final transient Logger logger = LoggerFactory.getLogger(BankAccountController.class);
 
 	@Autowired
-	private BankAccountService bankAccountService;
+	private transient BankAccountService bankAccountService;
 
 	@Autowired
-	private BankAccountStatusService bankAccountStatusService;
+	private transient BankAccountStatusService bankAccountStatusService;
 
 	@Autowired
-	private UserService userServiceNew;
+	private transient UserService userServiceNew;
 
 	@Autowired
-	private CurrencyService currencyService;
+	private transient CurrencyService currencyService;
 
 	@Autowired
-	private BankAccountTypeService bankAccountTypeService;
+	private transient BankAccountTypeService bankAccountTypeService;
 
 	@Autowired
-	private CountryService countryService;
+	private transient CountryService countryService;
 
 	@Autowired
-	private BankAccountRestHelper bankAccountRestHelper;
+	private transient BankAccountRestHelper bankAccountRestHelper;
 
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private BankAccountRestHelper bankRestHelper;
+	private transient BankAccountRestHelper bankRestHelper;
 
 	@Autowired
-	private TransactionService transactionService;
+	private transient TransactionService transactionService;
 
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
@@ -110,8 +110,6 @@ public class BankAccountController implements Serializable {
 			filterDataMap.put(BankAccounrFilterEnum.CURRENCY_CODE,
 					currencyService.findByPK(filterModel.getCurrencyCode()));
 		}
-
-		// filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
 
 		PaginationResponseModel paginatinResponseModel = bankAccountService.getBankAccounts(filterDataMap, filterModel);
 		if (paginatinResponseModel != null) {
@@ -138,7 +136,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -159,7 +157,7 @@ public class BankAccountController implements Serializable {
 			return new ResponseEntity<>(HttpStatus.OK);
 
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -197,7 +195,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -220,7 +218,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -237,7 +235,7 @@ public class BankAccountController implements Serializable {
 
 			return new ResponseEntity<>(bankAccountRestHelper.getModel(bankAccount), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -249,7 +247,7 @@ public class BankAccountController implements Serializable {
 			bankAccountService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -264,7 +262,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -281,7 +279,7 @@ public class BankAccountController implements Serializable {
 					transactionService.getCashInData(monthCount, bankId),
 					transactionService.getCashOutData(monthCount, bankId)), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -292,7 +290,7 @@ public class BankAccountController implements Serializable {
 			BigDecimal totalBalance = bankAccountService.getAllBankAccountsTotalBalance();
 			return new ResponseEntity<>(totalBalance != null ? totalBalance : 0, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

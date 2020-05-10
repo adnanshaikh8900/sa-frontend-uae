@@ -22,7 +22,6 @@ import com.simplevat.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
 import com.simplevat.entity.TransactionCategoryBalance;
 import com.simplevat.entity.User;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.transactioncategorycontroller.TransactionCategoryRestController;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.TransactionCategoryBalanceService;
@@ -33,7 +32,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/transactionCategoryBalance")
 public class TransactionCategoryBalanceController {
-	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryRestController.class);
+	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryBalanceController.class);
 
 	@Autowired
 	private UserService userServiceNew;

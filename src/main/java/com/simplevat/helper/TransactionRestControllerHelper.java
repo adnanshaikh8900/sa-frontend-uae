@@ -59,7 +59,6 @@ public class TransactionRestControllerHelper {
 				.setExplainedTransactionAttachementDescription(model.getExplainedTransactionAttachementDescription());
 		transaction.setExplainedTransactionAttachement(model.getExplainedTransactionAttachement());
 		transaction.setBankAccount(model.getBankAccount());
-		//transaction.setTransactionStatus(model.getTransactionStatus());
 		transaction.setCurrentBalance(model.getCurrentBalance());
 		transaction.setCreatedBy(model.getCreatedBy());
 		transaction.setCreatedDate(model.getCreatedDate());
@@ -100,7 +99,6 @@ public class TransactionRestControllerHelper {
 		transactionModel
 				.setExplainedTransactionAttachementDescription(entity.getExplainedTransactionAttachementDescription());
 		transactionModel.setExplainedTransactionAttachement(entity.getExplainedTransactionAttachement());
-		//transactionModel.setTransactionStatus(entity.getTransactionStatus());
 		transactionModel.setBankAccount(entity.getBankAccount());
 		transactionModel.setCurrentBalance(entity.getCurrentBalance());
 		transactionModel.setCreatedBy(entity.getCreatedBy());
@@ -117,10 +115,7 @@ public class TransactionRestControllerHelper {
 		if (entity.getReferenceType() != null) {
 			if (entity.getReferenceType() == TransactionRefrenceTypeConstant.INVOICE) {
 				transactionModel.setReferenceTypeName("Invoice");
-//                Invoice invoice = invoiceService.findByPK(entity.getReferenceId());
-//                transactionModel.setRefObject(invoice);
-//                transactionModel.setReferenceName("Invoice : " + invoice.getInvoiceReferenceNumber());
-			} else if (entity.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
+		} else if (entity.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
 				transactionModel.setReferenceTypeName("Purchase");
 				Purchase purchase = purchaseService.findByPK(entity.getReferenceId());
 				transactionModel.setRefObject(purchase);
@@ -180,7 +175,6 @@ public class TransactionRestControllerHelper {
 						model.getExplainedTransactionAttachementDescription());
 				transaction.setExplainedTransactionAttachement(model.getExplainedTransactionAttachement());
 				transaction.setBankAccount(model.getBankAccount());
-			//	transaction.setTransactionStatus(model.getTransactionStatus());
 				transaction.setCurrentBalance(model.getCurrentBalance());
 				transaction.setCreatedBy(model.getCreatedBy());
 				transaction.setCreatedDate(model.getCreatedDate());
@@ -223,7 +217,6 @@ public class TransactionRestControllerHelper {
 				transactionModel.setExplainedTransactionAttachementDescription(
 						transaction.getExplainedTransactionAttachementDescription());
 				transactionModel.setExplainedTransactionAttachement(transaction.getExplainedTransactionAttachement());
-			//	transactionModel.setTransactionStatus(transaction.getTransactionStatus());
 				transactionModel.setBankAccount(transaction.getBankAccount());
 				transactionModel.setCurrentBalance(transaction.getCurrentBalance());
 				transactionModel.setCreatedBy(transaction.getCreatedBy());

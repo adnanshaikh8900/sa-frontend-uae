@@ -21,22 +21,22 @@ import com.simplevat.service.UserService;
 @Component
 public class CompanyRestHelper implements Serializable{
 	
-	private final transient Logger logger = LoggerFactory.getLogger(CompanyRestHelper.class);
+	private final Logger logger = LoggerFactory.getLogger(CompanyRestHelper.class);
 	
 	@Autowired
-	private transient IndustryTypeService industryTypeService;
+	private IndustryTypeService industryTypeService;
 
 	@Autowired
-	private transient CountryService countryService;
+	private CountryService countryService;
 
 	@Autowired
-	private transient CompanyTypeService companyTypeService;
+	private CompanyTypeService companyTypeService;
 
 	@Autowired
-	private transient CurrencyService currencyService;
+	private CurrencyService currencyService;
 
 	@Autowired
-	transient UserService userService;
+	UserService userService;
 
 	public List<CompanyListModel> getModelList(List<Company> companyList) {
 		List<CompanyListModel> coModelList = new ArrayList<>();

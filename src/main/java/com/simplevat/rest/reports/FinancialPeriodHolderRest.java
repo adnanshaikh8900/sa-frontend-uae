@@ -6,6 +6,8 @@
 package com.simplevat.rest.reports;
 
 import com.simplevat.model.FinancialPeriodRestModel;
+import lombok.NoArgsConstructor;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,9 +21,6 @@ import java.util.List;
 public class FinancialPeriodHolderRest {
 
     private static final int INITIALYEAR = 2015;
-    /*for sonar error*/
-    private FinancialPeriodHolderRest() {
-    }
 
     public static List<FinancialPeriodRestModel> getFinancialPeriodList() {
         List<FinancialPeriodRestModel> financialPeriodList = new ArrayList<>();
@@ -95,7 +94,6 @@ public class FinancialPeriodHolderRest {
                 }
                 financialPeriod.setName(name);
                 financialPeriodList.add(financialPeriod);
-                /* name = new SimpleDateFormat("MM/dd/yyyy").format(startDate) + " To " + new SimpleDateFormat("MM/dd/yyyy").format(endDate);*/
             }
         }
         return financialPeriodList;

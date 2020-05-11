@@ -36,10 +36,10 @@ import io.swagger.annotations.ApiOperation;
 public class TaxTransactionController implements Serializable {
 
 	@Autowired
-	private transient TaxTransactionService taxTransactionService;
+	private  TaxTransactionService taxTransactionService;
 
 	@Autowired
-	private transient TaxTranscationRestHelper taxTranscationRestHelper;
+	private  TaxTranscationRestHelper taxTranscationRestHelper;
 
 	@ApiOperation(value = "Get Open Tax Transaction List")
 	@GetMapping(value = "/getOpenTaxTransaction")

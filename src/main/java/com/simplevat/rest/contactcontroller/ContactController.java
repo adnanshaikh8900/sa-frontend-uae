@@ -39,13 +39,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rest/contact")
 public class ContactController implements Serializable {
 
-	private final transient Logger logger = LoggerFactory.getLogger(ContactController.class);
+	private final Logger logger = LoggerFactory.getLogger(ContactController.class);
 
 	@Autowired
-	private transient ContactService contactService;
+	private ContactService contactService;
 
 	@Autowired
-	private transient ContactHelper contactHelper;
+	private ContactHelper contactHelper;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;

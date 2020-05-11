@@ -46,13 +46,13 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/rest/project")
 public class ProjectController implements Serializable {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
+	private  final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
 	@Autowired
-	private transient ProjectService projectService;
+	private  ProjectService projectService;
 
 	@Autowired
-	private transient ProjectRestHelper projectRestHelper;
+	private  ProjectRestHelper projectRestHelper;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;

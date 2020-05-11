@@ -13,7 +13,7 @@ import java.util.Map;
 public abstract class InvoiceService extends SimpleVatService<Integer, Invoice> {
 
 	public abstract PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> map,
-			PaginationModel paginationModel);
+														   PaginationModel paginationModel);
 
 	public abstract List<DropdownModel> getInvoicesForDropdown();
 

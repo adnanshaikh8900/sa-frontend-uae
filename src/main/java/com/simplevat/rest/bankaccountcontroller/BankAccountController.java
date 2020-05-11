@@ -55,37 +55,37 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/rest/bank")
 public class BankAccountController implements Serializable {
 
-	private  final transient Logger logger = LoggerFactory.getLogger(BankAccountController.class);
+	private  final Logger logger = LoggerFactory.getLogger(BankAccountController.class);
 
 	@Autowired
-	private transient BankAccountService bankAccountService;
+	private BankAccountService bankAccountService;
 
 	@Autowired
-	private transient BankAccountStatusService bankAccountStatusService;
+	private BankAccountStatusService bankAccountStatusService;
 
 	@Autowired
-	private transient UserService userServiceNew;
+	private UserService userServiceNew;
 
 	@Autowired
-	private transient CurrencyService currencyService;
+	private CurrencyService currencyService;
 
 	@Autowired
-	private transient BankAccountTypeService bankAccountTypeService;
+	private BankAccountTypeService bankAccountTypeService;
 
 	@Autowired
-	private transient CountryService countryService;
+	private CountryService countryService;
 
 	@Autowired
-	private transient BankAccountRestHelper bankAccountRestHelper;
+	private BankAccountRestHelper bankAccountRestHelper;
 
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private transient BankAccountRestHelper bankRestHelper;
+	private BankAccountRestHelper bankRestHelper;
 
 	@Autowired
-	private transient TransactionService transactionService;
+	private TransactionService transactionService;
 
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")

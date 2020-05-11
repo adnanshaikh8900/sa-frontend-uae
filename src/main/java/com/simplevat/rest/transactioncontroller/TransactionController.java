@@ -73,57 +73,57 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/transaction")
 public class TransactionController implements Serializable {
-	 final transient Logger logger = LoggerFactory.getLogger(TransactionController.class);
+	 private final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private transient TransactionService transactionService;
+	private TransactionService transactionService;
 
 	@Autowired
-	private transient BankAccountService bankAccountService;
+	private BankAccountService bankAccountService;
 
 	@Autowired
-	private transient ChartOfAccountService chartOfAccountService;
+	private ChartOfAccountService chartOfAccountService;
 
 	@Autowired
-	private transient TransactionHelper transactionHelper;
+	private TransactionHelper transactionHelper;
 
 	@Autowired
-	private transient ChartUtil chartUtil;
+	private ChartUtil chartUtil;
 
 	@Autowired
-	private transient TransactionCategoryService transactionCategoryService;
+	private TransactionCategoryService transactionCategoryService;
 
 	@Autowired
-	private transient ReconsilationRestHelper reconsilationRestHelper;
+	private ReconsilationRestHelper reconsilationRestHelper;
 
 	@Autowired
-	private transient JournalService journalService;
+	private JournalService journalService;
 
 	@Autowired
-	private transient BankAccountService bankService;
+	private BankAccountService bankService;
 
 	@Autowired
-	private transient ChartOfAccountCategoryService chartOfAccountCategoryService;
+	private ChartOfAccountCategoryService chartOfAccountCategoryService;
 
 	@Autowired
-	private transient VatCategoryService vatCategoryService;
+	private VatCategoryService vatCategoryService;
 
 	@Autowired
-	private transient EmployeeService employeeService;
+	private EmployeeService employeeService;
 
 	@Autowired
-	private transient ContactService contactService;
+	private ContactService contactService;
 
 	@Autowired
-	private transient TransactionStatusService transactionStatusService;
+	private TransactionStatusService transactionStatusService;
 
 	@Autowired
-	private transient DateFormatUtil dateFormatUtil;
+	private DateFormatUtil dateFormatUtil;
 
 	@Autowired
-	private transient FileHelper fileHelper;
+	private FileHelper fileHelper;
 
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")

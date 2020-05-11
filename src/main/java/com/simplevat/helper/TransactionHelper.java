@@ -57,6 +57,63 @@ public class TransactionHelper {
 	@Autowired
 	private TransactionStatusService transactionStatusService;
 
+//	public Transaction getEntity(TransactionPresistModel transactionModel) {
+//		Transaction transaction = new Transaction();
+//
+//		if (transactionModel.getId() != null) {
+//			transaction = transactionService.findByPK(transactionModel.getId());
+//		}
+//
+//		BigDecimal currentBal = BigDecimal.valueOf(0);
+//
+//		if (transactionModel.getBankAccountId() != null) {
+//			BankAccount bankAccount = bankAccountService.getBankAccountById(transactionModel.getBankAccountId());
+//			bankAccount.setBankAccountId(transactionModel.getBankAccountId());
+//			transaction.setBankAccount(bankAccount);
+//			currentBal = bankAccount.getCurrentBalance();
+//		}
+//
+//		if (transactionModel.getChartOfAccountId() != null) {
+//			ChartOfAccount chartOfAccount = chartOfAccountService
+//					.getChartOfAccount(transactionModel.getChartOfAccountId());
+//			chartOfAccount.setChartOfAccountId(transactionModel.getChartOfAccountId());
+//			transaction.setChartOfAccount(chartOfAccount);
+//			transaction.setDebitCreditFlag(chartOfAccount.getDebitCreditFlag());
+//
+//			boolean isdebitFromBank = chartOfAccount.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
+//					|| (chartOfAccount.getParentChartOfAccount() != null
+//							&& chartOfAccount.getParentChartOfAccount().getChartOfAccountId() != null
+//							&& chartOfAccount.getParentChartOfAccount().getChartOfAccountId()
+//									.equals(ChartOfAccountConstant.MONEY_IN)) ? Boolean.TRUE : Boolean.FALSE;
+//
+//			transaction.setCurrentBalance(isdebitFromBank ? currentBal.subtract(transactionModel.getTransactionAmount())
+//					: currentBal.add(transactionModel.getTransactionAmount()));
+//			transaction.getBankAccount().setCurrentBalance(currentBal);
+//		}
+//
+//		if (transactionModel.getTransactionDate() != null) {
+//			LocalDateTime trnxDate = Instant.ofEpochMilli(transactionModel.getTransactionDate().getTime())
+//					.atZone(ZoneId.systemDefault()).toLocalDateTime();
+//			transaction.setTransactionDate(trnxDate);
+//		}
+//		if (transactionModel.getTransactionCategoryId() != null) {
+//			TransactionCategory transactionCategory = transactionCategoryService
+//					.findByPK(transactionModel.getTransactionCategoryId());
+//			transaction.setExplainedTransactionCategory(transactionCategory);
+//		}
+//		transaction.setTransactionDescription(transactionModel.getTransactionDescription());
+//		if (transactionModel.getProjectId() != null) {
+//			Project project = projectService.findByPK(transactionModel.getProjectId());
+//			transaction.setProject(project);
+//		}
+//		transaction.setTransactionAmount(transactionModel.getTransactionAmount());
+//		transaction.setReceiptNumber(transactionModel.getReceiptNumber());
+//		transaction.setExplainedTransactionAttachementDescription(transactionModel.getAttachementDescription());
+//		transaction.setCreationMode(TransactionCreationMode.MANUAL);
+//		return transaction;
+//	}
+
+
 	public List<TransactionViewModel> getModelList(Object trasactionList) {
 
 		List<TransactionViewModel> transactionModelList = new ArrayList<>();

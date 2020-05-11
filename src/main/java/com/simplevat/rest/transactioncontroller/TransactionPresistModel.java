@@ -48,7 +48,7 @@ public class TransactionPresistModel implements Serializable {
 	private Integer reconsileBankId;
 
 	// SALES
-	private transient List<ReconsileRequestLineItemModel> invoiceIdList;
+	private List<ReconsileRequestLineItemModel> invoiceIdList;
 
 	private TransactionExplinationStatusEnum explinationStatusEnum;
 

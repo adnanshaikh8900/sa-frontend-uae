@@ -37,7 +37,7 @@ import com.simplevat.utils.FileHelper;
 @Component
 public class ExpenseRestHelper {
 
-	private final transient Logger LOGGER = LoggerFactory.getLogger(ExpenseRestHelper.class);
+	private final Logger logger = LoggerFactory.getLogger(ExpenseRestHelper.class);
 
 	@Autowired
 	private VatCategoryService vatCategoryService;
@@ -153,7 +153,7 @@ public class ExpenseRestHelper {
 
 			return expenseModel;
 		} catch (Exception e) {
-			LOGGER.error("Error = ", e);
+			logger.error("Error = ", e);
 		}
 		return null;
 	}

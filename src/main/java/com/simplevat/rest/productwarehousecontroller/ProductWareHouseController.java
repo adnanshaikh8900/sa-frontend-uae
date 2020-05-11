@@ -31,10 +31,10 @@ import io.swagger.annotations.ApiOperation;
 public class ProductWareHouseController implements Serializable {
 
 	@Autowired
-	private transient ProductWareHouseRestHelper productWareHouseRestHelper;
+	private  ProductWareHouseRestHelper productWareHouseRestHelper;
 
 	@Autowired
-	private transient ProductWarehouseService productWarehouseService;
+	private ProductWarehouseService productWarehouseService;
 
 	@ApiOperation(value = "get Ware House List")
 	@GetMapping(value = "/getWareHouse")

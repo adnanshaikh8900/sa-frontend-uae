@@ -18,6 +18,7 @@ import com.simplevat.utils.DateFormatUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,8 +89,8 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
 				&& reportRequestModel.getReportBasis().equals("CASH")) {
 			query.setParameter("transactionCategoryIdList",
-					new String[]{TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
-							TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode()});
+					Arrays.asList(TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
+							TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode()));
 		}
 		List<JournalLineItem> list = query.getResultList();
 		return list != null && !list.isEmpty() ? list : null;

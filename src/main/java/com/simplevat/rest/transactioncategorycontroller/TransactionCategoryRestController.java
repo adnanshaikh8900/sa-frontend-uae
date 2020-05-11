@@ -50,19 +50,19 @@ import io.swagger.annotations.ApiOperation;
 public class TransactionCategoryRestController implements Serializable {
 	private final transient Logger logger = LoggerFactory.getLogger(TransactionCategoryRestController.class);
 	@Autowired
-	private transient TransactionCategoryService transactionCategoryService;
+	private  TransactionCategoryService transactionCategoryService;
 
 	@Autowired
-	private transient ChartOfAccountService chartOfAccountService;
+	private  ChartOfAccountService chartOfAccountService;
 
 	@Autowired
-	private transient UserService userServiceNew;
+	private  UserService userServiceNew;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private transient TranscationCategoryHelper transcationCategoryHelper;
+	private TranscationCategoryHelper transcationCategoryHelper;
 
 	@ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/gettransactioncategory")

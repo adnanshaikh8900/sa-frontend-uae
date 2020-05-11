@@ -59,32 +59,32 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/rest/transactionimport")
 public class TransactionImportController implements Serializable {
 
-	private transient final Logger logger = LoggerFactory.getLogger(TransactionImportController.class);
+	private  final Logger logger = LoggerFactory.getLogger(TransactionImportController.class);
 	@Autowired
-	private transient CsvParser csvParser;
+	private CsvParser csvParser;
 
 	@Autowired
-	private transient ExcelParser excelParser;
+	private ExcelParser excelParser;
 
 	@Autowired
-	private transient FileHelper fileHelper;
+	private FileHelper fileHelper;
 
 	@Autowired
-	private transient BankAccountService bankAccountService;
+	private BankAccountService bankAccountService;
 
 	@Autowired
-	private transient TransactionService transactionService;
+	private TransactionService transactionService;
 
 	@Autowired
-	private transient UserService userServiceNew;
+	private UserService userServiceNew;
 
 	@Autowired
-	private transient TransactionParsingSettingService transactionParsingSettingService;
+	private TransactionParsingSettingService transactionParsingSettingService;
 	@Autowired
-	private transient TransactionParsingSettingRestHelper transactionParsingSettingRestHelper;
+	private TransactionParsingSettingRestHelper transactionParsingSettingRestHelper;
 
 	@Autowired
-	private transient	TransactionImportRestHelper transactionImportRestHelper;
+	private	TransactionImportRestHelper transactionImportRestHelper;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -128,6 +128,7 @@ public class TransactionImportController implements Serializable {
 		}
 	}
 
+	@Deprecated
 	@ApiOperation(value = "Save Import Transaction")
 	@PostMapping(value = "/saveimporttransaction")
 	public ResponseEntity<Integer> saveTransactions(@RequestBody List<TransactionModel> transactionList,

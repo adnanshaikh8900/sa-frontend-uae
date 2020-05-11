@@ -214,7 +214,7 @@ public class PurchaseRestController {
 		}
 	}
 
-
+	@Deprecated
 	@GetMapping(value = "/currencys")
 	public ResponseEntity getCurrency() {
 		try {

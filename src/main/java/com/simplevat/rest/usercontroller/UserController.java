@@ -63,31 +63,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/rest/user")
 public class UserController implements Serializable {
 
-	private transient Logger logger = LoggerFactory.getLogger(UserController.class);
+	private  Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
-	private transient UserService userService;
+	private UserService userService;
 
 	@Autowired
-	private transient FileHelper fileUtility;
+	private  FileHelper fileUtility;
 
 	@Autowired
-	private transient RoleService roleService;
+	private  RoleService roleService;
 
 	@Autowired
-	private static ConfigurationService configurationService;
+	private  ConfigurationService configurationService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private transient CompanyService companyService;
+	private  CompanyService companyService;
 
 	@Autowired
-	private transient UserRestHelper userRestHelper;
+	private UserRestHelper userRestHelper;
 
 	@Autowired
-	private transient MailIntegration mailIntegration;
+	private MailIntegration mailIntegration;
 
 	private boolean isEmailPresent = false;
 

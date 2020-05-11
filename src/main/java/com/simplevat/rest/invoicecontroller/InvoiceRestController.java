@@ -252,4 +252,3 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 		}
 	}
 }
-

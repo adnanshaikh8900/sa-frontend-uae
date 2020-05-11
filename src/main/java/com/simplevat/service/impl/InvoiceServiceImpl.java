@@ -59,9 +59,8 @@ public class InvoiceServiceImpl extends InvoiceService {
 		Invoice invoice = supplierInvoiceDao.getLastInvoice();
 		if (invoice != null) {
 			try {
-				return Integer.parseInt(invoice.getReferenceNumber()) + 1;
+				return new Integer(invoice.getReferenceNumber()) + 1;
 			} catch (Exception e) {
-
 				return 0;
 			}
 		}

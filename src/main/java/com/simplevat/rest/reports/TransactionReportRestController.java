@@ -102,7 +102,7 @@ public class TransactionReportRestController {
 	}
 
 	@ApiOperation(value = "Get Account Balance Report")
-	@GetMapping(value = "/accountBalanceReport")
+	@PostMapping(value = "/accountBalanceReport")
 	public ResponseEntity<List<TransactionRestModel>> view(
 			@RequestParam(value = "transactionTypeCode", required = false) Integer transactionTypeCode,
 			@RequestParam(value = "transactionCategoryId", required = false) Integer transactionCategoryId,

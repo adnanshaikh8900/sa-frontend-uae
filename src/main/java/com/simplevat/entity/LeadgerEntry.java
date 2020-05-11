@@ -47,11 +47,6 @@ public class LeadgerEntry implements Serializable {
     @Column(name = "balance")
     private Double balance;
 
-//    @Nullable
-//    @ManyToOne
-//    @JoinColumn(name = "transcation_id")
-//    private com.simplevat.entity.dummy.Transaction transaction;
-
     @Column(name = "created_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;

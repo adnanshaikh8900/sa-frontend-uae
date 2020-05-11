@@ -3,8 +3,6 @@ package com.simplevat.service.impl.bankaccount;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -18,17 +16,13 @@ import com.simplevat.dao.bankaccount.BankAccountDao;
 import com.simplevat.dao.bankaccount.TransactionDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.model.ChartData;
 import com.simplevat.model.DashBoardBankDataModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.BankAccountService;
-import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.DateUtils;
 
-import org.apache.commons.lang3.StringUtils;
 
 @Service("bankAccountService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

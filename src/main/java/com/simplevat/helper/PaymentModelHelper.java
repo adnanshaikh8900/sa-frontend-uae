@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PaymentModelHelper {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(PaymentModelHelper.class);
+	private final Logger logger = LoggerFactory.getLogger(PaymentModelHelper.class);
 
 	public Payment convertToPayment(PaymentPersistModel paymentModel) {
 		Payment payment = new Payment();
@@ -91,7 +91,7 @@ public class PaymentModelHelper {
 		try {
 			paymentService.deleteByIds(paymentIds.getIds());
 		} catch (Exception e) {
-			LOGGER.error("Error = " + e);
+			logger.error("Error = " + e);
 		}
 	}
 }

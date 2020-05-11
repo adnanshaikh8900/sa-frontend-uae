@@ -27,7 +27,6 @@ import com.simplevat.utils.MailUtility;
 import io.swagger.annotations.ApiOperation;
 
 import java.io.File;
-import java.io.Serializable;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -61,27 +60,27 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/rest/user")
-public class UserController implements Serializable {
+public class UserController{
 
-	private static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+	private  Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private UserService userService;
 
 	@Autowired
-	private FileHelper fileUtility;
+	private  FileHelper fileUtility;
 
 	@Autowired
-	private RoleService roleService;
+	private  RoleService roleService;
 
 	@Autowired
-	private ConfigurationService configurationService;
+	private  ConfigurationService configurationService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private CompanyService companyService;
+	private  CompanyService companyService;
 
 	@Autowired
 	private UserRestHelper userRestHelper;
@@ -95,7 +94,7 @@ public class UserController implements Serializable {
 	@GetMapping(value = "/getList")
 	public ResponseEntity getUserList(UserRequestFilterModel filterModel) {
 		try {
-			Map<UserFilterEnum, Object> filterDataMap = new HashMap<UserFilterEnum, Object>();
+			Map<UserFilterEnum, Object> filterDataMap = new HashMap<>();
 			filterDataMap.put(UserFilterEnum.FIRST_NAME, filterModel.getName());
 			filterDataMap.put(UserFilterEnum.DELETE_FLAG, false);
 			if (filterModel.getActive() != null)
@@ -122,7 +121,7 @@ public class UserController implements Serializable {
 			}
 
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -142,7 +141,7 @@ public class UserController implements Serializable {
 			return new ResponseEntity(HttpStatus.OK);
 
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -155,9 +154,9 @@ public class UserController implements Serializable {
 			userService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
-		LOGGER.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
+		logger.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -194,7 +193,6 @@ public class UserController implements Serializable {
 				user.setLastUpdatedBy(creatingUser.getUserId());
 				if (user.getUserId() == null) {
 					userService.persist(user);
-//                    sendNewUserMail(user, password);
 					return new ResponseEntity("User Profile saved successfully", HttpStatus.OK);
 				} else {
 					userService.update(user, user.getUserId());
@@ -202,9 +200,9 @@ public class UserController implements Serializable {
 				}
 			}
 		} catch (Exception ex) {
-			LOGGER.error("Error", ex);
+			logger.error("Error", ex);
 		}
-		LOGGER.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
+		logger.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -225,7 +223,7 @@ public class UserController implements Serializable {
 			userService.update(user);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
+			logger.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -240,7 +238,7 @@ public class UserController implements Serializable {
 			}
 			return new ResponseEntity<>(userRestHelper.getModel(user), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -288,27 +286,24 @@ public class UserController implements Serializable {
 					.getEMailConfigurationList(configurationService.getConfigurationList());
 			sendActivationMail(mailEnum, mimeMultipart, mailDefaultConfigurationModel.getMailusername(), email);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return null;
 	}
 
 	private void sendActivationMail(MailEnum mailEnum, MimeMultipart mimeMultipart, String userName,
 			String[] senderMailAddress) {
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Mail mail = new Mail();
-					mail.setFrom(userName);
-					mail.setFromName(EmailConstant.ADMIN_EMAIL_SENDER_NAME);
-					mail.setTo(senderMailAddress);
-					mail.setSubject(mailEnum.getSubject());
-					mailIntegration.sendHtmlEmail(mimeMultipart, mail,
-							MailUtility.getJavaMailSender(configurationService.getConfigurationList()),false);
-				} catch (Exception ex) {
-					LOGGER.error("Error", ex);
-				}
+		Thread t = new Thread(() -> {
+			try {
+				Mail mail = new Mail();
+				mail.setFrom(userName);
+				mail.setFromName(EmailConstant.ADMIN_EMAIL_SENDER_NAME);
+				mail.setTo(senderMailAddress);
+				mail.setSubject(mailEnum.getSubject());
+				mailIntegration.sendHtmlEmail(mimeMultipart, mail,
+						MailUtility.getJavaMailSender(configurationService.getConfigurationList()),false);
+			} catch (Exception ex) {
+				logger.error("Error", ex);
 			}
 		});
 		t.start();

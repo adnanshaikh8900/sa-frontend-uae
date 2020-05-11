@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/rest/currency")
 public class CurrencyController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(CurrencyController.class);
+	private final Logger logger = LoggerFactory.getLogger(CurrencyController.class);
 
 	@Autowired
 	private CurrencyService currencyService;
@@ -61,7 +61,7 @@ public class CurrencyController {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -77,7 +77,7 @@ public class CurrencyController {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -92,7 +92,7 @@ public class CurrencyController {
 			currencyService.persist(currency);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -118,7 +118,7 @@ public class CurrencyController {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -140,7 +140,7 @@ public class CurrencyController {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

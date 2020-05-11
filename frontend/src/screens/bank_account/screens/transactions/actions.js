@@ -16,6 +16,7 @@ export const getTransactionList = (obj) => {
   let param = `/rest/transaction/list?bankId=${id}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`;
   if (transactionDate !== '') {
     let date = moment(transactionDate).format('DD-MM-YYYY');
+    console.log(date);
     param = param + `&transactionDate=${date}`;
   }
   return (dispatch) => {
@@ -143,6 +144,7 @@ export const getChartOfCategoryList = (type) => {
 };
 
 export const getTransactionCategoryListForExplain = (id) => {
+  console.log(id);
   return (dispatch) => {
     let data = {
       method: 'get',

@@ -1,6 +1,5 @@
 package com.simplevat.rest.bankaccountcontroller;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -53,9 +52,9 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/bank")
-public class BankAccountController implements Serializable {
+public class BankAccountController{
 
-	private final Logger LOGGER = LoggerFactory.getLogger(BankAccountController.class);
+	private  final Logger logger = LoggerFactory.getLogger(BankAccountController.class);
 
 	@Autowired
 	private BankAccountService bankAccountService;
@@ -111,8 +110,6 @@ public class BankAccountController implements Serializable {
 					currencyService.findByPK(filterModel.getCurrencyCode()));
 		}
 
-		// filterDataMap.put(BankAccounrFilterEnum.ORDER_BY, "DESC");
-
 		PaginationResponseModel paginatinResponseModel = bankAccountService.getBankAccounts(filterDataMap, filterModel);
 		if (paginatinResponseModel != null) {
 			return new ResponseEntity<>(bankAccountRestHelper.getListModel(paginatinResponseModel), HttpStatus.OK);
@@ -138,7 +135,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -159,7 +156,7 @@ public class BankAccountController implements Serializable {
 			return new ResponseEntity<>(HttpStatus.OK);
 
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -197,7 +194,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -220,7 +217,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -237,7 +234,7 @@ public class BankAccountController implements Serializable {
 
 			return new ResponseEntity<>(bankAccountRestHelper.getModel(bankAccount), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -249,7 +246,7 @@ public class BankAccountController implements Serializable {
 			bankAccountService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -264,7 +261,7 @@ public class BankAccountController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -281,7 +278,7 @@ public class BankAccountController implements Serializable {
 					transactionService.getCashInData(monthCount, bankId),
 					transactionService.getCashOutData(monthCount, bankId)), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -292,7 +289,7 @@ public class BankAccountController implements Serializable {
 			BigDecimal totalBalance = bankAccountService.getAllBankAccountsTotalBalance();
 			return new ResponseEntity<>(totalBalance != null ? totalBalance : 0, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

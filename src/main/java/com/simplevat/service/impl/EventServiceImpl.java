@@ -27,7 +27,6 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public List<Event> getEvents() {
             return new ArrayList<Event>();
-//		return invoiceService.getInvoiceAsEvent();
 	}
 
 }

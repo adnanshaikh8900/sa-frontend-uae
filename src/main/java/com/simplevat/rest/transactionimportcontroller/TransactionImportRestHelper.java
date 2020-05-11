@@ -254,12 +254,7 @@ public class TransactionImportRestHelper {
 					for (String invalidHeading : invalidHeaderTransactionList) {
 						validationMessage.append(invalidHeading).append("  ");
 					}
-//	                    validationMessage.append(" heading should be (" + TransactionStatusConstant.TRANSACTION_DATE + "," + TransactionStatusConstant.DESCRIPTION + "," + TransactionStatusConstant.DEBIT_AMOUNT + "," + TransactionStatusConstant.CREDIT_AMOUNT + ")");
-//	                    FacesMessage message = new FacesMessage(validationMessage.toString());
-//	                    message.setSeverity(FacesMessage.SEVERITY_ERROR);
-//	                    FacesContext.getCurrentInstance().addMessage("validationId", message);
 				}
-
 			}
 		} catch (Exception ex) {
 			LOGGER.error("Error", ex);

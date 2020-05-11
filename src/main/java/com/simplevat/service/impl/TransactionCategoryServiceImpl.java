@@ -96,11 +96,11 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	public TransactionCategory getDefaultTransactionCategoryByTransactionCategoryId(Integer transactionCategoryId) {
 		return dao.getDefaultTransactionCategoryByTransactionCategoryId(transactionCategoryId);
 	}
-
+	@Override
 	public void persist(TransactionCategory transactionCategory) {
 		super.persist(transactionCategory, null, getActivity(transactionCategory, "CREATED"));
 	}
-
+	@Override
 	public TransactionCategory update(TransactionCategory transactionCategory) {
 		return super.update(transactionCategory, null, getActivity(transactionCategory, "UPDATED"));
 	}

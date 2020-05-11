@@ -2,7 +2,6 @@ package com.simplevat.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +15,9 @@ import com.simplevat.dao.Dao;
 import com.simplevat.dao.ProductCategoryDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.ProductCategory;
-import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ProductCategoryService;
-import com.simplevat.service.SimpleVatService;
 
 @Service("ProductCategoryService")
 public class ProductCategoryServiceImpl extends ProductCategoryService {

@@ -2,7 +2,6 @@ package com.simplevat.service.impl;
 
 import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
 import com.simplevat.dao.CompanyDao;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

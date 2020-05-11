@@ -37,9 +37,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rest/contact")
-public class ContactController implements Serializable {
+public class ContactController{
 
-	private final Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
+	private final Logger logger = LoggerFactory.getLogger(ContactController.class);
 
 	@Autowired
 	private ContactService contactService;
@@ -71,7 +71,7 @@ public class ContactController implements Serializable {
 			}
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error =", e);
+			logger.error("Error =", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -94,14 +94,14 @@ public class ContactController implements Serializable {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 		try {
-			Contact contact = contactHelper.getEntity(contactPersistModel, userId);
+			Contact contact = contactHelper.getEntity(contactPersistModel);
 			contact.setCreatedBy(userId);
 			contact.setCreatedDate(LocalDateTime.now());
 			contact.setDeleteFlag(false);
 			contactService.persist(contact);
 			return new ResponseEntity<>(contactHelper.getModel(contact), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error =", e);
+			logger.error("Error =", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -113,14 +113,14 @@ public class ContactController implements Serializable {
 
 		try {
 			if (contactPersistModel.getContactId() != null && contactPersistModel.getContactId() > 0) {
-				Contact contact = contactHelper.getEntity(contactPersistModel, userId);
+				Contact contact = contactHelper.getEntity(contactPersistModel);
 				contact.setLastUpdatedBy(userId);
 				contact.setLastUpdateDate(LocalDateTime.now());
 				contactService.update(contact);
 			}
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error =", e);
+			logger.error("Error =", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -149,7 +149,7 @@ public class ContactController implements Serializable {
 			contactService.deleleByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error =", e);
+			logger.error("Error =", e);
 		}
 
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

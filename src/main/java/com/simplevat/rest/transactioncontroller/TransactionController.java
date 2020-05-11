@@ -6,7 +6,6 @@
 package com.simplevat.rest.transactioncontroller;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +43,6 @@ import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
-import com.simplevat.entity.InvoiceLineItem;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.Transaction;
@@ -52,7 +50,6 @@ import com.simplevat.entity.bankaccount.TransactionStatus;
 import com.simplevat.helper.TransactionHelper;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
-import com.simplevat.rest.invoicecontroller.InvoiceLineItemModel;
 import com.simplevat.rest.reconsilationcontroller.ReconsilationRestHelper;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
@@ -77,8 +74,8 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/transaction")
-public class TransactionController implements Serializable {
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionController.class);
+public class TransactionController{
+	 private final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
@@ -146,7 +143,7 @@ public class TransactionController implements Serializable {
 				dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getTransactionDate()).getTime())
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 			} catch (ParseException e) {
-				LOGGER.error("Error", e);
+				logger.error("Error", e);
 			}
 			dataMap.put(TransactionFilterEnum.TRANSACTION_DATE, dateTime);
 		}
@@ -236,7 +233,7 @@ public class TransactionController implements Serializable {
 								new TypeReference<List<ReconsileRequestLineItemModel>>() {
 								});
 					} catch (IOException ex) {
-						LOGGER.error("Error", ex);
+						logger.error("Error", ex);
 					}
 				}
 				
@@ -278,7 +275,7 @@ public class TransactionController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -385,7 +382,7 @@ public class TransactionController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -409,7 +406,7 @@ public class TransactionController implements Serializable {
 			transactionService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -425,26 +422,6 @@ public class TransactionController implements Serializable {
 		}
 	}
 
-//    @ApiOperation(value = "Update Bank Account", response = BankAccount.class)
-//    @PutMapping("/{bankAccountId}")
-//    public ResponseEntity updateBankAccount(@PathVariable("bankAccountId") Integer bankAccountId, BankModel bankModel, HttpServletRequest request) {
-//        try {
-//            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//            bankModel.setBankAccountId(bankAccountId);
-//            BankAccount bankAccount = BankHelper.getBankAccountByBankAccountModel(bankModel, bankAccountService, bankAccountStatusService, currencyService, bankAccountTypeService, countryService);
-//            User user = userServiceNew.findByPK(userId);
-//            bankAccount.setBankAccountId(bankModel.getBankAccountId());
-//            bankAccount.setLastUpdateDate(LocalDateTime.now());
-//            bankAccount.setLastUpdatedBy(user.getUserId());
-//            bankAccountService.update(bankAccount);
-//            return new ResponseEntity<>(HttpStatus.OK);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-
 	@GetMapping(value = "/getCashFlow")
 	public ResponseEntity getCashFlow(@RequestParam int monthNo) {
 		try {
@@ -452,7 +429,7 @@ public class TransactionController implements Serializable {
 					transactionService.getCashOutData(monthNo, null));
 			return new ResponseEntity<>(obj, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

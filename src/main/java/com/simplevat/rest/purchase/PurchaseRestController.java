@@ -16,11 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.InvoicePurchaseStatusConstant;
@@ -50,7 +46,7 @@ import com.simplevat.service.VatCategoryService;
 @RestController
 @RequestMapping("/rest/purchase")
 public class PurchaseRestController {
-	private final Logger LOGGER = LoggerFactory.getLogger(PurchaseRestController.class);
+	private final Logger logger = LoggerFactory.getLogger(PurchaseRestController.class);
 	@Autowired
 	private PurchaseService purchaseService;
 
@@ -71,7 +67,7 @@ public class PurchaseRestController {
 	@Autowired
 	PurchaseRestControllerHelper purchaseControllerRestHelper;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/populatepurchases")
+	@GetMapping(value = "/populatepurchases")
 	public ResponseEntity populatePurchases() {
 		List<PurchaseRestModel> purchaseModels = new ArrayList<>();
 		try {
@@ -105,57 +101,49 @@ public class PurchaseRestController {
 			}
 			return new ResponseEntity(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/vieworedit")
+	@GetMapping(value = "/vieworedit")
 	public ResponseEntity viewOrEditPurchase(@RequestParam("purchaseId") Integer purchaseId) {
 		try {
 			PurchaseRestModel selectedPurchaseModel;
 			Purchase purchase = purchaseService.findByPK(purchaseId);
 			selectedPurchaseModel = purchaseControllerRestHelper.getPurchaseModel(purchase);
-
-//            if (selectedPurchaseModel.getReceiptAttachmentBinary() != null) {
-//                InputStream stream = new ByteArrayInputStream(selectedPurchaseModel.getReceiptAttachmentBinary());
-//                selectedPurchaseModel.setAttachmentFileContent(new DefaultStreamedContent(stream));
-//            }
 			return new ResponseEntity(selectedPurchaseModel, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "/delete")
+	@DeleteMapping(value = "/delete")
 	public ResponseEntity deletePurchase(@RequestParam("purchaseId") Integer purchaseId) {
 		try {
-//              PurchaseRestModel selectedPurchaseModel;
 			Purchase purchase = purchaseService.findByPK(purchaseId);
-//            selectedPurchaseModel = purchaseControllerRestHelper.getPurchaseModel(purchase);
-//            Purchase purchase = purchaseControllerRestHelper.getPurchase(selectedPurchaseModel);
 			purchase.setDeleteFlag(true);
 			purchaseService.update(purchase);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "/deletes")
+	@DeleteMapping(value = "/deletes")
 	public ResponseEntity deletePurchases(@RequestBody DeleteModel purchaseIds) {
 		try {
 			purchaseService.deleteByIds(purchaseIds.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/allpaidpurchase")
+	@GetMapping(value = "/allpaidpurchase")
 	public ResponseEntity<List<PurchaseRestModel>> allPaidPurchase() {
 		try {
 			List<PurchaseRestModel> purchaseModels = new ArrayList<>();
@@ -166,12 +154,12 @@ public class PurchaseRestController {
 			}
 			return new ResponseEntity(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/allunpaidpurchase")
+	@GetMapping(value = "/allunpaidpurchase")
 	public ResponseEntity<List<PurchaseRestModel>> allUnPaidPurchase() {
 		try {
 			List<PurchaseRestModel> purchaseModels = new ArrayList<>();
@@ -182,12 +170,12 @@ public class PurchaseRestController {
 			}
 			return new ResponseEntity(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/allpartialpaidpurchase")
+	@GetMapping(value = "/allpartialpaidpurchase")
 	public ResponseEntity allPartialPaidPurchase() {
 		try {
 			List<PurchaseRestModel> purchaseModels = new ArrayList<>();
@@ -198,22 +186,22 @@ public class PurchaseRestController {
 			}
 			return new ResponseEntity(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/claimants")
+	@GetMapping(value = "/claimants")
 	public ResponseEntity getClaimants() {
 		try {
 			return new ResponseEntity(userServiceNew.executeNamedQuery("findAllUsers"), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/categories")
+	@GetMapping(value = "/categories")
 	public ResponseEntity getCategory() {
 		try {
 			List<TransactionCategory> transactionCategoryList = transactionCategoryService
@@ -221,13 +209,13 @@ public class PurchaseRestController {
 							TransactionCategoryConsatant.TRANSACTION_CATEGORY_PURCHASE);
 			return new ResponseEntity(transactionCategoryList, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
 	@Deprecated
-	@RequestMapping(method = RequestMethod.GET, value = "/currencys")
+	@GetMapping(value = "/currencys")
 	public ResponseEntity getCurrency() {
 		try {
 			List<Currency> currencies = currencyService.getCurrencies();
@@ -237,12 +225,12 @@ public class PurchaseRestController {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/projects")
+	@GetMapping(value = "/projects")
 	public ResponseEntity projects(@RequestParam("projectName") String searchQuery) {
 		try {
 			ProjectCriteria criteria = new ProjectCriteria();
@@ -253,22 +241,22 @@ public class PurchaseRestController {
 			List<Project> projects = projectService.getProjectsByCriteria(criteria);
 			return new ResponseEntity(projects, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/vatcategories")
-	public ResponseEntity vatCategorys(@RequestParam("vatSearchString") String searchQuery) throws Exception {
+	@GetMapping(value = "/vatcategories")
+	public ResponseEntity vatCategorys(@RequestParam("vatSearchString") String searchQuery){
 		try {
 			return new ResponseEntity(vatCategoryService.getVatCategoryList(), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/getexchangerate")
+	@GetMapping(value = "/getexchangerate")
 	public ResponseEntity exchangeRate(@RequestParam("currencyCode") Integer currencyCode,
 			@RequestParam("userId") Integer userId) {
 		try {
@@ -287,12 +275,11 @@ public class PurchaseRestController {
 			}
 			return new ResponseEntity(exchangeRateString, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/updatevatpercentage")
+    @PostMapping(value = "/updatevatpercentage")
 	public void updateVatPercentage(PurchaseItemRestModel purchaseItemModel, PurchaseRestModel purchaseRestModel) {
 		if (purchaseItemModel.getProductService() != null) {
 			if (purchaseItemModel.getProductService().getVatCategory() != null) {
@@ -313,39 +300,17 @@ public class PurchaseRestController {
 			}
 			purchaseItemModel.setDescription(purchaseItemModel.getProductService().getProductDescription());
 		}
-		updateSubTotal(purchaseItemModel, purchaseRestModel);
-		addInvoiceItemOnProductSelect(purchaseRestModel);
+
 	}
 
-	public void updateSubTotal(final PurchaseItemRestModel itemModel, PurchaseRestModel purchaseRestModel) {
+	public void updateSubTotal(final PurchaseItemRestModel itemModel) {
 		final int quantity = itemModel.getQuatity();
 		final BigDecimal unitPrice = itemModel.getUnitPrice();
 		if (null != unitPrice) {
 			final BigDecimal amountWithoutTax = unitPrice.multiply(new BigDecimal(quantity));
 			itemModel.setSubTotal(amountWithoutTax);
 		}
-//        calculateTotal(purchaseRestModel);
 	}
-
-//    private void calculateTotal(PurchaseRestModel purchaseRestModel) {
-//        total = new BigDecimal(0);
-//        vatTotal = new BigDecimal(0);
-//        List<PurchaseItemRestModel> purchaseItemModels = purchaseRestModel.getPurchaseItems();
-//        if (purchaseItemModels != null) {
-//            for (PurchaseItemRestModel itemModel : purchaseItemModels) {
-//                if (itemModel.getSubTotal() != null) {
-//                    total = total.add(itemModel.getSubTotal());
-//                    if (itemModel.getUnitPrice() != null) {
-//                        BigDecimal totalAmount = itemModel.getUnitPrice().multiply(new BigDecimal(itemModel.getQuatity()));
-//                        vatTotal = vatTotal.add((totalAmount.multiply(itemModel.getVatId().getVat())).divide(new BigDecimal(100)));
-//                    }
-//                }
-//            }
-//        }
-//        purchaseRestModel.setPurchaseSubtotal(total);
-//        purchaseRestModel.setPurchaseVATAmount(vatTotal);
-//        totalAmount = total.add(vatTotal);
-//    }
 	public void addInvoiceItemOnProductSelect(PurchaseRestModel purchaseRestModel) {
 		if (validateInvoiceItem(purchaseRestModel)) {
 			addLineItem(purchaseRestModel);
@@ -375,9 +340,6 @@ public class PurchaseRestController {
 			}
 			if (!validated) {
 				validationMessage.append("in expense items.");
-//                FacesMessage message = new FacesMessage(validationMessage.toString());
-//                message.setSeverity(FacesMessage.SEVERITY_ERROR);
-//                FacesContext.getCurrentInstance().addMessage("validationId", message);
 			}
 		}
 		return validated;

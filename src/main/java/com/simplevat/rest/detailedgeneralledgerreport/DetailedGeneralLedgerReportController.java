@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/rest/detailedGeneralLedgerReport")
 public class DetailedGeneralLedgerReportController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(DetailedGeneralLedgerReportController.class);
+	private final Logger logger = LoggerFactory.getLogger(DetailedGeneralLedgerReportController.class);
 
 	@Autowired
 	private DetailedGeneralLedgerRestHelper detailedGeneralLedgerRestHelper;
@@ -37,7 +37,7 @@ public class DetailedGeneralLedgerReportController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(list, HttpStatus.OK);
 	}

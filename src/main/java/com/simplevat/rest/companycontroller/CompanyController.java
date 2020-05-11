@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/rest/company")
 public class CompanyController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(CompanyController.class);
+	private final Logger logger = LoggerFactory.getLogger(CompanyController.class);
 
 	@Autowired
 	private CompanyService companyService;
@@ -62,7 +62,7 @@ public class CompanyController {
 			}
 			return new ResponseEntity<>(companyRestHelper.getModelList(companyList), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error = ", e);
+			logger.error("Error = ", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -84,7 +84,7 @@ public class CompanyController {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error = ", e);
+			logger.error("Error = ", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -97,7 +97,7 @@ public class CompanyController {
 			companyService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error = ", e);
+			logger.error("Error = ", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -116,7 +116,7 @@ public class CompanyController {
 				return new ResponseEntity<>(companyRestHelper.getModel(user.getCompany()), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error = ", e);
+			logger.error("Error = ", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -133,7 +133,7 @@ public class CompanyController {
 			companyService.persist(company);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -149,7 +149,7 @@ public class CompanyController {
 			companyService.update(company);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ERROR = ", e);
+			logger.error("ERROR = ", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

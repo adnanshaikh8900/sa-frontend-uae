@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/rest/financialReport")
 public class FinancialReportController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(FinancialReportController.class);
+	private final Logger logger = LoggerFactory.getLogger(FinancialReportController.class);
 
 	@Autowired
 	private FinancialReportRestHelper financialReportRestHelper;
@@ -36,7 +36,7 @@ public class FinancialReportController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(profitAndLossResponseModel, HttpStatus.OK);
 	}

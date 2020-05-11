@@ -5,7 +5,6 @@
  */
 package com.simplevat.rest.taxtransactioncontroller;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -33,13 +32,13 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/taxtransaction")
-public class TaxTransactionController implements Serializable {
+public class TaxTransactionController{
 
 	@Autowired
-	private TaxTransactionService taxTransactionService;
+	private  TaxTransactionService taxTransactionService;
 
 	@Autowired
-	private TaxTranscationRestHelper taxTranscationRestHelper;
+	private  TaxTranscationRestHelper taxTranscationRestHelper;
 
 	@ApiOperation(value = "Get Open Tax Transaction List")
 	@GetMapping(value = "/getOpenTaxTransaction")
@@ -49,7 +48,6 @@ public class TaxTransactionController implements Serializable {
 		Date endDate = taxTranscationRestHelper.getEndDate();
 		if (!taxTranscationRestHelper.isTaxTransactionExist(startDate, endDate, taxTransactionList)) {
 			taxTransactionList = taxTranscationRestHelper.separateTransactionCrediTAndDebit(startDate, endDate);
-//            calculateTaxPerMonth(startDate, endDate,);
 		}
 		if (taxTransactionList != null) {
 			return new ResponseEntity(taxTransactionList, HttpStatus.OK);
@@ -117,9 +115,6 @@ public class TaxTransactionController implements Serializable {
 		taxTransaction1.setPaymentDate(new Date());
 		taxTransaction1.setCreatedBy(id);
 		taxTransaction1.setCreatedDate(LocalDateTime.now());
-//        taxTransaction.setDueAmount(dueAmount);
-//        taxTransaction.setPaymentDate(new Date());
-//        taxTransaction.setStatus(TaxTransactionStatusConstant.OPEN);
 		return taxTransaction1;
 	}
 

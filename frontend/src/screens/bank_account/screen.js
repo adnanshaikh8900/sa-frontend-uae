@@ -1,6 +1,6 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -13,50 +13,41 @@ import {
   ButtonDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
-} from 'reactstrap'
-import Select from 'react-select'
+  DropdownItem,
+} from 'reactstrap';
+import Select from 'react-select';
 
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
-import { CSVLink } from "react-csv";
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { CSVLink } from 'react-csv';
 
-import {
-  Loader,
-  ConfirmDeleteModal
-} from 'components'
-import {
-  selectCurrencyFactory,
-  selectOptionsFactory,
-} from 'utils'
+import { Loader, ConfirmDeleteModal } from 'components';
+import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
-import {
-  CommonActions
-} from 'services/global'
-import * as BankAccountActions from './actions'
+import { CommonActions } from 'services/global';
+import * as BankAccountActions from './actions';
 
-import 'react-toastify/dist/ReactToastify.css'
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
-import './style.scss'
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import './style.scss';
 
 const mapStateToProps = (state) => {
-  return ({
+  return {
     is_authed: state.auth.is_authed,
     account_type_list: state.bank_account.account_type_list,
     currency_list: state.bank_account.currency_list,
-    bank_account_list: state.bank_account.bank_account_list
-  })
-}
+    bank_account_list: state.bank_account.bank_account_list,
+  };
+};
 const mapDispatchToProps = (dispatch) => {
-  return ({
+  return {
     commonActions: bindActionCreators(CommonActions, dispatch),
-    bankAccountActions: bindActionCreators(BankAccountActions, dispatch)
-  })
-}
+    bankAccountActions: bindActionCreators(BankAccountActions, dispatch),
+  };
+};
 
 class BankAccount extends React.Component {
-
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       loading: true,
       dialog: null,
@@ -71,8 +62,8 @@ class BankAccount extends React.Component {
         currencyCode: '',
       },
       csvData: [],
-      view: false
-    }
+      view: false,
+    };
 
     this.options = {
       paginationPosition: 'top',
@@ -82,63 +73,66 @@ class BankAccount extends React.Component {
       sortOrder: '',
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,
-      onSortChange: this.sortColumn
-    }
+      onSortChange: this.sortColumn,
+    };
 
     this.selectRowProp = {
       mode: 'checkbox',
       bgColor: 'rgba(0,0,0, 0.05)',
       clickToSelect: false,
       onSelect: this.onRowSelect,
-      onSelectAll: this.onSelectAll
-    }
-    this.csvLink = React.createRef()
+      onSelectAll: this.onSelectAll,
+    };
+    this.csvLink = React.createRef();
   }
-
 
   componentDidMount = () => {
-    this.props.bankAccountActions.getAccountTypeList()
-    this.props.bankAccountActions.getCurrencyList()
-    this.initializeData()
-  }
+    this.props.bankAccountActions.getAccountTypeList();
+    this.props.bankAccountActions.getCurrencyList();
+    this.initializeData();
+  };
 
   initializeData = () => {
-    let { filterData } = this.state
+    let { filterData } = this.state;
     const paginationData = {
       pageNo: this.options.page ? this.options.page - 1 : 0,
-      pageSize: this.options.sizePerPage
-    }
+      pageSize: this.options.sizePerPage,
+    };
     const sortingData = {
       order: this.options.sortOrder ? this.options.sortOrder : '',
-      sortingCol: this.options.sortName ? this.options.sortName : ''
-    }
-    const postData = { ...filterData, ...paginationData, ...sortingData }
+      sortingCol: this.options.sortName ? this.options.sortName : '',
+    };
+    const postData = { ...filterData, ...paginationData, ...sortingData };
 
-    this.props.bankAccountActions.getBankAccountList(postData).then((res) => {
-      if (res.status === 200) {
-        this.setState({
-          loading: false,
-        });
-      }
-    }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong');
-      this.setState({ loading: false })
-    })
-
-  }
-
+    this.props.bankAccountActions
+      .getBankAccountList(postData)
+      .then((res) => {
+        if (res.status === 200) {
+          this.setState({
+            loading: false,
+          });
+        }
+      })
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong',
+        );
+        this.setState({ loading: false });
+      });
+  };
 
   inputHandler = (name, val) => {
     this.setState({
       filterData: Object.assign(this.state.filterData, {
-        [name]: val
-      })
-    })
-  }
+        [name]: val,
+      }),
+    });
+  };
 
   handleSearch = () => {
-    this.initializeData()
-  }
+    this.initializeData();
+  };
 
   // filterBankAccountList (bank_account_list) {
   //   let data = []
@@ -184,90 +178,113 @@ class BankAccount extends React.Component {
 
   renderAccountType = (cell, row) => {
     if (row.bankAccountTypeName) {
-      let data = null
+      let data = null;
       switch (row.bankAccountTypeName) {
         case 'Saving':
         case 'saving':
-          data = <label className="badge badge-primary text-white mb-0">{row.bankAccountTypeName}</label>
-          break
+          data = (
+            <label className="badge badge-primary text-white mb-0">
+              {row.bankAccountTypeName}
+            </label>
+          );
+          break;
         case 'Current':
         case 'current':
-          data = <label className="badge badge-info text-white mb-0">{row.bankAccountTypeName}</label>
-          break
+          data = (
+            <label className="badge badge-info text-white mb-0">
+              {row.bankAccountTypeName}
+            </label>
+          );
+          break;
         case 'Checking':
         case 'checking':
-          data = <label className="badge badge-warning text-white mb-0">{row.bankAccountTypeName}</label>
-          break
+          data = (
+            <label className="badge badge-warning text-white mb-0">
+              {row.bankAccountTypeName}
+            </label>
+          );
+          break;
         case 'Credit Card':
         case 'credit card':
-          data = <label className="badge badge-success text-white mb-0">{row.bankAccountTypeName}</label>
-          break
+          data = (
+            <label className="badge badge-success text-white mb-0">
+              {row.bankAccountTypeName}
+            </label>
+          );
+          break;
         case 'Others':
         case 'others':
-          data = <label className="badge badge-info text-white mb-0">{row.bankAccountTypeName}</label>
-          break
+          data = (
+            <label className="badge badge-info text-white mb-0">
+              {row.bankAccountTypeName}
+            </label>
+          );
+          break;
         case 'Paypal':
         case 'paypal':
-          data = <label className="badge badge-danger text-white mb-0">{row.bankAccountTypeName}</label>
-          break
+          data = (
+            <label className="badge badge-danger text-white mb-0">
+              {row.bankAccountTypeName}
+            </label>
+          );
+          break;
         default:
-          data = <label className="badge badge-default mb-0">No Specified</label>
-          break
+          data = (
+            <label className="badge badge-default mb-0">No Specified</label>
+          );
+          break;
       }
-      return data
+      return data;
     } else {
-      return (
-        <label className="badge badge-danger mb-0">No Specified</label>
-      )
+      return <label className="badge badge-danger mb-0">No Specified</label>;
     }
-  }
+  };
 
   toggleActionButton = (index) => {
-    let temp = Object.assign({}, this.state.actionButtons)
+    let temp = Object.assign({}, this.state.actionButtons);
     if (temp[parseInt(index, 10)]) {
-      temp[parseInt(index, 10)] = false
+      temp[parseInt(index, 10)] = false;
     } else {
-      temp[parseInt(index, 10)] = true
+      temp[parseInt(index, 10)] = true;
     }
     this.setState({
-      actionButtons: temp
-    })
-  }
+      actionButtons: temp,
+    });
+  };
 
   renderAccountNumber = (cell, row) => {
     return (
       <label
         className="mb-0 my-link"
-        onClick={() => this.props.history.push('/admin/banking/bank-account/transaction',
-          { bankAccountId: row.bankAccountNo })}
+        onClick={() =>
+          this.props.history.push('/admin/banking/bank-account/transaction', {
+            bankAccountId: row.bankAccountId,
+          })
+        }
       >
         {row.bankAccountNo}
       </label>
-    )
-  }
+    );
+  };
 
   renderCurrency = (cell, row) => {
-    if (
-      row.currancyName
-    ) {
+    if (row.currancyName) {
       return (
         <label className="badge badge-primary mb-0">{row.currancyName}</label>
-      )
+      );
     } else {
-      return (
-        <label className="badge badge-danger mb-0">No Specified</label>
-      )
+      return <label className="badge badge-danger mb-0">No Specified</label>;
     }
-  }
+  };
 
   sortColumn = (sortName, sortOrder) => {
-    this.options.sortName = sortName
-    this.options.sortOrder = sortOrder
-    this.initializeData()
-  }
+    this.options.sortName = sortName;
+    this.options.sortOrder = sortOrder;
+    this.initializeData();
+  };
 
   renderBalance(cell, row) {
-    return row.openingBalance ? (row.openingBalance).toFixed(2) : ''
+    return row.openingBalance ? row.openingBalance.toFixed(2) : '';
   }
 
   renderActions = (cell, row) => {
@@ -275,76 +292,100 @@ class BankAccount extends React.Component {
       <div>
         <ButtonDropdown
           isOpen={this.state.actionButtons[row.bankAccountId]}
-          toggle={(e) => { e.preventDefault(); this.toggleActionButton(row.bankAccountId) }}
+          toggle={(e) => {
+            e.preventDefault();
+            this.toggleActionButton(row.bankAccountId);
+          }}
         >
           <DropdownToggle size="sm" color="primary" className="btn-brand icon">
-            {
-              this.state.actionButtons[row.bankAccountId] === true ?
-                <i className="fas fa-chevron-up" />
-                :
-                <i className="fas fa-chevron-down" />
-            }
+            {this.state.actionButtons[row.bankAccountId] === true ? (
+              <i className="fas fa-chevron-up" />
+            ) : (
+              <i className="fas fa-chevron-down" />
+            )}
           </DropdownToggle>
           <DropdownMenu right>
-            <DropdownItem onClick={() => this.props.history.push('/admin/banking/bank-account/detail', {
-              bankAccountId: row.bankAccountId
-            })}>
+            <DropdownItem
+              onClick={() =>
+                this.props.history.push('/admin/banking/bank-account/detail', {
+                  bankAccountId: row.bankAccountId,
+                })
+              }
+            >
               <i className="fas fa-edit" /> Edit
             </DropdownItem>
-            <DropdownItem onClick={() => {
-              this.props.history.push('/admin/banking/bank-account/transaction', {
-                bankAccountId: row.bankAccountId
-              })
-            }}>
+            <DropdownItem
+              onClick={() => {
+                this.props.history.push(
+                  '/admin/banking/bank-account/transaction',
+                  {
+                    bankAccountId: row.bankAccountId,
+                  },
+                );
+              }}
+            >
               <i className="fas fa-eye" /> View Transactions
             </DropdownItem>
             <DropdownItem>
               <i className="fas fa-sync" /> Synch
             </DropdownItem>
-            <DropdownItem onClick={() => this.closeBankAccount(row.bankAccountId)}>
+            <DropdownItem
+              onClick={() => this.closeBankAccount(row.bankAccountId)}
+            >
               <i className="fa fa-trash" /> Delete
             </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
       </div>
-    )
-  }
+    );
+  };
 
   closeBankAccount = (_id) => {
     this.setState({
-      dialog: <ConfirmDeleteModal
-        isOpen={true}
-        okHandler={() => this.removeBankAccount(_id)}
-        cancelHandler={this.removeDialog}
-      />
-    })
-  }
+      dialog: (
+        <ConfirmDeleteModal
+          isOpen={true}
+          okHandler={() => this.removeBankAccount(_id)}
+          cancelHandler={this.removeDialog}
+        />
+      ),
+    });
+  };
 
   removeBankAccount = (_id) => {
-    this.removeDialog()
-    this.props.bankAccountActions.removeBankAccountByID(_id).then(() => {
-      this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
-      this.initializeData()
-      let tempList = []
-      this.state.selected_id_list.map((item) => {
-        if (item !== _id) {
-          tempList.push(item)
-        }
-        return item
+    this.removeDialog();
+    this.props.bankAccountActions
+      .removeBankAccountByID(_id)
+      .then(() => {
+        this.props.commonActions.tostifyAlert(
+          'success',
+          'Bank Account Deleted Successfully',
+        );
+        this.initializeData();
+        let tempList = [];
+        this.state.selected_id_list.map((item) => {
+          if (item !== _id) {
+            tempList.push(item);
+          }
+          return item;
+        });
+        this.setState({
+          selected_id_list: tempList,
+        });
       })
-      this.setState({
-        selected_id_list: tempList
-      })
-    }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-    })
-  }
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong',
+        );
+      });
+  };
 
   removeDialog = () => {
     this.setState({
-      dialog: null
-    })
-  }
+      dialog: null,
+    });
+  };
 
   renderLastReconciled = (cell, row) => {
     return (
@@ -354,141 +395,144 @@ class BankAccount extends React.Component {
           <label className="badge badge-success mb-0">2034234</label>
         </div>
         <div>
-          <label className="font-weight-bold mr-2">Date : </label><label>2019/12/05</label>
+          <label className="font-weight-bold mr-2">Date : </label>
+          <label>2019/12/05</label>
         </div>
       </div>
-    )
-  }
-
+    );
+  };
 
   onRowSelect = (row, isSelected, e) => {
-    let tempList = []
+    let tempList = [];
     if (isSelected) {
-      tempList = Object.assign([], this.state.selected_id_list)
-      tempList.push(row.bankAccountId)
+      tempList = Object.assign([], this.state.selected_id_list);
+      tempList.push(row.bankAccountId);
     } else {
       this.state.selected_id_list.map((item) => {
         if (item !== row.bankAccountId) {
-          tempList.push(item)
+          tempList.push(item);
         }
-        return item
-      })
+        return item;
+      });
     }
     this.setState({
-      selected_id_list: tempList
-    })
-  }
+      selected_id_list: tempList,
+    });
+  };
 
   onSelectAll = (isSelected, rows) => {
-    let tempList = []
+    let tempList = [];
     if (isSelected) {
       rows.map((item) => {
-        tempList.push(item.bankAccountId)
-        return item
-      })
+        tempList.push(item.bankAccountId);
+        return item;
+      });
     }
     this.setState({
-      selected_id_list: tempList
-    })
-  }
+      selected_id_list: tempList,
+    });
+  };
 
   bulkDeleteBankAccount = () => {
-    let {
-      selected_id_list
-    } = this.state
+    let { selected_id_list } = this.state;
     if (selected_id_list.length > 0) {
       this.setState({
-        dialog: <ConfirmDeleteModal
-          isOpen={true}
-          okHandler={this.removeBulkBankAccount}
-          cancelHandler={this.removeDialog}
-        />
-      })
+        dialog: (
+          <ConfirmDeleteModal
+            isOpen={true}
+            okHandler={this.removeBulkBankAccount}
+            cancelHandler={this.removeDialog}
+          />
+        ),
+      });
     } else {
-      this.props.commonActions.tostifyAlert('info', 'Please select the rows of the table and try again.')
+      this.props.commonActions.tostifyAlert(
+        'info',
+        'Please select the rows of the table and try again.',
+      );
     }
-  }
+  };
 
   removeBulkBankAccount = () => {
-    this.removeDialog()
-    let {
-      selected_id_list
-    } = this.state
+    this.removeDialog();
+    let { selected_id_list } = this.state;
     let obj = {
-      ids: selected_id_list
-    }
-    this.props.bankAccountActions.removeBulkBankAccount(obj).then(() => {
-      this.props.commonActions.tostifyAlert('success', 'Bank Account Deleted Successfully')
-      this.initializeData()
-      this.setState({
-        selected_id_list: []
+      ids: selected_id_list,
+    };
+    this.props.bankAccountActions
+      .removeBulkBankAccount(obj)
+      .then(() => {
+        this.props.commonActions.tostifyAlert(
+          'success',
+          'Bank Account Deleted Successfully',
+        );
+        this.initializeData();
+        this.setState({
+          selected_id_list: [],
+        });
       })
-    }).catch((err) => {
-      this.props.commonActions.tostifyAlert('error', err && err.data ? err.data.message : 'Something Went Wrong')
-    })
-  }
-
+      .catch((err) => {
+        this.props.commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong',
+        );
+      });
+  };
 
   onSizePerPageList = (sizePerPage) => {
     if (this.options.sizePerPage !== sizePerPage) {
-      this.options.sizePerPage = sizePerPage
-      this.initializeData()
+      this.options.sizePerPage = sizePerPage;
+      this.initializeData();
     }
-  }
+  };
 
   onPageChange = (page, sizePerPage) => {
     if (this.options.page !== page) {
-      this.options.page = page
-      this.initializeData()
+      this.options.page = page;
+      this.initializeData();
     }
-  }
+  };
 
   getCsvData = () => {
     if (this.state.csvData.length === 0) {
       let obj = {
-        paginationDisable: true
-      }
+        paginationDisable: true,
+      };
       this.props.bankAccountActions.getBankAccountList(obj).then((res) => {
         if (res.status === 200) {
           this.setState({ csvData: res.data.data, view: true }, () => {
             setTimeout(() => {
-              this.csvLink.current.link.click()
-            }, 0)
+              this.csvLink.current.link.click();
+            }, 0);
           });
         }
-      })
+      });
     } else {
-      this.csvLink.current.link.click()
+      this.csvLink.current.link.click();
     }
-  }
+  };
 
   clearAll = () => {
-    this.setState({
-      filterData: {
-        bankName: '',
-        bankAccountTypeId: '',
-        bankAccountName: '',
-        transactionDate: '',
-        accountNumber: '',
-        currencyCode: '',
+    this.setState(
+      {
+        filterData: {
+          bankName: '',
+          bankAccountTypeId: '',
+          bankAccountName: '',
+          transactionDate: '',
+          accountNumber: '',
+          currencyCode: '',
+        },
       },
-    },() => {this.initializeData()})
-  }
+      () => {
+        this.initializeData();
+      },
+    );
+  };
 
   render() {
-
-    const {
-      loading,
-      filterData,
-      dialog,
-      csvData,
-      view
-    } = this.state
-    const {
-      account_type_list,
-      currency_list,
-      bank_account_list
-    } = this.props
+    const { loading, filterData, dialog, csvData, view } = this.state;
+    const { account_type_list, currency_list, bank_account_list } = this.props;
 
     return (
       <div className="bank-account-screen">
@@ -506,203 +550,263 @@ class BankAccount extends React.Component {
               </Row>
             </CardHeader>
             <CardBody>
-              {
-                loading ?
-                  <Row>
-                    <Col lg={12}>
-                      <Loader />
-                    </Col>
-                  </Row>
-                  :
-                  <Row>
-                    <Col lg={12}>
-                      <div className="d-flex justify-content-end">
-                        <ButtonGroup size="sm">
-                          <Button
-                            color="success"
-                            className="btn-square"
-                            onClick={() => this.getCsvData()}
-                          >
-                            <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
-                          </Button>
-                          {view && <CSVLink
+              {loading ? (
+                <Row>
+                  <Col lg={12}>
+                    <Loader />
+                  </Col>
+                </Row>
+              ) : (
+                <Row>
+                  <Col lg={12}>
+                    <div className="d-flex justify-content-end">
+                      <ButtonGroup size="sm">
+                        <Button
+                          color="success"
+                          className="btn-square"
+                          onClick={() => this.getCsvData()}
+                        >
+                          <i className="fa glyphicon glyphicon-export fa-download mr-1" />
+                          Export To CSV
+                        </Button>
+                        {view && (
+                          <CSVLink
                             data={csvData}
                             filename={'BankAccount.csv'}
                             className="hidden"
                             ref={this.csvLink}
                             target="_blank"
-                          />}
+                          />
+                        )}
+                        <Button
+                          color="primary"
+                          className="btn-square"
+                          onClick={() =>
+                            this.props.history.push(
+                              `/admin/banking/bank-account/create`,
+                            )
+                          }
+                        >
+                          <i className="fas fa-plus mr-1" />
+                          New Account
+                        </Button>
+                        <Button
+                          color="warning"
+                          className="btn-square"
+                          onClick={this.bulkDeleteBankAccount}
+                        >
+                          <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
+                          Bulk Delete
+                        </Button>
+                      </ButtonGroup>
+                    </div>
+                    <div className="py-3">
+                      <h5>Filter : </h5>
+                      <Row>
+                        <Col lg={2} className="mb-1">
+                          <Input
+                            type="text"
+                            placeholder="Bank"
+                            value={filterData.bankName}
+                            onChange={(e) =>
+                              this.inputHandler('bankName', e.target.value)
+                            }
+                          />
+                        </Col>
+                        <Col lg={2} className="mb-1">
+                          <Select
+                            className=""
+                            options={
+                              account_type_list
+                                ? selectOptionsFactory.renderOptions(
+                                    'name',
+                                    'id',
+                                    account_type_list,
+                                    'Account Type',
+                                  )
+                                : []
+                            }
+                            value={filterData.bankAccountTypeId}
+                            onChange={(option) =>
+                              this.inputHandler('bankAccountTypeId', option)
+                            }
+                            placeholder="Account Type"
+                          />
+                        </Col>
+                        <Col lg={2} className="mb-1">
+                          <Input
+                            type="text"
+                            placeholder="Account Name"
+                            value={filterData.bankAccountName}
+                            onChange={(e) =>
+                              this.inputHandler(
+                                'bankAccountName',
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </Col>
+                        <Col lg={2} className="mb-1">
+                          <Input
+                            type="text"
+                            placeholder="Account Number"
+                            value={filterData.accountNumber}
+                            onChange={(e) =>
+                              this.inputHandler('accountNumber', e.target.value)
+                            }
+                          />
+                        </Col>
+                        <Col lg={2} className="mb-1">
+                          <Select
+                            className=""
+                            options={
+                              currency_list
+                                ? selectCurrencyFactory.renderOptions(
+                                    'currencyName',
+                                    'currencyCode',
+                                    currency_list,
+                                    'Currency',
+                                  )
+                                : []
+                            }
+                            value={filterData.currencyCode}
+                            onChange={(option) =>
+                              this.inputHandler('currencyCode', option)
+                            }
+                            placeholder="Currency"
+                          />
+                        </Col>
+                        <Col lg={1} className="pl-0 pr-0">
                           <Button
+                            type="button"
+                            color="primary"
+                            className="btn-square mr-1"
+                            onClick={this.handleSearch}
+                          >
+                            <i className="fa fa-search"></i>
+                          </Button>
+                          <Button
+                            type="button"
                             color="primary"
                             className="btn-square"
-                            onClick={() => this.props.history.push(`/admin/banking/bank-account/create`)}
+                            onClick={this.clearAll}
                           >
-                            <i className="fas fa-plus mr-1" />
-                            New Account
+                            <i className="fa fa-refresh"></i>
                           </Button>
-                          <Button
-                            color="warning"
-                            className="btn-square"
-                            onClick={this.bulkDeleteBankAccount}
-                          >
-                            <i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-                            Bulk Delete
-                          </Button>
-                        </ButtonGroup>
-                      </div>
-                      <div className="py-3">
-                        <h5>Filter : </h5>
-                        <Row>
-                          <Col lg={2} className="mb-1">
-                            <Input
-                              type="text"
-                              placeholder="Bank"
-                              value={filterData.bankName}
-                              onChange={(e) => this.inputHandler('bankName', e.target.value)}
-                            />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Select
-                              className=""
-                              options={account_type_list ? selectOptionsFactory.renderOptions('name', 'id', account_type_list, 'Account Type') : []}
-                              value={filterData.bankAccountTypeId}
-                              onChange={(option) => this.inputHandler('bankAccountTypeId', option)}
-                              placeholder="Account Type"
-                            />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input
-                              type="text"
-                              placeholder="Account Name"
-                              value={filterData.bankAccountName}
-                              onChange={(e) => this.inputHandler('bankAccountName', e.target.value)}
-                            />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Input
-                              type="text"
-                              placeholder="Account Number"
-                              value={filterData.accountNumber}
-                              onChange={(e) => this.inputHandler('accountNumber', e.target.value)}
-                            />
-                          </Col>
-                          <Col lg={2} className="mb-1">
-                            <Select
-                              className=""
-                              options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
-                              value={filterData.currencyCode}
-                              onChange={(option) => this.inputHandler('currencyCode', option)}
-                              placeholder="Currency"
-                            />
-                          </Col>
-                          <Col lg={1} className="pl-0 pr-0">
-                            <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
-                              <i className="fa fa-search"></i>
-                            </Button>
-                            <Button type="button" color="primary" className="btn-square" onClick={this.clearAll}>
-                              <i className="fa fa-refresh"></i>
-                            </Button>
-                          </Col>
-                        </Row>
-                      </div>
-                      <div>
-                        <BootstrapTable
-                          selectRow={this.selectRowProp}
-                          search={false}
-                          options={this.options}
-                          data={bank_account_list && bank_account_list.data ? bank_account_list.data : []}
-                          version="4"
-                          hover
-                          // totalSize={bank_account_list ? bank_account_list.length : 0}
-                          pagination={bank_account_list && bank_account_list.data && bank_account_list.data.length > 0 ? true : false}
-                          remote
-                          keyField="bankAccountId"
-                          multiColumnSort
-                          fetchInfo={{ dataTotalSize: bank_account_list && bank_account_list.count ? bank_account_list.count : 0 }}
-                          className="bank-account-table"
-                          csvFileName="bank_account_list.csv"
-                          ref={(node) => {
-                            this.table = node
-                          }}
-
+                        </Col>
+                      </Row>
+                    </div>
+                    <div>
+                      <BootstrapTable
+                        selectRow={this.selectRowProp}
+                        search={false}
+                        options={this.options}
+                        data={
+                          bank_account_list && bank_account_list.data
+                            ? bank_account_list.data
+                            : []
+                        }
+                        version="4"
+                        hover
+                        // totalSize={bank_account_list ? bank_account_list.length : 0}
+                        pagination={
+                          bank_account_list &&
+                          bank_account_list.data &&
+                          bank_account_list.data.length > 0
+                            ? true
+                            : false
+                        }
+                        remote
+                        keyField="bankAccountId"
+                        multiColumnSort
+                        fetchInfo={{
+                          dataTotalSize:
+                            bank_account_list && bank_account_list.count
+                              ? bank_account_list.count
+                              : 0,
+                        }}
+                        className="bank-account-table"
+                        csvFileName="bank_account_list.csv"
+                        ref={(node) => {
+                          this.table = node;
+                        }}
+                      >
+                        <TableHeaderColumn
+                          dataField="name"
+                          dataSort
+                          width="10%"
                         >
-                          <TableHeaderColumn
-                            dataField="name"
-                            dataSort
-                            width="10%"
-                          >
-                            Bank
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataFormat={this.renderAccountType}
-                            dataField="bankAccountTypeName"
-                            dataSort
-                            width="15%"
-                          >
-                            Account Type
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="accounName"
-                            dataSort
-                            width="15%"
-                          >
-                            Account Name
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="bankAccountNo"
-                            dataFormat={this.renderAccountNumber}
-                            dataSort
-                            width="18%"
-                          >
-                            Account Number
-                          </TableHeaderColumn>
+                          Bank
+                        </TableHeaderColumn>
+                        <TableHeaderColumn
+                          dataFormat={this.renderAccountType}
+                          dataField="bankAccountTypeName"
+                          dataSort
+                          width="15%"
+                        >
+                          Account Type
+                        </TableHeaderColumn>
+                        <TableHeaderColumn
+                          dataField="accounName"
+                          dataSort
+                          width="15%"
+                        >
+                          Account Name
+                        </TableHeaderColumn>
+                        <TableHeaderColumn
+                          dataField="bankAccountNo"
+                          dataFormat={this.renderAccountNumber}
+                          dataSort
+                          width="18%"
+                        >
+                          Account Number
+                        </TableHeaderColumn>
 
-                          <TableHeaderColumn
-                            dataFormat={this.renderCurrency}
-                            dataSort
-                            dataField="currancyName"
-                            width="12%"
-                          >
-                            Currency
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="openingBalance"
-                            dataSort
-                            width="15%"
-                            dataFormat={this.renderBalance}
-                            dataAlign="right"
-                          >
-                            Bank Balance
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            dataField="swift_code"
-                            export={false}
-                            dataSort={false}
-                            dataFormat={this.renderLastReconciled}
-                            width="20%"
-                          >
-                            Last Reconciled
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            className="text-right"
-                            columnClassName="text-right"
-                            width="5%"
-                            dataSort={false}
-                            export={false}
-                            dataFormat={this.renderActions}
-                          >
-                          </TableHeaderColumn>
-                        </BootstrapTable>
-                      </div>
-                    </Col>
-                  </Row>
-              }
+                        <TableHeaderColumn
+                          dataFormat={this.renderCurrency}
+                          dataSort
+                          dataField="currancyName"
+                          width="12%"
+                        >
+                          Currency
+                        </TableHeaderColumn>
+                        <TableHeaderColumn
+                          dataField="openingBalance"
+                          dataSort
+                          width="15%"
+                          dataFormat={this.renderBalance}
+                          dataAlign="right"
+                        >
+                          Bank Balance
+                        </TableHeaderColumn>
+                        <TableHeaderColumn
+                          dataField="swift_code"
+                          export={false}
+                          dataSort={false}
+                          dataFormat={this.renderLastReconciled}
+                          width="20%"
+                        >
+                          Last Reconciled
+                        </TableHeaderColumn>
+                        <TableHeaderColumn
+                          className="text-right"
+                          columnClassName="text-right"
+                          width="5%"
+                          dataSort={false}
+                          export={false}
+                          dataFormat={this.renderActions}
+                        ></TableHeaderColumn>
+                      </BootstrapTable>
+                    </div>
+                  </Col>
+                </Row>
+              )}
             </CardBody>
           </Card>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BankAccount)
+export default connect(mapStateToProps, mapDispatchToProps)(BankAccount);

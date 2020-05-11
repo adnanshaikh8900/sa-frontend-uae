@@ -11,10 +11,15 @@ import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ContactService;
+
+import liquibase.pro.packaged.ex;
+
 import com.simplevat.security.JwtTokenUtil;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rest/contact")
-public class ContactController{
+public class ContactController {
 
 	private final Logger logger = LoggerFactory.getLogger(ContactController.class);
 
@@ -94,6 +99,14 @@ public class ContactController{
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 		try {
+			Map<String, Object> param = new HashMap<>();
+			param.put("email", contactPersistModel.getEmail());
+			List<Contact> existingContact = contactService.findByAttributes(param);
+
+			if (existingContact != null && !existingContact.isEmpty()) {
+				return new ResponseEntity<>("Allready exists.", HttpStatus.BAD_REQUEST);
+			}
+			
 			Contact contact = contactHelper.getEntity(contactPersistModel);
 			contact.setCreatedBy(userId);
 			contact.setCreatedDate(LocalDateTime.now());

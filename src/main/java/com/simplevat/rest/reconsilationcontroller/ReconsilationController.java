@@ -1,14 +1,12 @@
 
 package com.simplevat.rest.reconsilationcontroller;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,26 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.ReconsileCategoriesEnumConstant;
-import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.entity.ChartOfAccountCategory;
 import com.simplevat.entity.Invoice;
-import com.simplevat.entity.Journal;
-import com.simplevat.entity.JournalLineItem;
-import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionStatus;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.InviceSingleLevelDropdownModel;
-import com.simplevat.rest.ReconsileRequestLineItemModel;
-import com.simplevat.rest.ReconsileRequestModel;
 import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import com.simplevat.security.JwtTokenUtil;
@@ -48,14 +37,13 @@ import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.service.bankaccount.TransactionStatusService;
 import com.simplevat.utils.DateFormatUtil;
 
 @RestController
 @RequestMapping("/rest/reconsile")
 public class ReconsilationController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(ReconsilationController.class);
+	private final Logger logger = LoggerFactory.getLogger(ReconsilationController.class);
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -104,7 +92,7 @@ public class ReconsilationController {
 					reconsilationRestHelper.getList(ReconsileCategoriesEnumConstant.get(reconcilationCatCode)),
 					HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -180,7 +168,7 @@ public class ReconsilationController {
 
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

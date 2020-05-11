@@ -5,7 +5,6 @@
  */
 package com.simplevat.rest.transactioncategorycontroller;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +46,8 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/transactioncategory")
-public class TransactionCategoryRestController implements Serializable {
-	private final transient Logger logger = LoggerFactory.getLogger(TransactionCategoryRestController.class);
+public class TransactionCategoryRestController{
+	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryRestController.class);
 	@Autowired
 	private  TransactionCategoryService transactionCategoryService;
 
@@ -68,7 +67,6 @@ public class TransactionCategoryRestController implements Serializable {
 	@GetMapping(value = "/gettransactioncategory")
 	public ResponseEntity getAllTransactionCategory(HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userServiceNew.findByPK(userId);
 		List<TransactionCategory> transactionCategories = transactionCategoryService
 				.findAllTransactionCategoryByUserId(userId);
 		if (transactionCategories != null) {
@@ -192,8 +190,6 @@ public class TransactionCategoryRestController implements Serializable {
 	@ApiOperation(value = "Get All Transaction Categories for Expense")
 	@GetMapping(value = "/getForExpenses")
 	public ResponseEntity getTransactionCatgeoriesForExpenses(HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userServiceNew.findByPK(userId);
 		List<TransactionCategory> transactionCategories = transactionCategoryService
 				.findAllTransactionCategoryByChartOfAccount(ChartOfAccountConstant.EXPENSE);
 		if (transactionCategories != null) {

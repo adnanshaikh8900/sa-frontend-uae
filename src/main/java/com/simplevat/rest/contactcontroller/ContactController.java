@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/rest/contact")
-public class ContactController implements Serializable {
+public class ContactController{
 
 	private final Logger logger = LoggerFactory.getLogger(ContactController.class);
 
@@ -94,7 +94,7 @@ public class ContactController implements Serializable {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 		try {
-			Contact contact = contactHelper.getEntity(contactPersistModel, userId);
+			Contact contact = contactHelper.getEntity(contactPersistModel);
 			contact.setCreatedBy(userId);
 			contact.setCreatedDate(LocalDateTime.now());
 			contact.setDeleteFlag(false);
@@ -113,7 +113,7 @@ public class ContactController implements Serializable {
 
 		try {
 			if (contactPersistModel.getContactId() != null && contactPersistModel.getContactId() > 0) {
-				Contact contact = contactHelper.getEntity(contactPersistModel, userId);
+				Contact contact = contactHelper.getEntity(contactPersistModel);
 				contact.setLastUpdatedBy(userId);
 				contact.setLastUpdateDate(LocalDateTime.now());
 				contactService.update(contact);

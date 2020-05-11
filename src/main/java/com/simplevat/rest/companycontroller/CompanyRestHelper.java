@@ -1,7 +1,6 @@
 package com.simplevat.rest.companycontroller;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import com.simplevat.service.IndustryTypeService;
 import com.simplevat.service.UserService;
 
 @Component
-public class CompanyRestHelper implements Serializable{
+public class CompanyRestHelper{
 	
 	private final Logger logger = LoggerFactory.getLogger(CompanyRestHelper.class);
 	

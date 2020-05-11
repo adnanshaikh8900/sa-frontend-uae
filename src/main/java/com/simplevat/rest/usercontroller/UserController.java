@@ -27,7 +27,6 @@ import com.simplevat.utils.MailUtility;
 import io.swagger.annotations.ApiOperation;
 
 import java.io.File;
-import java.io.Serializable;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -61,7 +60,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/rest/user")
-public class UserController implements Serializable {
+public class UserController{
 
 	private  Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -294,20 +293,17 @@ public class UserController implements Serializable {
 
 	private void sendActivationMail(MailEnum mailEnum, MimeMultipart mimeMultipart, String userName,
 			String[] senderMailAddress) {
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Mail mail = new Mail();
-					mail.setFrom(userName);
-					mail.setFromName(EmailConstant.ADMIN_EMAIL_SENDER_NAME);
-					mail.setTo(senderMailAddress);
-					mail.setSubject(mailEnum.getSubject());
-					mailIntegration.sendHtmlEmail(mimeMultipart, mail,
-							MailUtility.getJavaMailSender(configurationService.getConfigurationList()),false);
-				} catch (Exception ex) {
-					logger.error("Error", ex);
-				}
+		Thread t = new Thread(() -> {
+			try {
+				Mail mail = new Mail();
+				mail.setFrom(userName);
+				mail.setFromName(EmailConstant.ADMIN_EMAIL_SENDER_NAME);
+				mail.setTo(senderMailAddress);
+				mail.setSubject(mailEnum.getSubject());
+				mailIntegration.sendHtmlEmail(mimeMultipart, mail,
+						MailUtility.getJavaMailSender(configurationService.getConfigurationList()),false);
+			} catch (Exception ex) {
+				logger.error("Error", ex);
 			}
 		});
 		t.start();

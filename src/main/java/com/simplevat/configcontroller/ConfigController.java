@@ -10,19 +10,13 @@ import com.simplevat.constant.ConfigurationConstants;
 
 import io.swagger.annotations.ApiOperation;
 
-import java.io.Serializable;
 
 @RestController
 @RequestMapping("/config")
-public class ConfigController implements Serializable {
+public class ConfigController{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	@Autowired
-	private transient Environment env;
+	private Environment env;
 
 	@ApiOperation(value = "Get Release Number")
 	@GetMapping(value = "/getreleasenumber")

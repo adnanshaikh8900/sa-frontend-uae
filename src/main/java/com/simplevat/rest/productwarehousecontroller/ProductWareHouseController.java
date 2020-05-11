@@ -5,7 +5,6 @@
  */
 package com.simplevat.rest.productwarehousecontroller;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/productwarehouse")
-public class ProductWareHouseController implements Serializable {
+public class ProductWareHouseController{
 
 	@Autowired
 	private  ProductWareHouseRestHelper productWareHouseRestHelper;

@@ -1,7 +1,7 @@
 steps:
 - name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
   entrypoint: 'mvn'
-  args: ['clean','package']
+  args: ['verify', 'sonar:sonar','clean','package']
   id: mvn-build
   waitFor: ['-']
 - name: 'gcr.io/kaniko-project/executor:debug-edge'

@@ -1,20 +1,37 @@
 package com.simplevat.entity;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Version;
+
+import org.hibernate.annotations.ColumnDefault;
+
 import com.simplevat.constant.ProductPriceType;
 import com.simplevat.constant.ProductType;
 import com.simplevat.entity.converter.DateConverter;
 
-import liquibase.pro.packaged.it;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
 import lombok.Data;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.hibernate.annotations.ColumnDefault;
 
 /**
  * Created by mohsinh on 2/26/2017.

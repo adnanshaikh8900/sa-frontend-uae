@@ -1,6 +1,5 @@
 package com.simplevat.rest.bankaccountcontroller;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -53,7 +52,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/bank")
-public class BankAccountController implements Serializable {
+public class BankAccountController{
 
 	private  final Logger logger = LoggerFactory.getLogger(BankAccountController.class);
 

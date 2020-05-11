@@ -5,7 +5,6 @@
  */
 package com.simplevat.rest.projectcontroller;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +43,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/project")
-public class ProjectController implements Serializable {
+public class ProjectController{
 
 	private  final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 

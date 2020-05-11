@@ -58,9 +58,6 @@ public class ProductCategoryRestController {
 	@GetMapping(value = "/getList")
 	public ResponseEntity getAllProductCategory(ProductCategoryFilterModel filterModel, HttpServletRequest request) {
 
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userServiceNew.findByPK(userId);
-
 		Map<ProductCategoryFilterEnum, Object> filterDataMap = new HashMap();
 		filterDataMap.put(ProductCategoryFilterEnum.PRODUCT_CATEGORY_CODE, filterModel.getProductCategoryCode());
 		filterDataMap.put(ProductCategoryFilterEnum.PRODUCT_CATEGORY_NAME, filterModel.getProductCategoryName());

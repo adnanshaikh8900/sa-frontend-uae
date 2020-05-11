@@ -103,7 +103,7 @@ public class DetailedGeneralLedgerRestHelper {
 
 			for (Integer item : map.keySet()) {
 				List<DetailedGeneralLedgerReportListModel> dataList = new LinkedList<>();
-				List<JournalLineItem> journalLineItemList = (List<JournalLineItem>) map.get(item);
+				List<JournalLineItem> journalLineItemList = map.get(item);
 
 				Comparator<JournalLineItem> dateComparator = Comparator.comparing(j -> j.getJournal().getJournalDate());
 

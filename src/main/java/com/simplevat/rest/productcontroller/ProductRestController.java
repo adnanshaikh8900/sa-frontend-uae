@@ -26,7 +26,6 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.Product;
-import com.simplevat.entity.ProductLineItem;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ProductService;

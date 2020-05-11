@@ -6,7 +6,6 @@
 package com.simplevat.rest.transactionimportcontroller;
 
 import java.io.File;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -57,7 +56,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/transactionimport")
-public class TransactionImportController implements Serializable {
+public class TransactionImportController{
 
 	private  final Logger logger = LoggerFactory.getLogger(TransactionImportController.class);
 	@Autowired

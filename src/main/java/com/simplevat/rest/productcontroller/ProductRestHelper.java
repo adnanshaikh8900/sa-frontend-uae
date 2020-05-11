@@ -1,6 +1,5 @@
 package com.simplevat.rest.productcontroller;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +15,6 @@ import com.simplevat.entity.ProductCategory;
 import com.simplevat.entity.ProductLineItem;
 import com.simplevat.entity.ProductWarehouse;
 import com.simplevat.entity.VatCategory;
-import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.ProductCategoryService;
 import com.simplevat.service.ProductLineItemService;
 import com.simplevat.service.ProductService;

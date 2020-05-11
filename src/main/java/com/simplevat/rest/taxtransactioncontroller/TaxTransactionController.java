@@ -5,7 +5,6 @@
  */
 package com.simplevat.rest.taxtransactioncontroller;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -33,7 +32,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/taxtransaction")
-public class TaxTransactionController implements Serializable {
+public class TaxTransactionController{
 
 	@Autowired
 	private  TaxTransactionService taxTransactionService;

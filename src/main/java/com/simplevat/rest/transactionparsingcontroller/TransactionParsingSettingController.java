@@ -33,7 +33,7 @@ import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.TransactionParsingSettingService;
 import com.simplevat.utils.FileHelper;
 
-import io.swagger.annotations.ApiOperation;;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/rest/transactionParsing")
@@ -144,7 +144,6 @@ public class TransactionParsingSettingController {
 	@GetMapping(value = "/list")
 	public ResponseEntity getTransactionParserSettigList(HttpServletRequest request) {
 		try {
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Map<TransactionParsingSettingFilterEnum, Object> filterDataMap = new HashMap();
 			filterDataMap.put(TransactionParsingSettingFilterEnum.DELETE_FLAG, false);
 			List<TransactionParsingSetting> transactionParsingSettingList = transactionParsingSettingService
@@ -193,7 +192,6 @@ public class TransactionParsingSettingController {
 	@GetMapping(value = "/selectModelList")
 	public ResponseEntity getTransactionParserSettigSelectModelList(HttpServletRequest request) {
 		try {
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Map<TransactionParsingSettingFilterEnum, Object> filterDataMap = new HashMap();
 			filterDataMap.put(TransactionParsingSettingFilterEnum.DELETE_FLAG, false);
 			List<TransactionParsingSetting> transactionParsingSettingList = transactionParsingSettingService

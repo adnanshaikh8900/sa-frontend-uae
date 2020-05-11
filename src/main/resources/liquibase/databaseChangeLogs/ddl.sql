@@ -116,6 +116,4 @@ ALTER TABLE PRODUCT add column PRICE_TYPE varchar(255);
 CREATE TABLE PRODUCT_LINE_ITEM (ID integer not null auto_increment, CREATED_BY integer not null, CREATED_DATE datetime default CURRENT_TIMESTAMP, DELETE_FLAG bit default 0 not null, DESCRIPTION varchar(255), LAST_UPDATED_BY integer, LAST_UPDATE_DATE datetime, PRICE_TYPE varchar(255), UNIT_PRICE decimal(19,2), VERSION_NUMBER integer default 1, PRODUCT_ID integer, TRANSACTION_CATEGORY_ID integer, primary key (ID));
 ALTER TABLE PRODUCT_LINE_ITEM add constraint FKax4sf8pl7n9tgbl8dbonlyq9s foreign key (PRODUCT_ID) references PRODUCT (PRODUCT_ID);
 ALTER TABLE PRODUCT_LINE_ITEM add constraint FK49pfehurx3mnt3ut4gygv57pp foreign key (TRANSACTION_CATEGORY_ID) references TRANSACTION_CATEGORY (TRANSACTION_CATEGORY_ID);
-
---changeset 11/05/2020 SAURABH:ddl-5
 ALTER TABLE PRODUCT add column PRODUCT_TYPE varchar(255);

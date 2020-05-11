@@ -2,7 +2,10 @@ package com.simplevat.rest.productcontroller;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import lombok.Data;
+
+import com.simplevat.constant.ProductPriceType;
+import com.simplevat.constant.ProductType;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,10 +14,9 @@ import lombok.Setter;
 public class ProductRequestModel {
 
 	private Integer productID;
-	private String productName;
-	private String productDescription;
-	private Integer vatCategoryId;
 	private Integer productCategoryId;
+	private String productName;
+	private Integer vatCategoryId;
 	private Integer productWarehouseId;
 	private String productCode;
 	private Integer createdBy;
@@ -24,9 +26,18 @@ public class ProductRequestModel {
 	private Boolean deleteFlag = Boolean.FALSE;
 	private Boolean active;
 	private Integer versionNumber;
-	private Integer parentProduct;
-	private Integer productWarehouse;
 	private Boolean vatIncluded = Boolean.FALSE;
-	private BigDecimal unitPrice;
+
+	// new Added
+	private ProductPriceType productPriceType;
+	private ProductType productType;
+
+	private BigDecimal salesUnitPrice;
+	private String salesDescription;
+	private Integer salesTransactionCategoryId;
+
+	private BigDecimal purchaseUnitPrice;
+	private String purchaseDescription;
+	private Integer purchaseTransactionCategoryId;
 
 }

@@ -13,7 +13,7 @@ public class ProductListModel {
     private String description;
     private String productCode;
     private String vatPercentage;
-    private BigDecimal unitPrice;
+	private BigDecimal unitPrice;
     private Integer vatCategoryId;
     private Integer productCategoryId;
     private Integer productWarehouseId;

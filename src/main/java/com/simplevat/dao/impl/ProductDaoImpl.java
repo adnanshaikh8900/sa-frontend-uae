@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ProductDao;
 import com.simplevat.entity.Product;
+import com.simplevat.entity.ProductLineItem;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
@@ -41,6 +42,8 @@ public class ProductDaoImpl extends AbstractDao<Integer, Product> implements Pro
 			for (Integer id : ids) {
 				Product product = findByPK(id);
 				product.setDeleteFlag(Boolean.TRUE);
+				for (ProductLineItem lineItem : product.getLineItemList())
+					lineItem.setDeleteFlag(Boolean.TRUE);
 				update(product);
 			}
 		}

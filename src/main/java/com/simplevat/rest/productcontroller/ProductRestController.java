@@ -1,8 +1,8 @@
 package com.simplevat.rest.productcontroller;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +26,7 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.Product;
+import com.simplevat.entity.ProductLineItem;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ProductService;
@@ -92,8 +93,7 @@ public class ProductRestController {
 		try {
 			Product product = productService.findByPK(id);
 			if (product != null) {
-				product.setDeleteFlag(Boolean.TRUE);
-				productService.update(product, product.getProductID());
+				productService.deleteByIds(Arrays.asList(id));
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
@@ -136,8 +136,8 @@ public class ProductRestController {
 	public ResponseEntity save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			productRequestModel.setCreatedBy(userId);
 			Product product = productRestHelper.getEntity(productRequestModel);
-			product.setCreatedBy(userId);
 			product.setCreatedDate(LocalDateTime.now());
 			product.setDeleteFlag(Boolean.FALSE);
 			productService.persist(product);
@@ -153,10 +153,10 @@ public class ProductRestController {
 	public ResponseEntity update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			productRequestModel.setCreatedBy(userId);
 			Product product = productRestHelper.getEntity(productRequestModel);
 			product.setLastUpdateDate(LocalDateTime.now());
 			product.setLastUpdatedBy(userId);
-			productService.update(product);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error("Error", e);

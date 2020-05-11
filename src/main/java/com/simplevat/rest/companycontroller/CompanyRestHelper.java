@@ -21,7 +21,7 @@ import com.simplevat.service.UserService;
 @Component
 public class CompanyRestHelper implements Serializable{
 	
-	private final Logger LOGGER = LoggerFactory.getLogger(CompanyRestHelper.class);
+	private final Logger logger = LoggerFactory.getLogger(CompanyRestHelper.class);
 	
 	@Autowired
 	private IndustryTypeService industryTypeService;
@@ -165,7 +165,7 @@ public class CompanyRestHelper implements Serializable{
 			try {
 				company.setCompanyLogo(companyModel.getCompanyLogo().getBytes());
 			} catch (IOException e) {
-				LOGGER.error("ERROR = ", e);
+				logger.error("ERROR = ", e);
 			}
 		}
 		return company;

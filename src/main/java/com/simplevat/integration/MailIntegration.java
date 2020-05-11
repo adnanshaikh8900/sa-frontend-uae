@@ -22,12 +22,12 @@ import com.simplevat.entity.MailAttachment;
 @Component
 public class MailIntegration {
 
-	private final Logger Logger = LoggerFactory.getLogger(MailIntegration.class);
+	private final Logger logger = LoggerFactory.getLogger(MailIntegration.class);
 
 	private static final String UTF_8 = "UTF-8";
 
 	private void sendEmail(final Mail mail, List<MailAttachment> mailAttachmentList, JavaMailSender javaMailSender,
-			boolean html) throws Exception {
+			boolean html){
 		MimeMessagePreparator preparator = mimeMessage -> {
 			MimeMessageHelper mimeMessagePreparator = new MimeMessageHelper(mimeMessage, true, UTF_8);
 			mimeMessagePreparator.setTo(mail.getTo());
@@ -52,7 +52,7 @@ public class MailIntegration {
 		javaMailSender.send(preparator);
 	}
 
-	private void sendEmail(final Mail mail, JavaMailSender javaMailSender, boolean html) throws Exception {
+	private void sendEmail(final Mail mail, JavaMailSender javaMailSender, boolean html) {
 
 		MimeMessagePreparator preparator = mimeMessage -> {
 			MimeMessageHelper mimeMessagePreparator = new MimeMessageHelper(mimeMessage, true, UTF_8);
@@ -65,8 +65,7 @@ public class MailIntegration {
 	}
 
 	public void sendHtmlEmail(final MimeMultipart mimeMultipart, final Mail mail, JavaMailSender javaMailSender,boolean isHtml)
-			throws Exception {
-
+	{
 		MimeMessagePreparator preparator = mimeMessage -> {
 			MimeMessageHelper mimeMessagePreparator = new MimeMessageHelper(mimeMessage, true, UTF_8);
 			mimeMessagePreparator.setTo(mail.getTo());
@@ -78,18 +77,14 @@ public class MailIntegration {
 			}
 		};
 		javaMailSender.send(preparator);
-		Logger.info("Email send to = " + mail);
+		logger.info("Email send to =" +mail );
 	}
-
-//    public void sendHtmlMail(final Mail mail) throws Exception {
-//        sendEmail(mail, true);
-//    }
 	public void sendHtmlMail(final Mail mail, List<MailAttachment> mailAttachmentList, JavaMailSender javaMailSender)
-			throws Exception {
+			{
 		sendEmail(mail, mailAttachmentList, javaMailSender, true);
 	}
 
-	public void sendHtmlMail(final Mail mail, JavaMailSender javaMailSender) throws Exception {
+	public void sendHtmlMail(final Mail mail, JavaMailSender javaMailSender){
 		sendEmail(mail, javaMailSender, true);
 	}
 }

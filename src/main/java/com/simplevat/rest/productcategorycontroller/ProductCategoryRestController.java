@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/productcategory")
 public class ProductCategoryRestController {
-	private final Logger LOGGER = LoggerFactory.getLogger(ProductCategoryRestController.class);
+	private final Logger logger = LoggerFactory.getLogger(ProductCategoryRestController.class);
 	@Autowired
 	private ProductCategoryService productCategoryService;
 
@@ -101,7 +101,7 @@ public class ProductCategoryRestController {
 			productCategoryService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -118,7 +118,7 @@ public class ProductCategoryRestController {
 			productCategoryService.persist(selectedProductCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -138,7 +138,7 @@ public class ProductCategoryRestController {
 			productCategoryService.update(selectedProductCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

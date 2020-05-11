@@ -10,14 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.entity.User;
-import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.RoleService;
 import com.simplevat.service.UserService;
 import com.simplevat.utils.DateFormatUtil;
 
 @Component
 public class UserRestHelper {
-	private final Logger LOGGER = LoggerFactory.getLogger(UserRestHelper.class);
+	private final Logger logger = LoggerFactory.getLogger(UserRestHelper.class);
 	@Autowired
 	private RoleService roleService;
 
@@ -77,7 +76,7 @@ public class UserRestHelper {
 				try {
 					user.setProfileImageBinary(userModel.getProfilePic().getBytes());
 				} catch (IOException e) {
-					LOGGER.error("ERROR", e);
+					logger.error("ERROR", e);
 				}
 			}
 			user.setIsActive(userModel.getActive());

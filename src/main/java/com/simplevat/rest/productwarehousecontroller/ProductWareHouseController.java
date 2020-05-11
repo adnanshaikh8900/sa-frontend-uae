@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
 public class ProductWareHouseController implements Serializable {
 
 	@Autowired
-	private ProductWareHouseRestHelper productWareHouseRestHelper;
+	private  ProductWareHouseRestHelper productWareHouseRestHelper;
 
 	@Autowired
 	private ProductWarehouseService productWarehouseService;

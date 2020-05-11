@@ -5,7 +5,6 @@
  */
 package com.simplevat.rest.projectcontroller;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -47,13 +46,13 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/rest/project")
 public class ProjectController implements Serializable {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
+	private  final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
 	@Autowired
-	private ProjectService projectService;
+	private  ProjectService projectService;
 
 	@Autowired
-	private ProjectRestHelper projectRestHelper;
+	private  ProjectRestHelper projectRestHelper;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -72,7 +71,7 @@ public class ProjectController implements Serializable {
 
 	@ApiOperation(value = "Get Project List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getProductList(ProjectRequestFilterModel filterModel, HttpServletRequest request) {
+	public ResponseEntity getProductList(ProjectRequestFilterModel filterModel) {
 		Map<ProjectFilterEnum, Object> filterDataMap = new HashMap();
 		filterDataMap.put(ProjectFilterEnum.USER_ID, filterModel.getUserId());
 		filterDataMap.put(ProjectFilterEnum.PROJECT_ID, filterModel.getProjectId());
@@ -91,14 +90,14 @@ public class ProjectController implements Serializable {
 	}
 
 	@GetMapping(value = "/getProjectsForDropdown")
-	public ResponseEntity getContactsForDropdown() throws IOException {
+	public ResponseEntity getContactsForDropdown() {
 		List<DropdownModel> dropdownModels = projectService.getProjectsForDropdown();
 		return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Delete Project By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteProject(@RequestParam(value = "id") Integer id) throws Exception {
+	public ResponseEntity deleteProject(@RequestParam(value = "id") Integer id){
 		try {
 			Project project = projectService.findByPK(id);
 
@@ -110,26 +109,25 @@ public class ProjectController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Delete Project in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteProjects(@RequestBody DeleteModel ids) throws Exception {
+	public ResponseEntity deleteProjects(@RequestBody DeleteModel ids){
 		try {
 			projectService.deleteByIds(ids.getIds());
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@PostMapping(value = "/save")
-	public ResponseEntity saveProject(@RequestBody ProjectRequestModel projectRequestModel, HttpServletRequest request)
-			throws Exception {
+	public ResponseEntity saveProject(@RequestBody ProjectRequestModel projectRequestModel, HttpServletRequest request){
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		Project project = projectRestHelper.getEntity(projectRequestModel);
 		project.setCreatedBy(userId);

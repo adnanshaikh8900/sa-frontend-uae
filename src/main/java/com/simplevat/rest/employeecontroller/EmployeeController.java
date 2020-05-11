@@ -2,20 +2,15 @@ package com.simplevat.rest.employeecontroller;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.EmployeeFilterEnum;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.entity.Employee;
-import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.EmployeeService;
 
 import io.swagger.annotations.ApiOperation;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/rest/employee")
 public class EmployeeController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
+	private final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Autowired
 	private EmployeeService employeeService;
@@ -55,7 +50,7 @@ public class EmployeeController {
 
 	@ApiOperation(value = "Get Product List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getEmployeeList(EmployeeRequestFilterModel filterModel) throws IOException {
+	public ResponseEntity getEmployeeList(EmployeeRequestFilterModel filterModel){
 
 		try {
 
@@ -72,7 +67,7 @@ public class EmployeeController {
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -89,7 +84,7 @@ public class EmployeeController {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -101,7 +96,7 @@ public class EmployeeController {
 			employeeService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -118,7 +113,7 @@ public class EmployeeController {
 				return new ResponseEntity<>(employeeHelper.getModel(employee), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -136,7 +131,7 @@ public class EmployeeController {
 			employeeService.persist(employee);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -152,7 +147,7 @@ public class EmployeeController {
 			employeeService.update(employee);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

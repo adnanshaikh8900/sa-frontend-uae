@@ -120,7 +120,5 @@ public class TransactionCategory implements Serializable {
 	@Version
 	private Integer versionNumber;
 
-//	@OneToMany(mappedBy = "chartOfAccountCategory", fetch = FetchType.LAZY)
-//	private List<CoacTransactionCategory> coaTransactionCategoryList;
 
 }

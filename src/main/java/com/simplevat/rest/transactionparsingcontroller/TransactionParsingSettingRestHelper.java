@@ -44,7 +44,7 @@ public class TransactionParsingSettingRestHelper {
 			entity.setDelimiter(ExcellDelimiterEnum.valueOf(model.getDelimiter()));
 			entity.setOtherDilimiterStr(model.getOtherDilimiterStr());
 			if (model.getIndexMap() != null) {
-				List<TransactionDataColMapping> mappinglist = new ArrayList<TransactionDataColMapping>();
+				List<TransactionDataColMapping> mappinglist = new ArrayList<>();
 				Map<TransactionEnum, Integer> map = model.getIndexMap();
 
 				for (TransactionEnum dbColEnum : model.getIndexMap().keySet()) {
@@ -80,7 +80,7 @@ public class TransactionParsingSettingRestHelper {
 			model.setDelimiter(setting.getDelimiter());
 			model.setOtherDilimiterStr(setting.getOtherDilimiterStr());
 			if (setting.getTransactionDtaColMapping() != null) {
-				Map<TransactionEnum, Integer> map = new HashMap<TransactionEnum, Integer>();
+				Map<TransactionEnum, Integer> map = new HashMap<>();
 
 				for (TransactionDataColMapping mapping : setting.getTransactionDtaColMapping()) {
 					map.put(TransactionEnum.valueOf(mapping.getColName()), mapping.getFileColIndex());
@@ -109,7 +109,7 @@ public class TransactionParsingSettingRestHelper {
 		model.setDelimiter(setting.getDelimiter());
 		model.setOtherDilimiterStr(setting.getOtherDilimiterStr());
 		if (setting.getTransactionDtaColMapping() != null) {
-			Map<TransactionEnum, Integer> map = new HashMap<TransactionEnum, Integer>();
+			Map<TransactionEnum, Integer> map = new HashMap<>();
 
 			for (TransactionDataColMapping mapping : setting.getTransactionDtaColMapping()) {
 				map.put(TransactionEnum.valueOf(mapping.getColName()), mapping.getFileColIndex());

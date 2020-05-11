@@ -1,9 +1,6 @@
 package com.simplevat.rest.usercontroller;
 
-import java.util.Date;
-
 import com.simplevat.rest.PaginationModel;
-import com.simplevat.rest.PaginationResponseModel;
 
 import lombok.Data;
 

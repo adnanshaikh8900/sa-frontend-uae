@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.rest.PaginationResponseModel;
@@ -136,22 +135,6 @@ public class VatController implements Serializable {
 		}
 		return new ResponseEntity(HttpStatus.OK);
 	}
-
-//    Commented by mohsin as this is failing the application
-	// @DeleteMapping(value = "/deletevats")
-//    private ResponseEntity deleteVats() {
-//        List<VatCategory> vatCategoryList = vatCategoryService.getVatCategoryList();
-//        if (vatCategoryList != null) {
-//            for (VatCategory vatCategory : vatCategoryList) {
-//            	vatCategory.setDeleteFlag(true);
-//            	vatCategoryService.update(vatCategory, vatCategory.getId());
-//			}
-//        } else {
-//            return new ResponseEntity(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity(HttpStatus.OK);
-//
-//    }
 	@ApiOperation(value = "Update Vat Category")
 	@PostMapping(value = "/update")
 	public ResponseEntity update(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {

@@ -36,7 +36,7 @@ public class VatCategoryRestHelper {
 
 	public List<VatCategoryModel> getList(Object vatCategories) {
 
-		List<VatCategoryModel> vatCatModelList = new ArrayList<VatCategoryModel>();
+		List<VatCategoryModel> vatCatModelList = new ArrayList<>();
 
 		if (vatCategories != null) {
 

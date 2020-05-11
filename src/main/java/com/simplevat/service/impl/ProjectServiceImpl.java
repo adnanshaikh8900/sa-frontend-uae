@@ -40,15 +40,6 @@ public class ProjectServiceImpl extends ProjectService {
         return projectDao;
     }
 
-//    @Override
-//    public void updateProjectExpenseBudget(BigDecimal expenseAmount, Project project) {
-//        if (project.getProjectExpenseBudget() != null) {
-//            project.setProjectExpenseBudget(project.getProjectExpenseBudget().add(expenseAmount));
-//        } else {
-//            project.setProjectExpenseBudget(expenseAmount);
-//        }
-//        update(project);
-//    }
     @Override
     public void updateProjectRevenueBudget(BigDecimal revenueAmount, Project project) {
         if (project.getRevenueBudget()!= null) {

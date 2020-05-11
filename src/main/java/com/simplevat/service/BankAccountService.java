@@ -9,7 +9,6 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.model.DashBoardBankDataModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.service.SimpleVatService;
 
 public abstract class BankAccountService extends SimpleVatService<Integer, BankAccount> {
 

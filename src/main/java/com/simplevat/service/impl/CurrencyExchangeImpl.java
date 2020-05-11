@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 
 @Service("currencyExchangeImpl")
 public class CurrencyExchangeImpl extends CurrencyExchangeService {
-	private final Logger LOGGER = LoggerFactory.getLogger(CurrencyExchangeImpl.class);
-    private static String ACCESSKEY = "c6267cc9e9bd2735a5a2637aa778d61a";
+	private final Logger logger = LoggerFactory.getLogger(CurrencyExchangeImpl.class);
+    private static String accesskey = "c6267cc9e9bd2735a5a2637aa778d61a";
     @Autowired
     CurrencyExchangeDao currencyExchangeDao;
 
@@ -44,22 +44,6 @@ public class CurrencyExchangeImpl extends CurrencyExchangeService {
             currencyIdMap.put(currency.getCurrencyIsoCode(), currency.getCurrencyCode());
         }
 
-//            System.out.println("baseCurrency====" + baseCurrency.getCurrencyIsoCode());
-//            System.out.println("convertCurrenies====" + convertCurrenies);
-//            List<String> listOfCounteries = new ArrayList<>();
-//            for (Currency currency : convertCurrenies) {
-//                listOfCounteries.add(currency.getCurrencyIsoCode());
-//            }
-//
-//            String currencyIsoName = StringUtils.join(listOfCounteries, ',');
-//            System.out.println("currencyIsoName=" + currencyIsoName);
-//            String url = "http://data.fixer.io/api/latest?access_key=" + URLEncoder.encode(ACCESSKEY, "UTF-8") + "&base=" + URLEncoder.encode(baseCurrency.getCurrencyIsoCode(), "UTF-8") + "&symbols=" + URLEncoder.encode(currencyIsoName, "UTF8");
-//            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-//            HttpGet httpGet = new HttpGet(url);
-//            CloseableHttpResponse response = httpClient.execute(httpGet);
-//            String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-//            JSONObject obj = new JSONObject(responseString);
-//            JSONObject rates = obj.getJSONObject("rates");
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         try {
             String url = "https://us-central1-simplevat-web-app.cloudfunctions.net/getExchangeRate";
@@ -94,26 +78,8 @@ public class CurrencyExchangeImpl extends CurrencyExchangeService {
                 persist(currencyConversion);
             }
 
-//                for (Currency currency : convertCurrenies) {
-//                    try {
-//                        //double value = rates.getDouble(currency.getCurrencyIsoCode());
-//                        CurrencyConversion currencyConversion = new CurrencyConversion();
-//                        currencyConversion.setCurrencyCode(baseCurrency.getCurrencyCode());
-//                        currencyConversion.setCurrencyCodeConvertedTo(currency.getCurrencyCode());
-//                        currencyConversion.setCreatedDate(LocalDateTime.ofInstant(dateWithoutTime.toInstant(), ZoneId.systemDefault()));
-//                        //currencyConversion.setExchangeRate(new BigDecimal(value));
-//                        persist(currencyConversion);
-//                    } catch (Exception e) {
-//                        CurrencyConversion currencyConversion = new CurrencyConversion();
-//                        currencyConversion.setCurrencyCode(baseCurrency.getCurrencyCode());
-//                        currencyConversion.setCurrencyCodeConvertedTo(currency.getCurrencyCode());
-//                        currencyConversion.setCreatedDate(LocalDateTime.ofInstant(dateWithoutTime.toInstant(), ZoneId.systemDefault()));
-//                        //currencyConversion.setExchangeRate(new BigDecimal(1).negate());
-//                        persist(currencyConversion);
-//                    }
-//                }
         } catch (Exception e) {
-        	LOGGER.error("Error", e);
+        	logger.error("Error", e);
         }
     }
 

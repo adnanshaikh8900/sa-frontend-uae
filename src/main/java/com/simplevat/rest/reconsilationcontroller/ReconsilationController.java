@@ -93,8 +93,6 @@ public class ReconsilationController {
 	@Autowired
 	private ContactService contactService;
 
-	@Autowired
-	private TransactionStatusService transactionStatusService;
 
 	@Autowired
 	private DateFormatUtil dateFormatUtil;
@@ -106,99 +104,6 @@ public class ReconsilationController {
 					reconsilationRestHelper.getList(ReconsileCategoriesEnumConstant.get(reconcilationCatCode)),
 					HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
-		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
-	@PostMapping(value = "/reconcile")
-	public ResponseEntity reconcile(@ModelAttribute ReconsileRequestModel reconsileRequestModel,
-			HttpServletRequest request) {
-
-		try {
-			List<Journal> journalList = null;
-
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			Transaction trnx = transactionService.findByPK(reconsileRequestModel.getTransactionId());
-
-			if (reconsileRequestModel != null && reconsileRequestModel.getTransactionId() != null) {
-
-				if (reconsileRequestModel.getTransactionCategoryId() != null) {
-					trnx.setExplainedTransactionCategory(
-							transactionCategoryService.findByPK(reconsileRequestModel.getTransactionCategoryId()));
-				}
-				if (reconsileRequestModel.getDescription() != null) {
-					trnx.setExplainedTransactionDescription(reconsileRequestModel.getDescription());
-				}
-				if (reconsileRequestModel.getAttachmentFile() != null) {
-					trnx.setExplainedTransactionAttachement(reconsileRequestModel.getAttachmentFile().getBytes());
-				}
-				if (reconsileRequestModel.getCustomerId() != null) {
-					trnx.setExplinationCustomer(contactService.findByPK(reconsileRequestModel.getCustomerId()));
-				}
-				if (reconsileRequestModel.getVatId() != null) {
-					trnx.setVatCategory(vatCategoryService.findByPK(reconsileRequestModel.getVatId()));
-				}
-				if (reconsileRequestModel.getVendorId() != null) {
-					trnx.setExplinationVendor((contactService.findByPK(reconsileRequestModel.getVendorId())));
-				}
-				if (reconsileRequestModel.getEmployeeId() != null) {
-					// employee remaining
-					trnx.setExplinationEmployee(employeeService.findByPK(reconsileRequestModel.getEmployeeId()));
-				}
-				if (reconsileRequestModel.getBankId() != null) {
-					trnx.setExplinationBankAccount(bankService.findByPK(reconsileRequestModel.getBankId()));
-				}
-				if (reconsileRequestModel.getReference() != null && !reconsileRequestModel.getReference().isEmpty()) {
-					trnx.setReferenceStr(reconsileRequestModel.getReference());
-				}
-				if (reconsileRequestModel.getCoaCategoryId() != null) {
-					trnx.setCoaCategory(
-							chartOfAccountCategoryService.findByPK(reconsileRequestModel.getCoaCategoryId()));
-				}
-
-				journalList = reconsilationRestHelper.get(
-						ChartOfAccountCategoryIdEnumConstant.get(reconsileRequestModel.getCoaCategoryId()),
-						reconsileRequestModel.getTransactionCategoryId(), reconsileRequestModel.getAmount(), userId,
-						trnx, reconsileRequestModel.getInvoiceIdList());
-
-				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
-				if (reconsileRequestModel.getInvoiceIdList() != null) {
-					for (ReconsileRequestLineItemModel invoice : reconsileRequestModel.getInvoiceIdList()) {
-						invoiceIdAmtMap.put(invoice.getInvoiceId(), invoice.getRemainingInvoiceAmount());
-					}
-				}
-
-				if (journalList != null && !journalList.isEmpty()) {
-					List<TransactionStatus> transationStatusList = new ArrayList<>();
-					for (Journal journal : journalList) {
-
-						JournalLineItem item = journal.getJournalLineItems().iterator().next();
-
-						journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(reconsileRequestModel.getDate(),
-								reconsileRequestModel.getDATE_FORMAT()));
-						journalService.persist(journal);
-						TransactionStatus status = new TransactionStatus();
-						status.setCreatedBy(userId);
-						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
-						status.setTransaction(trnx);
-						status.setRemainingToExplain(invoiceIdAmtMap.containsKey(item.getReferenceId())
-								? invoiceIdAmtMap.get(item.getReferenceId())
-								: BigDecimal.ZERO);
-						status.setReconsileJournal(journal);
-						transactionStatusService.persist(status);
-
-						transationStatusList.add(status);
-					}
-				}
-				trnx.setTransactionExplinationStatusEnum(reconsileRequestModel.getExplinationStatusEnum());
-				transactionService.persist(trnx);
-
-				return new ResponseEntity<>(HttpStatus.OK);
-			}
-		} catch (
-
-		Exception e) {
 			LOGGER.error("Error", e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -217,6 +122,7 @@ public class ReconsilationController {
 			case SALES:
 				param = new HashMap<>();
 				param.put("deleteFlag", false);
+				param.put("type", 2);
 				List<Invoice> invList = invoiceService.findByAttributes(param);
 				List<InviceSingleLevelDropdownModel> invModelList = new ArrayList<>();
 

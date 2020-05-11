@@ -5,6 +5,7 @@
  */
 package com.simplevat.rest.transactioncontroller;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -34,14 +35,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.ChartOfAccountConstant;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
+import com.simplevat.entity.InvoiceLineItem;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.Transaction;
@@ -49,6 +52,7 @@ import com.simplevat.entity.bankaccount.TransactionStatus;
 import com.simplevat.helper.TransactionHelper;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
+import com.simplevat.rest.invoicecontroller.InvoiceLineItemModel;
 import com.simplevat.rest.reconsilationcontroller.ReconsilationRestHelper;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
@@ -223,11 +227,23 @@ public class TransactionController implements Serializable {
 					trnx.setExplainedTransactionAttachmentPath(filePath);
 				}
 				transactionService.persist(trnx);
-
+				
+				List<ReconsileRequestLineItemModel> itemModels = new ArrayList<>();
+				if (transactionPresistModel.getInvoiceIdListStr() != null && !transactionPresistModel.getInvoiceIdListStr().isEmpty()) {
+					ObjectMapper mapper = new ObjectMapper();
+					try {
+						itemModels = mapper.readValue(transactionPresistModel.getInvoiceIdListStr(),
+								new TypeReference<List<ReconsileRequestLineItemModel>>() {
+								});
+					} catch (IOException ex) {
+						LOGGER.error("Error", ex);
+					}
+				}
+				
 				journalList = reconsilationRestHelper.get(
 						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
 						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
-						trnx, transactionPresistModel.getInvoiceIdList());
+						trnx,itemModels);
 
 				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
 				if (transactionPresistModel.getInvoiceIdList() != null) {
@@ -380,7 +396,7 @@ public class TransactionController implements Serializable {
 		Transaction trnx = transactionService.findByPK(id);
 		if (trnx != null) {
 			trnx.setDeleteFlag(Boolean.TRUE);
-			transactionService.update(trnx, trnx.getTransactionId());
+			transactionService.deleteTransaction(trnx);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 

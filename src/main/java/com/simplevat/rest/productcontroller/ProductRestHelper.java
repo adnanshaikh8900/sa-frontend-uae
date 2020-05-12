@@ -128,7 +128,8 @@ public class ProductRestHelper {
 			productModel.setProductWarehouseId(product.getProductWarehouse().getWarehouseId());
 		}
 		productModel.setVatIncluded(product.getVatIncluded());
-
+		productModel.setProductPriceType(product.getPriceType());
+		
 		if (product.getLineItemList() != null && !product.getLineItemList().isEmpty()) {
 			for (ProductLineItem lineItem : product.getLineItemList()) {
 				if (lineItem.getPriceType().equals(ProductPriceType.SALES)) {

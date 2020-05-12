@@ -128,7 +128,7 @@ public class ProductRestController {
 			if (product == null) {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			} else {
-				return new ResponseEntity<>(productRestHelper.getListModel(product), HttpStatus.OK);
+				return new ResponseEntity<>(productRestHelper.getRequestModel(product), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error("Error", e);

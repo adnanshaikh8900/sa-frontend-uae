@@ -39,5 +39,4 @@ public class ProductRequestModel {
 	private BigDecimal purchaseUnitPrice;
 	private String purchaseDescription;
 	private Integer purchaseTransactionCategoryId;
-
 }

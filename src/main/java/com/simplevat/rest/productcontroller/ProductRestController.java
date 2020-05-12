@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ProductPriceType;
+import com.simplevat.constant.ProductType;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.Product;
@@ -66,6 +68,10 @@ public class ProductRestController {
 						vatCategoryService.findByPK(filterModel.getVatPercentage()));
 			}
 			filterDataMap.put(ProductFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
+			if (filterModel.getProductPriceType() != null) {
+				filterDataMap.put(ProductFilterEnum.PRODUCT_PRICE_TYPE,
+						Arrays.asList(filterModel.getProductPriceType(), ProductPriceType.BOTH));
+			}
 			PaginationResponseModel response = productService.getProductList(filterDataMap, filterModel);
 			List<ProductListModel> productListModels = new ArrayList<>();
 			if (response == null) {

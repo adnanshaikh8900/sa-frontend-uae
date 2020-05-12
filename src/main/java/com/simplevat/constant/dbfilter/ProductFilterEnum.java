@@ -17,6 +17,7 @@ public enum ProductFilterEnum {
     PRODUCT_VAT_PERCENTAGE("vatCategory", " = :vatCategory"),   
     DELETE_FLAG("deleteFlag", " = :deleteFlag"),   
 	ORDER_BY("productID"," =:productID"),
+	PRODUCT_PRICE_TYPE("priceType"," in :priceType"),
     USER_ID("createdBy", "= :createdBy");
 
     @Getter

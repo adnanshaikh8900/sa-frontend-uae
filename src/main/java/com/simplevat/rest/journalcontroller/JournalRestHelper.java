@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,12 +29,10 @@ import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
 
-import io.jsonwebtoken.lang.Collections;
-
 @Component
 public class JournalRestHelper {
-	private final Logger LOGGER = LoggerFactory.getLogger(JournalRestHelper.class);
-	private final boolean isList = true;
+	private final Logger logger = LoggerFactory.getLogger(JournalRestHelper.class);
+	private static final boolean isList = true;
 	@Autowired
 	private CurrencyService currencyService;
 
@@ -138,7 +134,7 @@ public class JournalRestHelper {
 
 				lineItems.add(lineItem);
 			} catch (Exception e) {
-				LOGGER.error("Error", e);
+				logger.error("Error", e);
 				return new ArrayList<>();
 			}
 		}

@@ -6,18 +6,8 @@
 package com.simplevat.helper;
 
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.ChartOfAccountConstant;
-import com.simplevat.constant.PostingReferenceTypeEnum;
-import com.simplevat.constant.TransactionCreationMode;
-import com.simplevat.constant.TransactionExplinationStatusEnum;
-import com.simplevat.entity.Journal;
-import com.simplevat.entity.JournalLineItem;
-import com.simplevat.entity.Project;
-import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.bankaccount.TransactionStatus;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
 import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
 import com.simplevat.rest.transactioncontroller.TransactionViewModel;
@@ -30,21 +20,11 @@ import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.FileHelper;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+
 
 /**
  *
@@ -133,6 +113,7 @@ public class TransactionHelper {
 //		return transaction;
 //	}
 
+
 	public List<TransactionViewModel> getModelList(Object trasactionList) {
 
 		List<TransactionViewModel> transactionModelList = new ArrayList<>();
@@ -182,7 +163,6 @@ public class TransactionHelper {
 		if (transaction.getTransactionDate() != null)
 			model.setDate(dateUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), model.getDATE_FORMAT()));
 		model.setDescription(transaction.getExplainedTransactionDescription());
-		// TODO : work on attachement
 		model.setReference(transaction.getReferenceStr());
 
 		// EXPENSE

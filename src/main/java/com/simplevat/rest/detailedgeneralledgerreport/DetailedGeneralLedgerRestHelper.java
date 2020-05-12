@@ -11,8 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +22,6 @@ import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.rest.invoicecontroller.InvoiceRestController;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalLineItemService;
@@ -32,8 +30,6 @@ import com.simplevat.utils.DateFormatUtil;
 
 @Component
 public class DetailedGeneralLedgerRestHelper {
-
-	private final Logger logger = LoggerFactory.getLogger(InvoiceRestController.class);
 
 	@Autowired
 	private JournalLineItemService journalLineItemService;
@@ -107,14 +103,9 @@ public class DetailedGeneralLedgerRestHelper {
 
 			for (Integer item : map.keySet()) {
 				List<DetailedGeneralLedgerReportListModel> dataList = new LinkedList<>();
-				List<JournalLineItem> journalLineItemList = (List<JournalLineItem>) map.get(item);
+				List<JournalLineItem> journalLineItemList = map.get(item);
 
-				Comparator<JournalLineItem> dateComparator = new Comparator<JournalLineItem>() {
-					@Override
-					public int compare(JournalLineItem j1, JournalLineItem j2) {
-						return j1.getJournal().getJournalDate().compareTo(j2.getJournal().getJournalDate());
-					}
-				};
+				Comparator<JournalLineItem> dateComparator = Comparator.comparing(j -> j.getJournal().getJournalDate());
 
 				Collections.sort(journalLineItemList, dateComparator);
 

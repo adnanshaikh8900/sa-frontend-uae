@@ -422,8 +422,6 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		if (transactionStatus != null) {
 			builder.append(" AND t.transactionStatus.explainationStatusCode = ").append(transactionStatus);
 		}
-		// sql.append(" and ").append(entry.getKey()).append(" like
-		// '%").append(value).append("%'");
 		for (String filedName : filters.keySet()) {
 			Object filterValue = filters.get(filedName);
 			if (filterValue != null && !((String) filterValue).isEmpty()) {

@@ -5,7 +5,7 @@
  */
 package com.simplevat.rest.transactioncontroller;
 
-import java.io.Serializable;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,9 +34,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.ChartOfAccountConstant;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
@@ -67,14 +68,16 @@ import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 /**
  *
  * @author sonu
  */
 @RestController
 @RequestMapping(value = "/rest/transaction")
-public class TransactionController implements Serializable {
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionController.class);
+public class TransactionController{
+	 private final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
@@ -142,7 +145,7 @@ public class TransactionController implements Serializable {
 				dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getTransactionDate()).getTime())
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 			} catch (ParseException e) {
-				LOGGER.error("Error", e);
+				logger.error(ERROR, e);
 			}
 			dataMap.put(TransactionFilterEnum.TRANSACTION_DATE, dateTime);
 		}
@@ -223,11 +226,23 @@ public class TransactionController implements Serializable {
 					trnx.setExplainedTransactionAttachmentPath(filePath);
 				}
 				transactionService.persist(trnx);
-
+				
+				List<ReconsileRequestLineItemModel> itemModels = new ArrayList<>();
+				if (transactionPresistModel.getInvoiceIdListStr() != null && !transactionPresistModel.getInvoiceIdListStr().isEmpty()) {
+					ObjectMapper mapper = new ObjectMapper();
+					try {
+						itemModels = mapper.readValue(transactionPresistModel.getInvoiceIdListStr(),
+								new TypeReference<List<ReconsileRequestLineItemModel>>() {
+								});
+					} catch (IOException ex) {
+						logger.error(ERROR, ex);
+					}
+				}
+				
 				journalList = reconsilationRestHelper.get(
 						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
 						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
-						trnx, transactionPresistModel.getInvoiceIdList());
+						trnx,itemModels);
 
 				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
 				if (transactionPresistModel.getInvoiceIdList() != null) {
@@ -262,7 +277,7 @@ public class TransactionController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -369,7 +384,7 @@ public class TransactionController implements Serializable {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -380,7 +395,7 @@ public class TransactionController implements Serializable {
 		Transaction trnx = transactionService.findByPK(id);
 		if (trnx != null) {
 			trnx.setDeleteFlag(Boolean.TRUE);
-			transactionService.update(trnx, trnx.getTransactionId());
+			transactionService.deleteTransaction(trnx);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 
@@ -393,7 +408,7 @@ public class TransactionController implements Serializable {
 			transactionService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -409,26 +424,6 @@ public class TransactionController implements Serializable {
 		}
 	}
 
-//    @ApiOperation(value = "Update Bank Account", response = BankAccount.class)
-//    @PutMapping("/{bankAccountId}")
-//    public ResponseEntity updateBankAccount(@PathVariable("bankAccountId") Integer bankAccountId, BankModel bankModel, HttpServletRequest request) {
-//        try {
-//            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//            bankModel.setBankAccountId(bankAccountId);
-//            BankAccount bankAccount = BankHelper.getBankAccountByBankAccountModel(bankModel, bankAccountService, bankAccountStatusService, currencyService, bankAccountTypeService, countryService);
-//            User user = userServiceNew.findByPK(userId);
-//            bankAccount.setBankAccountId(bankModel.getBankAccountId());
-//            bankAccount.setLastUpdateDate(LocalDateTime.now());
-//            bankAccount.setLastUpdatedBy(user.getUserId());
-//            bankAccountService.update(bankAccount);
-//            return new ResponseEntity<>(HttpStatus.OK);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-
 	@GetMapping(value = "/getCashFlow")
 	public ResponseEntity getCashFlow(@RequestParam int monthNo) {
 		try {
@@ -436,7 +431,7 @@ public class TransactionController implements Serializable {
 					transactionService.getCashOutData(monthNo, null));
 			return new ResponseEntity<>(obj, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

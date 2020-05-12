@@ -89,8 +89,8 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
 				&& reportRequestModel.getReportBasis().equals("CASH")) {
 			query.setParameter("transactionCategoryIdList",
-					Arrays.asList(new String[] { TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
-							TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode() }));
+					Arrays.asList(TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
+							TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode()));
 		}
 		List<JournalLineItem> list = query.getResultList();
 		return list != null && !list.isEmpty() ? list : null;
@@ -156,7 +156,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			return aggregatedTransactionMap;
 		} catch (Exception e) {
 			LOGGER.error(
-					"Error occurred while calling stored procedure profitAndLossStoredProcedure " + e.getStackTrace());
+					String.format("Error occurred while calling stored procedure profitAndLossStoredProcedure %s", e.getStackTrace()));
 		}
 		return aggregatedTransactionMap;
 	}

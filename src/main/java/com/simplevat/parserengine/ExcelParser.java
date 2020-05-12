@@ -37,7 +37,7 @@ import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSetting
 @Component
 public class ExcelParser implements TransactionFileParser {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(ExcelParser.class);
+	private final Logger logger = LoggerFactory.getLogger(ExcelParser.class);
 
 	@Autowired
 	private DateFormatDao dateformatDao;
@@ -76,7 +76,7 @@ public class ExcelParser implements TransactionFileParser {
 
 				return list;
 			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
-				LOGGER.error("ERROR = ", e);
+				logger.error("ERROR = ", e);
 			}
 
 		}
@@ -168,11 +168,11 @@ public class ExcelParser implements TransactionFileParser {
 
 				Map responseMap = new LinkedHashMap<>();
 				responseMap.put("data", list);
-				responseMap.put("error", errorList);// errorRowCellIndexMap.isEmpty() ? null : errorRowCellIndexMap);
+				responseMap.put("error", errorList);
 
 				return responseMap;
 			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
-				LOGGER.error("ERROR = ", e);
+				logger.error("ERROR = ", e);
 			}
 
 		}
@@ -209,7 +209,7 @@ public class ExcelParser implements TransactionFileParser {
 				});
 				return list;
 			} catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
-				LOGGER.error("ERROR = ", e);
+				logger.error("ERROR = ", e);
 			}
 
 		}

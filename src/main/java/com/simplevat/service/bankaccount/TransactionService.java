@@ -2,6 +2,7 @@ package com.simplevat.service.bankaccount;
 
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.model.TransactionReportRestModel;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
-public abstract class TransactionService extends SimpleVatService<Integer, Transaction> {
+public abstract class TransactionService extends SimpleVatService<Integer, Transaction>{
 
 	public abstract List<Transaction> getTransactionsByCriteria(TransactionCriteria transactionCriteria)
 			throws Exception;

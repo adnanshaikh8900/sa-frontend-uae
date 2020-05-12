@@ -19,7 +19,6 @@ public abstract class ProjectService extends SimpleVatService<Integer, Project> 
 
 	public abstract PaginationResponseModel getProjectList(Map<ProjectFilterEnum, Object> filterMap,PaginationModel paginationModel);
 
-//    public abstract void updateProjectExpenseBudget(BigDecimal expenseAmount, Project project);
 
 	public abstract void updateProjectRevenueBudget(BigDecimal revenueAmount, Project project);
 

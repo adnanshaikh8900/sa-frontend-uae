@@ -61,11 +61,6 @@ public abstract class SimpleVatService<PK, ENTITY> {
 	}
 
 	protected ENTITY update(ENTITY entity, PK pk, Activity activity) {
-		// commenting this as we are calling update for save and update method both
-		// ENTITY returnEntity = getDao().findByPK(pk);
-		// if(returnEntity == null) {
-		// throw new ServiceException("", ServiceErrorCode.RecordDoesntExists);
-		// }
 		entity = getDao().update(entity);
 		persistActivity(entity, activity, " Updated ");
 		return entity;

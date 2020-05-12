@@ -5,7 +5,6 @@
  */
 package com.simplevat.rest.vatcontroller;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.EnumMap;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.rest.PaginationResponseModel;
@@ -36,6 +34,8 @@ import com.simplevat.service.VatCategoryService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 /**
  *
  * @author Sonu
@@ -43,8 +43,8 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/vat")
-public class VatController implements Serializable {
-	private final Logger LOGGER = LoggerFactory.getLogger(VatController.class);
+public class VatController{
+	private final Logger logger = LoggerFactory.getLogger(VatController.class);
 	@Autowired
 	private VatCategoryService vatCategoryService;
 
@@ -97,7 +97,7 @@ public class VatController implements Serializable {
 			vatCategoryService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -131,27 +131,11 @@ public class VatController implements Serializable {
 			vatCategoryService.persist(vatCategory);
 
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 	}
-
-//    Commented by mohsin as this is failing the application
-	// @DeleteMapping(value = "/deletevats")
-//    private ResponseEntity deleteVats() {
-//        List<VatCategory> vatCategoryList = vatCategoryService.getVatCategoryList();
-//        if (vatCategoryList != null) {
-//            for (VatCategory vatCategory : vatCategoryList) {
-//            	vatCategory.setDeleteFlag(true);
-//            	vatCategoryService.update(vatCategory, vatCategory.getId());
-//			}
-//        } else {
-//            return new ResponseEntity(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity(HttpStatus.OK);
-//
-//    }
 	@ApiOperation(value = "Update Vat Category")
 	@PostMapping(value = "/update")
 	public ResponseEntity update(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
@@ -163,7 +147,7 @@ public class VatController implements Serializable {
 			vatCategoryService.update(vatCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

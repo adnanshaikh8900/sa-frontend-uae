@@ -5,7 +5,6 @@
  */
 package com.simplevat.rest.transactioncategorycontroller;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -41,22 +40,24 @@ import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 /**
  *
  * @author Sonu
  */
 @RestController
 @RequestMapping(value = "/rest/transactioncategory")
-public class TransactionCategoryRestController implements Serializable {
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionCategoryRestController.class);
+public class TransactionCategoryRestController{
+	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryRestController.class);
 	@Autowired
-	private TransactionCategoryService transactionCategoryService;
+	private  TransactionCategoryService transactionCategoryService;
 
 	@Autowired
-	private ChartOfAccountService chartOfAccountService;
+	private  ChartOfAccountService chartOfAccountService;
 
 	@Autowired
-	private UserService userServiceNew;
+	private  UserService userServiceNew;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -68,7 +69,6 @@ public class TransactionCategoryRestController implements Serializable {
 	@GetMapping(value = "/gettransactioncategory")
 	public ResponseEntity getAllTransactionCategory(HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userServiceNew.findByPK(userId);
 		List<TransactionCategory> transactionCategories = transactionCategoryService
 				.findAllTransactionCategoryByUserId(userId);
 		if (transactionCategories != null) {
@@ -135,7 +135,7 @@ public class TransactionCategoryRestController implements Serializable {
 			transactionCategoryService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -155,7 +155,7 @@ public class TransactionCategoryRestController implements Serializable {
 			transactionCategoryService.persist(selectedTransactionCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -184,7 +184,7 @@ public class TransactionCategoryRestController implements Serializable {
 			transactionCategoryService.update(selectedTransactionCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -192,8 +192,6 @@ public class TransactionCategoryRestController implements Serializable {
 	@ApiOperation(value = "Get All Transaction Categories for Expense")
 	@GetMapping(value = "/getForExpenses")
 	public ResponseEntity getTransactionCatgeoriesForExpenses(HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userServiceNew.findByPK(userId);
 		List<TransactionCategory> transactionCategories = transactionCategoryService
 				.findAllTransactionCategoryByChartOfAccount(ChartOfAccountConstant.EXPENSE);
 		if (transactionCategories != null) {

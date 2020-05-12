@@ -43,6 +43,8 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 @Component
 public class TransactionImportRestHelper {
 	private final Logger LOGGER = LoggerFactory.getLogger(TransactionImportRestHelper.class);
@@ -101,7 +103,7 @@ public class TransactionImportRestHelper {
 			CSVParser parser = new CSVParser(br, CSVFormat.EXCEL);
 			listParser = parser.getRecords();
 		} catch (IOException e) {
-			LOGGER.error("Error", e);
+			LOGGER.error(ERROR, e);
 		}
 		populateTranscationOnFileUpload(listParser);
 	}
@@ -254,15 +256,10 @@ public class TransactionImportRestHelper {
 					for (String invalidHeading : invalidHeaderTransactionList) {
 						validationMessage.append(invalidHeading).append("  ");
 					}
-//	                    validationMessage.append(" heading should be (" + TransactionStatusConstant.TRANSACTION_DATE + "," + TransactionStatusConstant.DESCRIPTION + "," + TransactionStatusConstant.DEBIT_AMOUNT + "," + TransactionStatusConstant.CREDIT_AMOUNT + ")");
-//	                    FacesMessage message = new FacesMessage(validationMessage.toString());
-//	                    message.setSeverity(FacesMessage.SEVERITY_ERROR);
-//	                    FacesContext.getCurrentInstance().addMessage("validationId", message);
 				}
-
 			}
 		} catch (Exception ex) {
-			LOGGER.error("Error", ex);
+			LOGGER.error(ERROR, ex);
 		}
 	}
 
@@ -361,7 +358,7 @@ public class TransactionImportRestHelper {
 									.atZone(ZoneId.systemDefault()).toLocalDateTime();
 							trnx.setTransactionDate(transactionDate);
 						} catch (ParseException e) {
-							LOGGER.error("Error", e);
+							LOGGER.error(ERROR, e);
 						}
 						break;
 					}

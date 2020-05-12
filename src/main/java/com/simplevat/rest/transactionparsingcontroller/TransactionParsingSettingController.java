@@ -33,13 +33,15 @@ import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.TransactionParsingSettingService;
 import com.simplevat.utils.FileHelper;
 
-import io.swagger.annotations.ApiOperation;;
+import io.swagger.annotations.ApiOperation;
+
+import static com.simplevat.constant.ErrorConstant.*;
 
 @RestController
 @RequestMapping(value = "/rest/transactionParsing")
 public class TransactionParsingSettingController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionParsingSettingController.class);
+	private final Logger logger = LoggerFactory.getLogger(TransactionParsingSettingController.class);
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -109,11 +111,11 @@ public class TransactionParsingSettingController {
 				mapping.setCreatedDate(LocalDateTime.now());
 			}
 			transactionParsingSettingService.persist(transactionParsigSetting);
-			Map<String, Object> responseMap = new HashMap<String, Object>();
+			Map<String, Object> responseMap = new HashMap<>();
 			responseMap.put("id", transactionParsigSetting.getId());
 			return new ResponseEntity(responseMap, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -135,7 +137,7 @@ public class TransactionParsingSettingController {
 			transactionParsingSettingService.persist(transactionParsigSetting);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -144,7 +146,6 @@ public class TransactionParsingSettingController {
 	@GetMapping(value = "/list")
 	public ResponseEntity getTransactionParserSettigList(HttpServletRequest request) {
 		try {
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Map<TransactionParsingSettingFilterEnum, Object> filterDataMap = new HashMap();
 			filterDataMap.put(TransactionParsingSettingFilterEnum.DELETE_FLAG, false);
 			List<TransactionParsingSetting> transactionParsingSettingList = transactionParsingSettingService
@@ -156,7 +157,7 @@ public class TransactionParsingSettingController {
 					HttpStatus.OK);
 
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -184,7 +185,7 @@ public class TransactionParsingSettingController {
 			return new ResponseEntity(model, HttpStatus.OK);
 
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -193,7 +194,6 @@ public class TransactionParsingSettingController {
 	@GetMapping(value = "/selectModelList")
 	public ResponseEntity getTransactionParserSettigSelectModelList(HttpServletRequest request) {
 		try {
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Map<TransactionParsingSettingFilterEnum, Object> filterDataMap = new HashMap();
 			filterDataMap.put(TransactionParsingSettingFilterEnum.DELETE_FLAG, false);
 			List<TransactionParsingSetting> transactionParsingSettingList = transactionParsingSettingService
@@ -205,7 +205,7 @@ public class TransactionParsingSettingController {
 					HttpStatus.OK);
 
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

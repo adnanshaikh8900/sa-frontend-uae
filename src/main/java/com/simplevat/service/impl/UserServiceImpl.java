@@ -23,7 +23,6 @@ import com.simplevat.utils.DateUtils;
 import com.simplevat.utils.EmailSender;
 import com.simplevat.utils.RandomString;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.simplevat.dao.UserDao;
@@ -31,7 +30,7 @@ import com.simplevat.dao.UserDao;
 @Service("userService")
 public class UserServiceImpl extends UserService{
 
-	private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+	private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 	
 	@Value("${simplevat.baseUrl}")
@@ -99,7 +98,7 @@ public class UserServiceImpl extends UserService{
 					emailSender.resetPassword.replace("LINK", baseUrl + "/reset-password?token=" + token),
 					EmailConstant.ADMIN_SUPPORT_EMAIL, true);
 		} catch (MessagingException e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return false;
 		}
 		user.setForgotPasswordToken(token);

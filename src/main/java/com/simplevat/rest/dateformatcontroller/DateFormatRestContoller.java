@@ -28,11 +28,13 @@ import com.simplevat.service.DateFormatService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 @Controller
 @RequestMapping("/rest/dateFormat")
 public class DateFormatRestContoller {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DateFormatRestContoller.class);
+	private static final Logger logger = LoggerFactory.getLogger(DateFormatRestContoller.class);
 
 	@Autowired
 	private DateFormatService dateFormatService;
@@ -50,7 +52,8 @@ public class DateFormatRestContoller {
 		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
 		List<DateFormat> dateFormatList = dateFormatService.getDateFormatList(filterDataMap);
 		if (dateFormatList == null) {
-			LOGGER.error("Error = ", "NO DATA AVALIBALE FOR DATE FORMAT");
+			logger.error(ERROR,
+					"NO DATA AVALIBALE FOR DATE FORMAT");
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity(dateFormatRestHelper.getModelList(dateFormatList), HttpStatus.OK);
@@ -91,7 +94,7 @@ public class DateFormatRestContoller {
 			dateFormatService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -122,7 +125,7 @@ public class DateFormatRestContoller {
 		if (dateFormat == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		} else {
-			LOGGER.error("Error = NOT FOUND dateFormtter ID" + id);
+			logger.error(ERROR + id);
 		}
 		return new ResponseEntity(dateFormatRestHelper.getModel(dateFormat), HttpStatus.OK);
 	}

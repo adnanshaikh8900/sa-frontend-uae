@@ -26,9 +26,7 @@ public enum ChartOfAccountCategoryIdEnumConstant {
 
 	public static boolean isDebitedFromBank(Integer id) {
 
-		if (id.equals(MONEY_SPENT.id))
-			return true;
+		return id.equals(MONEY_SPENT.id);
 
-		return false;
 	}
 }

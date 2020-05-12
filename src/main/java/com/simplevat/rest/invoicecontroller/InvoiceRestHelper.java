@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.internet.MimeMultipart;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,6 @@ import com.simplevat.entity.Contact;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.InvoiceLineItem;
-import com.simplevat.entity.Mail;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.User;
 import com.simplevat.service.ConfigurationService;
@@ -46,7 +43,7 @@ import com.simplevat.utils.MailUtility;
 
 @Service
 public class InvoiceRestHelper {
-	private final Logger LOGGER = LoggerFactory.getLogger(InvoiceRestHelper.class);
+	private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
 	@Autowired
 	VatCategoryService vatCategoryService;
 
@@ -139,7 +136,7 @@ public class InvoiceRestHelper {
 						new TypeReference<List<InvoiceLineItemModel>>() {
 						});
 			} catch (IOException ex) {
-				LOGGER.error("Error", ex);
+				logger.error("Error", ex);
 			}
 			if (!itemModels.isEmpty()) {
 				List<InvoiceLineItem> invoiceLineItemList = getLineItems(itemModels, invoice, userId);
@@ -179,7 +176,7 @@ public class InvoiceRestHelper {
 				lineItem.setInvoice(invoice);
 				lineItems.add(lineItem);
 			} catch (Exception e) {
-				LOGGER.error("Error", e);
+				logger.error("Error", e);
 				return new ArrayList<>();
 			}
 		}
@@ -375,7 +372,7 @@ public class InvoiceRestHelper {
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[] { invoice.getContact().getBillingEmail() },
 					true);
 		} else {
-			LOGGER.info("BILLING ADDRES NOT PRESENT");
+			logger.info("BILLING ADDRES NOT PRESENT");
 		}
 	}
 
@@ -447,11 +444,6 @@ public class InvoiceRestHelper {
 				}
 				break;
 
-//			case MailUtility.Due_Amount:
-//				if (invoice.getd!= null) {
-//					invoiceDataMap.put(value, invoice.getTotalAmount().toString());
-//				}
-//				break;
 
 			case MailUtility.SENDER_NAME:
 

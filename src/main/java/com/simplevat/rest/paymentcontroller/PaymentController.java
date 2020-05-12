@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,6 +41,8 @@ import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 /**
  *
  * @author Ashish
@@ -50,7 +51,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/rest/payment")
 public class PaymentController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(PaymentController.class);
+	private final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
 	@Autowired
 	private PaymentService paymentService;
@@ -99,7 +100,6 @@ public class PaymentController {
 			}
 			filterDataMap.put(PaymentFilterEnum.USER_ID, userId);
 			filterDataMap.put(PaymentFilterEnum.DELETE_FLAG, false);
-			// filterDataMap.put(PaymentFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 			PaginationResponseModel response = paymentService.getPayments(filterDataMap, filterModel);
 
 			List<PaymentViewModel> paymentModels = new ArrayList<>();
@@ -116,8 +116,7 @@ public class PaymentController {
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
-			;
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -133,7 +132,7 @@ public class PaymentController {
 			}
 			return new ResponseEntity<>(paymentModel, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -165,7 +164,7 @@ public class PaymentController {
 			paymentService.persist(payment);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -206,7 +205,7 @@ public class PaymentController {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -224,13 +223,13 @@ public class PaymentController {
 	}
 
 	@ApiOperation(value = "Delete Multiple Payments")
-	@RequestMapping(method = RequestMethod.DELETE, value = "/deletes")
+	@DeleteMapping(value = "/deletes")
 	public ResponseEntity deleteExpenses(@RequestBody DeleteModel expenseIds) {
 		try {
 			paymentModelHelper.deletePayments(expenseIds, paymentService);
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}

@@ -184,7 +184,6 @@ public class BankAccountRestHelper {
 			bankAccount.setAccountNumber(bankModel.getAccountNumber());
 			bankAccount.setBankAccountName(bankModel.getBankAccountName());
 			bankAccount.setBankName(bankModel.getBankName());
-			// bankAccount.setDeleteFlag(Boolean.FALSE);
 			bankAccount.setIfscCode(bankModel.getIfscCode());
 			bankAccount.setIsprimaryAccountFlag(bankModel.getIsprimaryAccountFlag());
 			bankAccount.setOpeningBalance(bankModel.getOpeningBalance());

@@ -129,7 +129,7 @@ public class ProductRestHelper {
 		}
 		productModel.setVatIncluded(product.getVatIncluded());
 		productModel.setProductPriceType(product.getPriceType());
-		
+
 		if (product.getLineItemList() != null && !product.getLineItemList().isEmpty()) {
 			for (ProductLineItem lineItem : product.getLineItemList()) {
 				if (lineItem.getPriceType().equals(ProductPriceType.SALES)) {
@@ -137,12 +137,15 @@ public class ProductRestHelper {
 					productModel.setSalesDescription(lineItem.getDescription());
 					productModel.setSalesTransactionCategoryId(
 							lineItem.getTransactioncategory().getTransactionCategoryId());
+					productModel.setSalesTransactionCategoryLabel(
+							lineItem.getTransactioncategory().getChartOfAccount().getChartOfAccountName());
 				} else {
 					productModel.setPurchaseUnitPrice(lineItem.getUnitPrice());
 					productModel.setPurchaseDescription(lineItem.getDescription());
 					productModel.setPurchaseTransactionCategoryId(
 							lineItem.getTransactioncategory().getTransactionCategoryId());
-
+					productModel.setPurchaseTransactionCategoryLabel(
+							lineItem.getTransactioncategory().getChartOfAccount().getChartOfAccountName());
 				}
 			}
 		}

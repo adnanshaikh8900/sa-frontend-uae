@@ -35,8 +35,10 @@ public class ProductRequestModel {
 	private BigDecimal salesUnitPrice;
 	private String salesDescription;
 	private Integer salesTransactionCategoryId;
-
+	private String salesTransactionCategoryLabel;
+	
 	private BigDecimal purchaseUnitPrice;
 	private String purchaseDescription;
 	private Integer purchaseTransactionCategoryId;
+	private String purchaseTransactionCategoryLabel;
 }

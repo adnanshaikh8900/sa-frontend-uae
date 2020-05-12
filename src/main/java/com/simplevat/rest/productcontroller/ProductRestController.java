@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ProductPriceType;
-import com.simplevat.constant.ProductType;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.Product;

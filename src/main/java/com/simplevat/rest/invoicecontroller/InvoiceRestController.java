@@ -222,20 +222,24 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 		}
 	}
 
+	@Deprecated
 	@ApiOperation(value = "Send Invoice")
 	@PostMapping(value = "/send")
 	public ResponseEntity update(@RequestParam("id") Integer id, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			invoiceRestHelper.send(invoiceService.findByPK(id),userId);
+			invoiceRestHelper.send(invoiceService.findByPK(id), userId);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("Error", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+
 	/**
-	 * This method web service will retriever the OverDueAmountDetails To Be Paid for the the specific user
+	 * This method web service will retriever the OverDueAmountDetails To Be Paid
+	 * for the the specific user
+	 * 
 	 * @param request HTTP servelet request
 	 * @return Response entity
 	 */

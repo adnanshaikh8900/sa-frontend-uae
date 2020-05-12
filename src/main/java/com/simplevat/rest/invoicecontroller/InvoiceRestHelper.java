@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerErrorException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,10 +34,10 @@ import com.simplevat.service.CurrencyService;
 import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.PaymentService;
+import com.simplevat.service.ProductService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
-import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.DateUtils;
 import com.simplevat.utils.FileHelper;
 import com.simplevat.utils.MailUtility;
@@ -81,7 +82,7 @@ public class InvoiceRestHelper {
 	private DateUtils dateUtils;
 
 	@Autowired
-	private DateFormatUtil dateFormatUtil;
+	private ProductService productService;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -91,6 +92,9 @@ public class InvoiceRestHelper {
 			if (invoice.getInvoiceLineItems() != null) {
 				invoiceLineItemService.deleteByInvoiceId(invoiceModel.getInvoiceId());
 			}
+			// If invoice is paid cannot update
+			if (invoice.getStatus() > InvoiceStatusEnum.APPROVED.getValue())
+				throw new ServerErrorException("Cannot Update Paid Invoice.");
 		}
 		if (invoiceModel.getTotalAmount() != null) {
 			invoice.setTotalAmount(invoiceModel.getTotalAmount());
@@ -99,8 +103,9 @@ public class InvoiceRestHelper {
 			invoice.setTotalVatAmount(invoiceModel.getTotalVatAmount());
 		}
 		invoice.setReferenceNumber(invoiceModel.getReferenceNumber());
-		// Type supplier = 1
-		// Type customer = 2
+		/**
+		 * @see ContactTypeEnum
+		 */
 		if (invoiceModel.getType() != null && !invoiceModel.getType().isEmpty()) {
 			invoice.setType(Integer.parseInt(invoiceModel.getType()));
 		}
@@ -170,10 +175,11 @@ public class InvoiceRestHelper {
 				lineItem.setDescription(model.getDescription());
 				lineItem.setUnitPrice(model.getUnitPrice());
 				lineItem.setSubTotal(model.getSubTotal());
-				if (model.getVatCategoryId() != null) {
+				if (model.getVatCategoryId() != null)
 					lineItem.setVatCategory(vatCategoryService.findByPK(Integer.parseInt(model.getVatCategoryId())));
-				}
 				lineItem.setInvoice(invoice);
+				if (model.getProductId() != null)
+					lineItem.setProduct(productService.findByPK(model.getProductId()));
 				lineItems.add(lineItem);
 			} catch (Exception e) {
 				logger.error("Error", e);
@@ -213,7 +219,10 @@ public class InvoiceRestHelper {
 		requestModel.setReceiptNumber(invoice.getReceiptNumber());
 		requestModel.setNotes(invoice.getNotes());
 		if (invoice.getType() != null) {
-			requestModel.setType(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getType()));
+			/**
+			 * @see ContactTypeEnum
+			 */
+			requestModel.setType(invoice.getType().toString());
 		}
 		requestModel.setReceiptAttachmentDescription(invoice.getReceiptAttachmentDescription());
 		if (invoice.getTaxIdentificationNumber() != null) {
@@ -264,6 +273,8 @@ public class InvoiceRestHelper {
 			lineItemModel.setVatCategoryId(lineItem.getVatCategory().getId().toString());
 			lineItemModel.setVatPercentage(lineItem.getVatCategory().getVat().intValue());
 		}
+		if (lineItem.getProduct() != null)
+			lineItemModel.setProductId(lineItem.getProduct().getProductID());
 		return lineItemModel;
 	}
 
@@ -291,11 +302,7 @@ public class InvoiceRestHelper {
 				model.setTotalVatAmount(invoice.getTotalVatAmount());
 
 				if (invoice.getStatus() != null) {
-					if (invoice.getStatus() > 2 && invoice.getStatus() < 5) {
-						model.setStatus(getInvoceStatus(dateUtils.get(invoice.getInvoiceDueDate())));
-					} else {
-						model.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
-					}
+					model.setStatus(getInvoiceStatus(invoice.getStatus(), invoice.getInvoiceDueDate()));
 				}
 				invoiceListModels.add(model);
 			}
@@ -376,7 +383,7 @@ public class InvoiceRestHelper {
 		}
 	}
 
-	public Map<String, String> getInvoceData(Invoice invoice, Integer userId) {
+	private Map<String, String> getInvoceData(Invoice invoice, Integer userId) {
 		Map<String, String> map = mailUtility.getInvoiceEmailParamMap();
 		Map<String, String> invoiceDataMap = new HashMap<>();
 		User user = userService.findByPK(userId);
@@ -444,7 +451,6 @@ public class InvoiceRestHelper {
 				}
 				break;
 
-
 			case MailUtility.SENDER_NAME:
 
 				invoiceDataMap.put(value, user.getUserEmail());
@@ -459,7 +465,7 @@ public class InvoiceRestHelper {
 		return invoiceDataMap;
 	}
 
-	public String getInvoceStatus(Date dueDate) {
+	private String getInvoceStatusLabel(Date dueDate) {
 		String status = "";
 		Date today = new Date();
 		int dueDays = dateUtils.diff(today, dueDate);
@@ -472,5 +478,15 @@ public class InvoiceRestHelper {
 			status = ("Due Today");
 		}
 		return status;
+	}
+
+	private String getInvoiceStatus(Integer status, LocalDateTime dueDate) {
+		String statusLabel = "";
+		if (status > 2 && status < 5) {
+			statusLabel = getInvoceStatusLabel(dateUtils.get(dueDate));
+		} else {
+			statusLabel = InvoiceStatusEnum.getInvoiceTypeByValue(status);
+		}
+		return statusLabel;
 	}
 }

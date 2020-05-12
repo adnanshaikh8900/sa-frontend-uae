@@ -36,7 +36,8 @@ import org.hibernate.annotations.ColumnDefault;
 		@NamedQuery(name = "activeInvoicesByDateRange", query = "from Invoice i where i.invoiceDate between :startDate and :endDate and i.deleteFlag = false"),
 		@NamedQuery(name = "overDueAmount", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2"),
 		@NamedQuery(name = "overDueAmountWeeklyMonthly", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2 and i.invoiceDueDate between :startDate and :endDate")
-		//select com.simplevat.entity.Invoice(i.invoiceDate,i.invoiceDueDate,i.totalAmount,i.type) 
+		// select
+		// com.simplevat.entity.Invoice(i.invoiceDate,i.invoiceDueDate,i.totalAmount,i.type)
 
 })
 public class Invoice implements Serializable {
@@ -137,6 +138,9 @@ public class Invoice implements Serializable {
 	@ColumnDefault(value = "0.00")
 	private BigDecimal totalVatAmount;
 
+	/**
+	 * @see com.simplevat.constant.InvoiceStatusEnum
+	 */
 	@Basic
 	@Column(name = "STATUS")
 	private Integer status;
@@ -165,8 +169,13 @@ public class Invoice implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private InvoiceDuePeriodEnum invoiceDuePeriod;
 
+	/**
+	 * Its compulsary field
+	 * 
+	 * @see com.simplevat.constant.ContactTypeEnum
+	 */
 	@Column(name = "TYPE")
-	@Basic(optional = false)
+	@Basic
 	private Integer type;
 
 	@PrePersist

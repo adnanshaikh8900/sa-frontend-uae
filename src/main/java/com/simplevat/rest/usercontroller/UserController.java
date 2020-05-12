@@ -54,6 +54,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 /**
  *
  * @author Sonu
@@ -121,7 +123,7 @@ public class UserController{
 			}
 
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -154,7 +156,7 @@ public class UserController{
 			userService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		logger.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -200,7 +202,7 @@ public class UserController{
 				}
 			}
 		} catch (Exception ex) {
-			logger.error("Error", ex);
+			logger.error(ERROR, ex);
 		}
 		logger.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -238,7 +240,7 @@ public class UserController{
 			}
 			return new ResponseEntity<>(userRestHelper.getModel(user), HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -286,7 +288,7 @@ public class UserController{
 					.getEMailConfigurationList(configurationService.getConfigurationList());
 			sendActivationMail(mailEnum, mimeMultipart, mailDefaultConfigurationModel.getMailusername(), email);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return null;
 	}
@@ -303,7 +305,7 @@ public class UserController{
 				mailIntegration.sendHtmlEmail(mimeMultipart, mail,
 						MailUtility.getJavaMailSender(configurationService.getConfigurationList()),false);
 			} catch (Exception ex) {
-				logger.error("Error", ex);
+				logger.error(ERROR, ex);
 			}
 		});
 		t.start();

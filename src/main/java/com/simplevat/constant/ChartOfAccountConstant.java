@@ -24,9 +24,7 @@ public class ChartOfAccountConstant {
 
 	public static boolean isDebitedFromBank(Integer id) {
 
-		if (id.equals(ASSET) || id.equals(REVENUE) || id.equals(EQUITY))
-			return true;
+		return (id.equals(ASSET) || id.equals(REVENUE) || id.equals(EQUITY));
 
-		return false;
 	}
 }

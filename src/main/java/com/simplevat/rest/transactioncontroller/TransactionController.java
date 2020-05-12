@@ -68,6 +68,8 @@ import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 /**
  *
  * @author sonu
@@ -143,7 +145,7 @@ public class TransactionController{
 				dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getTransactionDate()).getTime())
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 			} catch (ParseException e) {
-				logger.error("Error", e);
+				logger.error(ERROR, e);
 			}
 			dataMap.put(TransactionFilterEnum.TRANSACTION_DATE, dateTime);
 		}
@@ -233,7 +235,7 @@ public class TransactionController{
 								new TypeReference<List<ReconsileRequestLineItemModel>>() {
 								});
 					} catch (IOException ex) {
-						logger.error("Error", ex);
+						logger.error(ERROR, ex);
 					}
 				}
 				
@@ -275,7 +277,7 @@ public class TransactionController{
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -382,7 +384,7 @@ public class TransactionController{
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -406,7 +408,7 @@ public class TransactionController{
 			transactionService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -429,7 +431,7 @@ public class TransactionController{
 					transactionService.getCashOutData(monthNo, null));
 			return new ResponseEntity<>(obj, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

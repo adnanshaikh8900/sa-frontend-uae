@@ -50,6 +50,8 @@ import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 /**
  *
  * @author Sonu
@@ -164,7 +166,7 @@ public class TransactionImportController{
 			}
 			transactionService.persist(transaction1);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 	}
 

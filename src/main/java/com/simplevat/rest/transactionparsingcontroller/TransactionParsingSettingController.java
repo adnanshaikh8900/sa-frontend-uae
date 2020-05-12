@@ -35,6 +35,8 @@ import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 @RestController
 @RequestMapping(value = "/rest/transactionParsing")
 public class TransactionParsingSettingController {
@@ -113,7 +115,7 @@ public class TransactionParsingSettingController {
 			responseMap.put("id", transactionParsigSetting.getId());
 			return new ResponseEntity(responseMap, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -135,7 +137,7 @@ public class TransactionParsingSettingController {
 			transactionParsingSettingService.persist(transactionParsigSetting);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -183,7 +185,7 @@ public class TransactionParsingSettingController {
 			return new ResponseEntity(model, HttpStatus.OK);
 
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -203,7 +205,7 @@ public class TransactionParsingSettingController {
 					HttpStatus.OK);
 
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

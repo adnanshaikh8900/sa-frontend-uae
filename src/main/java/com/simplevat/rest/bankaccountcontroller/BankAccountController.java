@@ -46,6 +46,8 @@ import com.simplevat.service.bankaccount.TransactionService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 /**
  *
  * @author Sonu
@@ -135,7 +137,7 @@ public class BankAccountController{
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -156,7 +158,7 @@ public class BankAccountController{
 			return new ResponseEntity<>(HttpStatus.OK);
 
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -194,7 +196,7 @@ public class BankAccountController{
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -217,7 +219,7 @@ public class BankAccountController{
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -234,7 +236,7 @@ public class BankAccountController{
 
 			return new ResponseEntity<>(bankAccountRestHelper.getModel(bankAccount), HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -246,7 +248,7 @@ public class BankAccountController{
 			bankAccountService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -261,7 +263,7 @@ public class BankAccountController{
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -278,7 +280,7 @@ public class BankAccountController{
 					transactionService.getCashInData(monthCount, bankId),
 					transactionService.getCashOutData(monthCount, bankId)), HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -289,7 +291,7 @@ public class BankAccountController{
 			BigDecimal totalBalance = bankAccountService.getAllBankAccountsTotalBalance();
 			return new ResponseEntity<>(totalBalance != null ? totalBalance : 0, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

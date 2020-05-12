@@ -6,7 +6,6 @@
 package-lock.json
 node_modules/
 frontend/node_modules/
-frontend/src/constants/config.js/
 target/
 frontend/node_module/*
 frontend/node/*

@@ -123,7 +123,7 @@ class CreateContact extends React.Component {
         }
       })
       .catch((err) => {
-        this.setState({ disabled: true });
+        this.setState({ disabled: false });
         this.props.commonActions.tostifyAlert(
           'error',
           err && err.data ? err.data.message : 'Something Went Wrong',

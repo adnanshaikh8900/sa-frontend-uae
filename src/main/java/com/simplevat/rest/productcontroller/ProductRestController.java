@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ProductPriceType;
-import com.simplevat.constant.ProductType;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.Product;
@@ -34,6 +33,8 @@ import com.simplevat.service.ProductService;
 import com.simplevat.service.VatCategoryService;
 
 import io.swagger.annotations.ApiOperation;
+
+import static com.simplevat.constant.ErrorConstant.*;
 
 /**
  *
@@ -87,7 +88,7 @@ public class ProductRestController {
 			}
 			return new ResponseEntity(response, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -102,7 +103,7 @@ public class ProductRestController {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -114,7 +115,7 @@ public class ProductRestController {
 			productService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -131,7 +132,7 @@ public class ProductRestController {
 				return new ResponseEntity<>(productRestHelper.getRequestModel(product), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -148,7 +149,7 @@ public class ProductRestController {
 			productService.persist(product);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -164,7 +165,7 @@ public class ProductRestController {
 			product.setLastUpdatedBy(userId);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

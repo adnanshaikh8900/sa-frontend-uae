@@ -163,7 +163,6 @@ public class TransactionHelper {
 		if (transaction.getTransactionDate() != null)
 			model.setDate(dateUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), model.getDATE_FORMAT()));
 		model.setDescription(transaction.getExplainedTransactionDescription());
-		// TODO : work on attachement
 		model.setReference(transaction.getReferenceStr());
 
 		// EXPENSE

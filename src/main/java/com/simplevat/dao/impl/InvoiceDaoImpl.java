@@ -91,7 +91,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter("type", type);
 		query.setMaxResults(1);
 		BigDecimal overDueAmount =  query.getSingleResult();
-		Float overDueAmountFloat = new Float(0);
+		Float overDueAmountFloat = (float) 0;
 		if(overDueAmount!=null)
 			overDueAmountFloat= overDueAmount.floatValue() ;
 		Date date = new Date();
@@ -116,8 +116,8 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter("startDate", dateUtil.get(startDate));
 		query.setParameter("endDate", dateUtil.get(endDate));
 		query.setMaxResults(1);
-		BigDecimal overDueAmountMonthly = (BigDecimal) query.getSingleResult();
-		Float overDueAmountFloat = new Float(0);
+		BigDecimal overDueAmountMonthly = query.getSingleResult();
+		Float overDueAmountFloat = (float) 0;
 		if(overDueAmountMonthly!=null)
 			overDueAmountFloat = overDueAmountMonthly.floatValue() ;
 		return overDueAmountFloat;

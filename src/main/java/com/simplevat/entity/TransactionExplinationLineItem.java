@@ -17,7 +17,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.converter.DateConverter;
@@ -46,7 +45,6 @@ public class TransactionExplinationLineItem {
 	@JoinColumn(name = "Id")
 	private Invoice invoice;
 
-	// TODO use when partial payent is needed
 	@Column(name = "REMANINING_BALANCE")
 	@ColumnDefault(value = "0.00")
 	private BigDecimal currentBalance;

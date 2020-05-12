@@ -14,6 +14,8 @@ import com.simplevat.service.RoleService;
 import com.simplevat.service.UserService;
 import com.simplevat.utils.DateFormatUtil;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 @Component
 public class UserRestHelper {
 	private final Logger logger = LoggerFactory.getLogger(UserRestHelper.class);
@@ -76,7 +78,7 @@ public class UserRestHelper {
 				try {
 					user.setProfileImageBinary(userModel.getProfilePic().getBytes());
 				} catch (IOException e) {
-					logger.error("ERROR", e);
+					logger.error(ERROR, e);
 				}
 			}
 			user.setIsActive(userModel.getActive());

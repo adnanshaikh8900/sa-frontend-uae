@@ -1,8 +1,6 @@
 package com.simplevat.constant;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -10,197 +8,224 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatatableSortingFilterConstant {
 
-	Map<String, String> dataMap;
-	public final static String DEFAULT_SORTING_ORDER = "DESC";
-	private final String transactionCategoryName = "transactionCategoryName";
-	private final String status = "status";
-	private final String description = "description";
-	private final String referenceCode = "referenceCode";
-	private final String firstName = "firstName";
-	private final String email = "email";
-
-	public final String EXEPENSE = "EXPENSE";
-	public final String EXEPENSE_DEFAULT = "expenseId";
-	private final List<String> expenseColLabelList = Arrays.asList(new String[] { "payee", "expenseStatus",
-			"expenseDescription", "receiptNumber", "expenseAmount", transactionCategoryName, "expenseDate" });
-	private final List<String> expenseColNameList = Arrays.asList(new String[] { "payee", status, "expenseDescription",
-			"receiptNumber", "expenseAmount", "transactionCategory.transactionCategoryName", "expenseDate" });
-
-	public final String JOURNAL = "JOURNAL";
-	public final String JOURNAL_DEFAULT = "id";
-	private final List<String> journalColLabelList = Arrays.asList(
-			new String[] { "journalDate", "journalReferenceNo", "postingReferenceTypeDisplayName", description });
-	private final List<String> journalColNameList = Arrays
-			.asList(new String[] { "journalDate", "journlReferencenNo", "postingReferenceType", description });
-
-	public final String BANK_ACCOUNT = "BANK_ACCOUNT";
-	public final String BANK_ACCOUNT_DEFAULT = "id";
-	private final List<String> bankAccountColLabelList = Arrays.asList(new String[] { "name", "bankAccountTypeName",
-			"bankAccountNo", "accounName", "currancyName", "openingBalance" });
-	private final List<String> bankAccountColNameList = Arrays.asList(new String[] { "bankName", "bankAccountType.name",
-			"accountNumber", "bankAccountName", "bankAccountCurrency.currencyName", "openingBalance" });
-
-	public final String INVOICE = "INVOICE";
-	public final String INVOICE_DEFAULT = "id";
-	private final List<String> invoiceColLabelList = Arrays.asList(new String[] { status, "name", "referenceNumber",
-			"invoiceDate", "invoiceDueDate", "totalAmount", "totalVatAmount" });
-	private final List<String> invoiceColNameList = Arrays.asList(new String[] { status, "contact.firstName",
-			"referenceNumber", "invoiceDate", "invoiceDueDate", "totalAmount", "totalVatAmount" });
-
-	public final String RECEIPT = "RECEIPT";
-	public final String RECEIPT_DEFAULT = "id";
-	private final List<String> receiptColLabelList = Arrays.asList(
-			new String[] { "receiptDate", referenceCode, "customerName", "invoiceNumber", "amount", "unusedAmount" });
-	private final List<String> receiptColNameList = Arrays.asList(new String[] { "receiptDate", referenceCode,
-			"contact.firstName", "invoice.referenceNumber", "amount", "unusedAmount", });
-
-	public final String PAYMENT = "PAYMENT";
-	public final String PAYMENT_DEFAULT = "paymentId";
-	private final List<String> paymentColLabelList = Arrays
-			.asList(new String[] { "supplierName", "invoiceReferenceNo", "invoiceAmount", "paymentDate" });
-	private final List<String> paymentColNameList = Arrays
-			.asList(new String[] { "supplier.firstName", "invoice.referenceNumber", "invoiceAmount", "paymentDate" });
-
-	public final String USER = "USER";
-	public final String USER_DEFAULT = "userId";
-	private final List<String> userColLabelList = Arrays
-			.asList(new String[] { firstName, "dob", "roleName", "active" });
-	private final List<String> userColNameList = Arrays
-			.asList(new String[] { firstName, "dateOfBirth", "role.roleName", "isActive" });
-
-	public final String CHART_OF_ACCOUNT = "CHART_OF_ACCOUNT";
-	public final String CHART_OF_ACCOUNT_DEFAULT = "transactionCategoryId";
-	private final List<String> chartOfAccountColLabelList = Arrays
-			.asList(new String[] { "transactionCategoryCode", transactionCategoryName, "transactionTypeName" });
-	private final List<String> chartOfAccountColNameList = Arrays.asList(
-			new String[] { "transactionCategoryCode", transactionCategoryName, "chartOfAccount.chartOfAccountName" });
-
-	public final String CONTACT = "CONTACT";
-	public final String CONTACT_DEFALT = "contactId";
-	private final List<String> contactColLabelList = Arrays
-			.asList(new String[] { firstName, email, "contactTypeString" });
-	private final List<String> contactColNameList = Arrays.asList(new String[] { firstName, email, "contactType" });
-
-	public final String EMPLOYEE = "EMPLOYEE";
-	public final String EMPLOYEE_DEFALT = "id";
-	private final List<String> employeeColLabelList = Arrays
-			.asList(new String[] { firstName, referenceCode, email, "vatRegestationNo" });
-	private final List<String> employeeColNameList = Arrays
-			.asList(new String[] { firstName, referenceCode, email, "vatRegistrationNo" });
-
-	public final String PRODUCT = "PRODUCT";
-	public final String PRODUCT_DEFALT = "productID";
-	private final List<String> productColLabelList = Arrays
-			.asList(new String[] { "name", "productCode", description, "vatPercentage", "unitPrice" });
-	private final List<String> productColNameList = Arrays.asList(
-			new String[] { "productName", "productCode", "productDescription", "vatCategory.name", "unitPrice" });
-
-	public final String PROJECT = "PROJECT";
-	public final String PROJECT_DEFALT = "projectId";
-	private final List<String> projectColLabelList = Arrays
-			.asList(new String[] { "projectName", "expenseBudget", "revenueBudget", "vatRegistrationNumber" });
-	private final List<String> projectColNameList = Arrays
-			.asList(new String[] { "projectName", "expenseBudget", "revenueBudget", "vatRegistrationNumber" });
-
-	public final String VAT_CATEGORY = "VAT_CATEGORY";
-	public final String VAT_CATEGORYT_DEFALT = "id";
-	private final List<String> vatCategoryColLabelList = Arrays.asList(new String[] { "name", "vat" });
-	private final List<String> vatCategoryColNameList = Arrays.asList(new String[] { "name", "vat" });
-
-	public final String PRODUCT_CATEGORY = "PRODUCT_CATEGORY";
-	public final String PRODUCT_CATEGORYT_DEFALT = "id";
-	private final List<String> productCategoryColLabelList = Arrays
-			.asList(new String[] { "productCategoryName", "productCategoryCode" });
-	private final List<String> productCategoryColNameList = Arrays
-			.asList(new String[] { "productCategoryName", "productCategoryCode" });
-
-	private Map<String, String> getMap(List<String> colLabelList, List<String> colNameList) {
-		dataMap = new HashMap<String, String>();
-		for (String colName : colLabelList) {
-			int index = colLabelList.indexOf(colName);
-			dataMap.put(colLabelList.get(index), colNameList.get(index));
-		}
-		return dataMap;
+	private DatatableSortingFilterConstant() {
+		initColumnNameMapping();
 	}
 
+	Map<String, String> tableDefaultValueMap;
+	Map<String, Map<String, String>> tableColumnNameMappingDataMap;
+	public static final String DEFAULT_SORTING_ORDER = "DESC";
+
+	//EXPENSE table
+	public static final String EXPENSE = "EXPENSE";
+	public static final String EXPENSE_DEFAULT_VALUE = "expenseId";
+	public static final String EXPENSE_COL_LABEL_STRING = "payee,expenseStatus,expenseDescription,receiptNumber,expenseAmount,transactionCategoryName,expenseDate";
+	public static final String EXPENSE_COL_NAME_STRING = "payee,status,expenseDescription,receiptNumber,expenseAmount,transactionCategory.transactionCategoryName,expenseDate";
+
+	//JOURNAL table
+	public static final String JOURNAL = "JOURNAL";
+	public static final String JOURNAL_DEFAULT_VALUE = "id";
+	public static final String JOURNAL_COL_LABEL_STRING = "journalDate,journalReferenceNo,postingReferenceTypeDisplayName,description";
+	public static final String JOURNAL_COL_NAME_STRING = "journalDate,journlReferencenNo,postingReferenceType,description";
+
+	//BANK_ACCOUNT table
+	public static final String BANK_ACCOUNT = "BANK_ACCOUNT";
+	public static final String BANK_ACCOUNT_DEFAULT_VALUE = "id";
+	public static final String BANK_ACCOUNT_COL_LABEL_STRING = "name,bankAccountTypeName,bankAccountNo,accounName,currancyName,openingBalance";
+	public static final String BANK_ACCOUNT_COL_NAME_STRING = "bankName,bankAccountType.name,accountNumber,bankAccountName,bankAccountCurrency.currencyName,openingBalance";
+
+	//INVOICE table
+	public static final String INVOICE = "INVOICE";
+	public static final String INVOICE_DEFAULT_VALUE = "id";
+	public static final String INVOICE_COL_LABEL_STRING = "name,referenceNumber,invoiceDate,invoiceDueDate,totalAmount,totalVatAmount";
+	public static final String INVOICE_COL_NAME_STRING = "contact.firstName,referenceNumber,invoiceDate,invoiceDueDate,totalAmount,totalVatAmount";
+
+	//RECEIPT table
+	public static final String RECEIPT = "RECEIPT";
+	public static final String RECEIPT_DEFAULT_VALUE = "id";
+	public static final String RECEIPT_COL_LABEL_STRING = "receiptDate,referenceCode,customerName,invoiceNumber,amount,unusedAmount";
+	public static final String RECEIPT_COL_NAME_STRING = "receiptDate,referenceCode,contact.firstName,invoice.referenceNumber,amount,unusedAmount";
+
+	//PAYMENT table
+	public static final String PAYMENT = "PAYMENT";
+	public static final String PAYMENT_DEFAULT_VALUE = "paymentId";
+	public static final String PAYMENT_COL_LABEL_STRING = "supplierName,invoiceReferenceNo,invoiceAmount,paymentDate";
+	public static final String PAYMENT_COL_NAME_STRING = "supplier.firstName,invoice.referenceNumber,invoiceAmount,paymentDate";
+
+	//USER table
+	public static final String USER = "USER";
+	public static final String USER_DEFAULT_VALUE = "userId";
+	public static final String USER_COL_LABEL_STRING = "firstName,dob,roleName,active";
+	public static final String USER_COL_NAME_STRING = "firstName,dateOfBirth,role.roleName,isActive";
+
+    //CHART_OF_ACCOUNT table
+	public static final String CHART_OF_ACCOUNT = "CHART_OF_ACCOUNT";
+	public static final String CHART_OF_ACCOUNT_DEFAULT_VALUE = "transactionCategoryId";
+	public static final String CHART_OF_ACCOUNT_COL_LABEL_STRING = "transactionCategoryCode,transactionCategoryName,transactionTypeName";
+	public static final String CHART_OF_ACCOUNT_COL_NAME_STRING = "transactionCategoryCode,transactionCategoryName,chartOfAccount.chartOfAccountName";
+
+	//CONTACT table
+	public static final String CONTACT = "CONTACT";
+	public static final String CONTACT_DEFAULT_VALUE = "contactId";
+	public static final String CONTACT_COL_LABEL_STRING = "firstName,email,contactTypeString";
+	public static final String CONTACT_COL_NAME_STRING = "firstName,email,contactType";
+
+	//EMPLOYEE table
+	public static final String EMPLOYEE = "EMPLOYEE";
+	public static final String EMPLOYEE_DEFAULT_VALUE = "id";
+	public static final String EMPLOYEE_COL_LABEL_STRING = "firstName,referenceCode,email,vatRegestationNo";
+	public static final String EMPLOYEE_COL_NAME_STRING = "firstName,referenceCode,email,vatRegistrationNo";
+
+	//PRODUCT table
+	public static final String PRODUCT = "PRODUCT";
+	public static final String PRODUCT_DEFAULT_VALUE = "productID";
+	public static final String PRODUCT_COL_LABEL_STRING = "name,productCode,description,vatPercentage,unitPrice";
+	public static final String PRODUCT_COL_NAME_STRING = "productName,productCode,productDescription,vatCategory.name,unitPrice";
+
+	//PROJECT table
+	public static final String PROJECT = "PROJECT";
+	public static final String PROJECT_DEFAULT_VALUE = "projectId";
+	public static final String PROJECT_COL_LABEL_STRING = "projectName,expenseBudget,revenueBudget,vatRegistrationNumber";
+	public static final String PROJECT_COL_NAME_STRING = "projectName, expenseBudget, revenueBudget, vatRegistrationNumber";
+
+	//VAT_CATEGORY table
+	public static final String VAT_CATEGORY = "VAT_CATEGORY";
+	public static final String VAT_CATEGORY_DEFAULT_VALUE = "id";
+	public static final String VAT_CATEGORY_COL_LABEL_STRING = "name,vat";
+	public static final String VAT_CATEGORY_COL_NAME_STRING = "name,vat";
+
+	//PRODUCT_CATEGORY table
+	public static final String PRODUCT_CATEGORY = "PRODUCT_CATEGORY";
+	public static final String PRODUCT_CATEGORY_DEFAULT_VALUE = "id";
+	public static final String PRODUCT_CATEGORY_COL_LABEL_STRING = "productCategoryName,productCategoryCode";
+	public static final String PRODUCT_CATEGORY_COL_NAME_STRING = "productCategoryName,productCategoryCode";
+
+
 	public String getColName(String label, String tableName) {
-
-		String returnDbName = null;
-		Map<String, String> map = null;
-		switch (tableName) {
-		case EXEPENSE:
-			map = getMap(expenseColLabelList, expenseColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : EXEPENSE_DEFAULT);
-			break;
-
-		case JOURNAL:
-			map = getMap(journalColLabelList, journalColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : JOURNAL_DEFAULT);
-			break;
-
-		case BANK_ACCOUNT:
-			map = getMap(bankAccountColLabelList, bankAccountColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : BANK_ACCOUNT_DEFAULT);
-			break;
-
-		case INVOICE:
-			map = getMap(invoiceColLabelList, invoiceColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : INVOICE_DEFAULT);
-			break;
-		case RECEIPT:
-			map = getMap(receiptColLabelList, receiptColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : RECEIPT_DEFAULT);
-			break;
-
-		case PAYMENT:
-			map = getMap(paymentColLabelList, paymentColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : PAYMENT_DEFAULT);
-			break;
-
-		case USER:
-			map = getMap(userColLabelList, userColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : USER_DEFAULT);
-			break;
-
-		case CHART_OF_ACCOUNT:
-			map = getMap(chartOfAccountColLabelList, chartOfAccountColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : CHART_OF_ACCOUNT_DEFAULT);
-			break;
-
-		case CONTACT:
-			map = getMap(contactColLabelList, contactColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : CONTACT_DEFALT);
-			break;
-
-		case EMPLOYEE:
-			map = getMap(employeeColLabelList, employeeColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : EMPLOYEE_DEFALT);
-			break;
-
-		case PRODUCT:
-			map = getMap(productColLabelList, productColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : PRODUCT_DEFALT);
-			break;
-
-		case PROJECT:
-			map = getMap(projectColLabelList, projectColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : PROJECT_DEFALT);
-			break;
-
-		case VAT_CATEGORY:
-			map = getMap(vatCategoryColLabelList, vatCategoryColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : VAT_CATEGORYT_DEFALT);
-			break;
-
-		case PRODUCT_CATEGORY:
-			map = getMap(productCategoryColLabelList, productCategoryColNameList);
-			returnDbName = (map.containsKey(label) ? map.get(label) : PRODUCT_CATEGORYT_DEFALT);
-			break;
-
-		default:
-			break;
+		if (tableColumnNameMappingDataMap == null) {
+			initColumnNameMapping();
 		}
-		return returnDbName;
+			Map<String, String> columnDataMap = tableColumnNameMappingDataMap.get(tableName);
+			String value = columnDataMap.get(label);
+			if(value==null)
+				return tableDefaultValueMap.get(tableName);
+			return value;
+	}
+
+	private void initColumnNameMapping() {
+		initTableNameDefaultValueMapping();
+		tableColumnNameMappingDataMap = new HashMap<>();
+		//EXPENSE
+		String[] colLabelStringArray = EXPENSE_COL_LABEL_STRING.split(",");
+		String[] colNameStringArray = EXPENSE_COL_NAME_STRING.split(",");
+		Map<String, String>	tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(EXPENSE,tempDataMap);
+
+		//JOURNAL
+		colLabelStringArray = JOURNAL_COL_LABEL_STRING.split(",");
+		colNameStringArray = JOURNAL_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(JOURNAL,tempDataMap);
+
+		//BANK_ACCOUNT
+		colLabelStringArray = BANK_ACCOUNT_COL_LABEL_STRING.split(",");
+		colNameStringArray = BANK_ACCOUNT_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(BANK_ACCOUNT,tempDataMap);
+
+		//INVOICE
+		colLabelStringArray = INVOICE_COL_LABEL_STRING.split(",");
+		colNameStringArray = INVOICE_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(INVOICE,tempDataMap);
+
+		//RECEIPT
+		colLabelStringArray = RECEIPT_COL_LABEL_STRING.split(",");
+		colNameStringArray = RECEIPT_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(RECEIPT,tempDataMap);
+
+		//PAYMENT
+		colLabelStringArray = PAYMENT_COL_LABEL_STRING.split(",");
+		colNameStringArray = PAYMENT_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(PAYMENT,tempDataMap);
+
+		//USER
+		colLabelStringArray = USER_COL_LABEL_STRING.split(",");
+		colNameStringArray = USER_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(USER,tempDataMap);
+
+		//CHART_OF_ACCOUNT
+		colLabelStringArray = CHART_OF_ACCOUNT_COL_LABEL_STRING.split(",");
+		colNameStringArray = CHART_OF_ACCOUNT_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(CHART_OF_ACCOUNT,tempDataMap);
+
+		//CONTACT
+		colLabelStringArray = CONTACT_COL_LABEL_STRING.split(",");
+		colNameStringArray = CONTACT_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(CONTACT,tempDataMap);
+
+		//EMPLOYEE
+		colLabelStringArray = EMPLOYEE_COL_LABEL_STRING.split(",");
+		colNameStringArray = EMPLOYEE_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(EMPLOYEE,tempDataMap);
+
+		//PRODUCT
+		colLabelStringArray = PRODUCT_COL_LABEL_STRING.split(",");
+		colNameStringArray = PRODUCT_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(PRODUCT,tempDataMap);
+
+		//PROJECT
+		colLabelStringArray = PROJECT_COL_LABEL_STRING.split(",");
+		colNameStringArray = PROJECT_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(PROJECT,tempDataMap);
+
+		//VAT_CATEGORY
+		colLabelStringArray = VAT_CATEGORY_COL_LABEL_STRING.split(",");
+		colNameStringArray = VAT_CATEGORY_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(VAT_CATEGORY,tempDataMap);
+
+		//PRODUCT_CATEGORY
+		colLabelStringArray = PRODUCT_CATEGORY_COL_LABEL_STRING.split(",");
+		colNameStringArray = PRODUCT_CATEGORY_COL_NAME_STRING.split(",");
+		tempDataMap = createMap(colLabelStringArray,colNameStringArray);
+		tableColumnNameMappingDataMap.put(PRODUCT_CATEGORY,tempDataMap);
+
+	}
+
+	private void initTableNameDefaultValueMapping() {
+		tableDefaultValueMap = new HashMap<>();
+		tableDefaultValueMap.put(EXPENSE, EXPENSE_DEFAULT_VALUE);
+		tableDefaultValueMap.put(JOURNAL,JOURNAL_DEFAULT_VALUE);
+		tableDefaultValueMap.put(BANK_ACCOUNT,BANK_ACCOUNT_DEFAULT_VALUE);
+		tableDefaultValueMap.put(INVOICE,INVOICE_DEFAULT_VALUE);
+		tableDefaultValueMap.put(RECEIPT,RECEIPT_DEFAULT_VALUE);
+		tableDefaultValueMap.put(PAYMENT,PAYMENT_DEFAULT_VALUE);
+		tableDefaultValueMap.put(USER,USER_DEFAULT_VALUE);
+		tableDefaultValueMap.put(CHART_OF_ACCOUNT,CHART_OF_ACCOUNT_DEFAULT_VALUE);
+		tableDefaultValueMap.put(CONTACT,CONTACT_DEFAULT_VALUE);
+		tableDefaultValueMap.put(EMPLOYEE,EMPLOYEE_DEFAULT_VALUE);
+		tableDefaultValueMap.put(PRODUCT,PRODUCT_DEFAULT_VALUE);
+		tableDefaultValueMap.put(PROJECT,PROJECT_DEFAULT_VALUE);
+		tableDefaultValueMap.put(VAT_CATEGORY,VAT_CATEGORY_DEFAULT_VALUE);
+		tableDefaultValueMap.put(PRODUCT_CATEGORY,PRODUCT_CATEGORY_DEFAULT_VALUE);
+
+
+	}
+
+	private Map<String, String> createMap(String[] colLabelStringArray, String[] colNameStringArray) {
+		Map<String, String> tempDataMap = new HashMap<>();
+		for(int arrayCount=0;arrayCount<colLabelStringArray.length;arrayCount++)
+			tempDataMap.put(colLabelStringArray[arrayCount],colNameStringArray[arrayCount]);
+		return tempDataMap;
 	}
 
 }

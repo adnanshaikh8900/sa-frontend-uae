@@ -132,7 +132,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 				.add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
 						.condition(transactionCategoryFilter.getCondition()).value(value).build()));
 		paginationModel.setSortingCol(
-				dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.CHART_OF_ACCOUNT));
+				dataTableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.CHART_OF_ACCOUNT));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}

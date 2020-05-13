@@ -84,7 +84,7 @@ public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implem
 		filterDataMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));
 		paginationModel
-				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), dataTableUtil.BANK_ACCOUNT));
+				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), DatatableSortingFilterConstant.BANK_ACCOUNT));
 
 		PaginationResponseModel resposne = new PaginationResponseModel();
 		resposne.setCount(this.getResultCount(dbFilters));

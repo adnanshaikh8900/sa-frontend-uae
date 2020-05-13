@@ -5,6 +5,7 @@
  */
 package com.simplevat.rest;
 
+import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.ExpenseStatusEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;

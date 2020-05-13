@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
@@ -159,7 +160,10 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			invoice.setCreatedDate(LocalDateTime.now());
 			invoice.setDeleteFlag(Boolean.FALSE);
 			if (requestModel.getAttachmentFile() != null && !requestModel.getAttachmentFile().isEmpty()) {
-				String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(), FileTypeEnum.SUPPLIER_INVOICE);
+				String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(),
+						requestModel.getType().equals(ContactTypeEnum.SUPPLIER.getValue().toString())
+								? FileTypeEnum.SUPPLIER_INVOICE
+								: FileTypeEnum.CUSTOMER_INVOICE);
 				invoice.setReceiptAttachmentFileName(requestModel.getAttachmentFile().getOriginalFilename());
 				invoice.setReceiptAttachmentPath(fileName);
 			}
@@ -178,7 +182,10 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
 			if (requestModel.getAttachmentFile() != null && !requestModel.getAttachmentFile().isEmpty()) {
-				String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(), FileTypeEnum.SUPPLIER_INVOICE);
+				String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(),
+						requestModel.getType().equals(ContactTypeEnum.SUPPLIER.getValue().toString())
+								? FileTypeEnum.SUPPLIER_INVOICE
+								: FileTypeEnum.CUSTOMER_INVOICE);
 				invoice.setReceiptAttachmentFileName(requestModel.getAttachmentFile().getOriginalFilename());
 				invoice.setReceiptAttachmentPath(fileName);
 			}

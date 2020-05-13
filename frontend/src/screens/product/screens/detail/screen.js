@@ -83,6 +83,11 @@ class DetailProduct extends React.Component {
         .getProductById(this.props.location.state.id)
         .then((res) => {
           if (res.status === 200) {
+            if (res.data.productPriceType === 'BOTH') {
+              var productPriceType = ['SALES', 'PURCHASE'];
+            } else {
+              var productPriceType = [res.data.productPriceType];
+            }
             this.setState({
               loading: false,
               current_product_id: this.props.location.state.id,
@@ -120,9 +125,9 @@ class DetailProduct extends React.Component {
                   ? res.data.purchaseDescription
                   : '',
                 productType: res.data.productType ? res.data.productType : '',
-                productPriceType: [
-                  res.data.productPriceType ? res.data.productPriceType : '',
-                ],
+                productPriceType: res.data.productPriceType
+                  ? productPriceType
+                  : '',
                 salesTransactionCategoryLabel: res.data
                   .salesTransactionCategoryLabel
                   ? res.data.salesTransactionCategoryLabel
@@ -265,7 +270,6 @@ class DetailProduct extends React.Component {
         }),
     };
     const postData = this.getData(dataNew);
-    console.log(postData);
     this.props.detailProductActions
       .updateProduct(postData)
       .then((res) => {
@@ -336,13 +340,13 @@ class DetailProduct extends React.Component {
       product_warehouse_list,
     } = this.props;
     const { loading, dialog, purchaseCategory, salesCategory } = this.state;
-    if (salesCategory && this.state.initValue.salesTransactionCategoryLabel) {
-      console.log(typeof this.state.initValue.salesTransactionCategoryId);
-      const result = salesCategory.categoriesList
-        .find((item) => item.label == 'Income')
-        .options.find((item) => item.value === 80);
-      console.log(result);
-    }
+    // if (salesCategory && this.state.initValue.salesTransactionCategoryLabel) {
+    //   console.log(typeof this.state.initValue.salesTransactionCategoryId);
+    //   const result = salesCategory.categoriesList
+    //     .find((item) => item.label == 'Income')
+    //     .options.find((item) => item.value === 80);
+    //   console.log(result);
+    // }
     return (
       <div className="detail-product-screen">
         <div className="animated fadeIn">
@@ -454,7 +458,8 @@ class DetailProduct extends React.Component {
                                             );
                                           }}
                                           checked={
-                                            props.values.productType || ''
+                                            props.values.productType ===
+                                              'GOODS' || ''
                                           }
                                         />
                                         Goods
@@ -477,7 +482,7 @@ class DetailProduct extends React.Component {
                                           }}
                                           checked={
                                             props.values.productType ===
-                                            'SERVICE'
+                                              'SERVICE' || ''
                                           }
                                         />
                                         Service

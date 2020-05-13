@@ -163,6 +163,7 @@ public class ProductRestController {
 			Product product = productRestHelper.getEntity(productRequestModel);
 			product.setLastUpdateDate(LocalDateTime.now());
 			product.setLastUpdatedBy(userId);
+			productService.update(product);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

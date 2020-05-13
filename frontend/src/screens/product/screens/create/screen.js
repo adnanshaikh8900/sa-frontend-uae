@@ -82,7 +82,7 @@ class CreateProduct extends React.Component {
     };
     this.regEx = /^[0-9\d]+$/;
     this.regExBoth = /[a-zA-Z0-9]+$/;
-    this.regExAlpha = /^[a-zA-Z]+$/;
+    this.regExAlpha = /^[a-zA-Z ]+$/;
   }
 
   componentDidMount = () => {
@@ -268,7 +268,6 @@ class CreateProduct extends React.Component {
                       <Formik
                         initialValues={initValue}
                         onSubmit={(values, { resetForm }) => {
-                          console.log(values);
                           this.handleSubmit(values, resetForm);
                         }}
                         validationSchema={Yup.object().shape({

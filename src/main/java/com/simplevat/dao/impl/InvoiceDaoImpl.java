@@ -37,7 +37,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		paginationModel.setSortingCol(datatableUtil.getColName(paginationModel.getSortingCol(), datatableUtil.INVOICE));
+		paginationModel.setSortingCol(datatableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.INVOICE));
 		PaginationResponseModel response = new PaginationResponseModel();
 		response.setCount(this.getResultCount(dbFilters));
 		response.setData(this.executeQuery(dbFilters, paginationModel));

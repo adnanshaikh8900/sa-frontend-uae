@@ -39,6 +39,8 @@ import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.SingleLevelDropDownModel;
+import com.simplevat.rest.productcontroller.ProductPriceModel;
+import com.simplevat.rest.productcontroller.ProductRestHelper;
 import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
 import com.simplevat.service.ChartOfAccountCategoryService;
@@ -88,6 +90,9 @@ public class DataListController {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private ProductRestHelper productRestHelper;
 
 	@GetMapping(value = "/getcountry")
 	public ResponseEntity getCountry() {
@@ -343,11 +348,11 @@ public class DataListController {
 				filterDataMap.put(ProductFilterEnum.PRODUCT_PRICE_TYPE,
 						Arrays.asList(priceType, ProductPriceType.BOTH));
 
-				PaginationResponseModel responseModel = productService.getProductList(filterDataMap,null);
+				PaginationResponseModel responseModel = productService.getProductList(filterDataMap, null);
 				if (responseModel != null && responseModel.getData() != null) {
-					List<DropdownModel> modelList = new ArrayList<>();
+					List<ProductPriceModel> modelList = new ArrayList<>();
 					for (Product product : (List<Product>) responseModel.getData())
-						modelList.add(new DropdownModel(product.getProductID(), product.getProductName()));
+						modelList.add(productRestHelper.getPriceModel(product, priceType));
 					return new ResponseEntity<>(modelList, HttpStatus.OK);
 				} else {
 					return new ResponseEntity(HttpStatus.NOT_FOUND);

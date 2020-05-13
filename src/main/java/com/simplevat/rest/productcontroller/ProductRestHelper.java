@@ -166,12 +166,31 @@ public class ProductRestHelper {
 		if (product.getProductWarehouse() != null) {
 			productModel.setProductWarehouseId(product.getProductWarehouse().getWarehouseId());
 		}
-		if (!product.getPriceType().equals(ProductPriceType.PURCHASE)) {
-			productModel.setDescription(product.getDescription());
-			productModel.setUnitPrice(product.getUnitPrice());
+		for (ProductLineItem lineItem : product.getLineItemList()) {
+			if (!lineItem.getPriceType().equals(ProductPriceType.PURCHASE)) {
+				productModel.setDescription(product.getDescription());
+				productModel.setUnitPrice(product.getUnitPrice());
+			}
 		}
 		productModel.setProductCode(product.getProductCode());
 		productModel.setVatIncluded(product.getVatIncluded());
+		return productModel;
+	}
+
+	public ProductPriceModel getPriceModel(Product product, ProductPriceType priceType) {
+		ProductPriceModel productModel = new ProductPriceModel();
+		productModel.setId(product.getProductID());
+		productModel.setName(product.getProductName());
+		if (product.getVatCategory() != null) {
+			productModel.setVatCategoryId(product.getVatCategory().getId());
+			productModel.setVatPercentage(product.getVatCategory().getVatLabel());
+		}
+		for (ProductLineItem lineItem : product.getLineItemList()) {
+			if (lineItem.getPriceType().equals(priceType)) {
+				productModel.setDescription(lineItem.getDescription());
+				productModel.setUnitPrice(lineItem.getUnitPrice());
+			}
+		}
 		return productModel;
 	}
 }

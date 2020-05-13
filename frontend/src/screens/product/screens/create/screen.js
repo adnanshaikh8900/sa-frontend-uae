@@ -93,6 +93,12 @@ class CreateProduct extends React.Component {
     this.purchaseCategory();
   };
 
+  // componentDidUpdate(prevProps, prevState, snapshot) {
+  //   if (prevProps.vat_list !== this.props.vat_list) {
+  //     this.props.productActions.getProductVatCategoryList();
+  //   }
+  // }
+
   salesCategory = () => {
     try {
       this.props.transactionCreateActions

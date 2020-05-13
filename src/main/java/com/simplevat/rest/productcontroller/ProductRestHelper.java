@@ -166,9 +166,11 @@ public class ProductRestHelper {
 		if (product.getProductWarehouse() != null) {
 			productModel.setProductWarehouseId(product.getProductWarehouse().getWarehouseId());
 		}
-		productModel.setDescription(product.getDescription());
+		if (!product.getPriceType().equals(ProductPriceType.PURCHASE)) {
+			productModel.setDescription(product.getDescription());
+			productModel.setUnitPrice(product.getUnitPrice());
+		}
 		productModel.setProductCode(product.getProductCode());
-		productModel.setUnitPrice(product.getUnitPrice());
 		productModel.setVatIncluded(product.getVatIncluded());
 		return productModel;
 	}

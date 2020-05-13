@@ -22,13 +22,16 @@ import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PayMode;
+import com.simplevat.constant.ProductPriceType;
 import com.simplevat.constant.dbfilter.CurrencyFilterEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
+import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.constant.dbfilter.StateFilterEnum;
 import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
 import com.simplevat.entity.ChartOfAccountCategory;
 import com.simplevat.entity.Country;
 import com.simplevat.entity.IndustryType;
+import com.simplevat.entity.Product;
 import com.simplevat.entity.State;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.rest.DropdownModel;
@@ -42,6 +45,7 @@ import com.simplevat.service.ChartOfAccountCategoryService;
 import com.simplevat.service.CountryService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
+import com.simplevat.service.ProductService;
 import com.simplevat.service.StateService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
@@ -77,13 +81,13 @@ public class DataListController {
 	private VatCategoryRestHelper vatCategoryRestHelper;
 
 	@Autowired
-	private TranscationCategoryHelper transcationCategoryHelper;
-
-	@Autowired
 	private StateService stateService;
 
 	@Autowired
 	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+
+	@Autowired
+	private ProductService productService;
 
 	@GetMapping(value = "/getcountry")
 	public ResponseEntity getCountry() {
@@ -243,25 +247,22 @@ public class DataListController {
 	@GetMapping(value = "/getsubChartofAccount")
 	public ResponseEntity getsubChartofAccount() {
 		try {
-			//Check if the chartOf Account result is already cached.
-			Map<String, List<DropdownModel>> chartOfAccountMap =  ChartOfAccountCacheService.getInstance().getChartOfAccountCacheMap();
+			// Check if the chartOf Account result is already cached.
+			Map<String, List<DropdownModel>> chartOfAccountMap = ChartOfAccountCacheService.getInstance()
+					.getChartOfAccountCacheMap();
 
 			if (chartOfAccountMap != null && !chartOfAccountMap.isEmpty()) {
-				//If cached return the result
-				return new ResponseEntity<>(chartOfAccountMap,
-						HttpStatus.OK);
-			}
-			else if(chartOfAccountMap != null && chartOfAccountMap.isEmpty() )
-			{
-				//If result not cached read all the chart of accounts from the from db/
+				// If cached return the result
+				return new ResponseEntity<>(chartOfAccountMap, HttpStatus.OK);
+			} else if (chartOfAccountMap != null && chartOfAccountMap.isEmpty()) {
+				// If result not cached read all the chart of accounts from the from db/
 				List<ChartOfAccount> chartOfAccountList = transactionTypeService.findAll();
 				// Process them to get the desired result.
-				chartOfAccountMap = ChartOfAccountCacheService.getInstance().loadChartOfAccountCacheMap(chartOfAccountList);
-				//return the result.
-				return new ResponseEntity<>(chartOfAccountMap,
-						HttpStatus.OK);
-			}
-			else {
+				chartOfAccountMap = ChartOfAccountCacheService.getInstance()
+						.loadChartOfAccountCacheMap(chartOfAccountList);
+				// return the result.
+				return new ResponseEntity<>(chartOfAccountMap, HttpStatus.OK);
+			} else {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
@@ -332,4 +333,30 @@ public class DataListController {
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+	@ApiOperation(value = "get Product List")
+	@GetMapping(value = "/product")
+	public ResponseEntity getProductList(@RequestParam ProductPriceType priceType) {
+		try {
+			Map<ProductFilterEnum, Object> filterDataMap = new HashMap<>();
+			if (priceType != null) {
+				filterDataMap.put(ProductFilterEnum.PRODUCT_PRICE_TYPE,
+						Arrays.asList(priceType, ProductPriceType.BOTH));
+
+				PaginationResponseModel responseModel = productService.getProductList(filterDataMap,null);
+				if (responseModel != null && responseModel.getData() != null) {
+					List<DropdownModel> modelList = new ArrayList<>();
+					for (Product product : (List<Product>) responseModel.getData())
+						modelList.add(new DropdownModel(product.getProductID(), product.getProductName()));
+					return new ResponseEntity<>(modelList, HttpStatus.OK);
+				} else {
+					return new ResponseEntity(HttpStatus.NOT_FOUND);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("Error", e);
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 }

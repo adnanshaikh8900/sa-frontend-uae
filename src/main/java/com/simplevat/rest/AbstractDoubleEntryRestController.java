@@ -5,31 +5,39 @@
  */
 package com.simplevat.rest;
 
-import com.simplevat.constant.ContactTypeEnum;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import com.simplevat.constant.ExpenseStatusEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
+import com.simplevat.constant.ProductPriceType;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Invoice;
+import com.simplevat.entity.InvoiceLineItem;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
+import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
-import io.swagger.annotations.ApiOperation;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import io.swagger.annotations.ApiOperation;
 
 /**
  *
@@ -51,6 +59,9 @@ public abstract class AbstractDoubleEntryRestController {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+
+	@Autowired
+	private InvoiceLineItemService invoiceLineItemService;
 
 	@ApiOperation(value = "Post Journal Entry")
 	@PostMapping(value = "/posting")
@@ -99,26 +110,73 @@ public abstract class AbstractDoubleEntryRestController {
 		journalLineItem1.setJournal(journal);
 		journalLineItemList.add(journalLineItem1);
 
-		JournalLineItem journalLineItem2 = new JournalLineItem();
-		TransactionCategory saleTransactionCategory = abstractDoubleEntryTransactionCategoryService
-				.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.SALE.getCode());
-		journalLineItem2.setTransactionCategory(saleTransactionCategory);
-		journalLineItem2.setCreditAmount(postingRequestModel.getAmount());
-		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.INVOICE);
-		journalLineItem2.setReferenceId(postingRequestModel.getPostingRefId());
-		journalLineItem2.setCreatedBy(userId);
-		journalLineItem2.setJournal(journal);
-		journalLineItemList.add(journalLineItem2);
+		Map<String, Object> param = new HashMap<>();
+		Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
+		param.put("invoice", invoice);
+		param.put("deleteFlag", false);
+
+		List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);
+		Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
+		Map<Integer, TransactionCategory> tnxcatMap = new HashMap<>();
+		TransactionCategory category;
+		for (InvoiceLineItem lineItem : invoiceLineItemList) {
+			// sales for customer
+			// purchase for vendor
+			category = lineItem.getProduct().getLineItemList().stream()
+					.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
+					.getTransactioncategory();
+			tnxcatMap.put(category.getTransactionCategoryId(), category);
+			if (tnxcatIdInvLnItemMap.containsKey(category.getTransactionCategoryId())) {
+				tnxcatIdInvLnItemMap.get(category.getTransactionCategoryId()).add(lineItem);
+			} else {
+				List<InvoiceLineItem> dummyInvoiceLineItemList = new ArrayList<>();
+				dummyInvoiceLineItemList.add(lineItem);
+				tnxcatIdInvLnItemMap.put(category.getTransactionCategoryId(), dummyInvoiceLineItemList);
+			}
+		}
+
+		for (Integer categoryId : tnxcatIdInvLnItemMap.keySet()) {
+			List<InvoiceLineItem> sortedItemList = tnxcatIdInvLnItemMap.get(categoryId);
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			for (InvoiceLineItem sortedLineItem : sortedItemList) {
+				BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
+						.multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
+				totalAmount = totalAmount.add(amntWithoutVat);
+			}
+			JournalLineItem journalLineItem = new JournalLineItem();
+			journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));
+			journalLineItem.setCreditAmount(totalAmount);
+			journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
+			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
+			journalLineItem.setCreatedBy(userId);
+			journalLineItem.setJournal(journal);
+			journalLineItemList.add(journalLineItem);
+
+		}
+
+		if (invoice.getTotalVatAmount().compareTo(BigDecimal.ZERO) > 0) {
+			JournalLineItem journalLineItem = new JournalLineItem();
+			TransactionCategory inputVatCategory = abstractDoubleEntryTransactionCategoryService
+					.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.INPUT_VAT.getCode());
+			journalLineItem.setTransactionCategory(inputVatCategory);
+			journalLineItem.setCreditAmount(invoice.getTotalVatAmount());
+			journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
+			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
+			journalLineItem.setCreatedBy(userId);
+			journalLineItem.setJournal(journal);
+			journalLineItemList.add(journalLineItem);
+		}
 
 		journal.setJournalLineItems(journalLineItemList);
 		journal.setCreatedBy(userId);
 		journal.setPostingReferenceType(PostingReferenceTypeEnum.INVOICE);
 		journal.setJournalDate(LocalDateTime.now());
+
 		return journal;
 	}
 
 	private Journal expensePosting(PostingRequestModel postingRequestModel, Integer userId) {
-		List<JournalLineItem> journalLineItemList = new ArrayList();
+		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();

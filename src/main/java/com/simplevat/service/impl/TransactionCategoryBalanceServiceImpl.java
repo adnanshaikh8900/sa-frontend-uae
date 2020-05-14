@@ -54,10 +54,9 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 				balance.setEffectiveDate(new Date());
 			}
 
-			boolean isDebit = lineItem.getDebitAmount() == null
-					|| (lineItem.getDebitAmount() != null && new BigDecimal(0).equals(lineItem.getDebitAmount()))
-							? Boolean.TRUE
-							: Boolean.FALSE;
+			boolean isDebit = (lineItem.getDebitAmount() != null && !BigDecimal.ZERO.equals(lineItem.getDebitAmount()))
+					? Boolean.TRUE
+					: Boolean.FALSE;
 
 			BigDecimal runningBalance = balance.getRunningBalance() != null ? balance.getRunningBalance()
 					: BigDecimal.ZERO;

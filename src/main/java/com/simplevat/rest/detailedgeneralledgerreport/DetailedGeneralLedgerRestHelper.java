@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -158,8 +157,8 @@ public class DetailedGeneralLedgerRestHelper {
 
 						model.setReferenceNo(journal.getJournlReferencenNo());
 						model.setAmount(invoice.getTotalAmount());
-						model.setCreditAmount(!isDebit ? invoice.getTotalAmount() : BigDecimal.ZERO);
-						model.setDebitAmount(isDebit ? invoice.getTotalAmount() : BigDecimal.ZERO);
+						model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+						model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
 						model.setName(lineItem.getContact() != null
 								? lineItem.getContact().getFirstName() + " " + lineItem.getContact().getLastName()
 								: "");
@@ -182,8 +181,9 @@ public class DetailedGeneralLedgerRestHelper {
 					}
 
 					model.setAmount(lineItem.getCurrentBalance() != null
-							&& lineItem.getCurrentBalance().compareTo(BigDecimal.ZERO) == 0 ? model.getAmount()
-									: lineItem.getCurrentBalance());
+//							&& lineItem.getCurrentBalance().compareTo(BigDecimal.ZERO) == 0 
+							? lineItem.getCurrentBalance()
+							: model.getAmount());
 
 					dataList.add(model);
 				}

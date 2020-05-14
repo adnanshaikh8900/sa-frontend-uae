@@ -197,4 +197,9 @@ public class Invoice implements Serializable {
 		this.type = type;
 	}
 
+	public Invoice(Integer id) {
+		super();
+		this.id = id;
+	}
+
 }

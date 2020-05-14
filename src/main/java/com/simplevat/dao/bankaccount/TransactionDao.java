@@ -3,7 +3,6 @@ package com.simplevat.dao.bankaccount;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.model.TransactionReportRestModel;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -66,7 +65,7 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
 
 	public Transaction getCurrentBalanceByBankId(Integer bankId);
 
-	public void deleteByIds(ArrayList<Integer> ids);
+	public void deleteByIds(List<Integer> ids);
 
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,
 			PaginationModel paginationModel);

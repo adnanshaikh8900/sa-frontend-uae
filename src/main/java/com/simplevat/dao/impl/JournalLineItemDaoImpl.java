@@ -112,12 +112,12 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		LocalDateTime toDate = null;
 		Map<Integer, CreditDebitAggregator> aggregatedTransactionMap = new HashMap<>();
 		try {
-			fromDate = dateUtil.getDateStrAsLocalDateTime(financialReportRequestModel.getStartDate(), "dd/MM/yyyy");
+			fromDate = dateUtil.getDateStrAsLocalDateTime(financialReportRequestModel.getStartDate(), CommonColumnConstants.DD_MM_YYYY);
 		} catch (Exception e) {
 			LOGGER.error(ERROR, e);
 		}
 		try {
-			toDate = dateUtil.getDateStrAsLocalDateTime(financialReportRequestModel.getEndDate(), "dd/MM/yyyy");
+			toDate = dateUtil.getDateStrAsLocalDateTime(financialReportRequestModel.getEndDate(), CommonColumnConstants.DD_MM_YYYY);
 		} catch (Exception e) {
 			LOGGER.error(ERROR, e);
 		}

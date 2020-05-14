@@ -5,8 +5,6 @@ import com.simplevat.entity.Employee;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

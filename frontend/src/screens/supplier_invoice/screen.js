@@ -92,24 +92,11 @@ class SupplierInvoice extends React.Component {
       sortName: '',
       sortOrder: '',
       onSortChange: this.sortColumn,
-      expandBodyClass: function (row, rowIndex, isExpanding) {
-        if (!isExpanding) {
-          return 'current-is-hidden';
-        } else {
-          if (rowIndex > 1) {
-            return 'custom-expand-body-1';
-          } else {
-            return 'custom-expand-body-0';
-          }
-        }
-      },
-      onlyOneExpanding: true,
     };
     this.selectRowProp = {
       mode: 'checkbox',
       bgColor: 'rgba(0,0,0, 0.05)',
       clickToSelect: false,
-      clickToExpand: true,
       onSelect: this.onRowSelect,
       onSelectAll: this.onSelectAll,
     };
@@ -567,14 +554,6 @@ class SupplierInvoice extends React.Component {
       },
     );
   };
-  isExpandableRow(row) {
-    if (row.id) return true;
-    else return false;
-  }
-
-  expandComponent(row) {
-    return <div>{row.id}</div>;
-  }
 
   render() {
     const {
@@ -852,8 +831,6 @@ class SupplierInvoice extends React.Component {
                           ? true
                           : false
                       }
-                      expandableRow={this.isExpandableRow}
-                      expandComponent={this.expandComponent}
                       remote
                       fetchInfo={{
                         dataTotalSize: supplier_invoice_list.count
@@ -871,11 +848,7 @@ class SupplierInvoice extends React.Component {
                       >
                         Status
                       </TableHeaderColumn>
-                      <TableHeaderColumn
-                        dataField="customerName"
-                        dataSort
-                        width="15%"
-                      >
+                      <TableHeaderColumn dataField="customerName" dataSort>
                         Supplier Name
                       </TableHeaderColumn>
                       <TableHeaderColumn
@@ -885,18 +858,10 @@ class SupplierInvoice extends React.Component {
                       >
                         Invoice Number
                       </TableHeaderColumn>
-                      <TableHeaderColumn
-                        dataField="invoiceDate"
-                        dataSort
-                        width="13%"
-                      >
+                      <TableHeaderColumn dataField="invoiceDate" dataSort>
                         Invoice Date
                       </TableHeaderColumn>
-                      <TableHeaderColumn
-                        dataField="invoiceDueDate"
-                        dataSort
-                        width="10%"
-                      >
+                      <TableHeaderColumn dataField="invoiceDueDate" dataSort>
                         Due Date
                       </TableHeaderColumn>
                       <TableHeaderColumn

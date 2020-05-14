@@ -348,6 +348,7 @@ public class DataListController {
 				filterDataMap.put(ProductFilterEnum.PRODUCT_PRICE_TYPE,
 						Arrays.asList(priceType, ProductPriceType.BOTH));
 
+				filterDataMap.put(ProductFilterEnum.DELETE_FLAG, false);
 				PaginationResponseModel responseModel = productService.getProductList(filterDataMap, null);
 				if (responseModel != null && responseModel.getData() != null) {
 					List<ProductPriceModel> modelList = new ArrayList<>();

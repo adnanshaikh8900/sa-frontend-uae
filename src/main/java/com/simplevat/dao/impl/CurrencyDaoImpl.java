@@ -91,8 +91,8 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 				.createQuery("select c.currencyIsoCode from Currency c where c.currencyIsoCode !=:currencyCode");
 		query.setParameter(CommonColumnConstants.CURRENCY_CODE, countryCode);
 		List<String> currency = query.getResultList();
-		String name = StringUtils.join(currency, ',');
-		return name;
+		return StringUtils.join(currency, ',');
+
 	}
 
 	public List<Currency> getCurrencyList(Currency currency) {
@@ -110,7 +110,7 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 	@Override
 	public PaginationResponseModel getCurrencies(Map<CurrencyFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach((currencyFilter, value) -> dbFilters
 				.add(DbFilter.builder().dbCoulmnName(currencyFilter.getDbColumnName())
 						.condition(currencyFilter.getCondition()).value(value).build()));

@@ -14,8 +14,8 @@ import javax.persistence.TypedQuery;
 public class ChartOfAccountDaoImpl extends AbstractDao<Integer, ChartOfAccount> implements ChartOfAccountDao {
 
 	@Override
-	public ChartOfAccount updateOrCreateTransaction(ChartOfAccount ChartOfAccount) {
-		return this.update(ChartOfAccount);
+	public ChartOfAccount updateOrCreateTransaction(ChartOfAccount chartOfAccount) {
+		return this.update(chartOfAccount);
 	}
 
 	@Override

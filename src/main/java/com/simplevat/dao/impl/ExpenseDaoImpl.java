@@ -52,11 +52,6 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 					.append("from Expense e where e.deleteFlag = 'false' and e.expenseDate BETWEEN :startDate AND :endDate")
 					.append("group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))");
 
-//			String queryString = "select " + "sum(e.expenseAmount) as expenseTotal, "
-//					+ "CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate)) as month " + "from Expense e "
-//					+ "where e.deleteFlag = 'false' " + "and e.expenseDate BETWEEN :startDate AND :endDate "
-//					+ "group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))";
-
 			Query query = getEntityManager().createQuery(queryStringBuilder.toString())
 					.setParameter(CommonColumnConstants.START_DATE, startDate, TemporalType.DATE)
 					.setParameter(CommonColumnConstants.END_DATE, endDate, TemporalType.DATE);
@@ -77,10 +72,6 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 				.append("from Expense e where e.deleteFlag = 'false' ")
 				.append("and e.expenseDate BETWEEN :startDate AND :endDate order by e.expenseDate asc");
 
-//			String queryString = "select e.expenseAmount as expense, e.expenseDate as date, "
-//					+ "e.receiptNumber as ref " + "from Expense e " + "where e.deleteFlag = 'false' "
-//					+ "and e.expenseDate BETWEEN :startDate AND :endDate " + "order by e.expenseDate asc";
-//
 			Query query = getEntityManager().createQuery(queryStringBuilder.toString())
 					.setParameter(CommonColumnConstants.START_DATE, startDate, TemporalType.DATE)
 					.setParameter(CommonColumnConstants.END_DATE, endDate, TemporalType.DATE);
@@ -104,14 +95,6 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 			.append("and e.expenseDate BETWEEN :startDate AND :endDate ")
 			.append("group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))")
 ;
-
-//			String queryString = "select "
-//					+ "sum((li.expenseLineItemUnitPrice*li.expenseLineItemQuantity)*li.expenseLineItemVat/100) as vatOutTotal, "
-//					+ "CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate)) as month "
-//					+ "from Expense e JOIN e.expenseLineItems li "
-//					+ "where e.deleteFlag = 'false' and li.deleteFlag= 'false'"
-//					+ "and e.expenseDate BETWEEN :startDate AND :endDate "
-//					+ "group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))";
 
 			Query query = getEntityManager().createQuery(queryStringBuilder.toString())
 					.setParameter(CommonColumnConstants.START_DATE, startDate, TemporalType.DATE)

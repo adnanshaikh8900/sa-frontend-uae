@@ -17,7 +17,7 @@ public class DateFormatDaoImpl extends AbstractDao<Integer, DateFormat> implemen
 
 	@Override
 	public List<DateFormat> getDateFormatList(Map<DateFormatFilterEnum, Object> filterMap) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));

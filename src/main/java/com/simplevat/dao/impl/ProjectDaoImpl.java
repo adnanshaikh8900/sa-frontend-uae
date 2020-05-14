@@ -31,7 +31,7 @@ public class ProjectDaoImpl extends AbstractDao<Integer, Project> implements Pro
 	@Override
 	public PaginationResponseModel getProjectList(Map<ProjectFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach(
 				(projectFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(projectFilter.getDbColumnName())
 						.condition(projectFilter.getCondition()).value(value).build()));

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.simplevat.constant.ExpenseStatusEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
+import com.simplevat.constant.InvoiceTypeConstant;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.ProductPriceType;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
@@ -97,13 +98,21 @@ public abstract class AbstractDoubleEntryRestController {
 	private Journal invoicePosting(PostingRequestModel postingRequestModel, Integer userId) {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
+		Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
+
+		boolean isCustomerInvoice = InvoiceTypeConstant.isCustomerInvoice(invoice.getType());
+
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		TransactionCategory transactionCategory = abstractDoubleEntryTransactionCategoryService
 				.findTransactionCategoryByTransactionCategoryCode(
-						TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode());
+						isCustomerInvoice ? TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode()
+								: TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
 		journalLineItem1.setTransactionCategory(transactionCategory);
-		journalLineItem1.setDebitAmount(postingRequestModel.getAmount());
+		if (isCustomerInvoice)
+			journalLineItem1.setDebitAmount(postingRequestModel.getAmount());
+		else
+			journalLineItem1.setCreditAmount(postingRequestModel.getAmount());
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem1.setCreatedBy(userId);
@@ -111,20 +120,27 @@ public abstract class AbstractDoubleEntryRestController {
 		journalLineItemList.add(journalLineItem1);
 
 		Map<String, Object> param = new HashMap<>();
-		Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
 		param.put("invoice", invoice);
 		param.put("deleteFlag", false);
 
 		List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);
 		Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
 		Map<Integer, TransactionCategory> tnxcatMap = new HashMap<>();
-		TransactionCategory category;
+		TransactionCategory category = null;
 		for (InvoiceLineItem lineItem : invoiceLineItemList) {
 			// sales for customer
 			// purchase for vendor
-			category = lineItem.getProduct().getLineItemList().stream()
-					.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
-					.getTransactioncategory();
+			if (isCustomerInvoice)
+				category = lineItem.getProduct().getLineItemList().stream()
+						.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
+						.getTransactioncategory();
+			else {
+				// TODO : need to add transaction category
+//				category = lineItem.gettransaction
+				category = lineItem.getProduct().getLineItemList().stream()
+						.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
+						.getTransactioncategory();
+			}
 			tnxcatMap.put(category.getTransactionCategoryId(), category);
 			if (tnxcatIdInvLnItemMap.containsKey(category.getTransactionCategoryId())) {
 				tnxcatIdInvLnItemMap.get(category.getTransactionCategoryId()).add(lineItem);
@@ -145,7 +161,10 @@ public abstract class AbstractDoubleEntryRestController {
 			}
 			JournalLineItem journalLineItem = new JournalLineItem();
 			journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));
-			journalLineItem.setCreditAmount(totalAmount);
+			if (isCustomerInvoice)
+				journalLineItem.setCreditAmount(totalAmount);
+			else
+				journalLineItem.setDebitAmount(totalAmount);
 			journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
 			journalLineItem.setCreatedBy(userId);
@@ -157,9 +176,14 @@ public abstract class AbstractDoubleEntryRestController {
 		if (invoice.getTotalVatAmount().compareTo(BigDecimal.ZERO) > 0) {
 			JournalLineItem journalLineItem = new JournalLineItem();
 			TransactionCategory inputVatCategory = abstractDoubleEntryTransactionCategoryService
-					.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.INPUT_VAT.getCode());
+					.findTransactionCategoryByTransactionCategoryCode(
+							isCustomerInvoice ? TransactionCategoryCodeEnum.INPUT_VAT.getCode()
+									: TransactionCategoryCodeEnum.OUTPUT_VAT.getCode());
 			journalLineItem.setTransactionCategory(inputVatCategory);
-			journalLineItem.setCreditAmount(invoice.getTotalVatAmount());
+			if (isCustomerInvoice)
+				journalLineItem.setCreditAmount(invoice.getTotalVatAmount());
+			else
+				journalLineItem.setDebitAmount(invoice.getTotalVatAmount());
 			journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
 			journalLineItem.setCreatedBy(userId);

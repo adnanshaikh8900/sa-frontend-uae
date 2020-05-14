@@ -72,7 +72,7 @@ public class DetailedGeneralLedgerRestHelper {
 		return transactionMap;
 	}
 
-	public List<Object> getDetailedGeneralLedgerReport1(ReportRequestModel reportRequestModel) {
+	public List<Object> getDetailedGeneralLedgerReport(ReportRequestModel reportRequestModel) {
 
 		List<Object> resposneList = new ArrayList<>();
 		Map<JournalFilterEnum, Object> filterDataMap = new EnumMap<>(JournalFilterEnum.class);

@@ -31,7 +31,7 @@ public class DetailedGeneralLedgerReportController {
 	public ResponseEntity getDateFormat(ReportRequestModel reportRequestModel) {
 		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
 		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
-		List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport1(reportRequestModel);
+		List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport(reportRequestModel);
 		try {
 			if (list == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);

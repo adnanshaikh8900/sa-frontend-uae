@@ -61,7 +61,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			LOGGER.error("Error is ", e);
 		}
 
-		String queryStr = "select jn from JournalLineItem jn INNER join Journal j on j.id = jn.journal.id where j.journalDate BETWEEN :startDate and :endDate ";
+		String queryStr = "select jn from JournalLineItem jn INNER join Journal j on j.id = jn.journal.id where j.deleteFlag = false and  j.journalDate BETWEEN :startDate and :endDate ";
 
 		if (reportRequestModel.getChartOfAccountId() != null) {
 			queryStr += " and jn.transactionCategory.transactionCategoryId = :transactionCategoryId";
@@ -155,8 +155,8 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			}
 			return aggregatedTransactionMap;
 		} catch (Exception e) {
-			LOGGER.error(
-					String.format("Error occurred while calling stored procedure profitAndLossStoredProcedure %s", e.getStackTrace()));
+			LOGGER.error(String.format("Error occurred while calling stored procedure profitAndLossStoredProcedure %s",
+					e.getStackTrace()));
 		}
 		return aggregatedTransactionMap;
 	}

@@ -26,7 +26,7 @@ public class ProductDaoImpl extends AbstractDao<Integer, Product> implements Pro
 	@Override
 	public PaginationResponseModel getProductList(Map<ProductFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));

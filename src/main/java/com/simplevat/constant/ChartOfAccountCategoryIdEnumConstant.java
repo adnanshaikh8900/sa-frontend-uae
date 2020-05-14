@@ -10,7 +10,7 @@ public enum ChartOfAccountCategoryIdEnumConstant {
 
 	@Getter
 	@Setter
-	public Integer id;
+	Integer id;
 
 	ChartOfAccountCategoryIdEnumConstant(int id) {
 		this.id = id;

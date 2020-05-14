@@ -38,7 +38,7 @@ public class CompanyDaoImpl extends AbstractDao<Integer, Company> implements Com
 
 	@Override
 	public List<Company> getCompanyList(Map<CompanyFilterEnum, Object> filterMap) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));

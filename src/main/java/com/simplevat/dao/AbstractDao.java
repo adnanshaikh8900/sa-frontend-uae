@@ -138,7 +138,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 				i++;
 			} else if (orderBy) {
 				orderByFilter = dbFilter;
-				// java.util.ConcurrentModificationException: dbFilters.remove(orderByFilter);
 			}
 		}
 

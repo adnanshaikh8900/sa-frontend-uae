@@ -31,7 +31,7 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @Repository
 public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem> implements JournalLineItemDao {

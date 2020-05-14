@@ -31,7 +31,7 @@ import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 import io.swagger.annotations.ApiOperation;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *

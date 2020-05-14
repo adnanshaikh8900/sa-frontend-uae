@@ -14,7 +14,7 @@ import com.simplevat.service.RoleService;
 import com.simplevat.service.UserService;
 import com.simplevat.utils.DateFormatUtil;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @Component
 public class UserRestHelper {

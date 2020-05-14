@@ -1,6 +1,7 @@
 package com.simplevat.dao.impl;
 
 import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
+import com.simplevat.constant.CommonColumnConstants;
 import com.simplevat.rest.financialreport.CreditDebitAggregator;
 import com.simplevat.rest.financialreport.FinancialReportRequestModel;
 import org.slf4j.Logger;
@@ -30,6 +31,8 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.simplevat.constant.ErrorConstant.*;
+
 @Repository
 public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem> implements JournalLineItemDao {
 
@@ -51,14 +54,14 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		LocalDateTime fromDate = null;
 		LocalDateTime toDate = null;
 		try {
-			fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), "dd/MM/yyyy");
+			fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), CommonColumnConstants.DD_MM_YYYY);
 		} catch (Exception e) {
 			LOGGER.error("Exception is ", e);
 		}
 		try {
-			toDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), "dd/MM/yyyy");
+			toDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), CommonColumnConstants.DD_MM_YYYY);
 		} catch (Exception e) {
-			LOGGER.error("Error is ", e);
+			LOGGER.error(ERROR, e);
 		}
 
 		String queryStr = "select jn from JournalLineItem jn INNER join Journal j on j.id = jn.journal.id where j.journalDate BETWEEN :startDate and :endDate ";
@@ -78,10 +81,10 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 
 		TypedQuery<JournalLineItem> query = getEntityManager().createQuery(queryStr, JournalLineItem.class);
 		if (fromDate != null) {
-			query.setParameter("startDate", fromDate);
+			query.setParameter(CommonColumnConstants.START_DATE, fromDate);
 		}
 		if (toDate != null) {
-			query.setParameter("endDate", toDate);
+			query.setParameter(CommonColumnConstants.END_DATE, toDate);
 		}
 		if (reportRequestModel.getChartOfAccountId() != null) {
 			query.setParameter("transactionCategoryId", reportRequestModel.getChartOfAccountId());
@@ -111,12 +114,12 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		try {
 			fromDate = dateUtil.getDateStrAsLocalDateTime(financialReportRequestModel.getStartDate(), "dd/MM/yyyy");
 		} catch (Exception e) {
-			LOGGER.error("Error is ", e);
+			LOGGER.error(ERROR, e);
 		}
 		try {
 			toDate = dateUtil.getDateStrAsLocalDateTime(financialReportRequestModel.getEndDate(), "dd/MM/yyyy");
 		} catch (Exception e) {
-			LOGGER.error("Error is ", e);
+			LOGGER.error(ERROR, e);
 		}
 		try {
 
@@ -127,8 +130,8 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 					ParameterMode.IN);
 			storedProcedureQuery.registerStoredProcedureParameter("adminExpenseCode", String.class, ParameterMode.IN);
 			storedProcedureQuery.registerStoredProcedureParameter("otherExpenseCode", String.class, ParameterMode.IN);
-			storedProcedureQuery.registerStoredProcedureParameter("startDate", LocalDateTime.class, ParameterMode.IN);
-			storedProcedureQuery.registerStoredProcedureParameter("endDate", LocalDateTime.class, ParameterMode.IN);
+			storedProcedureQuery.registerStoredProcedureParameter(CommonColumnConstants.START_DATE, LocalDateTime.class, ParameterMode.IN);
+			storedProcedureQuery.registerStoredProcedureParameter(CommonColumnConstants.END_DATE, LocalDateTime.class, ParameterMode.IN);
 
 			storedProcedureQuery.setParameter("incomeCode", ChartOfAccountCategoryCodeEnum.INCOME.getCode());
 			storedProcedureQuery.setParameter("costOfGoodsSoldCode",
@@ -137,8 +140,8 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 					ChartOfAccountCategoryCodeEnum.ADMIN_EXPENSE.getCode());
 			storedProcedureQuery.setParameter("otherExpenseCode",
 					ChartOfAccountCategoryCodeEnum.OTHER_EXPENSE.getCode());
-			storedProcedureQuery.setParameter("startDate", fromDate);
-			storedProcedureQuery.setParameter("endDate", toDate);
+			storedProcedureQuery.setParameter(CommonColumnConstants.START_DATE, fromDate);
+			storedProcedureQuery.setParameter(CommonColumnConstants.END_DATE, toDate);
 			storedProcedureQuery.execute();
 			List<Object[]> resultList = storedProcedureQuery.getResultList();
 			int code = 0;

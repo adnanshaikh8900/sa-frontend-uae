@@ -32,7 +32,7 @@ public class ProductCategoryServiceImpl extends ProductCategoryService {
 		Map<String, Object> parameterDataMap = new HashMap();
 		parameterDataMap.put("createdBy", userId);
 
-		List<DbFilter> filterList = new ArrayList<DbFilter>();
+		List<DbFilter> filterList = new ArrayList<>();
 		filterList.add(DbFilter.builder().dbCoulmnName("createdBy").condition(" = :createdBy").value(userId).build());
 		filterList.add(
 				DbFilter.builder().dbCoulmnName("deleteFlag").condition(" = :deleteFlag").value(isDeleted).build());

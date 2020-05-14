@@ -17,10 +17,8 @@ package com.simplevat.entity;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-public class MailAttachment implements Serializable {
+public class MailAttachment  {
     private String attachmentName;
     private Object attachmentObject;
 }

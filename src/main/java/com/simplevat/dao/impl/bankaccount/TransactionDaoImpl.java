@@ -120,8 +120,8 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId,
-			Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo,
-			Integer pageSize) {
+																  Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo,
+																  Integer pageSize) {
 
 		StringBuilder builder = new StringBuilder();
 		if (transactionTypeId != null) {
@@ -187,7 +187,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public List<Transaction> getTransactionsByDateRangeAndBankAccountId(BankAccount bankAccount, Date startDate,
-			Date lastDate) {
+																		Date lastDate) {
 		TypedQuery<Transaction> query = getEntityManager().createQuery(
 				"SELECT t FROM Transaction t WHERE t.deleteFlag = false and t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate BETWEEN :startDate AND :lastDate ORDER BY t.transactionDate ASC",
 				Transaction.class);
@@ -296,7 +296,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public List<TransactionView> getTransactionViewList(int pageSize, Integer bankAccountId, int rowCount,
-			Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder) {
+														Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder) {
 		StringBuilder builder = new StringBuilder("");
 		StringBuilder filterBuilder = new StringBuilder("");
 		for (String filedName : filters.keySet()) {
@@ -332,7 +332,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public Integer getTotalTransactionCountByBankAccountIdForLazyModel(Integer bankAccountId,
-			Integer transactionStatus) {
+																	   Integer transactionStatus) {
 		StringBuilder builder = new StringBuilder("");
 		if (transactionStatus != null) {
 			builder.append(" AND t.explanationStatusCode = ").append(transactionStatus);
@@ -416,7 +416,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public List<Transaction> getParentTransactionListByRangeAndBankAccountId(int pageSize, Integer bankAccountId,
-			int rowCount, Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder) {
+																			 int rowCount, Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder) {
 		StringBuilder builder = new StringBuilder("");
 		StringBuilder filterBuilder = new StringBuilder("");
 		if (transactionStatus != null) {
@@ -485,7 +485,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,
-			PaginationModel paginationModel) {
+														 PaginationModel paginationModel) {
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));

@@ -47,7 +47,7 @@ public class ChartUtil {
 	}
 
 	public List<ChartData> convert(List<Object[]> rows) {
-		List<ChartData> chartDatas = new ArrayList<ChartData>();
+		List<ChartData> chartDatas = new ArrayList<>();
 		for (Object[] row : rows) {
 			String[] transactionDate = ((String) row[1]).split("-");
 			ChartData chartData = new ChartData(Integer.parseInt(transactionDate[0]) - 1,
@@ -118,7 +118,7 @@ public class ChartUtil {
 	}
 
 	private List<ChartData> getEmptyChartData(Integer count) {
-		List<ChartData> emptyChartDatas = new ArrayList<ChartData>();
+		List<ChartData> emptyChartDatas = new ArrayList<>();
 		for (int i = 0; i < count; i++) {
 			Calendar calendar = getStartDate(Calendar.MONTH, -count);
 			calendar.add(Calendar.MONTH, i);
@@ -136,7 +136,7 @@ public class ChartUtil {
 	}
 
 	public int getMaxValue(Map<Object, Number> data) {
-		List<Number> list = new ArrayList<Number>(data.values());
+		List<Number> list = new ArrayList<>(data.values());
 		Number max = 0;
 		for (int i = 0; i < list.size(); i++) {
 			Number number = list.get(i);
@@ -191,9 +191,9 @@ public class ChartUtil {
 	}
 
 	public Object getinvoiceData(List<Invoice> invList, int monthCount) {
-		List<Invoice> paid = new ArrayList<Invoice>();
-		List<Invoice> due = new ArrayList<Invoice>();
-		List<Invoice> overDue = new ArrayList<Invoice>();
+		List<Invoice> paid = new ArrayList<>();
+		List<Invoice> due = new ArrayList<>();
+		List<Invoice> overDue = new ArrayList<>();
 
 		for (Invoice invoice : invList) {
 			if (invoice.getStatus() > InvoiceStatusEnum.PAID.ordinal())

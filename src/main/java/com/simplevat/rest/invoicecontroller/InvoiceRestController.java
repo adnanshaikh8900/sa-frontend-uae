@@ -27,14 +27,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.FileTypeEnum;
+import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
+import com.simplevat.entity.Journal;
 import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.InvoiceService;
+import com.simplevat.service.JournalService;
 import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.FileHelper;
 
@@ -65,6 +69,9 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@Autowired
 	private ChartUtil chartUtil;
+
+	@Autowired
+	private JournalService journalService;
 
 	@ApiOperation(value = "Get Invoice List")
 	@GetMapping(value = "/getList")
@@ -121,6 +128,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 		if (invoice != null) {
 			invoice.setDeleteFlag(Boolean.TRUE);
 			invoiceService.update(invoice, invoice.getId());
+			invoiceService.deleteJournaForInvoice(invoice);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 
@@ -191,7 +199,14 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			}
 			invoice.setLastUpdateBy(userId);
 			invoice.setLastUpdateDate(LocalDateTime.now());
-			invoiceService.update(invoice);
+
+			invoiceService.update(invoice, invoice.getId());
+			invoiceService.deleteJournaForInvoice(invoice);
+			if (invoice.getStatus() == InvoiceStatusEnum.POST.getValue()) {
+				// persist updated journal
+				Journal journal = invoiceRestHelper.invoicePosting(new PostingRequestModel(invoice.getId()), userId);
+				journalService.persist(journal);
+			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("Error", e);

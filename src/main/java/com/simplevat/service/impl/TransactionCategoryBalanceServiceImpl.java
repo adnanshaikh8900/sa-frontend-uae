@@ -36,6 +36,8 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 	}
 
 	@Override
+	// TODO Remain for update completed create and delete
+	// TODO Need to split this method as get amount and update TransactionCategoryBalance
 	public synchronized BigDecimal updateRunningBalance(JournalLineItem lineItem) {
 		List<TransactionCategoryBalance> balanceList = new ArrayList<>();
 		if (lineItem != null) {
@@ -54,18 +56,30 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 				balance.setEffectiveDate(new Date());
 			}
 
+			boolean isDelated = lineItem.getDeleteFlag();
+
 			boolean isDebit = (lineItem.getDebitAmount() != null && !BigDecimal.ZERO.equals(lineItem.getDebitAmount()))
 					? Boolean.TRUE
 					: Boolean.FALSE;
 
 			BigDecimal runningBalance = balance.getRunningBalance() != null ? balance.getRunningBalance()
 					: BigDecimal.ZERO;
-			if (isDebit) {
-				runningBalance = runningBalance
-						.subtract(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+			if (!isDelated) {
+				if (isDebit) {
+					runningBalance = runningBalance
+							.subtract(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+				} else {
+					runningBalance = runningBalance
+							.add(lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+				}
 			} else {
-				runningBalance = runningBalance
-						.add(lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+				if (isDebit) {
+					runningBalance = runningBalance
+							.add(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+				} else {
+					runningBalance = runningBalance.subtract(
+							lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+				}
 			}
 			balance.setRunningBalance(runningBalance);
 			balanceList.add(balance);

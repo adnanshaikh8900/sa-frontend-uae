@@ -75,9 +75,6 @@ public class DetailedGeneralLedgerRestHelper {
 	public List<Object> getDetailedGeneralLedgerReport(ReportRequestModel reportRequestModel) {
 
 		List<Object> resposneList = new ArrayList<>();
-		Map<JournalFilterEnum, Object> filterDataMap = new EnumMap<>(JournalFilterEnum.class);
-
-		filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
 
 		List<JournalLineItem> itemList = journalLineItemService.getList(reportRequestModel);
 
@@ -181,9 +178,9 @@ public class DetailedGeneralLedgerRestHelper {
 					}
 
 					model.setAmount(lineItem.getCurrentBalance() != null
-//							&& lineItem.getCurrentBalance().compareTo(BigDecimal.ZERO) == 0 
-							? lineItem.getCurrentBalance()
-							: model.getAmount());
+//							&& lineItem.getCurrentBalance().compareTo(BigDecimal.ZERO) == 0
+									? lineItem.getCurrentBalance()
+									: model.getAmount());
 
 					dataList.add(model);
 				}

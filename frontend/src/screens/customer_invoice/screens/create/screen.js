@@ -455,6 +455,7 @@ class CreateCustomerInvoice extends React.Component {
 			true,
 		);
 	};
+
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
 		let productList = product_list.length
@@ -467,45 +468,61 @@ class CreateCustomerInvoice extends React.Component {
 			}
 			return obj;
 		});
-
-		return (
-			<Field
-				name={`lineItemsString.${idx}.productId`}
-				render={({ field, form }) => (
-					<Input
-						type="select"
-						onChange={(e) => {
-							this.selectItem(e, row, 'productId', form, field, props);
-							this.prductValue(e, row, 'productId', form, field, props);
-							// this.formRef.current.props.handleChange(field.name)(e.value)
-						}}
-						value={row.productId}
-						className={`form-control ${
-							props.errors.lineItemsString &&
-							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
-							Object.keys(props.touched).length > 0 &&
-							props.touched.lineItemsString &&
-							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].productId
-								? 'is-invalid'
-								: ''
-						}`}
-					>
-						{productList
-							? productList.map((obj) => {
-									// obj.name = obj.name === 'default' ? '0' : obj.name
-									return (
-										<option value={obj.id} key={obj.id}>
-											{obj.name}
-										</option>
-									);
-							  })
-							: ''}
-					</Input>
-				)}
-			/>
-		);
+		if (productList.length > 0) {
+			return (
+				<Field
+					name={`lineItemsString.${idx}.productId`}
+					render={({ field, form }) => (
+						<Input
+							type="select"
+							onChange={(e) => {
+								this.selectItem(e, row, 'productId', form, field, props);
+								this.prductValue(e, row, 'productId', form, field, props);
+								// this.formRef.current.props.handleChange(field.name)(e.value)
+							}}
+							value={row.productId}
+							className={`form-control ${
+								props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].productId
+									? 'is-invalid'
+									: ''
+							}`}
+						>
+							{productList
+								? productList.map((obj) => {
+										// obj.name = obj.name === 'default' ? '0' : obj.name
+										return (
+											<option value={obj.id} key={obj.id}>
+												{obj.name}
+											</option>
+										);
+								  })
+								: ''}
+						</Input>
+					)}
+				/>
+			);
+		} else {
+			return (
+				<div
+					className={`addProduct ${
+						props.errors.lineItemsString && props.touched.lineItemsString
+							? 'is-invalid'
+							: ''
+					}`}
+					onClick={() => {
+						this.props.history.push('/admin/master/product');
+					}}
+				>
+					Please add product
+				</div>
+			);
+		}
 	};
 
 	deleteRow = (e, row, props) => {

@@ -20,6 +20,7 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
+import * as transactionCreateActions from '../../../bank_account/screens/transactions/actions';
 
 import { SupplierModal } from '../../sections';
 
@@ -52,6 +53,10 @@ const mapDispatchToProps = (dispatch) => {
 			SupplierInvoiceCreateActions,
 			dispatch,
 		),
+		transactionCreateActions: bindActionCreators(
+			transactionCreateActions,
+			dispatch,
+		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -76,6 +81,7 @@ class CreateSupplierInvoice extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					productId: '',
+					transactiomCategoryId: '',
 				},
 			],
 			idCount: 0,
@@ -97,6 +103,7 @@ class CreateSupplierInvoice extends React.Component {
 						vatCategoryId: '',
 						subTotal: 0,
 						productId: '',
+						transactiomCategoryId: '',
 					},
 				],
 				invoice_number: '',
@@ -119,6 +126,7 @@ class CreateSupplierInvoice extends React.Component {
 			selectedType: { value: 'FIXED', label: 'Fixed' },
 			discountPercentage: '',
 			discountAmount: 0,
+			purchaseCategory: [],
 		};
 
 		this.formRef = React.createRef();
@@ -287,6 +295,26 @@ class CreateSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceActions.getVatList();
 		this.props.supplierInvoiceActions.getCountryList();
 		this.props.supplierInvoiceActions.getProductList();
+		this.purchaseCategory();
+	};
+
+	purchaseCategory = () => {
+		try {
+			this.props.transactionCreateActions
+				.getTransactionCategoryListForExplain('10')
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								purchaseCategory: res.data,
+							},
+							() => {},
+						);
+					}
+				});
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	addRow = () => {
@@ -421,8 +449,6 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
-		console.log(idx);
-		console.log(field.name);
 		form.setFieldValue(
 			`lineItemsString.${idx}.vatCategoryId`,
 			result.vatCategoryId,
@@ -452,42 +478,127 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
+		if (productList.length > 0) {
+			return (
+				<Field
+					name={`lineItemsString.${idx}.productId`}
+					render={({ field, form }) => (
+						<Input
+							type="select"
+							onChange={(e) => {
+								this.selectItem(e, row, 'productId', form, field, props);
+								this.prductValue(e, row, 'productId', form, field, props);
+								// this.formRef.current.props.handleChange(field.name)(e.value)
+							}}
+							value={row.productId}
+							className={`form-control ${
+								props.errors.lineItemsString &&
+								props.errors.lineItemsString[parseInt(idx, 10)] &&
+								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+								Object.keys(props.touched).length > 0 &&
+								props.touched.lineItemsString &&
+								props.touched.lineItemsString[parseInt(idx, 10)] &&
+								props.touched.lineItemsString[parseInt(idx, 10)].productId
+									? 'is-invalid'
+									: ''
+							}`}
+						>
+							{productList
+								? productList.map((obj) => {
+										// obj.name = obj.name === 'default' ? '0' : obj.name
+										return (
+											<option value={obj.id} key={obj.id}>
+												{obj.name}
+											</option>
+										);
+								  })
+								: ''}
+						</Input>
+					)}
+				/>
+			);
+		} else {
+			return (
+				<div
+					className={`addProduct ${
+						props.errors.lineItemsString && props.touched.lineItemsString
+							? 'is-invalid'
+							: ''
+					}`}
+					onClick={() => {
+						this.props.history.push('/admin/master/product');
+					}}
+				>
+					Please add product
+				</div>
+			);
+		}
+	};
+
+	selectCategory = (options, row, name, form, field, props) => {
+		console.log(options);
+		let data = this.state.data;
+		let idx;
+		data.map((obj, index) => {
+			if (obj.id === row.id) {
+				obj['transactiomCategoryId'] = options;
+				idx = index;
+			}
+			return obj;
+		});
+		console.log(data);
+		form.setFieldValue(
+			`lineItemsString.${idx}.transactiomCategoryId`,
+			options,
+			true,
+		);
+	};
+
+	renderAccount = (cell, row, props) => {
+		const { purchaseCategory } = this.state;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
 
 		return (
 			<Field
-				name={`lineItemsString.${idx}.productId`}
+				name={`lineItemsString.${idx}.transactiomCategoryId`}
 				render={({ field, form }) => (
-					<Input
-						type="select"
-						onChange={(e) => {
-							this.selectItem(e, row, 'productId', form, field, props);
-							this.prductValue(e, row, 'productId', form, field, props);
-							// this.formRef.current.props.handleChange(field.name)(e.value)
+					<Select
+						styles={{
+							menu: (provided) => ({ ...provided, zIndex: 9999 }),
 						}}
-						value={row.productId}
-						className={`form-control ${
+						options={purchaseCategory ? purchaseCategory.categoriesList : []}
+						id="transactiomCategoryId"
+						onChange={(e) => {
+							this.selectCategory(
+								e.value,
+								row,
+								'transactiomCategoryId',
+								form,
+								field,
+								props,
+							);
+						}}
+						placeholder="Select Account"
+						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
-							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+							props.errors.lineItemsString[parseInt(idx, 10)]
+								.transactiomCategoryId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
-							props.touched.lineItemsString[parseInt(idx, 10)].productId
+							props.touched.lineItemsString[parseInt(idx, 10)]
+								.transactiomCategoryId
 								? 'is-invalid'
 								: ''
 						}`}
-					>
-						{productList
-							? productList.map((obj) => {
-									// obj.name = obj.name === 'default' ? '0' : obj.name
-									return (
-										<option value={obj.id} key={obj.id}>
-											{obj.name}
-										</option>
-									);
-							  })
-							: ''}
-					</Input>
+					/>
 				)}
 			/>
 		);
@@ -660,61 +771,63 @@ class CreateSupplierInvoice extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		this.props.supplierInvoiceCreateActions
-			.createInvoice(formData)
-			.then((res) => {
-				this.props.commonActions.tostifyAlert(
-					'success',
-					'New Invoice Created Successfully.',
-				);
-				if (this.state.createMore) {
-					this.setState(
-						{
-							createMore: false,
-							selectedContact: '',
-							term: '',
-							data: [
-								{
-									id: 0,
-									description: '',
-									quantity: '',
-									unitPrice: '',
-									vatCategoryId: '',
-									subTotal: 0,
-								},
-							],
-							initValue: {
-								...this.state.initValue,
-								...{
-									total_net: 0,
-									invoiceVATAmount: 0,
-									totalAmount: 0,
-									discountType: '',
-									discount: 0,
-									discountPercentage: '',
-								},
-							},
-						},
-						() => {
-							resetForm(this.state.initValue);
-							this.getInvoiceNo();
-							this.formRef.current.setFieldValue(
-								'lineItemsString',
-								this.state.data,
-								false,
-							);
-						},
-					);
-				} else {
-					this.props.history.push('/admin/expense/supplier-invoice');
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-			});
+		console.log(data);
+		// this.props.supplierInvoiceCreateActions
+		// 	.createInvoice(formData)
+		// 	.then((res) => {
+		// 		this.props.commonActions.tostifyAlert(
+		// 			'success',
+		// 			'New Invoice Created Successfully.',
+		// 		);
+		// 		if (this.state.createMore) {
+		// 			this.setState(
+		// 				{
+		// 					createMore: false,
+		// 					selectedContact: '',
+		// 					term: '',
+		// 					data: [
+		// 						{
+		// 							id: 0,
+		// 							description: '',
+		// 							quantity: '',
+		// 							unitPrice: '',
+		// 							vatCategoryId: '',
+		// 							subTotal: 0,
+		// 							productId: '',
+		// 						},
+		// 					],
+		// 					initValue: {
+		// 						...this.state.initValue,
+		// 						...{
+		// 							total_net: 0,
+		// 							invoiceVATAmount: 0,
+		// 							totalAmount: 0,
+		// 							discountType: '',
+		// 							discount: 0,
+		// 							discountPercentage: '',
+		// 						},
+		// 					},
+		// 				},
+		// 				() => {
+		// 					resetForm(this.state.initValue);
+		// 					this.getInvoiceNo();
+		// 					this.formRef.current.setFieldValue(
+		// 						'lineItemsString',
+		// 						this.state.data,
+		// 						false,
+		// 					);
+		// 				},
+		// 			);
+		// 		} else {
+		// 			this.props.history.push('/admin/expense/supplier-invoice');
+		// 		}
+		// 	})
+		// 	.catch((err) => {
+		// 		this.props.commonActions.tostifyAlert(
+		// 			'error',
+		// 			err && err.data ? err.data.message : 'Something Went Wrong',
+		// 		);
+		// 	});
 	};
 
 	openSupplierModal = (e) => {
@@ -864,6 +977,9 @@ class CreateSupplierInvoice extends React.Component {
 																),
 																productId: Yup.string().required(
 																	'Product is Required',
+																),
+																transactiomCategoryId: Yup.string().required(
+																	'Account is Required',
 																),
 															}),
 														),
@@ -1374,6 +1490,14 @@ class CreateSupplierInvoice extends React.Component {
 																		}
 																	>
 																		Product
+																	</TableHeaderColumn>
+																	<TableHeaderColumn
+																		dataField="account"
+																		dataFormat={(cell, rows) =>
+																			this.renderAccount(cell, rows, props)
+																		}
+																	>
+																		Account
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="description"

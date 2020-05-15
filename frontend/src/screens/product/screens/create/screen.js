@@ -925,7 +925,7 @@ class CreateProduct extends React.Component {
                                 </FormGroup>
 
                                 <FormGroup className="mb-3">
-                                  <Label htmlFor="transactionCategoryId">
+                                  <Label htmlFor="purchaseTransactionCategoryId">
                                     <span className="text-danger">*</span>{' '}
                                     Account
                                   </Label>

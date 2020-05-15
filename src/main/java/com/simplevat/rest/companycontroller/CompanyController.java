@@ -31,6 +31,8 @@ import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 @Component
 @RequestMapping("/rest/company")
 public class CompanyController {
@@ -62,7 +64,7 @@ public class CompanyController {
 			}
 			return new ResponseEntity<>(companyRestHelper.getModelList(companyList), HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error = ", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -116,7 +118,7 @@ public class CompanyController {
 				return new ResponseEntity<>(companyRestHelper.getModel(user.getCompany()), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			logger.error("Error = ", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -133,7 +135,7 @@ public class CompanyController {
 			companyService.persist(company);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -149,7 +151,7 @@ public class CompanyController {
 			companyService.update(company);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("ERROR = ", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

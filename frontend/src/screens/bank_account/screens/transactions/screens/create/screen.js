@@ -234,6 +234,7 @@ class CreateBankTransaction extends React.Component {
   };
 
   getTransactionCategoryList = (type) => {
+    console.log(type);
     this.setValue(null);
     try {
       this.props.transactionCreateActions

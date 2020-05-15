@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
+import com.simplevat.constant.CommonColumnConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.ExpenseDao;
 import com.simplevat.entity.Expense;
-import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
@@ -32,7 +32,7 @@ import javax.persistence.TypedQuery;
 @Transactional
 public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements ExpenseDao {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(ExpenseDaoImpl.class);
+	private static  final Logger LOGGER = LoggerFactory.getLogger(ExpenseDaoImpl.class);
 
 	@Autowired
 	private DatatableSortingFilterConstant dataTableUtil;
@@ -46,14 +46,15 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 	public List<Object[]> getExpensePerMonth(Date startDate, Date endDate) {
 		List<Object[]> expenses = new ArrayList<>(0);
 		try {
-			String queryString = "select " + "sum(e.expenseAmount) as expenseTotal, "
-					+ "CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate)) as month " + "from Expense e "
-					+ "where e.deleteFlag = 'false' " + "and e.expenseDate BETWEEN :startDate AND :endDate "
-					+ "group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))";
+			StringBuilder queryStringBuilder = new StringBuilder();
+			queryStringBuilder.append("select sum(e.expenseAmount) as expenseTotal,")
+			.append("CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate)) as month")
+					.append("from Expense e where e.deleteFlag = 'false' and e.expenseDate BETWEEN :startDate AND :endDate")
+					.append("group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))");
 
-			Query query = getEntityManager().createQuery(queryString)
-					.setParameter("startDate", startDate, TemporalType.DATE)
-					.setParameter("endDate", endDate, TemporalType.DATE);
+			Query query = getEntityManager().createQuery(queryStringBuilder.toString())
+					.setParameter(CommonColumnConstants.START_DATE, startDate, TemporalType.DATE)
+					.setParameter(CommonColumnConstants.END_DATE, endDate, TemporalType.DATE);
 			expenses = query.getResultList();
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
@@ -65,13 +66,15 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 	public List<Object[]> getExpenses(Date startDate, Date endDate) {
 		List<Object[]> expenses = new ArrayList<>(0);
 		try {
-			String queryString = "select " + "e.expenseAmount as expense, e.expenseDate as date, "
-					+ "e.receiptNumber as ref " + "from Expense e " + "where e.deleteFlag = 'false' "
-					+ "and e.expenseDate BETWEEN :startDate AND :endDate " + "order by e.expenseDate asc";
+			StringBuilder queryStringBuilder = new StringBuilder();
 
-			Query query = getEntityManager().createQuery(queryString)
-					.setParameter("startDate", startDate, TemporalType.DATE)
-					.setParameter("endDate", endDate, TemporalType.DATE);
+			queryStringBuilder.append("select e.expenseAmount as expense, e.expenseDate as date,e.receiptNumber as ref")
+				.append("from Expense e where e.deleteFlag = 'false' ")
+				.append("and e.expenseDate BETWEEN :startDate AND :endDate order by e.expenseDate asc");
+
+			Query query = getEntityManager().createQuery(queryStringBuilder.toString())
+					.setParameter(CommonColumnConstants.START_DATE, startDate, TemporalType.DATE)
+					.setParameter(CommonColumnConstants.END_DATE, endDate, TemporalType.DATE);
 			expenses = query.getResultList();
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
@@ -83,17 +86,19 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 	public List<Object[]> getVatOutPerMonthWise(Date startDate, Date endDate) {
 		List<Object[]> expenses = new ArrayList<>(0);
 		try {
-			String queryString = "select "
-					+ "sum((li.expenseLineItemUnitPrice*li.expenseLineItemQuantity)*li.expenseLineItemVat/100) as vatOutTotal, "
-					+ "CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate)) as month "
-					+ "from Expense e JOIN e.expenseLineItems li "
-					+ "where e.deleteFlag = 'false' and li.deleteFlag= 'false'"
-					+ "and e.expenseDate BETWEEN :startDate AND :endDate "
-					+ "group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))";
+			StringBuilder queryStringBuilder = new StringBuilder();
 
-			Query query = getEntityManager().createQuery(queryString)
-					.setParameter("startDate", startDate, TemporalType.DATE)
-					.setParameter("endDate", endDate, TemporalType.DATE);
+			queryStringBuilder.append("select sum((li.expenseLineItemUnitPrice*li.expenseLineItemQuantity)*li.expenseLineItemVat/100) as vatOutTotal,")
+			.append("CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate)) as month")
+			.append("from Expense e JOIN e.expenseLineItems li ")
+			.append("where e.deleteFlag = 'false' and li.deleteFlag= 'false'")
+			.append("and e.expenseDate BETWEEN :startDate AND :endDate ")
+			.append("group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))")
+;
+
+			Query query = getEntityManager().createQuery(queryStringBuilder.toString())
+					.setParameter(CommonColumnConstants.START_DATE, startDate, TemporalType.DATE)
+					.setParameter(CommonColumnConstants.END_DATE, endDate, TemporalType.DATE);
 			expenses = query.getResultList();
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
@@ -107,9 +112,9 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 		TypedQuery<Expense> query = getEntityManager().createQuery(
 				"SELECT i FROM Expense i WHERE i.deleteFlag = false AND i.expenseDate BETWEEN :startDate AND :endDate ORDER BY i.expenseDate ASC",
 				Expense.class);
-		query.setParameter("startDate",
+		query.setParameter(CommonColumnConstants.START_DATE,
 				Instant.ofEpochMilli(startDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
-		query.setParameter("endDate",
+		query.setParameter(CommonColumnConstants.END_DATE,
 				Instant.ofEpochMilli(endDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
 		List<Expense> expenseList = query.getResultList();
 		if (expenseList != null && !expenseList.isEmpty()) {
@@ -139,7 +144,7 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
 		paginationModel
-				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), dataTableUtil.EXEPENSE));
+				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), DatatableSortingFilterConstant.EXPENSE));
 		PaginationResponseModel request = new PaginationResponseModel();
 		request.setData(this.executeQuery(dbFilters, paginationModel));
 		request.setCount(this.getResultCount(dbFilters));

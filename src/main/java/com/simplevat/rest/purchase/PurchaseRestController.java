@@ -39,6 +39,8 @@ import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author daynil
@@ -101,7 +103,7 @@ public class PurchaseRestController {
 			}
 			return new ResponseEntity(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -114,7 +116,7 @@ public class PurchaseRestController {
 			selectedPurchaseModel = purchaseControllerRestHelper.getPurchaseModel(purchase);
 			return new ResponseEntity(selectedPurchaseModel, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -127,7 +129,7 @@ public class PurchaseRestController {
 			purchaseService.update(purchase);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -138,7 +140,7 @@ public class PurchaseRestController {
 			purchaseService.deleteByIds(purchaseIds.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
@@ -154,7 +156,7 @@ public class PurchaseRestController {
 			}
 			return new ResponseEntity(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -170,7 +172,7 @@ public class PurchaseRestController {
 			}
 			return new ResponseEntity(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -186,7 +188,7 @@ public class PurchaseRestController {
 			}
 			return new ResponseEntity(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -209,7 +211,7 @@ public class PurchaseRestController {
 							TransactionCategoryConsatant.TRANSACTION_CATEGORY_PURCHASE);
 			return new ResponseEntity(transactionCategoryList, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -225,7 +227,7 @@ public class PurchaseRestController {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -241,7 +243,7 @@ public class PurchaseRestController {
 			List<Project> projects = projectService.getProjectsByCriteria(criteria);
 			return new ResponseEntity(projects, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -251,7 +253,7 @@ public class PurchaseRestController {
 		try {
 			return new ResponseEntity(vatCategoryService.getVatCategoryList(), HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -275,7 +277,7 @@ public class PurchaseRestController {
 			}
 			return new ResponseEntity(exchangeRateString, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}

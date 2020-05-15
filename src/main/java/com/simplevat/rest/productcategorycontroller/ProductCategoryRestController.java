@@ -31,6 +31,8 @@ import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author saurabhg 26/12/19
@@ -98,7 +100,7 @@ public class ProductCategoryRestController {
 			productCategoryService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -115,7 +117,7 @@ public class ProductCategoryRestController {
 			productCategoryService.persist(selectedProductCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -135,7 +137,7 @@ public class ProductCategoryRestController {
 			productCategoryService.update(selectedProductCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

@@ -10,7 +10,7 @@ public enum ChartOfAccountCategoryIdEnumConstant {
 
 	@Getter
 	@Setter
-	public Integer id;
+	Integer id;
 
 	ChartOfAccountCategoryIdEnumConstant(int id) {
 		this.id = id;
@@ -26,9 +26,7 @@ public enum ChartOfAccountCategoryIdEnumConstant {
 
 	public static boolean isDebitedFromBank(Integer id) {
 
-		if (id.equals(MONEY_SPENT.id))
-			return true;
+		return id.equals(MONEY_SPENT.id);
 
-		return false;
 	}
 }

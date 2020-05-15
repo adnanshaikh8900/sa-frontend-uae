@@ -39,6 +39,8 @@ import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.utils.DateFormatUtil;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 @RestController
 @RequestMapping("/rest/reconsile")
 public class ReconsilationController {
@@ -92,7 +94,7 @@ public class ReconsilationController {
 					reconsilationRestHelper.getList(ReconsileCategoriesEnumConstant.get(reconcilationCatCode)),
 					HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -168,7 +170,7 @@ public class ReconsilationController {
 
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

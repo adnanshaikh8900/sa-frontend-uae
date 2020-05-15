@@ -17,6 +17,8 @@ import com.simplevat.constant.dbfilter.DateFormatFilterEnum;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 @RestController
 @RequestMapping("/rest/detailedGeneralLedgerReport")
 public class DetailedGeneralLedgerReportController {
@@ -37,7 +39,7 @@ public class DetailedGeneralLedgerReportController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(list, HttpStatus.OK);
 	}

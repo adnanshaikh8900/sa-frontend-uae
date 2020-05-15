@@ -34,6 +34,8 @@ import com.simplevat.service.VatCategoryService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author Sonu
@@ -86,7 +88,7 @@ public class ProductRestController {
 			}
 			return new ResponseEntity(response, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -101,7 +103,7 @@ public class ProductRestController {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -113,7 +115,7 @@ public class ProductRestController {
 			productService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -130,7 +132,7 @@ public class ProductRestController {
 				return new ResponseEntity<>(productRestHelper.getRequestModel(product), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -147,7 +149,7 @@ public class ProductRestController {
 			productService.persist(product);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -164,7 +166,7 @@ public class ProductRestController {
 			productService.update(product);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

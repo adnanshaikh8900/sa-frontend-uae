@@ -40,6 +40,8 @@ import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author Sonu
@@ -133,7 +135,7 @@ public class TransactionCategoryRestController{
 			transactionCategoryService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -153,7 +155,7 @@ public class TransactionCategoryRestController{
 			transactionCategoryService.persist(selectedTransactionCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -182,7 +184,7 @@ public class TransactionCategoryRestController{
 			transactionCategoryService.update(selectedTransactionCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

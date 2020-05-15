@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author daynil
@@ -88,7 +90,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			response.setData(expenseRestHelper.getExpenseList(response.getData()));
 			return new ResponseEntity(response, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -110,7 +112,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			expenseService.persist(expense);
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -134,7 +136,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			}
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -147,7 +149,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			ExpenseModel expenseModel = expenseRestHelper.getExpenseModel(expense);
 			return new ResponseEntity(expenseModel, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -160,7 +162,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			expenseService.update(expense);
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -171,7 +173,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			expenseService.deleteByIds(expenseIds.getIds());
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}

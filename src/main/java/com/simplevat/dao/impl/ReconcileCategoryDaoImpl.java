@@ -17,8 +17,7 @@ public class ReconcileCategoryDaoImpl extends AbstractDao<Integer, ReconcileCate
 	public List<ReconcileCategory> findByType(String reconcileCategotyCode) {
 		Query query = getEntityManager().createNamedQuery("allReconcileCategoryByparentReconcileCategoryId");
 		query.setParameter("code", Integer.valueOf(reconcileCategotyCode));
-		List<ReconcileCategory> reconcileCategories = query.getResultList();
-		return reconcileCategories;
+		return query.getResultList();
 	}
 
 }

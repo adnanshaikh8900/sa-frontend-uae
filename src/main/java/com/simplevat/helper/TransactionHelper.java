@@ -163,7 +163,6 @@ public class TransactionHelper {
 		if (transaction.getTransactionDate() != null)
 			model.setDate(dateUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), model.getDATE_FORMAT()));
 		model.setDescription(transaction.getExplainedTransactionDescription());
-		// TODO : work on attachement
 		model.setReference(transaction.getReferenceStr());
 
 		// EXPENSE
@@ -183,7 +182,7 @@ public class TransactionHelper {
 		if (transaction.getExplinationEmployee() != null)
 			model.setVendorId(transaction.getBankAccount().getBankAccountId());
 		if (transaction.getCoaCategory() != null && transaction.getCoaCategory().getChartOfAccountCategoryId()
-				.equals(ChartOfAccountCategoryIdEnumConstant.SALES.id)) {
+				.equals(ChartOfAccountCategoryIdEnumConstant.SALES.getId())) {
 			// SALES
 			List<ReconsileRequestLineItemModel> invoiceIdList = new ArrayList<>();
 			List<TransactionStatus> trnxStatusList = transactionStatusService

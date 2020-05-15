@@ -58,7 +58,7 @@ public class JournalDaoImpl extends AbstractDao<Integer, Journal> implements Jou
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
 		paginationModel
-				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), dataTableUtil.JOURNAL));
+				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), DatatableSortingFilterConstant.JOURNAL));
 		PaginationResponseModel resposne = new PaginationResponseModel();
 		resposne.setCount(this.getResultCount(dbFilters));
 		resposne.setData(this.executeQuery(dbFilters, paginationModel));

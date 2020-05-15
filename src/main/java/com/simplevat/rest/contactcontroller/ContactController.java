@@ -12,10 +12,8 @@ import com.simplevat.entity.Contact;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ContactService;
 
-import liquibase.pro.packaged.ex;
 
 import com.simplevat.security.JwtTokenUtil;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -35,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -76,7 +76,7 @@ public class ContactController {
 			}
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error =", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -114,7 +114,7 @@ public class ContactController {
 			contactService.persist(contact);
 			return new ResponseEntity<>(contactHelper.getModel(contact), HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error =", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -133,7 +133,7 @@ public class ContactController {
 			}
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error =", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -162,7 +162,7 @@ public class ContactController {
 			contactService.deleleByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error =", e);
+			logger.error(ERROR, e);
 		}
 
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

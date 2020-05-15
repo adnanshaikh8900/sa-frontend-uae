@@ -20,9 +20,8 @@ public class BankAccountStatusDaoImpl implements BankAccountStatusDao {
 
 	@Override
 	public List<BankAccountStatus> getBankAccountStatuses() {
-		List<BankAccountStatus> bankAccountStatuses = entityManager
+		return entityManager
 				.createNamedQuery("allBankAccountStatuses", BankAccountStatus.class).getResultList();
-		return bankAccountStatuses;
 	}
 
 	@Override

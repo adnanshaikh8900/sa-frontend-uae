@@ -54,12 +54,12 @@ public class ExcelUtil {
 							if (cell.getRow().getRowNum() == firstRowIndex) {
 								indexHeaderMap.put(cell.getColumnIndex(), cellValue);
 							} else {
-								List<String> dataList = new ArrayList<String>();
+								List<String> dataList = new ArrayList<>();
 								if (indexDateMap.containsKey(cell.getColumnIndex())) {
 									dataList = indexDateMap.get(cell.getColumnIndex());
 									dataList.add(cellValue);
 								} else {
-									dataList = new ArrayList<String>();
+									dataList = new ArrayList<>();
 									dataList.add(cellValue);
 									indexDateMap.put(cell.getColumnIndex(), dataList);
 								}

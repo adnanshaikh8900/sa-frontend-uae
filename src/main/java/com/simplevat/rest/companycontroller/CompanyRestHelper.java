@@ -17,6 +17,8 @@ import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
 import com.simplevat.service.UserService;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 @Component
 public class CompanyRestHelper{
 	
@@ -164,7 +166,7 @@ public class CompanyRestHelper{
 			try {
 				company.setCompanyLogo(companyModel.getCompanyLogo().getBytes());
 			} catch (IOException e) {
-				logger.error("ERROR = ", e);
+				logger.error(ERROR, e);
 			}
 		}
 		return company;

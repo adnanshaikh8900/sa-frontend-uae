@@ -1,5 +1,7 @@
 package com.simplevat.rest.datalistcontroller;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -7,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.simplevat.utils.ChartOfAccountCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,6 @@ import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.rest.productcontroller.ProductPriceModel;
 import com.simplevat.rest.productcontroller.ProductRestHelper;
-import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
 import com.simplevat.service.ChartOfAccountCategoryService;
 import com.simplevat.service.CountryService;
@@ -51,6 +51,7 @@ import com.simplevat.service.ProductService;
 import com.simplevat.service.StateService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
+import com.simplevat.utils.ChartOfAccountCacheService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -105,12 +106,15 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-//	@Deprecated
+	/**
+	 * @author $@urabh Shifted from this to @see CurrencyController
+	 */
+	@Deprecated
 	@GetMapping(value = "/getcurrenncy")
 	public ResponseEntity getCurrency(PaginationModel paginationModel) {
 		try {
@@ -125,7 +129,7 @@ public class DataListController {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -145,7 +149,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -165,7 +169,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -185,7 +189,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -205,7 +209,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -224,7 +228,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -243,7 +247,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -271,7 +275,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -292,7 +296,7 @@ public class DataListController {
 				return new ResponseEntity(modelList, HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -327,6 +331,7 @@ public class DataListController {
 						parentCategory = chartOfAccountCategory;
 					}
 				}
+				assert parentCategory != null;
 				return new ResponseEntity<>(Arrays.asList(
 						new SingleLevelDropDownModel(parentCategory.getChartOfAccountCategoryName(), modelList)),
 						HttpStatus.OK);
@@ -334,7 +339,7 @@ public class DataListController {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

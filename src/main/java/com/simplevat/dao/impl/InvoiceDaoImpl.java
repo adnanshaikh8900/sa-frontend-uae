@@ -48,11 +48,12 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	@Override
 	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		paginationModel.setSortingCol(datatableUtil.getColName(paginationModel.getSortingCol(), datatableUtil.INVOICE));
+		paginationModel.setSortingCol(
+				datatableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.INVOICE));
 		PaginationResponseModel response = new PaginationResponseModel();
 		response.setCount(this.getResultCount(dbFilters));
 		response.setData(this.executeQuery(dbFilters, paginationModel));
@@ -112,8 +113,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("overDueAmount", BigDecimal.class);
 		query.setParameter("type", type);
 		query.setMaxResults(1);
+
 		BigDecimal overDueAmount = query.getSingleResult();
-		Float overDueAmountFloat = new Float(0);
+		Float overDueAmountFloat = (float) 0;
 		if (overDueAmount != null)
 			overDueAmountFloat = overDueAmount.floatValue();
 		Date date = new Date();
@@ -126,9 +128,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		endDate = DateUtils.getEndDate(DateUtils.Duration.THIS_MONTH, TimeZone.getDefault(), date);
 		Float overDueAmountMonthlyFloat = getOverDueAmountWeeklyMonthly(type, startDate, endDate);
 
-		OverDueAmountDetailsModel overDueAmountDetailsModel = new OverDueAmountDetailsModel(overDueAmountFloat,
-				overDueAmountWeeklyFloat, overDueAmountMonthlyFloat);
-		return overDueAmountDetailsModel;
+		return new OverDueAmountDetailsModel(overDueAmountFloat, overDueAmountWeeklyFloat, overDueAmountMonthlyFloat);
 	}
 
 	private Float getOverDueAmountWeeklyMonthly(Integer type, Date startDate, Date endDate) {
@@ -139,8 +139,9 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		query.setParameter("startDate", dateUtil.get(startDate));
 		query.setParameter("endDate", dateUtil.get(endDate));
 		query.setMaxResults(1);
-		BigDecimal overDueAmountMonthly = (BigDecimal) query.getSingleResult();
-		Float overDueAmountFloat = new Float(0);
+
+		BigDecimal overDueAmountMonthly = query.getSingleResult();
+		Float overDueAmountFloat = (float) 0;
 		if (overDueAmountMonthly != null)
 			overDueAmountFloat = overDueAmountMonthly.floatValue();
 		return overDueAmountFloat;

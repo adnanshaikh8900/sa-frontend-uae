@@ -28,6 +28,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author daynil
@@ -55,7 +57,7 @@ public class TransactionReportRestController {
 		try {
 			return new ResponseEntity(FinancialPeriodHolderRest.getFinancialPeriodList(), HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -67,7 +69,7 @@ public class TransactionReportRestController {
 			List<ChartOfAccount> transactionTypeList = transactionTypeService.findAllChild();
 			return new ResponseEntity(transactionTypeList, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -96,7 +98,7 @@ public class TransactionReportRestController {
 			}
 			return new ResponseEntity(transactionCategoryList, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -116,7 +118,7 @@ public class TransactionReportRestController {
 					transactionTypeCode, transactionCategoryId, startDate, endDate, accountId, pageNo, pageSize);
 			return new ResponseEntity(transactionRestModels, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -142,7 +144,7 @@ public class TransactionReportRestController {
 			return new ResponseEntity(
 					HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}

@@ -1,0 +1,1465 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {
+	Card,
+	CardHeader,
+	CardBody,
+	Button,
+	Row,
+	Col,
+	Form,
+	FormGroup,
+	Input,
+	Label,
+	NavLink,
+} from 'reactstrap';
+import Select from 'react-select';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import DatePicker from 'react-datepicker';
+import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
+import * as CustomerInvoiceDetailActions from './actions';
+import * as CustomerInvoiceActions from '../../actions';
+
+import { CustomerModal } from '../../sections';
+import { Loader, ConfirmDeleteModal } from 'components';
+
+import 'react-datepicker/dist/react-datepicker.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import { CommonActions } from 'services/global';
+import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
+
+import './style.scss';
+import moment from 'moment';
+import API_ROOT_URL from '../../../../constants/config';
+
+const mapStateToProps = (state) => {
+	return {
+		project_list: state.customer_invoice.project_list,
+		contact_list: state.customer_invoice.contact_list,
+		currency_list: state.customer_invoice.currency_list,
+		vat_list: state.customer_invoice.vat_list,
+		product_list: state.customer_invoice.product_list,
+		customer_list: state.customer_invoice.customer_list,
+		country_list: state.customer_invoice.country_list,
+	};
+};
+const mapDispatchToProps = (dispatch) => {
+	return {
+		customerInvoiceActions: bindActionCreators(
+			CustomerInvoiceActions,
+			dispatch,
+		),
+		customerInvoiceDetailActions: bindActionCreators(
+			CustomerInvoiceDetailActions,
+			dispatch,
+		),
+		commonActions: bindActionCreators(CommonActions, dispatch),
+	};
+};
+
+class RecordCustomerPayment extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			loading: false,
+			dialog: false,
+			discountOptions: [
+				{ value: 'FIXED', label: 'Fixed' },
+				{ value: 'PERCENTAGE', label: 'Percentage' },
+			],
+			discount_option: '',
+			data: [],
+			current_customer_id: null,
+			initValue: {},
+			contactType: 2,
+			openCustomerModal: false,
+			selectedContact: '',
+			term: '',
+			selectedType: '',
+			discountPercentage: '',
+			discountAmount: 0,
+			fileName: '',
+		};
+
+		// this.options = {
+		//   paginationPosition: 'top'
+		// }
+		this.formRef = React.createRef();
+		this.termList = [
+			{ label: 'Net 7', value: 'NET_7' },
+			{ label: 'Net 10', value: 'NET_10' },
+			{ label: 'Net 30', value: 'NET_30' },
+			{ label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
+		];
+		this.regEx = /^[0-9\b]+$/;
+		this.regExBoth = /[a-zA-Z0-9]+$/;
+
+		this.file_size = 1024000;
+		this.supported_format = [
+			'text/plain',
+			'application/pdf',
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'application/vnd.ms-excel',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		];
+	}
+
+	componentDidMount = () => {
+		this.initializeData();
+	};
+
+	initializeData = () => {
+		console.log(this.props.location.state.id);
+		// if (this.props.location.state && this.props.location.state.id) {
+		// 	this.props.customerInvoiceDetailActions
+		// 		.getInvoiceById(this.props.location.state.id)
+		// 		.then((res) => {
+		// 			if (res.status === 200) {
+		// 				this.props.customerInvoiceActions.getVatList();
+		// 				this.props.customerInvoiceActions.getProjectList();
+		// 				this.props.customerInvoiceActions.getCustomerList(
+		// 					this.state.contactType,
+		// 				);
+		// 				this.props.customerInvoiceActions.getCurrencyList();
+		// 				this.props.customerInvoiceActions.getCountryList();
+		// 				this.props.customerInvoiceActions.getProductList();
+
+		// 				this.setState(
+		// 					{
+		// 						current_customer_id: this.props.location.state.id,
+		// 						initValue: {
+		// 							receiptAttachmentDescription: res.data
+		// 								.receiptAttachmentDescription
+		// 								? res.data.receiptAttachmentDescription
+		// 								: '',
+		// 							receiptNumber: res.data.receiptNumber
+		// 								? res.data.receiptNumber
+		// 								: '',
+		// 							contact_po_number: res.data.contactPoNumber
+		// 								? res.data.contactPoNumber
+		// 								: '',
+		// 							currency: res.data.currencyCode ? res.data.currencyCode : '',
+		// 							invoiceDueDate: res.data.invoiceDueDate
+		// 								? moment(res.data.invoiceDueDate).format('DD/MM/YYYY')
+		// 								: '',
+		// 							invoiceDate: res.data.invoiceDate
+		// 								? moment(res.data.invoiceDate).format('DD/MM/YYYY')
+		// 								: '',
+		// 							contactId: res.data.contactId ? res.data.contactId : '',
+		// 							project: res.data.projectId ? res.data.projectId : '',
+		// 							invoice_number: res.data.referenceNumber
+		// 								? res.data.referenceNumber
+		// 								: '',
+		// 							total_net: 0,
+		// 							invoiceVATAmount: res.data.totalVatAmount
+		// 								? res.data.totalVatAmount
+		// 								: 0,
+		// 							totalAmount: res.data.totalAmount ? res.data.totalAmount : 0,
+		// 							notes: res.data.notes ? res.data.notes : '',
+		// 							lineItemsString: res.data.invoiceLineItems
+		// 								? res.data.invoiceLineItems
+		// 								: [],
+		// 							discount: res.data.discount ? res.data.discount : 0,
+		// 							discountPercentage: res.data.discountPercentage
+		// 								? res.data.discountPercentage
+		// 								: '',
+		// 							discountType: res.data.discountType
+		// 								? res.data.discountType
+		// 								: '',
+		// 							term: res.data.term ? res.data.term : '',
+		// 							fileName: res.data.fileName ? res.data.fileName : '',
+		// 							filePath: res.data.filePath ? res.data.filePath : '',
+		// 						},
+		// 						discountAmount: res.data.discount ? res.data.discount : 0,
+		// 						discountPercentage: res.data.discountPercentage
+		// 							? res.data.discountPercentage
+		// 							: '',
+		// 						data: res.data.invoiceLineItems
+		// 							? res.data.invoiceLineItems
+		// 							: [],
+		// 						selectedContact: res.data.contactId ? res.data.contactId : '',
+		// 						term: res.data.term ? res.data.term : '',
+		// 						loading: false,
+		// 					},
+		// 					() => {
+		// 						if (this.state.data.length > 0) {
+		// 							this.calTotalNet(this.state.data);
+		// 							const { data } = this.state;
+		// 							const idCount =
+		// 								data.length > 0
+		// 									? Math.max.apply(
+		// 											Math,
+		// 											data.map((item) => {
+		// 												return item.id;
+		// 											}),
+		// 									  )
+		// 									: 0;
+		// 							this.setState({
+		// 								idCount,
+		// 							});
+		// 						} else {
+		// 							this.setState({
+		// 								idCount: 0,
+		// 							});
+		// 						}
+		// 					},
+		// 				);
+		// 			}
+		// 		});
+		// } else {
+		// 	this.props.history.push('/admin/revenue/customer-invoice');
+		// }
+	};
+
+	calTotalNet = (data) => {
+		let total_net = 0;
+		data.map((obj) => {
+			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+			return obj;
+		});
+		this.setState({
+			initValue: Object.assign(this.state.initValue, { total_net }),
+		});
+	};
+
+	renderDescription = (cell, row, props) => {
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.description`}
+				render={({ field, form }) => (
+					<Input
+						type="text"
+						value={row['description'] !== '' ? row['description'] : ''}
+						onChange={(e) => {
+							this.selectItem(e, row, 'description', form, field);
+						}}
+						placeholder="Description"
+						className={`form-control 
+            ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].description &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].description
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
+				)}
+			/>
+		);
+	};
+
+	renderQuantity = (cell, row, props) => {
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.quantity`}
+				render={({ field, form }) => (
+					<Input
+						type="text"
+						value={row['quantity'] !== 0 ? row['quantity'] : 0}
+						onChange={(e) => {
+							if (e.target.value === '' || this.regEx.test(e.target.value)) {
+								this.selectItem(e, row, 'quantity', form, field, props);
+							}
+						}}
+						placeholder="Quantity"
+						className={`form-control 
+           						${
+												props.errors.lineItemsString &&
+												props.errors.lineItemsString[parseInt(idx, 10)] &&
+												props.errors.lineItemsString[parseInt(idx, 10)]
+													.quantity &&
+												Object.keys(props.touched).length > 0 &&
+												props.touched.lineItemsString &&
+												props.touched.lineItemsString[parseInt(idx, 10)] &&
+												props.touched.lineItemsString[parseInt(idx, 10)]
+													.quantity
+													? 'is-invalid'
+													: ''
+											}`}
+					/>
+				)}
+			/>
+		);
+	};
+
+	renderUnitPrice = (cell, row, props) => {
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.unitPrice`}
+				render={({ field, form }) => (
+					<Input
+						type="text"
+						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
+						onChange={(e) => {
+							if (e.target.value === '' || this.regEx.test(e.target.value)) {
+								this.selectItem(e, row, 'unitPrice', form, field, props);
+							}
+						}}
+						placeholder="Unit Price"
+						className={`form-control 
+                       ${
+													props.errors.lineItemsString &&
+													props.errors.lineItemsString[parseInt(idx, 10)] &&
+													props.errors.lineItemsString[parseInt(idx, 10)]
+														.unitPrice &&
+													Object.keys(props.touched).length > 0 &&
+													props.touched.lineItemsString &&
+													props.touched.lineItemsString[parseInt(idx, 10)] &&
+													props.touched.lineItemsString[parseInt(idx, 10)]
+														.unitPrice
+														? 'is-invalid'
+														: ''
+												}`}
+					/>
+				)}
+			/>
+		);
+	};
+
+	renderSubTotal = (cell, row) => {
+		return <label className="mb-0">{row.subTotal.toFixed(2)}</label>;
+	};
+
+	addRow = () => {
+		const data = [...this.state.data];
+		this.setState(
+			{
+				data: data.concat({
+					id: this.state.idCount + 1,
+					description: '',
+					quantity: '',
+					unitPrice: '',
+					vatCategoryId: '',
+					subTotal: 0,
+					productId: '',
+				}),
+				idCount: this.state.idCount + 1,
+			},
+			() => {
+				this.formRef.current.setFieldValue(
+					'lineItemsString',
+					this.state.data,
+					true,
+				);
+			},
+		);
+	};
+
+	selectItem = (e, row, name, form, field, props) => {
+		e.preventDefault();
+		let data = this.state.data;
+		let idx;
+		data.map((obj, index) => {
+			if (obj.id === row.id) {
+				obj[`${name}`] = e.target.value;
+				idx = index;
+			}
+			return obj;
+		});
+		if (
+			name === 'unitPrice' ||
+			name === 'vatCategoryId' ||
+			name === 'quantity'
+		) {
+			form.setFieldValue(
+				field.name,
+				this.state.data[parseInt(idx, 10)][`${name}`],
+				true,
+			);
+			this.updateAmount(data, props);
+		} else {
+			this.setState({ data }, () => {
+				form.setFieldValue(
+					field.name,
+					this.state.data[parseInt(idx, 10)][`${name}`],
+					true,
+				);
+			});
+		}
+	};
+
+	renderVat = (cell, row, props) => {
+		const { vat_list } = this.props;
+		let vatList = vat_list.length
+			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
+			: vat_list;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.vatCategoryId`}
+				render={({ field, form }) => (
+					<Input
+						type="select"
+						onChange={(e) => {
+							this.selectItem(e, row, 'vatCategoryId', form, field, props);
+							// this.formRef.current.props.handleChange(field.name)(e.value)
+						}}
+						value={row.vatCategoryId}
+						className={`form-control 
+            ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].vatCategoryId
+								? 'is-invalid'
+								: ''
+						}`}
+					>
+						{vatList
+							? vatList.map((obj) => {
+									// obj.name = obj.name === 'default' ? '0' : obj.name
+									return (
+										<option value={obj.id} key={obj.id}>
+											{obj.vat}
+										</option>
+									);
+							  })
+							: ''}
+					</Input>
+				)}
+			/>
+		);
+	};
+
+	prductValue = (e, row, name, form, field, props) => {
+		const { product_list } = this.props;
+		let data = this.state.data;
+		const result = product_list.find(
+			(item) => item.id === parseInt(e.target.value),
+		);
+		let idx;
+		data.map((obj, index) => {
+			if (obj.id === row.id) {
+				obj['unitPrice'] = result.unitPrice;
+				obj['vatCategoryId'] = result.vatCategoryId;
+				obj['description'] = result.description;
+				idx = index;
+			}
+			return obj;
+		});
+		form.setFieldValue(
+			`lineItemsString.${idx}.vatCategoryId`,
+			result.vatCategoryId,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.unitPrice`,
+			result.unitPrice,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.description`,
+			result.description,
+			true,
+		);
+		this.updateAmount(data, props);
+	};
+
+	renderProduct = (cell, row, props) => {
+		const { product_list } = this.props;
+		let productList = product_list.length
+			? [{ id: '', name: 'Select Product' }, ...product_list]
+			: product_list;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.productId`}
+				render={({ field, form }) => (
+					<Input
+						type="select"
+						onChange={(e) => {
+							this.selectItem(e, row, 'productId', form, field, props);
+							this.prductValue(e, row, 'productId', form, field, props);
+							// this.formRef.current.props.handleChange(field.name)(e.value)
+						}}
+						value={row.productId}
+						className={`form-control ${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)].productId
+								? 'is-invalid'
+								: ''
+						}`}
+					>
+						{productList
+							? productList.map((obj) => {
+									// obj.name = obj.name === 'default' ? '0' : obj.name
+									return (
+										<option value={obj.id} key={obj.id}>
+											{obj.name}
+										</option>
+									);
+							  })
+							: ''}
+					</Input>
+				)}
+			/>
+		);
+	};
+
+	deleteRow = (e, row, props) => {
+		const id = row['id'];
+		let newData = [];
+		e.preventDefault();
+		const data = this.state.data;
+		newData = data.filter((obj) => obj.id !== id);
+		props.setFieldValue('lineItemsString', newData, true);
+		this.updateAmount(newData, props);
+	};
+
+	renderActions = (cell, rows, props) => {
+		return (
+			<Button
+				size="sm"
+				className="btn-twitter btn-brand icon"
+				disabled={this.state.data.length === 1 ? true : false}
+				onClick={(e) => {
+					this.deleteRow(e, rows, props);
+				}}
+			>
+				<i className="fas fa-trash"></i>
+			</Button>
+		);
+	};
+
+	checkedRow = () => {
+		if (this.state.data.length > 0) {
+			let length = this.state.data.length - 1;
+			let temp = Object.values(this.state.data[`${length}`]).indexOf('');
+			if (temp > -1) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	};
+
+	updateAmount = (data, props) => {
+		console.log(data);
+		const { vat_list } = this.props;
+		let total_net = 0;
+		let total = 0;
+		let total_vat = 0;
+		const { discountPercentage, discountAmount } = this.state;
+
+		data.map((obj) => {
+			const index =
+				obj.vatCategoryId !== ''
+					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
+					: '';
+			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
+			// let val = (((+obj.unitPrice) * vat) / 100)
+			let val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			obj.subTotal =
+				obj.unitPrice && obj.vatCategoryId
+					? +obj.unitPrice * obj.quantity + val
+					: 0;
+			total_net = +(total_net + +obj.unitPrice * obj.quantity);
+			total_vat = +(total_vat + val);
+			total = total_vat + total_net;
+
+			return obj;
+		});
+		const discount =
+			props.values.discountType === 'PERCENTAGE'
+				? +((total_net * discountPercentage) / 100).toFixed(2)
+				: discountAmount;
+		this.setState(
+			{
+				data,
+				initValue: {
+					...this.state.initValue,
+					...{
+						total_net,
+						invoiceVATAmount: total_vat,
+						discount: total_net > discount ? discount : 0,
+						totalAmount: total_net > discount ? total - discount : total,
+					},
+				},
+			},
+			() => {
+				if (props.values.discountType === 'PERCENTAGE') {
+					this.formRef.current.setFieldValue('discount', discount);
+				}
+			},
+		);
+	};
+
+	setDate = (props, value) => {
+		const { term } = this.state;
+		const val = term.split('_');
+		const temp = val[val.length - 1] === 'Receipt' ? 1 : val[val.length - 1];
+		const values = value
+			? value
+			: moment(props.values.invoiceDate, 'DD/MM/YYYY').toDate();
+		if (temp && values) {
+			const date = moment(values)
+				.add(temp - 1, 'days')
+				.format('DD/MM/YYYY');
+			props.setFieldValue('invoiceDueDate', date, true);
+		}
+	};
+
+	handleFileChange = (e, props) => {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachmentFile', file, true);
+		}
+	};
+
+	handleSubmit = (data) => {
+		const { current_customer_id, term } = this.state;
+		const {
+			receiptAttachmentDescription,
+			receiptNumber,
+			contact_po_number,
+			currency,
+			invoiceDueDate,
+			invoiceDate,
+			contactId,
+			project,
+			invoice_number,
+			notes,
+			discount,
+			discountType,
+			discountPercentage,
+		} = data;
+
+		let formData = new FormData();
+		formData.append('type', 2);
+		formData.append('invoiceId', current_customer_id);
+		formData.append(
+			'referenceNumber',
+			invoice_number !== null ? invoice_number : '',
+		);
+		formData.append(
+			'invoiceDate',
+			typeof invoiceDate === 'string'
+				? moment(invoiceDate, 'DD/MM/YYYY').toDate()
+				: invoiceDate,
+		);
+		formData.append(
+			'invoiceDueDate',
+			typeof invoiceDueDate === 'string'
+				? moment(invoiceDueDate, 'DD/MM/YYYY').toDate()
+				: invoiceDueDate,
+		);
+		formData.append(
+			'receiptNumber',
+			receiptNumber !== null ? receiptNumber : '',
+		);
+		formData.append(
+			'contactPoNumber',
+			contact_po_number !== null ? contact_po_number : '',
+		);
+		formData.append(
+			'receiptAttachmentDescription',
+			receiptAttachmentDescription !== null ? receiptAttachmentDescription : '',
+		);
+		formData.append('notes', notes !== null ? notes : '');
+		formData.append('lineItemsString', JSON.stringify(this.state.data));
+		formData.append('totalVatAmount', this.state.initValue.invoiceVATAmount);
+		formData.append('totalAmount', this.state.initValue.totalAmount);
+		formData.append('discount', discount);
+		formData.append('discountType', discountType);
+		formData.append('term', term);
+		if (discountType === 'PERCENTAGE') {
+			formData.append('discountPercentage', discountPercentage);
+		}
+		if (contactId) {
+			formData.append('contactId', contactId);
+		}
+		if (currency) {
+			formData.append('currencyCode', currency);
+		}
+		if (project) {
+			formData.append('projectId', project);
+		}
+		if (this.uploadFile.files[0]) {
+			formData.append('attachmentFile', this.uploadFile.files[0]);
+		}
+		this.props.customerInvoiceDetailActions
+			.updateInvoice(formData)
+			.then((res) => {
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'Invoice Updated Successfully.',
+				);
+				this.props.history.push('/admin/revenue/customer-invoice');
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
+
+	openCustomerModal = (e) => {
+		e.preventDefault();
+		this.setState({ openCustomerModal: true });
+	};
+
+	getCurrentUser = (data) => {
+		let option;
+		if (data.label || data.value) {
+			option = data;
+		} else {
+			option = {
+				label: `${data.fullName}`,
+				value: data.id,
+			};
+		}
+		// this.setState({
+		//   selectedContact: option
+		// })
+		this.formRef.current.setFieldValue('contactId', option.value, true);
+	};
+
+	closeCustomerModal = (res) => {
+		if (res) {
+			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
+		}
+		this.setState({ openCustomerModal: false });
+	};
+
+	deleteInvoice = () => {
+		this.setState({
+			dialog: (
+				<ConfirmDeleteModal
+					isOpen={true}
+					okHandler={this.removeInvoice}
+					cancelHandler={this.removeDialog}
+				/>
+			),
+		});
+	};
+
+	removeInvoice = () => {
+		const { current_customer_id } = this.state;
+		this.props.customerInvoiceDetailActions
+			.deleteInvoice(current_customer_id)
+			.then((res) => {
+				if (res.status === 200) {
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Data Deleted Successfully',
+					);
+					this.props.history.push('/admin/revenue/customer-invoice');
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
+	};
+
+	removeDialog = () => {
+		this.setState({
+			dialog: null,
+		});
+	};
+
+	render() {
+		const { data, discountOptions, initValue, loading, dialog } = this.state;
+
+		const { project_list, currency_list, customer_list } = this.props;
+		const options = {
+			categoriesList: [
+				{
+					options: [
+						{
+							value: 10,
+							label: 'Bank remittance',
+						},
+						{
+							value: 11,
+							label: 'Bank Transfer',
+						},
+						{
+							value: 12,
+							label: 'Cash',
+						},
+						{
+							value: 13,
+							label: 'Check',
+						},
+						{
+							value: 14,
+							label: 'Credit Card',
+						},
+					],
+				},
+			],
+			depositTo: [
+				{
+					label: 'Cash',
+					options: [
+						{
+							value: 10,
+							label: 'Pretty Cash',
+						},
+						{
+							value: 11,
+							label: 'Undeposited Funds',
+						},
+					],
+				},
+				{
+					label: 'Other Current Liability',
+					options: [
+						{
+							value: 10,
+							label: 'Employee Reimbursement',
+						},
+						{
+							value: 11,
+							label: 'TDS Payable',
+						},
+					],
+				},
+			],
+		};
+
+		return (
+			<div className="detail-customer-invoice-screen">
+				<div className="animated fadeIn">
+					<Row>
+						<Col lg={12} className="mx-auto">
+							<Card>
+								<CardHeader>
+									<Row>
+										<Col lg={12}>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<i className="fas fa-address-book" />
+												<span className="ml-2">Payment for INV-000001</span>
+											</div>
+										</Col>
+									</Row>
+								</CardHeader>
+								<CardBody>
+									{dialog}
+									{loading ? (
+										<Loader />
+									) : (
+										<Row>
+											<Col lg={12}>
+												<Formik
+													initialValues={this.state.initValue}
+													ref={this.formRef}
+													onSubmit={(values, { resetForm }) => {
+														this.handleSubmit(values);
+													}}
+													validationSchema={Yup.object().shape({
+														invoice_number: Yup.string().required(
+															'Invoice Number is Required',
+														),
+														contactId: Yup.string().required(
+															'Supplier is Required',
+														),
+														term: Yup.string().required('term is Required'),
+														invoiceDate: Yup.string().required(
+															'Invoice Date is Required',
+														),
+														invoiceDueDate: Yup.string().required(
+															'Invoice Due Date is Required',
+														),
+														currency: Yup.string().required(
+															'Currency is Required',
+														),
+														lineItemsString: Yup.array()
+															.required(
+																'Atleast one invoice sub detail is mandatory',
+															)
+															.of(
+																Yup.object().shape({
+																	description: Yup.string().required(
+																		'Value is Required',
+																	),
+																	quantity: Yup.string()
+																		.required('Value is Required')
+																		.test(
+																			'quantity',
+																			'Quantity Should be Greater than 1',
+																			(value) => {
+																				if (value > 0) {
+																					return true;
+																				} else {
+																					return false;
+																				}
+																			},
+																		),
+																	unitPrice: Yup.string()
+																		.required('Value is Required')
+																		.test(
+																			'Unit Price',
+																			'Unit Price Should be Greater than 1',
+																			(value) => {
+																				if (value > 0) {
+																					return true;
+																				} else {
+																					return false;
+																				}
+																			},
+																		),
+																	vatCategoryId: Yup.string().required(
+																		'Value is Required',
+																	),
+																	productId: Yup.string().required(
+																		'Product is Required',
+																	),
+																}),
+															),
+														attachmentFile: Yup.mixed()
+															.test(
+																'fileType',
+																'*Unsupported File Format',
+																(value) => {
+																	value &&
+																		this.setState({
+																			fileName: value.name,
+																		});
+																	if (
+																		!value ||
+																		(value &&
+																			this.supported_format.includes(
+																				value.type,
+																			))
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															)
+															.test(
+																'fileSize',
+																'*File Size is too large',
+																(value) => {
+																	if (
+																		!value ||
+																		(value && value.size <= this.file_size)
+																	) {
+																		return true;
+																	} else {
+																		return false;
+																	}
+																},
+															),
+													})}
+												>
+													{(props) => (
+														<Form onSubmit={props.handleSubmit}>
+															<Row>
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="invoice_number">
+																			<span className="text-danger">*</span>{' '}
+																			Customer Name
+																		</Label>
+																		<Input
+																			type="text"
+																			id="invoice_number"
+																			name="invoice_number"
+																			placeholder=""
+																			disabled
+																			value={
+																				this.props.location.state.id
+																					.customerName
+																			}
+																			onChange={(value) => {
+																				props.handleChange('invoice_number')(
+																					value,
+																				);
+																			}}
+																			className={
+																				props.errors.invoice_number &&
+																				props.touched.invoice_number
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.invoice_number &&
+																			props.touched.invoice_number && (
+																				<div className="invalid-feedback">
+																					{props.errors.invoice_number}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="project">
+																			<span className="text-danger">*</span>{' '}
+																			Payment
+																		</Label>
+																		<Input
+																			type="text"
+																			id="payment"
+																			name="payment"
+																			placeholder=""
+																			disabled
+																			value={1}
+																			onChange={(value) => {
+																				props.handleChange('payment')(value);
+																			}}
+																			className={
+																				props.errors.payment &&
+																				props.touched.payment
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.payment &&
+																			props.touched.payment && (
+																				<div className="invalid-feedback">
+																					{props.errors.payment}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+															</Row>
+															<hr />
+															<Row>
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="project">
+																			<span className="text-danger">*</span>{' '}
+																			Amount Received
+																		</Label>
+																		<Input
+																			type="text"
+																			id="amount"
+																			name="amount"
+																			placeholder=""
+																			value={
+																				this.props.location.state.id
+																					.invoiceAmount
+																			}
+																			onChange={(value) => {
+																				props.handleChange('amount')(value);
+																			}}
+																			className={
+																				props.errors.amount &&
+																				props.touched.amount
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.amount &&
+																			props.touched.amount && (
+																				<div className="invalid-feedback">
+																					{props.errors.amount}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="project">
+																			Bank Charges
+																		</Label>
+																		<Input
+																			type="text"
+																			id="bankCharges"
+																			name="bankCharges"
+																			placeholder=""
+																			value=""
+																			onChange={(value) => {
+																				props.handleChange('bankCharges')(
+																					value,
+																				);
+																			}}
+																			className={
+																				props.errors.bankCharges &&
+																				props.touched.bankCharges
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.bankCharges &&
+																			props.touched.bankCharges && (
+																				<div className="invalid-feedback">
+																					{props.errors.bankCharges}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+															</Row>
+															<hr />
+															<Row>
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="date">
+																			<span className="text-danger">*</span>
+																			Payment Date
+																		</Label>
+																		<DatePicker
+																			id="invoiceDate"
+																			name="invoiceDate"
+																			placeholderText="Invoice Date"
+																			showMonthDropdown
+																			showYearDropdown
+																			dateFormat="dd/MM/yyyy"
+																			dropdownMode="select"
+																			value={props.values.invoiceDate}
+																			onChange={(value) => {
+																				props.handleChange('invoiceDate')(
+																					moment(value).format('DD/MM/YYYY'),
+																				);
+																				this.setDate(props, value);
+																			}}
+																			className={`form-control ${
+																				props.errors.invoiceDate &&
+																				props.touched.invoiceDate
+																					? 'is-invalid'
+																					: ''
+																			}`}
+																		/>
+																		{props.errors.invoiceDate &&
+																			props.touched.invoiceDate && (
+																				<div className="invalid-feedback">
+																					{props.errors.invoiceDate}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="due_date">
+																			Payment Due Date
+																		</Label>
+																		<div>
+																			<DatePicker
+																				id="invoiceDueDate"
+																				name="invoiceDueDate"
+																				placeholderText="Invoice Due Date"
+																				// selected={props.values.invoiceDueDate}
+																				showMonthDropdown
+																				showYearDropdown
+																				disabled
+																				dateFormat="dd/MM/yyyy"
+																				dropdownMode="select"
+																				value={props.values.invoiceDueDate}
+																				onChange={(value) => {
+																					props.handleChange('invoiceDueDate')(
+																						value,
+																					);
+																				}}
+																				className={`form-control ${
+																					props.errors.invoiceDueDate &&
+																					props.touched.invoiceDueDate
+																						? 'is-invalid'
+																						: ''
+																				}`}
+																			/>
+																			{props.errors.invoiceDueDate &&
+																				props.touched.invoiceDueDate && (
+																					<div className="invalid-feedback">
+																						{props.errors.invoiceDueDate}
+																					</div>
+																				)}
+																		</div>
+																	</FormGroup>
+																</Col>
+															</Row>
+															<Row>
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="paymentMode">
+																			Payment Mode
+																		</Label>
+																		<Select
+																			options={options.categoriesList}
+																			placeholder="Select Payment Mode"
+																			id="paymentMode"
+																			name="paymentMode"
+																			className={
+																				props.errors.paymentMode &&
+																				props.touched.paymentMode
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.paymentMode &&
+																			props.touched.paymentMode && (
+																				<div className="invalid-feedback">
+																					{props.errors.paymentMode}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>{' '}
+																<Col lg={4}>
+																	<FormGroup className="mb-3">
+																		<Label htmlFor="depositTo">
+																			<span className="text-danger">*</span>
+																			Deposit To
+																		</Label>
+																		<Select
+																			options={options.depositTo}
+																			placeholder="Select Type"
+																			id="depositTo"
+																			name="depositTo"
+																			className={
+																				props.errors.depositTo &&
+																				props.touched.depositTo
+																					? 'is-invalid'
+																					: ''
+																			}
+																		/>
+																		{props.errors.depositTo &&
+																			props.touched.depositTo && (
+																				<div className="invalid-feedback">
+																					{props.errors.depositTo}
+																				</div>
+																			)}
+																	</FormGroup>
+																</Col>{' '}
+															</Row>
+															<hr />
+															<Row>
+																<Col lg={8}>
+																	<Row>
+																		<Col lg={6}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptNumber">
+																					Reference Number
+																				</Label>
+																				<Input
+																					type="text"
+																					id="receiptNumber"
+																					name="receiptNumber"
+																					placeholder="Enter Reference Number"
+																					onChange={(option) => {
+																						if (
+																							option.target.value === '' ||
+																							this.regExBoth.test(
+																								option.target.value,
+																							)
+																						) {
+																							props.handleChange(
+																								'receiptNumber',
+																							)(option);
+																						}
+																					}}
+																					value={props.values.receiptNumber}
+																				/>
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																	<Row>
+																		<Col lg={12}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="receiptAttachmentDescription">
+																					Notes
+																				</Label>
+																				<Input
+																					type="textarea"
+																					name="receiptAttachmentDescription"
+																					id="receiptAttachmentDescription"
+																					rows="5"
+																					placeholder="Notes"
+																					onChange={(option) =>
+																						props.handleChange(
+																							'receiptAttachmentDescription',
+																						)(option)
+																					}
+																					defaultValue={
+																						props.values
+																							.receiptAttachmentDescription
+																					}
+																				/>
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																</Col>
+																<Col lg={4}>
+																	<Row>
+																		<Col lg={12}>
+																			<FormGroup className="mb-3">
+																				<Field
+																					name="attachmentFile"
+																					render={({ field, form }) => (
+																						<div>
+																							<Label>Attachment</Label> <br />
+																							<div className="file-upload-cont">
+																								<Button
+																									color="primary"
+																									onClick={() => {
+																										document
+																											.getElementById(
+																												'fileInput',
+																											)
+																											.click();
+																									}}
+																									className="btn-square mr-3"
+																								>
+																									<i className="fa fa-upload"></i>{' '}
+																									Upload
+																								</Button>
+																								<input
+																									id="fileInput"
+																									ref={(ref) => {
+																										this.uploadFile = ref;
+																									}}
+																									type="file"
+																									style={{ display: 'none' }}
+																									onChange={(e) => {
+																										this.handleFileChange(
+																											e,
+																											props,
+																										);
+																									}}
+																								/>
+																								{this.state.fileName ? (
+																									this.state.fileName
+																								) : (
+																									<NavLink
+																										href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`}
+																										download={
+																											this.state.initValue
+																												.fileName
+																										}
+																										style={{
+																											fontSize: '0.875rem',
+																										}}
+																										target="_blank"
+																									>
+																										{
+																											this.state.initValue
+																												.fileName
+																										}
+																									</NavLink>
+																								)}
+																							</div>
+																						</div>
+																					)}
+																				/>
+																				{props.errors.attachmentFile && (
+																					<div className="invalid-file">
+																						{props.errors.attachmentFile}
+																					</div>
+																				)}
+																			</FormGroup>
+																		</Col>
+																	</Row>
+																</Col>
+															</Row>
+															<Row>
+																<Col
+																	lg={12}
+																	className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+																>
+																	<FormGroup className="text-right">
+																		<Button
+																			type="submit"
+																			color="primary"
+																			className="btn-square mr-3"
+																		>
+																			<i className="fa fa-dot-circle-o"></i>{' '}
+																			Record Payment
+																		</Button>
+																		<Button
+																			color="secondary"
+																			className="btn-square"
+																			onClick={() => {
+																				this.props.history.push(
+																					'/admin/revenue/customer-invoice',
+																				);
+																			}}
+																		>
+																			<i className="fa fa-ban"></i> Cancel
+																		</Button>
+																	</FormGroup>
+																</Col>
+															</Row>
+														</Form>
+													)}
+												</Formik>
+											</Col>
+										</Row>
+									)}
+								</CardBody>
+							</Card>
+						</Col>
+					</Row>
+				</div>
+				<CustomerModal
+					openCustomerModal={this.state.openCustomerModal}
+					closeCustomerModal={(e) => {
+						this.closeCustomerModal(e);
+					}}
+					getCurrentUser={(e) => this.getCurrentUser(e)}
+					createCustomer={this.props.customerInvoiceActions.createCustomer}
+					currency_list={this.props.currency_list}
+					country_list={this.props.country_list}
+					getStateList={this.props.customerInvoiceActions.getStateList}
+				/>
+			</div>
+		);
+	}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(RecordCustomerPayment);

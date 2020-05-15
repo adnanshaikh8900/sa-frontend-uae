@@ -69,13 +69,13 @@ public class VatCategoryDaoImpl extends AbstractDao<Integer, VatCategory> implem
 	public PaginationResponseModel getVatCategoryList(Map<VatCategoryFilterEnum, Object> filterDataMap,
 			PaginationModel paginationModel) {
 
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterDataMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
 		if (paginationModel != null && paginationModel.getSortingCol() != null)
 			paginationModel.setSortingCol(
-					dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.VAT_CATEGORY));
+					dataTableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.VAT_CATEGORY));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 

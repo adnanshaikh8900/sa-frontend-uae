@@ -43,6 +43,8 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 @Component
 public class TransactionImportRestHelper {
 	private final Logger LOGGER = LoggerFactory.getLogger(TransactionImportRestHelper.class);
@@ -101,7 +103,7 @@ public class TransactionImportRestHelper {
 			CSVParser parser = new CSVParser(br, CSVFormat.EXCEL);
 			listParser = parser.getRecords();
 		} catch (IOException e) {
-			LOGGER.error("Error", e);
+			LOGGER.error(ERROR, e);
 		}
 		populateTranscationOnFileUpload(listParser);
 	}
@@ -257,7 +259,7 @@ public class TransactionImportRestHelper {
 				}
 			}
 		} catch (Exception ex) {
-			LOGGER.error("Error", ex);
+			LOGGER.error(ERROR, ex);
 		}
 	}
 
@@ -356,7 +358,7 @@ public class TransactionImportRestHelper {
 									.atZone(ZoneId.systemDefault()).toLocalDateTime();
 							trnx.setTransactionDate(transactionDate);
 						} catch (ParseException e) {
-							LOGGER.error("Error", e);
+							LOGGER.error(ERROR, e);
 						}
 						break;
 					}

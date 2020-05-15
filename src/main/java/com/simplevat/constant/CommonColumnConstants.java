@@ -21,6 +21,9 @@ public class CommonColumnConstants {
     public static final String CURRENCY_CODE="currencyCode";
     public static final String CREATED_DATE="createdDate";
 
+    public static final String CHARTOFACCOUNT_ID =  "chartOfAccountId";
+    public static final String EXPLANATION_STATUS_CODE =  "explanationStatusCode";
+
 
     private CommonColumnConstants(){
         throw new IllegalStateException("Utility class ContactTypeConstants");

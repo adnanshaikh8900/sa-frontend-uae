@@ -84,8 +84,7 @@ public class ReconsilationController {
 	private ContactService contactService;
 
 
-	@Autowired
-	private DateFormatUtil dateFormatUtil;
+;
 
 	@GetMapping(value = "/getByReconcilationCatCode")
 	public ResponseEntity getByReconcilationCatCode(@RequestParam int reconcilationCatCode) {

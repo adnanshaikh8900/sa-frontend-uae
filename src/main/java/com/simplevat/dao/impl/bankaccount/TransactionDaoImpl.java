@@ -309,10 +309,10 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			}
 		}
 		if (sortField != null) {
-			filterBuilder.append(" order by ").append(sortField)
+			filterBuilder.append(CommonColumnConstants.ORDER_BY).append(sortField)
 					.append(sortOrder.equalsIgnoreCase("ASCENDING") ? " ASC," : " DESC,");
 		} else {
-			filterBuilder.append(" order by ");
+			filterBuilder.append(CommonColumnConstants.ORDER_BY);
 		}
 		if (transactionStatus != null) {
 			builder.append(" AND t.explanationStatusCode = ").append(transactionStatus);
@@ -355,7 +355,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		Query query = getEntityManager().createQuery(
 				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId AND t.explanationStatusCode =:explanationStatusCode");
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
-		query.setParameter("explanationStatusCode", TransactionStatusConstant.EXPLIANED);
+		query.setParameter(CommonColumnConstants.EXPLANATION_STATUS_CODE, TransactionStatusConstant.EXPLIANED);
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
 			return ((Long) countList.get(0)).intValue();
@@ -368,7 +368,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		Query query = getEntityManager().createQuery(
 				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId AND t.explanationStatusCode =:explanationStatusCode");
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
-		query.setParameter("explanationStatusCode", TransactionStatusConstant.UNEXPLAINED);
+		query.setParameter(CommonColumnConstants.EXPLANATION_STATUS_CODE, TransactionStatusConstant.UNEXPLAINED);
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
 			return ((Long) countList.get(0)).intValue();
@@ -381,7 +381,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		Query query = getEntityManager().createQuery(
 				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId AND t.explanationStatusCode =:explanationStatusCode");
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
-		query.setParameter("explanationStatusCode", TransactionStatusConstant.PARTIALLYEXPLIANED);
+		query.setParameter(CommonColumnConstants.EXPLANATION_STATUS_CODE, TransactionStatusConstant.PARTIALLYEXPLIANED);
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
 			return ((Long) countList.get(0)).intValue();
@@ -432,10 +432,10 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			}
 		}
 		if (sortField != null) {
-			filterBuilder.append(" order by ").append(sortField)
+			filterBuilder.append(CommonColumnConstants.ORDER_BY).append(sortField)
 					.append(sortOrder.equalsIgnoreCase("ASCENDING") ? " ASC," : " DESC,");
 		} else {
-			filterBuilder.append(" order by ");
+			filterBuilder.append(CommonColumnConstants.ORDER_BY);
 		}
 		TypedQuery<Transaction> query = getEntityManager().createQuery(
 				"SELECT t FROM Transaction t WHERE t.bankAccount.bankAccountId =:bankAccountId AND t.parentTransaction IS NULL"

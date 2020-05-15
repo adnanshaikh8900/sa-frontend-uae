@@ -33,7 +33,7 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	@Override
 	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,
 												  PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
@@ -104,9 +104,8 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		endDate = DateUtils.getEndDate(DateUtils.Duration.THIS_MONTH,TimeZone.getDefault(),date);
 		Float overDueAmountMonthlyFloat = getOverDueAmountWeeklyMonthly(type, startDate, endDate);
 
-		OverDueAmountDetailsModel overDueAmountDetailsModel = new OverDueAmountDetailsModel(overDueAmountFloat,
+		return new OverDueAmountDetailsModel(overDueAmountFloat,
 				overDueAmountWeeklyFloat, overDueAmountMonthlyFloat);
-		return overDueAmountDetailsModel;
 	}
 
 	private Float getOverDueAmountWeeklyMonthly( Integer type, Date startDate, Date endDate) {

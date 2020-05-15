@@ -72,7 +72,7 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
 	@Override
 	public PaginationResponseModel getContactList(Map<ContactFilterEnum, Object> filterDataMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterDataMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));

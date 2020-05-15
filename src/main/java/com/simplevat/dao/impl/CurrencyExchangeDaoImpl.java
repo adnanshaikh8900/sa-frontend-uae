@@ -26,8 +26,8 @@ import com.simplevat.entity.CurrencyConversion;
 @Repository
 public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConversion> implements CurrencyExchangeDao {
 
-	private static String ACCESSKEY = "c6267cc9e9bd2735a5a2637aa778d61a";
-	private final Logger LOGGER = LoggerFactory.getLogger(CurrencyExchangeDaoImpl.class);
+	private static String accessKey = "c6267cc9e9bd2735a5a2637aa778d61a";
+	private final Logger logger = LoggerFactory.getLogger(CurrencyExchangeDaoImpl.class);
 
 	@Override
 	public void saveExchangeCurrencies(Currency baseCurrency, List<Currency> convertCurrenies) {
@@ -42,7 +42,7 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 			String currencyIsoName = StringUtils.join(listOfCounteries, ',');
 			System.out.println("currencyIsoName=" + currencyIsoName);
 			String url = "http://data.fixer.io/api/latest?access_key="
-					+ URLEncoder.encode(ACCESSKEY, StandardCharsets.UTF_8.toString()) + "&base="
+					+ URLEncoder.encode( accessKey , StandardCharsets.UTF_8.toString()) + "&base="
 					+ URLEncoder.encode(baseCurrency.getCurrencyIsoCode(), "UTF-8") + "&symbols="
 					+ URLEncoder.encode(currencyIsoName, "UTF8");
 			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -74,10 +74,9 @@ public class CurrencyExchangeDaoImpl extends AbstractDao<Integer, CurrencyConver
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 		}
 
-//            StorageValue storageValue = new ObjectMapper().readValue(responseString, new TypeReference<StorageValue>() {
-//            });
+
 	}
 }

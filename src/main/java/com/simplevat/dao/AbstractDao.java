@@ -26,8 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 
-	private final String andClause = " and ";
-	private final String whereClause = " where ";
+	private static final String andClause = " and ";
+	private static final String whereClause = " where ";
 
 	protected Class<ENTITY> entityClass;
 
@@ -138,7 +138,6 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 				i++;
 			} else if (orderBy) {
 				orderByFilter = dbFilter;
-				// java.util.ConcurrentModificationException: dbFilters.remove(orderByFilter);
 			}
 		}
 

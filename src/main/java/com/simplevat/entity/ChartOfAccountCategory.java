@@ -1,6 +1,5 @@
 package com.simplevat.entity;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -26,7 +25,7 @@ import lombok.Data;
 @Data
 @NamedQueries({
 		@NamedQuery(name = "allChartOfAccountCategory", query = "SELECT c FROM ChartOfAccountCategory c where c.deleteFlag = FALSE") })
-public class ChartOfAccountCategory implements Serializable {
+public class ChartOfAccountCategory  {
 
 	@Id
 	@Column(name = "CHART_OF_ACCOUNT_CATEGORY_ID")

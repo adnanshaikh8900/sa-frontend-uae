@@ -28,7 +28,7 @@ public class ReceiptDaoImpl extends AbstractDao<Integer, Receipt> implements Rec
 	@Override
 	public PaginationResponseModel getProductList(Map<ReceiptFilterEnum, Object> filterMap,
 			PaginationModel paginamtionModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));

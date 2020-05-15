@@ -320,6 +320,7 @@ public class DataListController {
 						parentCategory = chartOfAccountCategory;
 					}
 				}
+				assert parentCategory != null;
 				return new ResponseEntity<>(Arrays.asList(
 						new SingleLevelDropDownModel(parentCategory.getChartOfAccountCategoryName(), modelList)),
 						HttpStatus.OK);

@@ -1,5 +1,7 @@
 package com.simplevat.dao.impl.bankaccount;
 
+import com.simplevat.constant.BankAccountConstant;
+import com.simplevat.constant.CommonColumnConstants;
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
@@ -54,8 +56,8 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 					+ "group by CONCAT(MONTH(t.transactionDate),'-' , Year(t.transactionDate))";
 
 			Query query = getEntityManager().createQuery(queryString)
-					.setParameter("startDate", dateUtils.get(startDate))
-					.setParameter("endDate", dateUtils.get(endDate));
+					.setParameter(CommonColumnConstants.START_DATE, dateUtils.get(startDate))
+					.setParameter(CommonColumnConstants.END_DATE, dateUtils.get(endDate));
 			if (bankId != null) {
 				query.setParameter("bankId", bankId);
 			}
@@ -77,8 +79,8 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 					+ (bankId != null ? " and t.bankAccount.bankAccountId =:bankId " : " ")
 					+ "group by CONCAT(MONTH(t.transactionDate),'-' , Year(t.transactionDate))";
 			Query query = getEntityManager().createQuery(queryString)
-					.setParameter("startDate", dateUtils.get(startDate))
-					.setParameter("endDate", dateUtils.get(endDate));
+					.setParameter(CommonColumnConstants.START_DATE, dateUtils.get(startDate))
+					.setParameter(CommonColumnConstants.END_DATE, dateUtils.get(endDate));
 			if (bankId != null) {
 				query.setParameter("bankId", bankId);
 			}
@@ -95,7 +97,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				"SELECT t FROM Transaction t WHERE t.transactionDate <= :transactionDate and t.transactionId < :transactionId and t.deleteFlag = false and t.bankAccount.bankAccountId = :bankAccountId ORDER BY t.transactionDate DESC",
 				Transaction.class);
 		query.setParameter("transactionDate", transaction.getTransactionDate());
-		query.setParameter("bankAccountId", transaction.getBankAccount().getBankAccountId());
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, transaction.getBankAccount().getBankAccountId());
 		query.setParameter("transactionId", transaction.getTransactionId());
 		List<Transaction> transactionList = query.getResultList();
 		if (transactionList != null && !transactionList.isEmpty()) {
@@ -110,7 +112,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				"SELECT t FROM Transaction t WHERE t.transactionDate > :transactionDate and t.deleteFlag = false and t.bankAccount.bankAccountId = :bankAccountId ORDER BY t.transactionDate ASC",
 				Transaction.class);
 		query.setParameter("transactionDate", transaction.getTransactionDate());
-		query.setParameter("bankAccountId", transaction.getBankAccount().getBankAccountId());
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, transaction.getBankAccount().getBankAccountId());
 		List<Transaction> transactionList = query.getResultList();
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
@@ -120,8 +122,8 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId,
-			Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo,
-			Integer pageSize) {
+																  Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo,
+																  Integer pageSize) {
 
 		StringBuilder builder = new StringBuilder();
 		if (transactionTypeId != null) {
@@ -143,7 +145,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			query.setParameter("transactionCategoryId", transactionCategoryId);
 		}
 		if (startDate != null && endDate != null) {
-			query.setParameter("startDate", Instant.ofEpochMilli(DateUtils.getStartDate(startDate).getTime())
+			query.setParameter(CommonColumnConstants.START_DATE, Instant.ofEpochMilli(DateUtils.getStartDate(startDate).getTime())
 					.atZone(ZoneId.systemDefault()).toLocalDateTime());
 			query.setParameter("lastDate", Instant.ofEpochMilli(DateUtils.getEndDate(endDate).getTime())
 					.atZone(ZoneId.systemDefault()).toLocalDateTime());
@@ -187,12 +189,12 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public List<Transaction> getTransactionsByDateRangeAndBankAccountId(BankAccount bankAccount, Date startDate,
-			Date lastDate) {
+																		Date lastDate) {
 		TypedQuery<Transaction> query = getEntityManager().createQuery(
 				"SELECT t FROM Transaction t WHERE t.deleteFlag = false and t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate BETWEEN :startDate AND :lastDate ORDER BY t.transactionDate ASC",
 				Transaction.class);
-		query.setParameter("bankAccountId", bankAccount.getBankAccountId());
-		query.setParameter("startDate",
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccount.getBankAccountId());
+		query.setParameter(CommonColumnConstants.START_DATE,
 				Instant.ofEpochMilli(startDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
 		query.setParameter("lastDate",
 				Instant.ofEpochMilli(lastDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());
@@ -235,7 +237,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		TypedQuery<Transaction> query = getEntityManager().createQuery(
 				"SELECT t FROM Transaction t WHERE t.deleteFlag = false and t.parentTransaction = null and t.bankAccount.bankAccountId = :bankAccountId ORDER BY t.transactionDate DESC",
 				Transaction.class);
-		query.setParameter("bankAccountId", bankAccount.getBankAccountId());
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccount.getBankAccountId());
 		List<Transaction> transactionList = query.getResultList();
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
@@ -248,7 +250,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		TypedQuery<Transaction> query = getEntityManager().createQuery(
 				"SELECT t FROM Transaction t WHERE t.deleteFlag = false AND t.bankAccount.bankAccountId =:bankAccountId ORDER BY t.transactionDate ASC",
 				Transaction.class);
-		query.setParameter("bankAccountId", bankAccountId);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		List<Transaction> transactionList = query.getResultList();
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
@@ -273,7 +275,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		TypedQuery<TransactionView> query = getEntityManager().createQuery(
 				"SELECT t FROM TransactionView t WHERE t.bankAccountId =:bankAccountId ORDER BY t.transactionDate DESC",
 				TransactionView.class);
-		query.setParameter("bankAccountId", bankAccountId);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		List<TransactionView> transactionViewList = query.getResultList();
 		if (transactionViewList != null && !transactionViewList.isEmpty()) {
 			return transactionViewList;
@@ -296,7 +298,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public List<TransactionView> getTransactionViewList(int pageSize, Integer bankAccountId, int rowCount,
-			Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder) {
+														Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder) {
 		StringBuilder builder = new StringBuilder("");
 		StringBuilder filterBuilder = new StringBuilder("");
 		for (String filedName : filters.keySet()) {
@@ -320,7 +322,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 						+ builder.toString() + filterBuilder.toString()
 						+ "  t.transactionDate DESC, t.transactionId DESC",
 				TransactionView.class);
-		query.setParameter("bankAccountId", bankAccountId);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		query.setFirstResult(pageSize);
 		query.setMaxResults(rowCount);
 		List<TransactionView> transactionViewList = query.getResultList();
@@ -332,7 +334,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public Integer getTotalTransactionCountByBankAccountIdForLazyModel(Integer bankAccountId,
-			Integer transactionStatus) {
+																	   Integer transactionStatus) {
 		StringBuilder builder = new StringBuilder("");
 		if (transactionStatus != null) {
 			builder.append(" AND t.explanationStatusCode = ").append(transactionStatus);
@@ -340,7 +342,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		Query query = getEntityManager().createQuery(
 				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId"
 						+ builder.toString());
-		query.setParameter("bankAccountId", bankAccountId);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
 			return ((Long) countList.get(0)).intValue();
@@ -352,7 +354,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	public Integer getTotalExplainedTransactionCountByBankAccountId(Integer bankAccountId) {
 		Query query = getEntityManager().createQuery(
 				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId AND t.explanationStatusCode =:explanationStatusCode");
-		query.setParameter("bankAccountId", bankAccountId);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		query.setParameter("explanationStatusCode", TransactionStatusConstant.EXPLIANED);
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
@@ -365,7 +367,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	public Integer getTotalUnexplainedTransactionCountByBankAccountId(Integer bankAccountId) {
 		Query query = getEntityManager().createQuery(
 				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId AND t.explanationStatusCode =:explanationStatusCode");
-		query.setParameter("bankAccountId", bankAccountId);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		query.setParameter("explanationStatusCode", TransactionStatusConstant.UNEXPLAINED);
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
@@ -378,7 +380,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	public Integer getTotalPartiallyExplainedTransactionCountByBankAccountId(Integer bankAccountId) {
 		Query query = getEntityManager().createQuery(
 				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId AND t.explanationStatusCode =:explanationStatusCode");
-		query.setParameter("bankAccountId", bankAccountId);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		query.setParameter("explanationStatusCode", TransactionStatusConstant.PARTIALLYEXPLIANED);
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
@@ -391,7 +393,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	public Integer getTotalAllTransactionCountByBankAccountId(Integer bankAccountId) {
 		Query query = getEntityManager().createQuery(
 				"SELECT COUNT(t) FROM TransactionView t WHERE t.parentTransaction = null AND t.bankAccountId =:bankAccountId");
-		query.setParameter("bankAccountId", bankAccountId);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		List<Object> countList = query.getResultList();
 		if (countList != null && !countList.isEmpty()) {
 			return ((Long) countList.get(0)).intValue();
@@ -404,7 +406,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		TypedQuery<TransactionView> query = getEntityManager().createQuery(
 				"SELECT t FROM TransactionView t WHERE t.bankAccountId =:bankAccountId AND t.parentTransaction = null ORDER BY t.transactionDate DESC",
 				TransactionView.class);
-		query.setParameter("bankAccountId", bankAccountId);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		query.setFirstResult(pageSize);
 		query.setMaxResults(rowCount);
 		List<TransactionView> transactionViewList = query.getResultList();
@@ -416,7 +418,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public List<Transaction> getParentTransactionListByRangeAndBankAccountId(int pageSize, Integer bankAccountId,
-			int rowCount, Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder) {
+																			 int rowCount, Integer transactionStatus, Map<String, Object> filters, String sortField, String sortOrder) {
 		StringBuilder builder = new StringBuilder("");
 		StringBuilder filterBuilder = new StringBuilder("");
 		if (transactionStatus != null) {
@@ -439,7 +441,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				"SELECT t FROM Transaction t WHERE t.bankAccount.bankAccountId =:bankAccountId AND t.parentTransaction IS NULL"
 						+ builder.toString() + filterBuilder.toString() + "  t.transactionDate DESC",
 				Transaction.class);
-		query.setParameter("bankAccountId", bankAccountId);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
 		query.setFirstResult(pageSize);
 		query.setMaxResults(rowCount);
 		List<Transaction> transactionList = query.getResultList();
@@ -454,9 +456,9 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		TypedQuery<TransactionView> query = getEntityManager().createQuery(
 				"SELECT t FROM TransactionView t WHERE t.bankAccountId =:bankAccountId AND t.parentTransaction = null AND t.transactionDate >=:startDate AND t.transactionDate <=:endDate ORDER BY t.transactionDate DESC, t.transactionId DESC",
 				TransactionView.class);
-		query.setParameter("bankAccountId", bankAccountId);
-		query.setParameter("startDate", startDate, TemporalType.TIMESTAMP);
-		query.setParameter("endDate", endDate, TemporalType.TIMESTAMP);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
+		query.setParameter(CommonColumnConstants.START_DATE, startDate, TemporalType.TIMESTAMP);
+		query.setParameter(CommonColumnConstants.END_DATE, endDate, TemporalType.TIMESTAMP);
 		List<TransactionView> transactionList = query.getResultList();
 		if (transactionList != null && !transactionList.isEmpty()) {
 			return transactionList;
@@ -473,7 +475,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	}
 
 	@Override
-	public void deleteByIds(ArrayList<Integer> ids) {
+	public void deleteByIds(List<Integer> ids) {
 		if (ids != null && !ids.isEmpty()) {
 			for (Integer id : ids) {
 				Transaction trnx = findByPK(id);
@@ -485,7 +487,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 
 	@Override
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,
-			PaginationModel paginationModel) {
+														 PaginationModel paginationModel) {
 		List<DbFilter> dbFilters = new ArrayList();
 		filterMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));

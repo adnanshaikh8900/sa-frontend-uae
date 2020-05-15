@@ -44,7 +44,7 @@ public class ReconsilationRestHelper {
 
 		attribute.put("deleteFlag", Boolean.FALSE);
 
-		List<ReconsilationListModel> modelList = new ArrayList<ReconsilationListModel>();
+		List<ReconsilationListModel> modelList = new ArrayList<>();
 		switch (constant) {
 		case EXPENSE:
 			List<Expense> expenseList = expenseService.findByAttributes(attribute);
@@ -76,7 +76,7 @@ public class ReconsilationRestHelper {
 			Integer transactionCategoryCode, BigDecimal amount, int userId, Transaction transaction,
 			List<ReconsileRequestLineItemModel> invoiceIdList) {
 
-		List<Journal> journalList = new ArrayList<Journal>();
+		List<Journal> journalList = new ArrayList<>();
 
 		Journal journal = null;
 		switch (chartOfAccountCategoryIdEnumConstant) {

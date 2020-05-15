@@ -28,7 +28,7 @@ import javax.persistence.TypedQuery;
 @Transactional
 public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implements BankAccountDao {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(BankAccountDaoImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BankAccountDaoImpl.class);
 
 	@Autowired
 	private DatatableSortingFilterConstant dataTableUtil;
@@ -80,7 +80,7 @@ public class BankAccountDaoImpl extends AbstractDao<Integer, BankAccount> implem
 	@Override
 	public PaginationResponseModel getBankAccounts(Map<BankAccounrFilterEnum, Object> filterDataMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterDataMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));
 		paginationModel

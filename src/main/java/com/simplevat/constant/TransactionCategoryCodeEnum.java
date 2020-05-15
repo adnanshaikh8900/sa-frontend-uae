@@ -17,7 +17,10 @@ public enum TransactionCategoryCodeEnum {
     ACCOUNTANCY_FEE("04-01-002"),
     SALE("03-01-006"),
     BANK("01-02-001"),
-	EXPENSE("04");
+	EXPENSE("04"),
+	INPUT_VAT("01-06-004"),
+	OUTPUT_VAT("02-02-004");
+	
 	
     @Getter
     private final String code;

@@ -7,17 +7,27 @@ package com.simplevat.rest;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author uday
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostingRequestModel implements Serializable {
 
-    private Integer postingRefId;
-    private String postingRefType;
-    private Integer postingChartOfAccountId;
-    private BigDecimal amount;
+	private Integer postingRefId;
+	private String postingRefType;
+	private Integer postingChartOfAccountId;
+	private BigDecimal amount;
+
+	public PostingRequestModel(Integer postingRefId) {
+		super();
+		this.postingRefId = postingRefId;
+	}
 }

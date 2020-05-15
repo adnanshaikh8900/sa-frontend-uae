@@ -46,22 +46,15 @@ public class JournalLineItemServiceImpl extends JournalLineItemService {
 	public BigDecimal updateCurrentBalance(TransactionCategory transactionCategory, BigDecimal balance) {
 		List<JournalLineItem> itemList = journalLineItemDao.getListByTransactionCategory(transactionCategory);
 
-		logger.info("BALANCE = " + balance);
-
 		BigDecimal currentBalance = balance;
 		for (JournalLineItem journalLineItem : itemList) {
 
 			if (journalLineItem.getCreditAmount() != null) {
 				currentBalance = currentBalance.add(journalLineItem.getCreditAmount());
-				logger.info("getCreditAmount = " + journalLineItem.getCreditAmount());
 			} else {
 				currentBalance = currentBalance.subtract(journalLineItem.getDebitAmount());
-				logger.info("getDebitAmount = " + journalLineItem.getDebitAmount());
 			}
-
-			logger.info("JournalLineItem BALANCE = " + journalLineItem.getCurrentBalance());
 			journalLineItem.setCurrentBalance(currentBalance);
-			logger.info("JournalLineItem BALANCE = " + journalLineItem.getCurrentBalance());
 		}
 
 		return currentBalance;

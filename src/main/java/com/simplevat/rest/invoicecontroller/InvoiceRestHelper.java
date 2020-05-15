@@ -169,7 +169,7 @@ public class InvoiceRestHelper {
 		invoice.setNotes(invoiceModel.getNotes());
 		invoice.setDiscountType(invoiceModel.getDiscountType());
 		invoice.setDiscount(invoiceModel.getDiscount());
-		invoice.setStatus(invoice.getId() == null ? InvoiceStatusEnum.PENDING.getValue() : invoice.getStatus()); // default set, will change in transaction
+		invoice.setStatus(invoice.getId() == null ? InvoiceStatusEnum.PENDING.getValue() : invoice.getStatus());
 		invoice.setDiscountPercentage(invoiceModel.getDiscountPercentage());
 		invoice.setInvoiceDuePeriod(invoiceModel.getTerm());
 
@@ -193,6 +193,9 @@ public class InvoiceRestHelper {
 				lineItem.setInvoice(invoice);
 				if (model.getProductId() != null)
 					lineItem.setProduct(productService.findByPK(model.getProductId()));
+				if (model.getTransactionCategoryId() != null)
+					lineItem.setTrnsactioncCategory(
+							transactionCategoryService.findByPK(model.getTransactionCategoryId()));
 				lineItems.add(lineItem);
 			} catch (Exception e) {
 				logger.error("Error", e);
@@ -288,6 +291,9 @@ public class InvoiceRestHelper {
 		}
 		if (lineItem.getProduct() != null)
 			lineItemModel.setProductId(lineItem.getProduct().getProductID());
+		if (lineItem.getTrnsactioncCategory() != null)
+			lineItemModel.setTransactionCategoryId(lineItem.getTrnsactioncCategory().getTransactionCategoryId());
+
 		return lineItemModel;
 	}
 
@@ -543,11 +549,10 @@ public class InvoiceRestHelper {
 						.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
 						.getTransactioncategory();
 			else {
-				// TODO : need to add transaction category
-//				category = lineItem.gettransaction
-				category = lineItem.getProduct().getLineItemList().stream()
-						.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
-						.getTransactioncategory();
+				category = lineItem.getTrnsactioncCategory() != null ? lineItem.getTrnsactioncCategory()
+						: lineItem.getProduct().getLineItemList().stream()
+								.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
+								.getTransactioncategory();
 			}
 			tnxcatMap.put(category.getTransactionCategoryId(), category);
 			if (tnxcatIdInvLnItemMap.containsKey(category.getTransactionCategoryId())) {

@@ -56,4 +56,6 @@ public class InvoiceRequestModel {
     private String email;
     private String taxRegistrationNo;
     
+    //if true while creating create payment
+    private boolean markAsPaid;
 }

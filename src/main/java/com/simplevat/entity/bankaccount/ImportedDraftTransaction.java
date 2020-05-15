@@ -5,7 +5,18 @@ import java.io.Serializable;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.Basic;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
+import javax.persistence.Convert;
+import javax.persistence.PreUpdate;
+import javax.persistence.PrePersist;
+import javax.persistence.Version;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

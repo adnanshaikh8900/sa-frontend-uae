@@ -43,7 +43,7 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @Component
 public class TransactionImportRestHelper {

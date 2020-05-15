@@ -39,7 +39,7 @@ import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *

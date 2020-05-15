@@ -39,7 +39,7 @@ import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.utils.DateFormatUtil;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/reconsile")

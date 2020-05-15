@@ -4,7 +4,23 @@ import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Basic;
+import javax.persistence.Version;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Convert;
+import javax.persistence.Lob;
+import javax.persistence.PreUpdate;
+import javax.persistence.PrePersist;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.ColumnDefault;
 

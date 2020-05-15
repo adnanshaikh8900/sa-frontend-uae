@@ -1,7 +1,17 @@
 package com.simplevat.entity.bankaccount;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.TemporalType;
+import javax.persistence.Temporal;
+import javax.persistence.Version;
+
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 

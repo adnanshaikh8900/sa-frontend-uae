@@ -56,7 +56,6 @@ public class TransactionImportRestHelper {
 	private String debitAmount = "Debit Amount";
 
 	private String creditAmount = "Credit Amount";
-	private List<TransactionModel> selectedTransaction;
 	private List<TransactionModel> creditTransaction = new ArrayList<>();
 	private boolean transactionDateBoolean = false;
 	private boolean descriptionBoolean = false;

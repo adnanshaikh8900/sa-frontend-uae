@@ -16,12 +16,14 @@ import com.simplevat.entity.bankaccount.TransactionCategory;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "COAC_TRANSACTION_CATEGORY")
 @Data
 @NamedQueries({
 		@NamedQuery(name = "findCoacTransactionCategoryForTransctionCategortyId", query = "SELECT tc FROM CoacTransactionCategory tc where tc.transactionCategory.transactionCategoryId=:id ") })
-public class CoacTransactionCategory {
+public class CoacTransactionCategory implements Serializable {
 	@Id
 	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

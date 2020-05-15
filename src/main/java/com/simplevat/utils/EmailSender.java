@@ -1,16 +1,21 @@
 package com.simplevat.utils;
 
+import com.simplevat.constant.ErrorConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.EmailConstant;
 
-import javax.mail.*;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Message;
+import javax.mail.Transport;
+
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
-import javax.mail.internet.AddressException;
 
 /**
  *
@@ -19,10 +24,10 @@ import javax.mail.internet.AddressException;
 @Component
 public class EmailSender {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(EmailSender.class);
+	private final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
 	public void send(String recipients, String subject, String content, String from, boolean html)
-			throws AddressException, MessagingException {
+			throws MessagingException {
 
 		final String username = "saurabh.gaikwad@daynilgroup.com";
 		final String password = "saurabh......";
@@ -55,7 +60,7 @@ public class EmailSender {
 			}
 			Transport.send(message);
 		} catch (MessagingException e) {
-			LOGGER.error("Error", e);
+			logger.error(ErrorConstant.ERROR, e);
 		}
 	}
 

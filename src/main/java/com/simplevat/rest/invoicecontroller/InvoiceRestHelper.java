@@ -80,8 +80,6 @@ public class InvoiceRestHelper {
 	@Autowired
 	private DateUtils dateUtils;
 
-	@Autowired
-	private DateFormatUtil dateFormatUtil;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();

@@ -291,9 +291,11 @@ public class InvoiceRestHelper {
 		}
 		if (lineItem.getProduct() != null)
 			lineItemModel.setProductId(lineItem.getProduct().getProductID());
-		if (lineItem.getTrnsactioncCategory() != null)
+		if (lineItem.getTrnsactioncCategory() != null) {
 			lineItemModel.setTransactionCategoryId(lineItem.getTrnsactioncCategory().getTransactionCategoryId());
-			lineItemModel.setTransactionCategoryLabel(lineItem.getTrnsactioncCategory().getChartOfAccount().getChartOfAccountName());
+			lineItemModel.setTransactionCategoryLabel(
+					lineItem.getTrnsactioncCategory().getChartOfAccount().getChartOfAccountName());
+		}
 		return lineItemModel;
 	}
 
@@ -323,6 +325,7 @@ public class InvoiceRestHelper {
 				if (invoice.getStatus() != null) {
 					model.setStatus(getInvoiceStatus(invoice.getStatus(), invoice.getInvoiceDueDate()));
 				}
+				model.setStatusEnum(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
 				invoiceListModels.add(model);
 			}
 		}

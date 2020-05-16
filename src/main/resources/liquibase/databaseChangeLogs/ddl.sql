@@ -125,9 +125,12 @@ ALTER TABLE INVOICE_LINE_ITEM ADD CONSTRAINT FK1vtja97apxmby178xm9a7p5ot foreign
 --changeset 15/05/2020 SAURABH:ddl-6
 alter table INVOICE_LINE_ITEM add column TRANSACTION_CATEGORY_ID integer;
 alter table INVOICE_LINE_ITEM add constraint FKoo2qdo7l6ijg1r06ph5u4g29w foreign key (TRANSACTION_CATEGORY_ID) references TRANSACTION_CATEGORY (TRANSACTION_CATEGORY_ID);
-
---changeset 16/05/2020 SAURABH:ddl-7
 alter table INVOICE add column DUE_AMOUNT decimal(19,2) default 0.00;
 create table CUSTOMER_INVOICE_RECEIPT (ID bigint not null auto_increment, DUE_AMOUNT decimal(19,2) not null, CREATED_BY integer not null, CREATED_DATE datetime default CURRENT_TIMESTAMP, DELETE_FLAG bit default 0 not null, LAST_UPDATED_BY integer, LAST_UPDATE_DATE datetime, PAID_AMOUNT decimal(19,2) not null, CUSTOMER_INVOICE_ID integer, RECEIPT_ID integer, primary key (ID));
 alter table CUSTOMER_INVOICE_RECEIPT add constraint FK1w519064bksnojirx1fddlups foreign key (CUSTOMER_INVOICE_ID) references INVOICE (ID);
 alter table CUSTOMER_INVOICE_RECEIPT add constraint FK1t89wcd8sy641i8a53b2bcrf1 foreign key (RECEIPT_ID) references RECEIPT (ID);
+alter table RECEIPT add column NOTES varchar(255);
+ALTER TABLE RECEIPT add column PAY_MODE varchar(32) default 'CASH';
+ALTER TABLE RECEIPT DROP COLUMN UNUSED_AMOUNT;
+alter table RECEIPT add column DEPOSITE_TO_TRANSACTION_CATEGORY_ID integer;
+alter table RECEIPT add constraint FKkhhdki7s8y02tu4ufdutgr60u foreign key (DEPOSITE_TO_TRANSACTION_CATEGORY_ID) references TRANSACTION_CATEGORY (TRANSACTION_CATEGORY_ID);

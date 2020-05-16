@@ -24,12 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
+import com.simplevat.entity.CustomerInvoiceReceipt;
+import com.simplevat.entity.Journal;
 import com.simplevat.entity.Receipt;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CustomerInvoiceReceiptService;
 import com.simplevat.service.InvoiceService;
+import com.simplevat.service.JournalService;
 import com.simplevat.service.ReceiptService;
 
 import io.swagger.annotations.ApiOperation;
@@ -62,6 +66,9 @@ public class ReceiptController {
 
 	@Autowired
 	private CustomerInvoiceReceiptService customerInvoiceReceiptService;
+
+	@Autowired
+	private JournalService journalService;
 
 	@ApiOperation(value = "Get receipt List")
 	@GetMapping(value = "/getList")
@@ -148,10 +155,24 @@ public class ReceiptController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
+			// TODO : need to add attcahement
 			receipt.setCreatedBy(userId);
 			receipt.setCreatedDate(LocalDateTime.now());
 			receipt.setDeleteFlag(Boolean.FALSE);
 			receiptService.persist(receipt);
+
+			// save data in Mapping Table
+			CustomerInvoiceReceipt customerInvoiceReceipt = receiptRestHelper
+					.getCustomerInvoiceReceiptEntity(receiptRequestModel);
+			customerInvoiceReceipt.setReceipt(receipt);
+			customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+
+			// Post journal
+			Journal journal = receiptRestHelper.receiptPosting(
+					new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+					receipt.getDepositeToTransactionCategory());
+			journalService.persist(journal);
+
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -165,6 +186,7 @@ public class ReceiptController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
+			// TODO : need to add attcahement
 			receipt.setLastUpdateDate(LocalDateTime.now());
 			receipt.setLastUpdatedBy(userId);
 			receiptService.update(receipt);

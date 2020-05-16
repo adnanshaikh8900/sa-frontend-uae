@@ -7,10 +7,13 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -18,13 +21,15 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.simplevat.constant.PayMode;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.converter.DateConverter;
 
 import lombok.Data;
 
 /**
  * @author Saurabhg
- * */
+ */
 @Entity
 @Table(name = "RECEIPT")
 @Data
@@ -61,11 +66,6 @@ public class Receipt {
 	@ColumnDefault(value = "0.00")
 	private BigDecimal amount;
 
-	@Basic
-	@Column(name = "UNUSED_AMOUNT")
-	@ColumnDefault(value = "0.00")
-	private BigDecimal unusedAmount;
-
 	@Column(name = "CREATED_BY")
 	@Basic(optional = false)
 	private Integer createdBy;
@@ -87,6 +87,18 @@ public class Receipt {
 	@ColumnDefault(value = "0")
 	@Basic(optional = false)
 	private Boolean deleteFlag = Boolean.FALSE;
+
+	@Basic
+	@Column(name = "NOTES")
+	private String notes;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "PAY_MODE")
+	private PayMode payMode;
+
+	@ManyToOne
+	@JoinColumn(name = "DEPOSITE_TO_TRANSACTION_CATEGORY_ID")
+	private TransactionCategory depositeToTransactionCategory;
 
 	@PrePersist
 	public void updateDates() {

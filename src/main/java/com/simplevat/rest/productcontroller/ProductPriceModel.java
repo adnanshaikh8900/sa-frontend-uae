@@ -12,4 +12,6 @@ public class ProductPriceModel {
 	private String vatPercentage;
 	private BigDecimal unitPrice;
 	private Integer vatCategoryId;
+	private Integer transactionCategoryId;
+	private String transactionCategoryLabel;
 }

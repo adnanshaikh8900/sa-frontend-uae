@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.simplevat.constant;
 
 import lombok.Getter;
@@ -18,7 +13,9 @@ public enum PostingReferenceTypeEnum {
     TRANSACTION_RECONSILE_INVOICE("Reconsile Transaction for Invoice"),
     TRANSACTION_RECONSILE("Transaction Reconsile"),
     BANK_ACCOUNT("Bank Account"),
-    PURCHASE("Purchase");
+    PURCHASE("Purchase"),
+    RECEIPT("Customer Payment")
+    ;
 	
 	@Getter
 	private String displayName;

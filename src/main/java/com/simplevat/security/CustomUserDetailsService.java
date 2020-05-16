@@ -1,6 +1,6 @@
 package com.simplevat.security;
 
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -21,6 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService
     private UserService userService;
 
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "userCache", key = "#emailAddress")
     public CustomUserDetails loadUserByUsername(String emailAddress)
             throws UsernameNotFoundException {
         Optional<User> user = userService.getUserByEmail(emailAddress);

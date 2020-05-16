@@ -44,8 +44,7 @@ import io.swagger.annotations.ApiOperation;
 import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
- *
- * @author Ashish
+ * @author Ashish  : For Supplier invoice
  */
 @RestController
 @RequestMapping(value = "/rest/payment")

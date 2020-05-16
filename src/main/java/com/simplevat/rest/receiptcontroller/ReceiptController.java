@@ -35,12 +35,15 @@ import io.swagger.annotations.ApiOperation;
 
 import static com.simplevat.constant.ErrorConstant.ERROR;
 
+/**
+ * @author $@urabh : For Customer invoice
+ */
 @RestController
 @RequestMapping("/rest/receipt")
 public class ReceiptController {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(ReceiptController.class);
-	
+
 	@Autowired
 	private ReceiptService receiptService;
 

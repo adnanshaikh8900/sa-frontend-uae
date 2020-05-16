@@ -131,8 +131,8 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		filterMap.forEach((transactionCategoryFilter, value) -> dbFilters
 				.add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
 						.condition(transactionCategoryFilter.getCondition()).value(value).build()));
-		paginationModel.setSortingCol(
-				dataTableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.CHART_OF_ACCOUNT));
+		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(),
+				DatatableSortingFilterConstant.CHART_OF_ACCOUNT));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}
@@ -164,4 +164,10 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 				"SELECT * FROM TRANSACTION_CATEGORY INNER JOIN CHART_OF_ACCOUNT on TRANSACTION_CATEGORY.CHART_OF_ACCOUNT_ID= CHART_OF_ACCOUNT.CHART_OF_ACCOUNT_ID INNER JOIN COA_COA_CATEGORY ON COA_COA_CATEGORY.CHART_OF_ACCOUNT_ID= CHART_OF_ACCOUNT.CHART_OF_ACCOUNT_ID WHERE COA_COA_CATEGORY.CHART_OF_ACCOUNT_CATEGORY_ID = :coaCategoryId",
 				TransactionCategory.class).setParameter("coaCategoryId", chartOfAccountCategoryId).getResultList();
 	}
+
+	@Override
+	public List<TransactionCategory> findTnxCatForReicpt() {
+		return getEntityManager().createNamedQuery("findTnxCatForReicpt").getResultList();
+	}
+
 }

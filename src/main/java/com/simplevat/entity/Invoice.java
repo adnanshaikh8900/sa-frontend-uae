@@ -33,7 +33,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.CascadeType;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -199,6 +198,10 @@ public class Invoice implements Serializable {
 	@Column(name = "TYPE")
 	@Basic
 	private Integer type;
+
+	@Column(name = "DUE_AMOUNT")
+	@ColumnDefault(value = "0.00")
+	private BigDecimal dueAmount;
 
 	@PrePersist
 	public void updateDates() {

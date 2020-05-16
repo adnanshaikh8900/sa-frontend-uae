@@ -35,6 +35,7 @@ import com.simplevat.entity.IndustryType;
 import com.simplevat.entity.Product;
 import com.simplevat.entity.State;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.EnumDropdownModel;
 import com.simplevat.rest.PaginationModel;
@@ -49,6 +50,7 @@ import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
 import com.simplevat.service.ProductService;
 import com.simplevat.service.StateService;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.utils.ChartOfAccountCacheService;
@@ -94,6 +96,9 @@ public class DataListController {
 
 	@Autowired
 	private ProductRestHelper productRestHelper;
+
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
 
 	@GetMapping(value = "/getcountry")
 	public ResponseEntity getCountry() {
@@ -365,6 +370,50 @@ public class DataListController {
 			}
 		} catch (Exception e) {
 			logger.error("Error", e);
+		}
+		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ApiOperation(value = "Get Transaction Category for receipt")
+	@GetMapping(value = "/receipt/tnxCat")
+	public ResponseEntity getTransactionCategoryListForReceipt() {
+		try {
+
+			List<TransactionCategory> categoryList = transactionCategoryService.getListForReceipt();
+			if (categoryList != null && !categoryList.isEmpty()) {
+				// categories in coa
+				Map<Integer, List<TransactionCategory>> map = new HashMap<>();
+				for (TransactionCategory trncCat : categoryList) {
+					if (map.containsKey(trncCat.getChartOfAccount().getChartOfAccountId())) {
+						map.get(trncCat.getChartOfAccount().getChartOfAccountId()).add(trncCat);
+					} else {
+						List<TransactionCategory> dummyList = new ArrayList<>();
+						dummyList.add(trncCat);
+						map.put(trncCat.getChartOfAccount().getChartOfAccountId(), dummyList);
+					}
+				}
+
+				List<SingleLevelDropDownModel> singleLevelDropDownModelList = new ArrayList<>();
+
+				for (Integer id : map.keySet()) {
+					categoryList = map.get(id);
+					ChartOfAccount parentCategory = categoryList.get(0).getChartOfAccount();
+					List<DropdownModel> modelList = new ArrayList<>();
+					for (TransactionCategory trncCat : categoryList) {
+
+						modelList.add(new DropdownModel(trncCat.getTransactionCategoryId(),
+								trncCat.getTransactionCategoryName()));
+					}
+					singleLevelDropDownModelList
+							.add(new SingleLevelDropDownModel(parentCategory.getChartOfAccountName(), modelList));
+				}
+
+				return new ResponseEntity<>(singleLevelDropDownModelList, HttpStatus.OK);
+			} else {
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

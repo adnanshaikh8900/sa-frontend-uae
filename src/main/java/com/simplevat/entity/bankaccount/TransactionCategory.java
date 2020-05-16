@@ -34,6 +34,7 @@ import lombok.Data;
 		@NamedQuery(name = "findAllTransactionCategoryBychartOfAccount", query = "SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.chartOfAccount.chartOfAccountId =:chartOfAccountId ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC"),
 		@NamedQuery(name = "findAllTransactionCategoryByUserId", query = "SELECT t FROM TransactionCategory t where t.deleteFlag=false and (t.createdBy = :createdBy or t.createdBy = 1) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC"),
 		@NamedQuery(name = "findMaxTnxCodeByChartOfAccId", query = "SELECT t FROM TransactionCategory t where chartOfAccount =:chartOfAccountId ORDER BY transactionCategoryId  DESC"),
+		@NamedQuery(name = "findTnxCatForReicpt", query = "SELECT t FROM TransactionCategory t WHERE t.transactionCategoryCode in  ('01-04-006') or t.chartOfAccount.chartOfAccountId =8 or t.parentTransactionCategory.transactionCategoryId = 46  and t.deleteFlag=false ")
 
 })
 
@@ -119,6 +120,5 @@ public class TransactionCategory implements Serializable {
 	@Basic(optional = false)
 	@Version
 	private Integer versionNumber;
-
 
 }

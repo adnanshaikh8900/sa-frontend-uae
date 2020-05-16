@@ -28,6 +28,7 @@ import com.simplevat.entity.Receipt;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
+import com.simplevat.service.CustomerInvoiceReceiptService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.ReceiptService;
 
@@ -58,6 +59,9 @@ public class ReceiptController {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+
+	@Autowired
+	private CustomerInvoiceReceiptService customerInvoiceReceiptService;
 
 	@ApiOperation(value = "Get receipt List")
 	@GetMapping(value = "/getList")
@@ -171,4 +175,18 @@ public class ReceiptController {
 		}
 	}
 
+	@ApiOperation(value = "Next Receipt No")
+	@GetMapping(value = "/getNextReceiptNo")
+	public ResponseEntity getNextReceiptNo(@RequestParam("id") Integer invoiceId) {
+		try {
+			Integer nxtInvoiceNo = customerInvoiceReceiptService.findNextReceiptNoForInvoice(invoiceId);
+			if (nxtInvoiceNo == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity(nxtInvoiceNo, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

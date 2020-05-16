@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -26,6 +28,9 @@ import lombok.Data;
  * @author S@urabh : Middle table between Customer invoice and receipt to
  *         provide Many to Many mapping
  */
+
+@NamedQueries({
+		@NamedQuery(name = "findAllForInvoice", query = "SELECT c FROM CustomerInvoiceReceipt  c where  c.customerInvoice.id = :id and  c.deleteFlag=false ORDER BY c.id DESC") })
 @Entity
 @Table(name = "CUSTOMER_INVOICE_RECEIPT")
 @Data

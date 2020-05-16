@@ -1,6 +1,7 @@
 package com.simplevat.dao.impl;
 
 import com.simplevat.constant.CommonConstant;
+import com.simplevat.constant.CommonColumnConstants;
 import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.dbfilter.ContactFilterEnum;
 import com.simplevat.constant.dbfilter.DbFilter;
@@ -25,6 +26,7 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 
+
 /**
  * Created by mohsin on 3/3/2017.
  */
@@ -45,22 +47,22 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
 		query += " order by c.firstName, c.lastName ";
 		TypedQuery<DropdownModel> typedQuery = getEntityManager().createQuery(query, DropdownModel.class);
 		if (contactType != null && !contactType.toString().isEmpty()) {
-			typedQuery.setParameter("contactType", contactType);
+			typedQuery.setParameter(CommonColumnConstants.CONTACT_TYPE, contactType);
 		}
 		return typedQuery.getResultList();
 	}
 
 	@Override
 	public List<Contact> getContacts(ContactRequestFilterModel filterModel, Integer pageNo, Integer pageSize) {
-		TypedQuery<Contact> typedQuery = getEntityManager().createNamedQuery("contactsByType", Contact.class);
+		TypedQuery<Contact> typedQuery = getEntityManager().createNamedQuery(CommonColumnConstants.CONTACT_BY_TYPE, Contact.class);
 		if (filterModel.getContactType() != null) {
-			typedQuery.setParameter("contactType", filterModel.getContactType());
+			typedQuery.setParameter(CommonColumnConstants.CONTACT_TYPE, filterModel.getContactType());
 		}
 		if (filterModel.getName() != null) {
-			typedQuery.setParameter("firstName", filterModel.getName());
+			typedQuery.setParameter(CommonColumnConstants.FIRST_NAME, filterModel.getName());
 		}
 		if (filterModel.getEmail() != null) {
-			typedQuery.setParameter("email", filterModel.getEmail());
+			typedQuery.setParameter(CommonColumnConstants.EMAIL, filterModel.getEmail());
 		}
 		typedQuery.setMaxResults(pageSize);
 		typedQuery.setFirstResult(pageNo * pageSize);
@@ -70,31 +72,31 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
 	@Override
 	public PaginationResponseModel getContactList(Map<ContactFilterEnum, Object> filterDataMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterDataMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.CONTACT));
+		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.CONTACT));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}
 
 	@Override
 	public List<Contact> getAllContacts(Integer pageNo, Integer pageSize) {
-		return getEntityManager().createNamedQuery("allContacts", Contact.class).setMaxResults(pageSize)
+		return getEntityManager().createNamedQuery(CommonColumnConstants.ALL_CONTACT, Contact.class).setMaxResults(pageSize)
 				.setFirstResult(pageNo * pageSize).getResultList();
 	}
 
 	@Override
 	public List<Contact> getContacts(Integer contactType, final String searchQuery, Integer pageNo, Integer pageSize) {
-		return getEntityManager().createNamedQuery("Contact.contactsByName", Contact.class)
-				.setParameter("name", "%" + searchQuery + "%").setParameter("contactType", contactType)
+		return getEntityManager().createNamedQuery(CommonColumnConstants.CONTACT_BY_NAMES, Contact.class)
+				.setParameter(CommonColumnConstants.NAME, "%" + searchQuery + "%").setParameter(CommonColumnConstants.CONTACT_TYPE, contactType)
 				.setMaxResults(pageSize).setFirstResult(pageNo * pageSize).getResultList();
 	}
 
 	@Override
 	public Optional<Contact> getContactByEmail(String email) {
-		Query query = getEntityManager().createNamedQuery("Contact.contactByEmail", Contact.class).setParameter("email",
+		Query query = getEntityManager().createNamedQuery(CommonColumnConstants.CONTACT_BY_EMAIL, Contact.class).setParameter("email",
 				email);
 		List resultList = query.getResultList();
 		if (CollectionUtils.isNotEmpty(resultList) && resultList.size() == 1) {

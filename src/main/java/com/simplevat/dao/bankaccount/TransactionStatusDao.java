@@ -8,4 +8,6 @@ import com.simplevat.dao.Dao;
 public interface TransactionStatusDao  extends Dao<Integer, TransactionStatus> {
 
 	public List<TransactionStatus> findAllTransactionStatues();
+
+	public List<TransactionStatus> findAllTransactionStatuesByTrnxId(Integer transactionId);
 }

@@ -31,6 +31,8 @@ import com.simplevat.service.bankaccount.ChartOfAccountService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author saurabhg 26/12/19
@@ -38,7 +40,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/productcategory")
 public class ProductCategoryRestController {
-	private final Logger LOGGER = LoggerFactory.getLogger(ProductCategoryRestController.class);
+	private final Logger logger = LoggerFactory.getLogger(ProductCategoryRestController.class);
 	@Autowired
 	private ProductCategoryService productCategoryService;
 
@@ -57,9 +59,6 @@ public class ProductCategoryRestController {
 	@ApiOperation(value = "Get All Product Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/getList")
 	public ResponseEntity getAllProductCategory(ProductCategoryFilterModel filterModel, HttpServletRequest request) {
-
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userServiceNew.findByPK(userId);
 
 		Map<ProductCategoryFilterEnum, Object> filterDataMap = new HashMap();
 		filterDataMap.put(ProductCategoryFilterEnum.PRODUCT_CATEGORY_CODE, filterModel.getProductCategoryCode());
@@ -101,7 +100,7 @@ public class ProductCategoryRestController {
 			productCategoryService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -118,7 +117,7 @@ public class ProductCategoryRestController {
 			productCategoryService.persist(selectedProductCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -138,7 +137,7 @@ public class ProductCategoryRestController {
 			productCategoryService.update(selectedProductCategory);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

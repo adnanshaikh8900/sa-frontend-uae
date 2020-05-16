@@ -14,7 +14,7 @@ import com.simplevat.service.InvoiceService;
 @Service("eventService")
 public class EventServiceImpl implements EventService {
 	
-	private List<Event> events = new ArrayList<Event>();
+	private List<Event> events = new ArrayList<>();
 	
 	@Autowired
 	InvoiceService invoiceService;
@@ -27,7 +27,6 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public List<Event> getEvents() {
             return new ArrayList<Event>();
-//		return invoiceService.getInvoiceAsEvent();
 	}
 
 }

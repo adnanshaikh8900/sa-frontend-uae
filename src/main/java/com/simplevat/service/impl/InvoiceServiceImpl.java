@@ -1,31 +1,36 @@
 package com.simplevat.service.impl;
 
-import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
-
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
-import com.simplevat.model.OverDueAmountDetailsModel;
-import com.simplevat.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.simplevat.dao.Dao;
-import com.simplevat.entity.Invoice;
-import com.simplevat.service.InvoiceService;
-import com.simplevat.util.ChartUtil;
-
 import java.util.Map;
 
-import javax.persistence.TypedQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.simplevat.constant.PostingReferenceTypeEnum;
+import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.dao.Dao;
 import com.simplevat.dao.InvoiceDao;
+import com.simplevat.dao.JournalDao;
+import com.simplevat.dao.JournalLineItemDao;
+import com.simplevat.entity.Invoice;
+import com.simplevat.entity.JournalLineItem;
+import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.invoicecontroller.InvoiceRestController;
+import com.simplevat.service.InvoiceService;
+import com.simplevat.utils.ChartUtil;
+import com.simplevat.utils.DateUtils;
 
 @Service("SupplierInvoiceService")
 public class InvoiceServiceImpl extends InvoiceService {
+	private final Logger logger = LoggerFactory.getLogger(InvoiceRestController.class);
 
 	@Autowired
 	private InvoiceDao supplierInvoiceDao;
@@ -35,6 +40,12 @@ public class InvoiceServiceImpl extends InvoiceService {
 
 	@Autowired
 	DateUtils dateUtils;
+
+	@Autowired
+	private JournalDao journalDao;
+
+	@Autowired
+	private JournalLineItemDao journalLineItemDao;
 
 	@Override
 	protected Dao<Integer, Invoice> getDao() {
@@ -64,7 +75,6 @@ public class InvoiceServiceImpl extends InvoiceService {
 			try {
 				return new Integer(invoice.getReferenceNumber()) + 1;
 			} catch (Exception e) {
-				// TODO: handle exception
 				return 0;
 			}
 		}
@@ -77,13 +87,45 @@ public class InvoiceServiceImpl extends InvoiceService {
 				util.getEndDate().getTime());
 
 	}
-//created by zain/Muzammil for getting overdueamount
-	//created on:28/03/2020
+
+	/**
+	 * @author zain/Muzammil for getting overdueamount created on:28/03/2020
+	 * 
+	 * @param @see com.simplevat.constant.ContactTypeEnum
+	 * 
+	 * 
+	 */
 
 	@Override
 	public OverDueAmountDetailsModel getOverDueAmountDetails(Integer type) {
 
 		OverDueAmountDetailsModel overDueAmountDetails = supplierInvoiceDao.getOverDueAmountDetails(type);
 		return overDueAmountDetails;
+	}
+
+	/**
+	 * @author $@urabh for deleting journal belongs to invoice created on:15/05/2020
+	 */
+	@Override
+	public Invoice deleteJournaForInvoice(Invoice invoice) {
+
+		try {
+			// find journal related to invoice and delete
+			Map<String, Object> param = new HashMap<>();
+			param.put("referenceType", PostingReferenceTypeEnum.INVOICE);
+			param.put("referenceId", invoice.getId());
+			param.put("deleteFlag", false);
+			List<JournalLineItem> lineItemList = journalLineItemDao.findByAttributes(param);
+
+			if (lineItemList != null && !lineItemList.isEmpty()) {
+				List<Integer> list = new ArrayList<>();
+				list.add(lineItemList.get(0).getJournal().getId());
+				journalDao.deleteByIds(list);
+			}
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return invoice;
 	}
 }

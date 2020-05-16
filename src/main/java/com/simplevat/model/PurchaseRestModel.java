@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 import lombok.Data;
 import org.springframework.lang.NonNull;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -52,7 +51,6 @@ public class PurchaseRestModel implements Serializable {
 	private LocalDateTime lastUpdateDate;
 	private Boolean deleteFlag = Boolean.FALSE;
 	private byte[] receiptAttachmentBinary;
-//	private MultipartFile attachmentFile;
 	private List<PurchaseItemRestModel> purchaseItems;
 	private Integer versionNumber;
 	private Integer status;

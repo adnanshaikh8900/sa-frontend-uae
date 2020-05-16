@@ -29,13 +29,13 @@ import com.simplevat.model.TransactionReportRestModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.util.ChartUtil;
+import com.simplevat.utils.ChartUtil;
 
 @Service("transactionService")
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class TransactionServiceImpl extends TransactionService {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
 	@Autowired
 	private ChartUtil util;
@@ -331,7 +331,7 @@ public class TransactionServiceImpl extends TransactionService {
 			}
 			return true;
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error("Error", e);
 			return false;
 		}
 	}

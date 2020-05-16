@@ -49,7 +49,7 @@ public class ContactHelper {
 
 	}
 
-	public Contact getEntity(ContactPersistModel contactPersistModel, Integer userId) {
+	public Contact getEntity(ContactPersistModel contactPersistModel) {
 		Contact contact = new Contact();
 		if (contactPersistModel.getContactId() != null) {
 			contact = contactService.findByPK(contactPersistModel.getContactId());

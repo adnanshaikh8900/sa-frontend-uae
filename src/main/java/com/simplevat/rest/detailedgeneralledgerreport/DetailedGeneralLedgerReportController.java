@@ -17,11 +17,13 @@ import com.simplevat.constant.dbfilter.DateFormatFilterEnum;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 @RestController
 @RequestMapping("/rest/detailedGeneralLedgerReport")
 public class DetailedGeneralLedgerReportController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(DetailedGeneralLedgerReportController.class);
+	private final Logger logger = LoggerFactory.getLogger(DetailedGeneralLedgerReportController.class);
 
 	@Autowired
 	private DetailedGeneralLedgerRestHelper detailedGeneralLedgerRestHelper;
@@ -31,13 +33,13 @@ public class DetailedGeneralLedgerReportController {
 	public ResponseEntity getDateFormat(ReportRequestModel reportRequestModel) {
 		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
 		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
-		List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport1(reportRequestModel);
+		List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport(reportRequestModel);
 		try {
 			if (list == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(list, HttpStatus.OK);
 	}

@@ -22,7 +22,6 @@ import com.simplevat.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
 import com.simplevat.entity.TransactionCategoryBalance;
 import com.simplevat.entity.User;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.transactioncategorycontroller.TransactionCategoryRestController;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.TransactionCategoryBalanceService;
@@ -30,10 +29,12 @@ import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 @RestController
 @RequestMapping(value = "/rest/transactionCategoryBalance")
 public class TransactionCategoryBalanceController {
-	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryRestController.class);
+	private final Logger logger = LoggerFactory.getLogger(TransactionCategoryBalanceController.class);
 
 	@Autowired
 	private UserService userServiceNew;
@@ -62,7 +63,7 @@ public class TransactionCategoryBalanceController {
 			transactionCategoryBalanceService.persist(openingBalance);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -82,7 +83,7 @@ public class TransactionCategoryBalanceController {
 			transactionCategoryBalanceService.persist(openingBalance);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

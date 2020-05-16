@@ -1,6 +1,7 @@
 package com.simplevat.rest.invoicecontroller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -10,43 +11,50 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.internet.MimeMultipart;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerErrorException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.constant.ConfigurationConstants;
 import com.simplevat.constant.EmailConstant;
 import com.simplevat.constant.InvoiceStatusEnum;
+import com.simplevat.constant.InvoiceTypeConstant;
+import com.simplevat.constant.PostingReferenceTypeEnum;
+import com.simplevat.constant.ProductPriceType;
+import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.Configuration;
 import com.simplevat.entity.Contact;
 import com.simplevat.entity.Currency;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.InvoiceLineItem;
-import com.simplevat.entity.Mail;
+import com.simplevat.entity.Journal;
+import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.User;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.service.ConfigurationService;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.PaymentService;
+import com.simplevat.service.ProductService;
 import com.simplevat.service.ProjectService;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
-import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.DateUtils;
 import com.simplevat.utils.FileHelper;
 import com.simplevat.utils.MailUtility;
 
 @Service
 public class InvoiceRestHelper {
-	private final Logger LOGGER = LoggerFactory.getLogger(InvoiceRestHelper.class);
+	private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
 	@Autowired
 	VatCategoryService vatCategoryService;
 
@@ -84,7 +92,10 @@ public class InvoiceRestHelper {
 	private DateUtils dateUtils;
 
 	@Autowired
-	private DateFormatUtil dateFormatUtil;
+	private ProductService productService;
+
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -94,6 +105,9 @@ public class InvoiceRestHelper {
 			if (invoice.getInvoiceLineItems() != null) {
 				invoiceLineItemService.deleteByInvoiceId(invoiceModel.getInvoiceId());
 			}
+			// If invoice is paid cannot update
+			if (invoice.getStatus() > InvoiceStatusEnum.APPROVED.getValue())
+				throw new ServerErrorException("Cannot Update Paid Invoice.");
 		}
 		if (invoiceModel.getTotalAmount() != null) {
 			invoice.setTotalAmount(invoiceModel.getTotalAmount());
@@ -102,8 +116,9 @@ public class InvoiceRestHelper {
 			invoice.setTotalVatAmount(invoiceModel.getTotalVatAmount());
 		}
 		invoice.setReferenceNumber(invoiceModel.getReferenceNumber());
-		// Type supplier = 1
-		// Type customer = 2
+		/**
+		 * @see ContactTypeEnum
+		 */
 		if (invoiceModel.getType() != null && !invoiceModel.getType().isEmpty()) {
 			invoice.setType(Integer.parseInt(invoiceModel.getType()));
 		}
@@ -139,7 +154,7 @@ public class InvoiceRestHelper {
 						new TypeReference<List<InvoiceLineItemModel>>() {
 						});
 			} catch (IOException ex) {
-				LOGGER.error("Error", ex);
+				logger.error("Error", ex);
 			}
 			if (!itemModels.isEmpty()) {
 				List<InvoiceLineItem> invoiceLineItemList = getLineItems(itemModels, invoice, userId);
@@ -154,7 +169,7 @@ public class InvoiceRestHelper {
 		invoice.setNotes(invoiceModel.getNotes());
 		invoice.setDiscountType(invoiceModel.getDiscountType());
 		invoice.setDiscount(invoiceModel.getDiscount());
-		invoice.setStatus(InvoiceStatusEnum.PENDING.getValue()); // default set, will change in transaction
+		invoice.setStatus(invoice.getId() == null ? InvoiceStatusEnum.PENDING.getValue() : invoice.getStatus()); // default set, will change in transaction
 		invoice.setDiscountPercentage(invoiceModel.getDiscountPercentage());
 		invoice.setInvoiceDuePeriod(invoiceModel.getTerm());
 
@@ -173,13 +188,14 @@ public class InvoiceRestHelper {
 				lineItem.setDescription(model.getDescription());
 				lineItem.setUnitPrice(model.getUnitPrice());
 				lineItem.setSubTotal(model.getSubTotal());
-				if (model.getVatCategoryId() != null) {
+				if (model.getVatCategoryId() != null)
 					lineItem.setVatCategory(vatCategoryService.findByPK(Integer.parseInt(model.getVatCategoryId())));
-				}
 				lineItem.setInvoice(invoice);
+				if (model.getProductId() != null)
+					lineItem.setProduct(productService.findByPK(model.getProductId()));
 				lineItems.add(lineItem);
 			} catch (Exception e) {
-				LOGGER.error("Error", e);
+				logger.error("Error", e);
 				return new ArrayList<>();
 			}
 		}
@@ -216,7 +232,10 @@ public class InvoiceRestHelper {
 		requestModel.setReceiptNumber(invoice.getReceiptNumber());
 		requestModel.setNotes(invoice.getNotes());
 		if (invoice.getType() != null) {
-			requestModel.setType(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getType()));
+			/**
+			 * @see ContactTypeEnum
+			 */
+			requestModel.setType(invoice.getType().toString());
 		}
 		requestModel.setReceiptAttachmentDescription(invoice.getReceiptAttachmentDescription());
 		if (invoice.getTaxIdentificationNumber() != null) {
@@ -267,6 +286,8 @@ public class InvoiceRestHelper {
 			lineItemModel.setVatCategoryId(lineItem.getVatCategory().getId().toString());
 			lineItemModel.setVatPercentage(lineItem.getVatCategory().getVat().intValue());
 		}
+		if (lineItem.getProduct() != null)
+			lineItemModel.setProductId(lineItem.getProduct().getProductID());
 		return lineItemModel;
 	}
 
@@ -294,11 +315,7 @@ public class InvoiceRestHelper {
 				model.setTotalVatAmount(invoice.getTotalVatAmount());
 
 				if (invoice.getStatus() != null) {
-					if (invoice.getStatus() > 2 && invoice.getStatus() < 5) {
-						model.setStatus(getInvoceStatus(dateUtils.get(invoice.getInvoiceDueDate())));
-					} else {
-						model.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
-					}
+					model.setStatus(getInvoiceStatus(invoice.getStatus(), invoice.getInvoiceDueDate()));
 				}
 				invoiceListModels.add(model);
 			}
@@ -375,11 +392,11 @@ public class InvoiceRestHelper {
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[] { invoice.getContact().getBillingEmail() },
 					true);
 		} else {
-			LOGGER.info("BILLING ADDRES NOT PRESENT");
+			logger.info("BILLING ADDRES NOT PRESENT");
 		}
 	}
 
-	public Map<String, String> getInvoceData(Invoice invoice, Integer userId) {
+	private Map<String, String> getInvoceData(Invoice invoice, Integer userId) {
 		Map<String, String> map = mailUtility.getInvoiceEmailParamMap();
 		Map<String, String> invoiceDataMap = new HashMap<>();
 		User user = userService.findByPK(userId);
@@ -447,12 +464,6 @@ public class InvoiceRestHelper {
 				}
 				break;
 
-//			case MailUtility.Due_Amount:
-//				if (invoice.getd!= null) {
-//					invoiceDataMap.put(value, invoice.getTotalAmount().toString());
-//				}
-//				break;
-
 			case MailUtility.SENDER_NAME:
 
 				invoiceDataMap.put(value, user.getUserEmail());
@@ -467,7 +478,7 @@ public class InvoiceRestHelper {
 		return invoiceDataMap;
 	}
 
-	public String getInvoceStatus(Date dueDate) {
+	private String getInvoceStatusLabel(Date dueDate) {
 		String status = "";
 		Date today = new Date();
 		int dueDays = dateUtils.diff(today, dueDate);
@@ -480,5 +491,119 @@ public class InvoiceRestHelper {
 			status = ("Due Today");
 		}
 		return status;
+	}
+
+	private String getInvoiceStatus(Integer status, LocalDateTime dueDate) {
+		String statusLabel = "";
+		if (status > 2 && status < 5) {
+			statusLabel = getInvoceStatusLabel(dateUtils.get(dueDate));
+		} else {
+			statusLabel = InvoiceStatusEnum.getInvoiceTypeByValue(status);
+		}
+		return statusLabel;
+	}
+
+	public Journal invoicePosting(PostingRequestModel postingRequestModel, Integer userId) {
+		List<JournalLineItem> journalLineItemList = new ArrayList<>();
+
+		Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
+
+		boolean isCustomerInvoice = InvoiceTypeConstant.isCustomerInvoice(invoice.getType());
+
+		Journal journal = new Journal();
+		JournalLineItem journalLineItem1 = new JournalLineItem();
+		TransactionCategory transactionCategory = transactionCategoryService
+				.findTransactionCategoryByTransactionCategoryCode(
+						isCustomerInvoice ? TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode()
+								: TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
+		journalLineItem1.setTransactionCategory(transactionCategory);
+		if (isCustomerInvoice)
+			journalLineItem1.setDebitAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
+		else
+			journalLineItem1.setCreditAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
+		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.INVOICE);
+		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
+		journalLineItem1.setCreatedBy(userId);
+		journalLineItem1.setJournal(journal);
+		journalLineItemList.add(journalLineItem1);
+
+		Map<String, Object> param = new HashMap<>();
+		param.put("invoice", invoice);
+		param.put("deleteFlag", false);
+
+		List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);
+		Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
+		Map<Integer, TransactionCategory> tnxcatMap = new HashMap<>();
+		TransactionCategory category = null;
+		for (InvoiceLineItem lineItem : invoiceLineItemList) {
+			// sales for customer
+			// purchase for vendor
+			if (isCustomerInvoice)
+				category = lineItem.getProduct().getLineItemList().stream()
+						.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
+						.getTransactioncategory();
+			else {
+				// TODO : need to add transaction category
+//				category = lineItem.gettransaction
+				category = lineItem.getProduct().getLineItemList().stream()
+						.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
+						.getTransactioncategory();
+			}
+			tnxcatMap.put(category.getTransactionCategoryId(), category);
+			if (tnxcatIdInvLnItemMap.containsKey(category.getTransactionCategoryId())) {
+				tnxcatIdInvLnItemMap.get(category.getTransactionCategoryId()).add(lineItem);
+			} else {
+				List<InvoiceLineItem> dummyInvoiceLineItemList = new ArrayList<>();
+				dummyInvoiceLineItemList.add(lineItem);
+				tnxcatIdInvLnItemMap.put(category.getTransactionCategoryId(), dummyInvoiceLineItemList);
+			}
+		}
+
+		for (Integer categoryId : tnxcatIdInvLnItemMap.keySet()) {
+			List<InvoiceLineItem> sortedItemList = tnxcatIdInvLnItemMap.get(categoryId);
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			for (InvoiceLineItem sortedLineItem : sortedItemList) {
+				BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
+						.multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
+				totalAmount = totalAmount.add(amntWithoutVat);
+			}
+			JournalLineItem journalLineItem = new JournalLineItem();
+			journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));
+			if (isCustomerInvoice)
+				journalLineItem.setCreditAmount(totalAmount);
+			else
+				journalLineItem.setDebitAmount(totalAmount);
+			journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
+			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
+			journalLineItem.setCreatedBy(userId);
+			journalLineItem.setJournal(journal);
+			journalLineItemList.add(journalLineItem);
+
+		}
+
+		if (invoice.getTotalVatAmount().compareTo(BigDecimal.ZERO) > 0) {
+			JournalLineItem journalLineItem = new JournalLineItem();
+			TransactionCategory inputVatCategory = transactionCategoryService
+					.findTransactionCategoryByTransactionCategoryCode(
+							isCustomerInvoice ? TransactionCategoryCodeEnum.INPUT_VAT.getCode()
+									: TransactionCategoryCodeEnum.OUTPUT_VAT.getCode());
+			journalLineItem.setTransactionCategory(inputVatCategory);
+			if (isCustomerInvoice)
+				journalLineItem.setCreditAmount(invoice.getTotalVatAmount());
+			else
+				journalLineItem.setDebitAmount(invoice.getTotalVatAmount());
+			journalLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
+			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
+			journalLineItem.setCreatedBy(userId);
+			journalLineItem.setJournal(journal);
+			journalLineItemList.add(journalLineItem);
+		}
+
+		journal.setJournalLineItems(journalLineItemList);
+		journal.setCreatedBy(userId);
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.INVOICE);
+		journal.setJournalDate(LocalDateTime.now());
+
+		return journal;
 	}
 }

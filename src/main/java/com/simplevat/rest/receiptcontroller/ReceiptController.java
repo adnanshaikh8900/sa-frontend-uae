@@ -1,9 +1,10 @@
 package com.simplevat.rest.receiptcontroller;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.entity.Receipt;
 import com.simplevat.rest.PaginationResponseModel;
@@ -32,15 +32,14 @@ import com.simplevat.service.InvoiceService;
 import com.simplevat.service.ReceiptService;
 
 import io.swagger.annotations.ApiOperation;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.ZoneId;
+
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/receipt")
 public class ReceiptController {
 	
-	private final Logger LOGGER = LoggerFactory.getLogger(ReceiptController.class);
+	private final Logger logger = LoggerFactory.getLogger(ReceiptController.class);
 	
 	@Autowired
 	private ReceiptService receiptService;
@@ -86,7 +85,7 @@ public class ReceiptController {
 			response.setData(receiptRestHelper.getListModel(response.getData()));
 			return new ResponseEntity(response, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -102,7 +101,7 @@ public class ReceiptController {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -114,7 +113,7 @@ public class ReceiptController {
 			receiptService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -131,7 +130,7 @@ public class ReceiptController {
 				return new ResponseEntity<>(receiptRestHelper.getRequestModel(receipt), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -148,7 +147,7 @@ public class ReceiptController {
 			receiptService.persist(receipt);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -164,7 +163,7 @@ public class ReceiptController {
 			receiptService.update(receipt);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

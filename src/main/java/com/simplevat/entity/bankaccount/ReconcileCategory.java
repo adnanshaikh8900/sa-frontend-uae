@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -44,10 +43,6 @@ public class ReconcileCategory implements Serializable {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PARENT_RECONCILE_CATEGORY_ID")
 	private ReconcileCategory parentReconcileCategory;
-
-//	@Column(name = "DEBIT_CREDIT_FLAG")
-//	@Basic(optional = false)
-//	private Character debitCreditFlag;
 
 	@Column(name = "RECONCILE_CATEGORY_CODE")
 	@Basic(optional = false)

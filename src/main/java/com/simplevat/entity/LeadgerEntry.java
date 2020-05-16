@@ -4,7 +4,19 @@ import java.io.Serializable;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Id;
+import javax.persistence.GenerationType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.TemporalType;
+import javax.persistence.Temporal;
+import javax.persistence.JoinColumn;
 
 import java.util.Date;
 import org.springframework.lang.Nullable;
@@ -46,11 +58,6 @@ public class LeadgerEntry implements Serializable {
 
     @Column(name = "balance")
     private Double balance;
-
-//    @Nullable
-//    @ManyToOne
-//    @JoinColumn(name = "transcation_id")
-//    private com.simplevat.entity.dummy.Transaction transaction;
 
     @Column(name = "created_time")
     @Temporal(TemporalType.TIMESTAMP)

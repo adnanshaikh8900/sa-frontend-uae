@@ -5,40 +5,14 @@
  */
 package com.simplevat.rest.transactioncontroller;
 
-import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.FileTypeEnum;
-import com.simplevat.constant.ReconsileCategoriesEnumConstant;
-import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
-import com.simplevat.constant.dbfilter.TransactionFilterEnum;
-import com.simplevat.entity.Currency;
-import com.simplevat.entity.Invoice;
-import com.simplevat.entity.Journal;
-import com.simplevat.entity.bankaccount.ReconcileCategory;
-import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.helper.TransactionHelper;
-import com.simplevat.rest.DropdownModel;
-import com.simplevat.rest.PaginationModel;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.JournalService;
-import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.service.bankaccount.TransactionStatusService;
-import com.simplevat.util.ChartUtil;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
-import com.simplevat.utils.DateFormatUtil;
-import com.simplevat.utils.FileHelper;
-
-import io.swagger.annotations.ApiOperation;
-import java.io.Serializable;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +20,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,14 +34,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
+import com.simplevat.constant.FileTypeEnum;
+import com.simplevat.constant.TransactionCreationMode;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
+import com.simplevat.constant.dbfilter.TransactionFilterEnum;
+import com.simplevat.entity.Journal;
+import com.simplevat.entity.JournalLineItem;
+import com.simplevat.entity.bankaccount.Transaction;
+import com.simplevat.entity.bankaccount.TransactionStatus;
+import com.simplevat.helper.TransactionHelper;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.ReconsileRequestLineItemModel;
+import com.simplevat.rest.reconsilationcontroller.ReconsilationRestHelper;
+import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.BankAccountService;
+import com.simplevat.service.ChartOfAccountCategoryService;
+import com.simplevat.service.ContactService;
+import com.simplevat.service.EmployeeService;
+import com.simplevat.service.JournalService;
+import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.VatCategoryService;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
+import com.simplevat.service.bankaccount.TransactionService;
+import com.simplevat.service.bankaccount.TransactionStatusService;
+import com.simplevat.utils.ChartUtil;
+import com.simplevat.utils.DateFormatUtil;
+import com.simplevat.utils.FileHelper;
+
+import io.swagger.annotations.ApiOperation;
+
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author sonu
  */
 @RestController
 @RequestMapping(value = "/rest/transaction")
-public class TransactionController implements Serializable {
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionController.class);
+public class TransactionController{
+	 private final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
@@ -79,22 +88,47 @@ public class TransactionController implements Serializable {
 	private BankAccountService bankAccountService;
 
 	@Autowired
-	private TransactionStatusService transactionStatusService;
 
-	@Autowired
 	private ChartOfAccountService chartOfAccountService;
 
 	@Autowired
 	private TransactionHelper transactionHelper;
 
 	@Autowired
+	private ChartUtil chartUtil;
+
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	private ReconsilationRestHelper reconsilationRestHelper;
+
+	@Autowired
 	private JournalService journalService;
 
 	@Autowired
-	private FileHelper fileHelper;
+	private BankAccountService bankService;
 
 	@Autowired
-	private ChartUtil chartUtil;
+	private ChartOfAccountCategoryService chartOfAccountCategoryService;
+
+	@Autowired
+	private VatCategoryService vatCategoryService;
+
+	@Autowired
+	private EmployeeService employeeService;
+
+	@Autowired
+	private ContactService contactService;
+
+	@Autowired
+	private TransactionStatusService transactionStatusService;
+
+	@Autowired
+	private DateFormatUtil dateFormatUtil;
+
+	@Autowired
+	private FileHelper fileHelper;
 
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
@@ -112,7 +146,7 @@ public class TransactionController implements Serializable {
 				dateTime = Instant.ofEpochMilli(dateFormat.parse(filterModel.getTransactionDate()).getTime())
 						.atZone(ZoneId.systemDefault()).toLocalDateTime();
 			} catch (ParseException e) {
-				LOGGER.error("Error", e);
+				logger.error(ERROR, e);
 			}
 			dataMap.put(TransactionFilterEnum.TRANSACTION_DATE, dateTime);
 		}
@@ -125,7 +159,7 @@ public class TransactionController implements Serializable {
 					chartOfAccountService.findByPK(filterModel.getChartOfAccountId()));
 		}
 		dataMap.put(TransactionFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
-
+		dataMap.put(TransactionFilterEnum.DELETE_FLAG, false);
 		PaginationResponseModel response = transactionService.getAllTransactionList(dataMap, filterModel);
 		if (response == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -138,29 +172,113 @@ public class TransactionController implements Serializable {
 	@PostMapping(value = "/save")
 	public ResponseEntity saveTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
 			HttpServletRequest request) {
-		try {
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			Transaction transaction = transactionHelper.getEntity(transactionPresistModel);
-			if (transactionPresistModel.getAttachment() != null && !transactionPresistModel.getAttachment().isEmpty()) {
-				String fileName = fileHelper.saveFile(transactionPresistModel.getAttachment(), FileTypeEnum.TRANSATION);
-				transaction.setExplainedTransactionAttachmentFileName(
-						transactionPresistModel.getAttachment().getOriginalFilename());
-				transaction.setExplainedTransactionAttachmentPath(fileName);
-			}
-			transaction.setCreatedBy(userId);
-			transaction.setCreatedDate(LocalDateTime.now());
-			transactionService.persist(transaction);
-			if (transaction.getTransactionId() == null) {
 
-				return new ResponseEntity<>("Unable To Save", HttpStatus.OK);
-			} else {
-				// save journal
-				Journal journal = transactionHelper.getByTransaction(transaction);
-				journalService.persist(journal);
+		try {
+
+			if (transactionPresistModel != null) {
+				List<Journal> journalList = null;
+
+				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+				Transaction trnx = new Transaction();
+				trnx.setCreatedBy(userId);
+				trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
+				boolean isDebit = ChartOfAccountCategoryIdEnumConstant.isDebitedFromBank(
+						trnx.getCoaCategory().getParentChartOfAccount().getChartOfAccountCategoryId());
+				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
+				trnx.setTransactionAmount(transactionPresistModel.getAmount());
+				trnx.setCreationMode(TransactionCreationMode.MANUAL);
+				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
+				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				trnx.setExplainedTransactionCategory(
+						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
+
+				if (transactionPresistModel.getDescription() != null) {
+					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
+				}
+				if (transactionPresistModel.getCustomerId() != null) {
+					trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
+				}
+				if (transactionPresistModel.getVatId() != null) {
+					trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
+				}
+				if (transactionPresistModel.getVendorId() != null) {
+					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
+				}
+				if (transactionPresistModel.getEmployeeId() != null) {
+					trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
+				}
+				if (transactionPresistModel.getBankId() != null) {
+					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+				}
+				if (transactionPresistModel.getReconsileBankId() != null) {
+					trnx.setExplinationBankAccount(bankService.findByPK(transactionPresistModel.getReconsileBankId()));
+				}
+				if (transactionPresistModel.getReference() != null
+						&& !transactionPresistModel.getReference().isEmpty()) {
+					trnx.setReferenceStr(transactionPresistModel.getReference());
+				}
+				if (transactionPresistModel.getAttachmentFile() != null
+						&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+					String filePath = fileHelper.saveFile(transactionPresistModel.getAttachmentFile(),
+							FileTypeEnum.TRANSATION);
+					trnx.setExplainedTransactionAttachmentFileName(
+							transactionPresistModel.getAttachmentFile().getOriginalFilename());
+					trnx.setExplainedTransactionAttachmentPath(filePath);
+				}
+				transactionService.persist(trnx);
+				
+				List<ReconsileRequestLineItemModel> itemModels = new ArrayList<>();
+				if (transactionPresistModel.getInvoiceIdListStr() != null && !transactionPresistModel.getInvoiceIdListStr().isEmpty()) {
+					ObjectMapper mapper = new ObjectMapper();
+					try {
+						itemModels = mapper.readValue(transactionPresistModel.getInvoiceIdListStr(),
+								new TypeReference<List<ReconsileRequestLineItemModel>>() {
+								});
+					} catch (IOException ex) {
+						logger.error(ERROR, ex);
+					}
+				}
+				
+				journalList = reconsilationRestHelper.get(
+						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
+						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
+						trnx,itemModels);
+
+				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
+				if (transactionPresistModel.getInvoiceIdList() != null) {
+					for (ReconsileRequestLineItemModel invoice : transactionPresistModel.getInvoiceIdList()) {
+						invoiceIdAmtMap.put(invoice.getInvoiceId(), invoice.getRemainingInvoiceAmount());
+					}
+				}
+
+				if (journalList != null && !journalList.isEmpty()) {
+					List<TransactionStatus> transationStatusList = new ArrayList<>();
+					for (Journal journal : journalList) {
+
+						JournalLineItem item = journal.getJournalLineItems().iterator().next();
+
+						journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(
+								transactionPresistModel.getDate(), transactionPresistModel.getDATE_FORMAT()));
+						journalService.persist(journal);
+						TransactionStatus status = new TransactionStatus();
+						status.setCreatedBy(userId);
+						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+						status.setTransaction(trnx);
+						status.setRemainingToExplain(invoiceIdAmtMap.containsKey(item.getReferenceId())
+								? invoiceIdAmtMap.get(item.getReferenceId())
+								: BigDecimal.ZERO);
+						status.setReconsileJournal(journal);
+						transactionStatusService.persist(status);
+
+						transationStatusList.add(status);
+					}
+				}
+
+				return new ResponseEntity<>(HttpStatus.OK);
 			}
-			return new ResponseEntity<>(transaction.getTransactionId(), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -169,24 +287,105 @@ public class TransactionController implements Serializable {
 	@PostMapping(value = "/update")
 	public ResponseEntity updateTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
 			HttpServletRequest request) {
+
 		try {
-			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			Transaction transaction = transactionHelper.getEntity(transactionPresistModel);
-			if (transactionPresistModel.getAttachment() != null && !transactionPresistModel.getAttachment().isEmpty()) {
-				String fileName = fileHelper.saveFile(transactionPresistModel.getAttachment(), FileTypeEnum.TRANSATION);
-				transaction.setExplainedTransactionAttachmentFileName(
-						transactionPresistModel.getAttachment().getOriginalFilename());
-				transaction.setExplainedTransactionAttachmentPath(fileName);
+
+			if (transactionPresistModel != null) {
+				List<Journal> journalList = null;
+
+				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+				Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId());
+				trnx.setCreatedBy(userId);
+				trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
+				boolean isDebit = ChartOfAccountCategoryIdEnumConstant.isDebitedFromBank(
+						trnx.getCoaCategory().getParentChartOfAccount().getChartOfAccountCategoryId());
+				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
+				trnx.setTransactionAmount(transactionPresistModel.getAmount());
+				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
+				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				trnx.setExplainedTransactionCategory(
+						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
+
+				if (transactionPresistModel.getDescription() != null) {
+					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
+				}
+				if (transactionPresistModel.getCustomerId() != null) {
+					trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
+				}
+				if (transactionPresistModel.getVatId() != null) {
+					trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
+				}
+				if (transactionPresistModel.getVendorId() != null) {
+					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
+				}
+				if (transactionPresistModel.getEmployeeId() != null) {
+					trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
+				}
+				if (transactionPresistModel.getBankId() != null) {
+					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+				}
+				if (transactionPresistModel.getReconsileBankId() != null) {
+					trnx.setExplinationBankAccount(bankService.findByPK(transactionPresistModel.getReconsileBankId()));
+				}
+				if (transactionPresistModel.getReference() != null
+						&& !transactionPresistModel.getReference().isEmpty()) {
+					trnx.setReferenceStr(transactionPresistModel.getReference());
+				}
+				if (transactionPresistModel.getAttachmentFile() != null
+						&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+					String filePath = fileHelper.saveFile(transactionPresistModel.getAttachmentFile(),
+							FileTypeEnum.TRANSATION);
+					trnx.setExplainedTransactionAttachmentFileName(
+							transactionPresistModel.getAttachmentFile().getOriginalFilename());
+					trnx.setExplainedTransactionAttachmentPath(filePath);
+				}
+				transactionService.update(trnx);
+
+				// remove old entries
+				List<TransactionStatus> trnxStatusList = transactionStatusService
+						.findAllTransactionStatuesByTrnxId(transactionPresistModel.getTransactionId());
+				transactionStatusService.deleteList(trnxStatusList);
+
+				journalList = reconsilationRestHelper.get(
+						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
+						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
+						trnx, transactionPresistModel.getInvoiceIdList());
+
+				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
+				if (transactionPresistModel.getInvoiceIdList() != null) {
+					for (ReconsileRequestLineItemModel invoice : transactionPresistModel.getInvoiceIdList()) {
+						invoiceIdAmtMap.put(invoice.getInvoiceId(), invoice.getRemainingInvoiceAmount());
+					}
+				}
+
+				if (journalList != null && !journalList.isEmpty()) {
+					List<TransactionStatus> transationStatusList = new ArrayList<>();
+					for (Journal journal : journalList) {
+
+						JournalLineItem item = journal.getJournalLineItems().iterator().next();
+
+						journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(
+								transactionPresistModel.getDate(), transactionPresistModel.getDATE_FORMAT()));
+						journalService.persist(journal);
+						TransactionStatus status = new TransactionStatus();
+						status.setCreatedBy(userId);
+						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+						status.setTransaction(trnx);
+						status.setRemainingToExplain(invoiceIdAmtMap.containsKey(item.getReferenceId())
+								? invoiceIdAmtMap.get(item.getReferenceId())
+								: BigDecimal.ZERO);
+						status.setReconsileJournal(journal);
+						transactionStatusService.persist(status);
+
+						transationStatusList.add(status);
+					}
+				}
+
+				return new ResponseEntity<>(HttpStatus.OK);
 			}
-			transaction.setLastUpdateBy(userId);
-			transaction.setLastUpdateDate(LocalDateTime.now());
-			transactionService.persist(transaction);
-			if (transaction.getTransactionId() == null) {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-			return new ResponseEntity<>(transaction.getTransactionId(), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -197,7 +396,7 @@ public class TransactionController implements Serializable {
 		Transaction trnx = transactionService.findByPK(id);
 		if (trnx != null) {
 			trnx.setDeleteFlag(Boolean.TRUE);
-			transactionService.update(trnx, trnx.getTransactionId());
+			transactionService.deleteTransaction(trnx);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 
@@ -210,7 +409,7 @@ public class TransactionController implements Serializable {
 			transactionService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -226,26 +425,6 @@ public class TransactionController implements Serializable {
 		}
 	}
 
-//    @ApiOperation(value = "Update Bank Account", response = BankAccount.class)
-//    @PutMapping("/{bankAccountId}")
-//    public ResponseEntity updateBankAccount(@PathVariable("bankAccountId") Integer bankAccountId, BankModel bankModel, HttpServletRequest request) {
-//        try {
-//            Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-//            bankModel.setBankAccountId(bankAccountId);
-//            BankAccount bankAccount = BankHelper.getBankAccountByBankAccountModel(bankModel, bankAccountService, bankAccountStatusService, currencyService, bankAccountTypeService, countryService);
-//            User user = userServiceNew.findByPK(userId);
-//            bankAccount.setBankAccountId(bankModel.getBankAccountId());
-//            bankAccount.setLastUpdateDate(LocalDateTime.now());
-//            bankAccount.setLastUpdatedBy(user.getUserId());
-//            bankAccountService.update(bankAccount);
-//            return new ResponseEntity<>(HttpStatus.OK);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-
 	@GetMapping(value = "/getCashFlow")
 	public ResponseEntity getCashFlow(@RequestParam int monthNo) {
 		try {
@@ -253,7 +432,7 @@ public class TransactionController implements Serializable {
 					transactionService.getCashOutData(monthNo, null));
 			return new ResponseEntity<>(obj, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

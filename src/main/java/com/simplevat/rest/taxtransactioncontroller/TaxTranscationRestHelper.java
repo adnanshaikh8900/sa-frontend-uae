@@ -118,7 +118,6 @@ public class TaxTranscationRestHelper {
 
 		taxTransactionList.add(taxTransaction);
 		return taxTransactionList;
-		// TODO Invoice Vat Calculation Depending on Vat percentage
 	}
 
 	public List<Transaction> getCreditTransactionList(List<Transaction> transactionList) {
@@ -185,14 +184,7 @@ public class TaxTranscationRestHelper {
 		BigDecimal totalVat = BigDecimal.ZERO;
 		BigDecimal vatPercent = BigDecimal.ZERO;
 		if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.INVOICE) {
-			Invoice invoice = invoiceService.findByPK(refId);
-//            for (InvoiceLineItem invoiceLineItem : invoice.getInvoiceLineItems()) {
-//                BigDecimal totalAmount = invoiceLineItem.getInvoiceLineItemUnitPrice().multiply(new BigDecimal(invoiceLineItem.getInvoiceLineItemQuantity()));
-//                if (invoiceLineItem.getInvoiceLineItemVat() != null) {
-//                    vatPercent = invoiceLineItem.getInvoiceLineItemVat().getVat();
-//                }
-//                totalVat = (totalAmount.multiply(vatPercent)).divide(new BigDecimal(100), 5, RoundingMode.HALF_UP);
-//            }
+			Invoice invoice= invoiceService.findByPK(refId);
 		}
 		if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
 			Purchase purchase = purchaseService.findByPK(refId);

@@ -55,10 +55,11 @@ public class VatCategoryServiceImpl extends VatCategoryService {
 		return vatCategoryDao.getDefaultVatCategory();
 	}
 
+	@Override
 	public void persist(VatCategory vatCategory) {
 		super.persist(vatCategory, null, getActivity(vatCategory, "CREATED"));
 	}
-
+	@Override
 	public VatCategory update(VatCategory vatCategory) {
 		VatCategory vatCategoryUpdated =  super.update(vatCategory, null, getActivity(vatCategory, "UPDATED"));
 		deleteFromCache(Collections.singletonList(vatCategoryUpdated.getId()));

@@ -1,4 +1,4 @@
-package com.simplevat.util;
+package com.simplevat.utils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -13,28 +13,16 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.apache.poi.ss.formula.functions.Count;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.entity.Invoice;
-import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.model.ChartData;
-import com.simplevat.model.DashBoardBankDataModel;
 import com.simplevat.model.DashboardInvoiceDataModel;
-import com.simplevat.model.DashboardInvoiceDataModel.data;
 import com.simplevat.service.report.model.BankAccountTransactionReportModel;
-import com.simplevat.utils.DateFormatUtil;
-
-import net.bytebuddy.asm.Advice.Return;
-import springfox.documentation.spring.web.json.Json;
 
 @Component
 public class ChartUtil {
@@ -59,7 +47,7 @@ public class ChartUtil {
 	}
 
 	public List<ChartData> convert(List<Object[]> rows) {
-		List<ChartData> chartDatas = new ArrayList<ChartData>();
+		List<ChartData> chartDatas = new ArrayList<>();
 		for (Object[] row : rows) {
 			String[] transactionDate = ((String) row[1]).split("-");
 			ChartData chartData = new ChartData(Integer.parseInt(transactionDate[0]) - 1,
@@ -130,7 +118,7 @@ public class ChartUtil {
 	}
 
 	private List<ChartData> getEmptyChartData(Integer count) {
-		List<ChartData> emptyChartDatas = new ArrayList<ChartData>();
+		List<ChartData> emptyChartDatas = new ArrayList<>();
 		for (int i = 0; i < count; i++) {
 			Calendar calendar = getStartDate(Calendar.MONTH, -count);
 			calendar.add(Calendar.MONTH, i);
@@ -148,7 +136,7 @@ public class ChartUtil {
 	}
 
 	public int getMaxValue(Map<Object, Number> data) {
-		List<Number> list = new ArrayList(data.values());
+		List<Number> list = new ArrayList<>(data.values());
 		Number max = 0;
 		for (int i = 0; i < list.size(); i++) {
 			Number number = list.get(i);
@@ -203,9 +191,9 @@ public class ChartUtil {
 	}
 
 	public Object getinvoiceData(List<Invoice> invList, int monthCount) {
-		List<Invoice> paid = new ArrayList<Invoice>();
-		List<Invoice> due = new ArrayList<Invoice>();
-		List<Invoice> overDue = new ArrayList<Invoice>();
+		List<Invoice> paid = new ArrayList<>();
+		List<Invoice> due = new ArrayList<>();
+		List<Invoice> overDue = new ArrayList<>();
 
 		for (Invoice invoice : invList) {
 			if (invoice.getStatus() > InvoiceStatusEnum.PAID.ordinal())

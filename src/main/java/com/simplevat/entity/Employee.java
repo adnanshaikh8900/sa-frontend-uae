@@ -4,9 +4,26 @@ import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Basic;
+import javax.persistence.Version;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.TableGenerator;
+import javax.persistence.Convert;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 @NamedQueries({
     @NamedQuery(name = "employeesForDropdown", query = "SELECT  new " + CommonConstant.DROPDOWN_MODEL_PACKAGE + "(c.id , CONCAT(c.firstName,' ',c.middleName,' ', c.lastName)) "

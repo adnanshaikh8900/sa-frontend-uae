@@ -28,7 +28,8 @@ import com.simplevat.entity.converter.DateConverter;
 import lombok.Data;
 
 @NamedQueries({
-		@NamedQuery(name = "findAllTransactionStatues", query = "SELECT t FROM TransactionStatus t where t.deleteFlag = FALSE order by t.explinationStatus ASC") })
+		@NamedQuery(name = "findAllTransactionStatues", query = "SELECT t FROM TransactionStatus t where t.deleteFlag = FALSE order by t.explinationStatus ASC"),
+		@NamedQuery(name = "findAllTransactionStatuesByTrnxId", query = "SELECT t FROM TransactionStatus t where t.deleteFlag = FALSE and transaction.transactionId = :transactionId")})
 @Entity
 @Table(name = "EXPLANATION_STATUS")
 @Data

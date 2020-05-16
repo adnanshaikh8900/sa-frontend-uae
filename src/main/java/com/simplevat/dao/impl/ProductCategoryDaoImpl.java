@@ -27,11 +27,11 @@ public class ProductCategoryDaoImpl extends AbstractDao<Integer, ProductCategory
 	@Override
 	public PaginationResponseModel getProductCategoryList(Map<ProductCategoryFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach((productCategoryFilter, value) -> dbFilters
 				.add(DbFilter.builder().dbCoulmnName(productCategoryFilter.getDbColumnName())
 						.condition(productCategoryFilter.getCondition()).value(value).build()));
-		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), dataTableUtil.PRODUCT_CATEGORY));
+		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.PRODUCT_CATEGORY));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}

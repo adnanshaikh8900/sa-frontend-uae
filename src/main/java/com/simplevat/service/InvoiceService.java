@@ -7,7 +7,6 @@ import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +24,6 @@ public abstract class InvoiceService extends SimpleVatService<Integer, Invoice> 
 	public abstract List<Invoice> getInvoiceList(int mounthCount);
 
 	public abstract OverDueAmountDetailsModel getOverDueAmountDetails(Integer type);
+
+	public abstract Invoice deleteJournaForInvoice(Invoice invoice);
 }

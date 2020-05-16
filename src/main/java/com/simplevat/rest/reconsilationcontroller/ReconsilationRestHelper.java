@@ -23,7 +23,6 @@ import com.simplevat.entity.bankaccount.ChartOfAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
-import com.simplevat.rest.ReconsileRequestModel;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.TransactionCategoryService;
@@ -45,7 +44,7 @@ public class ReconsilationRestHelper {
 
 		attribute.put("deleteFlag", Boolean.FALSE);
 
-		List<ReconsilationListModel> modelList = new ArrayList<ReconsilationListModel>();
+		List<ReconsilationListModel> modelList = new ArrayList<>();
 		switch (constant) {
 		case EXPENSE:
 			List<Expense> expenseList = expenseService.findByAttributes(attribute);
@@ -77,7 +76,7 @@ public class ReconsilationRestHelper {
 			Integer transactionCategoryCode, BigDecimal amount, int userId, Transaction transaction,
 			List<ReconsileRequestLineItemModel> invoiceIdList) {
 
-		List<Journal> journalList = new ArrayList<Journal>();
+		List<Journal> journalList = new ArrayList<>();
 
 		Journal journal = null;
 		switch (chartOfAccountCategoryIdEnumConstant) {

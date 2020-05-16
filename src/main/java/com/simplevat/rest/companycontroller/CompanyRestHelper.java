@@ -1,7 +1,6 @@
 package com.simplevat.rest.companycontroller;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +17,12 @@ import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
 import com.simplevat.service.UserService;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 @Component
-public class CompanyRestHelper implements Serializable{
+public class CompanyRestHelper{
 	
-	private final Logger LOGGER = LoggerFactory.getLogger(CompanyRestHelper.class);
+	private final Logger logger = LoggerFactory.getLogger(CompanyRestHelper.class);
 	
 	@Autowired
 	private IndustryTypeService industryTypeService;
@@ -165,7 +166,7 @@ public class CompanyRestHelper implements Serializable{
 			try {
 				company.setCompanyLogo(companyModel.getCompanyLogo().getBytes());
 			} catch (IOException e) {
-				LOGGER.error("ERROR = ", e);
+				logger.error(ERROR, e);
 			}
 		}
 		return company;

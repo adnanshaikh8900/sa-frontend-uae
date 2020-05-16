@@ -124,7 +124,7 @@ public class PurchaseRestControllerHelper {
 		purchaseModel.setPaymentMode(entity.getPaymentMode());
 
 		final List<PurchaseItemRestModel> items = entity.getPurchaseLineItems().stream()
-				.map(lineItem -> convertToItemModel(lineItem)).collect(Collectors.toList());
+				.map(lineItem -> PurchaseRestControllerHelper.this.convertToItemModel(lineItem)).collect(Collectors.toList());
 		purchaseModel.setPurchaseItems(items);
 		return purchaseModel;
 	}

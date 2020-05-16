@@ -1,21 +1,30 @@
 package com.simplevat.dao.impl;
 
-import com.simplevat.constant.DatatableSortingFilterConstant;
-import com.simplevat.constant.dbfilter.DbFilter;
-import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import java.math.BigDecimal;
-import java.util.*;
-
-import com.simplevat.model.OverDueAmountDetailsModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import com.simplevat.dao.AbstractDao;
-import com.simplevat.entity.Invoice;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 
 import javax.persistence.TypedQuery;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.simplevat.constant.DatatableSortingFilterConstant;
+import com.simplevat.constant.PostingReferenceTypeEnum;
+import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.InvoiceDao;
+import com.simplevat.dao.JournalDao;
+import com.simplevat.dao.JournalLineItemDao;
+import com.simplevat.entity.Invoice;
+import com.simplevat.entity.JournalLineItem;
+import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
@@ -30,14 +39,21 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	@Autowired
 	private DatatableSortingFilterConstant datatableUtil;
 
+	@Autowired
+	private JournalDao journalDao;
+
+	@Autowired
+	private JournalLineItemDao journalLineItemDao;
+
 	@Override
 	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		paginationModel.setSortingCol(datatableUtil.getColName(paginationModel.getSortingCol(), datatableUtil.INVOICE));
+		paginationModel.setSortingCol(
+				datatableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.INVOICE));
 		PaginationResponseModel response = new PaginationResponseModel();
 		response.setCount(this.getResultCount(dbFilters));
 		response.setData(this.executeQuery(dbFilters, paginationModel));
@@ -56,6 +72,18 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 			for (Integer id : ids) {
 				Invoice supplierInvoice = findByPK(id);
 				supplierInvoice.setDeleteFlag(Boolean.TRUE);
+				// find journal related to invoice and delete
+				Map<String, Object> param = new HashMap<>();
+				param.put("referenceType", PostingReferenceTypeEnum.INVOICE);
+				param.put("referenceId", id);
+				param.put("deleteFlag", false);
+				List<JournalLineItem> lineItemList = journalLineItemDao.findByAttributes(param);
+
+				if (lineItemList != null && !lineItemList.isEmpty()) {
+					List<Integer> list = new ArrayList<>();
+					list.add(lineItemList.get(0).getJournal().getId());
+					journalDao.deleteByIds(list);
+				}
 				update(supplierInvoice);
 			}
 		}
@@ -85,38 +113,37 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("overDueAmount", BigDecimal.class);
 		query.setParameter("type", type);
 		query.setMaxResults(1);
-		BigDecimal overDueAmount = (BigDecimal) query.getSingleResult();
-		Float overDueAmountFloat = new Float(0);
-		if(overDueAmount!=null)
-			overDueAmountFloat= overDueAmount.floatValue() ;
+
+		BigDecimal overDueAmount = query.getSingleResult();
+		Float overDueAmountFloat = (float) 0;
+		if (overDueAmount != null)
+			overDueAmountFloat = overDueAmount.floatValue();
 		Date date = new Date();
 
-		Date startDate = dateUtil.getStartDate(DateUtils.Duration.THIS_WEEK,TimeZone.getDefault(),date);
-		Date endDate = dateUtil.getEndDate(DateUtils.Duration.THIS_WEEK,TimeZone.getDefault(),date);
-		Float overDueAmountWeeklyFloat = getOverDueAmountWeeklyMonthly( type, startDate, endDate);
+		Date startDate = DateUtils.getStartDate(DateUtils.Duration.THIS_WEEK, TimeZone.getDefault(), date);
+		Date endDate = DateUtils.getEndDate(DateUtils.Duration.THIS_WEEK, TimeZone.getDefault(), date);
+		Float overDueAmountWeeklyFloat = getOverDueAmountWeeklyMonthly(type, startDate, endDate);
 
-		startDate = dateUtil.getStartDate(DateUtils.Duration.THIS_MONTH,TimeZone.getDefault(),date);
-		endDate = dateUtil.getEndDate(DateUtils.Duration.THIS_MONTH,TimeZone.getDefault(),date);
+		startDate = DateUtils.getStartDate(DateUtils.Duration.THIS_MONTH, TimeZone.getDefault(), date);
+		endDate = DateUtils.getEndDate(DateUtils.Duration.THIS_MONTH, TimeZone.getDefault(), date);
 		Float overDueAmountMonthlyFloat = getOverDueAmountWeeklyMonthly(type, startDate, endDate);
 
-		OverDueAmountDetailsModel overDueAmountDetailsModel = new OverDueAmountDetailsModel(overDueAmountFloat,
-				overDueAmountWeeklyFloat, overDueAmountMonthlyFloat);
-		return overDueAmountDetailsModel;
+		return new OverDueAmountDetailsModel(overDueAmountFloat, overDueAmountWeeklyFloat, overDueAmountMonthlyFloat);
 	}
 
-	private Float getOverDueAmountWeeklyMonthly( Integer type, Date startDate, Date endDate) {
+	private Float getOverDueAmountWeeklyMonthly(Integer type, Date startDate, Date endDate) {
 
-		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("overDueAmountWeeklyMonthly", BigDecimal.class);
+		TypedQuery<BigDecimal> query = getEntityManager().createNamedQuery("overDueAmountWeeklyMonthly",
+				BigDecimal.class);
 		query.setParameter("type", type);
 		query.setParameter("startDate", dateUtil.get(startDate));
 		query.setParameter("endDate", dateUtil.get(endDate));
 		query.setMaxResults(1);
-		BigDecimal overDueAmountMonthly = (BigDecimal) query.getSingleResult();
-		Float overDueAmountFloat = new Float(0);
-		if(overDueAmountMonthly!=null)
-			overDueAmountFloat = overDueAmountMonthly.floatValue() ;
+
+		BigDecimal overDueAmountMonthly = query.getSingleResult();
+		Float overDueAmountFloat = (float) 0;
+		if (overDueAmountMonthly != null)
+			overDueAmountFloat = overDueAmountMonthly.floatValue();
 		return overDueAmountFloat;
 	}
-
 }
-

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.simplevat.constant.TransactionCreationMode;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.model.TransactionModel;
 import com.simplevat.criteria.enums.TransactionEnum;
@@ -41,6 +42,8 @@ import com.simplevat.dao.TransactionParsingSettingDao;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
+
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @Component
 public class TransactionImportRestHelper {
@@ -53,7 +56,6 @@ public class TransactionImportRestHelper {
 	private String debitAmount = "Debit Amount";
 
 	private String creditAmount = "Credit Amount";
-	private List<TransactionModel> selectedTransaction;
 	private List<TransactionModel> creditTransaction = new ArrayList<>();
 	private boolean transactionDateBoolean = false;
 	private boolean descriptionBoolean = false;
@@ -100,7 +102,7 @@ public class TransactionImportRestHelper {
 			CSVParser parser = new CSVParser(br, CSVFormat.EXCEL);
 			listParser = parser.getRecords();
 		} catch (IOException e) {
-			LOGGER.error("Error", e);
+			LOGGER.error(ERROR, e);
 		}
 		populateTranscationOnFileUpload(listParser);
 	}
@@ -253,15 +255,10 @@ public class TransactionImportRestHelper {
 					for (String invalidHeading : invalidHeaderTransactionList) {
 						validationMessage.append(invalidHeading).append("  ");
 					}
-//	                    validationMessage.append(" heading should be (" + TransactionStatusConstant.TRANSACTION_DATE + "," + TransactionStatusConstant.DESCRIPTION + "," + TransactionStatusConstant.DEBIT_AMOUNT + "," + TransactionStatusConstant.CREDIT_AMOUNT + ")");
-//	                    FacesMessage message = new FacesMessage(validationMessage.toString());
-//	                    message.setSeverity(FacesMessage.SEVERITY_ERROR);
-//	                    FacesContext.getCurrentInstance().addMessage("validationId", message);
 				}
-
 			}
 		} catch (Exception ex) {
-			LOGGER.error("Error", ex);
+			LOGGER.error(ERROR, ex);
 		}
 	}
 
@@ -360,7 +357,7 @@ public class TransactionImportRestHelper {
 									.atZone(ZoneId.systemDefault()).toLocalDateTime();
 							trnx.setTransactionDate(transactionDate);
 						} catch (ParseException e) {
-							LOGGER.error("Error", e);
+							LOGGER.error(ERROR, e);
 						}
 						break;
 					}
@@ -368,6 +365,7 @@ public class TransactionImportRestHelper {
 				trnx.setCreatedBy(transactionImportModel.getCreatedBy());
 				trnx.setCreatedDate(LocalDateTime.now());
 				trnx.setCreationMode(TransactionCreationMode.IMPORT);
+				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.NOT_EXPLAIN);
 				transactions.add(trnx);
 				System.out.println(trnx.toString());
 			}

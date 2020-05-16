@@ -35,6 +35,8 @@ import com.simplevat.service.JournalService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author saurabhg
@@ -42,7 +44,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/journal")
 public class JournalRestController {
-	private final Logger LOGGER = LoggerFactory.getLogger(JournalRestController.class);
+	private final Logger logger = LoggerFactory.getLogger(JournalRestController.class);
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
@@ -72,7 +74,6 @@ public class JournalRestController {
 				filterDataMap.put(JournalFilterEnum.JOURNAL_DATE, dateTime);
 			}
 			filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
-			// filterDataMap.put(JournalFilterEnum.ORDER_BY, "DESC");
 			PaginationResponseModel responseModel = journalService.getJornalList(filterDataMap, filterModel);
 			if (responseModel == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -82,7 +83,7 @@ public class JournalRestController {
 							: journalRestHelper.getListModel(responseModel),
 					HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -114,7 +115,7 @@ public class JournalRestController {
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -153,7 +154,7 @@ public class JournalRestController {
 
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -169,7 +170,7 @@ public class JournalRestController {
 			journalService.update(journal);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

@@ -3,6 +3,7 @@ package com.simplevat.dao.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.simplevat.constant.CommonColumnConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
@@ -60,8 +61,8 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 		TypedQuery<CurrencyConversion> query = getEntityManager().createQuery(
 				"select c from CurrencyConversion c where c.currencyCodeConvertedTo =:currencyCode AND c.createdDate=:createdDate",
 				CurrencyConversion.class);
-		query.setParameter("currencyCode", currencyCode);
-		query.setParameter("createdDate", LocalDateTime.ofInstant(dateWithoutTime.toInstant(), ZoneId.systemDefault()));
+		query.setParameter(CommonColumnConstants.CURRENCY_CODE, currencyCode);
+		query.setParameter(CommonColumnConstants.CREATED_DATE, LocalDateTime.ofInstant(dateWithoutTime.toInstant(), ZoneId.systemDefault()));
 		List<CurrencyConversion> currencyConversionList = query.getResultList();
 		if (currencyConversionList != null && !currencyConversionList.isEmpty()) {
 			return currencyConversionList.get(0);
@@ -79,7 +80,7 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 		Date dateWithoutTime = cal.getTime();
 		TypedQuery<CurrencyConversion> query = getEntityManager().createQuery(
 				"select c from CurrencyConversion c where c.createdDate=:createdDate", CurrencyConversion.class);
-		query.setParameter("createdDate", LocalDateTime.ofInstant(dateWithoutTime.toInstant(), ZoneId.systemDefault()));
+		query.setParameter(CommonColumnConstants.CREATED_DATE, LocalDateTime.ofInstant(dateWithoutTime.toInstant(), ZoneId.systemDefault()));
 		List<CurrencyConversion> currencyConversionList = query.getResultList();
 		return currencyConversionList != null && !currencyConversionList.isEmpty();
 	}
@@ -88,16 +89,16 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 	public String getCountryCodeAsString(String countryCode) {
 		Query query = getEntityManager()
 				.createQuery("select c.currencyIsoCode from Currency c where c.currencyIsoCode !=:currencyCode");
-		query.setParameter("currencyCode", countryCode);
+		query.setParameter(CommonColumnConstants.CURRENCY_CODE, countryCode);
 		List<String> currency = query.getResultList();
-		String name = StringUtils.join(currency, ',');
-		return name;
+		return StringUtils.join(currency, ',');
+
 	}
 
 	public List<Currency> getCurrencyList(Currency currency) {
 		Query query = getEntityManager()
 				.createQuery("select c from Currency c where c.currencyIsoCode !=:currencyCode");
-		query.setParameter("currencyCode", currency.getCurrencyIsoCode());
+		query.setParameter(CommonColumnConstants.CURRENCY_CODE, currency.getCurrencyIsoCode());
 		return query.getResultList();
 	}
 
@@ -109,7 +110,7 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 	@Override
 	public PaginationResponseModel getCurrencies(Map<CurrencyFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach((currencyFilter, value) -> dbFilters
 				.add(DbFilter.builder().dbCoulmnName(currencyFilter.getDbColumnName())
 						.condition(currencyFilter.getCondition()).value(value).build()));

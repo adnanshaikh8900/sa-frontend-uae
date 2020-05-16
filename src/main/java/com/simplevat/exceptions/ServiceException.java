@@ -5,7 +5,7 @@ import com.simplevat.service.exceptions.ServiceErrorCode;
 public class ServiceException extends BaseException {
 	private static final long serialVersionUID = 1L;
 
-	private ServiceErrorCode errorCode;
+	private final ServiceErrorCode errorCode;
 	public static final String SERVICE = "SERVICE";
 
 	public ServiceException(String errorMsg, ServiceErrorCode errorCode) {

@@ -16,5 +16,4 @@ public abstract class JournalService extends SimpleVatService<Integer, Journal> 
 
 	public abstract PaginationResponseModel getJornalList(Map<JournalFilterEnum, Object> filterMap,
 			PaginationModel paginationModel);
-
 }

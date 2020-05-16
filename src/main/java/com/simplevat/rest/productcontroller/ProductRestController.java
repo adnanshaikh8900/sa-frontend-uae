@@ -1,8 +1,8 @@
 package com.simplevat.rest.productcontroller;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ProductPriceType;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.ProductFilterEnum;
 import com.simplevat.entity.Product;
@@ -33,6 +34,8 @@ import com.simplevat.service.VatCategoryService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author Sonu
@@ -40,7 +43,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/rest/product")
 public class ProductRestController {
-	private final Logger LOGGER = LoggerFactory.getLogger(ProductRestController.class);
+	private final Logger logger = LoggerFactory.getLogger(ProductRestController.class);
 	@Autowired
 	private ProductService productService;
 
@@ -66,6 +69,10 @@ public class ProductRestController {
 						vatCategoryService.findByPK(filterModel.getVatPercentage()));
 			}
 			filterDataMap.put(ProductFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
+			if (filterModel.getProductPriceType() != null) {
+				filterDataMap.put(ProductFilterEnum.PRODUCT_PRICE_TYPE,
+						Arrays.asList(filterModel.getProductPriceType(), ProductPriceType.BOTH));
+			}
 			PaginationResponseModel response = productService.getProductList(filterDataMap, filterModel);
 			List<ProductListModel> productListModels = new ArrayList<>();
 			if (response == null) {
@@ -81,7 +88,7 @@ public class ProductRestController {
 			}
 			return new ResponseEntity(response, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -92,12 +99,11 @@ public class ProductRestController {
 		try {
 			Product product = productService.findByPK(id);
 			if (product != null) {
-				product.setDeleteFlag(Boolean.TRUE);
-				productService.update(product, product.getProductID());
+				productService.deleteByIds(Arrays.asList(id));
 			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -109,7 +115,7 @@ public class ProductRestController {
 			productService.deleteByIds(ids.getIds());
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -123,10 +129,10 @@ public class ProductRestController {
 			if (product == null) {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			} else {
-				return new ResponseEntity<>(productRestHelper.getListModel(product), HttpStatus.OK);
+				return new ResponseEntity<>(productRestHelper.getRequestModel(product), HttpStatus.OK);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -136,14 +142,14 @@ public class ProductRestController {
 	public ResponseEntity save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			productRequestModel.setCreatedBy(userId);
 			Product product = productRestHelper.getEntity(productRequestModel);
-			product.setCreatedBy(userId);
 			product.setCreatedDate(LocalDateTime.now());
 			product.setDeleteFlag(Boolean.FALSE);
 			productService.persist(product);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -153,13 +159,14 @@ public class ProductRestController {
 	public ResponseEntity update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			productRequestModel.setCreatedBy(userId);
 			Product product = productRestHelper.getEntity(productRequestModel);
 			product.setLastUpdateDate(LocalDateTime.now());
 			product.setLastUpdatedBy(userId);
 			productService.update(product);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

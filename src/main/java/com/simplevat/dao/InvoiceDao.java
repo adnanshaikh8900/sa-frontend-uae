@@ -22,8 +22,7 @@ import java.util.Map;
  */
 public interface InvoiceDao extends Dao<Integer, Invoice> {
 
-	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,
-			PaginationModel paginationModel);
+	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,PaginationModel paginationModel);
 
 	public List<DropdownModel> getInvoicesForDropdown();
 

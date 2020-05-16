@@ -6,7 +6,6 @@
 package com.simplevat.rest.transactionimportcontroller;
 
 import java.io.File;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.simplevat.constant.TransactionCreditDebitConstant;
 import com.simplevat.constant.TransactionEntryTypeConstant;
-import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.entity.TransactionParsingSetting;
 import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.BankAccount;
@@ -46,13 +44,13 @@ import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.TransactionParsingSettingService;
 import com.simplevat.service.UserService;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.service.bankaccount.TransactionStatusService;
 import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
+
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -60,8 +58,9 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/transactionimport")
-public class TransactionImportController implements Serializable {
-	private final Logger LOGGER = LoggerFactory.getLogger(TransactionImportController.class);
+public class TransactionImportController{
+
+	private  final Logger logger = LoggerFactory.getLogger(TransactionImportController.class);
 	@Autowired
 	private CsvParser csvParser;
 
@@ -78,9 +77,6 @@ public class TransactionImportController implements Serializable {
 	private TransactionService transactionService;
 
 	@Autowired
-	private TransactionStatusService transactionStatusService;
-
-	@Autowired
 	private UserService userServiceNew;
 
 	@Autowired
@@ -89,7 +85,7 @@ public class TransactionImportController implements Serializable {
 	private TransactionParsingSettingRestHelper transactionParsingSettingRestHelper;
 
 	@Autowired
-	TransactionImportRestHelper transactionImportRestHelper;
+	private	TransactionImportRestHelper transactionImportRestHelper;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -160,18 +156,17 @@ public class TransactionImportController implements Serializable {
 			transaction1.setTransactionDate(LocalDateTime.of(date, time));
 			if (transaction.getDebit() != null && !transaction.getDebit().trim().isEmpty()) {
 				transaction1.setTransactionAmount(
-						BigDecimal.valueOf(Double.parseDouble(transaction.getDebit().replaceAll(",", ""))));
+						BigDecimal.valueOf(Double.parseDouble(transaction.getDebit().replace(",", ""))));
 				transaction1.setDebitCreditFlag(TransactionCreditDebitConstant.DEBIT);
 			}
 			if (transaction.getCredit() != null && !transaction.getCredit().trim().isEmpty()) {
 				transaction1.setTransactionAmount(
-						BigDecimal.valueOf(Double.parseDouble(transaction.getCredit().replaceAll(",", ""))));
+						BigDecimal.valueOf(Double.parseDouble(transaction.getCredit().replace(",", ""))));
 				transaction1.setDebitCreditFlag(TransactionCreditDebitConstant.CREDIT);
 			}
-			//transaction1.setTransactionStatus(transactionStatusService.findByPK(TransactionStatusConstant.UNEXPLAINED));
 			transactionService.persist(transaction1);
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 	}
 
@@ -217,6 +212,7 @@ public class TransactionImportController implements Serializable {
 		case "xlx":
 			dataMap = excelParser.parseImportData(model, file);
 			break;
+			default:
 		}
 
 		if (dataMap == null) {

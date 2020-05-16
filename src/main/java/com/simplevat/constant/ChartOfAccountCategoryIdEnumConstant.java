@@ -5,11 +5,12 @@ import lombok.Setter;
 
 public enum ChartOfAccountCategoryIdEnumConstant {
 
-	MONEY_RECEIVED(1), SALES(2), MONEY_SPENT(9), EXPENSE(10),MONEY_PAID_TO_USER(12),MONEY_RECEIVED_FROM_USER(6), DEFAULT(0);
+	MONEY_RECEIVED(1), SALES(2), MONEY_SPENT(9), EXPENSE(10), MONEY_PAID_TO_USER(12), MONEY_RECEIVED_FROM_USER(6),
+	DEFAULT(0);
 
 	@Getter
 	@Setter
-	public Integer id;
+	Integer id;
 
 	ChartOfAccountCategoryIdEnumConstant(int id) {
 		this.id = id;
@@ -23,4 +24,9 @@ public enum ChartOfAccountCategoryIdEnumConstant {
 		return ChartOfAccountCategoryIdEnumConstant.DEFAULT;
 	}
 
+	public static boolean isDebitedFromBank(Integer id) {
+
+		return id.equals(MONEY_SPENT.id);
+
+	}
 }

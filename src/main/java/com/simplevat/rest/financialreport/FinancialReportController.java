@@ -16,11 +16,13 @@ import com.simplevat.constant.dbfilter.DateFormatFilterEnum;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 @RestController
 @RequestMapping("/rest/financialReport")
 public class FinancialReportController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(FinancialReportController.class);
+	private final Logger logger = LoggerFactory.getLogger(FinancialReportController.class);
 
 	@Autowired
 	private FinancialReportRestHelper financialReportRestHelper;
@@ -36,7 +38,7 @@ public class FinancialReportController {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity(profitAndLossResponseModel, HttpStatus.OK);
 	}

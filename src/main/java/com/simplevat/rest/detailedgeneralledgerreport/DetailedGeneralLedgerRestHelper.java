@@ -11,12 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.BeanProperty.Bogus;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.entity.Expense;
@@ -24,19 +21,14 @@ import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.invoicecontroller.InvoiceRestController;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalLineItemService;
-import com.simplevat.service.JournalService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.utils.DateFormatUtil;
 
 @Component
 public class DetailedGeneralLedgerRestHelper {
-
-	private final Logger logger = LoggerFactory.getLogger(InvoiceRestController.class);
 
 	@Autowired
 	private JournalLineItemService journalLineItemService;
@@ -80,12 +72,9 @@ public class DetailedGeneralLedgerRestHelper {
 		return transactionMap;
 	}
 
-	public List<Object> getDetailedGeneralLedgerReport1(ReportRequestModel reportRequestModel) {
+	public List<Object> getDetailedGeneralLedgerReport(ReportRequestModel reportRequestModel) {
 
 		List<Object> resposneList = new ArrayList<>();
-		Map<JournalFilterEnum, Object> filterDataMap = new EnumMap<>(JournalFilterEnum.class);
-
-		filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
 
 		List<JournalLineItem> itemList = journalLineItemService.getList(reportRequestModel);
 
@@ -110,14 +99,9 @@ public class DetailedGeneralLedgerRestHelper {
 
 			for (Integer item : map.keySet()) {
 				List<DetailedGeneralLedgerReportListModel> dataList = new LinkedList<>();
-				List<JournalLineItem> journalLineItemList = (List<JournalLineItem>) map.get(item);
+				List<JournalLineItem> journalLineItemList = map.get(item);
 
-				Comparator<JournalLineItem> dateComparator = new Comparator<JournalLineItem>() {
-					@Override
-					public int compare(JournalLineItem j1, JournalLineItem j2) {
-						return j1.getJournal().getJournalDate().compareTo(j2.getJournal().getJournalDate());
-					}
-				};
+				Comparator<JournalLineItem> dateComparator = Comparator.comparing(j -> j.getJournal().getJournalDate());
 
 				Collections.sort(journalLineItemList, dateComparator);
 
@@ -170,8 +154,8 @@ public class DetailedGeneralLedgerRestHelper {
 
 						model.setReferenceNo(journal.getJournlReferencenNo());
 						model.setAmount(invoice.getTotalAmount());
-						model.setCreditAmount(!isDebit ? invoice.getTotalAmount() : BigDecimal.ZERO);
-						model.setDebitAmount(isDebit ? invoice.getTotalAmount() : BigDecimal.ZERO);
+						model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+						model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
 						model.setName(lineItem.getContact() != null
 								? lineItem.getContact().getFirstName() + " " + lineItem.getContact().getLastName()
 								: "");
@@ -194,8 +178,9 @@ public class DetailedGeneralLedgerRestHelper {
 					}
 
 					model.setAmount(lineItem.getCurrentBalance() != null
-							&& lineItem.getCurrentBalance().compareTo(BigDecimal.ZERO) == 0 ? model.getAmount()
-									: lineItem.getCurrentBalance());
+//							&& lineItem.getCurrentBalance().compareTo(BigDecimal.ZERO) == 0
+									? lineItem.getCurrentBalance()
+									: model.getAmount());
 
 					dataList.add(model);
 				}

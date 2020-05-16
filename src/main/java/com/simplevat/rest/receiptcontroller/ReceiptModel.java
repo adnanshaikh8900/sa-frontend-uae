@@ -18,5 +18,4 @@ public class ReceiptModel {
 	private BigDecimal unusedAmount;
 	private String invoiceNumber;
 	private Integer invoiceId;
-
 }

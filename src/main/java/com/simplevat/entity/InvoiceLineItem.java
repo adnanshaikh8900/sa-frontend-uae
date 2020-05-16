@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 
@@ -95,5 +96,9 @@ public class InvoiceLineItem implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "INVOICE_ID")
 	private Invoice invoice;
+
+	@ManyToOne
+	@JoinColumn(name = "TRANSACTION_CATEGORY_ID")
+	private TransactionCategory trnsactioncCategory;
 
 }

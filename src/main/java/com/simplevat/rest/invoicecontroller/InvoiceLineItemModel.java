@@ -17,5 +17,7 @@ public class InvoiceLineItemModel {
 	private BigDecimal subTotal;
 	private Integer vatPercentage;
 	private Integer productId;
+	private Integer transactionCategoryId;
+	private String transactionCategoryLabel;
 
 }

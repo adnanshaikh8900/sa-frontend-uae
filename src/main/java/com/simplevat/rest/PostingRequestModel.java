@@ -30,4 +30,11 @@ public class PostingRequestModel implements Serializable {
 		super();
 		this.postingRefId = postingRefId;
 	}
+
+	public PostingRequestModel(Integer postingRefId,BigDecimal amount) {
+		super();
+		this.postingRefId = postingRefId;
+		this.amount=amount;
+	}
+
 }

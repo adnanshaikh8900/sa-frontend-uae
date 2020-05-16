@@ -19,7 +19,8 @@ public enum TransactionCategoryCodeEnum {
     BANK("01-02-001"),
 	EXPENSE("04"),
 	INPUT_VAT("01-06-004"),
-	OUTPUT_VAT("02-02-004");
+	OUTPUT_VAT("02-02-004"),
+	UNDEPOSTED_FUND("01-04-006");
 	
 	
     @Getter

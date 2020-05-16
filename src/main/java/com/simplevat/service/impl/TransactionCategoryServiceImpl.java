@@ -141,4 +141,9 @@ public class TransactionCategoryServiceImpl extends TransactionCategoryService {
 	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryId(Integer chartOfAccountCategoryId) {
 		return dao.getTransactionCatByChartOfAccountCategoryId(chartOfAccountCategoryId);
 	}
+
+	@Override
+	public List<TransactionCategory> getListForReceipt() {
+		return dao.findTnxCatForReicpt();
+	}
 }

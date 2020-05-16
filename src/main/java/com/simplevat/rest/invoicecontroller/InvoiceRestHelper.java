@@ -293,7 +293,7 @@ public class InvoiceRestHelper {
 			lineItemModel.setProductId(lineItem.getProduct().getProductID());
 		if (lineItem.getTrnsactioncCategory() != null)
 			lineItemModel.setTransactionCategoryId(lineItem.getTrnsactioncCategory().getTransactionCategoryId());
-
+			lineItemModel.setTransactionCategoryLabel(lineItem.getTrnsactioncCategory().getChartOfAccount().getChartOfAccountName());
 		return lineItemModel;
 	}
 

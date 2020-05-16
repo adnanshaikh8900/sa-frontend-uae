@@ -191,6 +191,7 @@ public class ProductRestHelper {
 				productModel.setUnitPrice(lineItem.getUnitPrice());
 				if (lineItem.getPriceType().equals(ProductPriceType.PURCHASE))
 					productModel.setTransactionCategoryId(lineItem.getTransactioncategory().getTransactionCategoryId());
+					productModel.setTransactionCategoryLabel(lineItem.getTransactioncategory().getChartOfAccount().getChartOfAccountName());
 			}
 
 		}

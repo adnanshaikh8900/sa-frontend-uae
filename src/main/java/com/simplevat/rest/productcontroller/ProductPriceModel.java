@@ -13,4 +13,5 @@ public class ProductPriceModel {
 	private BigDecimal unitPrice;
 	private Integer vatCategoryId;
 	private Integer transactionCategoryId;
+	private String transactionCategoryLabel;
 }

@@ -55,7 +55,7 @@ public class CurrencyController {
 
 	@ApiOperation(value = "Get Currency List", response = List.class)
 	@GetMapping
-	public ResponseEntity getCurrencies() {
+	public ResponseEntity<List<Currency>> getCurrencies() {
 		try {
 			List<Currency> currencies = currencyService.getCurrencies();
 			if (currencies != null && !currencies.isEmpty()) {
@@ -71,7 +71,7 @@ public class CurrencyController {
 
 	@ApiOperation(value = "Get Currency by Currency Code", response = Currency.class)
 	@GetMapping("/{currencyCode}")
-	public ResponseEntity getCurrency(@RequestParam("currencyCode") Integer currencyCode) {
+	public ResponseEntity<Currency> getCurrency(@RequestParam("currencyCode") Integer currencyCode) {
 		try {
 			Currency currency = currencyService.findByPK(currencyCode);
 			if (currency != null) {
@@ -87,7 +87,7 @@ public class CurrencyController {
 
 	@ApiOperation(value = "Save Currency Code", response = Currency.class)
 	@PostMapping(value = "/save")
-	public ResponseEntity createCurrency(@RequestBody Currency currency, HttpServletRequest request) {
+	public ResponseEntity<Currency> createCurrency(@RequestBody Currency currency, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			currency.setCreatedBy(userId);
@@ -102,7 +102,7 @@ public class CurrencyController {
 
 	@ApiOperation(value = "Update Currency by Currency Code", response = Currency.class)
 	@PutMapping(value = "/{currencyCode}")
-	public ResponseEntity editCurrency(@RequestBody Currency currency,
+	public ResponseEntity<Currency> editCurrency(@RequestBody Currency currency,
 			@RequestParam("currencyCode") Integer currencyCode, HttpServletRequest request) {
 		try {
 
@@ -128,7 +128,7 @@ public class CurrencyController {
 
 	@ApiOperation(value = "Delete Currency by Currency Code", response = Currency.class)
 	@DeleteMapping(value = "/{currencyCode}")
-	public ResponseEntity deleteCurrency(@RequestParam("currencyCode") Integer currencyCode,
+	public ResponseEntity<Currency> deleteCurrency(@RequestParam("currencyCode") Integer currencyCode,
 			HttpServletRequest request) {
 		try {
 			Currency currency = currencyService.findByPK(currencyCode);

@@ -6,15 +6,15 @@ import com.simplevat.utils.DateUtils;
 @Setter*/
 public class ChartData implements Comparable<ChartData> {
 
+	private int month;
+	private int year;
+	private Number amount;
+
 	public ChartData(int month, int year, Number amount) {
 		this.month = month;
 		this.year = year;
 		this.amount = amount;
 	}
-
-	private int month;
-	private int year;
-	private Number amount;
 
 	@Override
 	public int compareTo(ChartData chartData) {

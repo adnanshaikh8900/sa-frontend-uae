@@ -116,7 +116,6 @@ public class TransactionImportRestHelper {
 		totalErrorRows = 0;
 		renderButtonOnValidData = true;
 		isDataRepeated = false;
-		String message = null;
 		Integer headerValue = 0;
 		getHeaderListData();
 		Set<String> setToReturn = new HashSet<>();
@@ -176,7 +175,6 @@ public class TransactionImportRestHelper {
 
 							headerIndexPosition++;
 							if (isDataRepeated) {
-								message = "Column mapping cannot be repeated";
 								break;
 							}
 							if (!transactionDateBoolean && !descriptionBoolean && !debitAmountBoolean

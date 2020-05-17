@@ -245,7 +245,12 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 		}
 	}
 
-	@Deprecated
+	/**
+	 * @Deprecated
+	 * @param id
+	 * @param request
+	 * @return
+	 */
 	@ApiOperation(value = "Send Invoice")
 	@PostMapping(value = "/send")
 	public ResponseEntity update(@RequestParam("id") Integer id, HttpServletRequest request) {

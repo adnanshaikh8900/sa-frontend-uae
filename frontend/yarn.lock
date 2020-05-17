@@ -2796,7 +2796,7 @@ bootstrap-daterangepicker@^3.0.5:
   integrity sha512-WdTNB5ZKCpqZltcRkzeE6Xmwp/b8yPnuwsHfqP5mGP2VIV/kzd/6VuTIKEjuskDcsLAYW38LXGjcSm2TBNRdTw==
   dependencies:
     jquery ">=1.10"
-    moment "2.9.0"
+    moment "^2.9.0"
 
 bootstrap-sass@^3.4.1:
   version "3.4.1"
@@ -3233,7 +3233,7 @@ chart.js@^2.8.0:
   integrity sha512-+2jlOobSk52c1VU6fzkh3UwqHMdSlgH1xFv9FKMqHiNCpXsGPQa/+81AFa+i3jZ253Mq9aAycPwDjnn1XbRNNw==
   dependencies:
     chartjs-color "^2.1.0"
-    moment "2.10.2"
+    moment "^2.10.2"
 
 chartjs-color-string@^0.6.0:
   version "0.6.0"
@@ -8208,6 +8208,11 @@ moment@2.24.0:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
+moment@>=1.6.0, moment@^2.10.2, moment@^2.10.6, moment@^2.9.0:
+  version "2.25.3"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.25.3.tgz#252ff41319cf41e47761a1a88cab30edfe9808c0"
+  integrity sha512-PuYv0PHxZvzc15Sp8ybUCoQ+xpyPWvjOuK72a5ovzp2LI32rJXOiIfyoFoYvG3s6EwwrdkMyWuRiEHSZRLJNdg==
+
 moo@^0.5.0:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/moo/-/moo-0.5.1.tgz#7aae7f384b9b09f620b6abf6f74ebbcd1b65dbc4"
@@ -10261,7 +10266,16 @@ react-bootstrap-daterangepicker@^4.1.0:
   resolved "https://registry.yarnpkg.com/react-bootstrap-daterangepicker/-/react-bootstrap-daterangepicker-4.1.0.tgz#7133e9a959a42e18b49a0aea50a48c31b88aa7d8"
   integrity sha512-BZwwRaWcUDZVVgzQBtbmnbV1jyNNlfI5v7Jxb9FNEJ9FW8m+hzJgDFUMUlvz3VKCe5JNKcv5fKBizIDFSIUu+A==
 
-react-bootstrap-table2-paginator@^2.1.0:
+react-bootstrap-table-next@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-table-next/-/react-bootstrap-table-next-4.0.1.tgz#844735a2ebcf851e25ba417030b70d3b4f19236d"
+  integrity sha512-TOSk4zOyuLQr020KRlKeUOfi8lvtAwMyC4803FjNVMGWwUveYijmhlnJ4ASqlNpdmDvvEYZThGRp5QfoNYpTjQ==
+  dependencies:
+    classnames "^2.2.5"
+    react-transition-group "^4.2.0"
+    underscore "1.9.1"
+
+react-bootstrap-table2-paginator@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/react-bootstrap-table2-paginator/-/react-bootstrap-table2-paginator-2.1.2.tgz#a62151909e594719db568cede6e5d2962cbf8ddb"
   integrity sha512-LC5znEphhgKJvaSY1q8d+Gj0Nc/1X+VS3tKJjkmWmfv9P61YC/BnwJ+aoqEmQzsLiVGowrzss+i/u+Tip5H+Iw==
@@ -10314,7 +10328,7 @@ react-date-range@^0.9.4:
   integrity sha1-2XUVVFoo7ccXtnThaaUKIV1p7BU=
   dependencies:
     classnames "^2.2.1"
-    moment "2.10.6"
+    moment "^2.10.6"
     prop-types "^15.5.10"
 
 react-datepicker@^2.9.6:
@@ -10343,7 +10357,7 @@ react-dates@^20.2.3:
     object.values "^1.0.4"
     prop-types "^15.6.1"
     raf "^3.4.1"
-    react-moment-proptypes "1.6.0"
+    react-moment-proptypes "^1.6.0"
     react-outside-click-handler "^1.2.0"
     react-portal "^4.1.5"
     react-with-direction "^1.3.0"
@@ -10581,12 +10595,12 @@ react-modal@^3.1.7:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
-react-moment-proptypes@1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/react-moment-proptypes/-/react-moment-proptypes-1.6.0.tgz#8ec266ee392a08ba3412d2df2eebf833ab1046df"
-  integrity sha512-4h7EuhDMTzQqZ+02KUUO+AVA7PqhbD88yXB740nFpNDyDS/bj9jiPyn2rwr9sa8oDyaE1ByFN9+t5XPyPTmN6g==
+react-moment-proptypes@^1.6.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/react-moment-proptypes/-/react-moment-proptypes-1.7.0.tgz#89881479840a76c13574a86e3bb214c4ba564e7a"
+  integrity sha512-ZbOn/P4u469WEGAw5hgkS/E+g1YZqdves2BjYsLluJobzUZCtManhjHiZKjniBVT7MSHM6D/iKtRVzlXVv3ikA==
   dependencies:
-    moment "1.6.0"
+    moment ">=1.6.0"
 
 react-onclickout@^2.0.8:
   version "2.0.8"
@@ -10931,6 +10945,16 @@ react-transition-group@^4, react-transition-group@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.3.0.tgz#fea832e386cf8796c58b61874a3319704f5ce683"
   integrity sha512-1qRV1ZuVSdxPlPf4O8t7inxUGpdyO5zG9IoNfJxSO0ImU2A1YWkEQvFPuIPZmMLkg5hYs7vv5mMOyfgSkvAwvw==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    dom-helpers "^5.0.1"
+    loose-envify "^1.4.0"
+    prop-types "^15.6.2"
+
+react-transition-group@^4.2.0:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.1.tgz#63868f9325a38ea5ee9535d828327f85773345c9"
+  integrity sha512-Djqr7OQ2aPUiYurhPalTrVy9ddmFCCzwhqQmtN+J3+3DzLO209Fdr70QrN8Z3DsglWql6iY1lDWAfpFiBtuKGw==
   dependencies:
     "@babel/runtime" "^7.5.5"
     dom-helpers "^5.0.1"
@@ -12807,6 +12831,11 @@ uncontrollable@^6.0.0:
   dependencies:
     "@babel/runtime" "^7.4.5"
     invariant "^2.2.4"
+
+underscore@1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
+  integrity sha512-5/4etnCkd9c8gwgowi5/om/mYO5ajCaOgdzj/oW+0eQV9WxKBDZw5+ycmKmeaTXjInS/W0BzpGLo2xR2aBwZdg==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"

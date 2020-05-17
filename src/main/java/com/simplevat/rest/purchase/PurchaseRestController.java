@@ -86,8 +86,8 @@ public class PurchaseRestController {
 			if (purchaseService.getAllPurchase() != null) {
 				for (Purchase purchase : purchaseService.getAllPurchase()) {
 					if (purchase.getStatus() != null) {
-						if (null != purchase.getStatus()) {
-							switch (purchase.getStatus()) {
+
+						switch (purchase.getStatus()) {
 							case InvoicePurchaseStatusConstant.PAID:
 								totalPaid++;
 								break;
@@ -100,7 +100,6 @@ public class PurchaseRestController {
 							default:
 								break;
 							}
-						}
 					}
 					totalPurchases++;
 					PurchaseRestModel model = purchaseControllerRestHelper.getPurchaseModel(purchase);
@@ -222,7 +221,10 @@ public class PurchaseRestController {
 		}
 	}
 
-	@Deprecated
+	/**
+	 * @Deprecated
+	 * @return
+	 */
 	@GetMapping(value = "/currencys")
 	public ResponseEntity getCurrency() {
 		try {
@@ -274,12 +276,11 @@ public class PurchaseRestController {
 			Company company = userServiceNew.findByPK(userId).getCompany();
 			currencyConversion = currencyService.getCurrencyRateFromCurrencyConversion(currencyCode);
 			if (currencyConversion != null) {
-				if (company.getCurrencyCode() != null) {
 					exchangeRateString = "1 "
 							+ currency.getCurrencyIsoCode() + " = " + new BigDecimal(BigInteger.ONE)
 									.divide(currencyConversion.getExchangeRate(), 9, RoundingMode.HALF_UP)
 							+ " " + company.getCurrencyCode().getCurrencyIsoCode();
-				}
+
 			}
 			return new ResponseEntity(exchangeRateString, HttpStatus.OK);
 		} catch (Exception e) {

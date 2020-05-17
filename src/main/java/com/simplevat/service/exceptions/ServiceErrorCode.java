@@ -7,11 +7,6 @@ public enum ServiceErrorCode {
 	RecordDoesntExists("Record does not Exists", true),
 	BadRequest("Bad Request", true);
 
-	
-	ServiceErrorCode(String errorDescription_, boolean businessException_) {
-		this.errorDescription = errorDescription_;
-		this.businessException = businessException_;
-	}
 
 	public String getErrorDescription() {
 		return errorDescription;
@@ -31,4 +26,9 @@ public enum ServiceErrorCode {
 
 	private String errorDescription;
 	private boolean businessException;
+
+	ServiceErrorCode(String errorDescription_, boolean businessException_) {
+		this.errorDescription = errorDescription_;
+		this.businessException = businessException_;
+	}
 }

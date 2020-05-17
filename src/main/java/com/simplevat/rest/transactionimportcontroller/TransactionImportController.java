@@ -129,7 +129,13 @@ public class TransactionImportController{
 		}
 	}
 
-	@Deprecated
+	/**
+	 * @Deprecated
+	 * @param transactionList
+	 * @param id
+	 * @param bankId
+	 * @return
+	 */
 	@ApiOperation(value = "Save Import Transaction")
 	@PostMapping(value = "/saveimporttransaction")
 	public ResponseEntity<Integer> saveTransactions(@RequestBody List<TransactionModel> transactionList,

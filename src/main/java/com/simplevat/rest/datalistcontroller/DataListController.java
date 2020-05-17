@@ -117,9 +117,9 @@ public class DataListController {
 	}
 
 	/**
+	 * @Deprecated
 	 * @author $@urabh Shifted from this to @see CurrencyController
 	 */
-	@Deprecated
 	@GetMapping(value = "/getcurrenncy")
 	public ResponseEntity getCurrency(PaginationModel paginationModel) {
 		try {
@@ -308,7 +308,7 @@ public class DataListController {
 
 	@ApiOperation(value = "reconsileCategories")
 	@GetMapping(value = "/reconsileCategories")
-	public ResponseEntity getReconsilteCategories(@RequestParam("debitCreditFlag") String debitCreditFlag) {
+	public ResponseEntity<List<SingleLevelDropDownModel>> getReconsilteCategories(@RequestParam("debitCreditFlag") String debitCreditFlag) {
 		try {
 			List<ChartOfAccountCategory> chartOfAccountCategoryList = chartOfAccountCategoryService.findAll();
 			if (chartOfAccountCategoryList != null && !chartOfAccountCategoryList.isEmpty()) {
@@ -341,17 +341,17 @@ public class DataListController {
 						new SingleLevelDropDownModel(parentCategory.getChartOfAccountCategoryName(), modelList)),
 						HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "get Product List")
 	@GetMapping(value = "/product")
-	public ResponseEntity getProductList(@RequestParam ProductPriceType priceType) {
+	public ResponseEntity<List<ProductPriceModel>> getProductList(@RequestParam ProductPriceType priceType) {
 		try {
 			Map<ProductFilterEnum, Object> filterDataMap = new HashMap<>();
 			if (priceType != null) {
@@ -365,18 +365,18 @@ public class DataListController {
 						modelList.add(productRestHelper.getPriceModel(product, priceType));
 					return new ResponseEntity<>(modelList, HttpStatus.OK);
 				} else {
-					return new ResponseEntity(HttpStatus.NOT_FOUND);
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 				}
 			}
 		} catch (Exception e) {
 			logger.error("Error", e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Get Transaction Category for receipt")
 	@GetMapping(value = "/receipt/tnxCat")
-	public ResponseEntity getTransactionCategoryListForReceipt() {
+	public ResponseEntity<List<SingleLevelDropDownModel>> getTransactionCategoryListForReceipt() {
 		try {
 
 			List<TransactionCategory> categoryList = transactionCategoryService.getListForReceipt();
@@ -410,12 +410,12 @@ public class DataListController {
 
 				return new ResponseEntity<>(singleLevelDropDownModelList, HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.model.DashBoardBankDataModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +91,7 @@ public class BankAccountController{
 
 	@ApiOperation(value = "Get All Bank Accounts", response = List.class)
 	@GetMapping(value = "/list")
-	public ResponseEntity getBankAccountList(BankAccountFilterModel filterModel) {
+	public ResponseEntity<PaginationResponseModel> getBankAccountList(BankAccountFilterModel filterModel) {
 		Map<BankAccounrFilterEnum, Object> filterDataMap = new EnumMap<>(BankAccounrFilterEnum.class);
 
 		filterDataMap.put(BankAccounrFilterEnum.BANK_ACCOUNT_NAME, filterModel.getBankAccountName());
@@ -122,7 +123,7 @@ public class BankAccountController{
 
 	@ApiOperation(value = "Add New Bank Account", response = BankAccount.class)
 	@PostMapping("/save")
-	public ResponseEntity saveBankAccount(@RequestBody BankModel bankModel, HttpServletRequest request) {
+	public ResponseEntity<String> saveBankAccount(@RequestBody BankModel bankModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			bankModel.setCreatedBy(userId);
@@ -134,17 +135,17 @@ public class BankAccountController{
 					bankAccount.setCreatedBy(user.getUserId());
 				}
 				bankAccountService.persist(bankAccount);
-				return new ResponseEntity<>(HttpStatus.OK);
+				return new ResponseEntity<>("Save Successfull..",HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>("Save Failure",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Update Bank Account", response = BankAccount.class)
 	@PutMapping("/{bankAccountId}")
-	public ResponseEntity updateBankAccount(@PathVariable("bankAccountId") Integer bankAccountId, BankModel bankModel,
+	public ResponseEntity<String> updateBankAccount(@PathVariable("bankAccountId") Integer bankAccountId, BankModel bankModel,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -155,17 +156,17 @@ public class BankAccountController{
 			bankAccount.setLastUpdateDate(LocalDateTime.now());
 			bankAccount.setLastUpdatedBy(user.getUserId());
 			bankAccountService.update(bankAccount);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Update Successfull..",HttpStatus.OK);
 
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>("Update Failure..",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Get All Bank Account Types")
 	@GetMapping(value = "/getaccounttype")
-	public ResponseEntity getBankAccontType() {
+	public ResponseEntity<List<BankAccountType> > getBankAccontType() {
 		List<BankAccountType> bankAccountTypes = bankAccountTypeService.getBankAccountTypeList();
 		if (bankAccountTypes != null && !bankAccountTypes.isEmpty()) {
 			return new ResponseEntity<>(bankAccountTypes, HttpStatus.OK);
@@ -176,7 +177,7 @@ public class BankAccountController{
 
 	@ApiOperation(value = "Get All Bank Account Status")
 	@GetMapping(value = "/getbankaccountstatus")
-	public ResponseEntity getBankAccountStatus() {
+	public ResponseEntity<List<BankAccountStatus>> getBankAccountStatus() {
 		List<BankAccountStatus> bankAccountStatuses = bankAccountStatusService.getBankAccountStatuses();
 		if (bankAccountStatuses != null && !bankAccountStatuses.isEmpty()) {
 			return new ResponseEntity<>(bankAccountStatuses, HttpStatus.OK);
@@ -185,25 +186,28 @@ public class BankAccountController{
 		}
 	}
 
-	@Deprecated
+
+	/**
+	 * @Deprecated
+	 */
 	@GetMapping(value = "/getcountry")
-	public ResponseEntity getCountry() {
+	public ResponseEntity<List<Country>> getCountry() {
 		try {
 			List<Country> countries = countryService.getCountries();
 			if (countries != null && !countries.isEmpty()) {
-				return new ResponseEntity<>(countries, HttpStatus.OK);
+				return new ResponseEntity<>(countries,HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Delete the Bank Account", response = BankAccount.class)
 	@DeleteMapping(value = "/{bankAccountId}")
-	public ResponseEntity deleteBankAccount(@PathVariable("bankAccountId") Integer bankAccountId,
+	public ResponseEntity<BankAccount> deleteBankAccount(@PathVariable("bankAccountId") Integer bankAccountId,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -226,7 +230,7 @@ public class BankAccountController{
 
 	@ApiOperation(value = "Get Bank Account by Bank Account ID", response = BankAccount.class)
 	@GetMapping(value = "/getbyid")
-	public ResponseEntity getById(@RequestParam("id") Integer id) {
+	public ResponseEntity<BankModel> getById(@RequestParam("id") Integer id) {
 		try {
 			BankAccount bankAccount = bankAccountService.findByPK(id);
 
@@ -243,18 +247,18 @@ public class BankAccountController{
 
 	@ApiOperation(value = "Delete Bank Accounts")
 	@DeleteMapping(value = "/multiple")
-	public ResponseEntity deleteBankAccounts(@RequestBody DeleteModel ids, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<String> deleteBankAccounts(@RequestBody DeleteModel ids, HttpServletRequest httpServletRequest) {
 		try {
 			bankAccountService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfull..",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>("Delete Failure..",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@GetMapping(value = "/getcurrenncy")
-	public ResponseEntity getCurrency() {
+	public ResponseEntity<List<Currency>> getCurrency() {
 		try {
 			List<Currency> currencies = currencyService.getCurrencies();
 			if (currencies != null && !currencies.isEmpty()) {
@@ -269,7 +273,7 @@ public class BankAccountController{
 	}
 
 	@GetMapping(value = "/getBankChart")
-	public ResponseEntity getCurrency(@RequestParam Integer bankId, Integer monthCount) {
+	public ResponseEntity<DashBoardBankDataModel> getCurrency(@RequestParam Integer bankId, Integer monthCount) {
 		try {
 
 			if (bankId == null) {
@@ -286,10 +290,10 @@ public class BankAccountController{
 	}
 
 	@GetMapping(value = "/getTotalBalance")
-	public ResponseEntity getTotalBalance() {
+	public ResponseEntity<BigDecimal> getTotalBalance() {
 		try {
 			BigDecimal totalBalance = bankAccountService.getAllBankAccountsTotalBalance();
-			return new ResponseEntity<>(totalBalance != null ? totalBalance : 0, HttpStatus.OK);
+			return new ResponseEntity<>(totalBalance != null ? totalBalance : BigDecimal.valueOf(0), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}

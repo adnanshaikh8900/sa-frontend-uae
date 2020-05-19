@@ -178,6 +178,7 @@ public class ReceiptController {
 			CustomerInvoiceReceipt customerInvoiceReceipt = receiptRestHelper
 					.getCustomerInvoiceReceiptEntity(receiptRequestModel);
 			customerInvoiceReceipt.setReceipt(receipt);
+			customerInvoiceReceipt.setCreatedBy(userId);
 			customerInvoiceReceiptService.persist(customerInvoiceReceipt);
 
 			// Post journal

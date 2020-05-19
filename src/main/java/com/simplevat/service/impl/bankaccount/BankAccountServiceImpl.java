@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
 import com.simplevat.dao.bankaccount.BankAccountDao;
-import com.simplevat.dao.bankaccount.TransactionDao;
 import com.simplevat.entity.Activity;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.model.DashBoardBankDataModel;
@@ -21,7 +20,6 @@ import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.utils.DateFormatUtil;
-import com.simplevat.utils.DateUtils;
 
 
 @Service("bankAccountService")
@@ -32,12 +30,6 @@ public class BankAccountServiceImpl extends BankAccountService {
 
 	@Autowired
 	public BankAccountDao bankAccountDao;
-
-	@Autowired
-	private TransactionDao transactionDao;
-
-	@Autowired
-	private DateUtils dateUtil;
 
 	@Autowired
 	private DateFormatUtil dateFormatUtil;

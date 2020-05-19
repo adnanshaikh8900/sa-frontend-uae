@@ -34,6 +34,18 @@ public class MailUtility {
 	@Autowired
 	private ConfigurationService configurationService;
 
+	public static final String INVOICE_REFEREBCE_NO = "Invoice_Reference_Number";
+	public static final String INVOICE_DATE = "Invoice_Date";
+	public static final String INVOICE_DUE_DATE = "Invoice_Due_Date";
+	public static final String INVOICE_DISCOUNT = "Invoic_Discount";
+	public static final String CONTRACT_PO_NUMBER = "contract_Po_Number";
+	public static final String CONTACT_NAME = "Contact_Name";
+	public static final String PROJECT_NAME = "Project_Name";
+	public static final String INVOICE_AMOUNT = "Invoice_Amount";
+	public static final String DUE_AMOUNT = "Due_Amount";
+	public static final String SENDER_NAME = "Sender_Name";
+	public static final String COMPANY_NAME = "Company_Name";
+
 	public void triggerEmailOnBackground(String subject, String body, MimeMultipart mimeMultipart, String fromEmailId,
 			String fromName, String[] toMailAddress, boolean isHtml) {
 		Thread t = new Thread(new Runnable() {
@@ -151,18 +163,6 @@ public class MailUtility {
 		}
 		return data;
 	}
-
-	public static final String INVOICE_REFEREBCE_NO = "Invoice_Reference_Number";
-	public static final String INVOICE_DATE = "Invoice_Date";
-	public static final String INVOICE_DUE_DATE = "Invoice_Due_Date";
-	public static final String INVOICE_DISCOUNT = "Invoic_Discount";
-	public static final String CONTRACT_PO_NUMBER = "contract_Po_Number";
-	public static final String CONTACT_NAME = "Contact_Name";
-	public static final String PROJECT_NAME = "Project_Name";
-	public static final String INVOICE_AMOUNT = "Invoice_Amount";
-	public static final String DUE_AMOUNT = "Due_Amount";
-	public static final String SENDER_NAME = "Sender_Name";
-	public static final String COMPANY_NAME = "Company_Name";
 
 	public Map<String, String> getInvoiceEmailParamMap() {
 

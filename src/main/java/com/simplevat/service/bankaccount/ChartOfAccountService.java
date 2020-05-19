@@ -8,7 +8,7 @@ import com.simplevat.service.SimpleVatService;
 
 public abstract class ChartOfAccountService extends SimpleVatService<Integer, ChartOfAccount> {
 
-    public abstract List<ChartOfAccount> getChartOfAccountByCriteria(ChartOfAccountCriteria chartOfAccountCriteria) throws Exception;
+    public abstract List<ChartOfAccount> getChartOfAccountByCriteria(ChartOfAccountCriteria chartOfAccountCriteria);
 
     public abstract ChartOfAccount updateOrCreateChartOfAccount(ChartOfAccount chartOfAccount);
 

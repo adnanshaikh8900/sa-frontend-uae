@@ -32,7 +32,7 @@ import com.simplevat.rest.transactionparsingcontroller.TransactionParsingSetting
 @Component
 public class CsvParser implements TransactionFileParser {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(CsvParser.class);
+	private final Logger logger = LoggerFactory.getLogger(CsvParser.class);
 
 	@Autowired
 	private DateFormatDao dateformatDao;
@@ -78,13 +78,13 @@ public class CsvParser implements TransactionFileParser {
 			}
 			return list;
 		} catch (IOException e) {
-			LOGGER.error("Error =", e);
+			logger.error("Error =", e);
 		} finally {
 			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
-					LOGGER.error("Error =", e);
+					logger.error("Error =", e);
 				}
 			}
 		}
@@ -102,7 +102,6 @@ public class CsvParser implements TransactionFileParser {
 		String cvsSplitBy = ",";
 
 		List<Map<String, String>> list = new LinkedList<>();
-		Map<Integer, Set<Integer>> errorRowCellIndexMap = new HashMap<>();
 		List<String> errorList = new ArrayList<String>();
 
 		BufferedReader br = null;
@@ -188,13 +187,13 @@ public class CsvParser implements TransactionFileParser {
 
 			return responseMap;
 		} catch (IOException e) {
-			LOGGER.error("Error = ", e);
+			logger.error("Error = ", e);
 		} finally {
 			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
-					LOGGER.error("Error = ", e);
+					logger.error("Error = ", e);
 				}
 			}
 		}

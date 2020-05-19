@@ -8,10 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatatableSortingFilterConstant {
 
-	private DatatableSortingFilterConstant() {
-		initColumnNameMapping();
-	}
-
 	Map<String, String> tableDefaultValueMap;
 	Map<String, Map<String, String>> tableColumnNameMappingDataMap;
 	public static final String DEFAULT_SORTING_ORDER = "DESC";
@@ -226,6 +222,9 @@ public class DatatableSortingFilterConstant {
 		for(int arrayCount=0;arrayCount<colLabelStringArray.length;arrayCount++)
 			tempDataMap.put(colLabelStringArray[arrayCount],colNameStringArray[arrayCount]);
 		return tempDataMap;
+	}
+	private DatatableSortingFilterConstant() {
+		initColumnNameMapping();
 	}
 
 }

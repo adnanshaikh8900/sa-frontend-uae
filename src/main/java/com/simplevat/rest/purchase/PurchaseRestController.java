@@ -16,7 +16,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.InvoicePurchaseStatusConstant;
@@ -80,8 +86,8 @@ public class PurchaseRestController {
 			if (purchaseService.getAllPurchase() != null) {
 				for (Purchase purchase : purchaseService.getAllPurchase()) {
 					if (purchase.getStatus() != null) {
-						if (null != purchase.getStatus()) {
-							switch (purchase.getStatus()) {
+
+						switch (purchase.getStatus()) {
 							case InvoicePurchaseStatusConstant.PAID:
 								totalPaid++;
 								break;
@@ -94,7 +100,6 @@ public class PurchaseRestController {
 							default:
 								break;
 							}
-						}
 					}
 					totalPurchases++;
 					PurchaseRestModel model = purchaseControllerRestHelper.getPurchaseModel(purchase);
@@ -216,7 +221,10 @@ public class PurchaseRestController {
 		}
 	}
 
-	@Deprecated
+	/**
+	 * @Deprecated
+	 * @return
+	 */
 	@GetMapping(value = "/currencys")
 	public ResponseEntity getCurrency() {
 		try {
@@ -268,12 +276,11 @@ public class PurchaseRestController {
 			Company company = userServiceNew.findByPK(userId).getCompany();
 			currencyConversion = currencyService.getCurrencyRateFromCurrencyConversion(currencyCode);
 			if (currencyConversion != null) {
-				if (company.getCurrencyCode() != null) {
 					exchangeRateString = "1 "
 							+ currency.getCurrencyIsoCode() + " = " + new BigDecimal(BigInteger.ONE)
 									.divide(currencyConversion.getExchangeRate(), 9, RoundingMode.HALF_UP)
 							+ " " + company.getCurrencyCode().getCurrencyIsoCode();
-				}
+
 			}
 			return new ResponseEntity(exchangeRateString, HttpStatus.OK);
 		} catch (Exception e) {

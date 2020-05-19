@@ -53,12 +53,11 @@ public class TaxTranscationRestHelper {
 			}
 		}
 		for (TaxTransaction tax : taxTransactionService.getClosedTaxTransactionList()) {
-			if (tax.getStartDate().compareTo(startDate) == 0 && tax.getEndDate().compareTo(endDate) == 0) {
-				if (tax.getDueAmount().doubleValue() == 0) {
+				if (tax.getStartDate().compareTo(startDate) == 0 && tax.getEndDate().compareTo(endDate) == 0 && tax.getDueAmount().doubleValue() == 0) {
 					return true;
 				}
 			}
-		}
+
 		return false;
 	}
 
@@ -94,21 +93,18 @@ public class TaxTranscationRestHelper {
 		taxTransaction.setEndDate(endDate);
 		for (Transaction transaction : creditTransactionList) {
 			Date transDate = Date.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
-			if (transDate.compareTo(startDate) >= 0 && transDate.compareTo(endDate) <= 0) {
-				if (transaction.getReferenceId() != null) {
+				if (transDate.compareTo(startDate) >= 0 && transDate.compareTo(endDate) <= 0 && transaction.getReferenceId() != null) {
 					vatIn = vatIn.add(getVatFromTransaction(transaction));
 				}
 			}
-		}
 		for (Transaction transaction : debitTransactionList) {
 			Date transactionDate = Date
 					.from(transaction.getTransactionDate().atZone(ZoneId.systemDefault()).toInstant());
-			if (transactionDate.compareTo(startDate) >= 0 && transactionDate.compareTo(endDate) <= 0) {
-				if (transaction.getReferenceId() != null) {
+				if (transactionDate.compareTo(startDate) >= 0 && transactionDate.compareTo(endDate) <= 0 && transaction.getReferenceId() != null) {
 					vatOut = vatOut.add(getVatFromTransaction(transaction));
 				}
 			}
-		}
+
 
 		taxTransaction.setVatIn(vatIn);
 
@@ -150,8 +146,7 @@ public class TaxTranscationRestHelper {
 			prevYear.set(Calendar.SECOND, 0);
 			prevYear.set(Calendar.MILLISECOND, 0);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date dateWithoutTime = sdf.parse(sdf.format(prevYear.getTime()));
-			return dateWithoutTime;
+			return sdf.parse(sdf.format(prevYear.getTime()));
 
 		} catch (ParseException ex) {
 			Logger.getLogger(TaxTransactionController.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,8 +165,7 @@ public class TaxTranscationRestHelper {
 			preMonth.set(Calendar.SECOND, 0);
 			preMonth.set(Calendar.MILLISECOND, 0);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date dateWithoutTime = sdf.parse(sdf.format(preMonth.getTime()));
-			return dateWithoutTime;
+			return sdf.parse(sdf.format(preMonth.getTime()));
 
 		} catch (ParseException ex) {
 			Logger.getLogger(TaxTransactionController.class.getName()).log(Level.SEVERE, null, ex);

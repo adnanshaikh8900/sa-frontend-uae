@@ -9,4 +9,8 @@ public final class InvoiceTypeConstant {
 	private InvoiceTypeConstant() {
 		// CREATED TO REMOVE SONAR ERROR
 	}
+
+	public static boolean isCustomerInvoice(Integer type) {
+		return type.equals(CUSTOMER);
+	}
 }

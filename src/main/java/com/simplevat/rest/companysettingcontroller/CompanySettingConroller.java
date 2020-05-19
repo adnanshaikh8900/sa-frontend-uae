@@ -25,20 +25,20 @@ public class CompanySettingConroller {
 	private ConfigurationService configurationService;
 
 	@GetMapping(value = "/get")
-	public ResponseEntity getSetting() {
+	public ResponseEntity<CompanySettingModel> getSetting() {
 		return new ResponseEntity<>(companySettingRestHelper.getModel(), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody CompanySettingRequestModel requestModel) {
+	public ResponseEntity<String> update(@RequestBody CompanySettingRequestModel requestModel) {
 
 		List<Configuration> companySetting = companySettingRestHelper.getEntity(requestModel);
 
 		if (companySetting == null) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Update Failure ..",HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		configurationService.updateConfigurationList(companySetting);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>("Update Successfull ..",HttpStatus.OK);
 	}
 
 }

@@ -24,7 +24,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -122,7 +121,7 @@ public class FileHelper {
 		if (multipartFile.getOriginalFilename() != null) {
 			String dateString = new SimpleDateFormat("yyyyMMdd").format(new Date());
 			String fileExtension = multipartFile.getOriginalFilename()
-					.substring(multipartFile.getOriginalFilename().lastIndexOf(".") + 1);
+					.substring(multipartFile.getOriginalFilename().lastIndexOf('.') + 1);
 			UUID uuid = UUID.randomUUID();
 			String fileName = uuid.toString() + "." + fileExtension;
 			switch (fileTypeEnum) {
@@ -149,7 +148,7 @@ public class FileHelper {
 
 	public String getFileExtension(String fileName) {
 		if (fileName != null && !fileName.equals("")) {
-			return fileName.substring(fileName.lastIndexOf(".") + 1);
+			return fileName.substring(fileName.lastIndexOf('.') + 1);
 		}
 		return null;
 	}

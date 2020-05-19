@@ -43,7 +43,7 @@ import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @Component
 public class TransactionImportRestHelper {
@@ -56,7 +56,6 @@ public class TransactionImportRestHelper {
 	private String debitAmount = "Debit Amount";
 
 	private String creditAmount = "Credit Amount";
-	private List<TransactionModel> selectedTransaction;
 	private List<TransactionModel> creditTransaction = new ArrayList<>();
 	private boolean transactionDateBoolean = false;
 	private boolean descriptionBoolean = false;
@@ -117,7 +116,6 @@ public class TransactionImportRestHelper {
 		totalErrorRows = 0;
 		renderButtonOnValidData = true;
 		isDataRepeated = false;
-		String message = null;
 		Integer headerValue = 0;
 		getHeaderListData();
 		Set<String> setToReturn = new HashSet<>();
@@ -177,7 +175,6 @@ public class TransactionImportRestHelper {
 
 							headerIndexPosition++;
 							if (isDataRepeated) {
-								message = "Column mapping cannot be repeated";
 								break;
 							}
 							if (!transactionDateBoolean && !descriptionBoolean && !debitAmountBoolean

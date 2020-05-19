@@ -25,21 +25,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.FileTypeEnum;
+import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
+import com.simplevat.entity.Journal;
 import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.InvoiceService;
+import com.simplevat.service.JournalService;
 import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 /**
  *
  * @author ashish
@@ -65,6 +70,9 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@Autowired
 	private ChartUtil chartUtil;
+
+	@Autowired
+	private JournalService journalService;
 
 	@ApiOperation(value = "Get Invoice List")
 	@GetMapping(value = "/getList")
@@ -121,6 +129,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 		if (invoice != null) {
 			invoice.setDeleteFlag(Boolean.TRUE);
 			invoiceService.update(invoice, invoice.getId());
+			invoiceService.deleteJournaForInvoice(invoice);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 
@@ -160,7 +169,10 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			invoice.setCreatedDate(LocalDateTime.now());
 			invoice.setDeleteFlag(Boolean.FALSE);
 			if (requestModel.getAttachmentFile() != null && !requestModel.getAttachmentFile().isEmpty()) {
-				String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(), FileTypeEnum.SUPPLIER_INVOICE);
+				String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(),
+						requestModel.getType().equals(ContactTypeEnum.SUPPLIER.getValue().toString())
+								? FileTypeEnum.SUPPLIER_INVOICE
+								: FileTypeEnum.CUSTOMER_INVOICE);
 				invoice.setReceiptAttachmentFileName(requestModel.getAttachmentFile().getOriginalFilename());
 				invoice.setReceiptAttachmentPath(fileName);
 			}
@@ -179,13 +191,23 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Invoice invoice = invoiceRestHelper.getEntity(requestModel, userId);
 			if (requestModel.getAttachmentFile() != null && !requestModel.getAttachmentFile().isEmpty()) {
-				String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(), FileTypeEnum.SUPPLIER_INVOICE);
+				String fileName = fileHelper.saveFile(requestModel.getAttachmentFile(),
+						requestModel.getType().equals(ContactTypeEnum.SUPPLIER.getValue().toString())
+								? FileTypeEnum.SUPPLIER_INVOICE
+								: FileTypeEnum.CUSTOMER_INVOICE);
 				invoice.setReceiptAttachmentFileName(requestModel.getAttachmentFile().getOriginalFilename());
 				invoice.setReceiptAttachmentPath(fileName);
 			}
 			invoice.setLastUpdateBy(userId);
 			invoice.setLastUpdateDate(LocalDateTime.now());
-			invoiceService.update(invoice);
+
+			invoiceService.update(invoice, invoice.getId());
+			invoiceService.deleteJournaForInvoice(invoice);
+			if (invoice.getStatus() == InvoiceStatusEnum.POST.getValue()) {
+				// persist updated journal
+				Journal journal = invoiceRestHelper.invoicePosting(new PostingRequestModel(invoice.getId()), userId);
+				journalService.persist(journal);
+			}
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -223,20 +245,29 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 		}
 	}
 
+	/**
+	 * @Deprecated
+	 * @param id
+	 * @param request
+	 * @return
+	 */
 	@ApiOperation(value = "Send Invoice")
 	@PostMapping(value = "/send")
 	public ResponseEntity update(@RequestParam("id") Integer id, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-			invoiceRestHelper.send(invoiceService.findByPK(id),userId);
+			invoiceRestHelper.send(invoiceService.findByPK(id), userId);
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+
 	/**
-	 * This method web service will retriever the OverDueAmountDetails To Be Paid for the the specific user
+	 * This method web service will retriever the OverDueAmountDetails To Be Paid
+	 * for the the specific user
+	 * 
 	 * @param request HTTP servelet request
 	 * @return Response entity
 	 */

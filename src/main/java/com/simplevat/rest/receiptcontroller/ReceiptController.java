@@ -24,23 +24,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
+import com.simplevat.entity.CustomerInvoiceReceipt;
+import com.simplevat.entity.Journal;
 import com.simplevat.entity.Receipt;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
+import com.simplevat.service.CustomerInvoiceReceiptService;
 import com.simplevat.service.InvoiceService;
+import com.simplevat.service.JournalService;
 import com.simplevat.service.ReceiptService;
 
 import io.swagger.annotations.ApiOperation;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
+/**
+ * @author $@urabh : For Customer invoice
+ */
 @RestController
 @RequestMapping("/rest/receipt")
 public class ReceiptController {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(ReceiptController.class);
-	
+
 	@Autowired
 	private ReceiptService receiptService;
 
@@ -55,6 +63,12 @@ public class ReceiptController {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+
+	@Autowired
+	private CustomerInvoiceReceiptService customerInvoiceReceiptService;
+
+	@Autowired
+	private JournalService journalService;
 
 	@ApiOperation(value = "Get receipt List")
 	@GetMapping(value = "/getList")
@@ -141,10 +155,24 @@ public class ReceiptController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
+			// TODO : need to add attcahement
 			receipt.setCreatedBy(userId);
 			receipt.setCreatedDate(LocalDateTime.now());
 			receipt.setDeleteFlag(Boolean.FALSE);
 			receiptService.persist(receipt);
+
+			// save data in Mapping Table
+			CustomerInvoiceReceipt customerInvoiceReceipt = receiptRestHelper
+					.getCustomerInvoiceReceiptEntity(receiptRequestModel);
+			customerInvoiceReceipt.setReceipt(receipt);
+			customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+
+			// Post journal
+			Journal journal = receiptRestHelper.receiptPosting(
+					new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+					receipt.getDepositeToTransactionCategory());
+			journalService.persist(journal);
+
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -158,6 +186,7 @@ public class ReceiptController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
+			// TODO : need to add attcahement
 			receipt.setLastUpdateDate(LocalDateTime.now());
 			receipt.setLastUpdatedBy(userId);
 			receiptService.update(receipt);
@@ -168,4 +197,18 @@ public class ReceiptController {
 		}
 	}
 
+	@ApiOperation(value = "Next Receipt No")
+	@GetMapping(value = "/getNextReceiptNo")
+	public ResponseEntity getNextReceiptNo(@RequestParam("id") Integer invoiceId) {
+		try {
+			Integer nxtInvoiceNo = customerInvoiceReceiptService.findNextReceiptNoForInvoice(invoiceId);
+			if (nxtInvoiceNo == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity(nxtInvoiceNo, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

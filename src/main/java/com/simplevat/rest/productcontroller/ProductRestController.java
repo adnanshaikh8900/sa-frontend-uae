@@ -34,7 +34,7 @@ import com.simplevat.service.VatCategoryService;
 
 import io.swagger.annotations.ApiOperation;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -58,7 +58,7 @@ public class ProductRestController {
 
 	@ApiOperation(value = "Get Product List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getProductList(ProductRequestFilterModel filterModel, HttpServletRequest request) {
+	public ResponseEntity<PaginationResponseModel> getProductList(ProductRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
 			Map<ProductFilterEnum, Object> filterDataMap = new EnumMap<>(ProductFilterEnum.class);
 			filterDataMap.put(ProductFilterEnum.PRODUCT_NAME, filterModel.getName());
@@ -76,7 +76,7 @@ public class ProductRestController {
 			PaginationResponseModel response = productService.getProductList(filterDataMap, filterModel);
 			List<ProductListModel> productListModels = new ArrayList<>();
 			if (response == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
 				if (response.getData() != null) {
 					for (Product product : (List<Product>) response.getData()) {
@@ -86,60 +86,60 @@ public class ProductRestController {
 					response.setData(productListModels);
 				}
 			}
-			return new ResponseEntity(response, HttpStatus.OK);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Delete Product By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<Product> deleteProduct(@RequestParam(value = "id") Integer id) {
 		try {
 			Product product = productService.findByPK(id);
 			if (product != null) {
 				productService.deleteByIds(Arrays.asList(id));
 			}
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Delete Product in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deleteProducts(@RequestBody DeleteModel ids) {
 		try {
 			productService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
 	@ApiOperation(value = "Get Product By ID")
 	@GetMapping(value = "/getProductById")
-	public ResponseEntity getProductById(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<ProductRequestModel> getProductById(@RequestParam(value = "id") Integer id) {
 		try {
 			Product product = productService.findByPK(id);
 			if (product == null) {
-				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			} else {
 				return new ResponseEntity<>(productRestHelper.getRequestModel(product), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Add New Product")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+	public ResponseEntity<Product> save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			productRequestModel.setCreatedBy(userId);
@@ -147,16 +147,16 @@ public class ProductRestController {
 			product.setCreatedDate(LocalDateTime.now());
 			product.setDeleteFlag(Boolean.FALSE);
 			productService.persist(product);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Update Product")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+	public ResponseEntity<Product> update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			productRequestModel.setCreatedBy(userId);
@@ -164,10 +164,10 @@ public class ProductRestController {
 			product.setLastUpdateDate(LocalDateTime.now());
 			product.setLastUpdatedBy(userId);
 			productService.update(product);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

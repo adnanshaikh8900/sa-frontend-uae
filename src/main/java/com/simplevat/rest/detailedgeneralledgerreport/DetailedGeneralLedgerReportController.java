@@ -17,7 +17,7 @@ import com.simplevat.constant.dbfilter.DateFormatFilterEnum;
 
 import io.swagger.annotations.ApiOperation;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/detailedGeneralLedgerReport")
@@ -33,7 +33,7 @@ public class DetailedGeneralLedgerReportController {
 	public ResponseEntity getDateFormat(ReportRequestModel reportRequestModel) {
 		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
 		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
-		List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport1(reportRequestModel);
+		List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport(reportRequestModel);
 		try {
 			if (list == null) {
 				return new ResponseEntity(HttpStatus.NOT_FOUND);

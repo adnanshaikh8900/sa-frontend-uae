@@ -47,5 +47,6 @@ public class JournalServiceImpl extends JournalService {
 			lineItem.setCurrentBalance(transactionCategoryBalanceService.updateRunningBalance(lineItem));
 		}
 		super.persist(journal);
+
 	}
 }

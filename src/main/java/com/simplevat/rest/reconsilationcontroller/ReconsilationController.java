@@ -37,9 +37,8 @@ import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.utils.DateFormatUtil;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @RestController
 @RequestMapping("/rest/reconsile")
@@ -82,10 +81,6 @@ public class ReconsilationController {
 
 	@Autowired
 	private ContactService contactService;
-
-
-	@Autowired
-	private DateFormatUtil dateFormatUtil;
 
 	@GetMapping(value = "/getByReconcilationCatCode")
 	public ResponseEntity getByReconcilationCatCode(@RequestParam int reconcilationCatCode) {

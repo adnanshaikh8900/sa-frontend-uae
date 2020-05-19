@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.rest.DropdownModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @Component
 @RequestMapping("/rest/company")
@@ -51,10 +52,12 @@ public class CompanyController {
 	@Autowired
 	private UserService userService;
 
-	@Deprecated
+	/**
+	 * @Deprecated
+	 **/
 	@ApiOperation(value = "Get Company List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getCompanyList(HttpServletRequest request) {
+	public ResponseEntity<List<CompanyListModel>> getCompanyList(HttpServletRequest request) {
 		try {
 			Map<CompanyFilterEnum, Object> filterMap = new EnumMap<>(CompanyFilterEnum.class);
 			filterMap.put(CompanyFilterEnum.DELETE_FLAG, false);
@@ -70,62 +73,64 @@ public class CompanyController {
 	}
 
 	@GetMapping(value = "/getCompaniesForDropdown")
-	public ResponseEntity getCompaniesForDropdown() {
+	public ResponseEntity<List<DropdownModel>> getCompaniesForDropdown() {
 		return new ResponseEntity<>(companyService.getCompaniesForDropdown(), HttpStatus.OK);
 	}
-
-	@Deprecated
+/**
+ * @Deprecated
+ **/
 	@ApiOperation(value = "delete By Id")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteCompany(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<Company> deleteCompany(@RequestParam(value = "id") Integer id) {
 		try {
 			Company company = companyService.findByPK(id);
 			if (company != null) {
 				company.setDeleteFlag(Boolean.TRUE);
 				companyService.update(company);
 			}
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("Error = ", e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
-	@Deprecated
+/**
+* @Deprecated
+* */
 	@ApiOperation(value = "Delete Companies in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteCompanies(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deleteCompanies(@RequestBody DeleteModel ids) {
 		try {
 			companyService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Companies Deleted successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("Error = ", e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>("Cannot Delete The companies",HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
 	@ApiOperation(value = "Get Company Deatials for login user")
 	@GetMapping(value = "/getCompanyDetails")
-	public ResponseEntity getCompanyById(HttpServletRequest request) {
+	public ResponseEntity<CompanyModel> getCompanyById(HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 			User user = userService.findByPK(userId);
 			if (user == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
 				return new ResponseEntity<>(companyRestHelper.getModel(user.getCompany()), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Add New Company")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
+	public ResponseEntity<Company> save(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Company company = companyRestHelper.getEntity(companyModel, userId);
@@ -133,26 +138,26 @@ public class CompanyController {
 			company.setCreatedDate(LocalDateTime.now());
 			company.setDeleteFlag(Boolean.FALSE);
 			companyService.persist(company);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Update Company")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
+	public ResponseEntity<Company> update(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Company company = companyRestHelper.getEntity(companyModel, userId);
 			company.setLastUpdateDate(LocalDateTime.now());
 			company.setLastUpdatedBy(userId);
 			companyService.update(company);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

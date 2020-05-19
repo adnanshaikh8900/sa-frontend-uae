@@ -15,10 +15,7 @@ import com.simplevat.service.ContactService;
 
 import com.simplevat.security.JwtTokenUtil;
 import java.time.LocalDateTime;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -34,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -121,7 +118,7 @@ public class ContactController {
 	}
 
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
+	public ResponseEntity<Contact> update(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 		try {
@@ -140,7 +137,7 @@ public class ContactController {
 	}
 
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
+	public ResponseEntity<Contact> delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 		Contact contact = contactService.findByPK(id);
@@ -155,12 +152,11 @@ public class ContactController {
 	}
 
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
+	public ResponseEntity<ArrayList<Integer>> deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
 
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		try {
 			contactService.deleleByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}

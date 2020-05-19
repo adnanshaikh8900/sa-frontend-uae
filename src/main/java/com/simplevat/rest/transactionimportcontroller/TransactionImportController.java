@@ -50,7 +50,7 @@ import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -129,7 +129,13 @@ public class TransactionImportController{
 		}
 	}
 
-	@Deprecated
+	/**
+	 * @Deprecated
+	 * @param transactionList
+	 * @param id
+	 * @param bankId
+	 * @return
+	 */
 	@ApiOperation(value = "Save Import Transaction")
 	@PostMapping(value = "/saveimporttransaction")
 	public ResponseEntity<Integer> saveTransactions(@RequestBody List<TransactionModel> transactionList,

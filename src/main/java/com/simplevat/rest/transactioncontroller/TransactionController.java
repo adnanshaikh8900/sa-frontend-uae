@@ -68,7 +68,7 @@ import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -88,6 +88,7 @@ public class TransactionController{
 	private BankAccountService bankAccountService;
 
 	@Autowired
+
 	private ChartOfAccountService chartOfAccountService;
 
 	@Autowired

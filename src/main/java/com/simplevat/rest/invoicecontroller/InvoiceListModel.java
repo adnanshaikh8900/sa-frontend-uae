@@ -17,5 +17,7 @@ public class InvoiceListModel {
     private Date invoiceDueDate;
     private BigDecimal totalAmount;
     private BigDecimal totalVatAmount;
+    private String statusEnum;
+    
     
 }

@@ -17,7 +17,7 @@ import com.simplevat.service.CurrencyService;
 import com.simplevat.service.IndustryTypeService;
 import com.simplevat.service.UserService;
 
-import static com.simplevat.constant.ErrorConstant.*;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @Component
 public class CompanyRestHelper{

@@ -11,7 +11,28 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Convert;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Basic;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Version;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.CascadeType;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -36,7 +57,8 @@ import org.hibernate.annotations.ColumnDefault;
 		@NamedQuery(name = "activeInvoicesByDateRange", query = "from Invoice i where i.invoiceDate between :startDate and :endDate and i.deleteFlag = false"),
 		@NamedQuery(name = "overDueAmount", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2"),
 		@NamedQuery(name = "overDueAmountWeeklyMonthly", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2 and i.invoiceDueDate between :startDate and :endDate")
-		//select com.simplevat.entity.Invoice(i.invoiceDate,i.invoiceDueDate,i.totalAmount,i.type) 
+		// select
+		// com.simplevat.entity.Invoice(i.invoiceDate,i.invoiceDueDate,i.totalAmount,i.type)
 
 })
 public class Invoice implements Serializable {
@@ -137,6 +159,9 @@ public class Invoice implements Serializable {
 	@ColumnDefault(value = "0.00")
 	private BigDecimal totalVatAmount;
 
+	/**
+	 * @see com.simplevat.constant.InvoiceStatusEnum
+	 */
 	@Basic
 	@Column(name = "STATUS")
 	private Integer status;
@@ -165,9 +190,18 @@ public class Invoice implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private InvoiceDuePeriodEnum invoiceDuePeriod;
 
+	/**
+	 * Its compulsary field
+	 * 
+	 * @see com.simplevat.constant.ContactTypeEnum
+	 */
 	@Column(name = "TYPE")
-	@Basic(optional = false)
+	@Basic
 	private Integer type;
+
+	@Column(name = "DUE_AMOUNT")
+	@ColumnDefault(value = "0.00")
+	private BigDecimal dueAmount;
 
 	@PrePersist
 	public void updateDates() {
@@ -186,6 +220,11 @@ public class Invoice implements Serializable {
 		this.invoiceDueDate = invoiceDueDate;
 		this.totalAmount = totalAmount;
 		this.type = type;
+	}
+
+	public Invoice(Integer id) {
+		super();
+		this.id = id;
 	}
 
 }

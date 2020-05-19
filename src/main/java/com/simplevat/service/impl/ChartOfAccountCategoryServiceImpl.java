@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.simplevat.dao.ChartOfAccountCategoryDao;
@@ -25,8 +26,14 @@ public class ChartOfAccountCategoryServiceImpl extends ChartOfAccountCategorySer
 	}
 
 	@Override
-	public List<ChartOfAccountCategory> findAll() {
-		return dao.getChartOfAccountCategoryList();
+	@Cacheable(cacheNames = "chartOfAccountCategoryCache", key = "#chartOfAccountCategoryId")
+	public ChartOfAccountCategory findByPK(Integer chartOfAccountCategoryId) {
+		return dao.findByPK(chartOfAccountCategoryId);
 	}
 
+	@Override
+	@Cacheable(cacheNames = "chartOfAccountCategoryListCache", key = "'chartOfAccountCategoryList'")
+    public List<ChartOfAccountCategory> findAll() {
+		return  dao.getChartOfAccountCategoryList();
+	}
 }

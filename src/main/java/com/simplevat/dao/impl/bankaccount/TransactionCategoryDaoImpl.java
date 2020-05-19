@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.persistence.TypedQuery;
 
+import com.simplevat.constant.CommonColumnConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -54,7 +55,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		TypedQuery<TransactionCategory> query = getEntityManager().createQuery(
 				"SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND t.chartOfAccount.chartOfAccountId =:chartOfAccountId AND t.transactionCategoryName LIKE '%'||:transactionCategoryName||'%' ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC",
 				TransactionCategory.class);
-		query.setParameter("chartOfAccountId", chartOfAccountId);
+		query.setParameter(CommonColumnConstants.CHARTOFACCOUNT_ID, chartOfAccountId);
 		query.setParameter("transactionCategoryName", name);
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
 			return query.getResultList();
@@ -67,7 +68,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		TypedQuery<TransactionCategory> query = getEntityManager().createQuery(
 				"SELECT t FROM TransactionCategory t where t.deleteFlag=FALSE AND (t.chartOfAccount.chartOfAccountId =:chartOfAccountId  or t.chartOfAccount.parentChartOfAccount.chartOfAccountId =:chartOfAccountId) ORDER BY t.defaltFlag DESC , t.orderSequence,t.transactionCategoryName ASC",
 				TransactionCategory.class);
-		query.setParameter("chartOfAccountId", chartOfAccountId);
+		query.setParameter(CommonColumnConstants.CHARTOFACCOUNT_ID, chartOfAccountId);
 		if (query.getResultList() != null && !query.getResultList().isEmpty()) {
 			return query.getResultList();
 		}
@@ -131,8 +132,8 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 		filterMap.forEach((transactionCategoryFilter, value) -> dbFilters
 				.add(DbFilter.builder().dbCoulmnName(transactionCategoryFilter.getDbColumnName())
 						.condition(transactionCategoryFilter.getCondition()).value(value).build()));
-		paginationModel.setSortingCol(
-				dataTableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.CHART_OF_ACCOUNT));
+		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(),
+				DatatableSortingFilterConstant.CHART_OF_ACCOUNT));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}
@@ -141,7 +142,7 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 	public String getNxtTransactionCatCodeByChartOfAccount(ChartOfAccount chartOfAccount) {
 		List<TransactionCategory> result = getEntityManager()
 				.createNamedQuery("findMaxTnxCodeByChartOfAccId", entityClass)
-				.setParameter("chartOfAccountId", chartOfAccount).setMaxResults(1).getResultList();
+				.setParameter(CommonColumnConstants.CHARTOFACCOUNT_ID, chartOfAccount).setMaxResults(1).getResultList();
 
 		String chartOfAccountCode = chartOfAccount.getChartOfAccountCode();
 
@@ -164,4 +165,10 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 				"SELECT * FROM TRANSACTION_CATEGORY INNER JOIN CHART_OF_ACCOUNT on TRANSACTION_CATEGORY.CHART_OF_ACCOUNT_ID= CHART_OF_ACCOUNT.CHART_OF_ACCOUNT_ID INNER JOIN COA_COA_CATEGORY ON COA_COA_CATEGORY.CHART_OF_ACCOUNT_ID= CHART_OF_ACCOUNT.CHART_OF_ACCOUNT_ID WHERE COA_COA_CATEGORY.CHART_OF_ACCOUNT_CATEGORY_ID = :coaCategoryId",
 				TransactionCategory.class).setParameter("coaCategoryId", chartOfAccountCategoryId).getResultList();
 	}
+
+	@Override
+	public List<TransactionCategory> findTnxCatForReicpt() {
+		return getEntityManager().createNamedQuery("findTnxCatForReicpt").getResultList();
+	}
+
 }

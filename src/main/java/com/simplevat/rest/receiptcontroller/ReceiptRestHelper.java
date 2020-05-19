@@ -11,9 +11,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.CustomerInvoiceReceipt;
+import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Receipt;
@@ -121,7 +123,10 @@ public class ReceiptRestHelper {
 		CustomerInvoiceReceipt receipt = new CustomerInvoiceReceipt();
 
 		if (receiptRequestModel.getInvoiceId() != null) {
-			receipt.setCustomerInvoice(invoiceService.findByPK(receiptRequestModel.getInvoiceId()));
+			Invoice invoice = invoiceService.findByPK(receiptRequestModel.getInvoiceId());
+			invoice.setStatus(InvoiceStatusEnum.PAID.getValue());
+			invoice.setDueAmount(BigDecimal.ZERO);
+			receipt.setCustomerInvoice(invoice);
 		}
 		receipt.setPaidAmount(receiptRequestModel.getAmount());
 		receipt.setDeleteFlag(Boolean.FALSE);

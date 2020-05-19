@@ -326,6 +326,9 @@ public class InvoiceRestHelper {
 					model.setStatus(getInvoiceStatus(invoice.getStatus(), invoice.getInvoiceDueDate()));
 				}
 				model.setStatusEnum(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
+				if (invoice.getContact() != null) {
+					model.setContactId(invoice.getContact().getContactId());
+				}
 				invoiceListModels.add(model);
 			}
 		}

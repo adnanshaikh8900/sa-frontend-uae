@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ContactTypeEnum;
+import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.entity.CustomerInvoiceReceipt;
 import com.simplevat.entity.Journal;
@@ -35,6 +38,7 @@ import com.simplevat.service.CustomerInvoiceReceiptService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.ReceiptService;
+import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -69,6 +73,9 @@ public class ReceiptController {
 
 	@Autowired
 	private JournalService journalService;
+
+	@Autowired
+	private FileHelper fileHelper;
 
 	@ApiOperation(value = "Get receipt List")
 	@GetMapping(value = "/getList")
@@ -151,11 +158,18 @@ public class ReceiptController {
 
 	@ApiOperation(value = "Add New Receipt")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
+	public ResponseEntity save(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
-			// TODO : need to add attcahement
+
+			// save Attcahement
+			if (receiptRequestModel.getAttachmentFile() != null && !receiptRequestModel.getAttachmentFile().isEmpty()) {
+				String fileName = fileHelper.saveFile(receiptRequestModel.getAttachmentFile(), FileTypeEnum.RECEIPT);
+				receipt.setReceiptAttachmentFileName(receiptRequestModel.getAttachmentFile().getOriginalFilename());
+				receipt.setReceiptAttachmentPath(fileName);
+			}
+
 			receipt.setCreatedBy(userId);
 			receipt.setCreatedDate(LocalDateTime.now());
 			receipt.setDeleteFlag(Boolean.FALSE);
@@ -186,7 +200,14 @@ public class ReceiptController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
-			// TODO : need to add attcahement
+
+			// save Attcahement
+			if (receiptRequestModel.getAttachmentFile() != null && !receiptRequestModel.getAttachmentFile().isEmpty()) {
+				String fileName = fileHelper.saveFile(receiptRequestModel.getAttachmentFile(), FileTypeEnum.RECEIPT);
+				receipt.setReceiptAttachmentFileName(receiptRequestModel.getAttachmentFile().getOriginalFilename());
+				receipt.setReceiptAttachmentPath(fileName);
+			}
+
 			receipt.setLastUpdateDate(LocalDateTime.now());
 			receipt.setLastUpdatedBy(userId);
 			receiptService.update(receipt);

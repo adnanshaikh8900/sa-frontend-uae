@@ -9,15 +9,15 @@ import lombok.Setter;
 @Setter
 public class InvoiceListModel {
 
-    private Integer id;
-    private String status;
-    private String name;
-    private String referenceNumber;
-    private Date invoiceDate;
-    private Date invoiceDueDate;
-    private BigDecimal totalAmount;
-    private BigDecimal totalVatAmount;
-    private String statusEnum;
-    
-    
+	private Integer id;
+	private String status;
+	private String name;
+	private String referenceNumber;
+	private Date invoiceDate;
+	private Date invoiceDueDate;
+	private BigDecimal totalAmount;
+	private BigDecimal totalVatAmount;
+	private String statusEnum;
+	private Integer contactId;
+
 }

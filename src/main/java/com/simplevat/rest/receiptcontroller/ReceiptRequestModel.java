@@ -24,5 +24,5 @@ public class ReceiptRequestModel {
 	private PayMode payMode;
 	private Integer depositeTo;// transaction category Id
 	private String notes;
-	private MultipartFile attachment;
+	private MultipartFile attachmentFile;
 }

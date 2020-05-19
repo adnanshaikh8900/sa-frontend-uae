@@ -25,4 +25,8 @@ public class ReceiptRequestModel {
 	private Integer depositeTo;// transaction category Id
 	private String notes;
 	private MultipartFile attachmentFile;
+	private String fileName;
+	private String filePath;
+	private String receiptAttachmentDescription;
+
 }

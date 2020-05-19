@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
+import com.simplevat.dao.JournalLineItemDao;
 import com.simplevat.entity.CustomerInvoiceReceipt;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
@@ -23,8 +26,10 @@ import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.InvoiceService;
+import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.ReceiptService;
 import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.utils.FileHelper;
 
 @Component
 public class ReceiptRestHelper {
@@ -40,6 +45,12 @@ public class ReceiptRestHelper {
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	private FileHelper fileHelper;
+
+	@Autowired
+	private JournalLineItemService journalLineItemService;
 
 	public List<ReceiptModel> getListModel(Object receipts) {
 		List<ReceiptModel> receiptModelList = new ArrayList<ReceiptModel>();
@@ -106,9 +117,6 @@ public class ReceiptRestHelper {
 		if (receipt.getContact() != null) {
 			model.setContactId(receipt.getContact().getContactId());
 		}
-		if (receipt.getInvoice() != null) {
-			model.setInvoiceId(receipt.getInvoice().getId());
-		}
 		if (receipt.getReceiptDate() != null) {
 			Date date = Date.from(receipt.getReceiptDate().atZone(ZoneId.systemDefault()).withHour(0).withMinute(0)
 					.withSecond(0).withNano(0).toInstant());
@@ -116,6 +124,17 @@ public class ReceiptRestHelper {
 		}
 		model.setReferenceCode(receipt.getReferenceCode());
 		model.setReceiptNo(receipt.getReceiptNo());
+		model.setPayMode(receipt.getPayMode());
+		if (receipt.getDepositeToTransactionCategory() != null) {
+			model.setDepositeTo(receipt.getDepositeToTransactionCategory().getTransactionCategoryId());
+		}
+		if (receipt.getReceiptAttachmentFileName() != null) {
+			model.setFileName(receipt.getReceiptAttachmentFileName());
+		}
+		model.setReceiptAttachmentDescription(receipt.getReceiptAttachmentDescription());
+		if (receipt.getReceiptAttachmentPath() != null) {
+			model.setFilePath("/file/" + fileHelper.convertFilePthToUrl(receipt.getReceiptAttachmentPath()));
+		}
 		return model;
 	}
 
@@ -140,8 +159,17 @@ public class ReceiptRestHelper {
 			TransactionCategory depositeToTransactionCategory) {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
-		Journal journal = new Journal();
-		JournalLineItem journalLineItem1 = new JournalLineItem();
+		Map<String, Object> param = new HashMap<>();
+		param.put("referenceType", PostingReferenceTypeEnum.RECEIPT);
+		param.put("referenceId", postingRequestModel.getPostingRefId());
+		param.put("deleteFlag", false);
+		journalLineItemList = journalLineItemService.findByAttributes(param);
+
+		Journal journal = journalLineItemList != null && journalLineItemList.size() > 0
+				? journalLineItemList.get(0).getJournal()
+				: new Journal();
+		JournalLineItem journalLineItem1 = journal.getJournalLineItems() != null
+				&& journal.getJournalLineItems().size() > 0 ? journalLineItemList.get(0) : new JournalLineItem();
 		TransactionCategory transactionCategory = transactionCategoryService
 				.findTransactionCategoryByTransactionCategoryCode(
 						TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode());
@@ -153,8 +181,8 @@ public class ReceiptRestHelper {
 		journalLineItem1.setJournal(journal);
 		journalLineItemList.add(journalLineItem1);
 
-		JournalLineItem journalLineItem2 = new JournalLineItem();
-
+		JournalLineItem journalLineItem2 = journal.getJournalLineItems() != null
+				&& journal.getJournalLineItems().size() > 0 ? journalLineItemList.get(1) : new JournalLineItem();
 		journalLineItem2.setTransactionCategory(depositeToTransactionCategory);
 		journalLineItem2.setDebitAmount(postingRequestModel.getAmount());
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.RECEIPT);

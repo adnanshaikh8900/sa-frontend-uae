@@ -1,5 +1,7 @@
 package com.simplevat.rest.receiptcontroller;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -24,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.entity.CustomerInvoiceReceipt;
@@ -41,8 +42,6 @@ import com.simplevat.service.ReceiptService;
 import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
-
-import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  * @author $@urabh : For Customer invoice
@@ -196,7 +195,7 @@ public class ReceiptController {
 
 	@ApiOperation(value = "Update Receipt")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
+	public ResponseEntity update(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
@@ -207,6 +206,14 @@ public class ReceiptController {
 				receipt.setReceiptAttachmentFileName(receiptRequestModel.getAttachmentFile().getOriginalFilename());
 				receipt.setReceiptAttachmentPath(fileName);
 			}
+
+			// No need to Update data in Mapping Table
+
+			// Update journal
+			Journal journal = receiptRestHelper.receiptPosting(
+					new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+					receipt.getDepositeToTransactionCategory());
+			journalService.update(journal);
 
 			receipt.setLastUpdateDate(LocalDateTime.now());
 			receipt.setLastUpdatedBy(userId);

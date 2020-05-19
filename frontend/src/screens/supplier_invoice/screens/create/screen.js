@@ -81,7 +81,8 @@ class CreateSupplierInvoice extends React.Component {
 					vatCategoryId: '',
 					subTotal: 0,
 					productId: '',
-					transactiomCategoryId: '',
+					transactionCategoryId: '',
+					transactionCategoryLabel: '',
 				},
 			],
 			idCount: 0,
@@ -103,7 +104,7 @@ class CreateSupplierInvoice extends React.Component {
 						vatCategoryId: '',
 						subTotal: 0,
 						productId: '',
-						transactiomCategoryId: '',
+						transactionCategoryId: '',
 					},
 				],
 				invoice_number: '',
@@ -178,7 +179,14 @@ class CreateSupplierInvoice extends React.Component {
 						type="text"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
-							this.selectItem(e, row, 'description', form, field, props);
+							this.selectItem(
+								e.target.value,
+								row,
+								'description',
+								form,
+								field,
+								props,
+							);
 						}}
 						placeholder="Description"
 						className={`form-control 
@@ -217,7 +225,14 @@ class CreateSupplierInvoice extends React.Component {
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
-								this.selectItem(e, row, 'quantity', form, field, props);
+								this.selectItem(
+									e.target.value,
+									row,
+									'quantity',
+									form,
+									field,
+									props,
+								);
 							}
 						}}
 						placeholder="Quantity"
@@ -257,7 +272,14 @@ class CreateSupplierInvoice extends React.Component {
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
-								this.selectItem(e, row, 'unitPrice', form, field, props);
+								this.selectItem(
+									e.target.value,
+									row,
+									'unitPrice',
+									form,
+									field,
+									props,
+								);
 							}
 						}}
 						placeholder="Unit Price"
@@ -348,12 +370,12 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
-		e.preventDefault();
+		//e.preventDefault();
 		let data = this.state.data;
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj[`${name}`] = e.target.value;
+				obj[`${name}`] = e;
 				idx = index;
 			}
 			return obj;
@@ -382,9 +404,6 @@ class CreateSupplierInvoice extends React.Component {
 
 	renderVat = (cell, row, props) => {
 		const { vat_list } = this.props;
-		let vatList = vat_list.length
-			? [{ id: '', vat: 'Select Vat' }, ...vat_list]
-			: vat_list;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -397,15 +416,35 @@ class CreateSupplierInvoice extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
-					<Input
-						type="select"
+					<Select
+						options={
+							vat_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										vat_list,
+										'Vat',
+								  )
+								: []
+						}
+						value={
+							vat_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', vat_list, 'Vat')
+								.find((option) => option.value === +row.vatCategoryId)
+						}
+						id="vatCategoryId"
 						onChange={(e) => {
-							this.selectItem(e, row, 'vatCategoryId', form, field, props);
-							// this.formRef.current.props.handleChange(field.name)(e.value)
+							this.selectItem(
+								e.value,
+								row,
+								'vatCategoryId',
+								form,
+								field,
+								props,
+							);
 						}}
-						value={row.vatCategoryId}
-						className={`form-control 
-            ${
+						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
@@ -416,18 +455,7 @@ class CreateSupplierInvoice extends React.Component {
 								? 'is-invalid'
 								: ''
 						}`}
-					>
-						{vatList
-							? vatList.map((obj) => {
-									// obj.name = obj.name === 'default' ? '0' : obj.name
-									return (
-										<option value={obj.id} key={obj.id}>
-											{obj.vat}
-										</option>
-									);
-							  })
-							: ''}
-					</Input>
+					/>
 				)}
 			/>
 		);
@@ -445,6 +473,8 @@ class CreateSupplierInvoice extends React.Component {
 				obj['unitPrice'] = result.unitPrice;
 				obj['vatCategoryId'] = result.vatCategoryId;
 				obj['description'] = result.description;
+				obj['transactionCategoryId'] = result.transactionCategoryId;
+				obj['transactionCategoryLabel'] = result.transactionCategoryLabel;
 				idx = index;
 			}
 			return obj;
@@ -464,6 +494,17 @@ class CreateSupplierInvoice extends React.Component {
 			result.description,
 			true,
 		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.transactionCategoryId`,
+			result.transactionCategoryId,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.transactionCategoryLabel`,
+			result.transactionCategoryLabel,
+			true,
+		);
+		this.updateAmount(data, props);
 	};
 
 	renderProduct = (cell, row, props) => {
@@ -486,7 +527,14 @@ class CreateSupplierInvoice extends React.Component {
 						<Input
 							type="select"
 							onChange={(e) => {
-								this.selectItem(e, row, 'productId', form, field, props);
+								this.selectItem(
+									e.target.value,
+									row,
+									'productId',
+									form,
+									field,
+									props,
+								);
 								this.prductValue(e, row, 'productId', form, field, props);
 								// this.formRef.current.props.handleChange(field.name)(e.value)
 							}}
@@ -535,24 +583,23 @@ class CreateSupplierInvoice extends React.Component {
 		}
 	};
 
-	selectCategory = (options, row, name, form, field, props) => {
-		console.log(options);
-		let data = this.state.data;
-		let idx;
-		data.map((obj, index) => {
-			if (obj.id === row.id) {
-				obj['transactiomCategoryId'] = options;
-				idx = index;
-			}
-			return obj;
-		});
-		console.log(data);
-		form.setFieldValue(
-			`lineItemsString.${idx}.transactiomCategoryId`,
-			options,
-			true,
-		);
-	};
+	// selectCategory = (options, row, name, form, field, props) => {
+	// 	let data = this.state.data;
+	// 	let idx;
+	// 	data.map((obj, index) => {
+	// 		if (obj.id === row.id) {
+	// 			obj['transactiomCategoryId'] = options;
+	// 			idx = index;
+	// 		}
+	// 		return obj;
+	// 	});
+	// 	console.log(data);
+	// 	form.setFieldValue(
+	// 		`lineItemsString.${idx}.transactiomCategoryId`,
+	// 		options,
+	// 		true,
+	// 	);
+	// };
 
 	renderAccount = (cell, row, props) => {
 		const { purchaseCategory } = this.state;
@@ -566,35 +613,50 @@ class CreateSupplierInvoice extends React.Component {
 
 		return (
 			<Field
-				name={`lineItemsString.${idx}.transactiomCategoryId`}
+				name={`lineItemsString.${idx}.transactionCategoryId`}
 				render={({ field, form }) => (
 					<Select
 						styles={{
 							menu: (provided) => ({ ...provided, zIndex: 9999 }),
 						}}
 						options={purchaseCategory ? purchaseCategory.categoriesList : []}
-						id="transactiomCategoryId"
+						id="transactionCategoryId"
 						onChange={(e) => {
-							this.selectCategory(
+							this.selectItem(
 								e.value,
 								row,
-								'transactiomCategoryId',
+								'transactionCategoryId',
 								form,
 								field,
 								props,
 							);
 						}}
+						// value={
+						// 	purchaseCategory &&
+						// 	purchaseCategory.categoriesList.find(
+						// 		(item) => item.value === +row.transactionCategoryId,
+						// 	)
+						// }
+						value={
+							purchaseCategory && row.transactionCategoryLabel
+								? purchaseCategory.categoriesList
+										.find((item) => item.label === row.transactionCategoryLabel)
+										.options.find(
+											(item) => item.value === +row.transactionCategoryId,
+										)
+								: row.transactionCategoryId
+						}
 						placeholder="Select Account"
 						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)]
-								.transactiomCategoryId &&
+								.transactionCategoryId &&
 							Object.keys(props.touched).length > 0 &&
 							props.touched.lineItemsString &&
 							props.touched.lineItemsString[parseInt(idx, 10)] &&
 							props.touched.lineItemsString[parseInt(idx, 10)]
-								.transactiomCategoryId
+								.transactionCategoryId
 								? 'is-invalid'
 								: ''
 						}`}
@@ -771,63 +833,63 @@ class CreateSupplierInvoice extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		console.log(data);
-		// this.props.supplierInvoiceCreateActions
-		// 	.createInvoice(formData)
-		// 	.then((res) => {
-		// 		this.props.commonActions.tostifyAlert(
-		// 			'success',
-		// 			'New Invoice Created Successfully.',
-		// 		);
-		// 		if (this.state.createMore) {
-		// 			this.setState(
-		// 				{
-		// 					createMore: false,
-		// 					selectedContact: '',
-		// 					term: '',
-		// 					data: [
-		// 						{
-		// 							id: 0,
-		// 							description: '',
-		// 							quantity: '',
-		// 							unitPrice: '',
-		// 							vatCategoryId: '',
-		// 							subTotal: 0,
-		// 							productId: '',
-		// 						},
-		// 					],
-		// 					initValue: {
-		// 						...this.state.initValue,
-		// 						...{
-		// 							total_net: 0,
-		// 							invoiceVATAmount: 0,
-		// 							totalAmount: 0,
-		// 							discountType: '',
-		// 							discount: 0,
-		// 							discountPercentage: '',
-		// 						},
-		// 					},
-		// 				},
-		// 				() => {
-		// 					resetForm(this.state.initValue);
-		// 					this.getInvoiceNo();
-		// 					this.formRef.current.setFieldValue(
-		// 						'lineItemsString',
-		// 						this.state.data,
-		// 						false,
-		// 					);
-		// 				},
-		// 			);
-		// 		} else {
-		// 			this.props.history.push('/admin/expense/supplier-invoice');
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		this.props.commonActions.tostifyAlert(
-		// 			'error',
-		// 			err && err.data ? err.data.message : 'Something Went Wrong',
-		// 		);
-		// 	});
+		console.log(this.state.data);
+		this.props.supplierInvoiceCreateActions
+			.createInvoice(formData)
+			.then((res) => {
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'New Invoice Created Successfully.',
+				);
+				if (this.state.createMore) {
+					this.setState(
+						{
+							createMore: false,
+							selectedContact: '',
+							term: '',
+							data: [
+								{
+									id: 0,
+									description: '',
+									quantity: '',
+									unitPrice: '',
+									vatCategoryId: '',
+									subTotal: 0,
+									productId: '',
+								},
+							],
+							initValue: {
+								...this.state.initValue,
+								...{
+									total_net: 0,
+									invoiceVATAmount: 0,
+									totalAmount: 0,
+									discountType: '',
+									discount: 0,
+									discountPercentage: '',
+								},
+							},
+						},
+						() => {
+							resetForm(this.state.initValue);
+							this.getInvoiceNo();
+							this.formRef.current.setFieldValue(
+								'lineItemsString',
+								this.state.data,
+								false,
+							);
+						},
+					);
+				} else {
+					this.props.history.push('/admin/expense/supplier-invoice');
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
 	};
 
 	openSupplierModal = (e) => {
@@ -978,7 +1040,7 @@ class CreateSupplierInvoice extends React.Component {
 																productId: Yup.string().required(
 																	'Product is Required',
 																),
-																transactiomCategoryId: Yup.string().required(
+																transactionCategoryId: Yup.string().required(
 																	'Account is Required',
 																),
 															}),
@@ -1492,6 +1554,7 @@ class CreateSupplierInvoice extends React.Component {
 																		Product
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
+																		width="300"
 																		dataField="account"
 																		dataFormat={(cell, rows) =>
 																			this.renderAccount(cell, rows, props)
@@ -1509,6 +1572,7 @@ class CreateSupplierInvoice extends React.Component {
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="quantity"
+																		width="100"
 																		dataFormat={(cell, rows) =>
 																			this.renderQuantity(cell, rows, props)
 																		}

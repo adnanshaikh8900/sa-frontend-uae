@@ -808,7 +808,7 @@ class CreateCustomerInvoice extends React.Component {
 
 	render() {
 		const { data, discountOptions, initValue } = this.state;
-
+		console.log(this.props.deposit_list);
 		const { project_list, currency_list, customer_list } = this.props;
 		return (
 			<div className="create-customer-invoice-screen">

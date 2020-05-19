@@ -21,7 +21,7 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
-
+import * as transactionCreateActions from '../../../bank_account/screens/transactions/actions';
 import { SupplierModal } from '../../sections';
 import { Loader, ConfirmDeleteModal } from 'components';
 
@@ -55,6 +55,10 @@ const mapDispatchToProps = (dispatch) => {
 			SupplierInvoiceDetailActions,
 			dispatch,
 		),
+		transactionCreateActions: bindActionCreators(
+			transactionCreateActions,
+			dispatch,
+		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -81,6 +85,7 @@ class DetailSupplierInvoice extends React.Component {
 			discountPercentage: '',
 			discountAmount: 0,
 			fileName: '',
+			purchaseCategory: [],
 		};
 
 		// this.options = {
@@ -136,7 +141,7 @@ class DetailSupplierInvoice extends React.Component {
 						this.props.supplierInvoiceActions.getCurrencyList();
 						this.props.supplierInvoiceActions.getCountryList();
 						this.props.supplierInvoiceActions.getProductList();
-
+						this.purchaseCategory();
 						this.setState(
 							{
 								current_supplier_id: this.props.location.state.id,
@@ -222,6 +227,25 @@ class DetailSupplierInvoice extends React.Component {
 				});
 		} else {
 			this.props.history.push('/admin/expense/supplier-invoice');
+		}
+	};
+
+	purchaseCategory = () => {
+		try {
+			this.props.transactionCreateActions
+				.getTransactionCategoryListForExplain('10')
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								purchaseCategory: res.data,
+							},
+							() => {},
+						);
+					}
+				});
+		} catch (err) {
+			console.log(err);
 		}
 	};
 
@@ -388,12 +412,12 @@ class DetailSupplierInvoice extends React.Component {
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
-		e.preventDefault();
+		//e.preventDefault();
 		let data = this.state.data;
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj[`${name}`] = e.target.value;
+				obj[`${name}`] = e;
 				idx = index;
 			}
 			return obj;
@@ -485,6 +509,8 @@ class DetailSupplierInvoice extends React.Component {
 				obj['unitPrice'] = parseInt(result.unitPrice);
 				obj['vatCategoryId'] = parseInt(result.vatCategoryId);
 				obj['description'] = result.description;
+				obj['transactionCategoryId'] = result.transactionCategoryId;
+				obj['transactionCategoryLabel'] = result.transactionCategoryLabel;
 				idx = index;
 			}
 			return obj;
@@ -502,6 +528,16 @@ class DetailSupplierInvoice extends React.Component {
 		form.setFieldValue(
 			`lineItemsString.${idx}.description`,
 			result.description,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.transactionCategoryId`,
+			result.transactionCategoryId,
+			true,
+		);
+		form.setFieldValue(
+			`lineItemsString.${idx}.transactionCategoryLabel`,
+			result.transactionCategoryLabel,
 			true,
 		);
 		this.updateAmount(data, props);
@@ -555,6 +591,71 @@ class DetailSupplierInvoice extends React.Component {
 							  })
 							: ''}
 					</Input>
+				)}
+			/>
+		);
+	};
+
+	renderAccount = (cell, row, props) => {
+		const { purchaseCategory } = this.state;
+		let idx;
+		this.state.data.map((obj, index) => {
+			if (obj.id === row.id) {
+				idx = index;
+			}
+			return obj;
+		});
+
+		return (
+			<Field
+				name={`lineItemsString.${idx}.transactionCategoryId`}
+				render={({ field, form }) => (
+					<Select
+						styles={{
+							menu: (provided) => ({ ...provided, zIndex: 9999 }),
+						}}
+						options={purchaseCategory ? purchaseCategory.categoriesList : []}
+						id="transactionCategoryId"
+						onChange={(e) => {
+							this.selectItem(
+								e.value,
+								row,
+								'transactionCategoryId',
+								form,
+								field,
+								props,
+							);
+						}}
+						// value={
+						// 	purchaseCategory &&
+						// 	purchaseCategory.categoriesList.find(
+						// 		(item) => item.value === +row.transactionCategoryId,
+						// 	)
+						// }
+						value={
+							purchaseCategory && purchaseCategory.categoriesList
+								? purchaseCategory.categoriesList
+										.find((item) => item.label === row.transactionCategoryLabel)
+										.options.find(
+											(item) => item.value === +row.transactionCategoryId,
+										)
+								: row.transactionCategoryId
+						}
+						placeholder="Select Account"
+						className={`${
+							props.errors.lineItemsString &&
+							props.errors.lineItemsString[parseInt(idx, 10)] &&
+							props.errors.lineItemsString[parseInt(idx, 10)]
+								.transactionCategoryId &&
+							Object.keys(props.touched).length > 0 &&
+							props.touched.lineItemsString &&
+							props.touched.lineItemsString[parseInt(idx, 10)] &&
+							props.touched.lineItemsString[parseInt(idx, 10)]
+								.transactionCategoryId
+								? 'is-invalid'
+								: ''
+						}`}
+					/>
 				)}
 			/>
 		);
@@ -1464,6 +1565,14 @@ class DetailSupplierInvoice extends React.Component {
 																			dataField="product"
 																			dataFormat={(cell, rows) =>
 																				this.renderProduct(cell, rows, props)
+																			}
+																		>
+																			Product
+																		</TableHeaderColumn>
+																		<TableHeaderColumn
+																			dataField="account"
+																			dataFormat={(cell, rows) =>
+																				this.renderAccount(cell, rows, props)
 																			}
 																		>
 																			Product

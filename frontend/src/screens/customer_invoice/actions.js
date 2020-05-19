@@ -168,6 +168,28 @@ export const getProductList = () => {
 			});
 	};
 };
+export const getDepositList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `rest/datalist/receipt/tnxCat`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: CUSTOMER_INVOICE.DEPOSIT_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 
 export const getContactList = (nameCode) => {
 	let contactType = nameCode ? nameCode : '';
@@ -260,6 +282,29 @@ export const getCountryList = () => {
 					dispatch({
 						type: CUSTOMER_INVOICE.COUNTRY_LIST,
 						payload: res.data,
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getPaymentMode = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/datalist/payMode',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: CUSTOMER_INVOICE.PAY_MODE,
+						payload: {
+							data: res.data,
+						},
 					});
 				}
 			})

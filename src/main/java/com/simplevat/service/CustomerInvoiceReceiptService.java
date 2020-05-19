@@ -6,4 +6,5 @@ public abstract class CustomerInvoiceReceiptService extends SimpleVatService<Int
 
 	public abstract Integer findNextReceiptNoForInvoice(Integer invoiceId);
 
+	public abstract CustomerInvoiceReceipt findForReceipt(Integer receiptId);
 }

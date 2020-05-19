@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
-import com.simplevat.dao.JournalLineItemDao;
 import com.simplevat.entity.CustomerInvoiceReceipt;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
@@ -25,6 +24,7 @@ import com.simplevat.entity.Receipt;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.service.ContactService;
+import com.simplevat.service.CustomerInvoiceReceiptService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.ReceiptService;
@@ -51,6 +51,9 @@ public class ReceiptRestHelper {
 
 	@Autowired
 	private JournalLineItemService journalLineItemService;
+
+	@Autowired
+	private CustomerInvoiceReceiptService customerInvoiceReceiptService;
 
 	public List<ReceiptModel> getListModel(Object receipts) {
 		List<ReceiptModel> receiptModelList = new ArrayList<ReceiptModel>();
@@ -135,7 +138,11 @@ public class ReceiptRestHelper {
 		if (receipt.getReceiptAttachmentPath() != null) {
 			model.setFilePath("/file/" + fileHelper.convertFilePthToUrl(receipt.getReceiptAttachmentPath()));
 		}
+		CustomerInvoiceReceipt receiptEntry = customerInvoiceReceiptService.findForReceipt(receipt.getId());
+		if (receiptEntry != null)
+			model.setInvoiceId(receiptEntry.getCustomerInvoice().getId());
 		return model;
+
 	}
 
 	public CustomerInvoiceReceipt getCustomerInvoiceReceiptEntity(ReceiptRequestModel receiptRequestModel) {

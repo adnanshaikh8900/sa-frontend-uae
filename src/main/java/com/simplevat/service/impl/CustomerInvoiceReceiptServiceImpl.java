@@ -28,4 +28,10 @@ public class CustomerInvoiceReceiptServiceImpl extends CustomerInvoiceReceiptSer
 
 	}
 
+	@Override
+	public CustomerInvoiceReceipt findForReceipt(Integer receiptId) {
+		List<CustomerInvoiceReceipt> receiptList = customerInvoiceReceiptDao.findForReceipt(receiptId);
+		return receiptList != null && !receiptList.isEmpty() ? receiptList.get(0) : null;
+	}
+
 }

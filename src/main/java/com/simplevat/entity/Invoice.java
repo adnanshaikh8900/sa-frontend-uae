@@ -56,9 +56,8 @@ import org.hibernate.annotations.ColumnDefault;
 		@NamedQuery(name = "lastInvoice", query = "from Invoice i order by i.id desc"),
 		@NamedQuery(name = "activeInvoicesByDateRange", query = "from Invoice i where i.invoiceDate between :startDate and :endDate and i.deleteFlag = false"),
 		@NamedQuery(name = "overDueAmount", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2"),
-		@NamedQuery(name = "overDueAmountWeeklyMonthly", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2 and i.invoiceDueDate between :startDate and :endDate")
-		// select
-		// com.simplevat.entity.Invoice(i.invoiceDate,i.invoiceDueDate,i.totalAmount,i.type)
+		@NamedQuery(name = "overDueAmountWeeklyMonthly", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2 and i.invoiceDueDate between :startDate and :endDate"),
+		@NamedQuery(name = "unpaidInvoices", query = "from Invoice i where i.status < :status and i.contact.contactId = :id and i.type =:type and i.deleteFlag = false order by i.id desc")
 
 })
 public class Invoice implements Serializable {

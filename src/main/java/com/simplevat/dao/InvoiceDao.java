@@ -5,6 +5,7 @@
  */
 package com.simplevat.dao;
 
+import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.entity.Invoice;
 import com.simplevat.model.OverDueAmountDetailsModel;
@@ -22,7 +23,8 @@ import java.util.Map;
  */
 public interface InvoiceDao extends Dao<Integer, Invoice> {
 
-	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,PaginationModel paginationModel);
+	public PaginationResponseModel getInvoiceList(Map<InvoiceFilterEnum, Object> filterMap,
+			PaginationModel paginationModel);
 
 	public List<DropdownModel> getInvoicesForDropdown();
 
@@ -33,5 +35,7 @@ public interface InvoiceDao extends Dao<Integer, Invoice> {
 	public List<Invoice> getInvoiceList(Date startDate, Date endDate);
 
 	public OverDueAmountDetailsModel getOverDueAmountDetails(Integer type);
+
+	public List<Invoice> getUnpaidInvoice(Integer customerId, ContactTypeEnum type);
 
 }

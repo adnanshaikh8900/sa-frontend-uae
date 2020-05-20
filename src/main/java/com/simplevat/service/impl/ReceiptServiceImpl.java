@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
-import com.simplevat.dao.CustomerInvoiceReceiptDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.ReceiptDao;
 import com.simplevat.entity.Receipt;

@@ -6,9 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,20 +27,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.FileTypeEnum;
-import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.entity.CustomerInvoiceReceipt;
+import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
-import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Receipt;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.PostingRequestModel;
+import com.simplevat.rest.invoicecontroller.InvoiceRestHelper;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CustomerInvoiceReceiptService;
 import com.simplevat.service.InvoiceService;
-import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.ReceiptService;
 import com.simplevat.utils.FileHelper;
@@ -83,7 +81,7 @@ public class ReceiptController {
 	private FileHelper fileHelper;
 
 	@Autowired
-	private JournalLineItemService journalLineItemService;
+	private InvoiceRestHelper invoiceRestHelper;
 
 	@ApiOperation(value = "Get receipt List")
 	@GetMapping(value = "/getList")
@@ -184,12 +182,13 @@ public class ReceiptController {
 			receiptService.persist(receipt);
 
 			// save data in Mapping Table
-			CustomerInvoiceReceipt customerInvoiceReceipt = receiptRestHelper
+			List<CustomerInvoiceReceipt> customerInvoiceReceiptList = receiptRestHelper
 					.getCustomerInvoiceReceiptEntity(receiptRequestModel);
-			customerInvoiceReceipt.setReceipt(receipt);
-			customerInvoiceReceipt.setCreatedBy(userId);
-			customerInvoiceReceiptService.persist(customerInvoiceReceipt);
-
+			for (CustomerInvoiceReceipt customerInvoiceReceipt : customerInvoiceReceiptList) {
+				customerInvoiceReceipt.setReceipt(receipt);
+				customerInvoiceReceipt.setCreatedBy(userId);
+				customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+			}
 			// Post journal
 			Journal journal = receiptRestHelper.receiptPosting(
 					new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
@@ -248,5 +247,25 @@ public class ReceiptController {
 			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	/**
+	 * getUnpaid invoice
+	 * 
+	 * @param id Contact Id
+	 * @return list InvoiceDueAmountModel datalist
+	 */
+	@ApiOperation(value = "Get Overdue Amount Details")
+	@GetMapping(value = "/getDueInvoices")
+	public ResponseEntity getDueInvoiceForContact(@RequestParam("id") Integer contactId,
+			@RequestParam("type") ContactTypeEnum type) {
+		try {
+			List<Invoice> invoiceList = invoiceService.getUnpaidInvoice(contactId, type);
+			return new ResponseEntity(invoiceRestHelper.getDueInvoiceList(invoiceList), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 }

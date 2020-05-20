@@ -1,5 +1,6 @@
 package com.simplevat.rest.receiptcontroller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -10,9 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
@@ -23,6 +28,7 @@ import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Receipt;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PostingRequestModel;
+import com.simplevat.rest.invoicecontroller.InvoiceDueAmountModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CustomerInvoiceReceiptService;
 import com.simplevat.service.InvoiceService;
@@ -33,6 +39,7 @@ import com.simplevat.utils.FileHelper;
 
 @Component
 public class ReceiptRestHelper {
+	private final Logger logger = LoggerFactory.getLogger(ReceiptRestHelper.class);
 
 	@Autowired
 	private InvoiceService invoiceService;
@@ -72,10 +79,17 @@ public class ReceiptRestHelper {
 					model.setCustomerName(
 							receipt.getContact().getFirstName() + " " + receipt.getContact().getLastName());
 				}
-				if (receipt.getInvoice() != null) {
-					model.setInvoiceId(receipt.getInvoice().getId());
-					model.setInvoiceNumber(receipt.getInvoice().getReferenceNumber());
+
+				List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptService
+						.findForReceipt(receipt.getId());
+				if (receiptEntryList != null && !receiptEntryList.isEmpty()) {
+					List<String> invIdlist = new ArrayList<>();
+					for (CustomerInvoiceReceipt receiptEntry : receiptEntryList) {
+						invIdlist.add(receiptEntry.getCustomerInvoice().getId().toString());
+					}
+					model.setInvoiceIdStr(String.join(",", invIdlist));
 				}
+
 				if (receipt.getReceiptDate() != null) {
 					Date date = Date.from(receipt.getReceiptDate().atZone(ZoneId.systemDefault()).toInstant());
 					model.setReceiptDate(date);
@@ -138,28 +152,42 @@ public class ReceiptRestHelper {
 		if (receipt.getReceiptAttachmentPath() != null) {
 			model.setFilePath("/file/" + fileHelper.convertFilePthToUrl(receipt.getReceiptAttachmentPath()));
 		}
-		CustomerInvoiceReceipt receiptEntry = customerInvoiceReceiptService.findForReceipt(receipt.getId());
-		if (receiptEntry != null)
-			model.setInvoiceId(receiptEntry.getCustomerInvoice().getId());
+		List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptService.findForReceipt(receipt.getId());
+		if (receiptEntryList != null) {
+			model.setPaidInvoiceList(getInvoiceDueAmountList(receiptEntryList));
+		}
 		return model;
 
 	}
 
-	public CustomerInvoiceReceipt getCustomerInvoiceReceiptEntity(ReceiptRequestModel receiptRequestModel) {
-		CustomerInvoiceReceipt receipt = new CustomerInvoiceReceipt();
+	public List<CustomerInvoiceReceipt> getCustomerInvoiceReceiptEntity(ReceiptRequestModel receiptRequestModel) {
+		if (receiptRequestModel.getPaidInvoiceListStr() != null
+				&& !receiptRequestModel.getPaidInvoiceListStr().isEmpty()) {
 
-		if (receiptRequestModel.getInvoiceId() != null) {
-			Invoice invoice = invoiceService.findByPK(receiptRequestModel.getInvoiceId());
-			invoice.setStatus(InvoiceStatusEnum.PAID.getValue());
-			invoice.setDueAmount(BigDecimal.ZERO);
-			receipt.setCustomerInvoice(invoice);
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				List<InvoiceDueAmountModel> itemModels = mapper.readValue(receiptRequestModel.getPaidInvoiceListStr(),
+						new TypeReference<List<InvoiceDueAmountModel>>() {
+						});
+				receiptRequestModel.setPaidInvoiceList(itemModels);
+			} catch (IOException ex) {
+				logger.error("Error", ex);
+			}
+
+			List<CustomerInvoiceReceipt> receiptList = new ArrayList<>();
+			for (InvoiceDueAmountModel dueAmountModel : receiptRequestModel.getPaidInvoiceList()) {
+				CustomerInvoiceReceipt receipt = new CustomerInvoiceReceipt();
+				Invoice invoice = invoiceService.findByPK(dueAmountModel.getId());
+				invoice.setStatus(InvoiceStatusEnum.PAID.getValue());
+				receipt.setCustomerInvoice(invoice);
+				receipt.setPaidAmount(dueAmountModel.getPaidAmount());
+				receipt.setDeleteFlag(Boolean.FALSE);
+				receipt.setDueAmount(dueAmountModel.getDueAmount().subtract(dueAmountModel.getPaidAmount()));
+				receiptList.add(receipt);
+			}
+			return receiptList;
 		}
-		receipt.setPaidAmount(receiptRequestModel.getAmount());
-		receipt.setDeleteFlag(Boolean.FALSE);
-		// Update for partial payment
-		receipt.setDueAmount(BigDecimal.ZERO);
-
-		return receipt;
+		return new ArrayList<>();
 	}
 
 	public Journal receiptPosting(PostingRequestModel postingRequestModel, Integer userId,
@@ -203,5 +231,34 @@ public class ReceiptRestHelper {
 		journal.setPostingReferenceType(PostingReferenceTypeEnum.RECEIPT);
 		journal.setJournalDate(LocalDateTime.now());
 		return journal;
+	}
+
+	private List<InvoiceDueAmountModel> getInvoiceDueAmountList(List<CustomerInvoiceReceipt> receiptList) {
+
+		if (receiptList != null && !receiptList.isEmpty()) {
+			List<InvoiceDueAmountModel> modelList = new ArrayList<>();
+			for (CustomerInvoiceReceipt customerInvoiceReceipt : receiptList) {
+				Invoice invoice = customerInvoiceReceipt.getCustomerInvoice();
+				InvoiceDueAmountModel model = new InvoiceDueAmountModel();
+
+				model.setId(invoice.getId());
+				model.setDueAmount(invoice.getDueAmount() != null ? invoice.getDueAmount() : invoice.getTotalAmount());
+				if (invoice.getInvoiceDate() != null) {
+					Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
+					model.setDate(date);
+				}
+				if (invoice.getInvoiceDueDate() != null) {
+					Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
+					model.setDueDate(date);
+				}
+				model.setReferenceNo(invoice.getReferenceNumber());
+				model.setTotalAount(invoice.getTotalAmount());
+
+				modelList.add(model);
+			}
+			return modelList;
+		}
+
+		return new ArrayList<>();
 	}
 }

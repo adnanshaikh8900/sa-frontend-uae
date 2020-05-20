@@ -329,6 +329,7 @@ public class InvoiceRestHelper {
 				if (invoice.getContact() != null) {
 					model.setContactId(invoice.getContact().getContactId());
 				}
+				model.setDueAmount(invoice.getDueAmount() == null ? invoice.getTotalAmount() : invoice.getDueAmount());
 				invoiceListModels.add(model);
 			}
 		}
@@ -616,5 +617,34 @@ public class InvoiceRestHelper {
 		journal.setJournalDate(LocalDateTime.now());
 
 		return journal;
+	}
+
+	public List<InvoiceDueAmountModel> getDueInvoiceList(List<Invoice> invoiceList) {
+
+		if (invoiceList != null && !invoiceList.isEmpty()) {
+			List<InvoiceDueAmountModel> modelList = new ArrayList<>();
+			for (Invoice invoice : invoiceList) {
+				InvoiceDueAmountModel model = new InvoiceDueAmountModel();
+
+				model.setId(invoice.getId());
+				model.setDueAmount(invoice.getDueAmount() != null ? invoice.getDueAmount() : invoice.getTotalAmount());
+				if (invoice.getInvoiceDate() != null) {
+					Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
+					model.setDate(date);
+				}
+				if (invoice.getInvoiceDueDate() != null) {
+					Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
+					model.setDueDate(date);
+				}
+				model.setReferenceNo(invoice.getReferenceNumber());
+				model.setTotalAount(invoice.getTotalAmount());
+
+				modelList.add(model);
+			}
+			return modelList;
+		}
+
+		return new ArrayList<>();
+
 	}
 }

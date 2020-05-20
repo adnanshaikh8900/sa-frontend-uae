@@ -19,5 +19,5 @@ public class InvoiceListModel {
 	private BigDecimal totalVatAmount;
 	private String statusEnum;
 	private Integer contactId;
-
+	private BigDecimal dueAmount;
 }

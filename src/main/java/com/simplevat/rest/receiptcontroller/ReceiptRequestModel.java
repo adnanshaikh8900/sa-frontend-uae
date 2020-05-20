@@ -2,10 +2,12 @@ package com.simplevat.rest.receiptcontroller;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.simplevat.constant.PayMode;
+import com.simplevat.rest.invoicecontroller.InvoiceDueAmountModel;
 
 import lombok.Data;
 
@@ -17,7 +19,6 @@ public class ReceiptRequestModel {
 	private String receiptNo; // payment filed from ui
 	private String referenceCode; // reference number
 	private Integer contactId; // customer details
-	private Integer invoiceId;
 	private BigDecimal amount;
 
 	// New
@@ -28,5 +29,8 @@ public class ReceiptRequestModel {
 	private String fileName;
 	private String filePath;
 	private String receiptAttachmentDescription;
+	/** @see ReceiptLineItem */
+	private String paidInvoiceListStr;
+	private List<InvoiceDueAmountModel> paidInvoiceList;
 
 }

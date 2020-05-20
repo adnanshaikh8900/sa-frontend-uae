@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,7 @@ import com.simplevat.utils.FileHelper;
 import io.swagger.annotations.ApiOperation;
 
 import static com.simplevat.constant.ErrorConstant.ERROR;
+
 /**
  *
  * @author ashish
@@ -127,8 +130,9 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	public ResponseEntity delete(@RequestParam(value = "id") Integer id) {
 		Invoice invoice = invoiceService.findByPK(id);
 		if (invoice != null) {
-			invoice.setDeleteFlag(Boolean.TRUE);
-			invoiceService.update(invoice, invoice.getId());
+			List<Integer> receiptList = new ArrayList<>();
+			receiptList.add(id);
+			invoiceService.deleteByIds(receiptList);
 			invoiceService.deleteJournaForInvoice(invoice);
 		}
 		return new ResponseEntity(HttpStatus.OK);

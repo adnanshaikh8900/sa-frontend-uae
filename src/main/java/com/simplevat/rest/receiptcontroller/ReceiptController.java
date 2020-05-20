@@ -6,7 +6,10 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.FileTypeEnum;
+import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.entity.CustomerInvoiceReceipt;
 import com.simplevat.entity.Journal;
+import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Receipt;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.PostingRequestModel;
@@ -37,6 +42,7 @@ import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CustomerInvoiceReceiptService;
 import com.simplevat.service.InvoiceService;
+import com.simplevat.service.JournalLineItemService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.ReceiptService;
 import com.simplevat.utils.FileHelper;
@@ -75,6 +81,9 @@ public class ReceiptController {
 
 	@Autowired
 	private FileHelper fileHelper;
+
+	@Autowired
+	private JournalLineItemService journalLineItemService;
 
 	@ApiOperation(value = "Get receipt List")
 	@GetMapping(value = "/getList")

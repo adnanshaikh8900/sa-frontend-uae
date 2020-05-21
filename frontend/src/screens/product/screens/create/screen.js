@@ -68,7 +68,7 @@ class CreateProduct extends React.Component {
 				salesUnitPrice: '',
 				purchaseUnitPrice: '',
 				productPriceType: ['SALES'],
-				salesTransactionCategoryId: [],
+				salesTransactionCategoryId: 84,
 				purchaseTransactionCategoryId: [],
 				salesDescription: '',
 				purchaseDescription: '',

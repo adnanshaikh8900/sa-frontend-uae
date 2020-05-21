@@ -326,7 +326,7 @@ class CustomerInvoice extends React.Component {
 									)
 								}
 							>
-								<i className="fas fa-eye" /> Record Payment
+								<i className="fas fa-university" /> Record Payment
 							</DropdownItem>
 						)}
 						<DropdownItem

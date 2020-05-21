@@ -383,402 +383,413 @@ class CreateReceipt extends React.Component {
 															</Col>
 														</Row>
 														<hr />
-														<Row>
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="amount">
-																		<span className="text-danger">*</span>Amount
-																		Received
-																	</Label>
-																	<Input
-																		type="text"
-																		id="amount"
-																		name="amount"
-																		placeholder="Amount"
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
-																			) {
-																				props.handleChange('amount')(option);
-																			}
-																		}}
-																		value={props.values.amount}
-																		className={`form-control ${
-																			props.errors.amount &&
-																			props.touched.amount
-																				? 'is-invalid'
-																				: ''
-																		}`}
-																	/>
-																	{props.errors.amount &&
-																		props.touched.amount && (
-																			<div className="invalid-feedback">
-																				{props.errors.amount}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-														</Row>
-														<hr />
-														<Row>
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="receipt_date">
-																		<span className="text-danger">*</span>
-																		Payment Date
-																	</Label>
-																	<DatePicker
-																		id="date"
-																		name="receiptDate"
-																		placeholderText="Receipt Date"
-																		selected={props.values.receiptDate}
-																		showMonthDropdown
-																		showYearDropdown
-																		dateFormat="dd/MM/yyyy"
-																		dropdownMode="select"
-																		onChange={(value) => {
-																			props.handleChange('receiptDate')(value);
-																		}}
-																		className={`form-control ${
-																			props.errors.receiptDate &&
-																			props.touched.receiptDate
-																				? 'is-invalid'
-																				: ''
-																		}`}
-																	/>
-																	{props.errors.receiptDate &&
-																		props.touched.receiptDate && (
-																			<div className="invalid-feedback">
-																				{props.errors.receiptDate}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>
-														</Row>
-														<Row>
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="payMode">Payment Mode</Label>
-																	<Select
-																		options={
-																			pay_mode
-																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						pay_mode,
-																						'Mode',
-																				  )
-																				: []
-																		}
-																		value={props.values.payMode}
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				props.handleChange('payMode')(option);
-																			} else {
-																				props.handleChange('payMode')('');
-																			}
-																		}}
-																		placeholder="Select Payment Mode"
-																		id="payMode"
-																		name="payMode"
-																		className={
-																			props.errors.payMode &&
-																			props.touched.payMode
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.payMode &&
-																		props.touched.payMode && (
-																			<div className="invalid-feedback">
-																				{props.errors.payMode}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>{' '}
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="depositeTo">
-																		<span className="text-danger">*</span>{' '}
-																		Deposit To
-																	</Label>
-																	<Select
-																		options={deposit_list}
-																		value={props.values.depositeTo}
-																		onChange={(option) => {
-																			if (option && option.value) {
-																				props.handleChange('depositeTo')(
-																					option,
-																				);
-																			} else {
-																				props.handleChange('depositeTo')('');
-																			}
-																		}}
-																		placeholder="Select Deposit To"
-																		id="depositeTo"
-																		name="depositeTo"
-																		className={
-																			props.errors.depositeTo &&
-																			props.touched.depositeTo
-																				? 'is-invalid'
-																				: ''
-																		}
-																	/>
-																	{props.errors.depositeTo &&
-																		props.touched.depositeTo && (
-																			<div className="invalid-feedback">
-																				{props.errors.depositeTo}
-																			</div>
-																		)}
-																</FormGroup>
-															</Col>{' '}
-														</Row>
-														<hr />
-														<Row>
-															<Col lg={8}>
-																<Row>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="referenceCode">
-																				Reference Number
-																			</Label>
-																			<Input
-																				type="text"
-																				id="referenceCode"
-																				name="referenceCode"
-																				placeholder="Enter Reference Number"
-																				onChange={(option) => {
-																					if (
-																						option.target.value === '' ||
-																						this.regExBoth.test(
-																							option.target.value,
-																						)
-																					) {
-																						props.handleChange('referenceCode')(
-																							option,
-																						);
-																					}
-																				}}
-																				value={props.values.referenceCode}
-																			/>
-																		</FormGroup>
-																	</Col>
-																</Row>
-																<Row>
-																	<Col lg={12}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="notes">Notes</Label>
-																			<Input
-																				type="textarea"
-																				name="notes"
-																				id="notes"
-																				rows="5"
-																				placeholder="Notes"
-																				onChange={(option) =>
-																					props.handleChange('notes')(option)
-																				}
-																				defaultValue={props.values.notes}
-																			/>
-																		</FormGroup>
-																	</Col>
-																</Row>
-															</Col>
-															<Col lg={4}>
-																<Row>
-																	<Col lg={12}>
-																		<FormGroup className="mb-3">
-																			<Field
-																				name="attachmentFile"
-																				render={({ field, form }) => (
-																					<div>
-																						<Label>Attachment</Label> <br />
-																						<div className="file-upload-cont">
-																							<Button
-																								color="primary"
-																								onClick={() => {
-																									document
-																										.getElementById('fileInput')
-																										.click();
+														{props.values.contactId && (
+															<div>
+																{this.state.data.length > 0 ? (
+																	<div>
+																		<Row>
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="amount">
+																						<span className="text-danger">
+																							*
+																						</span>
+																						Amount Received
+																					</Label>
+																					<Input
+																						type="text"
+																						id="amount"
+																						name="amount"
+																						placeholder="Amount"
+																						onChange={(option) => {
+																							if (
+																								option.target.value === '' ||
+																								this.regEx.test(
+																									option.target.value,
+																								)
+																							) {
+																								props.handleChange('amount')(
+																									option,
+																								);
+																							}
+																						}}
+																						value={props.values.amount}
+																						className={`form-control ${
+																							props.errors.amount &&
+																							props.touched.amount
+																								? 'is-invalid'
+																								: ''
+																						}`}
+																					/>
+																					{props.errors.amount &&
+																						props.touched.amount && (
+																							<div className="invalid-feedback">
+																								{props.errors.amount}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+																		</Row>
+																		<hr />
+																		<Row>
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="receipt_date">
+																						<span className="text-danger">
+																							*
+																						</span>
+																						Payment Date
+																					</Label>
+																					<DatePicker
+																						id="date"
+																						name="receiptDate"
+																						placeholderText="Receipt Date"
+																						selected={props.values.receiptDate}
+																						showMonthDropdown
+																						showYearDropdown
+																						dateFormat="dd/MM/yyyy"
+																						dropdownMode="select"
+																						onChange={(value) => {
+																							props.handleChange('receiptDate')(
+																								value,
+																							);
+																						}}
+																						className={`form-control ${
+																							props.errors.receiptDate &&
+																							props.touched.receiptDate
+																								? 'is-invalid'
+																								: ''
+																						}`}
+																					/>
+																					{props.errors.receiptDate &&
+																						props.touched.receiptDate && (
+																							<div className="invalid-feedback">
+																								{props.errors.receiptDate}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>
+																		</Row>
+																		<Row>
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="payMode">
+																						Payment Mode
+																					</Label>
+																					<Select
+																						options={
+																							pay_mode
+																								? selectOptionsFactory.renderOptions(
+																										'label',
+																										'value',
+																										pay_mode,
+																										'Mode',
+																								  )
+																								: []
+																						}
+																						value={props.values.payMode}
+																						onChange={(option) => {
+																							if (option && option.value) {
+																								props.handleChange('payMode')(
+																									option,
+																								);
+																							} else {
+																								props.handleChange('payMode')(
+																									'',
+																								);
+																							}
+																						}}
+																						placeholder="Select Payment Mode"
+																						id="payMode"
+																						name="payMode"
+																						className={
+																							props.errors.payMode &&
+																							props.touched.payMode
+																								? 'is-invalid'
+																								: ''
+																						}
+																					/>
+																					{props.errors.payMode &&
+																						props.touched.payMode && (
+																							<div className="invalid-feedback">
+																								{props.errors.payMode}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>{' '}
+																			<Col lg={4}>
+																				<FormGroup className="mb-3">
+																					<Label htmlFor="depositeTo">
+																						<span className="text-danger">
+																							*
+																						</span>{' '}
+																						Deposit To
+																					</Label>
+																					<Select
+																						options={deposit_list}
+																						value={props.values.depositeTo}
+																						onChange={(option) => {
+																							if (option && option.value) {
+																								props.handleChange(
+																									'depositeTo',
+																								)(option);
+																							} else {
+																								props.handleChange(
+																									'depositeTo',
+																								)('');
+																							}
+																						}}
+																						placeholder="Select Deposit To"
+																						id="depositeTo"
+																						name="depositeTo"
+																						className={
+																							props.errors.depositeTo &&
+																							props.touched.depositeTo
+																								? 'is-invalid'
+																								: ''
+																						}
+																					/>
+																					{props.errors.depositeTo &&
+																						props.touched.depositeTo && (
+																							<div className="invalid-feedback">
+																								{props.errors.depositeTo}
+																							</div>
+																						)}
+																				</FormGroup>
+																			</Col>{' '}
+																		</Row>
+																		<hr />
+																		<Row>
+																			<Col lg={8}>
+																				<Row>
+																					<Col lg={6}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="referenceCode">
+																								Reference Number
+																							</Label>
+																							<Input
+																								type="text"
+																								id="referenceCode"
+																								name="referenceCode"
+																								placeholder="Enter Reference Number"
+																								onChange={(option) => {
+																									if (
+																										option.target.value ===
+																											'' ||
+																										this.regExBoth.test(
+																											option.target.value,
+																										)
+																									) {
+																										props.handleChange(
+																											'referenceCode',
+																										)(option);
+																									}
 																								}}
-																								className="btn-square mr-3"
-																							>
-																								<i className="fa fa-upload"></i>{' '}
-																								Upload
-																							</Button>
-																							<input
-																								id="fileInput"
-																								ref={(ref) => {
-																									this.uploadFile = ref;
-																								}}
-																								type="file"
-																								style={{ display: 'none' }}
-																								onChange={(e) => {
-																									this.handleFileChange(
-																										e,
-																										props,
-																									);
-																								}}
+																								value={
+																									props.values.referenceCode
+																								}
 																							/>
-																							{this.state.fileName ? (
-																								this.state.fileName
-																							) : (
-																								<NavLink
-																									href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`}
-																									download={
-																										this.state.initValue
-																											.fileName
-																									}
-																									style={{
-																										fontSize: '0.875rem',
-																									}}
-																									target="_blank"
-																								>
-																									{
-																										this.state.initValue
-																											.fileName
-																									}
-																								</NavLink>
+																						</FormGroup>
+																					</Col>
+																				</Row>
+																				<Row>
+																					<Col lg={12}>
+																						<FormGroup className="mb-3">
+																							<Label htmlFor="notes">
+																								Notes
+																							</Label>
+																							<Input
+																								type="textarea"
+																								name="notes"
+																								id="notes"
+																								rows="5"
+																								placeholder="Notes"
+																								onChange={(option) =>
+																									props.handleChange('notes')(
+																										option,
+																									)
+																								}
+																								defaultValue={
+																									props.values.notes
+																								}
+																							/>
+																						</FormGroup>
+																					</Col>
+																				</Row>
+																			</Col>
+																			<Col lg={4}>
+																				<Row>
+																					<Col lg={12}>
+																						<FormGroup className="mb-3">
+																							<Field
+																								name="attachmentFile"
+																								render={({ field, form }) => (
+																									<div>
+																										<Label>Attachment</Label>{' '}
+																										<br />
+																										<div className="file-upload-cont">
+																											<Button
+																												color="primary"
+																												onClick={() => {
+																													document
+																														.getElementById(
+																															'fileInput',
+																														)
+																														.click();
+																												}}
+																												className="btn-square mr-3"
+																											>
+																												<i className="fa fa-upload"></i>{' '}
+																												Upload
+																											</Button>
+																											<input
+																												id="fileInput"
+																												ref={(ref) => {
+																													this.uploadFile = ref;
+																												}}
+																												type="file"
+																												style={{
+																													display: 'none',
+																												}}
+																												onChange={(e) => {
+																													this.handleFileChange(
+																														e,
+																														props,
+																													);
+																												}}
+																											/>
+																											{this.state.fileName ? (
+																												this.state.fileName
+																											) : (
+																												<NavLink
+																													href={`${API_ROOT_URL.API_ROOT_URL}${initValue.filePath}`}
+																													download={
+																														this.state.initValue
+																															.fileName
+																													}
+																													style={{
+																														fontSize:
+																															'0.875rem',
+																													}}
+																													target="_blank"
+																												>
+																													{
+																														this.state.initValue
+																															.fileName
+																													}
+																												</NavLink>
+																											)}
+																										</div>
+																									</div>
+																								)}
+																							/>
+																							{props.errors.attachmentFile && (
+																								<div className="invalid-file">
+																									{props.errors.attachmentFile}
+																								</div>
 																							)}
-																						</div>
+																						</FormGroup>
+																					</Col>
+																				</Row>
+																			</Col>
+																		</Row>
+																		<Row>
+																			<div
+																				className={
+																					props.errors.paidInvoiceListStr &&
+																					props.touched.paidInvoiceListStr
+																						? 'is-invalid'
+																						: ''
+																				}
+																			></div>
+																			{props.errors.paidInvoiceListStr &&
+																				props.touched.paidInvoiceListStr && (
+																					<div
+																						className="invalid-feedback"
+																						style={{ fontSize: '20px' }}
+																					>
+																						{props.errors.paidInvoiceListStr}
 																					</div>
 																				)}
-																			/>
-																			{props.errors.attachmentFile && (
-																				<div className="invalid-file">
-																					{props.errors.attachmentFile}
-																				</div>
-																			)}
-																		</FormGroup>
-																	</Col>
-																</Row>
-															</Col>
-														</Row>
-														<Row>
-															<div
-																className={
-																	props.errors.paidInvoiceListStr &&
-																	props.touched.paidInvoiceListStr
-																		? 'is-invalid'
-																		: ''
-																}
-															></div>
-															{props.errors.paidInvoiceListStr &&
-																props.touched.paidInvoiceListStr && (
-																	<div
-																		className="invalid-feedback"
-																		style={{ fontSize: '20px' }}
-																	>
-																		{props.errors.paidInvoiceListStr}
+																		</Row>
+																		<Row>
+																			<BootstrapTable
+																				selectRow={this.selectRowProp}
+																				data={data}
+																				version="4"
+																				hover
+																				keyField="id"
+																				className="invoice-create-table"
+																			>
+																				<TableHeaderColumn
+																					dataField="date"
+																					dataFormat={(cell, rows) =>
+																						this.date(cell, rows, props)
+																					}
+																				>
+																					Date
+																				</TableHeaderColumn>
+																				<TableHeaderColumn dataField="referenceNo">
+																					Invoice Number
+																				</TableHeaderColumn>
+																				<TableHeaderColumn dataField="totalAount">
+																					Invoice Amount
+																				</TableHeaderColumn>
+																				<TableHeaderColumn dataField="dueAmount">
+																					Amount Due
+																				</TableHeaderColumn>
+																				<TableHeaderColumn
+																					dataField="paidAmount"
+																					dataFormat={(cell, rows) =>
+																						this.renderAmount(cell, rows, props)
+																					}
+																				>
+																					Payment
+																				</TableHeaderColumn>
+																			</BootstrapTable>
+																		</Row>
+																		<Row>
+																			<Col lg={12} className="mt-5">
+																				<FormGroup className="text-right">
+																					<Button
+																						type="button"
+																						color="primary"
+																						className="btn-square mr-3"
+																						onClick={() => {
+																							this.setState({
+																								createMore: false,
+																							});
+																							props.handleSubmit();
+																						}}
+																					>
+																						<i className="fa fa-dot-circle-o"></i>{' '}
+																						Create
+																					</Button>
+																					<Button
+																						type="button"
+																						color="secondary"
+																						className="btn-square"
+																						onClick={() => {
+																							this.props.history.push(
+																								'/admin/revenue/receipt',
+																							);
+																						}}
+																					>
+																						<i className="fa fa-ban"></i> Cancel
+																					</Button>
+																				</FormGroup>
+																			</Col>
+																		</Row>
+																	</div>
+																) : (
+																	<div>
+																		There are no pending invoices for selected
+																		customer. Please select different customer
+																		or create a new invoice to proceed further.
 																	</div>
 																)}
-														</Row>
-														<Row>
-															<BootstrapTable
-																selectRow={this.selectRowProp}
-																data={data}
-																version="4"
-																hover
-																keyField="id"
-																className="invoice-create-table"
-															>
-																<TableHeaderColumn
-																	dataField="date"
-																	dataFormat={(cell, rows) =>
-																		this.date(cell, rows, props)
-																	}
-																>
-																	Date
-																</TableHeaderColumn>
-																<TableHeaderColumn dataField="referenceNo">
-																	Invoice Number
-																</TableHeaderColumn>
-																<TableHeaderColumn dataField="totalAount">
-																	Invoice Amount
-																</TableHeaderColumn>
-																<TableHeaderColumn dataField="dueAmount">
-																	Amount Due
-																</TableHeaderColumn>
-																<TableHeaderColumn
-																	dataField="paidAmount"
-																	dataFormat={(cell, rows) =>
-																		this.renderAmount(cell, rows, props)
-																	}
-																>
-																	Payment
-																</TableHeaderColumn>
-																{/* <TableHeaderColumn
-																		dataField="description"
-																		dataFormat={(cell, rows) =>
-																			this.renderDescription(cell, rows, props)
-																		}
-																	>
-																		Description
-																	</TableHeaderColumn>
-																	<TableHeaderColumn
-																		dataField="quantity"
-																		dataFormat={(cell, rows) =>
-																			this.renderQuantity(cell, rows, props)
-																		}
-																	>
-																		Quantity
-																	</TableHeaderColumn>
-																	<TableHeaderColumn
-																		dataField="unitPrice"
-																		dataFormat={(cell, rows) =>
-																			this.renderUnitPrice(cell, rows, props)
-																		}
-																	>
-																		Unit Price (All)
-																	</TableHeaderColumn>
-																	<TableHeaderColumn
-																		dataField="vat"
-																		dataFormat={(cell, rows) =>
-																			this.renderVat(cell, rows, props)
-																		}
-																	>
-																		Vat (%)
-																	</TableHeaderColumn>
-																	<TableHeaderColumn
-																		dataField="sub_total"
-																		dataFormat={this.renderSubTotal}
-																		className="text-right"
-																		columnClassName="text-right"
-																	>
-																		Sub Total (All)
-																	</TableHeaderColumn> */}
-															</BootstrapTable>
-														</Row>
-														<Row>
-															<Col lg={12} className="mt-5">
-																<FormGroup className="text-right">
-																	<Button
-																		type="button"
-																		color="primary"
-																		className="btn-square mr-3"
-																		onClick={() => {
-																			this.setState({ createMore: false });
-																			props.handleSubmit();
-																		}}
-																	>
-																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		Create
-																	</Button>
-																	<Button
-																		type="button"
-																		color="secondary"
-																		className="btn-square"
-																		onClick={() => {
-																			this.props.history.push(
-																				'/admin/revenue/receipt',
-																			);
-																		}}
-																	>
-																		<i className="fa fa-ban"></i> Cancel
-																	</Button>
-																</FormGroup>
-															</Col>
-														</Row>
+															</div>
+														)}
 													</Form>
 												)}
 											</Formik>

@@ -178,7 +178,9 @@ public class ReceiptRestHelper {
 			for (InvoiceDueAmountModel dueAmountModel : receiptRequestModel.getPaidInvoiceList()) {
 				CustomerInvoiceReceipt receipt = new CustomerInvoiceReceipt();
 				Invoice invoice = invoiceService.findByPK(dueAmountModel.getId());
-				invoice.setStatus(InvoiceStatusEnum.PAID.getValue());
+				invoice.setStatus(
+						dueAmountModel.getDueAmount().equals(BigDecimal.ZERO) ? InvoiceStatusEnum.PAID.getValue()
+								: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
 				receipt.setCustomerInvoice(invoice);
 				receipt.setPaidAmount(dueAmountModel.getPaidAmount());
 				receipt.setDeleteFlag(Boolean.FALSE);

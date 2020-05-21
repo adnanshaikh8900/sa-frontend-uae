@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
 import com.simplevat.dao.Dao;
@@ -127,5 +128,15 @@ public class InvoiceServiceImpl extends InvoiceService {
 			logger.error(e.getMessage());
 		}
 		return invoice;
+	}
+
+	/**
+	 * @author $@urabh : get invoice based on status created on:20/05/2020
+	 * @param @see InvoiceStatusEnum
+	 * @return list invoiceList
+	 */
+	@Override
+	public List<Invoice> getUnpaidInvoice(Integer contactId,ContactTypeEnum type) {
+		return supplierInvoiceDao.getUnpaidInvoice(contactId,type);
 	}
 }

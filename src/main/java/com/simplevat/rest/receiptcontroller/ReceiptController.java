@@ -1,10 +1,13 @@
 package com.simplevat.rest.receiptcontroller;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,22 +27,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ContactTypeEnum;
+import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.entity.CustomerInvoiceReceipt;
+import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.Receipt;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.PostingRequestModel;
+import com.simplevat.rest.invoicecontroller.InvoiceRestHelper;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CustomerInvoiceReceiptService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.ReceiptService;
+import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
-
-import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  * @author $@urabh : For Customer invoice
@@ -69,6 +76,12 @@ public class ReceiptController {
 
 	@Autowired
 	private JournalService journalService;
+
+	@Autowired
+	private FileHelper fileHelper;
+
+	@Autowired
+	private InvoiceRestHelper invoiceRestHelper;
 
 	@ApiOperation(value = "Get receipt List")
 	@GetMapping(value = "/getList")
@@ -151,22 +164,31 @@ public class ReceiptController {
 
 	@ApiOperation(value = "Add New Receipt")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
+	public ResponseEntity save(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
-			// TODO : need to add attcahement
+
+			// save Attcahement
+			if (receiptRequestModel.getAttachmentFile() != null && !receiptRequestModel.getAttachmentFile().isEmpty()) {
+				String fileName = fileHelper.saveFile(receiptRequestModel.getAttachmentFile(), FileTypeEnum.RECEIPT);
+				receipt.setReceiptAttachmentFileName(receiptRequestModel.getAttachmentFile().getOriginalFilename());
+				receipt.setReceiptAttachmentPath(fileName);
+			}
+
 			receipt.setCreatedBy(userId);
 			receipt.setCreatedDate(LocalDateTime.now());
 			receipt.setDeleteFlag(Boolean.FALSE);
 			receiptService.persist(receipt);
 
 			// save data in Mapping Table
-			CustomerInvoiceReceipt customerInvoiceReceipt = receiptRestHelper
+			List<CustomerInvoiceReceipt> customerInvoiceReceiptList = receiptRestHelper
 					.getCustomerInvoiceReceiptEntity(receiptRequestModel);
-			customerInvoiceReceipt.setReceipt(receipt);
-			customerInvoiceReceiptService.persist(customerInvoiceReceipt);
-
+			for (CustomerInvoiceReceipt customerInvoiceReceipt : customerInvoiceReceiptList) {
+				customerInvoiceReceipt.setReceipt(receipt);
+				customerInvoiceReceipt.setCreatedBy(userId);
+				customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+			}
 			// Post journal
 			Journal journal = receiptRestHelper.receiptPosting(
 					new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
@@ -182,11 +204,26 @@ public class ReceiptController {
 
 	@ApiOperation(value = "Update Receipt")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
+	public ResponseEntity update(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
-			// TODO : need to add attcahement
+
+			// save Attcahement
+			if (receiptRequestModel.getAttachmentFile() != null && !receiptRequestModel.getAttachmentFile().isEmpty()) {
+				String fileName = fileHelper.saveFile(receiptRequestModel.getAttachmentFile(), FileTypeEnum.RECEIPT);
+				receipt.setReceiptAttachmentFileName(receiptRequestModel.getAttachmentFile().getOriginalFilename());
+				receipt.setReceiptAttachmentPath(fileName);
+			}
+
+			// No need to Update data in Mapping Table
+
+			// Update journal
+			Journal journal = receiptRestHelper.receiptPosting(
+					new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+					receipt.getDepositeToTransactionCategory());
+			journalService.update(journal);
+
 			receipt.setLastUpdateDate(LocalDateTime.now());
 			receipt.setLastUpdatedBy(userId);
 			receiptService.update(receipt);
@@ -210,5 +247,25 @@ public class ReceiptController {
 			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	/**
+	 * getUnpaid invoice
+	 * 
+	 * @param id Contact Id
+	 * @return list InvoiceDueAmountModel datalist
+	 */
+	@ApiOperation(value = "Get Overdue Amount Details")
+	@GetMapping(value = "/getDueInvoices")
+	public ResponseEntity getDueInvoiceForContact(@RequestParam("id") Integer contactId,
+			@RequestParam("type") ContactTypeEnum type) {
+		try {
+			List<Invoice> invoiceList = invoiceService.getUnpaidInvoice(contactId, type);
+			return new ResponseEntity(invoiceRestHelper.getDueInvoiceList(invoiceList), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 }

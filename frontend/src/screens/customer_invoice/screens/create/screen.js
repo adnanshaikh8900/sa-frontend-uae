@@ -565,7 +565,6 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		console.log(data);
 		const { vat_list } = this.props;
 		const { discountPercentage, discountAmount } = this.state;
 		let total_net = 0;
@@ -586,7 +585,6 @@ class CreateCustomerInvoice extends React.Component {
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
 			total = total_vat + total_net;
-
 			return obj;
 		});
 
@@ -596,7 +594,6 @@ class CreateCustomerInvoice extends React.Component {
 				: discountAmount;
 		this.setState(
 			{
-				data,
 				initValue: {
 					...this.state.initValue,
 					...{
@@ -608,6 +605,7 @@ class CreateCustomerInvoice extends React.Component {
 				},
 			},
 			() => {
+				console.log(this.state.data);
 				if (props.values.discountType.value === 'PERCENTAGE') {
 					this.formRef.current.setFieldValue('discount', discount);
 				}
@@ -808,7 +806,6 @@ class CreateCustomerInvoice extends React.Component {
 
 	render() {
 		const { data, discountOptions, initValue } = this.state;
-		console.log(this.props.deposit_list);
 		const { project_list, currency_list, customer_list } = this.props;
 		return (
 			<div className="create-customer-invoice-screen">

@@ -173,14 +173,23 @@ public class DetailedGeneralLedgerRestHelper {
 								: "");
 						break;
 
+					case RECEIPT:
+						model.setReferenceNo(journal.getJournlReferencenNo());
+						model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
+						model.setCreditAmount(lineItem.getCreditAmount());
+						model.setDebitAmount(lineItem.getDebitAmount());
+						model.setName(lineItem.getContact() != null
+								? lineItem.getContact().getFirstName() + " " + lineItem.getContact().getLastName()
+								: "");
+						break;
 					case PURCHASE:
 						break;
 					}
 
 					model.setAmount(lineItem.getCurrentBalance() != null
 //							&& lineItem.getCurrentBalance().compareTo(BigDecimal.ZERO) == 0
-									? lineItem.getCurrentBalance()
-									: model.getAmount());
+							? lineItem.getCurrentBalance()
+							: model.getAmount());
 
 					dataList.add(model);
 				}

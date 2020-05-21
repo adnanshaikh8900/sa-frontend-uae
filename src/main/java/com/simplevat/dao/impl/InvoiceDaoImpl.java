@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.DatatableSortingFilterConstant;
+import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
@@ -145,5 +147,15 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		if (overDueAmountMonthly != null)
 			overDueAmountFloat = overDueAmountMonthly.floatValue();
 		return overDueAmountFloat;
+	}
+
+	@Override
+	public List<Invoice> getUnpaidInvoice(Integer contactId, ContactTypeEnum type) {
+		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("unpaidInvoices", Invoice.class);
+		query.setParameter("status", InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+		query.setParameter("id", contactId);
+		query.setParameter("type", type.getValue());
+		List<Invoice> invoiceList = query.getResultList();
+		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList : null;
 	}
 }

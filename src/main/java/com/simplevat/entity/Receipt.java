@@ -100,6 +100,18 @@ public class Receipt {
 	@JoinColumn(name = "DEPOSITE_TO_TRANSACTION_CATEGORY_ID")
 	private TransactionCategory depositeToTransactionCategory;
 
+	@Basic
+	@Column(name = "RECEIPT_ATTACHMENT_PATH")
+	private String receiptAttachmentPath;
+
+	@Basic
+	@Column(name = "RECEIPT_ATTACHMENT_FILE_NAME")
+	private String receiptAttachmentFileName;
+
+	@Basic
+	@Column(name = "RECEIPT_ATTACHMENT_DESCRIPTION")
+	private String receiptAttachmentDescription;
+
 	@PrePersist
 	public void updateDates() {
 		createdDate = LocalDateTime.now();

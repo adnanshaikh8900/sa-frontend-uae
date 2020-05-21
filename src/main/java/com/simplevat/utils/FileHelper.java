@@ -99,7 +99,7 @@ public class FileHelper {
 				folder.mkdirs();
 			}
 			File file = new File(storagePath + entry.getValue());
-			if(!file.exists()) {
+			if (!file.exists()) {
 				file.createNewFile();
 			}
 			multipartFile.transferTo(file);
@@ -135,9 +135,11 @@ public class FileHelper {
 				map.put(dateString + File.separator, dateString + File.separator + "si-" + fileName);
 				break;
 			case TRANSATION:
-				map.put(dateString + File.separator, dateString + File.separator + "Tr-" + fileName);
+				map.put(dateString + File.separator, dateString + File.separator + "tr-" + fileName);
 				break;
-
+			case RECEIPT:
+				map.put(dateString + File.separator, dateString + File.separator + "re-" + fileName);
+				break;
 			default:
 				map.put(dateString + File.separator, dateString + File.separator + fileName);
 			}

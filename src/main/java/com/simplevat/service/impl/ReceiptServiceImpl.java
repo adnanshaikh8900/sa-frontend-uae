@@ -29,7 +29,6 @@ public class ReceiptServiceImpl extends ReceiptService {
 	@Override
 	public void deleteByIds(List<Integer> ids) {
 		receiptDao.deleteByIds(ids);
-
 	}
 
 	@Override

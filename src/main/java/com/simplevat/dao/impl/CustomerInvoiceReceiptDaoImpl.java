@@ -17,7 +17,12 @@ public class CustomerInvoiceReceiptDaoImpl extends AbstractDao<Integer, Customer
 
 	@Override
 	public List<CustomerInvoiceReceipt> findAllForInvoice(Integer invoiceId) {
-		return getEntityManager().createNamedQuery("findAllForInvoice").setParameter("id", invoiceId).getResultList();
+		return getEntityManager().createNamedQuery("findForInvoice").setParameter("id", invoiceId).getResultList();
+	}
+	
+	@Override
+	public List<CustomerInvoiceReceipt> findForReceipt(Integer receiptId) {
+		return getEntityManager().createNamedQuery("findForReceipt").setParameter("id", receiptId).getResultList();
 	}
 
 }

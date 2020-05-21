@@ -134,3 +134,8 @@ ALTER TABLE RECEIPT add column PAY_MODE varchar(32) default 'CASH';
 ALTER TABLE RECEIPT DROP COLUMN UNUSED_AMOUNT;
 alter table RECEIPT add column DEPOSITE_TO_TRANSACTION_CATEGORY_ID integer;
 alter table RECEIPT add constraint FKkhhdki7s8y02tu4ufdutgr60u foreign key (DEPOSITE_TO_TRANSACTION_CATEGORY_ID) references TRANSACTION_CATEGORY (TRANSACTION_CATEGORY_ID);
+
+--changeset 19/05/2020 SAURABH:ddl-7
+alter table RECEIPT add column RECEIPT_ATTACHMENT_DESCRIPTION varchar(4000);
+alter table RECEIPT add column RECEIPT_ATTACHMENT_FILE_NAME varchar(255);
+alter table RECEIPT add column RECEIPT_ATTACHMENT_PATH varchar(1000);

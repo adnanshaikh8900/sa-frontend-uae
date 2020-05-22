@@ -80,7 +80,8 @@ public class ReceiptDaoImpl extends AbstractDao<Integer, Receipt> implements Rec
 								remainingAmt.compareTo(BigDecimal.ZERO) == 0 ? InvoiceStatusEnum.POST.getValue()
 										: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
 						invoiceDao.update(invoice);
-						customerInvoiceReceiptDao.delete(receiptEntry);
+						receiptEntry.setDeleteFlag(Boolean.TRUE);
+						customerInvoiceReceiptDao.update(receiptEntry);
 					}
 				}
 

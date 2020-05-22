@@ -1,5 +1,6 @@
 package com.simplevat.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,15 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.simplevat.constant.DatatableSortingFilterConstant;
+import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.dao.AbstractDao;
 import com.simplevat.dao.CustomerInvoiceReceiptDao;
+import com.simplevat.dao.InvoiceDao;
 import com.simplevat.dao.JournalDao;
 import com.simplevat.dao.JournalLineItemDao;
 import com.simplevat.dao.ReceiptDao;
 import com.simplevat.entity.CustomerInvoiceReceipt;
+import com.simplevat.entity.Invoice;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Receipt;
 import com.simplevat.rest.PaginationModel;
@@ -41,6 +45,9 @@ public class ReceiptDaoImpl extends AbstractDao<Integer, Receipt> implements Rec
 	@Autowired
 	private JournalDao journalDao;
 
+	@Autowired
+	private InvoiceDao invoiceDao;
+
 	@Override
 	public PaginationResponseModel getProductList(Map<ReceiptFilterEnum, Object> filterMap,
 			PaginationModel paginamtionModel) {
@@ -61,13 +68,18 @@ public class ReceiptDaoImpl extends AbstractDao<Integer, Receipt> implements Rec
 		if (ids != null && !ids.isEmpty()) {
 			for (Integer id : ids) {
 				Receipt receipt = findByPK(id);
-				receipt.setDeleteFlag(Boolean.TRUE);
-				update(receipt);
 
-				// Get related journal line Item
+				// Delete middle tabe mapping and update invoice stats as post/partially paid
 				List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptDao.findForReceipt(id);
 				if (receiptEntryList != null && !receiptEntryList.isEmpty()) {
 					for (CustomerInvoiceReceipt receiptEntry : receiptEntryList) {
+						BigDecimal remainingAmt = receiptEntry.getCustomerInvoice().getTotalAmount()
+								.subtract(receipt.getAmount());
+						Invoice invoice = receiptEntry.getCustomerInvoice();
+						invoice.setStatus(
+								remainingAmt.compareTo(BigDecimal.ZERO) == 0 ? InvoiceStatusEnum.POST.getValue()
+										: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+						invoiceDao.update(invoice);
 						customerInvoiceReceiptDao.delete(receiptEntry);
 					}
 				}
@@ -84,6 +96,10 @@ public class ReceiptDaoImpl extends AbstractDao<Integer, Receipt> implements Rec
 					list.add(lineItemList.get(0).getJournal().getId());
 					journalDao.deleteByIds(list);
 				}
+
+				// delete receipt
+				receipt.setDeleteFlag(Boolean.TRUE);
+				update(receipt);
 			}
 		}
 	}

@@ -29,18 +29,18 @@ public class FinancialReportController {
 
 	@ApiOperation(value = "Get Profit and Loss Report")
 	@GetMapping(value = "/profitandloss")
-	public ResponseEntity getFormat(FinancialReportRequestModel reportRequestModel) {
+	public ResponseEntity<ProfitAndLossResponseModel> getFormat(FinancialReportRequestModel reportRequestModel) {
 		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
 		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
 		ProfitAndLossResponseModel profitAndLossResponseModel = financialReportRestHelper.getProfitAndLossReport(reportRequestModel);
 		try {
 			if (profitAndLossResponseModel == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(profitAndLossResponseModel, HttpStatus.OK);
+		return new ResponseEntity<>(profitAndLossResponseModel, HttpStatus.OK);
 	}
 
 }

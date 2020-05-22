@@ -95,13 +95,13 @@ public class ProductRestController {
 
 	@ApiOperation(value = "Delete Product By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<Product> deleteProduct(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<String> deleteProduct(@RequestParam(value = "id") Integer id) {
 		try {
 			Product product = productService.findByPK(id);
 			if (product != null) {
 				productService.deleteByIds(Arrays.asList(id));
 			}
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -113,7 +113,7 @@ public class ProductRestController {
 	public ResponseEntity<String> deleteProducts(@RequestBody DeleteModel ids) {
 		try {
 			productService.deleteByIds(ids.getIds());
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
@@ -139,7 +139,7 @@ public class ProductRestController {
 
 	@ApiOperation(value = "Add New Product")
 	@PostMapping(value = "/save")
-	public ResponseEntity<Product> save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			productRequestModel.setCreatedBy(userId);
@@ -147,7 +147,7 @@ public class ProductRestController {
 			product.setCreatedDate(LocalDateTime.now());
 			product.setDeleteFlag(Boolean.FALSE);
 			productService.persist(product);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Saved Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -156,7 +156,7 @@ public class ProductRestController {
 
 	@ApiOperation(value = "Update Product")
 	@PostMapping(value = "/update")
-	public ResponseEntity<Product> update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			productRequestModel.setCreatedBy(userId);
@@ -164,7 +164,7 @@ public class ProductRestController {
 			product.setLastUpdateDate(LocalDateTime.now());
 			product.setLastUpdatedBy(userId);
 			productService.update(product);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

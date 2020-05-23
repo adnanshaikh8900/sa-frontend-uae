@@ -83,7 +83,7 @@ public class ReconsilationController {
 	private ContactService contactService;
 
 	@GetMapping(value = "/getByReconcilationCatCode")
-	public ResponseEntity getByReconcilationCatCode(@RequestParam int reconcilationCatCode) {
+	public ResponseEntity<List<ReconsilationListModel>> getByReconcilationCatCode(@RequestParam int reconcilationCatCode) {
 		try {
 			return new ResponseEntity<>(
 					reconsilationRestHelper.getList(ReconsileCategoriesEnumConstant.get(reconcilationCatCode)),
@@ -95,7 +95,7 @@ public class ReconsilationController {
 	}
 
 	@GetMapping(value = "/getTransactionCat")
-	public ResponseEntity getTransactionCategory(@RequestParam Integer chartOfAccountCategoryId) {
+	public ResponseEntity	getTransactionCategory(@RequestParam Integer chartOfAccountCategoryId) {
 		try {
 			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);
 			Map<String, Object> param = new HashMap<>();
@@ -163,11 +163,11 @@ public class ReconsilationController {
 							HttpStatus.OK);
 			}
 
-			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

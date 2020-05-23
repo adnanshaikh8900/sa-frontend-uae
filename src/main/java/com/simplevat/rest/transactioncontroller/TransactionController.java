@@ -132,7 +132,7 @@ public class TransactionController{
 
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
-	public ResponseEntity getAllTransaction(TransactionRequestFilterModel filterModel) {
+	public ResponseEntity<PaginationResponseModel> getAllTransaction(TransactionRequestFilterModel filterModel) {
 
 		Map<TransactionFilterEnum, Object> dataMap = new EnumMap<>(TransactionFilterEnum.class);
 
@@ -162,15 +162,15 @@ public class TransactionController{
 		dataMap.put(TransactionFilterEnum.DELETE_FLAG, false);
 		PaginationResponseModel response = transactionService.getAllTransactionList(dataMap, filterModel);
 		if (response == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		response.setData(transactionHelper.getModelList(response.getData()));
-		return new ResponseEntity(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Add New Transaction", response = Transaction.class)
 	@PostMapping(value = "/save")
-	public ResponseEntity saveTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
+	public ResponseEntity<String> saveTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
 			HttpServletRequest request) {
 
 		try {
@@ -275,7 +275,7 @@ public class TransactionController{
 					}
 				}
 
-				return new ResponseEntity<>(HttpStatus.OK);
+				return new ResponseEntity<>("Saved successfull",HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -285,7 +285,7 @@ public class TransactionController{
 
 	@ApiOperation(value = "update Transaction", response = Transaction.class)
 	@PostMapping(value = "/update")
-	public ResponseEntity updateTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
+	public ResponseEntity<String> updateTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
 			HttpServletRequest request) {
 
 		try {
@@ -382,7 +382,7 @@ public class TransactionController{
 					}
 				}
 
-				return new ResponseEntity<>(HttpStatus.OK);
+				return new ResponseEntity<>("Updated successful",HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -392,41 +392,41 @@ public class TransactionController{
 
 	@ApiOperation(value = "Delete Transaction By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteTransaction(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<String> deleteTransaction(@RequestParam(value = "id") Integer id) {
 		Transaction trnx = transactionService.findByPK(id);
 		if (trnx != null) {
 			trnx.setDeleteFlag(Boolean.TRUE);
 			transactionService.deleteTransaction(trnx);
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>("Deleted successful",HttpStatus.OK);
 
 	}
 
 	@ApiOperation(value = "Delete Transaction in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteTransactions(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deleteTransactions(@RequestBody DeleteModel ids) {
 		try {
 			transactionService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted successfull",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Get Transaction By ID")
 	@GetMapping(value = "/getById")
-	public ResponseEntity getInvoiceById(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<TransactionPresistModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
 		Transaction trnx = transactionService.findByPK(id);
 		if (trnx == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity<>(transactionHelper.getModel(trnx), HttpStatus.OK);
 		}
 	}
 
 	@GetMapping(value = "/getCashFlow")
-	public ResponseEntity getCashFlow(@RequestParam int monthNo) {
+	public ResponseEntity<Object> getCashFlow(@RequestParam int monthNo) {
 		try {
 			Object obj = chartUtil.getCashFlow(transactionService.getCashInData(monthNo, null),
 					transactionService.getCashOutData(monthNo, null));

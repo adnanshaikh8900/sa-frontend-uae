@@ -63,7 +63,7 @@ public class TransactionParsingSettingController {
 
 	@ApiOperation("Parse excel file for Data")
 	@PostMapping(value = "/parse")
-	public ResponseEntity getDateFormat(@ModelAttribute TransactionParsingSettingPersistModel model) {
+	public ResponseEntity<List<Map<String, String>>> getDateFormat(@ModelAttribute TransactionParsingSettingPersistModel model) {
 
 		List<Map<String, String>> dataMap = null;
 		switch (fileHelper.getFileExtension(model.getFile().getOriginalFilename())) {
@@ -97,7 +97,7 @@ public class TransactionParsingSettingController {
 
 	@ApiOperation("Save  new Transaction Parsing setting")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody TransactionParsingSettingPersistModel persistModel,
+	public ResponseEntity<Map<String, Object>> save(@RequestBody TransactionParsingSettingPersistModel persistModel,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -113,7 +113,7 @@ public class TransactionParsingSettingController {
 			transactionParsingSettingService.persist(transactionParsigSetting);
 			Map<String, Object> responseMap = new HashMap<>();
 			responseMap.put("id", transactionParsigSetting.getId());
-			return new ResponseEntity(responseMap, HttpStatus.OK);
+			return new ResponseEntity<>(responseMap, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -122,7 +122,7 @@ public class TransactionParsingSettingController {
 
 	@ApiOperation("Update  Transaction Parsing setting")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody TransactionParsingSettingPersistModel persistModel,
+	public ResponseEntity<String> update(@RequestBody TransactionParsingSettingPersistModel persistModel,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -135,7 +135,7 @@ public class TransactionParsingSettingController {
 				mapping.setLastUpdateDate(LocalDateTime.now());
 			}
 			transactionParsingSettingService.persist(transactionParsigSetting);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Updated successful",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -144,69 +144,69 @@ public class TransactionParsingSettingController {
 
 	@ApiOperation("Getlist")
 	@GetMapping(value = "/list")
-	public ResponseEntity getTransactionParserSettigList(HttpServletRequest request) {
+	public ResponseEntity<List<TransactionParsingSettingListModel>> getTransactionParserSettigList(HttpServletRequest request) {
 		try {
 			Map<TransactionParsingSettingFilterEnum, Object> filterDataMap = new HashMap();
 			filterDataMap.put(TransactionParsingSettingFilterEnum.DELETE_FLAG, false);
 			List<TransactionParsingSetting> transactionParsingSettingList = transactionParsingSettingService
 					.geTransactionParsingList(filterDataMap);
 			if (transactionParsingSettingList == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity<>(transactionParsingRestHelper.getModelList(transactionParsingSettingList),
 					HttpStatus.OK);
 
 		} catch (Exception e) {
 			logger.error("Error", e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Delete By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity delete(@RequestParam(value = "id") Long id) {
+	public ResponseEntity<String> delete(@RequestParam(value = "id") Long id) {
 		TransactionParsingSetting transactionParsingSetting = transactionParsingSettingService.findByPK(id);
 		if (transactionParsingSetting != null) {
 			transactionParsingSetting.setDeleteFlag(Boolean.TRUE);
 			transactionParsingSettingService.update(transactionParsingSetting, transactionParsingSetting.getId());
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>("Deleted successful",HttpStatus.OK);
 	}
 
 	@ApiOperation("Get by Id")
 	@GetMapping(value = "/getById")
-	public ResponseEntity getDateFormatList(@RequestParam(value = "id") Long id) {
+	public ResponseEntity<TransactionParsingSettingDetailModel> getDateFormatList(@RequestParam(value = "id") Long id) {
 		try {
 			TransactionParsingSetting setting = transactionParsingSettingService.findByPK(id);
 			TransactionParsingSettingDetailModel model = transactionParsingRestHelper.getModel(setting);
 			if (model == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity(model, HttpStatus.OK);
+			return new ResponseEntity<>(model, HttpStatus.OK);
 
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation("Getlist")
 	@GetMapping(value = "/selectModelList")
-	public ResponseEntity getTransactionParserSettigSelectModelList(HttpServletRequest request) {
+	public ResponseEntity<List<EnumDropdownModel>> getTransactionParserSettigSelectModelList(HttpServletRequest request) {
 		try {
 			Map<TransactionParsingSettingFilterEnum, Object> filterDataMap = new HashMap();
 			filterDataMap.put(TransactionParsingSettingFilterEnum.DELETE_FLAG, false);
 			List<TransactionParsingSetting> transactionParsingSettingList = transactionParsingSettingService
 					.geTransactionParsingList(filterDataMap);
 			if (transactionParsingSettingList == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity<>(transactionParsingRestHelper.getSelectModelList(transactionParsingSettingList),
 					HttpStatus.OK);
 
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

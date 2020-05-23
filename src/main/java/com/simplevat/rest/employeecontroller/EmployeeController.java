@@ -3,6 +3,7 @@ package com.simplevat.rest.employeecontroller;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.EmployeeFilterEnum;
 import com.simplevat.entity.Employee;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.EmployeeService;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 
 import java.time.LocalDateTime;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,7 +54,7 @@ public class EmployeeController {
 
 	@ApiOperation(value = "Get Product List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getEmployeeList(EmployeeRequestFilterModel filterModel){
+	public ResponseEntity<PaginationResponseModel> getEmployeeList(EmployeeRequestFilterModel filterModel){
 
 		try {
 
@@ -63,21 +65,21 @@ public class EmployeeController {
 
 			PaginationResponseModel response = employeeService.getEmployeeList(filterDataMap, filterModel);
 			if (response == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
 				response.setData(employeeHelper.getListModel(response.getData()));
 				return new ResponseEntity<>(response, HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 
 	@ApiOperation(value = "Delete Employee By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteEmployee(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<String> deleteEmployee(@RequestParam(value = "id") Integer id) {
 		try {
 			Employee employee = employeeService.findByPK(id);
 			if (employee != null) {
@@ -106,23 +108,23 @@ public class EmployeeController {
 
 	@ApiOperation(value = "Get Employee By ID")
 	@GetMapping(value = "/getById")
-	public ResponseEntity getEmployeeById(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<EmployeeListModel> getEmployeeById(@RequestParam(value = "id") Integer id) {
 		try {
 			Employee employee = employeeService.findByPK(id);
 			if (employee == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
 				return new ResponseEntity<>(employeeHelper.getModel(employee), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Save new Employee")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody EmployeePersistModel employeePersistModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(@RequestBody EmployeePersistModel employeePersistModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 		try {
@@ -131,31 +133,31 @@ public class EmployeeController {
 			employee.setCreatedDate(LocalDateTime.now());
 			employee.setDeleteFlag(Boolean.FALSE);
 			employeeService.persist(employee);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Saaved Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Update Employee")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody EmployeePersistModel employeePersistModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@RequestBody EmployeePersistModel employeePersistModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Employee employee = employeeHelper.getEntity(employeePersistModel, userId);
 			employee.setLastUpdateDate(LocalDateTime.now());
 			employee.setLastUpdatedBy(userId);
 			employeeService.update(employee);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@GetMapping(value = "/getEmployeesForDropdown")
-	public ResponseEntity getEmployeesForDropdown() {
+	public ResponseEntity<List<DropdownModel>> getEmployeesForDropdown() {
 		return new ResponseEntity<>(employeeService.getEmployeesForDropdown(), HttpStatus.OK);
 	}
 }

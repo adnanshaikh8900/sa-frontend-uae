@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.constant.ErrorConstant;
 import com.simplevat.rest.DropdownModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,16 +82,16 @@ public class CompanyController {
  **/
 	@ApiOperation(value = "delete By Id")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<Company> deleteCompany(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<String> deleteCompany(@RequestParam(value = "id") Integer id) {
 		try {
 			Company company = companyService.findByPK(id);
 			if (company != null) {
 				company.setDeleteFlag(Boolean.TRUE);
 				companyService.update(company);
 			}
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error = ", e);
+			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -104,7 +105,7 @@ public class CompanyController {
 			companyService.deleteByIds(ids.getIds());
 			return new ResponseEntity<>("Companies Deleted successfully",HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error = ", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>("Cannot Delete The companies",HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -130,7 +131,7 @@ public class CompanyController {
 
 	@ApiOperation(value = "Add New Company")
 	@PostMapping(value = "/save")
-	public ResponseEntity<Company> save(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Company company = companyRestHelper.getEntity(companyModel, userId);
@@ -147,14 +148,14 @@ public class CompanyController {
 
 	@ApiOperation(value = "Update Company")
 	@PostMapping(value = "/update")
-	public ResponseEntity<Company> update(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Company company = companyRestHelper.getEntity(companyModel, userId);
 			company.setLastUpdateDate(LocalDateTime.now());
 			company.setLastUpdatedBy(userId);
 			companyService.update(company);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

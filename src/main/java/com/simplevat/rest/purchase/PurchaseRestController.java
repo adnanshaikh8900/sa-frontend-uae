@@ -76,7 +76,7 @@ public class PurchaseRestController {
 	PurchaseRestControllerHelper purchaseControllerRestHelper;
 
 	@GetMapping(value = "/populatepurchases")
-	public ResponseEntity populatePurchases() {
+	public ResponseEntity<List<PurchaseRestModel>> populatePurchases() {
 		List<PurchaseRestModel> purchaseModels = new ArrayList<>();
 		try {
 			int totalPurchases = 0;
@@ -106,7 +106,7 @@ public class PurchaseRestController {
 					purchaseModels.add(model);
 				}
 			}
-			return new ResponseEntity(purchaseModels, HttpStatus.OK);
+			return new ResponseEntity<>(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -114,12 +114,12 @@ public class PurchaseRestController {
 	}
 
 	@GetMapping(value = "/vieworedit")
-	public ResponseEntity viewOrEditPurchase(@RequestParam("purchaseId") Integer purchaseId) {
+	public ResponseEntity<PurchaseRestModel> viewOrEditPurchase(@RequestParam("purchaseId") Integer purchaseId) {
 		try {
 			PurchaseRestModel selectedPurchaseModel;
 			Purchase purchase = purchaseService.findByPK(purchaseId);
 			selectedPurchaseModel = purchaseControllerRestHelper.getPurchaseModel(purchase);
-			return new ResponseEntity(selectedPurchaseModel, HttpStatus.OK);
+			return new ResponseEntity<>(selectedPurchaseModel, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -127,12 +127,12 @@ public class PurchaseRestController {
 	}
 
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deletePurchase(@RequestParam("purchaseId") Integer purchaseId) {
+	public ResponseEntity<String> deletePurchase(@RequestParam("purchaseId") Integer purchaseId) {
 		try {
 			Purchase purchase = purchaseService.findByPK(purchaseId);
 			purchase.setDeleteFlag(true);
 			purchaseService.update(purchase);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -140,10 +140,10 @@ public class PurchaseRestController {
 	}
 
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deletePurchases(@RequestBody DeleteModel purchaseIds) {
+	public ResponseEntity<String> deletePurchases(@RequestBody DeleteModel purchaseIds) {
 		try {
 			purchaseService.deleteByIds(purchaseIds.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
@@ -159,7 +159,7 @@ public class PurchaseRestController {
 					purchaseModels.add(purchaseControllerRestHelper.getPurchaseModel(purchase));
 				}
 			}
-			return new ResponseEntity(purchaseModels, HttpStatus.OK);
+			return new ResponseEntity<>(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -175,7 +175,7 @@ public class PurchaseRestController {
 					purchaseModels.add(purchaseControllerRestHelper.getPurchaseModel(purchase));
 				}
 			}
-			return new ResponseEntity(purchaseModels, HttpStatus.OK);
+			return new ResponseEntity<>(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -183,7 +183,7 @@ public class PurchaseRestController {
 	}
 
 	@GetMapping(value = "/allpartialpaidpurchase")
-	public ResponseEntity allPartialPaidPurchase() {
+	public ResponseEntity<List<PurchaseRestModel>> allPartialPaidPurchase() {
 		try {
 			List<PurchaseRestModel> purchaseModels = new ArrayList<>();
 			for (Purchase purchase : purchaseService.getAllPurchase()) {
@@ -191,7 +191,7 @@ public class PurchaseRestController {
 					purchaseModels.add(purchaseControllerRestHelper.getPurchaseModel(purchase));
 				}
 			}
-			return new ResponseEntity(purchaseModels, HttpStatus.OK);
+			return new ResponseEntity<>(purchaseModels, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -203,18 +203,18 @@ public class PurchaseRestController {
 		try {
 			return new ResponseEntity(userServiceNew.executeNamedQuery("findAllUsers"), HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
 	@GetMapping(value = "/categories")
-	public ResponseEntity getCategory() {
+	public ResponseEntity<List<TransactionCategory>> getCategory() {
 		try {
 			List<TransactionCategory> transactionCategoryList = transactionCategoryService
 					.findTransactionCategoryListByParentCategory(
 							TransactionCategoryConsatant.TRANSACTION_CATEGORY_PURCHASE);
-			return new ResponseEntity(transactionCategoryList, HttpStatus.OK);
+			return new ResponseEntity<>(transactionCategoryList, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -226,7 +226,7 @@ public class PurchaseRestController {
 	 * @return
 	 */
 	@GetMapping(value = "/currencys")
-	public ResponseEntity getCurrency() {
+	public ResponseEntity<List<Currency>> getCurrency() {
 		try {
 			List<Currency> currencies = currencyService.getCurrencies();
 			if (currencies != null && !currencies.isEmpty()) {
@@ -241,7 +241,7 @@ public class PurchaseRestController {
 	}
 
 	@GetMapping(value = "/projects")
-	public ResponseEntity projects(@RequestParam("projectName") String searchQuery) {
+	public ResponseEntity<List<Project>> projects(@RequestParam("projectName") String searchQuery) {
 		try {
 			ProjectCriteria criteria = new ProjectCriteria();
 			criteria.setActive(Boolean.TRUE);
@@ -249,7 +249,7 @@ public class PurchaseRestController {
 				criteria.setProjectName(searchQuery);
 			}
 			List<Project> projects = projectService.getProjectsByCriteria(criteria);
-			return new ResponseEntity(projects, HttpStatus.OK);
+			return new ResponseEntity<>(projects, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -257,9 +257,9 @@ public class PurchaseRestController {
 	}
 
 	@GetMapping(value = "/vatcategories")
-	public ResponseEntity vatCategorys(@RequestParam("vatSearchString") String searchQuery){
+	public ResponseEntity<List<VatCategory>> vatCategorys(@RequestParam("vatSearchString") String searchQuery){
 		try {
-			return new ResponseEntity(vatCategoryService.getVatCategoryList(), HttpStatus.OK);
+			return new ResponseEntity<>(vatCategoryService.getVatCategoryList(), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

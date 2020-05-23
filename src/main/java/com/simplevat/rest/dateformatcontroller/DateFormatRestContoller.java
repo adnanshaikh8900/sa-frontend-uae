@@ -61,7 +61,7 @@ public class DateFormatRestContoller {
 
 	@ApiOperation(value = "Save Datformat")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(DateFormatRequestModel requestModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(DateFormatRequestModel requestModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		DateFormat dateFormat = dateFormatRestHelper.getEntity(requestModel);
 		if (dateFormat != null) {
@@ -69,12 +69,12 @@ public class DateFormatRestContoller {
 			dateFormat.setCreatedDate(LocalDateTime.now());
 			dateFormatService.update(dateFormat, dateFormat.getId());
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Delete DateFormat By Id")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
+	public ResponseEntity<String> delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
 		DateFormat dateFormat = dateFormatService.findByPK(id);
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
@@ -83,26 +83,26 @@ public class DateFormatRestContoller {
 			dateFormat.setLastUpdatedBy(userId);
 			dateFormatService.update(dateFormat, dateFormat.getId());
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 
 	}
 
 	@ApiOperation(value = "Delete DateFormat in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deletes(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deletes(@RequestBody DeleteModel ids) {
 		try {
 			dateFormatService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
 	@ApiOperation(value = "Update DateFormat")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(DateFormatRequestModel dateFormatRequestModel, HttpServletRequest request) {
+	public ResponseEntity< DateFormatResponseModel> update(DateFormatRequestModel dateFormatRequestModel, HttpServletRequest request) {
 		DateFormat dateFormat = dateFormatService.findByPK(dateFormatRequestModel.getId());
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		dateFormat = dateFormatRestHelper.getEntity(dateFormatRequestModel);
@@ -110,7 +110,7 @@ public class DateFormatRestContoller {
 		dateFormat.setLastUpdateDate(LocalDateTime.now());
 		dateFormat = dateFormatService.update(dateFormat);
 		if (dateFormat == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity<>(dateFormatRestHelper.getModel(dateFormat), HttpStatus.OK);
 		}
@@ -123,10 +123,10 @@ public class DateFormatRestContoller {
 		DateFormat dateFormat = dateFormatService.findByPK(id);
 
 		if (dateFormat == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
 			logger.error(ERROR + id);
 		}
-		return new ResponseEntity(dateFormatRestHelper.getModel(dateFormat), HttpStatus.OK);
+		return new ResponseEntity<>(dateFormatRestHelper.getModel(dateFormat), HttpStatus.OK);
 	}
 }

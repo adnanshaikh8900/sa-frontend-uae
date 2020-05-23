@@ -30,18 +30,18 @@ public class DetailedGeneralLedgerReportController {
 
 	@ApiOperation(value = "Get list of DateFormat")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getDateFormat(ReportRequestModel reportRequestModel) {
+	public ResponseEntity<List> getDateFormat(ReportRequestModel reportRequestModel) {
 		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
 		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
 		List list = detailedGeneralLedgerRestHelper.getDetailedGeneralLedgerReport(reportRequestModel);
 		try {
 			if (list == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(list, HttpStatus.OK);
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
 }

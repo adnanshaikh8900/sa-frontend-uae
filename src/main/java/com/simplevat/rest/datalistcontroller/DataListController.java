@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.simplevat.rest.vatcontroller.VatCategoryModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,19 +102,19 @@ public class DataListController {
 	private TransactionCategoryService transactionCategoryService;
 
 	@GetMapping(value = "/getcountry")
-	public ResponseEntity getCountry() {
+	public ResponseEntity<List<Country>> getCountry() {
 		try {
 
 			List<Country> countryList = countryService.getCountries();
 			if (countryList != null && !countryList.isEmpty()) {
 				return new ResponseEntity<>(countryList, HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/**
@@ -121,7 +122,7 @@ public class DataListController {
 	 * @author $@urabh Shifted from this to @see CurrencyController
 	 */
 	@GetMapping(value = "/getcurrenncy")
-	public ResponseEntity getCurrency(PaginationModel paginationModel) {
+	public ResponseEntity<PaginationResponseModel> getCurrency(PaginationModel paginationModel) {
 		try {
 			Map<CurrencyFilterEnum, Object> filterDataMap = new EnumMap<>(CurrencyFilterEnum.class);
 			filterDataMap.put(CurrencyFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
@@ -141,7 +142,7 @@ public class DataListController {
 
 	@ApiOperation(value = "All Transaction Types")
 	@GetMapping(value = "/getTransactionTypes")
-	public ResponseEntity getTransactionTypes() {
+	public ResponseEntity<List<ChartOfAccount>> getTransactionTypes() {
 		try {
 			List<ChartOfAccount> transactionTypes = transactionTypeService.findAll();
 			if (transactionTypes != null && !transactionTypes.isEmpty()) {
@@ -151,17 +152,17 @@ public class DataListController {
 				}
 				return new ResponseEntity<>(transactionTypes, HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "All Invoice Status Types")
 	@GetMapping(value = "/getInvoiceStatusTypes")
-	public ResponseEntity getInvoiceStatusTypes() {
+	public ResponseEntity<List<DropdownModel>> getInvoiceStatusTypes() {
 		try {
 			List<InvoiceStatusEnum> statusEnums = InvoiceStatusEnum.getInvoiceStatusList();
 			List<DropdownModel> dropdownModels = new ArrayList<>();
@@ -171,17 +172,17 @@ public class DataListController {
 				}
 				return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "All Contact Types")
 	@GetMapping(value = "/getContactTypes")
-	public ResponseEntity getContactTypes() {
+	public ResponseEntity<List<DropdownModel>> getContactTypes() {
 		try {
 			List<ContactTypeEnum> typeEnums = Arrays.asList(ContactTypeEnum.values());
 			List<DropdownModel> dropdownModels = new ArrayList<>();
@@ -191,17 +192,17 @@ public class DataListController {
 				}
 				return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "All Industry Types")
 	@GetMapping(value = "/getIndustryTypes")
-	public ResponseEntity getIndustryTypes() {
+	public ResponseEntity<List<DropdownModel>> getIndustryTypes() {
 		try {
 			List<DropdownModel> dropdownModels = new ArrayList<>();
 			List<IndustryType> industryTypes = industryTypeService.getIndustryTypes();
@@ -211,16 +212,16 @@ public class DataListController {
 				}
 				return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@GetMapping(value = "/vatCategory")
-	public ResponseEntity getVatCAtegory() {
+	public ResponseEntity< List<VatCategoryModel> > getVatCAtegory() {
 		try {
 			Map<VatCategoryFilterEnum, Object> filterDataMap = new HashMap();
 			filterDataMap.put(VatCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
@@ -228,19 +229,19 @@ public class DataListController {
 
 			PaginationResponseModel respone = vatCategoryService.getVatCategoryList(filterDataMap, null);
 			if (respone != null) {
-				return new ResponseEntity(vatCategoryRestHelper.getList(respone.getData()), HttpStatus.OK);
+				return new ResponseEntity<>(vatCategoryRestHelper.getList(respone.getData()), HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "get Pay mode (expense)")
 	@GetMapping(value = "/payMode")
-	public ResponseEntity getPayMode() {
+	public ResponseEntity<List<EnumDropdownModel>> getPayMode() {
 		try {
 			List<PayMode> payModes = Arrays.asList(PayMode.values());
 			if (payModes != null && !payModes.isEmpty()) {
@@ -249,17 +250,17 @@ public class DataListController {
 					modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
 				return new ResponseEntity<>(modelList, HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "All subChartofAccount")
 	@GetMapping(value = "/getsubChartofAccount")
-	public ResponseEntity getsubChartofAccount() {
+	public ResponseEntity<Map<String, List<DropdownModel>>> getsubChartofAccount() {
 		try {
 			// Check if the chartOf Account result is already cached.
 			Map<String, List<DropdownModel>> chartOfAccountMap = ChartOfAccountCacheService.getInstance()
@@ -277,16 +278,16 @@ public class DataListController {
 				// return the result.
 				return new ResponseEntity<>(chartOfAccountMap, HttpStatus.OK);
 			} else {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@GetMapping(value = "/getstate")
-	public ResponseEntity getState(@RequestParam Integer countryCode) {
+	public ResponseEntity<List<DropdownModel>> getState(@RequestParam Integer countryCode) {
 		try {
 
 			Map<StateFilterEnum, Object> filterMap = new EnumMap<>(StateFilterEnum.class);
@@ -298,12 +299,12 @@ public class DataListController {
 					modelList.add(new DropdownModel(state.getId(), state.getStateName()));
 				return new ResponseEntity<>(modelList, HttpStatus.OK);
 			} else {
-				return new ResponseEntity(modelList, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(modelList, HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "reconsileCategories")
@@ -369,7 +370,7 @@ public class DataListController {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("Error", e);
+			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

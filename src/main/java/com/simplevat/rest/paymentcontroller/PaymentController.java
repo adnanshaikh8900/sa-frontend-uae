@@ -75,7 +75,8 @@ public class PaymentController {
 
 	@ApiOperation(value = "Get All Payments")
 	@GetMapping(value = "/getlist")
-	public ResponseEntity getPaymentList(PaymentRequestFilterModel filterModel, HttpServletRequest request) {
+	public ResponseEntity<PaginationResponseModel> getPaymentList(PaymentRequestFilterModel filterModel,
+			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Map<PaymentFilterEnum, Object> filterDataMap = new EnumMap<>(PaymentFilterEnum.class);
@@ -110,13 +111,13 @@ public class PaymentController {
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Get Payment By Id")
 	@GetMapping(value = "/getpaymentbyid")
-	public ResponseEntity getPaymentById(@RequestParam("paymentId") Integer paymentId) {
+	public ResponseEntity<PaymentPersistModel> getPaymentById(@RequestParam("paymentId") Integer paymentId) {
 		try {
 			if (paymentId == null) {
 				return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -131,7 +132,7 @@ public class PaymentController {
 
 	@ApiOperation(value = "Save a Payment")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody PaymentPersistModel paymentModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(@RequestBody PaymentPersistModel paymentModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
@@ -158,16 +159,17 @@ public class PaymentController {
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Update Payment")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody PaymentPersistModel paymentModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@RequestBody PaymentPersistModel paymentModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
+
 			Payment payment = paymentRestHelper.convertToPayment(paymentModel);
 
 			// No need to Update data in Mapping Table
@@ -186,14 +188,13 @@ public class PaymentController {
 
 		Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Delete Payment")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deletePayment(@RequestParam(value = "id") Integer id) {
-
+	public ResponseEntity<String> deletePayment(@RequestParam(value = "id") Integer id) {
 		Payment payment = paymentService.findByPK(id);
 		try {
 			if (payment != null) {
@@ -201,18 +202,18 @@ public class PaymentController {
 				paymentIdList.add(id);
 				paymentService.deleteByIds(paymentIdList);
 			}
-			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
+		return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Delete Multiple Payments")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteExpenses(@RequestBody DeleteModel deleteModel) {
+	public ResponseEntity<String> deleteExpenses(@RequestBody DeleteModel expenseIds) {
 		try {
-			paymentService.deleteByIds(deleteModel.getIds());
+			paymentService.deleteByIds(expenseIds.getIds());
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
 			logger.error(ERROR, e);

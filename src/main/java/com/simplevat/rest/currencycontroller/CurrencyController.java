@@ -87,13 +87,13 @@ public class CurrencyController {
 
 	@ApiOperation(value = "Save Currency Code", response = Currency.class)
 	@PostMapping(value = "/save")
-	public ResponseEntity<Currency> createCurrency(@RequestBody Currency currency, HttpServletRequest request) {
+	public ResponseEntity<String> createCurrency(@RequestBody Currency currency, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			currency.setCreatedBy(userId);
 			currency.setCreatedDate(new Date());
 			currencyService.persist(currency);
-			return new ResponseEntity<>(HttpStatus.CREATED);
+			return new ResponseEntity<>("Saved Successfully",HttpStatus.CREATED);
 		} catch (Exception e) {
 			logger.error(ErrorConstant.ERROR, e);
 		}

@@ -142,7 +142,7 @@ class CreateBankTransaction extends React.Component {
     if (
       invoiceIdList &&
       coaCategoryId.value &&
-      coaCategoryId.label == 'Sales'
+      coaCategoryId.label === 'Sales'
     ) {
       var result = invoiceIdList.map((o) => ({ invoiceId: o.value }));
     }
@@ -164,15 +164,15 @@ class CreateBankTransaction extends React.Component {
     if (
       (customerId &&
         coaCategoryId.value &&
-        coaCategoryId.label == 'Expenses') ||
-      (customerId && coaCategoryId.value && coaCategoryId.label == 'Sales')
+        coaCategoryId.label === 'Expenses') ||
+      (customerId && coaCategoryId.value && coaCategoryId.label === 'Sales')
     ) {
       formData.append('customerId', customerId ? customerId.value : '');
     }
-    if (vendorId && coaCategoryId.value && coaCategoryId.label == 'Expenses') {
+    if (vendorId && coaCategoryId.value && coaCategoryId.label === 'Expenses') {
       formData.append('vendorId', vendorId ? vendorId.value : '');
     }
-    if (vendorId && coaCategoryId.value && coaCategoryId.label == 'Expenses') {
+    if (vendorId && coaCategoryId.value && coaCategoryId.label === 'Expenses') {
       formData.append('vatId', vatId ? vatId.value : '');
     }
     if (employeeId) {
@@ -181,7 +181,7 @@ class CreateBankTransaction extends React.Component {
     if (
       invoiceIdList &&
       coaCategoryId.value &&
-      coaCategoryId.label == 'Sales'
+      coaCategoryId.label === 'Sales'
     ) {
       formData.append(
         'invoiceIdList',

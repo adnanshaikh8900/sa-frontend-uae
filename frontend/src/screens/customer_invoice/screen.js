@@ -281,25 +281,27 @@ class CustomerInvoice extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						<DropdownItem>
-							<div
-								onClick={() => {
-									this.props.history.push(
-										'/admin/revenue/customer-invoice/detail',
-										{ id: row.id },
-									);
-								}}
-							>
-								<i className="fas fa-edit" /> Edit
-							</div>
-						</DropdownItem>
-						{row.status !== 'Post' && (
+						{row.statusEnum !== 'Paid' && (
+							<DropdownItem>
+								<div
+									onClick={() => {
+										this.props.history.push(
+											'/admin/revenue/customer-invoice/detail',
+											{ id: row.id },
+										);
+									}}
+								>
+									<i className="fas fa-edit" /> Edit
+								</div>
+							</DropdownItem>
+						)}
+						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && (
 							<DropdownItem
 								onClick={() => {
 									this.postInvoice(row);
 								}}
 							>
-								<i className="fas fa-heart" /> Post
+								<i className="fas fa-heart" /> Send
 							</DropdownItem>
 						)}
 						{/* <DropdownItem onClick={() => { this.openInvoicePreviewModal(row.id) }}>
@@ -315,29 +317,18 @@ class CustomerInvoice extends React.Component {
 						>
 							<i className="fas fa-eye" /> View
 						</DropdownItem>
-						<DropdownItem
-							onClick={() =>
-								this.props.history.push(
-									'/admin/revenue/customer-invoice/record-payment',
-									{ id: row },
-								)
-							}
-						>
-							<i className="fas fa-eye" /> Record Payment
-						</DropdownItem>
-						{/* <DropdownItem>
-              <i className="fas fa-adjust" /> Adjust
-            </DropdownItem> */}
-						<DropdownItem
-							onClick={() => {
-								this.sendMail(row.id);
-							}}
-						>
-							<i className="fas fa-upload" /> Send
-						</DropdownItem>
-						{/* <DropdownItem>
-              <i className="fas fa-times" /> Cancel
-            </DropdownItem> */}
+						{row.statusEnum === 'Sent' && (
+							<DropdownItem
+								onClick={() =>
+									this.props.history.push(
+										'/admin/revenue/customer-invoice/record-payment',
+										{ id: row },
+									)
+								}
+							>
+								<i className="fas fa-university" /> Record Payment
+							</DropdownItem>
+						)}
 						<DropdownItem
 							onClick={() => {
 								this.closeInvoice(row.id);
@@ -573,7 +564,9 @@ class CustomerInvoice extends React.Component {
 				? this.props.customer_invoice_list.data.map((customer) => ({
 						id: customer.id,
 						status: customer.status,
+						statusEnum: customer.statusEnum,
 						customerName: customer.name,
+						contactId: customer.contactId,
 						invoiceNumber: customer.referenceNumber,
 						invoiceDate: customer.invoiceDate
 							? moment(customer.invoiceDate).format('DD/MM/YYYY')

@@ -59,7 +59,7 @@ public class JournalRestController {
 
 	@ApiOperation(value = "Get Journal List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getList(JournalRequestFilterModel filterModel, HttpServletRequest request) {
+	public ResponseEntity<PaginationResponseModel> getList(JournalRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Map<JournalFilterEnum, Object> filterDataMap = new EnumMap<>(JournalFilterEnum.class);
@@ -76,7 +76,7 @@ public class JournalRestController {
 			filterDataMap.put(JournalFilterEnum.DELETE_FLAG, false);
 			PaginationResponseModel responseModel = journalService.getJornalList(filterDataMap, filterModel);
 			if (responseModel == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity(
 					filterModel.isPaginationDisable() ? journalRestHelper.getCsvListModel(responseModel)
@@ -84,13 +84,13 @@ public class JournalRestController {
 					HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Delete Journal By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteProduct(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<String> deleteProduct(@RequestParam(value = "id") Integer id) {
 		Journal journal = journalService.findByPK(id);
 		if (journal != null) {
 			if (journal.getJournalLineItems() != null) {
@@ -102,31 +102,31 @@ public class JournalRestController {
 			journal.setDeleteFlag(Boolean.TRUE);
 			journalService.update(journal, journal.getId());
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 
 	}
 
 	@ApiOperation(value = "Delete Journal in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteProducts(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deleteProducts(@RequestBody DeleteModel ids) {
 		try {
 			for (Integer id : ids.getIds()) {
 				deleteProduct(id);
 			}
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
 	@ApiOperation(value = "Get Journal By ID")
 	@GetMapping(value = "/getById")
-	public ResponseEntity getInvoiceById(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<JournalModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
 		Journal journal = journalService.findByPK(id);
 		if (journal == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity<>(journalRestHelper.getModel(journal, false), HttpStatus.OK);
 		}
@@ -134,7 +134,7 @@ public class JournalRestController {
 
 	@ApiOperation(value = "Add New Journal Invoice")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody JournalRequestModel journalRequestModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(@RequestBody JournalRequestModel journalRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Journal journal = journalRestHelper.getEntity(journalRequestModel, userId);
@@ -152,7 +152,7 @@ public class JournalRestController {
 			}
 			journalService.update(journal);
 
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Saved Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -161,17 +161,17 @@ public class JournalRestController {
 
 	@ApiOperation(value = "Update Journal")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody JournalRequestModel jouralRequestModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@RequestBody JournalRequestModel jouralRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Journal journal = journalRestHelper.getEntity(jouralRequestModel, userId);
 			journal.setLastUpdateDate(LocalDateTime.now());
 			journal.setLastUpdateBy(userId);
 			journalService.update(journal);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

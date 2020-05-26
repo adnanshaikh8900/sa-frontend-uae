@@ -29,30 +29,30 @@ public class LoginRestController {
 
 	@ApiOperation(value = "forgotPassword")
 	@PostMapping(value = "/forgotPassword")
-	public ResponseEntity forgotPassword(@RequestBody JwtRequest jwtRequest) {
+	public ResponseEntity<String> forgotPassword(@RequestBody JwtRequest jwtRequest) {
 
 		Map<String, Object> attribute = new HashMap<String, Object>();
 		attribute.put("userEmail", jwtRequest.getUsername());
 		List<User> userList = userService.findByAttributes(attribute);
 		if (userList == null || (userList != null && userList.isEmpty()))
-			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 		User user = userList.get(0);
 		if (userService.updateForgotPasswordToken(user))
-			return new ResponseEntity(HttpStatus.OK);
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "resetPassword")
 	@PostMapping(value = "/resetPassword")
-	public ResponseEntity resetPassword(@RequestBody ResetPasswordModel resetPasswordModel) {
+	public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordModel resetPasswordModel) {
 
 		Map<String, Object> attribute = new HashMap<String, Object>();
 		attribute.put("forgotPasswordToken", resetPasswordModel.getToken());
 		List<User> userList = userService.findByAttributes(attribute);
 		if (userList == null || (userList != null && userList.isEmpty()) || (userList != null && !userList.isEmpty()
 				&& userList.get(0).getForgotPasswordTokenExpiryDate().isBefore(LocalDateTime.now())))
-			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 		User user = userList.get(0);
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -61,7 +61,7 @@ public class LoginRestController {
 		user.setForgotPasswordToken(null);
 		user.setForgotPasswordTokenExpiryDate(null);
 		userService.persist(user);
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
 }

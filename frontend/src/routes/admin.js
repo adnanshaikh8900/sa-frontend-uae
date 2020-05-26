@@ -34,6 +34,7 @@ import {
 	CreateSupplierInvoice,
 	DetailSupplierInvoice,
 	ViewInvoice,
+	RecordSupplierPayment,
 
 	// Expense Screens
 	Expense,
@@ -243,6 +244,11 @@ const adminRoutes = [
 		path: '/admin/expense/supplier-invoice/detail',
 		name: 'Detail',
 		component: DetailSupplierInvoice.screen,
+	},
+	{
+		path: '/admin/expense/supplier-invoice/record-payment',
+		name: 'Record Payment',
+		component: RecordSupplierPayment.screen,
 	},
 	{
 		path: '/admin/expense/supplier-invoice',

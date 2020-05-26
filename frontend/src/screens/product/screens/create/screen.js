@@ -68,8 +68,12 @@ class CreateProduct extends React.Component {
 				salesUnitPrice: '',
 				purchaseUnitPrice: '',
 				productPriceType: ['SALES'],
-				salesTransactionCategoryId: 84,
-				purchaseTransactionCategoryId: [],
+				salesTransactionCategoryId: { value: 84, label: 'Sales' },
+				purchaseTransactionCategoryId: {
+					value: 49,
+					label: 'Cost of Goods Sold',
+				},
+
 				salesDescription: '',
 				purchaseDescription: '',
 				productSalesPriceType: '',
@@ -247,6 +251,7 @@ class CreateProduct extends React.Component {
 	render() {
 		const { vat_list, product_category_list } = this.props;
 		const { initValue, purchaseCategory, salesCategory } = this.state;
+		console.log(initValue.salesTransactionCategoryId);
 		return (
 			<div className="create-product-screen">
 				<div className="animated fadeIn">
@@ -772,6 +777,10 @@ class CreateProduct extends React.Component {
 																						.salesTransactionCategoryId
 																				: ''
 																		}
+																		defaultValue={{
+																			value: 79,
+																			label: 'Exchange Gain',
+																		}}
 																		id="salesTransactionCategoryId"
 																		onChange={(option) => {
 																			if (option && option.value) {

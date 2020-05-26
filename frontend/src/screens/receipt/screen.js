@@ -61,7 +61,7 @@ class Receipt extends React.Component {
 		};
 
 		this.options = {
-			//onRowClick: this.goToDetail,
+			onRowClick: this.goToDetail,
 			paginationPosition: 'top',
 			page: 1,
 			sizePerPage: 10,
@@ -514,8 +514,8 @@ class Receipt extends React.Component {
 												<TableHeaderColumn dataField="customerName" dataSort>
 													Customer Name
 												</TableHeaderColumn>
-												<TableHeaderColumn dataField="invoiceNumber" dataSort>
-													Invoice #
+												<TableHeaderColumn dataField="receiptId" dataSort>
+													Receipt #
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn
                             dataField="transactionType"

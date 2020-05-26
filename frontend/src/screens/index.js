@@ -32,6 +32,7 @@ import SupplierInvoice from './supplier_invoice';
 import CreateSupplierInvoice from './supplier_invoice/screens/create';
 import DetailSupplierInvoice from './supplier_invoice/screens/detail';
 import ViewInvoice from './supplier_invoice/screens/view';
+import RecordSupplierPayment from './supplier_invoice/screens/record_payment';
 
 import Expense from './expense';
 import CreateExpense from './expense/screens/create';
@@ -118,6 +119,7 @@ export {
 	CreateSupplierInvoice,
 	DetailSupplierInvoice,
 	ViewInvoice,
+	RecordSupplierPayment,
 	Expense,
 	CreateExpense,
 	DetailExpense,

@@ -50,9 +50,9 @@ public class TaxTransactionController{
 			taxTransactionList = taxTranscationRestHelper.separateTransactionCrediTAndDebit(startDate, endDate);
 		}
 		if (taxTransactionList != null) {
-			return new ResponseEntity(taxTransactionList, HttpStatus.OK);
+			return new ResponseEntity<>(taxTransactionList, HttpStatus.OK);
 		} else {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 	}
@@ -62,16 +62,16 @@ public class TaxTransactionController{
 	public ResponseEntity<List<TaxTransaction>> getCloseTaxTranscation() {
 		List<TaxTransaction> taxTransactionList = taxTransactionService.getClosedTaxTransactionList();
 		if (taxTransactionList != null) {
-			return new ResponseEntity(taxTransactionList, HttpStatus.OK);
+			return new ResponseEntity<>(taxTransactionList, HttpStatus.OK);
 		} else {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 	}
 
 	@ApiOperation(value = "Save Tax Transaction")
 	@PostMapping(value = "/saveTaxTransaction")
-	public ResponseEntity save(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<String> save(@RequestParam(value = "id") Integer id) {
 		TaxTransaction taxTransaction = taxTransactionService.findByPK(id);
 
 		TaxTransaction taxTransaction1 = null;
@@ -100,7 +100,7 @@ public class TaxTransactionController{
 		} else {
 			taxTransactionService.update(taxTransaction);
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>("Saved successfull",HttpStatus.OK);
 	}
 
 	private TaxTransaction createNewTaxTransaction(TaxTransaction taxTransaction1, BigDecimal dueAmount,

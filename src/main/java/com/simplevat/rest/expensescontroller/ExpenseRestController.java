@@ -64,7 +64,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 
 	@ApiOperation(value = "Get Expense List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getExpenseList(ExpenseRequestFilterModel expenseRequestFilterModel) {
+	public ResponseEntity<PaginationResponseModel> getExpenseList(ExpenseRequestFilterModel expenseRequestFilterModel) {
 		try {
 
 			Map<ExpenseFIlterEnum, Object> filterDataMap = new EnumMap<>(ExpenseFIlterEnum.class);
@@ -85,10 +85,10 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 			filterDataMap.put(ExpenseFIlterEnum.DELETE_FLAG, false);
 			PaginationResponseModel response = expenseService.getExpensesList(filterDataMap, expenseRequestFilterModel);
 			if (response == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 			response.setData(expenseRestHelper.getExpenseList(response.getData()));
-			return new ResponseEntity(response, HttpStatus.OK);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -97,7 +97,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 
 	@ApiOperation(value = "Add New Expense")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
@@ -119,7 +119,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 
 	@ApiOperation(value = "Update Expense")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@ModelAttribute ExpenseModel expenseModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
@@ -143,11 +143,11 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 
 	@ApiOperation(value = "Get Expense Detail by Expanse Id")
 	@GetMapping(value = "/getExpenseById")
-	public ResponseEntity getExpenseById(@RequestParam("expenseId") Integer expenseId) {
+	public ResponseEntity<ExpenseModel> getExpenseById(@RequestParam("expenseId") Integer expenseId) {
 		try {
 			Expense expense = expenseService.findByPK(expenseId);
 			ExpenseModel expenseModel = expenseRestHelper.getExpenseModel(expense);
-			return new ResponseEntity(expenseModel, HttpStatus.OK);
+			return new ResponseEntity<>(expenseModel, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -155,7 +155,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity delete(@RequestParam("expenseId") Integer expenseId) {
+	public ResponseEntity<String> delete(@RequestParam("expenseId") Integer expenseId) {
 		try {
 			Expense expense = expenseService.findByPK(expenseId);
 			expense.setDeleteFlag(true);
@@ -168,7 +168,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@DeleteMapping( value = "/deletes")
-	public ResponseEntity bulkDelete(@RequestBody DeleteModel expenseIds) {
+	public ResponseEntity<String> bulkDelete(@RequestBody DeleteModel expenseIds) {
 		try {
 			expenseService.deleteByIds(expenseIds.getIds());
 			return ResponseEntity.status(HttpStatus.OK).build();

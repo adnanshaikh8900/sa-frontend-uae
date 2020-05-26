@@ -19,11 +19,10 @@
 		padding: 0.3rem 0.75rem;
 		cursor: pointer;
 	}
-	.is-invalid {
-		color: #f86c6b;
-	}
 }
-
+.addProduct.is-invalid {
+	color: #f86c6b;
+}
 .react-bs-container-body {
 	overflow: initial;
 }

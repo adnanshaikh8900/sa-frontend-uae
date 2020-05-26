@@ -24,7 +24,7 @@ import * as Yup from "yup";
 import {
   CommonActions
 } from 'services/global'
-import {selectCurrencyFactory, selectOptionsFactory} from 'utils'
+import {selectCurrencyFactory} from 'utils'
 import * as JournalActions from '../../actions';
 import * as JournalCreateActions from './actions';
 

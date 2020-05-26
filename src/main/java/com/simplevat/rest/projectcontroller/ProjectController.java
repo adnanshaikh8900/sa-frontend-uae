@@ -60,10 +60,10 @@ public class ProjectController{
 
 	@ApiOperation(value = "Get Project By ID")
 	@GetMapping(value = "/getProjectById")
-	public ResponseEntity getProductById(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<ProjectRequestModel> getProductById(@RequestParam(value = "id") Integer id) {
 		Project project = projectService.findByPK(id);
 		if (project == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity<>(projectRestHelper.getRequestModel(project), HttpStatus.OK);
 		}
@@ -72,7 +72,7 @@ public class ProjectController{
 
 	@ApiOperation(value = "Get Project List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getProductList(ProjectRequestFilterModel filterModel) {
+	public ResponseEntity<PaginationResponseModel> getProductList(ProjectRequestFilterModel filterModel) {
 		Map<ProjectFilterEnum, Object> filterDataMap = new HashMap();
 		filterDataMap.put(ProjectFilterEnum.USER_ID, filterModel.getUserId());
 		filterDataMap.put(ProjectFilterEnum.PROJECT_ID, filterModel.getProjectId());
@@ -84,68 +84,68 @@ public class ProjectController{
 
 		PaginationResponseModel response = projectService.getProjectList(filterDataMap, filterModel);
 		if (response == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		response.setData(projectRestHelper.getListModel(response.getData()));
-		return new ResponseEntity(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/getProjectsForDropdown")
-	public ResponseEntity getContactsForDropdown() {
+	public ResponseEntity<List<DropdownModel>> getContactsForDropdown() {
 		List<DropdownModel> dropdownModels = projectService.getProjectsForDropdown();
 		return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Delete Project By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteProject(@RequestParam(value = "id") Integer id){
+	public ResponseEntity<String> deleteProject(@RequestParam(value = "id") Integer id){
 		try {
 			Project project = projectService.findByPK(id);
 
 			if (project == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
 				project.setDeleteFlag(Boolean.TRUE);
 				projectService.update(project);
-				return new ResponseEntity<>(HttpStatus.OK);
+				return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Delete Project in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteProjects(@RequestBody DeleteModel ids){
+	public ResponseEntity<String> deleteProjects(@RequestBody DeleteModel ids){
 		try {
 			projectService.deleteByIds(ids.getIds());
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@PostMapping(value = "/save")
-	public ResponseEntity saveProject(@RequestBody ProjectRequestModel projectRequestModel, HttpServletRequest request){
+	public ResponseEntity<String> saveProject(@RequestBody ProjectRequestModel projectRequestModel, HttpServletRequest request){
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		Project project = projectRestHelper.getEntity(projectRequestModel);
 		project.setCreatedBy(userId);
 		project.setCreatedDate(LocalDateTime.now());
 		projectService.persist(project);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>("Saved Successfully",HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Update Product")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody ProjectRequestModel projectRequestModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@RequestBody ProjectRequestModel projectRequestModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		Project project = projectRestHelper.getEntity(projectRequestModel);
 		project.setLastUpdateDate(LocalDateTime.now());
 		project.setLastUpdateBy(userId);
 		projectService.update(project);
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity("Updated Successfully",HttpStatus.OK);
 	}
 
 }

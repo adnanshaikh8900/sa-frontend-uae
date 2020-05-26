@@ -264,8 +264,7 @@ public class InvoiceRestHelper {
 		requestModel.setDiscount(invoice.getDiscount());
 		requestModel.setDiscountPercentage(invoice.getDiscountPercentage());
 		requestModel.setTerm(invoice.getInvoiceDuePeriod());
-		requestModel
-				.setDueAmount(invoice.getTotalAmount().subtract(paymentService.getAmountByInvoiceId(invoice.getId())));
+		requestModel.setDueAmount(invoice.getDueAmount());
 		if (invoice.getContact() != null) {
 			Contact contact = invoice.getContact();
 

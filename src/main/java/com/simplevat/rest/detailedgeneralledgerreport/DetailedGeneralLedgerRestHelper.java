@@ -174,6 +174,7 @@ public class DetailedGeneralLedgerRestHelper {
 						break;
 
 					case RECEIPT:
+					case PAYMENT:
 						model.setReferenceNo(journal.getJournlReferencenNo());
 						model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
 						model.setCreditAmount(lineItem.getCreditAmount());

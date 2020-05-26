@@ -139,3 +139,17 @@ alter table RECEIPT add constraint FKkhhdki7s8y02tu4ufdutgr60u foreign key (DEPO
 alter table RECEIPT add column RECEIPT_ATTACHMENT_DESCRIPTION varchar(4000);
 alter table RECEIPT add column RECEIPT_ATTACHMENT_FILE_NAME varchar(255);
 alter table RECEIPT add column RECEIPT_ATTACHMENT_PATH varchar(1000);
+
+--changeset 22/05/2020 SAURABH:ddl-8
+create table SUPPLIER_INVOICE_PAYMENT (ID bigint not null auto_increment, CREATED_BY integer not null, CREATED_DATE datetime default CURRENT_TIMESTAMP, DELETE_FLAG bit default 0 not null, DUE_AMOUNT decimal(19,2) not null, LAST_UPDATED_BY integer, LAST_UPDATE_DATE datetime, PAID_AMOUNT decimal(19,2) not null, PAYMENT_ID integer, SUPPLIER_INVOICE_ID integer, primary key (ID));
+alter table SUPPLIER_INVOICE_PAYMENT add constraint FKfex7pckbnnbh9bruwgjcy2spr foreign key (PAYMENT_ID) references PAYMENT (ID);
+alter table SUPPLIER_INVOICE_PAYMENT add constraint FK4ph4idew15w6smdgom59kbhxg foreign key (SUPPLIER_INVOICE_ID) references INVOICE (ID);
+alter table PAYMENT add column ATTACHMENT_DESCRIPTION varchar(255);
+alter table PAYMENT add column ATTACHMENT_FILE_NAME varchar(255);
+alter table PAYMENT add column ATTACHMENT_PATH varchar(255);
+alter table PAYMENT add column NOTES varchar(255);
+alter table PAYMENT add column PAY_MODE varchar(255);
+alter table PAYMENT add column PAYMENT_NO varchar(255);
+alter table PAYMENT add column REFERENCE_NO varchar(255);
+alter table PAYMENT add column DEPOSITE_TO_TRANSACTION_CATEGORY_ID integer;
+alter table PAYMENT add constraint FK477s0wc9n8l6oupyoqk4v2g3c foreign key (DEPOSITE_TO_TRANSACTION_CATEGORY_ID) references TRANSACTION_CATEGORY (TRANSACTION_CATEGORY_ID);

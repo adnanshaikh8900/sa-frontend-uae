@@ -24,6 +24,4 @@ public abstract class PaymentService extends SimpleVatService<Integer, Payment> 
     
     public abstract void deleteByIds(List<Integer> ids);
     
-    public abstract BigDecimal getAmountByInvoiceId(Integer invoiceId);
-
 }

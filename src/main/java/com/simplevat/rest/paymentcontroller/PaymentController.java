@@ -1,5 +1,7 @@
 package com.simplevat.rest.paymentcontroller;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,25 +28,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.PaymentFilterEnum;
+import com.simplevat.entity.Journal;
 import com.simplevat.entity.Payment;
+import com.simplevat.entity.SupplierInvoicePayment;
 import com.simplevat.entity.User;
-import com.simplevat.helper.PaymentModelHelper;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.BankAccountService;
 import com.simplevat.service.ContactService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.InvoiceService;
+import com.simplevat.service.JournalService;
 import com.simplevat.service.PaymentService;
-import com.simplevat.service.ProjectService;
+import com.simplevat.service.SupplierInvoicePaymentService;
 import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
-import static com.simplevat.constant.ErrorConstant.ERROR;
-
 /**
- * @author Ashish  : For Supplier invoice
+ * @author Ashish : For Supplier invoice
  */
 @RestController
 @RequestMapping(value = "/rest/payment")
@@ -53,31 +53,25 @@ public class PaymentController {
 	private final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
 	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+
+	@Autowired
 	private PaymentService paymentService;
 
 	@Autowired
 	private ContactService contactService;
 
 	@Autowired
-	private InvoiceService invoiceService;
-
-	@Autowired
-	private CurrencyService currencyService;
-
-	@Autowired
-	private ProjectService projectService;
-
-	@Autowired
-	private BankAccountService bankAccountService;
-
-	@Autowired
-	private PaymentModelHelper paymentModelHelper;
+	private PaymentRestHelper paymentRestHelper;
 
 	@Autowired
 	private UserService userServiceNew;
 
 	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private SupplierInvoicePaymentService supplierInvoicePaymentService;
+
+	@Autowired
+	private JournalService journalService;
 
 	@ApiOperation(value = "Get All Payments")
 	@GetMapping(value = "/getlist")
@@ -104,7 +98,7 @@ public class PaymentController {
 			List<PaymentViewModel> paymentModels = new ArrayList<>();
 			if (response != null && response.getData() != null) {
 				for (Payment payment : (List<Payment>) response.getData()) {
-					PaymentViewModel paymentModel = paymentModelHelper.convertToPaymentViewModel(payment);
+					PaymentViewModel paymentModel = paymentRestHelper.convertToPaymentViewModel(payment);
 					paymentModels.add(paymentModel);
 				}
 				response.setData(paymentModels);
@@ -124,12 +118,11 @@ public class PaymentController {
 	@GetMapping(value = "/getpaymentbyid")
 	public ResponseEntity getPaymentById(@RequestParam("paymentId") Integer paymentId) {
 		try {
-			PaymentPersistModel paymentModel = new PaymentPersistModel();
-			if (paymentId != null) {
-				Payment payment = paymentService.findByPK(paymentId);
-				paymentModel = paymentModelHelper.convertToPaymentPersistModel(payment);
+			if (paymentId == null) {
+				return new ResponseEntity(HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<>(paymentModel, HttpStatus.OK);
+			Payment payment = paymentService.findByPK(paymentId);
+			return new ResponseEntity<>(paymentRestHelper.convertToPaymentPersistModel(payment), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -142,25 +135,26 @@ public class PaymentController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
-			Payment payment = paymentModelHelper.convertToPayment(paymentModel);
-			if (paymentModel.getBankAccountId() != null) {
-				payment.setBankAccount(bankAccountService.findByPK(paymentModel.getBankAccountId()));
-			}
-			if (paymentModel.getContactId() != null) {
-				payment.setSupplier(contactService.findByPK(paymentModel.getContactId()));
-			}
-			if (paymentModel.getCurrencyCode() != null) {
-				payment.setCurrency(currencyService.findByPK(paymentModel.getCurrencyCode()));
-			}
-			if (paymentModel.getProjectId() != null) {
-				payment.setProject(projectService.findByPK(paymentModel.getProjectId()));
-			}
-			if (paymentModel.getInvoiceId() != null) {
-				payment.setInvoice(invoiceService.findByPK(paymentModel.getInvoiceId()));
-			}
+			Payment payment = paymentRestHelper.convertToPayment(paymentModel);
 			payment.setCreatedBy(user.getUserId());
 			payment.setCreatedDate(LocalDateTime.now());
 			paymentService.persist(payment);
+
+			// save data in Mapping Table
+			List<SupplierInvoicePayment> supplierInvoicePaymentList = paymentRestHelper
+					.getSupplierInvoicePaymentEntity(paymentModel);
+			for (SupplierInvoicePayment supplierInvoicePayment : supplierInvoicePaymentList) {
+				supplierInvoicePayment.setPayment(payment);
+				supplierInvoicePayment.setCreatedBy(userId);
+				supplierInvoicePaymentService.persist(supplierInvoicePayment);
+			}
+
+			// Post journal
+			Journal journal = paymentRestHelper.paymentPosting(
+					new PostingRequestModel(payment.getPaymentId(), payment.getInvoiceAmount()), userId,
+					payment.getDepositeToTransactionCategory());
+			journalService.persist(journal);
+
 			return new ResponseEntity(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -174,36 +168,23 @@ public class PaymentController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
-			if (paymentModel.getPaymentId() != null) {
-				Payment payment = paymentService.findByPK(paymentModel.getPaymentId());
-				if (paymentModel.getBankAccountId() != null) {
-					payment.setBankAccount(bankAccountService.findByPK(paymentModel.getBankAccountId()));
-				}
-				if (paymentModel.getContactId() != null) {
-					payment.setSupplier(contactService.findByPK(paymentModel.getContactId()));
-				}
-				if (paymentModel.getCurrencyCode() != null) {
-					payment.setCurrency(currencyService.findByPK(paymentModel.getCurrencyCode()));
-				}
-				if (paymentModel.getProjectId() != null) {
-					payment.setProject(projectService.findByPK(paymentModel.getProjectId()));
-				}
-				if (paymentModel.getInvoiceId() != null) {
-					payment.setInvoice(invoiceService.findByPK(paymentModel.getInvoiceId()));
-				}
-				payment.setInvoiceAmount(paymentModel.getInvoiceAmount());
-				if (paymentModel.getPaymentDate() != null) {
-					LocalDateTime paymentDate = Instant.ofEpochMilli(paymentModel.getPaymentDate().getTime())
-							.atZone(ZoneId.systemDefault()).toLocalDateTime();
-					payment.setPaymentDate(paymentDate);
-				}
-				payment.setDescription(paymentModel.getDescription());
-				payment.setLastUpdateBy(user.getUserId());
-				payment.setLastUpdateDate(LocalDateTime.now());
-				paymentService.update(payment);
-			}
+			Payment payment = paymentRestHelper.convertToPayment(paymentModel);
+
+			// No need to Update data in Mapping Table
+
+			// Update journal
+			Journal journal = paymentRestHelper.paymentPosting(
+					new PostingRequestModel(payment.getPaymentId(), payment.getInvoiceAmount()), userId,
+					payment.getDepositeToTransactionCategory());
+			journalService.update(journal);
+
+			payment.setLastUpdateBy(user.getUserId());
+			payment.setLastUpdateDate(LocalDateTime.now());
+			paymentService.update(payment);
 			return new ResponseEntity(HttpStatus.OK);
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -212,20 +193,26 @@ public class PaymentController {
 	@ApiOperation(value = "Delete Payment")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity deletePayment(@RequestParam(value = "id") Integer id) {
-		Payment payment = paymentService.findByPK(id);
-		if (payment != null) {
-			payment.setDeleteFlag(Boolean.TRUE);
-			paymentService.update(payment, payment.getPaymentId());
-		}
-		return new ResponseEntity(HttpStatus.OK);
 
+		Payment payment = paymentService.findByPK(id);
+		try {
+			if (payment != null) {
+				List<Integer> paymentIdList = new ArrayList<>();
+				paymentIdList.add(id);
+				paymentService.deleteByIds(paymentIdList);
+			}
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 	@ApiOperation(value = "Delete Multiple Payments")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteExpenses(@RequestBody DeleteModel expenseIds) {
+	public ResponseEntity deleteExpenses(@RequestBody DeleteModel deleteModel) {
 		try {
-			paymentModelHelper.deletePayments(expenseIds, paymentService);
+			paymentService.deleteByIds(deleteModel.getIds());
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (Exception e) {
 			logger.error(ERROR, e);

@@ -217,6 +217,7 @@ class SupplierInvoice extends React.Component {
 	};
 
 	renderActions = (cell, row) => {
+		console.log(row);
 		return (
 			<div>
 				<ButtonDropdown
@@ -241,13 +242,13 @@ class SupplierInvoice extends React.Component {
 						>
 							<i className="fas fa-edit" /> Edit
 						</DropdownItem>
-						{row.status !== 'Post' && (
+						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && (
 							<DropdownItem
 								onClick={() => {
 									this.postInvoice(row);
 								}}
 							>
-								<i className="fas fa-heart" /> Post
+								<i className="fas fa-heart" /> Send
 							</DropdownItem>
 						)}
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
@@ -263,19 +264,18 @@ class SupplierInvoice extends React.Component {
 						>
 							<i className="fas fa-eye" /> View
 						</DropdownItem>
-						<DropdownItem
-							onClick={() => {
-								this.sendMail(row.id);
-							}}
-						>
-							<i className="fas fa-upload" /> Send
-						</DropdownItem>
-						{/* <DropdownItem>
-              <i className="fas fa-print" /> Print
-            </DropdownItem> */}
-						{/* <DropdownItem>
-              <i className="fas fa-times" /> Cancel
-            </DropdownItem> */}
+						{row.statusEnum === 'Sent' && (
+							<DropdownItem
+								onClick={() =>
+									this.props.history.push(
+										'/admin/expense/supplier-invoice/record-payment',
+										{ id: row },
+									)
+								}
+							>
+								<i className="fas fa-university" /> Record Payment
+							</DropdownItem>
+						)}
 						<DropdownItem
 							onClick={() => {
 								this.closeInvoice(row.id);
@@ -546,7 +546,9 @@ class SupplierInvoice extends React.Component {
 					invoiceDueDate: '',
 					amount: '',
 					status: '',
+					statusEnum: '',
 					contactType: 1,
+					contactId: '',
 				},
 			},
 			() => {
@@ -574,6 +576,7 @@ class SupplierInvoice extends React.Component {
 				? this.props.supplier_invoice_list.data.map((supplier) => ({
 						id: supplier.id,
 						status: supplier.status,
+						statusEnum: supplier.statusEnum,
 						customerName: supplier.name,
 						invoiceNumber: supplier.referenceNumber,
 						invoiceDate: supplier.invoiceDate
@@ -584,6 +587,7 @@ class SupplierInvoice extends React.Component {
 							: '',
 						invoiceAmount: supplier.totalAmount,
 						vatAmount: supplier.totalVatAmount,
+						contactId: supplier.contactId,
 				  }))
 				: '';
 

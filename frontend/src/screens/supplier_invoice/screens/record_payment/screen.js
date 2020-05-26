@@ -18,10 +18,10 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import * as CustomerRecordPaymentActions from './actions';
-import * as CustomerInvoiceActions from '../../actions';
+//import * as CustomerRecordPaymentActions from './actions';
+import * as SupplierInvoiceActions from '../../actions';
 
-import { CustomerModal } from '../../sections';
+import { SupplierModal } from '../../sections';
 import { Loader, ConfirmDeleteModal } from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -36,26 +36,26 @@ import API_ROOT_URL from '../../../../constants/config';
 const mapStateToProps = (state) => {
 	return {
 		contact_list: state.customer_invoice.contact_list,
-		customer_list: state.customer_invoice.customer_list,
-		deposit_list: state.customer_invoice.deposit_list,
-		pay_mode: state.customer_invoice.pay_mode,
+		supplier_list: state.supplier_invoice.supplier_list,
+		deposit_list: state.supplier_invoice.deposit_list,
+		pay_mode: state.supplier_invoice.pay_mode,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		customerInvoiceActions: bindActionCreators(
-			CustomerInvoiceActions,
+		SupplierInvoiceActions: bindActionCreators(
+			SupplierInvoiceActions,
 			dispatch,
 		),
-		CustomerRecordPaymentActions: bindActionCreators(
-			CustomerRecordPaymentActions,
-			dispatch,
-		),
+		// CustomerRecordPaymentActions: bindActionCreators(
+		// 	CustomerRecordPaymentActions,
+		// 	dispatch,
+		// ),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
 
-class RecordCustomerPayment extends React.Component {
+class RecordSupplierPayment extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -81,8 +81,8 @@ class RecordCustomerPayment extends React.Component {
 				paidInvoiceListStr: [],
 			},
 			invoiceId: this.props.location.state.id.id,
-			contactType: 2,
-			openCustomerModal: false,
+			contactType: 1,
+			openSupplierModal: false,
 			selectedContact: '',
 			term: '',
 			selectedType: '',
@@ -136,11 +136,11 @@ class RecordCustomerPayment extends React.Component {
 			},
 		});
 		Promise.all([
-			this.props.customerInvoiceActions.getDepositList(),
-			this.props.customerInvoiceActions.getPaymentMode(),
-			this.props.customerInvoiceActions.getCustomerList(this.state.contactType),
+			this.props.SupplierInvoiceActions.getDepositList(),
+			this.props.SupplierInvoiceActions.getPaymentMode(),
+			this.props.SupplierInvoiceActions.getSupplierList(this.state.contactType),
 		]);
-		this.getReceiptNo();
+		//this.getReceiptNo();
 	};
 
 	getReceiptNo = () => {
@@ -266,9 +266,9 @@ class RecordCustomerPayment extends React.Component {
 			});
 	};
 
-	openCustomerModal = (e) => {
+	openSupplierModal = (e) => {
 		e.preventDefault();
-		this.setState({ openCustomerModal: true });
+		this.setState({ openSupplierModal: true });
 	};
 
 	getCurrentUser = (data) => {
@@ -287,11 +287,11 @@ class RecordCustomerPayment extends React.Component {
 		this.formRef.current.setFieldValue('contactId', option.value, true);
 	};
 
-	closeCustomerModal = (res) => {
+	closeSupplierModal = (res) => {
 		if (res) {
 			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		}
-		this.setState({ openCustomerModal: false });
+		this.setState({ openSupplierModal: false });
 	};
 
 	deleteInvoice = () => {
@@ -335,7 +335,7 @@ class RecordCustomerPayment extends React.Component {
 
 	render() {
 		const { initValue, loading, dialog } = this.state;
-		const { pay_mode, customer_list, deposit_list } = this.props;
+		const { pay_mode, supplier_list, deposit_list } = this.props;
 
 		return (
 			<div className="detail-customer-invoice-screen">
@@ -422,8 +422,8 @@ class RecordCustomerPayment extends React.Component {
 																			name="contactId"
 																			isDisabled
 																			value={
-																				customer_list &&
-																				customer_list.find(
+																				supplier_list &&
+																				supplier_list.find(
 																					(option) =>
 																						option.value ===
 																						+this.props.location.state.id
@@ -795,16 +795,16 @@ class RecordCustomerPayment extends React.Component {
 						</Col>
 					</Row>
 				</div>
-				<CustomerModal
-					openCustomerModal={this.state.openCustomerModal}
-					closeCustomerModal={(e) => {
-						this.closeCustomerModal(e);
+				<SupplierModal
+					openSupplierModal={this.state.openSupplierModal}
+					closeSupplierModal={(e) => {
+						this.closeSupplierModal(e);
 					}}
 					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.customerInvoiceActions.createCustomer}
+					createSupplier={this.props.SupplierInvoiceActions.createSupplier}
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}
-					getStateList={this.props.customerInvoiceActions.getStateList}
+					getStateList={this.props.SupplierInvoiceActions.getStateList}
 				/>
 			</div>
 		);
@@ -814,4 +814,4 @@ class RecordCustomerPayment extends React.Component {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(RecordCustomerPayment);
+)(RecordSupplierPayment);

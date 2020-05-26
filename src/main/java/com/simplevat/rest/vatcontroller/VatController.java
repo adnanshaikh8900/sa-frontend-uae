@@ -56,7 +56,7 @@ public class VatController{
 
 	@ApiOperation(value = "Get Vat Category List")
 	@GetMapping(value = "getList")
-	public ResponseEntity getVatList(VatCategoryRequestFilterModel filterModel) {
+	public ResponseEntity<PaginationResponseModel> getVatList(VatCategoryRequestFilterModel filterModel) {
 
 		Map<VatCategoryFilterEnum, Object> filterDataMap = new EnumMap<>(VatCategoryFilterEnum.class);
 		filterDataMap.put(VatCategoryFilterEnum.VAT_CATEGORY_NAME, filterModel.getName());
@@ -69,54 +69,54 @@ public class VatController{
 		if (respone != null) {
 
 			respone.setData(vatCategoryRestHelper.getList(respone.getData()));
-			return new ResponseEntity(respone, HttpStatus.OK);
+			return new ResponseEntity<>(respone, HttpStatus.OK);
 		} else {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 	}
 
 	@ApiOperation(value = "delete Vat Category by Id")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity delete(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<String> delete(@RequestParam(value = "id") Integer id) {
 		VatCategory vatCategory = vatCategoryService.findByPK(id);
 		if (vatCategory != null) {
 			vatCategory.setDeleteFlag(true);
 			vatCategoryService.update(vatCategory, vatCategory.getId());
 		} else {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>("Deleted Successful",HttpStatus.OK);
 
 	}
 
 	@ApiOperation(value = "Delete Vat Category in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deletes(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deletes(@RequestBody DeleteModel ids) {
 		try {
 			vatCategoryService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successful",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Get Vat Category By ID")
 	@GetMapping(value = "/getById")
-	public ResponseEntity getById(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<VatCategoryModel > getById(@RequestParam(value = "id") Integer id) {
 		VatCategory vatCategory = vatCategoryService.findByPK(id);
 		if (vatCategory != null) {
-			return new ResponseEntity(vatCategoryRestHelper.getModel(vatCategory), HttpStatus.OK);
+			return new ResponseEntity<>(vatCategoryRestHelper.getModel(vatCategory), HttpStatus.OK);
 
 		} else {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@ApiOperation(value = "Add New Vat Category")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
 		try {
 
 			VatCategory vatCategory = vatCategoryRestHelper.getEntity(vatCatRequestModel);
@@ -132,23 +132,23 @@ public class VatController{
 
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>("Saved Successful",HttpStatus.OK);
 	}
 	@ApiOperation(value = "Update Vat Category")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@RequestBody VatCategoryRequestModel vatCatRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			VatCategory vatCategory = vatCategoryRestHelper.getEntity(vatCatRequestModel);
 			vatCategory.setLastUpdateDate(new Date());
 			vatCategory.setLastUpdateBy(userId);
 			vatCategoryService.update(vatCategory);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successful",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

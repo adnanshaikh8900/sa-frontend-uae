@@ -30,7 +30,7 @@ public class StaticResourceConfiguration implements WebMvcConfigurer {
 		/**
 		 * @author $@urabh map "/file/" to base folder to access file from server
 		 */
-		registry.addResourceHandler("/file/**").addResourceLocations(basePath);
+		registry.addResourceHandler("/file/**").addResourceLocations("file:/" + basePath);
 		registry.addResourceHandler("/swagger-ui.html**")
 				.addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
 		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");

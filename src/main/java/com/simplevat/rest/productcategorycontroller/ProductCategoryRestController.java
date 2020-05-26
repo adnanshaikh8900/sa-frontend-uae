@@ -58,7 +58,7 @@ public class ProductCategoryRestController {
 
 	@ApiOperation(value = "Get All Product Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getAllProductCategory(ProductCategoryFilterModel filterModel, HttpServletRequest request) {
+	public ResponseEntity<PaginationResponseModel> getAllProductCategory(ProductCategoryFilterModel filterModel, HttpServletRequest request) {
 
 		Map<ProductCategoryFilterEnum, Object> filterDataMap = new HashMap();
 		filterDataMap.put(ProductCategoryFilterEnum.PRODUCT_CATEGORY_CODE, filterModel.getProductCategoryCode());
@@ -69,45 +69,45 @@ public class ProductCategoryRestController {
 		PaginationResponseModel response = productCategoryService.getProductCategoryList(filterDataMap, filterModel);
 		if (response != null) {
 			response.setData(productCategoryRestHelper.getListModel(response.getData()));
-			return new ResponseEntity(response, HttpStatus.OK);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Get Product Category By ID")
 	@GetMapping(value = "/getById")
-	public ResponseEntity getProductCategoryById(@RequestParam("id") Integer id) {
+	public ResponseEntity<ProductCategoryListModel> getProductCategoryById(@RequestParam("id") Integer id) {
 		ProductCategory productCategory = productCategoryService.findByPK(id);
-		return new ResponseEntity(productCategoryRestHelper.getRequestModel(productCategory), HttpStatus.OK);
+		return new ResponseEntity<>(productCategoryRestHelper.getRequestModel(productCategory), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Delete Product Category")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteTransactionCategory(@RequestParam("id") Integer id) {
+	public ResponseEntity<String> deleteTransactionCategory(@RequestParam("id") Integer id) {
 		ProductCategory productCategories = productCategoryService.findByPK(id);
 		if (productCategories == null) {
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		productCategories.setDeleteFlag(Boolean.TRUE);
 		productCategoryService.update(productCategories, id);
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Delete Product Category In Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteTransactionCategories(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deleteTransactionCategories(@RequestBody DeleteModel ids) {
 		try {
 			productCategoryService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Add New Product Category")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody ProductCategoryListModel productCategoryModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(@RequestBody ProductCategoryListModel productCategoryModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
@@ -115,16 +115,16 @@ public class ProductCategoryRestController {
 			selectedProductCategory.setCreatedBy(user.getUserId());
 			selectedProductCategory.setCreatedDate(LocalDateTime.now());
 			productCategoryService.persist(selectedProductCategory);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Saved Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Update Product Category")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody ProductCategoryListModel productCategoryModel,
+	public ResponseEntity<String> update(@RequestBody ProductCategoryListModel productCategoryModel,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -135,11 +135,11 @@ public class ProductCategoryRestController {
 			productCategoryModel.setLastUpdateBy(user.getUserId());
 			productCategoryModel.setLastUpdateDate(LocalDateTime.now());
 			productCategoryService.update(selectedProductCategory);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

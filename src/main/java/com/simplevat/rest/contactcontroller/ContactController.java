@@ -9,6 +9,7 @@ import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.ContactFilterEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.entity.Contact;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ContactService;
 
@@ -53,7 +54,7 @@ public class ContactController {
 	private JwtTokenUtil jwtTokenUtil;
 
 	@GetMapping(value = "/getContactList")
-	public ResponseEntity getContactList(ContactRequestFilterModel filterModel, HttpServletRequest request) {
+	public ResponseEntity<PaginationResponseModel> getContactList(ContactRequestFilterModel filterModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		try {
 			Map<ContactFilterEnum, Object> filterDataMap = new EnumMap<>(ContactFilterEnum.class);
@@ -79,20 +80,20 @@ public class ContactController {
 	}
 
 	@GetMapping(value = "/getContactsForDropdown")
-	public ResponseEntity getContactsForDropdown(
+	public ResponseEntity<List<DropdownModel>> getContactsForDropdown(
 			@RequestParam(name = "contactType", required = false) Integer contactType) {
 		return new ResponseEntity<>(contactService.getContactForDropdown(contactType), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/getContactById")
-	public ResponseEntity getContactById(@RequestParam("contactId") Integer contactId) {
+	public ResponseEntity<ContactPersistModel> getContactById(@RequestParam("contactId") Integer contactId) {
 		ContactPersistModel contactPersistModel = contactHelper
 				.getContactPersistModel(contactService.findByPK(contactId));
 		return new ResponseEntity<>(contactPersistModel, HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
+	public ResponseEntity<ContactListModel> save(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 		try {
@@ -101,7 +102,7 @@ public class ContactController {
 			List<Contact> existingContact = contactService.findByAttributes(param);
 
 			if (existingContact != null && !existingContact.isEmpty()) {
-				return new ResponseEntity<>("Allready exists.", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity("Allready exists.", HttpStatus.BAD_REQUEST);
 			}
 			
 			Contact contact = contactHelper.getEntity(contactPersistModel);
@@ -118,7 +119,7 @@ public class ContactController {
 	}
 
 	@PostMapping(value = "/update")
-	public ResponseEntity<Contact> update(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@RequestBody ContactPersistModel contactPersistModel, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 		try {
@@ -128,7 +129,7 @@ public class ContactController {
 				contact.setLastUpdateDate(LocalDateTime.now());
 				contactService.update(contact);
 			}
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -137,7 +138,7 @@ public class ContactController {
 	}
 
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<Contact> delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
+	public ResponseEntity<String> delete(@RequestParam(value = "id") Integer id, HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 		Contact contact = contactService.findByPK(id);
@@ -147,16 +148,16 @@ public class ContactController {
 		contact.setDeleteFlag(Boolean.TRUE);
 		contact.setLastUpdatedBy(userId);
 		contactService.update(contact);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 
 	}
 
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity<ArrayList<Integer>> deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
+	public ResponseEntity<String> deletes(@RequestBody DeleteModel ids, HttpServletRequest request) {
 
 		try {
 			contactService.deleleByIds(ids.getIds());
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}

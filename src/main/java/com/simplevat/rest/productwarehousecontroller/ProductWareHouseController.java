@@ -37,24 +37,24 @@ public class ProductWareHouseController{
 
 	@ApiOperation(value = "get Ware House List")
 	@GetMapping(value = "/getWareHouse")
-	public ResponseEntity getProductWarehouse() {
+	public ResponseEntity<List<ProductWarehouse>> getProductWarehouse() {
 		List<ProductWarehouse> productWarehouseList = productWarehouseService.getProductWarehouseList();
 		if (productWarehouseList == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(productWarehouseList, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Save Ware House")
 	@PostMapping(value = "/saveWareHouse")
-	public ResponseEntity createNewWarehouse(@RequestBody ProductWareHousePersistModel productWarehouseModel) {
+	public ResponseEntity<String> createNewWarehouse(@RequestBody ProductWareHousePersistModel productWarehouseModel) {
 
 		if (productWarehouseModel != null) {
 			ProductWarehouse productWarehouse = productWareHouseRestHelper.getEntity(productWarehouseModel);
 			productWarehouse.setDeleteFlag(Boolean.FALSE);
 			productWarehouseService.persist(productWarehouse);
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>("Saved Successfully",HttpStatus.OK);
 
 	}
 

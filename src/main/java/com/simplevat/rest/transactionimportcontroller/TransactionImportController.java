@@ -201,7 +201,7 @@ public class TransactionImportController{
 
 	@ApiOperation(value = "parse file and return data according template")
 	@PostMapping("/parse")
-	public ResponseEntity parseTransaction(@RequestBody MultipartFile file, @RequestParam(value = "id") Long id) {
+	public ResponseEntity<Map> parseTransaction(@RequestBody MultipartFile file, @RequestParam(value = "id") Long id) {
 
 		TransactionParsingSetting parsingSetting = transactionParsingSettingService.findByPK(id);
 		TransactionParsingSettingDetailModel model = transactionParsingSettingRestHelper.getModel(parsingSetting);

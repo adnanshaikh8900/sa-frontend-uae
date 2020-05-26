@@ -53,7 +53,7 @@ public class TransactionCategoryBalanceController {
 
 	@ApiOperation(value = "Save")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody TransactioncategoryBalancePersistModel persistmodel,
+	public ResponseEntity<String> save(@RequestBody TransactioncategoryBalancePersistModel persistmodel,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -61,16 +61,16 @@ public class TransactionCategoryBalanceController {
 			TransactionCategoryBalance openingBalance = transactionCategoryBalanceRestHelper.getEntity(persistmodel);
 			openingBalance.setCreatedBy(user.getUserId());
 			transactionCategoryBalanceService.persist(openingBalance);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Saved successfull",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "/Update")
 	@PostMapping(value = "update")
-	public ResponseEntity update(@RequestBody TransactioncategoryBalancePersistModel persistmodel,
+	public ResponseEntity<String> update(@RequestBody TransactioncategoryBalancePersistModel persistmodel,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -81,16 +81,16 @@ public class TransactionCategoryBalanceController {
 			openingBalance.setRunningBalance(currentRunnigBalance);
 			openingBalance.setLastUpdateBy(user.getUserId());
 			transactionCategoryBalanceService.persist(openingBalance);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Updated successfull",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
-	public ResponseEntity getAll(HttpServletRequest request) {
+	public ResponseEntity<PaginationResponseModel> getAll(HttpServletRequest request) {
 
 		Map<TransactionCategoryBalanceFilterEnum, Object> dataMap = new EnumMap<>(
 				TransactionCategoryBalanceFilterEnum.class);
@@ -99,11 +99,11 @@ public class TransactionCategoryBalanceController {
 
 		PaginationResponseModel response = transactionCategoryBalanceService.getAll(dataMap);
 		if (response == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		response.setData(
 				transactionCategoryBalanceRestHelper.getList((List<TransactionCategoryBalance>) response.getData()));
-		return new ResponseEntity(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 }

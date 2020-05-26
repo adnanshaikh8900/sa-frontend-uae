@@ -94,7 +94,7 @@ public class UserController{
 
 	@ApiOperation(value = "Get User List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getUserList(UserRequestFilterModel filterModel) {
+	public ResponseEntity<PaginationResponseModel> getUserList(UserRequestFilterModel filterModel) {
 		try {
 			Map<UserFilterEnum, Object> filterDataMap = new HashMap<>();
 			filterDataMap.put(UserFilterEnum.FIRST_NAME, filterModel.getName());
@@ -116,7 +116,7 @@ public class UserController{
 			filterDataMap.put(UserFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 			PaginationResponseModel response = userService.getUserList(filterDataMap, filterModel);
 			if (response == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
 				response.setData(userRestHelper.getModelList(response.getData()));
 				return new ResponseEntity<>(response, HttpStatus.OK);
@@ -124,47 +124,47 @@ public class UserController{
 
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Delete User")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteUser(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<String> deleteUser(@RequestParam(value = "id") Integer id) {
 		User user = userService.findByPK(id);
 		try {
 			if (user == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
 				user.setDeleteFlag(true);
 				userService.update(user);
 
 			}
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successful",HttpStatus.OK);
 
 		} catch (Exception e) {
 			logger.error("Error", e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 	}
 
 	@ApiOperation(value = "Delete User In Bulks")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteUsers(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deleteUsers(@RequestBody DeleteModel ids) {
 		try {
 			userService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted successful",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
 		logger.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Save New User")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@ModelAttribute UserModel selectedUser, HttpServletRequest request) {
+	public ResponseEntity<String> save(@ModelAttribute UserModel selectedUser, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
@@ -195,10 +195,10 @@ public class UserController{
 				user.setLastUpdatedBy(creatingUser.getUserId());
 				if (user.getUserId() == null) {
 					userService.persist(user);
-					return new ResponseEntity("User Profile saved successfully", HttpStatus.OK);
+					return new ResponseEntity<>("User Profile saved successfully", HttpStatus.OK);
 				} else {
 					userService.update(user, user.getUserId());
-					return new ResponseEntity("User Profile updated successfully", HttpStatus.OK);
+					return new ResponseEntity<>("User Profile updated successfully", HttpStatus.OK);
 				}
 			}
 		} catch (Exception ex) {
@@ -210,7 +210,7 @@ public class UserController{
 
 	@ApiOperation(value = "Update User")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@ModelAttribute UserModel userModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@ModelAttribute UserModel userModel, HttpServletRequest request) {
 		User user = null;
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -223,26 +223,26 @@ public class UserController{
 			user.setLastUpdateDate(LocalDateTime.now());
 			user.setLastUpdatedBy(userId);
 			userService.update(user);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Updated successful",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.info("NO DATA FOUND = INTERNAL_SERVER_ERROR");
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Get UserBy Id")
 	@GetMapping(value = "/getById")
-	public ResponseEntity getById(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<UserModel> getById(@RequestParam(value = "id") Integer id) {
 		try {
 			User user = userService.findByPK(id);
 			if (user == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity<>(userRestHelper.getModel(user), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Get Role List")

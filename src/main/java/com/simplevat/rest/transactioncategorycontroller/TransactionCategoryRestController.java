@@ -67,20 +67,20 @@ public class TransactionCategoryRestController{
 
 	@ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/gettransactioncategory")
-	public ResponseEntity getAllTransactionCategory(HttpServletRequest request) {
+	public ResponseEntity<List<TransactionCategory>> getAllTransactionCategory(HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 		List<TransactionCategory> transactionCategories = transactionCategoryService
 				.findAllTransactionCategoryByUserId(userId);
 		if (transactionCategories != null) {
-			return new ResponseEntity(transactionCategories, HttpStatus.OK);
+			return new ResponseEntity<>(transactionCategories, HttpStatus.OK);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
 	@ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data by filter")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getAllTransactionCategoryListByFilter(TransactionCategoryRequestFilterModel filterModel,
+	public ResponseEntity<PaginationResponseModel> getAllTransactionCategoryListByFilter(TransactionCategoryRequestFilterModel filterModel,
 			HttpServletRequest request) {
 
 		Map<TransactionCategoryFilterEnum, Object> filterDataMap = new HashMap();
@@ -99,50 +99,50 @@ public class TransactionCategoryRestController{
 		PaginationResponseModel response = transactionCategoryService.getTransactionCategoryList(filterDataMap,
 				filterModel);
 		if (response == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		response.setData(transcationCategoryHelper.getListModel(response.getData()));
-		return new ResponseEntity(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Get Transaction Category By ID")
 	@GetMapping(value = "/getTransactionCategoryById")
-	public ResponseEntity getTransactionCategoryById(@RequestParam("id") Integer id) {
+	public ResponseEntity<TransactionCategoryModel> getTransactionCategoryById(@RequestParam("id") Integer id) {
 		TransactionCategory transactionCategories = transactionCategoryService.findByPK(id);
 		if (transactionCategories != null) {
-			return new ResponseEntity(transcationCategoryHelper.getModel(transactionCategories), HttpStatus.OK);
+			return new ResponseEntity<>(transcationCategoryHelper.getModel(transactionCategories), HttpStatus.OK);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
 	@ApiOperation(value = "Delete Transaction Category")
 	@DeleteMapping(value = "/deleteTransactionCategory")
-	public ResponseEntity deleteTransactionCategory(@RequestParam("id") Integer id) {
+	public ResponseEntity<String> deleteTransactionCategory(@RequestParam("id") Integer id) {
 		TransactionCategory transactionCategories = transactionCategoryService.findByPK(id);
 		if (transactionCategories == null) {
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		transactionCategories.setDeleteFlag(Boolean.TRUE);
 		transactionCategoryService.update(transactionCategories, id);
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<>("Deleted successfull",HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Delete Transaction Category In Bulk")
 	@DeleteMapping(value = "/deleteTransactionCategories")
-	public ResponseEntity deleteTransactionCategories(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deleteTransactionCategories(@RequestBody DeleteModel ids) {
 		try {
 			transactionCategoryService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted successful",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Add New Transaction Category")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@RequestBody TransactionCategoryBean transactionCategoryBean,
+	public ResponseEntity<String> save(@RequestBody TransactionCategoryBean transactionCategoryBean,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -153,16 +153,16 @@ public class TransactionCategoryRestController{
 			selectedTransactionCategory.setCreatedBy(user.getUserId());
 			selectedTransactionCategory.setCreatedDate(LocalDateTime.now());
 			transactionCategoryService.persist(selectedTransactionCategory);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Saved successful",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Update Transaction Category")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody TransactionCategoryBean transactionCategoryBean,
+	public ResponseEntity<String> update(@RequestBody TransactionCategoryBean transactionCategoryBean,
 			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -182,25 +182,25 @@ public class TransactionCategoryRestController{
 			selectedTransactionCategory.setLastUpdateBy(user.getUserId());
 			selectedTransactionCategory.setLastUpdateDate(LocalDateTime.now());
 			transactionCategoryService.update(selectedTransactionCategory);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Updated successfull",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ApiOperation(value = "Get All Transaction Categories for Expense")
 	@GetMapping(value = "/getForExpenses")
-	public ResponseEntity getTransactionCatgeoriesForExpenses(HttpServletRequest request) {
+	public ResponseEntity<List<TransactionCategory>> getTransactionCatgeoriesForExpenses(HttpServletRequest request) {
 		List<TransactionCategory> transactionCategories = transactionCategoryService
 				.findAllTransactionCategoryByChartOfAccount(ChartOfAccountConstant.EXPENSE);
 		if (transactionCategories != null) {
 			for (TransactionCategory cat : transactionCategories) {
 				cat.setChartOfAccount(null);
 			}
-			return new ResponseEntity(transactionCategories, HttpStatus.OK);
+			return new ResponseEntity<>(transactionCategories, HttpStatus.OK);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 

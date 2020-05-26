@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.rest.invoicecontroller.InvoiceDueAmountModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,7 @@ public class ReceiptController {
 
 	@ApiOperation(value = "Get receipt List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity getList(ReceiptRequestFilterModel filterModel, HttpServletRequest request) {
+	public ResponseEntity<PaginationResponseModel> getList(ReceiptRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
 			Map<ReceiptFilterEnum, Object> filterDataMap = new EnumMap<>(ReceiptFilterEnum.class);
 
@@ -107,64 +108,64 @@ public class ReceiptController {
 
 			PaginationResponseModel response = receiptService.getReceiptList(filterDataMap, filterModel);
 			if (response == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 			response.setData(receiptRestHelper.getListModel(response.getData()));
-			return new ResponseEntity(response, HttpStatus.OK);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Delete Receipt By ID")
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity deleteReceipt(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<String> deleteReceipt(@RequestParam(value = "id") Integer id) {
 		try {
 			Receipt receipt = receiptService.findByPK(id);
 			if (receipt != null) {
 				receipt.setDeleteFlag(Boolean.TRUE);
 				receiptService.update(receipt, receipt.getId());
 			}
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Delete Reecipt in Bulk")
 	@DeleteMapping(value = "/deletes")
-	public ResponseEntity deleteReceipts(@RequestBody DeleteModel ids) {
+	public ResponseEntity<String> deleteReceipts(@RequestBody DeleteModel ids) {
 		try {
 			receiptService.deleteByIds(ids.getIds());
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
-		return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
 	@ApiOperation(value = "Get Receipt By ID")
 	@GetMapping(value = "/getReceiptById")
-	public ResponseEntity getReceiptById(@RequestParam(value = "id") Integer id) {
+	public ResponseEntity<ReceiptRequestModel> getReceiptById(@RequestParam(value = "id") Integer id) {
 		try {
 			Receipt receipt = receiptService.findByPK(id);
 			if (receipt == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
 				return new ResponseEntity<>(receiptRestHelper.getRequestModel(receipt), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Add New Receipt")
 	@PostMapping(value = "/save")
-	public ResponseEntity save(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
@@ -195,16 +196,16 @@ public class ReceiptController {
 					receipt.getDepositeToTransactionCategory());
 			journalService.persist(journal);
 
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Saved Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Update Receipt")
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@ModelAttribute ReceiptRequestModel receiptRequestModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Receipt receipt = receiptRestHelper.getEntity(receiptRequestModel);
@@ -227,25 +228,25 @@ public class ReceiptController {
 			receipt.setLastUpdateDate(LocalDateTime.now());
 			receipt.setLastUpdatedBy(userId);
 			receiptService.update(receipt);
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@ApiOperation(value = "Next Receipt No")
 	@GetMapping(value = "/getNextReceiptNo")
-	public ResponseEntity getNextReceiptNo(@RequestParam("id") Integer invoiceId) {
+	public ResponseEntity<Integer> getNextReceiptNo(@RequestParam("id") Integer invoiceId) {
 		try {
 			Integer nxtInvoiceNo = customerInvoiceReceiptService.findNextReceiptNoForInvoice(invoiceId);
 			if (nxtInvoiceNo == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity(nxtInvoiceNo, HttpStatus.OK);
+			return new ResponseEntity<>(nxtInvoiceNo, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -257,14 +258,14 @@ public class ReceiptController {
 	 */
 	@ApiOperation(value = "Get Overdue Amount Details")
 	@GetMapping(value = "/getDueInvoices")
-	public ResponseEntity getDueInvoiceForContact(@RequestParam("id") Integer contactId,
-			@RequestParam("type") ContactTypeEnum type) {
+	public ResponseEntity<List<InvoiceDueAmountModel>> getDueInvoiceForContact(@RequestParam("id") Integer contactId,
+																			   @RequestParam("type") ContactTypeEnum type) {
 		try {
 			List<Invoice> invoiceList = invoiceService.getUnpaidInvoice(contactId, type);
-			return new ResponseEntity(invoiceRestHelper.getDueInvoiceList(invoiceList), HttpStatus.OK);
+			return new ResponseEntity<>(invoiceRestHelper.getDueInvoiceList(invoiceList), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}

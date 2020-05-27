@@ -206,7 +206,7 @@ public class PaymentRestHelper {
 						TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode());
 		journalLineItem1.setTransactionCategory(transactionCategory);
 		journalLineItem1.setCreditAmount(postingRequestModel.getAmount());
-		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.RECEIPT);
+		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem1.setCreatedBy(userId);
 		journalLineItem1.setJournal(journal);
@@ -216,7 +216,7 @@ public class PaymentRestHelper {
 				&& journal.getJournalLineItems().size() > 0 ? journalLineItemList.get(1) : new JournalLineItem();
 		journalLineItem2.setTransactionCategory(depositeToTransactionCategory);
 		journalLineItem2.setDebitAmount(postingRequestModel.getAmount());
-		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.RECEIPT);
+		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
 		journalLineItem2.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem2.setCreatedBy(userId);
 		journalLineItem2.setJournal(journal);

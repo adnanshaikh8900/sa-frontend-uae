@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.PostingReferenceTypeEnum;
-import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
@@ -187,10 +185,11 @@ public class DetailedGeneralLedgerRestHelper {
 						break;
 					}
 
-					model.setAmount(lineItem.getCurrentBalance() != null
+					model.setAmount(
+//							lineItem.getCurrentBalance() != null
 //							&& lineItem.getCurrentBalance().compareTo(BigDecimal.ZERO) == 0
-							? lineItem.getCurrentBalance()
-							: model.getAmount());
+//							? lineItem.getCurrentBalance():
+								model.getAmount());
 
 					dataList.add(model);
 				}

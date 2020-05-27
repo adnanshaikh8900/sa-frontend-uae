@@ -19,6 +19,6 @@ public class DetailedGeneralLedgerReportListModel {
 	private BigDecimal debitAmount;
 	private BigDecimal creditAmount;
 	private BigDecimal amount;
-	private int referenceId;
-	private int invoiceType;
+	private Integer referenceId;
+	private Integer invoiceType;
 }

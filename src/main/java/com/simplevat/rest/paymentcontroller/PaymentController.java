@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -132,7 +133,7 @@ public class PaymentController {
 
 	@ApiOperation(value = "Save a Payment")
 	@PostMapping(value = "/save")
-	public ResponseEntity<String> save(@RequestBody PaymentPersistModel paymentModel, HttpServletRequest request) {
+	public ResponseEntity<String> save(@ModelAttribute PaymentPersistModel paymentModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
@@ -165,7 +166,7 @@ public class PaymentController {
 
 	@ApiOperation(value = "Update Payment")
 	@PostMapping(value = "/update")
-	public ResponseEntity<String> update(@RequestBody PaymentPersistModel paymentModel, HttpServletRequest request) {
+	public ResponseEntity<String> update(@ModelAttribute PaymentPersistModel paymentModel, HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);

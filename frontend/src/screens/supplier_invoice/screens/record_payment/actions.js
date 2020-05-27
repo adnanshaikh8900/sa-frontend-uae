@@ -37,7 +37,7 @@ export const recordPayment = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: '/rest/receipt/save',
+			url: '/rest/payment/save',
 			data: obj,
 		};
 		return authFileUploadApi(data)

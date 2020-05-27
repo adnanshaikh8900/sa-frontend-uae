@@ -135,7 +135,7 @@ class CreateReceipt extends React.Component {
 	};
 
 	initializeData = () => {
-		this.props.receiptActions.getContactList();
+		this.props.receiptActions.getContactList(2);
 		this.props.customerInvoiceActions.getDepositList();
 		this.props.customerInvoiceActions.getPaymentMode();
 	};
@@ -417,6 +417,7 @@ class CreateReceipt extends React.Component {
 																						type="text"
 																						id="amount"
 																						name="amount"
+																						readOnly
 																						placeholder="Amount"
 																						onChange={(option) => {
 																							if (

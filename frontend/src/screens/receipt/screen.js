@@ -61,7 +61,7 @@ class Receipt extends React.Component {
 		};
 
 		this.options = {
-			onRowClick: this.goToDetail,
+			//onRowClick: this.goToDetail,
 			paginationPosition: 'top',
 			page: 1,
 			sizePerPage: 10,
@@ -532,14 +532,14 @@ class Receipt extends React.Component {
 												>
 													Amount
 												</TableHeaderColumn>
-												<TableHeaderColumn
+												{/* <TableHeaderColumn
 													dataField="unusedAmount"
 													dataSort
 													dataAlign="right"
 													dataFormat={this.renderUnusedAmount}
 												>
 													Unused Amount
-												</TableHeaderColumn>
+												</TableHeaderColumn> */}
 											</BootstrapTable>
 										</div>
 									</Col>

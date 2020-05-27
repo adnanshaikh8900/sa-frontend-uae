@@ -30,8 +30,8 @@ import lombok.Data;
  */
 
 @NamedQueries({
-		@NamedQuery(name = "findForSupplierInvoice", query = "SELECT c FROM CustomerInvoiceReceipt  c where  c.customerInvoice.id = :id and  c.deleteFlag=false ORDER BY c.id DESC"),
-		@NamedQuery(name = "findForPayment", query = "SELECT c FROM CustomerInvoiceReceipt  c where  c.receipt.id = :id and  c.deleteFlag=false ORDER BY c.id DESC") })
+		@NamedQuery(name = "findForSupplierInvoice", query = "SELECT s FROM SupplierInvoicePayment  s where  s.supplierInvoice.id = :id and  s.deleteFlag=false ORDER BY s.id DESC"),
+		@NamedQuery(name = "findForPayment", query = "SELECT s FROM SupplierInvoicePayment  s where  s.payment.paymentId = :id and  s.deleteFlag=false ORDER BY s.id DESC") })
 @Entity
 @Table(name = "SUPPLIER_INVOICE_PAYMENT")
 @Data

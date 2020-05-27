@@ -5,14 +5,13 @@
  */
 package com.simplevat.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.simplevat.constant.dbfilter.PaymentFilterEnum;
 import com.simplevat.entity.Payment;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -23,7 +22,5 @@ public interface PaymentDao extends Dao<Integer, Payment> {
     public PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> filterMap,PaginationModel paginationModel);
 
     public void deleteByIds(List<Integer> ids);
-
-	public BigDecimal getAmountByInvoiceId(Integer invoiceId);
 
 }

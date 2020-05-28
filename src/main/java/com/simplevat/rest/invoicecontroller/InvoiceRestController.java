@@ -1,5 +1,6 @@
 package com.simplevat.rest.invoicecontroller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -76,7 +77,8 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@ApiOperation(value = "Get Invoice List")
 	@GetMapping(value = "/getList")
-	public ResponseEntity<PaginationResponseModel> getInvoiceList(InvoiceRequestFilterModel filterModel, HttpServletRequest request) {
+	public ResponseEntity<PaginationResponseModel> getInvoiceList(InvoiceRequestFilterModel filterModel,
+			HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			Map<InvoiceFilterEnum, Object> filterDataMap = new EnumMap<>(InvoiceFilterEnum.class);
@@ -118,7 +120,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@GetMapping(value = "/getInvoicesForDropdown")
-	public ResponseEntity< List<DropdownModel>> getInvoicesForDropdown() {
+	public ResponseEntity<List<DropdownModel>> getInvoicesForDropdown() {
 		return new ResponseEntity<>(invoiceService.getInvoicesForDropdown(), HttpStatus.OK);
 	}
 
@@ -132,7 +134,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			invoiceService.deleteByIds(receiptList);
 			invoiceService.deleteJournaForInvoice(invoice);
 		}
-		return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+		return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
 
 	}
 
@@ -141,7 +143,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	public ResponseEntity<String> delete(@RequestBody DeleteModel ids) {
 		try {
 			invoiceService.deleteByIds(ids.getIds());
-			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+			return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
@@ -178,7 +180,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 				invoice.setReceiptAttachmentPath(fileName);
 			}
 			invoiceService.persist(invoice);
-			return new ResponseEntity<>("Saved Successfully",HttpStatus.OK);
+			return new ResponseEntity<>("Saved Successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -209,7 +211,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 				Journal journal = invoiceRestHelper.invoicePosting(new PostingRequestModel(invoice.getId()), userId);
 				journalService.persist(journal);
 			}
-			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -258,7 +260,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			invoiceRestHelper.send(invoiceService.findByPK(id), userId);
-			return new ResponseEntity<>("Sent Successfully",HttpStatus.OK);
+			return new ResponseEntity<>("Sent Successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -284,6 +286,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 	/**
 	 * getUnpaid invoice
 	 * 
@@ -293,9 +296,30 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@ApiOperation(value = "Get Overdue Amount Details")
 	@GetMapping(value = "/getDueInvoices")
 	public ResponseEntity<List<InvoiceDueAmountModel>> getDueInvoiceForContact(@RequestParam("id") Integer contactId,
-																			   @RequestParam("type") ContactTypeEnum type) {
+			@RequestParam("type") ContactTypeEnum type) {
 		try {
 			List<Invoice> invoiceList = invoiceService.getUnpaidInvoice(contactId, type);
+			return new ResponseEntity<>(invoiceRestHelper.getDueInvoiceList(invoiceList), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	/**
+	 * Get Suggestion ofUnpaid Invoices for transaction explanation
+	 * 
+	 * @param id Contact Id
+	 * @return list InvoiceDueAmountModel data list
+	 */
+	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
+	@GetMapping(value = "/getSuggestionUnpaidInvoices")
+	public ResponseEntity<List<InvoiceDueAmountModel>> getSuggestionUnpaidInvoices(
+			@RequestParam("amount") BigDecimal amount, @RequestParam("cdFlag") String cdFlag) {
+		try {
+			List<Invoice> invoiceList = invoiceService.getSuggestionUnpaidInvoices(amount,
+					cdFlag.startsWith("D") ? ContactTypeEnum.SUPPLIER : ContactTypeEnum.CUSTOMER);
 			return new ResponseEntity<>(invoiceRestHelper.getDueInvoiceList(invoiceList), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

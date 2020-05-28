@@ -39,23 +39,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.FileTypeEnum;
+import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
+import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionStatus;
 import com.simplevat.helper.TransactionHelper;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
+import com.simplevat.rest.invoicecontroller.InvoiceRestHelper;
 import com.simplevat.rest.reconsilationcontroller.ReconsilationRestHelper;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.ChartOfAccountCategoryService;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.EmployeeService;
+import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
@@ -76,8 +81,8 @@ import static com.simplevat.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping(value = "/rest/transaction")
-public class TransactionController{
-	 private final Logger logger = LoggerFactory.getLogger(TransactionController.class);
+public class TransactionRestController {
+	private final Logger logger = LoggerFactory.getLogger(TransactionRestController.class);
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
@@ -130,6 +135,12 @@ public class TransactionController{
 	@Autowired
 	private FileHelper fileHelper;
 
+	@Autowired
+	private InvoiceService invoiceService;
+
+	@Autowired
+	private InvoiceRestHelper invoiceRestHelper;
+
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAllTransaction(TransactionRequestFilterModel filterModel) {
@@ -176,7 +187,7 @@ public class TransactionController{
 		try {
 
 			if (transactionPresistModel != null) {
-				List<Journal> journalList = null;
+				Journal journal = null;
 
 				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 				Transaction trnx = new Transaction();
@@ -227,9 +238,10 @@ public class TransactionController{
 					trnx.setExplainedTransactionAttachmentPath(filePath);
 				}
 				transactionService.persist(trnx);
-				
+
 				List<ReconsileRequestLineItemModel> itemModels = new ArrayList<>();
-				if (transactionPresistModel.getInvoiceIdListStr() != null && !transactionPresistModel.getInvoiceIdListStr().isEmpty()) {
+				if (transactionPresistModel.getInvoiceIdListStr() != null
+						&& !transactionPresistModel.getInvoiceIdListStr().isEmpty()) {
 					ObjectMapper mapper = new ObjectMapper();
 					try {
 						itemModels = mapper.readValue(transactionPresistModel.getInvoiceIdListStr(),
@@ -239,43 +251,41 @@ public class TransactionController{
 						logger.error(ERROR, ex);
 					}
 				}
-				
-				journalList = reconsilationRestHelper.get(
+
+				journal = reconsilationRestHelper.get(
 						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
 						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
-						trnx,itemModels);
+						trnx, itemModels);
 
-				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+
 				if (transactionPresistModel.getInvoiceIdList() != null) {
 					for (ReconsileRequestLineItemModel invoice : transactionPresistModel.getInvoiceIdList()) {
-						invoiceIdAmtMap.put(invoice.getInvoiceId(), invoice.getRemainingInvoiceAmount());
-					}
-				}
-
-				if (journalList != null && !journalList.isEmpty()) {
-					List<TransactionStatus> transationStatusList = new ArrayList<>();
-					for (Journal journal : journalList) {
-
-						JournalLineItem item = journal.getJournalLineItems().iterator().next();
-
-						journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(
-								transactionPresistModel.getDate(), transactionPresistModel.getDATE_FORMAT()));
-						journalService.persist(journal);
+						// update middle table mapping
 						TransactionStatus status = new TransactionStatus();
 						status.setCreatedBy(userId);
 						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
 						status.setTransaction(trnx);
-						status.setRemainingToExplain(invoiceIdAmtMap.containsKey(item.getReferenceId())
-								? invoiceIdAmtMap.get(item.getReferenceId())
-								: BigDecimal.ZERO);
+						status.setRemainingToExplain(invoice.getRemainingInvoiceAmount());
 						status.setReconsileJournal(journal);
 						transactionStatusService.persist(status);
 
-						transationStatusList.add(status);
+						// Update invoice Payment status and make entry in journal
+						Invoice invoiceEntity = invoiceService.findByPK(invoice.getInvoiceId());
+						Journal paidInvoiceJournal = invoiceRestHelper
+								.invoicePosting(new PostingRequestModel(invoice.getInvoiceId()), userId);
+						journalService.persist(paidInvoiceJournal);
+						invoiceEntity.setStatus(invoice.getRemainingInvoiceAmount().compareTo(BigDecimal.ZERO) == 0
+								? InvoiceStatusEnum.PAID.getValue()
+								: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+						invoiceEntity.setDueAmount(BigDecimal.ZERO);
+						invoiceService.update(invoiceEntity);
 					}
 				}
 
-				return new ResponseEntity<>("Saved successfull",HttpStatus.OK);
+				return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -347,10 +357,10 @@ public class TransactionController{
 						.findAllTransactionStatuesByTrnxId(transactionPresistModel.getTransactionId());
 				transactionStatusService.deleteList(trnxStatusList);
 
-				journalList = reconsilationRestHelper.get(
-						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
-						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
-						trnx, transactionPresistModel.getInvoiceIdList());
+//				journalList = reconsilationRestHelper.get(
+//						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
+//						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
+//						trnx, transactionPresistModel.getInvoiceIdList());
 
 				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
 				if (transactionPresistModel.getInvoiceIdList() != null) {
@@ -382,7 +392,7 @@ public class TransactionController{
 					}
 				}
 
-				return new ResponseEntity<>("Updated successful",HttpStatus.OK);
+				return new ResponseEntity<>("Updated successful", HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
@@ -398,7 +408,7 @@ public class TransactionController{
 			trnx.setDeleteFlag(Boolean.TRUE);
 			transactionService.deleteTransaction(trnx);
 		}
-		return new ResponseEntity<>("Deleted successful",HttpStatus.OK);
+		return new ResponseEntity<>("Deleted successful", HttpStatus.OK);
 
 	}
 
@@ -407,7 +417,7 @@ public class TransactionController{
 	public ResponseEntity<String> deleteTransactions(@RequestBody DeleteModel ids) {
 		try {
 			transactionService.deleteByIds(ids.getIds());
-			return new ResponseEntity<>("Deleted successfull",HttpStatus.OK);
+			return new ResponseEntity<>("Deleted successfull", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}

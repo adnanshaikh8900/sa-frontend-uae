@@ -1,5 +1,6 @@
 package com.simplevat.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -138,5 +139,16 @@ public class InvoiceServiceImpl extends InvoiceService {
 	@Override
 	public List<Invoice> getUnpaidInvoice(Integer contactId,ContactTypeEnum type) {
 		return supplierInvoiceDao.getUnpaidInvoice(contactId,type);
+	}
+	
+	/**
+	 * @author $@urabh : get invoice suggestion for transaction explanation created on:28/05/2020
+	 * @param InvoiceStatusEnum type
+	 * @param BigDecimal amount 
+	 * @return list invoiceList
+	 */
+	@Override
+	public List<Invoice> getSuggestionUnpaidInvoices(BigDecimal amount,ContactTypeEnum type) {
+		return supplierInvoiceDao.getSuggestionUnpaidInvoices(amount,type);
 	}
 }

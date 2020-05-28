@@ -42,7 +42,6 @@ import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.service.InvoiceService;
-import com.simplevat.service.PaymentService;
 import com.simplevat.service.ProductService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryService;
@@ -75,9 +74,6 @@ public class InvoiceRestHelper {
 
 	@Autowired
 	private FileHelper fileHelper;
-
-	@Autowired
-	private PaymentService paymentService;
 
 	@Autowired
 	private MailUtility mailUtility;

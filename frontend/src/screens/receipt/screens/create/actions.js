@@ -21,7 +21,7 @@ export const getList = (id) => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: `/rest/receipt/getDueInvoices?id=${id}&type=CUSTOMER`,
+			url: `/rest/invoice/getDueInvoices?id=${id}&type=CUSTOMER`,
 		};
 
 		return authApi(data)

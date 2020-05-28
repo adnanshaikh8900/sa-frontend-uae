@@ -204,6 +204,15 @@ class SupplierInvoice extends React.Component {
 		return row.vatAmount ? row.vatAmount.toFixed(2) : '';
 	};
 
+	invoiceDueDate = (cell, row) => {
+		return row.invoiceDueDate
+			? moment(row.invoiceDueDate).format('DD/MM/YYYY')
+			: '';
+	};
+	invoiceDate = (cell, row) => {
+		return row.invoiceDate ? moment(row.invoiceDate).format('DD/MM/YYYY') : '';
+	};
+
 	toggleActionButton = (index) => {
 		let temp = Object.assign({}, this.state.actionButtons);
 		if (temp[parseInt(index, 10)]) {
@@ -217,7 +226,6 @@ class SupplierInvoice extends React.Component {
 	};
 
 	renderActions = (cell, row) => {
-		console.log(row);
 		return (
 			<div>
 				<ButtonDropdown
@@ -579,11 +587,9 @@ class SupplierInvoice extends React.Component {
 						statusEnum: supplier.statusEnum,
 						customerName: supplier.name,
 						invoiceNumber: supplier.referenceNumber,
-						invoiceDate: supplier.invoiceDate
-							? moment(supplier.invoiceDate).format('DD/MM/YYYY')
-							: '',
+						invoiceDate: supplier.invoiceDate ? supplier.invoiceDate : '',
 						invoiceDueDate: supplier.invoiceDueDate
-							? moment(supplier.invoiceDueDate).format('DD/MM/YYYY')
+							? supplier.invoiceDueDate
 							: '',
 						invoiceAmount: supplier.totalAmount,
 						vatAmount: supplier.totalVatAmount,
@@ -862,10 +868,18 @@ class SupplierInvoice extends React.Component {
 											>
 												Invoice Number
 											</TableHeaderColumn>
-											<TableHeaderColumn dataField="invoiceDate" dataSort>
+											<TableHeaderColumn
+												dataField="invoiceDate"
+												dataSort
+												dataFormat={this.invoiceDate}
+											>
 												Invoice Date
 											</TableHeaderColumn>
-											<TableHeaderColumn dataField="invoiceDueDate" dataSort>
+											<TableHeaderColumn
+												dataField="invoiceDueDate"
+												dataSort
+												dataFormat={this.invoiceDueDate}
+											>
 												Due Date
 											</TableHeaderColumn>
 											<TableHeaderColumn

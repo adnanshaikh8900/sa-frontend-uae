@@ -73,9 +73,9 @@ public class ReceiptDaoImpl extends AbstractDao<Integer, Receipt> implements Rec
 				List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptDao.findForReceipt(id);
 				if (receiptEntryList != null && !receiptEntryList.isEmpty()) {
 					for (CustomerInvoiceReceipt receiptEntry : receiptEntryList) {
-						BigDecimal remainingAmt = receiptEntry.getCustomerInvoice().getTotalAmount()
-								.subtract(receipt.getAmount());
+
 						Invoice invoice = receiptEntry.getCustomerInvoice();
+						BigDecimal remainingAmt = invoice.getTotalAmount().subtract(receipt.getAmount());
 						invoice.setStatus(
 								remainingAmt.compareTo(BigDecimal.ZERO) == 0 ? InvoiceStatusEnum.POST.getValue()
 										: InvoiceStatusEnum.PARTIALLY_PAID.getValue());

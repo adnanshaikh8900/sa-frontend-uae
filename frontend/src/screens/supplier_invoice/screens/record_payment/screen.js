@@ -18,7 +18,7 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-//import * as CustomerRecordPaymentActions from './actions';
+import * as SupplierRecordPaymentActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 
 import { SupplierModal } from '../../sections';
@@ -47,10 +47,10 @@ const mapDispatchToProps = (dispatch) => {
 			SupplierInvoiceActions,
 			dispatch,
 		),
-		// CustomerRecordPaymentActions: bindActionCreators(
-		// 	CustomerRecordPaymentActions,
-		// 	dispatch,
-		// ),
+		SupplierRecordPaymentActions: bindActionCreators(
+			SupplierRecordPaymentActions,
+			dispatch,
+		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -69,8 +69,8 @@ class RecordSupplierPayment extends React.Component {
 			data: [],
 			current_customer_id: null,
 			initValue: {
-				receiptNo: '',
-				receiptDate: new Date(),
+				paymentNo: 1,
+				paymentDate: new Date(),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.invoiceAmount,
 				payMode: '',
@@ -79,6 +79,7 @@ class RecordSupplierPayment extends React.Component {
 				referenceCode: '',
 				attachmentFile: '',
 				paidInvoiceListStr: [],
+				deleteFlag: true,
 			},
 			invoiceId: this.props.location.state.id.id,
 			contactType: 1,
@@ -212,25 +213,26 @@ class RecordSupplierPayment extends React.Component {
 	handleSubmit = (data) => {
 		const { invoiceId } = this.state;
 		const {
-			receiptNo,
-			receiptDate,
+			paymentNo,
+			paymentDate,
 			contactId,
 			amount,
 			depositeTo,
 			payMode,
 			notes,
 			referenceCode,
+			deleteFlag,
 		} = data;
 		console.log(data);
 		console.log(JSON.stringify(this.state.initValue.paidInvoiceListStr));
 
 		let formData = new FormData();
-		formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
+		formData.append('paymentNo', paymentNo !== null ? paymentNo : '');
 		formData.append(
-			'receiptDate',
-			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD/MM/YYYY').toDate()
-				: receiptDate,
+			'paymentDate',
+			typeof paymentDate === 'string'
+				? moment(paymentDate, 'DD/MM/YYYY').toDate()
+				: paymentDate,
 		);
 		formData.append(
 			'paidInvoiceListStr',
@@ -238,10 +240,8 @@ class RecordSupplierPayment extends React.Component {
 		);
 		formData.append('amount', amount !== null ? amount : '');
 		formData.append('notes', notes !== null ? notes : '');
-		formData.append(
-			'referenceCode',
-			referenceCode !== null ? referenceCode : '',
-		);
+		formData.append('referenceNo', referenceCode !== null ? referenceCode : '');
+		formData.append('deleteFlag', deleteFlag !== null ? deleteFlag : '');
 		formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
 		formData.append('payMode', payMode !== null ? payMode.value : '');
 		if (contactId) {
@@ -250,13 +250,13 @@ class RecordSupplierPayment extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		this.props.CustomerRecordPaymentActions.recordPayment(formData)
+		this.props.SupplierRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
 					'Invoice Updated Successfully.',
 				);
-				this.props.history.push('/admin/revenue/customer-invoice');
+				this.props.history.push('/admin/expense/supplier-invoice');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -453,25 +453,25 @@ class RecordSupplierPayment extends React.Component {
 																		</Label>
 																		<Input
 																			type="text"
-																			id="receiptNo"
-																			name="receiptNo"
+																			id="paymentNo"
+																			name="paymentNo"
 																			placeholder=""
 																			disabled
-																			value={props.values.receiptNo}
+																			value={props.values.paymentNo}
 																			onChange={(value) => {
-																				props.handleChange('receiptNo')(value);
+																				props.handleChange('paymentNo')(value);
 																			}}
 																			className={
-																				props.errors.receiptNo &&
-																				props.touched.receiptNo
+																				props.errors.paymentNo &&
+																				props.touched.paymentNo
 																					? 'is-invalid'
 																					: ''
 																			}
 																		/>
-																		{props.errors.receiptNo &&
-																			props.touched.receiptNo && (
+																		{props.errors.paymentNo &&
+																			props.touched.paymentNo && (
 																				<div className="invalid-feedback">
-																					{props.errors.receiptNo}
+																					{props.errors.paymentNo}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -524,31 +524,31 @@ class RecordSupplierPayment extends React.Component {
 																			Payment Date
 																		</Label>
 																		<DatePicker
-																			id="receiptDate"
-																			name="receiptDate"
+																			id="paymentDate"
+																			name="paymentDate"
 																			placeholderText="Payment Date"
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd/MM/yyyy"
 																			dropdownMode="select"
-																			value={props.values.receiptDate}
-																			selected={props.values.receiptDate}
+																			value={props.values.paymentDate}
+																			selected={props.values.paymentDate}
 																			onChange={(value) => {
-																				props.handleChange('receiptDate')(
+																				props.handleChange('paymentDate')(
 																					moment(value).format('DD/MM/YYYY'),
 																				);
 																			}}
 																			className={`form-control ${
-																				props.errors.receiptDate &&
-																				props.touched.receiptDate
+																				props.errors.paymentDate &&
+																				props.touched.paymentDate
 																					? 'is-invalid'
 																					: ''
 																			}`}
 																		/>
-																		{props.errors.receiptDate &&
-																			props.touched.receiptDate && (
+																		{props.errors.paymentDate &&
+																			props.touched.paymentDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.receiptDate}
+																					{props.errors.paymentDate}
 																				</div>
 																			)}
 																	</FormGroup>

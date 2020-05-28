@@ -5,25 +5,33 @@
  */
 package com.simplevat.dao.impl;
 
-import com.simplevat.constant.DatatableSortingFilterConstant;
-import com.simplevat.constant.dbfilter.DbFilter;
-import com.simplevat.constant.dbfilter.PaymentFilterEnum;
-import com.simplevat.dao.AbstractDao;
-import com.simplevat.dao.PaymentDao;
-import com.simplevat.entity.Payment;
-import com.simplevat.rest.PaginationModel;
-import com.simplevat.rest.PaginationResponseModel;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.simplevat.constant.DatatableSortingFilterConstant;
+import com.simplevat.constant.InvoiceStatusEnum;
+import com.simplevat.constant.PostingReferenceTypeEnum;
+import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.PaymentFilterEnum;
+import com.simplevat.dao.AbstractDao;
+import com.simplevat.dao.InvoiceDao;
+import com.simplevat.dao.JournalDao;
+import com.simplevat.dao.JournalLineItemDao;
+import com.simplevat.dao.PaymentDao;
+import com.simplevat.dao.SupplierInvoicePaymentDao;
+import com.simplevat.entity.Invoice;
+import com.simplevat.entity.JournalLineItem;
+import com.simplevat.entity.Payment;
+import com.simplevat.entity.SupplierInvoicePayment;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 
 /**
  *
@@ -35,6 +43,18 @@ public class PaymentDaoImpl extends AbstractDao<Integer, Payment> implements Pay
 	@Autowired
 	private DatatableSortingFilterConstant dataTableUtil;
 
+	@Autowired
+	private SupplierInvoicePaymentDao supplierInvoicePaymentDao;
+
+	@Autowired
+	private JournalLineItemDao journalLineItemDao;
+
+	@Autowired
+	private JournalDao journalDao;
+
+	@Autowired
+	private InvoiceDao invoiceDao;
+
 	@Override
 	public PaginationResponseModel getPayments(Map<PaymentFilterEnum, Object> filterMap,
 			PaginationModel paginationModel) {
@@ -42,7 +62,8 @@ public class PaymentDaoImpl extends AbstractDao<Integer, Payment> implements Pay
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.PAYMENT));
+		paginationModel.setSortingCol(
+				dataTableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.PAYMENT));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
 	}
@@ -53,23 +74,40 @@ public class PaymentDaoImpl extends AbstractDao<Integer, Payment> implements Pay
 		if (ids != null && !ids.isEmpty()) {
 			for (Integer id : ids) {
 				Payment payment = findByPK(id);
+
+				// Delete middle tabe mapping and update invoice stats as post/partially paid
+				List<SupplierInvoicePayment> receiptEntryList = supplierInvoicePaymentDao.findForPayment(id);
+				if (receiptEntryList != null && !receiptEntryList.isEmpty()) {
+					for (SupplierInvoicePayment receiptEntry : receiptEntryList) {
+						Invoice invoice = receiptEntry.getSupplierInvoice();
+						BigDecimal remainingAmt = invoice.getTotalAmount().subtract(payment.getInvoiceAmount());
+
+						invoice.setStatus(
+								remainingAmt.compareTo(BigDecimal.ZERO) == 0 ? InvoiceStatusEnum.POST.getValue()
+										: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+						invoiceDao.update(invoice);
+						receiptEntry.setDeleteFlag(Boolean.TRUE);
+						supplierInvoicePaymentDao.update(receiptEntry);
+					}
+				}
+
+				// delete related journal
+				Map<String, Object> param = new HashMap<>();
+				param.put("referenceType", PostingReferenceTypeEnum.PAYMENT);
+				param.put("referenceId", id);
+				param.put("deleteFlag", false);
+				List<JournalLineItem> lineItemList = journalLineItemDao.findByAttributes(param);
+
+				if (lineItemList != null && !lineItemList.isEmpty()) {
+					List<Integer> list = new ArrayList<>();
+					list.add(lineItemList.get(0).getJournal().getId());
+					journalDao.deleteByIds(list);
+				}
+
+				// delete payment
 				payment.setDeleteFlag(Boolean.TRUE);
 				update(payment);
 			}
 		}
 	}
-
-	@Override
-	public BigDecimal getAmountByInvoiceId(Integer invoiceId) {
-		TypedQuery<Payment> query = getEntityManager().createNamedQuery("getAmountByInvoiceId", Payment.class);
-		query.setParameter("id", invoiceId);
-		List<Payment> paymentList = query.getResultList();
-		BigDecimal totalAmount = new BigDecimal(0);
-
-		for (Payment p : paymentList) {
-			totalAmount = totalAmount.add(p.getInvoiceAmount());
-		}
-		return totalAmount;
-	}
-
 }

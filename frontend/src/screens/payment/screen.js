@@ -62,7 +62,7 @@ class Payment extends React.Component {
 		};
 
 		this.options = {
-			onRowClick: this.goToDetail,
+			//onRowClick: this.goToDetail,
 			paginationPosition: 'top',
 			page: 1,
 			sizePerPage: 10,
@@ -474,14 +474,21 @@ class Payment extends React.Component {
 													this.table = node;
 												}}
 											>
-												<TableHeaderColumn dataField="supplierName" dataSort>
-													Supplier Name
+												<TableHeaderColumn
+													dataField="receiptDate"
+													dataSort
+													dataFormat={this.renderDate}
+												>
+													Receipt Date
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="invoiceReferenceNo"
 													dataSort
 												>
 													Reference #
+												</TableHeaderColumn>
+												<TableHeaderColumn dataField="supplierName" dataSort>
+													Supplier Name
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="invoiceAmount"
@@ -491,14 +498,6 @@ class Payment extends React.Component {
 													width="10%"
 												>
 													Amount
-												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="paymentDate"
-													dataSort
-													dataFormat={this.renderDate}
-													dataAlign="center"
-												>
-													Date
 												</TableHeaderColumn>
 											</BootstrapTable>
 										</div>

@@ -284,4 +284,23 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	/**
+	 * getUnpaid invoice
+	 * 
+	 * @param id Contact Id
+	 * @return list InvoiceDueAmountModel datalist
+	 */
+	@ApiOperation(value = "Get Overdue Amount Details")
+	@GetMapping(value = "/getDueInvoices")
+	public ResponseEntity<List<InvoiceDueAmountModel>> getDueInvoiceForContact(@RequestParam("id") Integer contactId,
+																			   @RequestParam("type") ContactTypeEnum type) {
+		try {
+			List<Invoice> invoiceList = invoiceService.getUnpaidInvoice(contactId, type);
+			return new ResponseEntity<>(invoiceRestHelper.getDueInvoiceList(invoiceList), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
 }

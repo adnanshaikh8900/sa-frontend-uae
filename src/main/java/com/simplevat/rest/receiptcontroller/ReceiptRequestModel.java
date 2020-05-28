@@ -29,7 +29,7 @@ public class ReceiptRequestModel {
 	private String fileName;
 	private String filePath;
 	private String receiptAttachmentDescription;
-	/** @see ReceiptLineItem */
+	/** @see InvoiceDueAmountModel */
 	private String paidInvoiceListStr;
 	private List<InvoiceDueAmountModel> paidInvoiceList;
 

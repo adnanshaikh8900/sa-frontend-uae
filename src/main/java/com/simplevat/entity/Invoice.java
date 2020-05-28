@@ -57,7 +57,7 @@ import org.hibernate.annotations.ColumnDefault;
 		@NamedQuery(name = "activeInvoicesByDateRange", query = "from Invoice i where i.invoiceDate between :startDate and :endDate and i.deleteFlag = false"),
 		@NamedQuery(name = "overDueAmount", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2"),
 		@NamedQuery(name = "overDueAmountWeeklyMonthly", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2 and i.invoiceDueDate between :startDate and :endDate"),
-		@NamedQuery(name = "unpaidInvoices", query = "from Invoice i where i.status < :status and i.contact.contactId = :id and i.type =:type and i.deleteFlag = false order by i.id desc"),
+		@NamedQuery(name = "unpaidInvoices", query = "from Invoice i where i.status in :status and i.contact.contactId = :id and i.type =:type and i.deleteFlag = false order by i.id desc"),
 		@NamedQuery(name = "suggestionUnpaidInvoices", query = "from Invoice i where i.status <= :status and i.type =:type and i.deleteFlag = false and i.totalAmount >= :amount order by i.id desc ")
 
 })

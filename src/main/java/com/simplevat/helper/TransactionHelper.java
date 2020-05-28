@@ -158,6 +158,7 @@ public class TransactionHelper {
 		if (transaction.getCoaCategory() != null)
 			model.setCoaCategoryId(transaction.getCoaCategory().getChartOfAccountCategoryId());
 		if (transaction.getExplainedTransactionCategory() != null)
+			model.setTransactionCategoryLabel(transaction.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
 			model.setTransactionCategoryId(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
 		model.setAmount(transaction.getTransactionAmount());
 		if (transaction.getTransactionDate() != null)

@@ -10,6 +10,8 @@ const initState = {
 	product_list: [],
 	supplier_list: [],
 	country_list: [],
+	deposit_list: [],
+	pay_mode: [],
 };
 
 const SupplierInvoiceReducer = (state = initState, action) => {
@@ -58,10 +60,22 @@ const SupplierInvoiceReducer = (state = initState, action) => {
 				vat_list: Object.assign([], payload.data),
 			};
 
+		case SUPPLIER_INVOICE.PAY_MODE:
+			return {
+				...state,
+				pay_mode: Object.assign([], payload.data),
+			};
+
 		case SUPPLIER_INVOICE.PRODUCT_LIST:
 			return {
 				...state,
 				product_list: Object.assign([], payload.data),
+			};
+
+		case SUPPLIER_INVOICE.DEPOSIT_LIST:
+			return {
+				...state,
+				deposit_list: Object.assign([], payload.data),
 			};
 
 		case SUPPLIER_INVOICE.COUNTRY_LIST:

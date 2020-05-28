@@ -514,8 +514,8 @@ class Receipt extends React.Component {
 												<TableHeaderColumn dataField="customerName" dataSort>
 													Customer Name
 												</TableHeaderColumn>
-												<TableHeaderColumn dataField="invoiceNumber" dataSort>
-													Invoice #
+												<TableHeaderColumn dataField="receiptId" dataSort>
+													Receipt #
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn
                             dataField="transactionType"
@@ -532,14 +532,14 @@ class Receipt extends React.Component {
 												>
 													Amount
 												</TableHeaderColumn>
-												<TableHeaderColumn
+												{/* <TableHeaderColumn
 													dataField="unusedAmount"
 													dataSort
 													dataAlign="right"
 													dataFormat={this.renderUnusedAmount}
 												>
 													Unused Amount
-												</TableHeaderColumn>
+												</TableHeaderColumn> */}
 											</BootstrapTable>
 										</div>
 									</Col>

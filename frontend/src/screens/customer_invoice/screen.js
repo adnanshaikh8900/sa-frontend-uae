@@ -261,6 +261,14 @@ class CustomerInvoice extends React.Component {
 	renderInvoiceAmount = (cell, row) => {
 		return row.invoiceAmount ? row.invoiceAmount.toFixed(2) : '';
 	};
+	invoiceDueDate = (cell, row) => {
+		return row.invoiceDueDate
+			? moment(row.invoiceDueDate).format('DD/MM/YYYY')
+			: '';
+	};
+	invoiceDate = (cell, row) => {
+		return row.invoiceDate ? moment(row.invoiceDate).format('DD/MM/YYYY') : '';
+	};
 
 	renderVatAmount = (cell, row) => {
 		return row.vatAmount ? row.vatAmount.toFixed(2) : '';
@@ -568,11 +576,9 @@ class CustomerInvoice extends React.Component {
 						customerName: customer.name,
 						contactId: customer.contactId,
 						invoiceNumber: customer.referenceNumber,
-						invoiceDate: customer.invoiceDate
-							? moment(customer.invoiceDate).format('DD/MM/YYYY')
-							: '',
+						invoiceDate: customer.invoiceDate ? customer.invoiceDate : '',
 						invoiceDueDate: customer.invoiceDueDate
-							? moment(customer.invoiceDueDate).format('DD/MM/YYYY')
+							? customer.invoiceDueDate
 							: '',
 						invoiceAmount: customer.totalAmount,
 						vatAmount: customer.totalVatAmount,
@@ -860,6 +866,7 @@ class CustomerInvoice extends React.Component {
 												dataField="invoiceDate"
 												dataSort
 												width="13%"
+												dataFormat={this.invoiceDate}
 											>
 												Invoice Date
 											</TableHeaderColumn>
@@ -867,6 +874,7 @@ class CustomerInvoice extends React.Component {
 												dataField="invoiceDueDate"
 												dataSort
 												width="10%"
+												dataFormat={this.invoiceDueDate}
 											>
 												Due Date
 											</TableHeaderColumn>

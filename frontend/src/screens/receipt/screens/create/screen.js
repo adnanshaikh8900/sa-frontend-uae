@@ -13,7 +13,6 @@ import {
 	Input,
 	Label,
 	NavLink,
-	Badge,
 } from 'reactstrap';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
@@ -87,6 +86,7 @@ class CreateReceipt extends React.Component {
 	}
 
 	onRowSelect = (row, isSelected, e) => {
+		console.log(this.state.initValue);
 		let tempList = [];
 		if (isSelected) {
 			tempList = Object.assign([], this.state.paidInvoiceListStr);
@@ -101,6 +101,14 @@ class CreateReceipt extends React.Component {
 		}
 		this.setState(
 			{
+				initValue: {
+					...this.state.initValue,
+					...{
+						amount: tempList.reduce(function (acc, val) {
+							return acc + val.totalAount;
+						}, 0),
+					},
+				},
 				paidInvoiceListStr: tempList,
 			},
 			() => {
@@ -109,7 +117,15 @@ class CreateReceipt extends React.Component {
 					tempList,
 					true,
 				);
+				this.formRef.current.setFieldValue(
+					'amount',
+					tempList.reduce(function (acc, val) {
+						return acc + val.totalAount;
+					}, 0),
+					true,
+				);
 				console.log(this.state.paidInvoiceListStr);
+				console.log(this.state.initValue);
 			},
 		);
 	};
@@ -119,13 +135,13 @@ class CreateReceipt extends React.Component {
 	};
 
 	initializeData = () => {
-		this.props.receiptActions.getContactList();
+		this.props.receiptActions.getContactList(2);
 		this.props.customerInvoiceActions.getDepositList();
 		this.props.customerInvoiceActions.getPaymentMode();
 	};
 
 	handleSubmit = (data, resetForm) => {
-		const { invoiceId } = this.state;
+		//const { invoiceId } = this.state;
 		const {
 			receiptNo,
 			receiptDate,
@@ -136,6 +152,7 @@ class CreateReceipt extends React.Component {
 			notes,
 			referenceCode,
 		} = data;
+		console.log(data);
 		let formData = new FormData();
 		formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
 		formData.append(
@@ -308,7 +325,7 @@ class CreateReceipt extends React.Component {
 													),
 													amount: Yup.string()
 														.required('Amount is required')
-														.matches(/^[0-9]+$/, {
+														.matches(/^[0-9]+([,.][0-9]+)?$/, {
 															message: 'Please enter valid Amount.',
 															excludeEmptyString: false,
 														}),
@@ -400,6 +417,7 @@ class CreateReceipt extends React.Component {
 																						type="text"
 																						id="amount"
 																						name="amount"
+																						readOnly
 																						placeholder="Amount"
 																						onChange={(option) => {
 																							if (

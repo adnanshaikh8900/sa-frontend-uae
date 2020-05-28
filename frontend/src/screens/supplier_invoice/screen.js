@@ -204,6 +204,15 @@ class SupplierInvoice extends React.Component {
 		return row.vatAmount ? row.vatAmount.toFixed(2) : '';
 	};
 
+	invoiceDueDate = (cell, row) => {
+		return row.invoiceDueDate
+			? moment(row.invoiceDueDate).format('DD/MM/YYYY')
+			: '';
+	};
+	invoiceDate = (cell, row) => {
+		return row.invoiceDate ? moment(row.invoiceDate).format('DD/MM/YYYY') : '';
+	};
+
 	toggleActionButton = (index) => {
 		let temp = Object.assign({}, this.state.actionButtons);
 		if (temp[parseInt(index, 10)]) {
@@ -241,13 +250,13 @@ class SupplierInvoice extends React.Component {
 						>
 							<i className="fas fa-edit" /> Edit
 						</DropdownItem>
-						{row.status !== 'Post' && (
+						{row.statusEnum !== 'Sent' && row.statusEnum !== 'Paid' && (
 							<DropdownItem
 								onClick={() => {
 									this.postInvoice(row);
 								}}
 							>
-								<i className="fas fa-heart" /> Post
+								<i className="fas fa-heart" /> Send
 							</DropdownItem>
 						)}
 						{/* <DropdownItem  onClick={() => {this.openInvoicePreviewModal(row.id)}}>
@@ -263,19 +272,18 @@ class SupplierInvoice extends React.Component {
 						>
 							<i className="fas fa-eye" /> View
 						</DropdownItem>
-						<DropdownItem
-							onClick={() => {
-								this.sendMail(row.id);
-							}}
-						>
-							<i className="fas fa-upload" /> Send
-						</DropdownItem>
-						{/* <DropdownItem>
-              <i className="fas fa-print" /> Print
-            </DropdownItem> */}
-						{/* <DropdownItem>
-              <i className="fas fa-times" /> Cancel
-            </DropdownItem> */}
+						{row.statusEnum === 'Sent' && (
+							<DropdownItem
+								onClick={() =>
+									this.props.history.push(
+										'/admin/expense/supplier-invoice/record-payment',
+										{ id: row },
+									)
+								}
+							>
+								<i className="fas fa-university" /> Record Payment
+							</DropdownItem>
+						)}
 						<DropdownItem
 							onClick={() => {
 								this.closeInvoice(row.id);
@@ -546,7 +554,9 @@ class SupplierInvoice extends React.Component {
 					invoiceDueDate: '',
 					amount: '',
 					status: '',
+					statusEnum: '',
 					contactType: 1,
+					contactId: '',
 				},
 			},
 			() => {
@@ -574,16 +584,16 @@ class SupplierInvoice extends React.Component {
 				? this.props.supplier_invoice_list.data.map((supplier) => ({
 						id: supplier.id,
 						status: supplier.status,
+						statusEnum: supplier.statusEnum,
 						customerName: supplier.name,
 						invoiceNumber: supplier.referenceNumber,
-						invoiceDate: supplier.invoiceDate
-							? moment(supplier.invoiceDate).format('DD/MM/YYYY')
-							: '',
+						invoiceDate: supplier.invoiceDate ? supplier.invoiceDate : '',
 						invoiceDueDate: supplier.invoiceDueDate
-							? moment(supplier.invoiceDueDate).format('DD/MM/YYYY')
+							? supplier.invoiceDueDate
 							: '',
 						invoiceAmount: supplier.totalAmount,
 						vatAmount: supplier.totalVatAmount,
+						contactId: supplier.contactId,
 				  }))
 				: '';
 
@@ -858,10 +868,18 @@ class SupplierInvoice extends React.Component {
 											>
 												Invoice Number
 											</TableHeaderColumn>
-											<TableHeaderColumn dataField="invoiceDate" dataSort>
+											<TableHeaderColumn
+												dataField="invoiceDate"
+												dataSort
+												dataFormat={this.invoiceDate}
+											>
 												Invoice Date
 											</TableHeaderColumn>
-											<TableHeaderColumn dataField="invoiceDueDate" dataSort>
+											<TableHeaderColumn
+												dataField="invoiceDueDate"
+												dataSort
+												dataFormat={this.invoiceDueDate}
+											>
 												Due Date
 											</TableHeaderColumn>
 											<TableHeaderColumn

@@ -76,8 +76,8 @@ import static com.simplevat.constant.ErrorConstant.ERROR;
  */
 @RestController
 @RequestMapping(value = "/rest/transaction")
-public class TransactionController{
-	 private final Logger logger = LoggerFactory.getLogger(TransactionController.class);
+public class TransactionRestController{
+	 private final Logger logger = LoggerFactory.getLogger(TransactionRestController.class);
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 

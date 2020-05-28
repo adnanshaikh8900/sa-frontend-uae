@@ -1,11 +1,8 @@
 package com.simplevat.rest;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,20 +13,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.simplevat.constant.ExpenseStatusEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
-import com.simplevat.constant.InvoiceTypeConstant;
 import com.simplevat.constant.PostingReferenceTypeEnum;
-import com.simplevat.constant.ProductPriceType;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Invoice;
-import com.simplevat.entity.InvoiceLineItem;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.invoicecontroller.InvoiceRestHelper;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ExpenseService;
-import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
 import com.simplevat.service.TransactionCategoryService;
@@ -46,7 +39,7 @@ public abstract class AbstractDoubleEntryRestController {
 	TransactionCategoryService abstractDoubleEntryTransactionCategoryService;
 
 	@Autowired
-	JournalService journalService;
+	protected JournalService journalService;
 
 	@Autowired
 	private InvoiceService invoiceService;

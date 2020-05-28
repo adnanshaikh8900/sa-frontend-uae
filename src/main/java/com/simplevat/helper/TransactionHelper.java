@@ -128,17 +128,7 @@ public class TransactionHelper {
 			transactionModel.setRunningAmount(
 					transaction.getCurrentBalance() != null ? transaction.getCurrentBalance().doubleValue() : 0.0);
 
-			if (transaction.getDebitCreditFlag().equals('D')) {
-				transactionModel.setWithdrawalAmount(
-						transaction.getTransactionAmount() != null ? transaction.getTransactionAmount().doubleValue()
-								: 0.0);
-				transactionModel.setDepositeAmount(0.0);
-			} else {
-				transactionModel.setDepositeAmount(
-						transaction.getTransactionAmount() != null ? transaction.getTransactionAmount().doubleValue()
-								: 0.0);
-				transactionModel.setWithdrawalAmount(0.0);
-			}
+			debitcreditflag(transaction, transactionModel);
 			transactionModel.setTransactionTypeName(
 					transaction.getChartOfAccount() != null ? transaction.getChartOfAccount().getChartOfAccountName()
 							: "-");
@@ -149,6 +139,20 @@ public class TransactionHelper {
 		}
 
 		return transactionModelList;
+	}
+
+	private void debitcreditflag(Transaction transaction, TransactionViewModel transactionModel) {
+		if (transaction.getDebitCreditFlag().equals('D')) {
+			transactionModel.setWithdrawalAmount(
+					transaction.getTransactionAmount() != null ? transaction.getTransactionAmount().doubleValue()
+							: 0.0);
+			transactionModel.setDepositeAmount(0.0);
+		} else {
+			transactionModel.setDepositeAmount(
+					transaction.getTransactionAmount() != null ? transaction.getTransactionAmount().doubleValue()
+							: 0.0);
+			transactionModel.setWithdrawalAmount(0.0);
+		}
 	}
 
 	public TransactionPresistModel getModel(Transaction transaction) {

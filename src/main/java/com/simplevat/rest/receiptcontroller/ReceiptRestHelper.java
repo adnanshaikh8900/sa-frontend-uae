@@ -70,15 +70,10 @@ public class ReceiptRestHelper {
 				ReceiptModel model = new ReceiptModel();
 				model.setReceiptId(receipt.getId());
 				model.setAmount(receipt.getAmount());
-				// TODO remove once remove from front end list
 				model.setUnusedAmount(BigDecimal.ZERO);
 				model.setReferenceCode(receipt.getReferenceCode());
 				model.setReceiptNo(receipt.getReceiptNo());
-				if (receipt.getContact() != null) {
-					model.setContactId(receipt.getContact().getContactId());
-					model.setCustomerName(
-							receipt.getContact().getFirstName() + " " + receipt.getContact().getLastName());
-				}
+				getContact(receipt, model);
 
 				List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptService
 						.findForReceipt(receipt.getId());
@@ -98,6 +93,14 @@ public class ReceiptRestHelper {
 			}
 		}
 		return receiptModelList;
+	}
+
+	private void getContact(Receipt receipt, ReceiptModel model) {
+		if (receipt.getContact() != null) {
+			model.setContactId(receipt.getContact().getContactId());
+			model.setCustomerName(
+					receipt.getContact().getFirstName() + " " + receipt.getContact().getLastName());
+		}
 	}
 
 	public Receipt getEntity(ReceiptRequestModel receiptRequestModel) {

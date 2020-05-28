@@ -130,10 +130,7 @@ public class BankAccountRestHelper {
 					.getBankAccountStatus(bankModel.getBankAccountStatus());
 			bankAccount.setBankAccountStatus(bankAccountStatus);
 		}
-		if (bankModel.getBankAccountCurrency() != null) {
-			Currency currency = currencyService.getCurrency(Integer.valueOf(bankModel.getBankAccountCurrency()));
-			bankAccount.setBankAccountCurrency(currency);
-		}
+		bankAccountCurrency(bankModel, bankAccount);
 
 		if (bankModel.getBankAccountType() != null) {
 			BankAccountType bankAccountType = bankAccountTypeService.getBankAccountType(bankModel.getBankAccountType());
@@ -197,10 +194,7 @@ public class BankAccountRestHelper {
 						.getBankAccountStatus(bankModel.getBankAccountStatus());
 				bankAccount.setBankAccountStatus(bankAccountStatus);
 			}
-			if (bankModel.getBankAccountCurrency() != null) {
-				Currency currency = currencyService.getCurrency(Integer.valueOf(bankModel.getBankAccountCurrency()));
-				bankAccount.setBankAccountCurrency(currency);
-			}
+			bankAccountCurrency(bankModel, bankAccount);
 
 			if (bankModel.getBankAccountType() != null) {
 				BankAccountType bankAccountType = bankAccountTypeService
@@ -216,6 +210,13 @@ public class BankAccountRestHelper {
 			return bankAccount;
 		}
 		return null;
+	}
+
+	private void bankAccountCurrency(BankModel bankModel, BankAccount bankAccount) {
+		if (bankModel.getBankAccountCurrency() != null) {
+			Currency currency = currencyService.getCurrency(Integer.valueOf(bankModel.getBankAccountCurrency()));
+			bankAccount.setBankAccountCurrency(currency);
+		}
 	}
 
 }

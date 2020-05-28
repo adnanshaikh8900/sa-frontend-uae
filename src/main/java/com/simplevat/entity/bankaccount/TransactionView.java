@@ -70,8 +70,5 @@ public class TransactionView implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueOn;
 
-    public TransactionView() {
-    	//default constrctor
-    }
 
 }

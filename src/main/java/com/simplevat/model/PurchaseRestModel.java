@@ -12,7 +12,6 @@ import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import org.springframework.lang.NonNull;
  * @author daynil
  */
 @Data
-public class PurchaseRestModel implements Serializable {
+public class PurchaseRestModel {
 
 	private static final long serialVersionUID = 1L;
 

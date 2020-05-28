@@ -45,10 +45,6 @@ public class TransactionViewRestModel implements Serializable {
 	private boolean expandIcon;
 	private String suggestedTransactionString;
 
-	public TransactionViewRestModel() {
-		// For removing sonar error
-	}
-
 	public boolean isParent() {
 		return parentTransaction == null;
 	}

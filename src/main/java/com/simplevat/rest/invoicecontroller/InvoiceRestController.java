@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,6 @@ import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.InvoiceService;
-import com.simplevat.service.JournalService;
 import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.FileHelper;
 
@@ -76,8 +74,6 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@Autowired
 	private ChartUtil chartUtil;
 
-	@Autowired
-	private JournalService journalService;
 
 	@ApiOperation(value = "Get Invoice List")
 	@GetMapping(value = "/getList")
@@ -113,7 +109,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 			PaginationResponseModel responseModel = invoiceService.getInvoiceList(filterDataMap, filterModel);
 			if (responseModel == null) {
-				return new ResponseEntity(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 			responseModel.setData(invoiceRestHelper.getListModel(responseModel.getData()));
 			return new ResponseEntity<>(responseModel, HttpStatus.OK);
@@ -215,7 +211,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 				Journal journal = invoiceRestHelper.invoicePosting(new PostingRequestModel(invoice.getId()), userId);
 				journalService.persist(journal);
 			}
-			return new ResponseEntity("Updated Successfully", HttpStatus.OK);
+			return new ResponseEntity<>("Updated Successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

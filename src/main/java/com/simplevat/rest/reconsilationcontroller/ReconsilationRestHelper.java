@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.ChartOfAccountConstant;
+import com.simplevat.constant.InvoiceTypeConstant;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.ReconsileCategoriesEnumConstant;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
@@ -72,28 +73,22 @@ public class ReconsilationRestHelper {
 		return modelList;
 	}
 
-	public List<Journal> get(ChartOfAccountCategoryIdEnumConstant chartOfAccountCategoryIdEnumConstant,
+	public Journal get(ChartOfAccountCategoryIdEnumConstant chartOfAccountCategoryIdEnumConstant,
 			Integer transactionCategoryCode, BigDecimal amount, int userId, Transaction transaction,
 			List<ReconsileRequestLineItemModel> invoiceIdList) {
-
-		List<Journal> journalList = new ArrayList<>();
 
 		Journal journal = null;
 		switch (chartOfAccountCategoryIdEnumConstant) {
 		default:
 			journal = getByTransactionType(transactionCategoryCode, amount, userId, transaction);
-			journalList.add(journal);
 			break;
 
 		case SALES:
-
-			for (ReconsileRequestLineItemModel invoice : invoiceIdList) {
-				journal = invoiceReconsile(invoice.getInvoiceId(), userId);
-				journalList.add(journal);
-			}
+			journal = invoiceReconsile(invoiceIdList, userId, transactionCategoryCode, transaction.getTransactionId());
 			break;
 		}
-		return journalList;
+		return journal;
+
 	}
 
 	private Journal getByTransactionType(Integer transactionCategoryCode, BigDecimal amount, int userId,
@@ -144,31 +139,49 @@ public class ReconsilationRestHelper {
 		return journal;
 	}
 
-	private Journal invoiceReconsile(Integer invoiceId, Integer userId) {
+	private Journal invoiceReconsile(List<ReconsileRequestLineItemModel> invoiceIdList, Integer userId,
+			Integer transactionId, Integer transactionCategoryCode) {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
-		Invoice invoice = invoiceService.findByPK(invoiceId);
-
 		Journal journal = new Journal();
-		JournalLineItem journalLineItem1 = new JournalLineItem();
-		TransactionCategory transactionCategory = transactionCategoryService
-				.findTransactionCategoryByTransactionCategoryCode(
-						TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
-		journalLineItem1.setTransactionCategory(transactionCategory);
-		journalLineItem1.setCreditAmount(invoice.getTotalAmount());
-		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE_INVOICE );
-		journalLineItem1.setReferenceId(invoice.getId());
-		journalLineItem1.setCreatedBy(userId);
-		journalLineItem1.setJournal(journal);
-		journalLineItemList.add(journalLineItem1);
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		// Considered invoice belongs to single type
+		boolean isCustomerInvoice = false;
+		for (ReconsileRequestLineItemModel model : invoiceIdList) {
 
+			Invoice invoice = invoiceService.findByPK(model.getInvoiceId());
+
+			isCustomerInvoice = InvoiceTypeConstant.isCustomerInvoice(invoice.getType());
+
+			JournalLineItem journalLineItem1 = new JournalLineItem();
+			TransactionCategory transactionCategory = transactionCategoryService
+					.findTransactionCategoryByTransactionCategoryCode(
+							isCustomerInvoice ? TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode()
+									: TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
+			journalLineItem1.setTransactionCategory(transactionCategory);
+			// Reverse flow as invoice creation
+			if (!isCustomerInvoice)
+				journalLineItem1.setDebitAmount(invoice.getTotalAmount());
+			else
+				journalLineItem1.setCreditAmount(invoice.getTotalAmount());
+			totalAmount = totalAmount.add(invoice.getTotalAmount());
+			journalLineItem1.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE_INVOICE);
+			journalLineItem1.setReferenceId(transactionId);
+			journalLineItem1.setCreatedBy(userId);
+			journalLineItem1.setJournal(journal);
+			journalLineItemList.add(journalLineItem1);
+
+		}
+
+		TransactionCategory BankTransactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
 		JournalLineItem journalLineItem2 = new JournalLineItem();
-		TransactionCategory saleTransactionCategory = transactionCategoryService
-				.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.SALE.getCode());
-		journalLineItem2.setTransactionCategory(saleTransactionCategory);
-		journalLineItem2.setDebitAmount(invoice.getTotalAmount());
+		journalLineItem2.setTransactionCategory(BankTransactionCategory);
+		if (isCustomerInvoice)
+			journalLineItem2.setDebitAmount(totalAmount);
+		else
+			journalLineItem2.setCreditAmount(totalAmount);
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE_INVOICE);
-		journalLineItem2.setReferenceId(invoice.getId());
+		journalLineItem2.setReferenceId(transactionId);
 		journalLineItem2.setCreatedBy(userId);
 		journalLineItem2.setJournal(journal);
 		journalLineItemList.add(journalLineItem2);

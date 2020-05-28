@@ -158,4 +158,14 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		List<Invoice> invoiceList = query.getResultList();
 		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList : null;
 	}
+
+	@Override
+	public List<Invoice> getSuggestionUnpaidInvoices(BigDecimal amount, ContactTypeEnum type) {
+		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("suggestionUnpaidInvoices", Invoice.class);
+		query.setParameter("status", InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+		query.setParameter("amount", amount);
+		query.setParameter("type", type.getValue());
+		List<Invoice> invoiceList = query.getResultList();
+		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList : null;
+	}
 }

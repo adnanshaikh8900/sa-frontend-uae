@@ -124,7 +124,45 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	public List<TransactionReportRestModel> getTransactionsReport(Integer transactionTypeId,
 																  Integer transactionCategoryId, Date startDate, Date endDate, Integer bankAccountId, Integer pageNo,
 																  Integer pageSize) {
+		TypedQuery<Transaction> query = getTransactionTypedQuery(transactionTypeId, transactionCategoryId, startDate, endDate);
+		int maxRows = CommonUtil.DEFAULT_ROW_COUNT;
+		if (pageSize != null) {
+			maxRows = pageSize;
+		}
+		int start = 0;
+		if (pageNo != null) {
+			pageNo = pageNo * maxRows;
+			start = pageNo;
+		}
+		query.setFirstResult(start);
+		query.setMaxResults(maxRows);
+		List<TransactionReportRestModel> transactionReportRestModelList = new ArrayList<>();
+		List<Transaction> transactionList = query.getResultList();
+		if (transactionList != null && !transactionList.isEmpty()) {
+			for (Transaction transaction : transactionList) {
+				TransactionReportRestModel transactionReportRestModel = new TransactionReportRestModel();
+				if (transaction.getBankAccount() != null) {
+					transactionReportRestModel.setBankAccount(transaction.getBankAccount().getBankAccountName());
+				}
+				transactionReportRestModel.setTransactionAmount(transaction.getTransactionAmount());
+				if (transaction.getExplainedTransactionCategory() != null) {
+					transactionReportRestModel.setTransactionCategory(
+							transaction.getExplainedTransactionCategory().getTransactionCategoryName());
+				}
+				transactionReportRestModel.setTransactionDate(transaction.getTransactionDate());
+				transactionReportRestModel.setTransactionDescription(transaction.getTransactionDescription());
+				transactionReportRestModel.setTransactionId(transaction.getTransactionId());
+				if (transaction.getChartOfAccount() != null) {
+					transactionReportRestModel
+							.setTransactionType(transaction.getChartOfAccount().getChartOfAccountName());
+				}
+				transactionReportRestModelList.add(transactionReportRestModel);
+			}
+		}
+		return transactionReportRestModelList;
+	}
 
+	private TypedQuery<Transaction> getTransactionTypedQuery(Integer transactionTypeId, Integer transactionCategoryId, Date startDate, Date endDate) {
 		StringBuilder builder = new StringBuilder();
 		if (transactionTypeId != null) {
 			builder.append("and t.transactionType.transactionTypeCode =:transactionTypeCode ");
@@ -150,41 +188,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			query.setParameter("lastDate", Instant.ofEpochMilli(DateUtils.getEndDate(endDate).getTime())
 					.atZone(ZoneId.systemDefault()).toLocalDateTime());
 		}
-		int maxRows = CommonUtil.DEFAULT_ROW_COUNT;
-		if (pageSize != null) {
-			maxRows = pageSize;
-		}
-		int start = 0;
-		if (pageNo != null) {
-			pageNo = pageNo * maxRows;
-			start = pageNo;
-		}
-		query.setFirstResult(start);
-		query.setMaxResults(maxRows);
-		List<TransactionReportRestModel> transactionReportRestModelList = new ArrayList();
-		List<Transaction> transactionList = query.getResultList();
-		if (transactionList != null && !transactionList.isEmpty()) {
-			for (Transaction transaction : transactionList) {
-				TransactionReportRestModel transactionReportRestModel = new TransactionReportRestModel();
-				if (transaction.getBankAccount() != null) {
-					transactionReportRestModel.setBankAccount(transaction.getBankAccount().getBankAccountName());
-				}
-				transactionReportRestModel.setTransactionAmount(transaction.getTransactionAmount());
-				if (transaction.getExplainedTransactionCategory() != null) {
-					transactionReportRestModel.setTransactionCategory(
-							transaction.getExplainedTransactionCategory().getTransactionCategoryName());
-				}
-				transactionReportRestModel.setTransactionDate(transaction.getTransactionDate());
-				transactionReportRestModel.setTransactionDescription(transaction.getTransactionDescription());
-				transactionReportRestModel.setTransactionId(transaction.getTransactionId());
-				if (transaction.getChartOfAccount() != null) {
-					transactionReportRestModel
-							.setTransactionType(transaction.getChartOfAccount().getChartOfAccountName());
-				}
-				transactionReportRestModelList.add(transactionReportRestModel);
-			}
-		}
-		return transactionReportRestModelList;
+		return query;
 	}
 
 	@Override
@@ -488,7 +492,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 	@Override
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,
 														 PaginationModel paginationModel) {
-		List<DbFilter> dbFilters = new ArrayList();
+		List<DbFilter> dbFilters = new ArrayList<>();
 		filterMap.forEach((filter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(filter.getDbColumnName())
 				.condition(filter.getCondition()).value(value).build()));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),

@@ -70,24 +70,16 @@ public class ProductRestHelper {
 
 		List<ProductLineItem> lineItem = new ArrayList<>();
 		Map<String, Object> param = new HashMap<>();
-		if (ProductPriceType.isSalesValuePresnt(productModel.getProductPriceType())) {
-			ProductLineItem item = new ProductLineItem();
-			if (product.getProductID() != null) {
-				param.put("product", product);
-				param.put("priceType", ProductPriceType.SALES);
-				List<ProductLineItem> itemList = productLineItemService.findByAttributes(param);
-				item = itemList != null && !itemList.isEmpty() ? itemList.get(0) : new ProductLineItem();
-			}
-			item.setUnitPrice(productModel.getSalesUnitPrice());
-			item.setCreatedBy(productModel.getCreatedBy());
-			item.setDeleteFlag(false);
-			item.setDescription(productModel.getSalesDescription());
-			item.setTransactioncategory(
-					transactionCategoryService.findByPK(productModel.getSalesTransactionCategoryId()));
-			item.setProduct(product);
-			item.setPriceType(ProductPriceType.SALES);
-			lineItem.add(item);
+		isSalesValuePresnt(productModel, product, lineItem, param);
+		isPurchaseValuePresnt(productModel, product, lineItem, param);
+
+		if (!lineItem.isEmpty()) {
+			product.setLineItemList(lineItem);
 		}
+		return product;
+	}
+
+	private void isPurchaseValuePresnt(ProductRequestModel productModel, Product product, List<ProductLineItem> lineItem, Map<String, Object> param) {
 		if (ProductPriceType.isPurchaseValuePresnt(productModel.getProductPriceType())) {
 			ProductLineItem item = new ProductLineItem();
 			if (product.getProductID() != null) {
@@ -106,11 +98,27 @@ public class ProductRestHelper {
 			item.setPriceType(ProductPriceType.PURCHASE);
 			lineItem.add(item);
 		}
+	}
 
-		if (!lineItem.isEmpty()) {
-			product.setLineItemList(lineItem);
+	private void isSalesValuePresnt(ProductRequestModel productModel, Product product, List<ProductLineItem> lineItem, Map<String, Object> param) {
+		if (ProductPriceType.isSalesValuePresnt(productModel.getProductPriceType())) {
+			ProductLineItem item = new ProductLineItem();
+			if (product.getProductID() != null) {
+				param.put("product", product);
+				param.put("priceType", ProductPriceType.SALES);
+				List<ProductLineItem> itemList = productLineItemService.findByAttributes(param);
+				item = itemList != null && !itemList.isEmpty() ? itemList.get(0) : new ProductLineItem();
+			}
+			item.setUnitPrice(productModel.getSalesUnitPrice());
+			item.setCreatedBy(productModel.getCreatedBy());
+			item.setDeleteFlag(false);
+			item.setDescription(productModel.getSalesDescription());
+			item.setTransactioncategory(
+					transactionCategoryService.findByPK(productModel.getSalesTransactionCategoryId()));
+			item.setProduct(product);
+			item.setPriceType(ProductPriceType.SALES);
+			lineItem.add(item);
 		}
-		return product;
 	}
 
 	public ProductRequestModel getRequestModel(Product product) {

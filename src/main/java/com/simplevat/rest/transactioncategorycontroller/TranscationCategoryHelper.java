@@ -132,16 +132,7 @@ public class TranscationCategoryHelper {
 			Map<Integer, List<ChartOfAccount>> idTrnxCatListMap = new HashMap<>();
 			List<ChartOfAccount> categoryList = new ArrayList<>();
 			for (ChartOfAccount trnxCat : list) {
-				if (trnxCat.getParentChartOfAccount() != null) {
-					if (idTrnxCatListMap.containsKey(trnxCat.getParentChartOfAccount().getChartOfAccountId())) {
-						categoryList = idTrnxCatListMap.get(trnxCat.getParentChartOfAccount().getChartOfAccountId());
-						categoryList.add(trnxCat);
-					} else {
-						categoryList = new ArrayList<ChartOfAccount>();
-						categoryList.add(trnxCat);
-						idTrnxCatListMap.put(trnxCat.getParentChartOfAccount().getChartOfAccountId(), categoryList);
-					}
-				}
+				getParentChartOfAccount(idTrnxCatListMap, trnxCat);
 			}
 
 			for (Integer key : idTrnxCatListMap.keySet()) {
@@ -149,7 +140,7 @@ public class TranscationCategoryHelper {
 				String parentCategory = "";
 				categoryList = idTrnxCatListMap.get(key);
 
-				List<DropdownModel> dropDownModelList = new ArrayList<DropdownModel>();
+				List<DropdownModel> dropDownModelList = new ArrayList<>();
 				for (ChartOfAccount trnxCat : categoryList) {
 					parentCategory = trnxCat.getParentChartOfAccount().getChartOfAccountName();
 					dropDownModelList
@@ -161,6 +152,20 @@ public class TranscationCategoryHelper {
 			return chartOfAccountDropdownModelList;
 		}
 		return null;
+	}
+
+	private void getParentChartOfAccount(Map<Integer, List<ChartOfAccount>> idTrnxCatListMap, ChartOfAccount trnxCat) {
+		List<ChartOfAccount> categoryList;
+		if (trnxCat.getParentChartOfAccount() != null) {
+			if (idTrnxCatListMap.containsKey(trnxCat.getParentChartOfAccount().getChartOfAccountId())) {
+				categoryList = idTrnxCatListMap.get(trnxCat.getParentChartOfAccount().getChartOfAccountId());
+				categoryList.add(trnxCat);
+			} else {
+				categoryList = new ArrayList<>();
+				categoryList.add(trnxCat);
+				idTrnxCatListMap.put(trnxCat.getParentChartOfAccount().getChartOfAccountId(), categoryList);
+			}
+		}
 	}
 
 	public List<SingleLevelDropDownModel> getSinleLevelDropDownModelList(List<TransactionCategory> transactionCatList) {
@@ -184,7 +189,7 @@ public class TranscationCategoryHelper {
 		for (Integer key : idTrnxCatListMap.keySet()) {
 			String parentCategory = "";
 			transactionCategoryList = idTrnxCatListMap.get(key);
-			List<DropdownModel> dropDownModelList = new ArrayList<DropdownModel>();
+			List<DropdownModel> dropDownModelList = new ArrayList<>();
 			for (TransactionCategory trnxCat : transactionCategoryList) {
 				parentCategory = trnxCat.getChartOfAccount().getChartOfAccountName();
 				dropDownModelList.add(

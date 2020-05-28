@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.PostingReferenceTypeEnum;
-import com.simplevat.constant.dbfilter.JournalFilterEnum;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
@@ -85,17 +83,7 @@ public class DetailedGeneralLedgerRestHelper {
 			Map<Integer, Transaction> transactionMap = new HashMap<>();
 			Map<Integer, Invoice> invoiceMap = new HashMap<>();
 
-			for (JournalLineItem item : itemList) {
-				if (item.getTransactionCategory() != null) {
-					if (map.containsKey(item.getTransactionCategory().getTransactionCategoryId())) {
-						map.get(item.getTransactionCategory().getTransactionCategoryId()).add(item);
-					} else {
-						List<JournalLineItem> jlList = new ArrayList<JournalLineItem>();
-						jlList.add(item);
-						map.put(item.getTransactionCategory().getTransactionCategoryId(), jlList);
-					}
-				}
-			}
+			transactionCategory(itemList, map);
 
 			for (Integer item : map.keySet()) {
 				List<DetailedGeneralLedgerReportListModel> dataList = new LinkedList<>();
@@ -199,6 +187,20 @@ public class DetailedGeneralLedgerRestHelper {
 		}
 
 		return resposneList;
+	}
+
+	private void transactionCategory(List<JournalLineItem> itemList, Map<Integer, List<JournalLineItem>> map) {
+		for (JournalLineItem item : itemList) {
+			if (item.getTransactionCategory() != null) {
+				if (map.containsKey(item.getTransactionCategory().getTransactionCategoryId())) {
+					map.get(item.getTransactionCategory().getTransactionCategoryId()).add(item);
+				} else {
+					List<JournalLineItem> jlList = new ArrayList<>();
+					jlList.add(item);
+					map.put(item.getTransactionCategory().getTransactionCategoryId(), jlList);
+				}
+			}
+		}
 	}
 
 }

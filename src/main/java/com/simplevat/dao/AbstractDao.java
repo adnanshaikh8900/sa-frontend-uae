@@ -98,10 +98,7 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 				orderByFilter = dbFilter;
 			}
 		}
-		if (paginationModel != null && paginationModel.getSortingCol() != null
-				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ") && !paginationModel.getSortingCol().contains("-1") ) {
-			queryBuilder.append(" order by " + paginationModel.getSortingCol() + " " + paginationModel.getOrder());
-		}
+		sortingCol(paginationModel, queryBuilder);
 
 		TypedQuery<ENTITY> typedQuery = entityManager.createQuery(queryBuilder.toString(), entityClass);
 		for (DbFilter dbFilter : dbFilters) {
@@ -116,6 +113,13 @@ public abstract class AbstractDao<PK, ENTITY> implements Dao<PK, ENTITY> {
 		}
 
 		return typedQuery.getResultList();
+	}
+
+	private void sortingCol(PaginationModel paginationModel, StringBuilder queryBuilder) {
+		if (paginationModel != null && paginationModel.getSortingCol() != null
+				&& !paginationModel.getSortingCol().isEmpty() && !paginationModel.getSortingCol().contains(" ") && !paginationModel.getSortingCol().contains("-1") ) {
+			queryBuilder.append(" order by " + paginationModel.getSortingCol() + " " + paginationModel.getOrder());
+		}
 	}
 
 	@Override

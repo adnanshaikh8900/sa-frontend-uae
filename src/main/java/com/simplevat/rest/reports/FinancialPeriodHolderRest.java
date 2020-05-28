@@ -6,7 +6,6 @@
 package com.simplevat.rest.reports;
 
 import com.simplevat.model.FinancialPeriodRestModel;
-import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

@@ -223,7 +223,7 @@ public class DataListController {
 	@GetMapping(value = "/vatCategory")
 	public ResponseEntity< List<VatCategoryModel> > getVatCAtegory() {
 		try {
-			Map<VatCategoryFilterEnum, Object> filterDataMap = new HashMap();
+			Map<VatCategoryFilterEnum, Object> filterDataMap = new HashMap<>();
 			filterDataMap.put(VatCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 			filterDataMap.put(VatCategoryFilterEnum.DELETE_FLAG, false);
 
@@ -314,28 +314,12 @@ public class DataListController {
 			List<ChartOfAccountCategory> chartOfAccountCategoryList = chartOfAccountCategoryService.findAll();
 			if (chartOfAccountCategoryList != null && !chartOfAccountCategoryList.isEmpty()) {
 
-				List<DropdownModel> modelList = new ArrayList<DropdownModel>();
+				List<DropdownModel> modelList = new ArrayList<>();
 
 				ChartOfAccountCategory parentCategory = null;
 				for (ChartOfAccountCategory chartOfAccountCategory : chartOfAccountCategoryList) {
 
-					if (debitCreditFlag.equals("C") && chartOfAccountCategory.getParentChartOfAccount() != null
-							&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
-									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId())) {
-
-						modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
-								chartOfAccountCategory.getChartOfAccountCategoryName()));
-					} else if (debitCreditFlag.equals("D") && chartOfAccountCategory.getParentChartOfAccount() != null
-							&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
-									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
-						modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
-								chartOfAccountCategory.getChartOfAccountCategoryName()));
-					} else if ((debitCreditFlag.equals("C") && chartOfAccountCategory.getChartOfAccountCategoryId()
-							.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId()))
-							|| debitCreditFlag.equals("D") && chartOfAccountCategory.getChartOfAccountCategoryId()
-									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
-						parentCategory = chartOfAccountCategory;
-					}
+					parentCategory = getChartOfAccountCategory(debitCreditFlag, modelList, parentCategory, chartOfAccountCategory);
 				}
 				assert parentCategory != null;
 				return new ResponseEntity<>(Arrays.asList(
@@ -348,6 +332,27 @@ public class DataListController {
 			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	private ChartOfAccountCategory getChartOfAccountCategory(@RequestParam("debitCreditFlag") String debitCreditFlag, List<DropdownModel> modelList, ChartOfAccountCategory parentCategory, ChartOfAccountCategory chartOfAccountCategory) {
+		if (debitCreditFlag.equals("C") && chartOfAccountCategory.getParentChartOfAccount() != null
+				&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
+						.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId())) {
+
+			modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
+					chartOfAccountCategory.getChartOfAccountCategoryName()));
+		} else if (debitCreditFlag.equals("D") && chartOfAccountCategory.getParentChartOfAccount() != null
+				&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
+						.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
+			modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
+					chartOfAccountCategory.getChartOfAccountCategoryName()));
+		} else if ((debitCreditFlag.equals("C") && chartOfAccountCategory.getChartOfAccountCategoryId()
+				.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId()))
+				|| debitCreditFlag.equals("D") && chartOfAccountCategory.getChartOfAccountCategoryId()
+						.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
+			parentCategory = chartOfAccountCategory;
+		}
+		return parentCategory;
 	}
 
 	@ApiOperation(value = "get Product List")

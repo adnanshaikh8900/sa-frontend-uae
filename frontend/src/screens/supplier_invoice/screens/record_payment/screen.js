@@ -18,10 +18,10 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import * as CustomerRecordPaymentActions from './actions';
-import * as CustomerInvoiceActions from '../../actions';
+import * as SupplierRecordPaymentActions from './actions';
+import * as SupplierInvoiceActions from '../../actions';
 
-import { CustomerModal } from '../../sections';
+import { SupplierModal } from '../../sections';
 import { Loader, ConfirmDeleteModal } from 'components';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -36,26 +36,26 @@ import API_ROOT_URL from '../../../../constants/config';
 const mapStateToProps = (state) => {
 	return {
 		contact_list: state.customer_invoice.contact_list,
-		customer_list: state.customer_invoice.customer_list,
-		deposit_list: state.customer_invoice.deposit_list,
-		pay_mode: state.customer_invoice.pay_mode,
+		supplier_list: state.supplier_invoice.supplier_list,
+		deposit_list: state.supplier_invoice.deposit_list,
+		pay_mode: state.supplier_invoice.pay_mode,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		customerInvoiceActions: bindActionCreators(
-			CustomerInvoiceActions,
+		SupplierInvoiceActions: bindActionCreators(
+			SupplierInvoiceActions,
 			dispatch,
 		),
-		CustomerRecordPaymentActions: bindActionCreators(
-			CustomerRecordPaymentActions,
+		SupplierRecordPaymentActions: bindActionCreators(
+			SupplierRecordPaymentActions,
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
 
-class RecordCustomerPayment extends React.Component {
+class RecordSupplierPayment extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -69,8 +69,8 @@ class RecordCustomerPayment extends React.Component {
 			data: [],
 			current_customer_id: null,
 			initValue: {
-				receiptNo: '',
-				receiptDate: new Date(),
+				paymentNo: 1,
+				paymentDate: new Date(),
 				contactId: this.props.location.state.id.contactId,
 				amount: this.props.location.state.id.invoiceAmount,
 				payMode: '',
@@ -79,10 +79,11 @@ class RecordCustomerPayment extends React.Component {
 				referenceCode: '',
 				attachmentFile: '',
 				paidInvoiceListStr: [],
+				deleteFlag: true,
 			},
 			invoiceId: this.props.location.state.id.id,
-			contactType: 2,
-			openCustomerModal: false,
+			contactType: 1,
+			openSupplierModal: false,
 			selectedContact: '',
 			term: '',
 			selectedType: '',
@@ -136,11 +137,11 @@ class RecordCustomerPayment extends React.Component {
 			},
 		});
 		Promise.all([
-			this.props.customerInvoiceActions.getDepositList(),
-			this.props.customerInvoiceActions.getPaymentMode(),
-			this.props.customerInvoiceActions.getCustomerList(this.state.contactType),
+			this.props.SupplierInvoiceActions.getDepositList(),
+			this.props.SupplierInvoiceActions.getPaymentMode(),
+			this.props.SupplierInvoiceActions.getSupplierList(this.state.contactType),
 		]);
-		this.getReceiptNo();
+		//this.getReceiptNo();
 	};
 
 	getReceiptNo = () => {
@@ -212,25 +213,26 @@ class RecordCustomerPayment extends React.Component {
 	handleSubmit = (data) => {
 		const { invoiceId } = this.state;
 		const {
-			receiptNo,
-			receiptDate,
+			paymentNo,
+			paymentDate,
 			contactId,
 			amount,
 			depositeTo,
 			payMode,
 			notes,
 			referenceCode,
+			deleteFlag,
 		} = data;
 		console.log(data);
 		console.log(JSON.stringify(this.state.initValue.paidInvoiceListStr));
 
 		let formData = new FormData();
-		formData.append('receiptNo', receiptNo !== null ? receiptNo : '');
+		formData.append('paymentNo', paymentNo !== null ? paymentNo : '');
 		formData.append(
-			'receiptDate',
-			typeof receiptDate === 'string'
-				? moment(receiptDate, 'DD/MM/YYYY').toDate()
-				: receiptDate,
+			'paymentDate',
+			typeof paymentDate === 'string'
+				? moment(paymentDate, 'DD/MM/YYYY').toDate()
+				: paymentDate,
 		);
 		formData.append(
 			'paidInvoiceListStr',
@@ -238,10 +240,8 @@ class RecordCustomerPayment extends React.Component {
 		);
 		formData.append('amount', amount !== null ? amount : '');
 		formData.append('notes', notes !== null ? notes : '');
-		formData.append(
-			'referenceCode',
-			referenceCode !== null ? referenceCode : '',
-		);
+		formData.append('referenceNo', referenceCode !== null ? referenceCode : '');
+		formData.append('deleteFlag', deleteFlag !== null ? deleteFlag : '');
 		formData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
 		formData.append('payMode', payMode !== null ? payMode.value : '');
 		if (contactId) {
@@ -250,13 +250,13 @@ class RecordCustomerPayment extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		this.props.CustomerRecordPaymentActions.recordPayment(formData)
+		this.props.SupplierRecordPaymentActions.recordPayment(formData)
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
 					'Invoice Updated Successfully.',
 				);
-				this.props.history.push('/admin/revenue/customer-invoice');
+				this.props.history.push('/admin/expense/supplier-invoice');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -266,9 +266,9 @@ class RecordCustomerPayment extends React.Component {
 			});
 	};
 
-	openCustomerModal = (e) => {
+	openSupplierModal = (e) => {
 		e.preventDefault();
-		this.setState({ openCustomerModal: true });
+		this.setState({ openSupplierModal: true });
 	};
 
 	getCurrentUser = (data) => {
@@ -287,11 +287,11 @@ class RecordCustomerPayment extends React.Component {
 		this.formRef.current.setFieldValue('contactId', option.value, true);
 	};
 
-	closeCustomerModal = (res) => {
+	closeSupplierModal = (res) => {
 		if (res) {
 			this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		}
-		this.setState({ openCustomerModal: false });
+		this.setState({ openSupplierModal: false });
 	};
 
 	deleteInvoice = () => {
@@ -335,7 +335,7 @@ class RecordCustomerPayment extends React.Component {
 
 	render() {
 		const { initValue, loading, dialog } = this.state;
-		const { pay_mode, customer_list, deposit_list } = this.props;
+		const { pay_mode, supplier_list, deposit_list } = this.props;
 
 		return (
 			<div className="detail-customer-invoice-screen">
@@ -422,8 +422,8 @@ class RecordCustomerPayment extends React.Component {
 																			name="contactId"
 																			isDisabled
 																			value={
-																				customer_list &&
-																				customer_list.find(
+																				supplier_list &&
+																				supplier_list.find(
 																					(option) =>
 																						option.value ===
 																						+this.props.location.state.id
@@ -453,25 +453,25 @@ class RecordCustomerPayment extends React.Component {
 																		</Label>
 																		<Input
 																			type="text"
-																			id="receiptNo"
-																			name="receiptNo"
+																			id="paymentNo"
+																			name="paymentNo"
 																			placeholder=""
 																			disabled
-																			value={props.values.receiptNo}
+																			value={props.values.paymentNo}
 																			onChange={(value) => {
-																				props.handleChange('receiptNo')(value);
+																				props.handleChange('paymentNo')(value);
 																			}}
 																			className={
-																				props.errors.receiptNo &&
-																				props.touched.receiptNo
+																				props.errors.paymentNo &&
+																				props.touched.paymentNo
 																					? 'is-invalid'
 																					: ''
 																			}
 																		/>
-																		{props.errors.receiptNo &&
-																			props.touched.receiptNo && (
+																		{props.errors.paymentNo &&
+																			props.touched.paymentNo && (
 																				<div className="invalid-feedback">
-																					{props.errors.receiptNo}
+																					{props.errors.paymentNo}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -524,31 +524,31 @@ class RecordCustomerPayment extends React.Component {
 																			Payment Date
 																		</Label>
 																		<DatePicker
-																			id="receiptDate"
-																			name="receiptDate"
+																			id="paymentDate"
+																			name="paymentDate"
 																			placeholderText="Payment Date"
 																			showMonthDropdown
 																			showYearDropdown
 																			dateFormat="dd/MM/yyyy"
 																			dropdownMode="select"
-																			value={props.values.receiptDate}
-																			selected={props.values.receiptDate}
+																			value={props.values.paymentDate}
+																			selected={props.values.paymentDate}
 																			onChange={(value) => {
-																				props.handleChange('receiptDate')(
+																				props.handleChange('paymentDate')(
 																					moment(value).format('DD/MM/YYYY'),
 																				);
 																			}}
 																			className={`form-control ${
-																				props.errors.receiptDate &&
-																				props.touched.receiptDate
+																				props.errors.paymentDate &&
+																				props.touched.paymentDate
 																					? 'is-invalid'
 																					: ''
 																			}`}
 																		/>
-																		{props.errors.receiptDate &&
-																			props.touched.receiptDate && (
+																		{props.errors.paymentDate &&
+																			props.touched.paymentDate && (
 																				<div className="invalid-feedback">
-																					{props.errors.receiptDate}
+																					{props.errors.paymentDate}
 																				</div>
 																			)}
 																	</FormGroup>
@@ -795,16 +795,16 @@ class RecordCustomerPayment extends React.Component {
 						</Col>
 					</Row>
 				</div>
-				<CustomerModal
-					openCustomerModal={this.state.openCustomerModal}
-					closeCustomerModal={(e) => {
-						this.closeCustomerModal(e);
+				<SupplierModal
+					openSupplierModal={this.state.openSupplierModal}
+					closeSupplierModal={(e) => {
+						this.closeSupplierModal(e);
 					}}
 					getCurrentUser={(e) => this.getCurrentUser(e)}
-					createCustomer={this.props.customerInvoiceActions.createCustomer}
+					createSupplier={this.props.SupplierInvoiceActions.createSupplier}
 					currency_list={this.props.currency_list}
 					country_list={this.props.country_list}
-					getStateList={this.props.customerInvoiceActions.getStateList}
+					getStateList={this.props.SupplierInvoiceActions.getStateList}
 				/>
 			</div>
 		);
@@ -814,4 +814,4 @@ class RecordCustomerPayment extends React.Component {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(RecordCustomerPayment);
+)(RecordSupplierPayment);

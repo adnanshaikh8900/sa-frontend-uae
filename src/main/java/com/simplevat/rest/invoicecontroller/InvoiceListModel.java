@@ -13,8 +13,8 @@ public class InvoiceListModel {
 	private String status;
 	private String name;
 	private String referenceNumber;
-	private Date invoiceDate;
-	private Date invoiceDueDate;
+	private String invoiceDate;
+	private String invoiceDueDate;
 	private BigDecimal totalAmount;
 	private BigDecimal totalVatAmount;
 	private String statusEnum;

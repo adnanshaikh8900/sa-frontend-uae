@@ -301,96 +301,96 @@ public class TransactionRestController {
 		try {
 
 			if (transactionPresistModel != null) {
-				List<Journal> journalList = null;
 
 				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 				Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId());
 				trnx.setCreatedBy(userId);
-				trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
-				boolean isDebit = ChartOfAccountCategoryIdEnumConstant.isDebitedFromBank(
-						trnx.getCoaCategory().getParentChartOfAccount().getChartOfAccountCategoryId());
-				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
-				trnx.setTransactionAmount(transactionPresistModel.getAmount());
-				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
-				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
-				trnx.setExplainedTransactionCategory(
-						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
+//				trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
+//				boolean isDebit = ChartOfAccountCategoryIdEnumConstant.isDebitedFromBank(
+//						trnx.getCoaCategory().getParentChartOfAccount().getChartOfAccountCategoryId());
+//				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
+//				trnx.setTransactionAmount(transactionPresistModel.getAmount());
+//				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
+//				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+//						transactionPresistModel.getDATE_FORMAT()));
+//				trnx.setExplainedTransactionCategory(
+//						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
 
 				if (transactionPresistModel.getDescription() != null) {
 					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
 				}
-				if (transactionPresistModel.getCustomerId() != null) {
-					trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
-				}
-				if (transactionPresistModel.getVatId() != null) {
-					trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
-				}
-				if (transactionPresistModel.getVendorId() != null) {
-					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
-				}
-				if (transactionPresistModel.getEmployeeId() != null) {
-					trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
-				}
-				if (transactionPresistModel.getBankId() != null) {
-					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
-				}
-				if (transactionPresistModel.getReconsileBankId() != null) {
-					trnx.setExplinationBankAccount(bankService.findByPK(transactionPresistModel.getReconsileBankId()));
-				}
-				if (transactionPresistModel.getReference() != null
-						&& !transactionPresistModel.getReference().isEmpty()) {
-					trnx.setReferenceStr(transactionPresistModel.getReference());
-				}
-				if (transactionPresistModel.getAttachmentFile() != null
-						&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
-					String filePath = fileHelper.saveFile(transactionPresistModel.getAttachmentFile(),
-							FileTypeEnum.TRANSATION);
-					trnx.setExplainedTransactionAttachmentFileName(
-							transactionPresistModel.getAttachmentFile().getOriginalFilename());
-					trnx.setExplainedTransactionAttachmentPath(filePath);
-				}
+//				if (transactionPresistModel.getCustomerId() != null) {
+//					trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
+//				}
+//				if (transactionPresistModel.getVatId() != null) {
+//					trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
+//				}
+//				if (transactionPresistModel.getVendorId() != null) {
+//					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
+//				}
+//				if (transactionPresistModel.getEmployeeId() != null) {
+//					trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
+//				}
+//				if (transactionPresistModel.getBankId() != null) {
+//					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+//				}
+//				if (transactionPresistModel.getReconsileBankId() != null) {
+//					trnx.setExplinationBankAccount(bankService.findByPK(transactionPresistModel.getReconsileBankId()));
+//				}
+//				if (transactionPresistModel.getReference() != null
+//						&& !transactionPresistModel.getReference().isEmpty()) {
+//					trnx.setReferenceStr(transactionPresistModel.getReference());
+//				}
+//				if (transactionPresistModel.getAttachmentFile() != null
+//						&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+//					String filePath = fileHelper.saveFile(transactionPresistModel.getAttachmentFile(),
+//							FileTypeEnum.TRANSATION);
+//					trnx.setExplainedTransactionAttachmentFileName(
+//							transactionPresistModel.getAttachmentFile().getOriginalFilename());
+//					trnx.setExplainedTransactionAttachmentPath(filePath);
+//				}
+				
 				transactionService.update(trnx);
 
 				// remove old entries
-				List<TransactionStatus> trnxStatusList = transactionStatusService
-						.findAllTransactionStatuesByTrnxId(transactionPresistModel.getTransactionId());
-				transactionStatusService.deleteList(trnxStatusList);
+//				List<TransactionStatus> trnxStatusList = transactionStatusService
+//						.findAllTransactionStatuesByTrnxId(transactionPresistModel.getTransactionId());
+//				transactionStatusService.deleteList(trnxStatusList);
 
 //				journalList = reconsilationRestHelper.get(
 //						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
 //						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
 //						trnx, transactionPresistModel.getInvoiceIdList());
 
-				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
-				if (transactionPresistModel.getInvoiceIdList() != null) {
-					for (ReconsileRequestLineItemModel invoice : transactionPresistModel.getInvoiceIdList()) {
-						invoiceIdAmtMap.put(invoice.getInvoiceId(), invoice.getRemainingInvoiceAmount());
-					}
-				}
-
-				if (journalList != null && !journalList.isEmpty()) {
-					List<TransactionStatus> transationStatusList = new ArrayList<>();
-					for (Journal journal : journalList) {
-
-						JournalLineItem item = journal.getJournalLineItems().iterator().next();
-
-						journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(
-								transactionPresistModel.getDate(), transactionPresistModel.getDATE_FORMAT()));
-						journalService.persist(journal);
-						TransactionStatus status = new TransactionStatus();
-						status.setCreatedBy(userId);
-						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
-						status.setTransaction(trnx);
-						status.setRemainingToExplain(invoiceIdAmtMap.containsKey(item.getReferenceId())
-								? invoiceIdAmtMap.get(item.getReferenceId())
-								: BigDecimal.ZERO);
-						status.setReconsileJournal(journal);
-						transactionStatusService.persist(status);
-
-						transationStatusList.add(status);
-					}
-				}
+//				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
+//				if (transactionPresistModel.getInvoiceIdList() != null) {
+//					for (ReconsileRequestLineItemModel invoice : transactionPresistModel.getInvoiceIdList()) {
+//						invoiceIdAmtMap.put(invoice.getInvoiceId(), invoice.getRemainingInvoiceAmount());
+//					}
+//				}
+//
+//				if (journalList != null && !journalList.isEmpty()) {
+//					List<TransactionStatus> transationStatusList = new ArrayList<>();
+//					for (Journal journal : journalList) {
+//
+//						JournalLineItem item = journal.getJournalLineItems().iterator().next();
+//
+//						journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(
+//								transactionPresistModel.getDate(), transactionPresistModel.getDATE_FORMAT()));
+//						journalService.persist(journal);
+//						TransactionStatus status = new TransactionStatus();
+//						status.setCreatedBy(userId);
+//						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+//						status.setTransaction(trnx);
+//						status.setRemainingToExplain(invoiceIdAmtMap.containsKey(item.getReferenceId())
+//								? invoiceIdAmtMap.get(item.getReferenceId())
+//								: BigDecimal.ZERO);
+//						status.setReconsileJournal(journal);
+//						transactionStatusService.persist(status);
+//
+//						transationStatusList.add(status);
+//					}
+//				}
 
 				return new ResponseEntity<>("Updated successful", HttpStatus.OK);
 			}

@@ -198,6 +198,9 @@ public class TransactionServiceImpl extends TransactionService {
 		updateOrCreateTransaction(transaction);
 		updateLatestTransaction(diffAmount, transaction);
 		updateAccountBalance(balanceAmount, transaction);
+
+		// Find invoices
+		 
 		return transaction;
 	}
 

@@ -1,4 +1,4 @@
-package com.simplevat.entity.bankaccount;
+package com.simplevat.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,6 +23,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.entity.Journal;
+import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.converter.DateConverter;
 
 import lombok.Data;
@@ -55,10 +56,15 @@ public class TransactionStatus implements Serializable {
 	@ColumnDefault(value = "0.00")
 	private BigDecimal remainingToExplain;
 
+	@Deprecated
 	@OneToOne
 	@JoinColumn(name = "RECONSILE_JOURNAL_ID")
 	private Journal reconsileJournal;
 
+	@OneToOne
+	@JoinColumn(name = "INVOICE_ID")
+	private Invoice invoice;
+	
 	@OneToOne
 	@JoinColumn(name = "TRANSACTION_ID")
 	private Transaction transaction;

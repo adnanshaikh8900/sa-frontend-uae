@@ -167,7 +167,7 @@ public class TransactionHelper {
 		if (transaction.getExplinationVendor() != null)
 			model.setVendorId(transaction.getExplinationVendor().getContactId());
 		if (transaction.getExplinationCustomer() != null)
-			model.setVendorId(transaction.getExplinationCustomer().getContactId());
+			model.setCustomerId(transaction.getExplinationCustomer().getContactId());
 
 		// MONEY PAID TO USER
 		// MONEY RECEIVED FROM OTHER
@@ -176,7 +176,7 @@ public class TransactionHelper {
 
 		// Transafer To
 		if (transaction.getExplinationEmployee() != null)
-			model.setVendorId(transaction.getBankAccount().getBankAccountId());
+			model.setEmployeeId(transaction.getExplinationEmployee().getId());
 		if (transaction.getCoaCategory() != null && transaction.getCoaCategory().getChartOfAccountCategoryId()
 				.equals(ChartOfAccountCategoryIdEnumConstant.SALES.getId())) {
 			// SALES
@@ -186,7 +186,7 @@ public class TransactionHelper {
 
 			for (TransactionStatus status : trnxStatusList) {
 				invoiceIdList.add(new ReconsileRequestLineItemModel(
-						status.getReconsileJournal().getJournalLineItems().stream().findFirst().get().getReferenceId(),
+						status.getInvoice().getId(),
 						status.getRemainingToExplain()));
 			}
 			model.setInvoiceIdList(invoiceIdList);

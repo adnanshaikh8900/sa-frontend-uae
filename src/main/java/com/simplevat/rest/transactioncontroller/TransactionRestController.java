@@ -364,8 +364,9 @@ public class TransactionRestController {
 				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
 				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
-				trnx.setExplainedTransactionCategory(
-						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
+				if (transactionPresistModel.getTransactionCategoryId() != null)
+					trnx.setExplainedTransactionCategory(
+							transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
 
 				if (transactionPresistModel.getDescription() != null) {
 					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
@@ -433,19 +434,19 @@ public class TransactionRestController {
 					BigDecimal totalAmt = BigDecimal.ZERO;
 					List<CustomerInvoiceReceipt> customerInvoiceReceiptList = new ArrayList<>();
 
-					for (ReconsileRequestLineItemModel invoice : transactionPresistModel.getInvoiceIdList()) {
+					for (ReconsileRequestLineItemModel invoice : itemModels) {
 						// Update invoice Payment status
 						Invoice invoiceEntity = invoiceService.findByPK(invoice.getInvoiceId());
 
 						contact = invoiceEntity.getContact();
 						totalAmt = totalAmt.add(invoiceEntity.getTotalAmount());
-
-						invoiceEntity.setStatus(invoice.getRemainingInvoiceAmount().compareTo(BigDecimal.ZERO) == 0
-								? InvoiceStatusEnum.PAID.getValue()
-								: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
-						invoiceEntity.setDueAmount(BigDecimal.ZERO);
-						// invoiceService.update(invoiceEntity);
-
+						if (invoiceEntity.getStatus() < InvoiceStatusEnum.PAID.getValue()) {
+							invoiceEntity.setStatus(invoice.getRemainingInvoiceAmount().compareTo(BigDecimal.ZERO) == 0
+									? InvoiceStatusEnum.PAID.getValue()
+									: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+							invoiceEntity.setDueAmount(BigDecimal.ZERO);
+							invoiceService.update(invoiceEntity);
+						}
 						// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
 						TransactionStatus status = new TransactionStatus();
 						status.setCreatedBy(userId);

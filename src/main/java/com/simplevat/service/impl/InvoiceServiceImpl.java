@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +17,12 @@ import org.springframework.stereotype.Service;
 import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.dao.CustomerInvoiceReceiptDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.InvoiceDao;
 import com.simplevat.dao.JournalDao;
 import com.simplevat.dao.JournalLineItemDao;
+import com.simplevat.entity.CustomerInvoiceReceipt;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.model.OverDueAmountDetailsModel;
@@ -48,6 +52,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 
 	@Autowired
 	private JournalLineItemDao journalLineItemDao;
+
+	@Autowired
+	private CustomerInvoiceReceiptDao customerInvoiceReceiptDao;
 
 	@Override
 	protected Dao<Integer, Invoice> getDao() {
@@ -137,18 +144,47 @@ public class InvoiceServiceImpl extends InvoiceService {
 	 * @return list invoiceList
 	 */
 	@Override
-	public List<Invoice> getUnpaidInvoice(Integer contactId,ContactTypeEnum type) {
-		return supplierInvoiceDao.getUnpaidInvoice(contactId,type);
+	public List<Invoice> getUnpaidInvoice(Integer contactId, ContactTypeEnum type) {
+		return supplierInvoiceDao.getUnpaidInvoice(contactId, type);
 	}
-	
+
 	/**
-	 * @author $@urabh : get invoice suggestion for transaction explanation created on:28/05/2020
-	 * @param InvoiceStatusEnum type
-	 * @param BigDecimal amount 
+	 * @author $@urabh : get invoice suggestion for transaction explanation created
+	 *         on:28/05/2020
+	 * @param Integer    contactId
+	 * @param BigDecimal amount
 	 * @return list invoiceList
 	 */
 	@Override
-	public List<Invoice> getSuggestionUnpaidInvoices(BigDecimal amount,ContactTypeEnum type) {
-		return supplierInvoiceDao.getSuggestionUnpaidInvoices(amount,type);
+	public List<Invoice> getSuggestionInvoices(BigDecimal amount, Integer contactId, ContactTypeEnum type) {
+
+		List<Invoice> responseList = new ArrayList<Invoice>();
+
+		List<Invoice> invoiceList = supplierInvoiceDao.getSuggestionUnpaidInvoices(amount, contactId, type);
+		List<CustomerInvoiceReceipt> mappedCustomerInvoiceReceipt = customerInvoiceReceiptDao.dumpData();
+
+		List<Invoice> mappedInvoices = getMappedInvoices(mappedCustomerInvoiceReceipt);
+
+		Set<Integer> mappedInvIdSet = new HashSet<>();
+
+		for (Invoice invoice : mappedInvoices) {
+			mappedInvIdSet.add(invoice.getId());
+		}
+		if (invoiceList != null && !invoiceList.isEmpty()) {
+			for (Invoice invoice : invoiceList) {
+				if (!mappedInvIdSet.contains(invoice.getId())) {
+					responseList.add(invoice);
+				}
+			}
+		}
+		return responseList;
+	}
+
+	private List<Invoice> getMappedInvoices(List<CustomerInvoiceReceipt> mappedCustomerInvoiceReceipt) {
+		List<Invoice> invoiceList = new ArrayList<Invoice>();
+		for (CustomerInvoiceReceipt customerInvoiceReceipt : mappedCustomerInvoiceReceipt) {
+			invoiceList.add(customerInvoiceReceipt.getCustomerInvoice());
+		}
+		return invoiceList;
 	}
 }

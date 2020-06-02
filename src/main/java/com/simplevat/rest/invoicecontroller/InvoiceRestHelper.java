@@ -47,6 +47,7 @@ import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.DateUtils;
 import com.simplevat.utils.FileHelper;
 import com.simplevat.utils.MailUtility;
@@ -54,6 +55,7 @@ import com.simplevat.utils.MailUtility;
 @Service
 public class InvoiceRestHelper {
 	private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
+	private static final String dateFormat = "dd/MM/yyyy";
 	@Autowired
 	VatCategoryService vatCategoryService;
 
@@ -92,6 +94,9 @@ public class InvoiceRestHelper {
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	private DateFormatUtil dateFormtUtil;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -149,7 +154,8 @@ public class InvoiceRestHelper {
 		return invoice;
 	}
 
-	private void lineItemString(InvoiceRequestModel invoiceModel, Integer userId, Invoice invoice, List<InvoiceLineItemModel> itemModels) {
+	private void lineItemString(InvoiceRequestModel invoiceModel, Integer userId, Invoice invoice,
+			List<InvoiceLineItemModel> itemModels) {
 		if (invoiceModel.getLineItemsString() != null && !invoiceModel.getLineItemsString().isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
 			try {
@@ -279,7 +285,8 @@ public class InvoiceRestHelper {
 		return requestModel;
 	}
 
-	private void invoiceLineItems(Invoice invoice, InvoiceRequestModel requestModel, List<InvoiceLineItemModel> lineItemModels) {
+	private void invoiceLineItems(Invoice invoice, InvoiceRequestModel requestModel,
+			List<InvoiceLineItemModel> lineItemModels) {
 		if (invoice.getInvoiceLineItems() != null && !invoice.getInvoiceLineItems().isEmpty()) {
 			for (InvoiceLineItem lineItem : invoice.getInvoiceLineItems()) {
 				InvoiceLineItemModel model = getLineItemModel(lineItem);
@@ -339,15 +346,13 @@ public class InvoiceRestHelper {
 
 	private void invoiceDueDate(Invoice invoice, InvoiceListModel model) {
 		if (invoice.getInvoiceDueDate() != null) {
-			Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
-			model.setInvoiceDueDate(date);
+			model.setInvoiceDueDate(dateFormtUtil.getLocalDateTimeAsString(invoice.getInvoiceDueDate(), dateFormat));
 		}
 	}
 
 	private void invoiceDate(Invoice invoice, InvoiceListModel model) {
 		if (invoice.getInvoiceDate() != null) {
-			Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
-			model.setInvoiceDate(date);
+			model.setInvoiceDate(dateFormtUtil.getLocalDateTimeAsString(invoice.getInvoiceDate(), dateFormat));
 		}
 	}
 
@@ -484,7 +489,7 @@ public class InvoiceRestHelper {
 				if (user.getCompany() != null)
 					invoiceDataMap.put(value, user.getCompany().getCompanyName());
 				break;
-				default:
+			default:
 			}
 		}
 		return invoiceDataMap;
@@ -599,7 +604,6 @@ public class InvoiceRestHelper {
 		List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);
 		Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
 		Map<Integer, TransactionCategory> tnxcatMap = new HashMap<>();
-		TransactionCategory category = null;
 		customerInvoice(isCustomerInvoice, invoiceLineItemList, tnxcatIdInvLnItemMap, tnxcatMap);
 
 		for (Integer categoryId : tnxcatIdInvLnItemMap.keySet()) {
@@ -650,7 +654,8 @@ public class InvoiceRestHelper {
 		return journal;
 	}
 
-	private void customerInvoice(boolean isCustomerInvoice, List<InvoiceLineItem> invoiceLineItemList, Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap, Map<Integer, TransactionCategory> tnxcatMap) {
+	private void customerInvoice(boolean isCustomerInvoice, List<InvoiceLineItem> invoiceLineItemList,
+			Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap, Map<Integer, TransactionCategory> tnxcatMap) {
 		TransactionCategory category;
 		for (InvoiceLineItem lineItem : invoiceLineItemList) {
 			// sales for customer

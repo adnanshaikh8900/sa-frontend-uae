@@ -9,4 +9,5 @@ public interface CustomerInvoiceReceiptDao extends Dao<Integer, CustomerInvoiceR
 	public List<CustomerInvoiceReceipt> findAllForInvoice(Integer invoiceId);
 
 	public List<CustomerInvoiceReceipt> findForReceipt(Integer receiptId);
+	
 }

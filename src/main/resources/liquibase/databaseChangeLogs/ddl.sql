@@ -153,3 +153,7 @@ alter table PAYMENT add column PAYMENT_NO varchar(255);
 alter table PAYMENT add column REFERENCE_NO varchar(255);
 alter table PAYMENT add column DEPOSITE_TO_TRANSACTION_CATEGORY_ID integer;
 alter table PAYMENT add constraint FK477s0wc9n8l6oupyoqk4v2g3c foreign key (DEPOSITE_TO_TRANSACTION_CATEGORY_ID) references TRANSACTION_CATEGORY (TRANSACTION_CATEGORY_ID);
+
+--changeset 30/05/2020 SAURABH:ddl-9
+alter table EXPLANATION_STATUS add column INVOICE_ID integer;
+alter table EXPLANATION_STATUS add constraint FKsbltb842k4hgrmpcg6a66oywp foreign key (INVOICE_ID) references INVOICE (ID);

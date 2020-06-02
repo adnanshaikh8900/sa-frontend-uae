@@ -177,7 +177,7 @@ public class ReceiptController {
 
 			// save data in Mapping Table
 			List<CustomerInvoiceReceipt> customerInvoiceReceiptList = receiptRestHelper
-					.getCustomerInvoiceReceiptEntity(receiptRequestModel);
+					.getCustomerInvoiceReceiptEntity(receiptRequestModel.getPaidInvoiceListStr());
 			for (CustomerInvoiceReceipt customerInvoiceReceipt : customerInvoiceReceiptList) {
 				customerInvoiceReceipt.setReceipt(receipt);
 				customerInvoiceReceipt.setCreatedBy(userId);

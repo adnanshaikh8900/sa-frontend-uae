@@ -84,7 +84,7 @@ public class ReconsilationRestHelper {
 			break;
 
 		case SALES:
-			journal = invoiceReconsile(invoiceIdList, userId, transactionCategoryCode, transaction.getTransactionId());
+//			journal = invoiceReconsile(invoiceIdList, userId, transaction.getTransactionId(), transactionCategoryCode);
 			break;
 		}
 		return journal;

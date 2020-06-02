@@ -39,6 +39,6 @@ public interface InvoiceDao extends Dao<Integer, Invoice> {
 
 	public List<Invoice> getUnpaidInvoice(Integer customerId, ContactTypeEnum type);
 
-	public List<Invoice> getSuggestionUnpaidInvoices(BigDecimal amount, ContactTypeEnum type);
+	public List<Invoice> getSuggestionUnpaidInvoices(BigDecimal amount, Integer contactId,ContactTypeEnum type);
 
 }

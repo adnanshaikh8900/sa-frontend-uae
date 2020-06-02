@@ -5,6 +5,8 @@
  */
 package com.simplevat.rest.transactioncontroller;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -14,7 +16,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,24 +45,28 @@ import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
+import com.simplevat.entity.Contact;
+import com.simplevat.entity.CustomerInvoiceReceipt;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
-import com.simplevat.entity.JournalLineItem;
+import com.simplevat.entity.Receipt;
+import com.simplevat.entity.TransactionStatus;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.entity.bankaccount.TransactionStatus;
 import com.simplevat.helper.TransactionHelper;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
-import com.simplevat.rest.invoicecontroller.InvoiceRestHelper;
+import com.simplevat.rest.receiptcontroller.ReceiptRestHelper;
 import com.simplevat.rest.reconsilationcontroller.ReconsilationRestHelper;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.BankAccountService;
 import com.simplevat.service.ChartOfAccountCategoryService;
 import com.simplevat.service.ContactService;
+import com.simplevat.service.CustomerInvoiceReceiptService;
 import com.simplevat.service.EmployeeService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
+import com.simplevat.service.ReceiptService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
@@ -72,8 +77,6 @@ import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
-
-import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -139,7 +142,13 @@ public class TransactionRestController {
 	private InvoiceService invoiceService;
 
 	@Autowired
-	private InvoiceRestHelper invoiceRestHelper;
+	private ReceiptService receiptService;
+
+	@Autowired
+	private CustomerInvoiceReceiptService customerInvoiceReceiptService;
+
+	@Autowired
+	private ReceiptRestHelper receiptRestHelper;
 
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
@@ -187,6 +196,7 @@ public class TransactionRestController {
 		try {
 
 			if (transactionPresistModel != null) {
+				// TRNSACTION ENTITY CREATION
 				Journal journal = null;
 
 				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -252,37 +262,75 @@ public class TransactionRestController {
 					}
 				}
 
+				// JOURNAL LINE ITEM FOR normal transaction
 				journal = reconsilationRestHelper.get(
 						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
 						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
 						trnx, itemModels);
 
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
-				journalService.persist(journal);
+				if (journal != null) {
+					journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+							transactionPresistModel.getDATE_FORMAT()));
+					journalService.persist(journal);
+				}
 
 				if (transactionPresistModel.getInvoiceIdList() != null) {
+
+					Contact contact = null;
+					BigDecimal totalAmt = BigDecimal.ZERO;
+					List<CustomerInvoiceReceipt> customerInvoiceReceiptList = new ArrayList<>();
+
 					for (ReconsileRequestLineItemModel invoice : transactionPresistModel.getInvoiceIdList()) {
-						// update middle table mapping
+						// Update invoice Payment status
+						Invoice invoiceEntity = invoiceService.findByPK(invoice.getInvoiceId());
+
+						contact = invoiceEntity.getContact();
+						totalAmt = totalAmt.add(invoiceEntity.getTotalAmount());
+
+						invoiceEntity.setStatus(invoice.getRemainingInvoiceAmount().compareTo(BigDecimal.ZERO) == 0
+								? InvoiceStatusEnum.PAID.getValue()
+								: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+						invoiceEntity.setDueAmount(BigDecimal.ZERO);
+						// invoiceService.update(invoiceEntity);
+
+						// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
 						TransactionStatus status = new TransactionStatus();
 						status.setCreatedBy(userId);
 						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
 						status.setTransaction(trnx);
 						status.setRemainingToExplain(invoice.getRemainingInvoiceAmount());
-						status.setReconsileJournal(journal);
+						status.setInvoice(invoiceEntity);
+
 						transactionStatusService.persist(status);
 
-						// Update invoice Payment status and make entry in journal
-						Invoice invoiceEntity = invoiceService.findByPK(invoice.getInvoiceId());
-						Journal paidInvoiceJournal = invoiceRestHelper
-								.invoicePosting(new PostingRequestModel(invoice.getInvoiceId()), userId);
-						journalService.persist(paidInvoiceJournal);
-						invoiceEntity.setStatus(invoice.getRemainingInvoiceAmount().compareTo(BigDecimal.ZERO) == 0
-								? InvoiceStatusEnum.PAID.getValue()
-								: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
-						invoiceEntity.setDueAmount(BigDecimal.ZERO);
-						invoiceService.update(invoiceEntity);
+						// CREATE MAPPNG BETWEEN RECEIPT AND INVOICE
+						CustomerInvoiceReceipt customerInvoiceReceipt = new CustomerInvoiceReceipt();
+						customerInvoiceReceipt.setCustomerInvoice(invoiceEntity);
+						customerInvoiceReceipt.setPaidAmount(invoiceEntity.getTotalAmount());
+						customerInvoiceReceipt.setDeleteFlag(Boolean.FALSE);
+						customerInvoiceReceipt.setDueAmount(BigDecimal.ZERO);
+						customerInvoiceReceiptList.add(customerInvoiceReceipt);
+
 					}
+
+					// CREATE RECEIPT
+					Receipt receipt = transactionHelper.getEntity(contact, totalAmt,
+							trnx.getBankAccount().getTransactionCategory());
+					receiptService.persist(receipt, userId);
+
+					// POST JOURNAL FOR RECCEPT
+					Journal journalForReceipt = receiptRestHelper.receiptPosting(
+							new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+							receipt.getDepositeToTransactionCategory());
+					journalService.persist(journalForReceipt);
+
+					// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
+					for (CustomerInvoiceReceipt customerInvoiceReceipt : customerInvoiceReceiptList) {
+						customerInvoiceReceipt.setReceipt(receipt);
+						customerInvoiceReceipt.setCreatedBy(userId);
+						customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+					}
+
 				}
 
 				return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
@@ -301,21 +349,24 @@ public class TransactionRestController {
 		try {
 
 			if (transactionPresistModel != null) {
-				List<Journal> journalList = null;
+				// TRNSACTION ENTITY CREATION
+				Journal journal = null;
 
 				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 				Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId());
-				trnx.setCreatedBy(userId);
+				trnx.setLastUpdateBy(userId);
 				trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
 				boolean isDebit = ChartOfAccountCategoryIdEnumConstant.isDebitedFromBank(
 						trnx.getCoaCategory().getParentChartOfAccount().getChartOfAccountCategoryId());
 				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
 				trnx.setTransactionAmount(transactionPresistModel.getAmount());
+				trnx.setCreationMode(TransactionCreationMode.MANUAL);
 				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
 				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
-				trnx.setExplainedTransactionCategory(
-						transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
+				if (transactionPresistModel.getTransactionCategoryId() != null)
+					trnx.setExplainedTransactionCategory(
+							transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
 
 				if (transactionPresistModel.getDescription() != null) {
 					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
@@ -350,49 +401,93 @@ public class TransactionRestController {
 							transactionPresistModel.getAttachmentFile().getOriginalFilename());
 					trnx.setExplainedTransactionAttachmentPath(filePath);
 				}
-				transactionService.update(trnx);
+				transactionService.persist(trnx);
 
-				// remove old entries
-				List<TransactionStatus> trnxStatusList = transactionStatusService
-						.findAllTransactionStatuesByTrnxId(transactionPresistModel.getTransactionId());
-				transactionStatusService.deleteList(trnxStatusList);
-
-//				journalList = reconsilationRestHelper.get(
-//						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
-//						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
-//						trnx, transactionPresistModel.getInvoiceIdList());
-
-				Map<Integer, BigDecimal> invoiceIdAmtMap = new HashMap<>();
-				if (transactionPresistModel.getInvoiceIdList() != null) {
-					for (ReconsileRequestLineItemModel invoice : transactionPresistModel.getInvoiceIdList()) {
-						invoiceIdAmtMap.put(invoice.getInvoiceId(), invoice.getRemainingInvoiceAmount());
+				List<ReconsileRequestLineItemModel> itemModels = new ArrayList<>();
+				if (transactionPresistModel.getInvoiceIdListStr() != null
+						&& !transactionPresistModel.getInvoiceIdListStr().isEmpty()) {
+					ObjectMapper mapper = new ObjectMapper();
+					try {
+						itemModels = mapper.readValue(transactionPresistModel.getInvoiceIdListStr(),
+								new TypeReference<List<ReconsileRequestLineItemModel>>() {
+								});
+					} catch (IOException ex) {
+						logger.error(ERROR, ex);
 					}
 				}
 
-				if (journalList != null && !journalList.isEmpty()) {
-					List<TransactionStatus> transationStatusList = new ArrayList<>();
-					for (Journal journal : journalList) {
+				// JOURNAL LINE ITEM FOR normal transaction
+				journal = reconsilationRestHelper.get(
+						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
+						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
+						trnx, itemModels);
 
-						JournalLineItem item = journal.getJournalLineItems().iterator().next();
+				if (journal != null) {
+					journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+							transactionPresistModel.getDATE_FORMAT()));
+					journalService.persist(journal);
+				}
 
-						journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(
-								transactionPresistModel.getDate(), transactionPresistModel.getDATE_FORMAT()));
-						journalService.persist(journal);
+				if (transactionPresistModel.getInvoiceIdList() != null) {
+
+					Contact contact = null;
+					BigDecimal totalAmt = BigDecimal.ZERO;
+					List<CustomerInvoiceReceipt> customerInvoiceReceiptList = new ArrayList<>();
+
+					for (ReconsileRequestLineItemModel invoice : itemModels) {
+						// Update invoice Payment status
+						Invoice invoiceEntity = invoiceService.findByPK(invoice.getInvoiceId());
+
+						contact = invoiceEntity.getContact();
+						totalAmt = totalAmt.add(invoiceEntity.getTotalAmount());
+						if (invoiceEntity.getStatus() < InvoiceStatusEnum.PAID.getValue()) {
+							invoiceEntity.setStatus(invoice.getRemainingInvoiceAmount().compareTo(BigDecimal.ZERO) == 0
+									? InvoiceStatusEnum.PAID.getValue()
+									: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+							invoiceEntity.setDueAmount(BigDecimal.ZERO);
+							invoiceService.update(invoiceEntity);
+						}
+						// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
 						TransactionStatus status = new TransactionStatus();
 						status.setCreatedBy(userId);
 						status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
 						status.setTransaction(trnx);
-						status.setRemainingToExplain(invoiceIdAmtMap.containsKey(item.getReferenceId())
-								? invoiceIdAmtMap.get(item.getReferenceId())
-								: BigDecimal.ZERO);
-						status.setReconsileJournal(journal);
+						status.setRemainingToExplain(invoice.getRemainingInvoiceAmount());
+						status.setInvoice(invoiceEntity);
+
 						transactionStatusService.persist(status);
 
-						transationStatusList.add(status);
+						// CREATE MAPPNG BETWEEN RECEIPT AND INVOICE
+						CustomerInvoiceReceipt customerInvoiceReceipt = new CustomerInvoiceReceipt();
+						customerInvoiceReceipt.setCustomerInvoice(invoiceEntity);
+						customerInvoiceReceipt.setPaidAmount(invoiceEntity.getTotalAmount());
+						customerInvoiceReceipt.setDeleteFlag(Boolean.FALSE);
+						customerInvoiceReceipt.setDueAmount(BigDecimal.ZERO);
+						customerInvoiceReceiptList.add(customerInvoiceReceipt);
+
 					}
+
+					// CREATE RECEIPT
+					Receipt receipt = transactionHelper.getEntity(contact, totalAmt,
+							trnx.getBankAccount().getTransactionCategory());
+					receiptService.persist(receipt, userId);
+
+					// POST JOURNAL FOR RECCEPT
+					Journal journalForReceipt = receiptRestHelper.receiptPosting(
+							new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+							receipt.getDepositeToTransactionCategory());
+					journalService.persist(journalForReceipt);
+
+					// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
+					for (CustomerInvoiceReceipt customerInvoiceReceipt : customerInvoiceReceiptList) {
+						customerInvoiceReceipt.setReceipt(receipt);
+						customerInvoiceReceipt.setCreatedBy(userId);
+						customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+					}
+
 				}
 
-				return new ResponseEntity<>("Updated successful", HttpStatus.OK);
+				return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);

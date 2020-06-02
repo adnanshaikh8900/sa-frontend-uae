@@ -316,10 +316,10 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
 	@GetMapping(value = "/getSuggestionUnpaidInvoices")
 	public ResponseEntity<List<InvoiceDueAmountModel>> getSuggestionUnpaidInvoices(
-			@RequestParam("amount") BigDecimal amount, @RequestParam("cdFlag") String cdFlag) {
+			@RequestParam("amount") BigDecimal amount,@RequestParam("id") Integer contactId,
+			@RequestParam("type") ContactTypeEnum type) {
 		try {
-			List<Invoice> invoiceList = invoiceService.getSuggestionUnpaidInvoices(amount,
-					cdFlag.startsWith("D") ? ContactTypeEnum.SUPPLIER : ContactTypeEnum.CUSTOMER);
+			List<Invoice> invoiceList = invoiceService.getSuggestionInvoices(amount, contactId, type);
 			return new ResponseEntity<>(invoiceRestHelper.getDueInvoiceList(invoiceList), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

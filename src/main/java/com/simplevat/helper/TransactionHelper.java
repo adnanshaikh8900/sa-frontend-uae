@@ -5,26 +5,28 @@
  */
 package com.simplevat.helper;
 
-import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.entity.bankaccount.TransactionStatus;
-import com.simplevat.rest.ReconsileRequestLineItemModel;
-import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
-import com.simplevat.rest.transactioncontroller.TransactionViewModel;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.service.bankaccount.TransactionStatusService;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
-import com.simplevat.utils.DateFormatUtil;
-import com.simplevat.utils.FileHelper;
-
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
+import com.simplevat.constant.PayMode;
+import com.simplevat.entity.Contact;
+import com.simplevat.entity.Receipt;
+import com.simplevat.entity.bankaccount.Transaction;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.entity.TransactionStatus;
+import com.simplevat.rest.ReconsileRequestLineItemModel;
+import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
+import com.simplevat.rest.transactioncontroller.TransactionViewModel;
+import com.simplevat.service.ContactService;
+import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.bankaccount.TransactionStatusService;
+import com.simplevat.utils.DateFormatUtil;
 
 /**
  *
@@ -34,28 +36,16 @@ import org.springframework.stereotype.Service;
 public class TransactionHelper {
 
 	@Autowired
-	private ChartOfAccountService chartOfAccountService;
-
-	@Autowired
-	private TransactionCategoryService transactionCategoryService;
-
-	@Autowired
-	private ProjectService projectService;
-
-	@Autowired
-	private BankAccountService bankAccountService;
-
-	@Autowired
 	private DateFormatUtil dateUtil;
 
 	@Autowired
-	private TransactionService transactionService;
-
-	@Autowired
-	private FileHelper fileHelper;
-
-	@Autowired
 	private TransactionStatusService transactionStatusService;
+
+	@Autowired
+	private ContactService contactService;
+
+	@Autowired
+	private TransactionCategoryService transactionCategoryService;
 
 //	public Transaction getEntity(TransactionPresistModel transactionModel) {
 //		Transaction transaction = new Transaction();
@@ -113,7 +103,6 @@ public class TransactionHelper {
 //		return transaction;
 //	}
 
-
 	public List<TransactionViewModel> getModelList(Object trasactionList) {
 
 		List<TransactionViewModel> transactionModelList = new ArrayList<>();
@@ -161,9 +150,11 @@ public class TransactionHelper {
 		model.setTransactionId(transaction.getTransactionId());
 		if (transaction.getCoaCategory() != null)
 			model.setCoaCategoryId(transaction.getCoaCategory().getChartOfAccountCategoryId());
-		if (transaction.getExplainedTransactionCategory() != null)
-			model.setTransactionCategoryLabel(transaction.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
+		if (transaction.getExplainedTransactionCategory() != null) {
+			model.setTransactionCategoryLabel(
+					transaction.getExplainedTransactionCategory().getChartOfAccount().getChartOfAccountName());
 			model.setTransactionCategoryId(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
+		}
 		model.setAmount(transaction.getTransactionAmount());
 		if (transaction.getTransactionDate() != null)
 			model.setDate(dateUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), model.getDATE_FORMAT()));
@@ -176,7 +167,7 @@ public class TransactionHelper {
 		if (transaction.getExplinationVendor() != null)
 			model.setVendorId(transaction.getExplinationVendor().getContactId());
 		if (transaction.getExplinationCustomer() != null)
-			model.setVendorId(transaction.getExplinationCustomer().getContactId());
+			model.setCustomerId(transaction.getExplinationCustomer().getContactId());
 
 		// MONEY PAID TO USER
 		// MONEY RECEIVED FROM OTHER
@@ -185,7 +176,7 @@ public class TransactionHelper {
 
 		// Transafer To
 		if (transaction.getExplinationEmployee() != null)
-			model.setVendorId(transaction.getBankAccount().getBankAccountId());
+			model.setEmployeeId(transaction.getExplinationEmployee().getId());
 		if (transaction.getCoaCategory() != null && transaction.getCoaCategory().getChartOfAccountCategoryId()
 				.equals(ChartOfAccountCategoryIdEnumConstant.SALES.getId())) {
 			// SALES
@@ -195,7 +186,7 @@ public class TransactionHelper {
 
 			for (TransactionStatus status : trnxStatusList) {
 				invoiceIdList.add(new ReconsileRequestLineItemModel(
-						status.getReconsileJournal().getJournalLineItems().stream().findFirst().get().getReferenceId(),
+						status.getInvoice().getId(),
 						status.getRemainingToExplain()));
 			}
 			model.setInvoiceIdList(invoiceIdList);
@@ -204,4 +195,20 @@ public class TransactionHelper {
 
 		return model;
 	}
+
+	public Receipt getEntity(Contact contact, BigDecimal totalAmt, TransactionCategory depositeToTransationCategory) {
+		Receipt receipt = new Receipt();
+		receipt.setContact(contact);
+		receipt.setAmount(totalAmt);
+		// receipt.setNotes(receiptRequestModel.getNotes());
+		receipt.setReceiptNo("1");
+		// receipt.setReferenceCode(receiptRequestModel.getReferenceCode());
+		receipt.setReceiptDate(LocalDateTime.now());
+		receipt.setPayMode(PayMode.BANK);
+		receipt.setDepositeToTransactionCategory(
+				// bank transacton category id
+				depositeToTransationCategory);
+		return receipt;
+	}
+
 }

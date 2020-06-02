@@ -40,6 +40,7 @@ import com.simplevat.entity.ChartOfAccountCategory;
 import com.simplevat.entity.Contact;
 import com.simplevat.entity.Employee;
 import com.simplevat.entity.Project;
+import com.simplevat.entity.TransactionStatus;
 import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.converter.DateConverter;
 

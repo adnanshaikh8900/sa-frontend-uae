@@ -156,20 +156,21 @@ public class InvoiceServiceImpl extends InvoiceService {
 	 * @return list invoiceList
 	 */
 	@Override
-	public List<Invoice> getSuggestionInvoices(BigDecimal amount, Integer contactId, ContactTypeEnum type) {
+	public List<Invoice> getSuggestionInvoices(BigDecimal amount, Integer contactId, ContactTypeEnum type,
+			Integer userId) {
 
 		List<Invoice> responseList = new ArrayList<Invoice>();
-
-		List<Invoice> invoiceList = supplierInvoiceDao.getSuggestionUnpaidInvoices(amount, contactId, type);
-		List<CustomerInvoiceReceipt> mappedCustomerInvoiceReceipt = customerInvoiceReceiptDao.dumpData();
-
-		List<Invoice> mappedInvoices = getMappedInvoices(mappedCustomerInvoiceReceipt);
-
 		Set<Integer> mappedInvIdSet = new HashSet<>();
 
-		for (Invoice invoice : mappedInvoices) {
-			mappedInvIdSet.add(invoice.getId());
-		}
+		List<CustomerInvoiceReceipt> mappedCustomerInvoiceReceipt = customerInvoiceReceiptDao.dumpData();
+		List<Invoice> mappedInvoices = getMappedInvoices(mappedCustomerInvoiceReceipt);
+
+		if (mappedInvoices != null && !mappedInvoices.isEmpty())
+			for (Invoice invoice : mappedInvoices) {
+				mappedInvIdSet.add(invoice.getId());
+			}
+
+		List<Invoice> invoiceList = supplierInvoiceDao.getSuggestionUnpaidInvoices(amount, contactId, type, userId);
 		if (invoiceList != null && !invoiceList.isEmpty()) {
 			for (Invoice invoice : invoiceList) {
 				if (!mappedInvIdSet.contains(invoice.getId())) {

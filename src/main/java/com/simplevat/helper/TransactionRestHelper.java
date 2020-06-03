@@ -28,16 +28,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TransactionRestHelper {
-
-	@Autowired
-	private InvoiceService invoiceService;
-
-	@Autowired
-	private PurchaseService purchaseService;
-
 	@Getter
 	@Setter
 	private List<TransactionViewRestModel> childTransactions = new ArrayList<>();
+
+	// TODO : remove coented code after chceking effect of referenceId and
+	// refrenceType in front end
 
 	public Transaction getTransactionEntity(TransactionRestModel model) {
 		Transaction transaction = new Transaction();
@@ -52,7 +48,7 @@ public class TransactionRestHelper {
 		transaction.setChartOfAccount(model.getChartOfAccountId());
 		transaction.setReceiptNumber(model.getReceiptNumber());
 		transaction.setDebitCreditFlag(model.getDebitCreditFlag());
-		transaction.setProject(model.getProject());
+		//transaction.setProject(model.getProject());
 		transaction.setExplainedTransactionCategory(model.getExplainedTransactionCategory());
 		transaction.setExplainedTransactionDescription(model.getExplainedTransactionDescription());
 		transaction
@@ -68,8 +64,8 @@ public class TransactionRestHelper {
 		transaction.setVersionNumber(model.getVersionNumber());
 		transaction.setEntryType(model.getEntryType());
 		transaction.setParentTransaction(model.getParentTransaction());
-		transaction.setReferenceId(model.getReferenceId());
-		transaction.setReferenceType(model.getReferenceType());
+//		transaction.setReferenceId(model.getReferenceId());
+//		transaction.setReferenceType(model.getReferenceType());
 		transaction.setCreationMode(TransactionCreationMode.MANUAL);
 		if (model.getChildTransactionList() != null && !model.getChildTransactionList().isEmpty()) {
 			model.getChildTransactionList().remove(model.getChildTransactionList().size() - 1);
@@ -93,7 +89,7 @@ public class TransactionRestHelper {
 		transactionModel.setChartOfAccountId(entity.getChartOfAccount());
 		transactionModel.setReceiptNumber(entity.getReceiptNumber());
 		transactionModel.setDebitCreditFlag(entity.getDebitCreditFlag());
-		transactionModel.setProject(entity.getProject());
+//		transactionModel.setProject(entity.getProject());
 		transactionModel.setExplainedTransactionCategory(entity.getExplainedTransactionCategory());
 		transactionModel.setExplainedTransactionDescription(entity.getExplainedTransactionDescription());
 		transactionModel
@@ -109,19 +105,19 @@ public class TransactionRestHelper {
 		transactionModel.setVersionNumber(entity.getVersionNumber());
 		transactionModel.setEntryType(entity.getEntryType());
 		transactionModel.setParentTransaction(entity.getParentTransaction());
-		transactionModel.setReferenceId(entity.getReferenceId());
-		transactionModel.setReferenceType(entity.getReferenceType());
+//		transactionModel.setReferenceId(entity.getReferenceId());
+//		transactionModel.setReferenceType(entity.getReferenceType());
 		transactionModel.setChildTransactionList(getChildTransactionModelList(entity.getChildTransactionList()));
-		if (entity.getReferenceType() != null) {
-			if (entity.getReferenceType() == TransactionRefrenceTypeConstant.INVOICE) {
-				transactionModel.setReferenceTypeName("Invoice");
-		} else if (entity.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
-				transactionModel.setReferenceTypeName("Purchase");
-				Purchase purchase = purchaseService.findByPK(entity.getReferenceId());
-				transactionModel.setRefObject(purchase);
-				transactionModel.setReferenceName("Purchase : " + purchase.getReceiptNumber());
-			}
-		}
+//		if (entity.getReferenceType() != null) {
+//			if (entity.getReferenceType() == TransactionRefrenceTypeConstant.INVOICE) {
+//				transactionModel.setReferenceTypeName("Invoice");
+//		} else if (entity.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
+//				transactionModel.setReferenceTypeName("Purchase");
+//				Purchase purchase = purchaseService.findByPK(entity.getReferenceId());
+//				transactionModel.setRefObject(purchase);
+//				transactionModel.setReferenceName("Purchase : " + purchase.getReceiptNumber());
+//			}
+//		}
 
 		return transactionModel;
 	}
@@ -168,7 +164,7 @@ public class TransactionRestHelper {
 				transaction.setChartOfAccount(model.getChartOfAccountId());
 				transaction.setReceiptNumber(model.getReceiptNumber());
 				transaction.setDebitCreditFlag(model.getDebitCreditFlag());
-				transaction.setProject(model.getProject());
+//				transaction.setProject(model.getProject());
 				transaction.setExplainedTransactionCategory(model.getExplainedTransactionCategory());
 				transaction.setExplainedTransactionDescription(model.getExplainedTransactionDescription());
 				transaction.setExplainedTransactionAttachementDescription(
@@ -184,8 +180,8 @@ public class TransactionRestHelper {
 				transaction.setVersionNumber(model.getVersionNumber());
 				transaction.setEntryType(model.getEntryType());
 				transaction.setParentTransaction(model.getParentTransaction());
-				transaction.setReferenceId(model.getReferenceId());
-				transaction.setReferenceType(model.getReferenceType());
+//				transaction.setReferenceId(model.getReferenceId());
+//				transaction.setReferenceType(model.getReferenceType());
 
 				transactionList.add(transaction);
 			}
@@ -211,7 +207,7 @@ public class TransactionRestHelper {
 				transactionModel.setChartOfAccountId(transaction.getChartOfAccount());
 				transactionModel.setReceiptNumber(transaction.getReceiptNumber());
 				transactionModel.setDebitCreditFlag(transaction.getDebitCreditFlag());
-				transactionModel.setProject(transaction.getProject());
+//				transactionModel.setProject(transaction.getProject());
 				transactionModel.setExplainedTransactionCategory(transaction.getExplainedTransactionCategory());
 				transactionModel.setExplainedTransactionDescription(transaction.getExplainedTransactionDescription());
 				transactionModel.setExplainedTransactionAttachementDescription(
@@ -227,21 +223,21 @@ public class TransactionRestHelper {
 				transactionModel.setVersionNumber(transaction.getVersionNumber());
 				transactionModel.setEntryType(transaction.getEntryType());
 				transactionModel.setParentTransaction(transaction.getParentTransaction());
-				transactionModel.setReferenceId(transaction.getReferenceId());
-				transactionModel.setReferenceType(transaction.getReferenceType());
-				if (transaction.getReferenceType() != null) {
-					if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.INVOICE) {
-						transactionModel.setReferenceTypeName("Invoice");
-						Invoice invoice = invoiceService.findByPK(transaction.getReferenceId());
-						transactionModel.setRefObject(invoice);
-						transactionModel.setReferenceName("Invoice : " + invoice.getReferenceNumber());
-					} else if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
-						transactionModel.setReferenceTypeName("Purchase");
-						Purchase purchase = purchaseService.findByPK(transaction.getReferenceId());
-						transactionModel.setRefObject(purchase);
-						transactionModel.setReferenceName("Purchase : " + purchase.getReceiptNumber());
-					}
-				}
+//				transactionModel.setReferenceId(transaction.getReferenceId());
+//				transactionModel.setReferenceType(transaction.getReferenceType());
+//				if (transaction.getReferenceType() != null) {
+//					if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.INVOICE) {
+//						transactionModel.setReferenceTypeName("Invoice");
+//						Invoice invoice = invoiceService.findByPK(transaction.getReferenceId());
+//						transactionModel.setRefObject(invoice);
+//						transactionModel.setReferenceName("Invoice : " + invoice.getReferenceNumber());
+//					} else if (transaction.getReferenceType() == TransactionRefrenceTypeConstant.PURCHASE) {
+//						transactionModel.setReferenceTypeName("Purchase");
+//						Purchase purchase = purchaseService.findByPK(transaction.getReferenceId());
+//						transactionModel.setRefObject(purchase);
+//						transactionModel.setReferenceName("Purchase : " + purchase.getReceiptNumber());
+//					}
+//				}
 				transactionModelList.add(transactionModel);
 			}
 		}

@@ -91,9 +91,9 @@ public class Transaction implements Serializable {
 	@Column(name = "DEBIT_CREDIT_FLAG")
 	private Character debitCreditFlag;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLAINED_PROJECT_ID")
-	private Project project;
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "EXPLAINED_PROJECT_ID")
+//	private Project project;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EXPLAINED_TRANSACTION_CATEGORY_CODE")
@@ -192,11 +192,11 @@ public class Transaction implements Serializable {
 	@Column(name = "ENTRY_TYPE")
 	private Integer entryType;
 
-	@Column(name = "REFERENCE_ID")
-	private Integer referenceId;
-
-	@Column(name = "REFERENCE_TYPE")
-	private Integer referenceType;
+//	@Column(name = "REFERENCE_ID")
+//	private Integer referenceId;
+//
+//	@Column(name = "REFERENCE_TYPE")
+//	private Integer referenceType;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PARENT_TRANSACTION")

@@ -32,14 +32,23 @@ import javax.persistence.TypedQuery;
 @Transactional
 public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements ExpenseDao {
 
-	private static  final Logger LOGGER = LoggerFactory.getLogger(ExpenseDaoImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseDaoImpl.class);
 
 	@Autowired
 	private DatatableSortingFilterConstant dataTableUtil;
 
 	@Override
-	public List<Expense> getAllExpenses() {
-		return this.executeNamedQuery("allExpenses");
+	public List<Expense> getAllExpenses(Integer userId, List<Integer> statusList) {
+
+		List<Expense> expenseList = null;
+		try {
+			TypedQuery<Expense> query = getEntityManager().createNamedQuery("postedExpenses", Expense.class)
+					.setParameter("status", statusList).setParameter("userId", userId);
+			expenseList = query.getResultList();
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return expenseList;
 	}
 
 	@Override
@@ -48,7 +57,7 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 		try {
 			StringBuilder queryStringBuilder = new StringBuilder();
 			queryStringBuilder.append("select sum(e.expenseAmount) as expenseTotal,")
-			.append("CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate)) as month")
+					.append("CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate)) as month")
 					.append("from Expense e where e.deleteFlag = 'false' and e.expenseDate BETWEEN :startDate AND :endDate")
 					.append("group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))");
 
@@ -69,8 +78,8 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 			StringBuilder queryStringBuilder = new StringBuilder();
 
 			queryStringBuilder.append("select e.expenseAmount as expense, e.expenseDate as date,e.receiptNumber as ref")
-				.append("from Expense e where e.deleteFlag = 'false' ")
-				.append("and e.expenseDate BETWEEN :startDate AND :endDate order by e.expenseDate asc");
+					.append("from Expense e where e.deleteFlag = 'false' ")
+					.append("and e.expenseDate BETWEEN :startDate AND :endDate order by e.expenseDate asc");
 
 			Query query = getEntityManager().createQuery(queryStringBuilder.toString())
 					.setParameter(CommonColumnConstants.START_DATE, startDate, TemporalType.DATE)
@@ -88,13 +97,13 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 		try {
 			StringBuilder queryStringBuilder = new StringBuilder();
 
-			queryStringBuilder.append("select sum((li.expenseLineItemUnitPrice*li.expenseLineItemQuantity)*li.expenseLineItemVat/100) as vatOutTotal,")
-			.append("CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate)) as month")
-			.append("from Expense e JOIN e.expenseLineItems li ")
-			.append("where e.deleteFlag = 'false' and li.deleteFlag= 'false'")
-			.append("and e.expenseDate BETWEEN :startDate AND :endDate ")
-			.append("group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))")
-;
+			queryStringBuilder.append(
+					"select sum((li.expenseLineItemUnitPrice*li.expenseLineItemQuantity)*li.expenseLineItemVat/100) as vatOutTotal,")
+					.append("CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate)) as month")
+					.append("from Expense e JOIN e.expenseLineItems li ")
+					.append("where e.deleteFlag = 'false' and li.deleteFlag= 'false'")
+					.append("and e.expenseDate BETWEEN :startDate AND :endDate ")
+					.append("group by CONCAT(MONTH(e.expenseDate),'-' , Year(e.expenseDate))");
 
 			Query query = getEntityManager().createQuery(queryStringBuilder.toString())
 					.setParameter(CommonColumnConstants.START_DATE, startDate, TemporalType.DATE)
@@ -143,11 +152,12 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 		filterMap.forEach(
 				(productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
 						.condition(productFilter.getCondition()).value(value).build()));
-		paginationModel
-				.setSortingCol(dataTableUtil.getColName((paginationModel.getSortingCol()), DatatableSortingFilterConstant.EXPENSE));
+		paginationModel.setSortingCol(
+				dataTableUtil.getColName((paginationModel.getSortingCol()), DatatableSortingFilterConstant.EXPENSE));
 		PaginationResponseModel request = new PaginationResponseModel();
 		request.setData(this.executeQuery(dbFilters, paginationModel));
 		request.setCount(this.getResultCount(dbFilters));
 		return request;
 	}
+
 }

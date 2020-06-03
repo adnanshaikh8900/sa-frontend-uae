@@ -31,6 +31,6 @@ public abstract class InvoiceService extends SimpleVatService<Integer, Invoice> 
 
 	public abstract List<Invoice> getUnpaidInvoice(Integer contactId, ContactTypeEnum type);
 
-	public abstract List<Invoice> getSuggestionInvoices(BigDecimal amount, Integer contactId,ContactTypeEnum type);
+	public abstract List<Invoice> getSuggestionInvoices(BigDecimal amount, Integer contactId,ContactTypeEnum type,Integer userId);
 
 }

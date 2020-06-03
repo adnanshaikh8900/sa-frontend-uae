@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +73,8 @@ public class ReconsilationController {
 	private ContactService contactService;
 
 	@GetMapping(value = "/getByReconcilationCatCode")
-	public ResponseEntity<List<ReconsilationListModel>> getByReconcilationCatCode(@RequestParam int reconcilationCatCode) {
+	public ResponseEntity<List<ReconsilationListModel>> getByReconcilationCatCode(
+			@RequestParam int reconcilationCatCode) {
 		try {
 			return new ResponseEntity<>(
 					reconsilationRestHelper.getList(ReconsileCategoriesEnumConstant.get(reconcilationCatCode)),
@@ -86,7 +86,7 @@ public class ReconsilationController {
 	}
 
 	@GetMapping(value = "/getTransactionCat")
-	public ResponseEntity	getTransactionCategory(@RequestParam Integer chartOfAccountCategoryId) {
+	public ResponseEntity getTransactionCategory(@RequestParam Integer chartOfAccountCategoryId) {
 		try {
 			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);
 			Map<String, Object> param = new HashMap<>();
@@ -102,11 +102,9 @@ public class ReconsilationController {
 				List<InviceSingleLevelDropdownModel> invModelList = new ArrayList<>();
 
 				for (Invoice invice : invList) {
-					invModelList
-							.add(new InviceSingleLevelDropdownModel(
-									invice.getId(), "Ref No. " + invice.getReferenceNumber() + " "
-											+ invice.getTotalAmount() + " " + invice.getCurrency().getCurrencyName(),
-									invice.getTotalAmount()));
+					invModelList.add(new InviceSingleLevelDropdownModel(invice.getId(), invice.getReferenceNumber()
+							+ " (" + invice.getTotalAmount() + " " + invice.getCurrency().getCurrencyName()+")",
+							invice.getTotalAmount()));
 				}
 
 				list.add(new SingleLevelDropDownModel("Customer", contactService.getContactForDropdown(2)));

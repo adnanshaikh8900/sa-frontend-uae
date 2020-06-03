@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.InviceSingleLevelDropdownModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +35,17 @@ import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.entity.Expense;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
+import com.simplevat.helper.ExpenseRestHelper;
 import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.AbstractDoubleEntryRestController;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
+import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.FileHelper;
@@ -74,6 +80,11 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	@Autowired
 	private ChartUtil chartUtil;
 
+	@Autowired
+	private ExpenseRestHelper ExpenseRestHelper;
+
+	@Autowired
+	private ExpenseService expenseService;
 
 	@ApiOperation(value = "Get Invoice List")
 	@GetMapping(value = "/getList")
@@ -308,23 +319,50 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 
 	/**
-	 * Get Suggestion ofUnpaid Invoices for transaction explanation
+	 * Get Suggestion Invoices for transaction explanation
 	 * 
-	 * @param id Contact Id
-	 * @return list InvoiceDueAmountModel data list
+	 * @param Integer Contact Id
+	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
 	 */
 	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
-	@GetMapping(value = "/getSuggestionUnpaidInvoices")
-	public ResponseEntity<List<InvoiceDueAmountModel>> getSuggestionUnpaidInvoices(
-			@RequestParam("amount") BigDecimal amount,@RequestParam("id") Integer contactId,
-			@RequestParam("type") ContactTypeEnum type) {
+	@GetMapping(value = "/getSuggestionInvoicesFotCust")
+	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionUnpaidInvoicesForCustomer(
+			@RequestParam("amount") BigDecimal amount, @RequestParam("id") Integer contactId,
+			HttpServletRequest request) {
 		try {
-			List<Invoice> invoiceList = invoiceService.getSuggestionInvoices(amount, contactId, type);
-			return new ResponseEntity<>(invoiceRestHelper.getDueInvoiceList(invoiceList), HttpStatus.OK);
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			List<Invoice> invoiceList = invoiceService.getSuggestionInvoices(amount, contactId,
+					ContactTypeEnum.CUSTOMER, userId);
+			return new ResponseEntity<>(invoiceRestHelper.getDropDownModelList(invoiceList), HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
 
+	/**
+	 * Get Suggestion Invoices & expense for transaction explanation
+	 * 
+	 * @param Integer Contact Id
+	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
+	 */
+	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
+	@GetMapping(value = "/getSuggestionInvoicesFotVend")
+	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionUnpaidInvoicesForVendor(
+			@RequestParam("amount") BigDecimal amount, @RequestParam("id") Integer contactId,
+			HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			List<Invoice> invoiceList = invoiceService.getSuggestionInvoices(amount, contactId,
+					ContactTypeEnum.SUPPLIER, userId);
+			List<InviceSingleLevelDropdownModel> responseList = invoiceRestHelper.getDropDownModelList(invoiceList);
+
+			List<Expense> expenseList = expenseService.getUnMappedExpenses(userId);
+			responseList.addAll(ExpenseRestHelper.getDropDoenModelList(expenseList));
+			return new ResponseEntity<>(responseList, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }

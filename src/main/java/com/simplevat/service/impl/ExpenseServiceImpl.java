@@ -90,7 +90,6 @@ public class ExpenseServiceImpl extends ExpenseService {
 
 		List<Expense> expList = getExpenses(userId, Arrays.asList(InvoiceStatusEnum.POST.getValue()));
 
-		// TODO : get mapped invoice and chcek with it
 		List<Expense> mappedExp = transactionExpensesService.getMappedExpenses();
 
 		Set<Integer> mappedInvIdSet = new HashSet<>();

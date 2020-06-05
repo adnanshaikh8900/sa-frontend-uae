@@ -50,7 +50,7 @@ public class TransactionPresistModel implements Serializable {
 	private String invoiceIdListStr;
 
 	// SALES
-	private List<ReconsileRequestLineItemModel> invoiceIdList;
+	private List<ReconsileRequestLineItemModel> explainParamList;
 
 	private TransactionExplinationStatusEnum explinationStatusEnum;
 	

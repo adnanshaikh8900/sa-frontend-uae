@@ -31,8 +31,14 @@ public class TransactionExpensesServiceImpl extends TransactionExpensesService {
 			for (TransactionExpenses trExpense : list) {
 				expenseList.add(trExpense.getExpense());
 			}
+			return expenseList;
 		}
 		return null;
+	}
+
+	@Override
+	public List<TransactionExpenses> findAllForTransactionExpenses(Integer transactionId) {
+		return transactionExpensesdao.getMappedExpenses(transactionId);
 	}
 
 }

@@ -15,8 +15,11 @@ import org.springframework.stereotype.Service;
 
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.PayMode;
+import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.entity.Contact;
+import com.simplevat.entity.Expense;
 import com.simplevat.entity.Receipt;
+import com.simplevat.entity.TransactionExpenses;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.entity.TransactionStatus;
@@ -25,6 +28,7 @@ import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
 import com.simplevat.rest.transactioncontroller.TransactionViewModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.TransactionExpensesService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
 import com.simplevat.utils.DateFormatUtil;
 
@@ -46,6 +50,9 @@ public class TransactionHelper {
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	private TransactionExpensesService transactionExpensesService;
 
 //	public Transaction getEntity(TransactionPresistModel transactionModel) {
 //		Transaction transaction = new Transaction();
@@ -177,19 +184,37 @@ public class TransactionHelper {
 		// Transafer To
 		if (transaction.getExplinationEmployee() != null)
 			model.setEmployeeId(transaction.getExplinationEmployee().getId());
-		if (transaction.getCoaCategory() != null && transaction.getCoaCategory().getChartOfAccountCategoryId()
-				.equals(ChartOfAccountCategoryIdEnumConstant.SALES.getId())) {
-			// SALES
-			List<ReconsileRequestLineItemModel> invoiceIdList = new ArrayList<>();
-			List<TransactionStatus> trnxStatusList = transactionStatusService
-					.findAllTransactionStatuesByTrnxId(transaction.getTransactionId());
+		if (transaction.getCoaCategory() != null) {
+			List<ReconsileRequestLineItemModel> explainParamList = new ArrayList<>();
+			if (transaction.getCoaCategory().getChartOfAccountCategoryId()
+					.equals(ChartOfAccountCategoryIdEnumConstant.SALES.getId())) {
+				// CUTOMER INVOICES
+				List<TransactionStatus> trnxStatusList = transactionStatusService
+						.findAllTransactionStatuesByTrnxId(transaction.getTransactionId());
 
-			for (TransactionStatus status : trnxStatusList) {
-				invoiceIdList.add(new ReconsileRequestLineItemModel(
-						status.getInvoice().getId(),
-						status.getRemainingToExplain()));
+				for (TransactionStatus status : trnxStatusList) {
+					explainParamList.add(new ReconsileRequestLineItemModel(status.getInvoice().getId(),
+							status.getRemainingToExplain(), PostingReferenceTypeEnum.INVOICE));
+				}
+			} else {
+				// VENDOR INVOICES
+				List<TransactionStatus> trnxStatusList = transactionStatusService
+						.findAllTransactionStatuesByTrnxId(transaction.getTransactionId());
+
+				for (TransactionStatus status : trnxStatusList) {
+					explainParamList.add(new ReconsileRequestLineItemModel(status.getInvoice().getId(),
+							status.getRemainingToExplain(), PostingReferenceTypeEnum.INVOICE));
+				}
+
+				List<TransactionExpenses> mappedExpenseList = transactionExpensesService
+						.findAllForTransactionExpenses(transaction.getTransactionId());
+				for (TransactionExpenses expense : mappedExpenseList) {
+					explainParamList.add(new ReconsileRequestLineItemModel(expense.getExpense().getExpenseId(),
+							expense.getRemainingToExplain(), PostingReferenceTypeEnum.EXPENSE));
+				}
 			}
-			model.setInvoiceIdList(invoiceIdList);
+
+			model.setExplainParamList(explainParamList);
 		}
 		model.setExplinationStatusEnum(transaction.getTransactionExplinationStatusEnum());
 

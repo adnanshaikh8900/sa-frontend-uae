@@ -149,7 +149,7 @@ public class ReconsilationRestHelper {
 		boolean isCustomerInvoice = false;
 		for (ReconsileRequestLineItemModel model : invoiceIdList) {
 
-			Invoice invoice = invoiceService.findByPK(model.getInvoiceId());
+			Invoice invoice = invoiceService.findByPK(model.getId());
 
 			isCustomerInvoice = InvoiceTypeConstant.isCustomerInvoice(invoice.getType());
 

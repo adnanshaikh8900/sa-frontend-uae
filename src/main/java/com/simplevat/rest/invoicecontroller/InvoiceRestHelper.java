@@ -42,12 +42,12 @@ import com.simplevat.service.ContactService;
 import com.simplevat.service.CurrencyService;
 import com.simplevat.service.InvoiceLineItemService;
 import com.simplevat.service.InvoiceService;
-import com.simplevat.service.PaymentService;
 import com.simplevat.service.ProductService;
 import com.simplevat.service.ProjectService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.UserService;
 import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.DateUtils;
 import com.simplevat.utils.FileHelper;
 import com.simplevat.utils.MailUtility;
@@ -55,6 +55,7 @@ import com.simplevat.utils.MailUtility;
 @Service
 public class InvoiceRestHelper {
 	private final Logger logger = LoggerFactory.getLogger(InvoiceRestHelper.class);
+	private static final String dateFormat = "dd/MM/yyyy";
 	@Autowired
 	VatCategoryService vatCategoryService;
 
@@ -77,9 +78,6 @@ public class InvoiceRestHelper {
 	private FileHelper fileHelper;
 
 	@Autowired
-	private PaymentService paymentService;
-
-	@Autowired
 	private MailUtility mailUtility;
 
 	@Autowired
@@ -96,6 +94,9 @@ public class InvoiceRestHelper {
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
+	private DateFormatUtil dateFormtUtil;
 
 	public Invoice getEntity(InvoiceRequestModel invoiceModel, Integer userId) {
 		Invoice invoice = new Invoice();
@@ -130,23 +131,31 @@ public class InvoiceRestHelper {
 			Contact contact = contactService.findByPK(invoiceModel.getContactId());
 			invoice.setContact(contact);
 		}
-		if (invoiceModel.getInvoiceDate() != null) {
-			LocalDateTime invoiceDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDate().getTime())
-					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-					.toLocalDateTime();
-			invoice.setInvoiceDate(invoiceDate);
-		}
-		if (invoiceModel.getInvoiceDueDate() != null) {
-			LocalDateTime invoiceDueDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDueDate().getTime())
-					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
-					.toLocalDateTime();
-			invoice.setInvoiceDueDate(invoiceDueDate);
-		}
+		invoiceDate(invoiceModel, invoice);
+		invoiceDueDate(invoiceModel, invoice);
 		if (invoiceModel.getCurrencyCode() != null) {
 			Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
 			invoice.setCurrency(currency);
 		}
 		List<InvoiceLineItemModel> itemModels = new ArrayList<>();
+		lineItemString(invoiceModel, userId, invoice, itemModels);
+		if (invoiceModel.getTaxIdentificationNumber() != null) {
+			invoice.setTaxIdentificationNumber(invoiceModel.getTaxIdentificationNumber());
+		}
+		invoice.setContactPoNumber(invoiceModel.getContactPoNumber());
+		invoice.setReceiptAttachmentDescription(invoiceModel.getReceiptAttachmentDescription());
+		invoice.setNotes(invoiceModel.getNotes());
+		invoice.setDiscountType(invoiceModel.getDiscountType());
+		invoice.setDiscount(invoiceModel.getDiscount());
+		invoice.setStatus(invoice.getId() == null ? InvoiceStatusEnum.PENDING.getValue() : invoice.getStatus());
+		invoice.setDiscountPercentage(invoiceModel.getDiscountPercentage());
+		invoice.setInvoiceDuePeriod(invoiceModel.getTerm());
+
+		return invoice;
+	}
+
+	private void lineItemString(InvoiceRequestModel invoiceModel, Integer userId, Invoice invoice,
+			List<InvoiceLineItemModel> itemModels) {
 		if (invoiceModel.getLineItemsString() != null && !invoiceModel.getLineItemsString().isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
 			try {
@@ -161,19 +170,24 @@ public class InvoiceRestHelper {
 				invoice.setInvoiceLineItems(invoiceLineItemList);
 			}
 		}
-		if (invoiceModel.getTaxIdentificationNumber() != null) {
-			invoice.setTaxIdentificationNumber(invoiceModel.getTaxIdentificationNumber());
-		}
-		invoice.setContactPoNumber(invoiceModel.getContactPoNumber());
-		invoice.setReceiptAttachmentDescription(invoiceModel.getReceiptAttachmentDescription());
-		invoice.setNotes(invoiceModel.getNotes());
-		invoice.setDiscountType(invoiceModel.getDiscountType());
-		invoice.setDiscount(invoiceModel.getDiscount());
-		invoice.setStatus(invoice.getId() == null ? InvoiceStatusEnum.PENDING.getValue() : invoice.getStatus());
-		invoice.setDiscountPercentage(invoiceModel.getDiscountPercentage());
-		invoice.setInvoiceDuePeriod(invoiceModel.getTerm());
+	}
 
-		return invoice;
+	private void invoiceDueDate(InvoiceRequestModel invoiceModel, Invoice invoice) {
+		if (invoiceModel.getInvoiceDueDate() != null) {
+			LocalDateTime invoiceDueDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDueDate().getTime())
+					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+					.toLocalDateTime();
+			invoice.setInvoiceDueDate(invoiceDueDate);
+		}
+	}
+
+	private void invoiceDate(InvoiceRequestModel invoiceModel, Invoice invoice) {
+		if (invoiceModel.getInvoiceDate() != null) {
+			LocalDateTime invoiceDate = Instant.ofEpochMilli(invoiceModel.getInvoiceDate().getTime())
+					.atZone(ZoneId.systemDefault()).withHour(0).withMinute(0).withSecond(0).withNano(0)
+					.toLocalDateTime();
+			invoice.setInvoiceDate(invoiceDate);
+		}
 	}
 
 	public List<InvoiceLineItem> getLineItems(List<InvoiceLineItemModel> itemModels, Invoice invoice, Integer userId) {
@@ -248,13 +262,7 @@ public class InvoiceRestHelper {
 			requestModel.setStatus(InvoiceStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
 		}
 		List<InvoiceLineItemModel> lineItemModels = new ArrayList<>();
-		if (invoice.getInvoiceLineItems() != null && !invoice.getInvoiceLineItems().isEmpty()) {
-			for (InvoiceLineItem lineItem : invoice.getInvoiceLineItems()) {
-				InvoiceLineItemModel model = getLineItemModel(lineItem);
-				lineItemModels.add(model);
-			}
-			requestModel.setInvoiceLineItems(lineItemModels);
-		}
+		invoiceLineItems(invoice, requestModel, lineItemModels);
 		if (invoice.getReceiptAttachmentPath() != null) {
 			requestModel.setFilePath("/file/" + fileHelper.convertFilePthToUrl(invoice.getReceiptAttachmentPath()));
 		}
@@ -264,8 +272,7 @@ public class InvoiceRestHelper {
 		requestModel.setDiscount(invoice.getDiscount());
 		requestModel.setDiscountPercentage(invoice.getDiscountPercentage());
 		requestModel.setTerm(invoice.getInvoiceDuePeriod());
-		requestModel
-				.setDueAmount(invoice.getTotalAmount().subtract(paymentService.getAmountByInvoiceId(invoice.getId())));
+		requestModel.setDueAmount(invoice.getDueAmount());
 		if (invoice.getContact() != null) {
 			Contact contact = invoice.getContact();
 
@@ -276,6 +283,17 @@ public class InvoiceRestHelper {
 			requestModel.setTaxRegistrationNo(contact.getVatRegistrationNumber());
 		}
 		return requestModel;
+	}
+
+	private void invoiceLineItems(Invoice invoice, InvoiceRequestModel requestModel,
+			List<InvoiceLineItemModel> lineItemModels) {
+		if (invoice.getInvoiceLineItems() != null && !invoice.getInvoiceLineItems().isEmpty()) {
+			for (InvoiceLineItem lineItem : invoice.getInvoiceLineItems()) {
+				InvoiceLineItemModel model = getLineItemModel(lineItem);
+				lineItemModels.add(model);
+			}
+			requestModel.setInvoiceLineItems(lineItemModels);
+		}
 	}
 
 	public InvoiceLineItemModel getLineItemModel(InvoiceLineItem lineItem) {
@@ -300,25 +318,15 @@ public class InvoiceRestHelper {
 	}
 
 	public List<InvoiceListModel> getListModel(Object invoices) {
-		List<InvoiceListModel> invoiceListModels = new ArrayList();
+		List<InvoiceListModel> invoiceListModels = new ArrayList<>();
 		if (invoices != null) {
 			for (Invoice invoice : (List<Invoice>) invoices) {
 				InvoiceListModel model = new InvoiceListModel();
 				model.setId(invoice.getId());
-				if (invoice.getContact() != null) {
-					if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
-						model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
-					}
-				}
+				contact(invoice, model);
 				model.setReferenceNumber(invoice.getReferenceNumber());
-				if (invoice.getInvoiceDate() != null) {
-					Date date = Date.from(invoice.getInvoiceDate().atZone(ZoneId.systemDefault()).toInstant());
-					model.setInvoiceDate(date);
-				}
-				if (invoice.getInvoiceDueDate() != null) {
-					Date date = Date.from(invoice.getInvoiceDueDate().atZone(ZoneId.systemDefault()).toInstant());
-					model.setInvoiceDueDate(date);
-				}
+				invoiceDate(invoice, model);
+				invoiceDueDate(invoice, model);
 				model.setTotalAmount(invoice.getTotalAmount());
 				model.setTotalVatAmount(invoice.getTotalVatAmount());
 
@@ -334,6 +342,26 @@ public class InvoiceRestHelper {
 			}
 		}
 		return invoiceListModels;
+	}
+
+	private void invoiceDueDate(Invoice invoice, InvoiceListModel model) {
+		if (invoice.getInvoiceDueDate() != null) {
+			model.setInvoiceDueDate(dateFormtUtil.getLocalDateTimeAsString(invoice.getInvoiceDueDate(), dateFormat));
+		}
+	}
+
+	private void invoiceDate(Invoice invoice, InvoiceListModel model) {
+		if (invoice.getInvoiceDate() != null) {
+			model.setInvoiceDate(dateFormtUtil.getLocalDateTimeAsString(invoice.getInvoiceDate(), dateFormat));
+		}
+	}
+
+	private void contact(Invoice invoice, InvoiceListModel model) {
+		if (invoice.getContact() != null) {
+			if (invoice.getContact().getFirstName() != null || invoice.getContact().getLastName() != null) {
+				model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
+			}
+		}
 	}
 
 	private String getFullName(Contact contact) {
@@ -418,57 +446,32 @@ public class InvoiceRestHelper {
 			String value = map.get(key);
 			switch (key) {
 			case MailUtility.INVOICE_REFEREBCE_NO:
-				if (invoice.getReferenceNumber() != null && !invoice.getReferenceNumber().isEmpty()) {
-					invoiceDataMap.put(value, invoice.getReferenceNumber());
-				}
+				getReferenceNumber(invoice, invoiceDataMap, value);
 				break;
 
 			case MailUtility.INVOICE_DATE:
-				if (invoice.getInvoiceDate() != null) {
-					invoiceDataMap.put(value, invoice.getInvoiceDate().toString());
-				}
+				getInvoiceDate(invoice, invoiceDataMap, value);
 				break;
 
 			case MailUtility.INVOICE_DUE_DATE:
-				if (invoice.getInvoiceDueDate() != null) {
-					invoiceDataMap.put(value, invoice.getInvoiceDueDate().toString());
-				}
+				getInvoiceDueDate(invoice, invoiceDataMap, value);
 				break;
 
 			case MailUtility.INVOICE_DISCOUNT:
-				if (invoice.getDiscount() != null) {
-					invoiceDataMap.put(value, invoice.getDiscount().toString());
-				}
+				getDiscount(invoice, invoiceDataMap, value);
 				break;
 
 			case MailUtility.CONTRACT_PO_NUMBER:
-				if (invoice.getContactPoNumber() != null && !invoice.getContactPoNumber().isEmpty()) {
-					invoiceDataMap.put(value, invoice.getContactPoNumber());
-				}
+				getContactPoNumber(invoice, invoiceDataMap, value);
 				break;
 
 			case MailUtility.CONTACT_NAME:
-				if (invoice.getContact() != null && !invoice.getContact().getFirstName().isEmpty()) {
-					StringBuilder sb = new StringBuilder();
-					Contact c = invoice.getContact();
-					if (c.getFirstName() != null && !c.getFirstName().isEmpty()) {
-						sb.append(c.getFirstName()).append(" ");
-					}
-					if (c.getMiddleName() != null && !c.getMiddleName().isEmpty()) {
-						sb.append(c.getMiddleName()).append(" ");
-					}
-					if (c.getLastName() != null && !c.getLastName().isEmpty()) {
-						sb.append(c.getLastName());
-					}
-					invoiceDataMap.put(value, sb.toString());
-				}
+				getContact(invoice, invoiceDataMap, value);
 
 				break;
 
 			case MailUtility.PROJECT_NAME:
-				if (invoice.getProject() != null && !invoice.getProject().getProjectName().isEmpty()) {
-					invoiceDataMap.put(value, invoice.getProject().getProjectName());
-				}
+				getProject(invoice, invoiceDataMap, value);
 				break;
 
 			case MailUtility.INVOICE_AMOUNT:
@@ -486,9 +489,63 @@ public class InvoiceRestHelper {
 				if (user.getCompany() != null)
 					invoiceDataMap.put(value, user.getCompany().getCompanyName());
 				break;
+			default:
 			}
 		}
 		return invoiceDataMap;
+	}
+
+	private void getProject(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getProject() != null && !invoice.getProject().getProjectName().isEmpty()) {
+			invoiceDataMap.put(value, invoice.getProject().getProjectName());
+		}
+	}
+
+	private void getContact(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getContact() != null && !invoice.getContact().getFirstName().isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			Contact c = invoice.getContact();
+			if (c.getFirstName() != null && !c.getFirstName().isEmpty()) {
+				sb.append(c.getFirstName()).append(" ");
+			}
+			if (c.getMiddleName() != null && !c.getMiddleName().isEmpty()) {
+				sb.append(c.getMiddleName()).append(" ");
+			}
+			if (c.getLastName() != null && !c.getLastName().isEmpty()) {
+				sb.append(c.getLastName());
+			}
+			invoiceDataMap.put(value, sb.toString());
+		}
+	}
+
+	private void getContactPoNumber(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getContactPoNumber() != null && !invoice.getContactPoNumber().isEmpty()) {
+			invoiceDataMap.put(value, invoice.getContactPoNumber());
+		}
+	}
+
+	private void getDiscount(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getDiscount() != null) {
+			invoiceDataMap.put(value, invoice.getDiscount().toString());
+		}
+	}
+
+	private void getInvoiceDueDate(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getInvoiceDueDate() != null) {
+			invoiceDataMap.put(value, invoice.getInvoiceDueDate().toString());
+		}
+	}
+
+	private void getInvoiceDate(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getInvoiceDate() != null) {
+			invoiceDataMap.put(value, invoice.getInvoiceDate().toString());
+		}
+	}
+
+	private void getReferenceNumber(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
+		if (invoice.getReferenceNumber() != null && !invoice.getReferenceNumber().isEmpty()) {
+			invoiceDataMap.put(value, invoice.getReferenceNumber());
+		}
 	}
 
 	private String getInvoceStatusLabel(Date dueDate) {
@@ -547,29 +604,7 @@ public class InvoiceRestHelper {
 		List<InvoiceLineItem> invoiceLineItemList = invoiceLineItemService.findByAttributes(param);
 		Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap = new HashMap<>();
 		Map<Integer, TransactionCategory> tnxcatMap = new HashMap<>();
-		TransactionCategory category = null;
-		for (InvoiceLineItem lineItem : invoiceLineItemList) {
-			// sales for customer
-			// purchase for vendor
-			if (isCustomerInvoice)
-				category = lineItem.getProduct().getLineItemList().stream()
-						.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
-						.getTransactioncategory();
-			else {
-				category = lineItem.getTrnsactioncCategory() != null ? lineItem.getTrnsactioncCategory()
-						: lineItem.getProduct().getLineItemList().stream()
-								.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
-								.getTransactioncategory();
-			}
-			tnxcatMap.put(category.getTransactionCategoryId(), category);
-			if (tnxcatIdInvLnItemMap.containsKey(category.getTransactionCategoryId())) {
-				tnxcatIdInvLnItemMap.get(category.getTransactionCategoryId()).add(lineItem);
-			} else {
-				List<InvoiceLineItem> dummyInvoiceLineItemList = new ArrayList<>();
-				dummyInvoiceLineItemList.add(lineItem);
-				tnxcatIdInvLnItemMap.put(category.getTransactionCategoryId(), dummyInvoiceLineItemList);
-			}
-		}
+		customerInvoice(isCustomerInvoice, invoiceLineItemList, tnxcatIdInvLnItemMap, tnxcatMap);
 
 		for (Integer categoryId : tnxcatIdInvLnItemMap.keySet()) {
 			List<InvoiceLineItem> sortedItemList = tnxcatIdInvLnItemMap.get(categoryId);
@@ -617,6 +652,33 @@ public class InvoiceRestHelper {
 		journal.setJournalDate(LocalDateTime.now());
 
 		return journal;
+	}
+
+	private void customerInvoice(boolean isCustomerInvoice, List<InvoiceLineItem> invoiceLineItemList,
+			Map<Integer, List<InvoiceLineItem>> tnxcatIdInvLnItemMap, Map<Integer, TransactionCategory> tnxcatMap) {
+		TransactionCategory category;
+		for (InvoiceLineItem lineItem : invoiceLineItemList) {
+			// sales for customer
+			// purchase for vendor
+			if (isCustomerInvoice)
+				category = lineItem.getProduct().getLineItemList().stream()
+						.filter(p -> p.getPriceType().equals(ProductPriceType.SALES)).findAny().get()
+						.getTransactioncategory();
+			else {
+				category = lineItem.getTrnsactioncCategory() != null ? lineItem.getTrnsactioncCategory()
+						: lineItem.getProduct().getLineItemList().stream()
+								.filter(p -> p.getPriceType().equals(ProductPriceType.PURCHASE)).findAny().get()
+								.getTransactioncategory();
+			}
+			tnxcatMap.put(category.getTransactionCategoryId(), category);
+			if (tnxcatIdInvLnItemMap.containsKey(category.getTransactionCategoryId())) {
+				tnxcatIdInvLnItemMap.get(category.getTransactionCategoryId()).add(lineItem);
+			} else {
+				List<InvoiceLineItem> dummyInvoiceLineItemList = new ArrayList<>();
+				dummyInvoiceLineItemList.add(lineItem);
+				tnxcatIdInvLnItemMap.put(category.getTransactionCategoryId(), dummyInvoiceLineItemList);
+			}
+		}
 	}
 
 	public List<InvoiceDueAmountModel> getDueInvoiceList(List<Invoice> invoiceList) {

@@ -2,6 +2,7 @@ package com.simplevat.dao.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -152,9 +153,22 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 	@Override
 	public List<Invoice> getUnpaidInvoice(Integer contactId, ContactTypeEnum type) {
 		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("unpaidInvoices", Invoice.class);
-		query.setParameter("status", InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+		query.setParameter("status", Arrays.asList(
+				new Integer[] { InvoiceStatusEnum.PARTIALLY_PAID.getValue(), InvoiceStatusEnum.POST.getValue() }));
 		query.setParameter("id", contactId);
 		query.setParameter("type", type.getValue());
+		List<Invoice> invoiceList = query.getResultList();
+		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList : null;
+	}
+
+	@Override
+	public List<Invoice> getSuggestionUnpaidInvoices(BigDecimal amount, Integer contactId, ContactTypeEnum type) {
+		TypedQuery<Invoice> query = getEntityManager().createNamedQuery("suggestionUnpaidInvoices", Invoice.class);
+		query.setParameter("status", Arrays.asList(new Integer[] { InvoiceStatusEnum.PAID.getValue(),
+				InvoiceStatusEnum.PARTIALLY_PAID.getValue(), InvoiceStatusEnum.POST.getValue() }));
+		query.setParameter("amount", amount);
+		query.setParameter("type", type.getValue());
+		query.setParameter("id", contactId);
 		List<Invoice> invoiceList = query.getResultList();
 		return invoiceList != null && !invoiceList.isEmpty() ? invoiceList : null;
 	}

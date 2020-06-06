@@ -12,7 +12,7 @@ import com.simplevat.dao.JournalDao;
 import com.simplevat.dao.JournalLineItemDao;
 import com.simplevat.dao.bankaccount.TransactionStatusDao;
 import com.simplevat.entity.JournalLineItem;
-import com.simplevat.entity.bankaccount.TransactionStatus;
+import com.simplevat.entity.TransactionStatus;
 import com.simplevat.rest.invoicecontroller.InvoiceRestController;
 import com.simplevat.service.bankaccount.TransactionStatusService;
 
@@ -46,7 +46,7 @@ public class TransactionStatusServiceImpl extends TransactionStatusService {
 		return getDao().findAllTransactionStatuesByTrnxId(transactionId);
 	}
 
-	@Override
+//	@Override
 	public void deleteList(List<TransactionStatus> trnxStatusList) {
 		try {
 			for (TransactionStatus status : trnxStatusList) {
@@ -59,6 +59,14 @@ public class TransactionStatusServiceImpl extends TransactionStatusService {
 			}
 		} catch (Exception e) {
 			LOGGER.error("error = ", e);
+		}
+	}
+
+	public void deleteForTransation(Integer transactionId) {
+		List<TransactionStatus> explinationList = findAllTransactionStatuesByTrnxId(transactionId);
+
+		if (explinationList != null && !explinationList.isEmpty()) {
+			 deleteList(explinationList);
 		}
 	}
 }

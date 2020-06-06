@@ -53,12 +53,6 @@ public class ReconsilationController {
 	private TransactionCategoryService transactionCategoryService;
 
 	@Autowired
-	private JournalService journalService;
-
-	@Autowired
-	private TransactionService transactionService;
-
-	@Autowired
 	private ReconsilationRestHelper reconsilationRestHelper;
 
 	@Autowired
@@ -66,9 +60,6 @@ public class ReconsilationController {
 
 	@Autowired
 	private TranscationCategoryHelper transcationCategoryHelper;
-
-	@Autowired
-	private BankAccountService bankService;
 
 	@Autowired
 	private ChartOfAccountCategoryService chartOfAccountCategoryService;
@@ -99,7 +90,6 @@ public class ReconsilationController {
 		try {
 			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);
 			Map<String, Object> param = new HashMap<>();
-			List<DropdownModel> dropDownModelList = new ArrayList<DropdownModel>();
 			List<TransactionCategory> transactionCatList = new ArrayList<>();
 			List<Object> list = new ArrayList<>();
 

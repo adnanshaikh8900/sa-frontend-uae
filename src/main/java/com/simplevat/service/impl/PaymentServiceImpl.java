@@ -46,9 +46,4 @@ public class PaymentServiceImpl extends PaymentService {
 		paymentDao.deleteByIds(ids);
 	}
 
-	@Override
-	public BigDecimal getAmountByInvoiceId(Integer invoiceId) {
-		return paymentDao.getAmountByInvoiceId(invoiceId);
-	}
-
 }

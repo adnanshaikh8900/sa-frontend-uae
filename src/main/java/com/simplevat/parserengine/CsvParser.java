@@ -52,7 +52,7 @@ public class CsvParser implements TransactionFileParser {
 			while ((line = br.readLine()) != null) {
 
 				String[] splitList = line.split(cvsSplitBy);
-				Map<String, String> dataMap = new LinkedHashMap<String, String>();
+				Map<String, String> dataMap = new LinkedHashMap<>();
 				if (rowCount == 0) {
 					int j = 0;
 					for (String data : splitList) {
@@ -102,7 +102,7 @@ public class CsvParser implements TransactionFileParser {
 		String cvsSplitBy = ",";
 
 		List<Map<String, String>> list = new LinkedList<>();
-		List<String> errorList = new ArrayList<String>();
+		List<String> errorList = new ArrayList<>();
 
 		BufferedReader br = null;
 
@@ -120,7 +120,7 @@ public class CsvParser implements TransactionFileParser {
 
 				String[] splitList = line.split(cvsSplitBy);
 
-				Map<String, String> dataMap = new LinkedHashMap<String, String>();
+				Map<String, String> dataMap = new LinkedHashMap<>();
 
 				if (rowCount > 0) {
 					int cellCount = 0;
@@ -202,7 +202,7 @@ public class CsvParser implements TransactionFileParser {
 
 	public Map<Integer, Set<Integer>> addErrorCellInRow(Map<Integer, Set<Integer>> map, Integer row, Integer cell) {
 
-		Set<Integer> cellSet = new HashSet<Integer>();
+		Set<Integer> cellSet = new HashSet<>();
 
 		if (map.containsKey(row)) {
 			cellSet = map.get(row);

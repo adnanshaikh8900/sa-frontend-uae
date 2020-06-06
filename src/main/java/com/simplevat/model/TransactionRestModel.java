@@ -9,7 +9,7 @@ import com.simplevat.entity.Project;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.bankaccount.TransactionStatus;
+import com.simplevat.entity.TransactionStatus;
 import com.simplevat.entity.bankaccount.ChartOfAccount;
 import java.util.ArrayList;
 import java.util.List;

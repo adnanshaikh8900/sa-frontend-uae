@@ -1,5 +1,6 @@
 package com.simplevat.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -29,4 +30,7 @@ public abstract class InvoiceService extends SimpleVatService<Integer, Invoice> 
 	public abstract Invoice deleteJournaForInvoice(Invoice invoice);
 
 	public abstract List<Invoice> getUnpaidInvoice(Integer contactId, ContactTypeEnum type);
+
+	public abstract List<Invoice> getSuggestionInvoices(BigDecimal amount, Integer contactId,ContactTypeEnum type);
+
 }

@@ -53,5 +53,8 @@ public class TransactionPresistModel implements Serializable {
 	private List<ReconsileRequestLineItemModel> invoiceIdList;
 
 	private TransactionExplinationStatusEnum explinationStatusEnum;
+	
+	//for view 
+	private String transactionCategoryLabel;
 
 }

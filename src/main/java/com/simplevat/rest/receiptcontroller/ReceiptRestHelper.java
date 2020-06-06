@@ -70,15 +70,10 @@ public class ReceiptRestHelper {
 				ReceiptModel model = new ReceiptModel();
 				model.setReceiptId(receipt.getId());
 				model.setAmount(receipt.getAmount());
-				// TODO remove once remove from front end list
 				model.setUnusedAmount(BigDecimal.ZERO);
 				model.setReferenceCode(receipt.getReferenceCode());
 				model.setReceiptNo(receipt.getReceiptNo());
-				if (receipt.getContact() != null) {
-					model.setContactId(receipt.getContact().getContactId());
-					model.setCustomerName(
-							receipt.getContact().getFirstName() + " " + receipt.getContact().getLastName());
-				}
+				getContact(receipt, model);
 
 				List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptService
 						.findForReceipt(receipt.getId());
@@ -98,6 +93,13 @@ public class ReceiptRestHelper {
 			}
 		}
 		return receiptModelList;
+	}
+
+	private void getContact(Receipt receipt, ReceiptModel model) {
+		if (receipt.getContact() != null) {
+			model.setContactId(receipt.getContact().getContactId());
+			model.setCustomerName(receipt.getContact().getFirstName() + " " + receipt.getContact().getLastName());
+		}
 	}
 
 	public Receipt getEntity(ReceiptRequestModel receiptRequestModel) {
@@ -160,27 +162,26 @@ public class ReceiptRestHelper {
 
 	}
 
-	public List<CustomerInvoiceReceipt> getCustomerInvoiceReceiptEntity(ReceiptRequestModel receiptRequestModel) {
-		if (receiptRequestModel.getPaidInvoiceListStr() != null
-				&& !receiptRequestModel.getPaidInvoiceListStr().isEmpty()) {
+	public List<CustomerInvoiceReceipt> getCustomerInvoiceReceiptEntity(String invoiceDueAmountModelListStr) {
+		if (invoiceDueAmountModelListStr != null && invoiceDueAmountModelListStr.isEmpty()) {
 
 			ObjectMapper mapper = new ObjectMapper();
+			List<InvoiceDueAmountModel> itemModels = null;
 			try {
-				List<InvoiceDueAmountModel> itemModels = mapper.readValue(receiptRequestModel.getPaidInvoiceListStr(),
+				itemModels = mapper.readValue(invoiceDueAmountModelListStr,
 						new TypeReference<List<InvoiceDueAmountModel>>() {
 						});
-				receiptRequestModel.setPaidInvoiceList(itemModels);
 			} catch (IOException ex) {
 				logger.error("Error", ex);
 			}
 
 			List<CustomerInvoiceReceipt> receiptList = new ArrayList<>();
-			for (InvoiceDueAmountModel dueAmountModel : receiptRequestModel.getPaidInvoiceList()) {
+			for (InvoiceDueAmountModel dueAmountModel : itemModels) {
 				CustomerInvoiceReceipt receipt = new CustomerInvoiceReceipt();
 				Invoice invoice = invoiceService.findByPK(dueAmountModel.getId());
-				invoice.setStatus(
-						dueAmountModel.getDueAmount().equals(dueAmountModel.getPaidAmount() ) ? InvoiceStatusEnum.PAID.getValue()
-								: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+				invoice.setStatus(dueAmountModel.getDueAmount().equals(dueAmountModel.getPaidAmount())
+						? InvoiceStatusEnum.PAID.getValue()
+						: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
 				receipt.setCustomerInvoice(invoice);
 				receipt.setPaidAmount(dueAmountModel.getPaidAmount());
 				receipt.setDeleteFlag(Boolean.FALSE);

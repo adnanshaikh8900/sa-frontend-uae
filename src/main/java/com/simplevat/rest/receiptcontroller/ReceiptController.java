@@ -12,7 +12,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.simplevat.rest.invoicecontroller.InvoiceDueAmountModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +27,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.dbfilter.ReceiptFilterEnum;
 import com.simplevat.entity.CustomerInvoiceReceipt;
-import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.Receipt;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.PostingRequestModel;
-import com.simplevat.rest.invoicecontroller.InvoiceRestHelper;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.CustomerInvoiceReceiptService;
@@ -80,9 +76,6 @@ public class ReceiptController {
 
 	@Autowired
 	private FileHelper fileHelper;
-
-	@Autowired
-	private InvoiceRestHelper invoiceRestHelper;
 
 	@ApiOperation(value = "Get receipt List")
 	@GetMapping(value = "/getList")
@@ -184,7 +177,7 @@ public class ReceiptController {
 
 			// save data in Mapping Table
 			List<CustomerInvoiceReceipt> customerInvoiceReceiptList = receiptRestHelper
-					.getCustomerInvoiceReceiptEntity(receiptRequestModel);
+					.getCustomerInvoiceReceiptEntity(receiptRequestModel.getPaidInvoiceListStr());
 			for (CustomerInvoiceReceipt customerInvoiceReceipt : customerInvoiceReceiptList) {
 				customerInvoiceReceipt.setReceipt(receipt);
 				customerInvoiceReceipt.setCreatedBy(userId);
@@ -248,25 +241,5 @@ public class ReceiptController {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}
-
-	/**
-	 * getUnpaid invoice
-	 * 
-	 * @param id Contact Id
-	 * @return list InvoiceDueAmountModel datalist
-	 */
-	@ApiOperation(value = "Get Overdue Amount Details")
-	@GetMapping(value = "/getDueInvoices")
-	public ResponseEntity<List<InvoiceDueAmountModel>> getDueInvoiceForContact(@RequestParam("id") Integer contactId,
-																			   @RequestParam("type") ContactTypeEnum type) {
-		try {
-			List<Invoice> invoiceList = invoiceService.getUnpaidInvoice(contactId, type);
-			return new ResponseEntity<>(invoiceRestHelper.getDueInvoiceList(invoiceList), HttpStatus.OK);
-		} catch (Exception e) {
-			logger.error(ERROR, e);
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
 	}
 }

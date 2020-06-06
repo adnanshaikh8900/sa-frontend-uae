@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,15 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.PostingReferenceTypeEnum;
-import com.simplevat.constant.dbfilter.JournalFilterEnum;
+import com.simplevat.entity.Contact;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
+import com.simplevat.entity.Payment;
+import com.simplevat.entity.Receipt;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalLineItemService;
+import com.simplevat.service.PaymentService;
+import com.simplevat.service.ReceiptService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.utils.DateFormatUtil;
 
@@ -41,6 +44,12 @@ public class DetailedGeneralLedgerRestHelper {
 
 	@Autowired
 	private InvoiceService invoiceService;
+
+	@Autowired
+	private PaymentService paymentService;
+
+	@Autowired
+	private ReceiptService receiptService;
 
 	@Autowired
 	private DateFormatUtil dateUtil;
@@ -72,6 +81,24 @@ public class DetailedGeneralLedgerRestHelper {
 		return transactionMap;
 	}
 
+	public Map<Integer, Payment> findOrGetFromDbPaymnt(Map<Integer, Payment> paymentMap, Integer id) {
+
+		if (!paymentMap.containsKey(id)) {
+			Payment payment = paymentService.findByPK(id);
+			paymentMap.put(payment.getPaymentId(), payment);
+		}
+		return paymentMap;
+	}
+
+	public Map<Integer, Receipt> findOrGetFromDbReceipt(Map<Integer, Receipt> receiptMap, Integer id) {
+
+		if (!receiptMap.containsKey(id)) {
+			Receipt receipt = receiptService.findByPK(id);
+			receiptMap.put(receipt.getId(), receipt);
+		}
+		return receiptMap;
+	}
+
 	public List<Object> getDetailedGeneralLedgerReport(ReportRequestModel reportRequestModel) {
 
 		List<Object> resposneList = new ArrayList<>();
@@ -84,7 +111,8 @@ public class DetailedGeneralLedgerRestHelper {
 			Map<Integer, Expense> expenseMap = new HashMap<>();
 			Map<Integer, Transaction> transactionMap = new HashMap<>();
 			Map<Integer, Invoice> invoiceMap = new HashMap<>();
-
+			Map<Integer, Receipt> receiptMap = new HashMap<>();
+			Map<Integer, Payment> paymentMap = new HashMap<>();
 			for (JournalLineItem item : itemList) {
 				if (item.getTransactionCategory() != null) {
 					if (map.containsKey(item.getTransactionCategory().getTransactionCategoryId())) {
@@ -156,8 +184,8 @@ public class DetailedGeneralLedgerRestHelper {
 						model.setAmount(invoice.getTotalAmount());
 						model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
 						model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
-						model.setName(lineItem.getContact() != null
-								? lineItem.getContact().getFirstName() + " " + lineItem.getContact().getLastName()
+						model.setName(invoice.getContact() != null
+								? invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName()
 								: "");
 						model.setTransactonRefNo(invoice.getReferenceNumber());
 						model.setInvoiceType(invoice.getType());
@@ -174,22 +202,34 @@ public class DetailedGeneralLedgerRestHelper {
 						break;
 
 					case RECEIPT:
+					case PAYMENT:
+
 						model.setReferenceNo(journal.getJournlReferencenNo());
 						model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
 						model.setCreditAmount(lineItem.getCreditAmount());
 						model.setDebitAmount(lineItem.getDebitAmount());
-						model.setName(lineItem.getContact() != null
-								? lineItem.getContact().getFirstName() + " " + lineItem.getContact().getLastName()
-								: "");
+						Contact contact = null;
+						if (postingType.equals(PostingReferenceTypeEnum.RECEIPT)) {
+							receiptMap = findOrGetFromDbReceipt(receiptMap, lineItem.getReferenceId());
+							Receipt receipt = receiptMap.get(lineItem.getReferenceId());
+							contact = receipt.getContact();
+						} else {
+							paymentMap = findOrGetFromDbPaymnt(paymentMap, lineItem.getReferenceId());
+							Payment payment = paymentMap.get(lineItem.getReferenceId());
+							contact = payment.getSupplier();
+						}
+						model.setName(contact != null ? contact.getFirstName() + " " + contact.getLastName() : "");
 						break;
+
 					case PURCHASE:
 						break;
 					}
 
-					model.setAmount(lineItem.getCurrentBalance() != null
+					model.setAmount(
+//							lineItem.getCurrentBalance() != null
 //							&& lineItem.getCurrentBalance().compareTo(BigDecimal.ZERO) == 0
-							? lineItem.getCurrentBalance()
-							: model.getAmount());
+//							? lineItem.getCurrentBalance():
+							model.getAmount());
 
 					dataList.add(model);
 				}

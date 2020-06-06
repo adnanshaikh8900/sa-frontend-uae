@@ -261,11 +261,11 @@ public class TransactionRestController {
 				transactionService.persist(trnx);
 
 				List<ReconsileRequestLineItemModel> itemModels = new ArrayList<>();
-				if (transactionPresistModel.getInvoiceIdListStr() != null
-						&& !transactionPresistModel.getInvoiceIdListStr().isEmpty()) {
+				if (transactionPresistModel.getExplainParamListStr() != null
+						&& !transactionPresistModel.getExplainParamListStr().isEmpty()) {
 					ObjectMapper mapper = new ObjectMapper();
 					try {
-						itemModels = mapper.readValue(transactionPresistModel.getInvoiceIdListStr(),
+						itemModels = mapper.readValue(transactionPresistModel.getExplainParamListStr(),
 								new TypeReference<List<ReconsileRequestLineItemModel>>() {
 								});
 					} catch (IOException ex) {
@@ -415,11 +415,11 @@ public class TransactionRestController {
 				transactionService.persist(trnx);
 
 				List<ReconsileRequestLineItemModel> itemModels = new ArrayList<>();
-				if (transactionPresistModel.getInvoiceIdListStr() != null
-						&& !transactionPresistModel.getInvoiceIdListStr().isEmpty()) {
+				if (transactionPresistModel.getExplainParamListStr() != null
+						&& !transactionPresistModel.getExplainParamListStr().isEmpty()) {
 					ObjectMapper mapper = new ObjectMapper();
 					try {
-						itemModels = mapper.readValue(transactionPresistModel.getInvoiceIdListStr(),
+						itemModels = mapper.readValue(transactionPresistModel.getExplainParamListStr(),
 								new TypeReference<List<ReconsileRequestLineItemModel>>() {
 								});
 					} catch (IOException ex) {

@@ -47,7 +47,7 @@ public class TransactionPresistModel implements Serializable {
 	// Transafer To
 	private Integer reconsileBankId;
 
-	private String invoiceIdListStr;
+	private String explainParamListStr;
 
 	// SALES
 	private List<ReconsileRequestLineItemModel> explainParamList;

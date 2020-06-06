@@ -641,6 +641,9 @@ class CreateCustomerInvoice extends React.Component {
 			notes,
 		} = data;
 		console.log(data);
+		console.log(
+			moment(moment(invoiceDate).format('DD/MM/YYYY'), 'DD/MM/YYYY').toDate(),
+		);
 		const { term } = this.state;
 		const formData = new FormData();
 		formData.append(
@@ -699,7 +702,7 @@ class CreateCustomerInvoice extends React.Component {
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		console.log(this.state.data);
+		//console.log(this.state.data);
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {

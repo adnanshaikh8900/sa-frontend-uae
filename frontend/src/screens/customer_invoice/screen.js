@@ -262,12 +262,10 @@ class CustomerInvoice extends React.Component {
 		return row.invoiceAmount ? row.invoiceAmount.toFixed(2) : '';
 	};
 	invoiceDueDate = (cell, row) => {
-		return row.invoiceDueDate
-			? moment(row.invoiceDueDate).format('DD/MM/YYYY')
-			: '';
+		return row.invoiceDueDate ? row.invoiceDueDate : '';
 	};
 	invoiceDate = (cell, row) => {
-		return row.invoiceDate ? moment(row.invoiceDate).format('DD/MM/YYYY') : '';
+		return row.invoiceDate ? row.invoiceDate : '';
 	};
 
 	renderVatAmount = (cell, row) => {
@@ -566,7 +564,6 @@ class CustomerInvoice extends React.Component {
 			view,
 		} = this.state;
 		const { status_list, customer_list, customer_invoice_list } = this.props;
-
 		const customer_invoice_data =
 			this.props.customer_invoice_list && this.props.customer_invoice_list.data
 				? this.props.customer_invoice_list.data.map((customer) => ({
@@ -584,7 +581,6 @@ class CustomerInvoice extends React.Component {
 						vatAmount: customer.totalVatAmount,
 				  }))
 				: '';
-
 		return (
 			<div className="customer-invoice-screen">
 				<div className="animated fadeIn">

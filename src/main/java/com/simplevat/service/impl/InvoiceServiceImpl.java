@@ -22,9 +22,11 @@ import com.simplevat.dao.Dao;
 import com.simplevat.dao.InvoiceDao;
 import com.simplevat.dao.JournalDao;
 import com.simplevat.dao.JournalLineItemDao;
+import com.simplevat.dao.SupplierInvoicePaymentDao;
 import com.simplevat.entity.CustomerInvoiceReceipt;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.JournalLineItem;
+import com.simplevat.entity.SupplierInvoicePayment;
 import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
@@ -55,6 +57,9 @@ public class InvoiceServiceImpl extends InvoiceService {
 
 	@Autowired
 	private CustomerInvoiceReceiptDao customerInvoiceReceiptDao;
+
+	@Autowired
+	private SupplierInvoicePaymentDao supplierInvoicePaymentDao;
 
 	@Override
 	protected Dao<Integer, Invoice> getDao() {
@@ -161,10 +166,14 @@ public class InvoiceServiceImpl extends InvoiceService {
 
 		List<Invoice> responseList = new ArrayList<Invoice>();
 		Set<Integer> mappedInvIdSet = new HashSet<>();
-
-		List<CustomerInvoiceReceipt> mappedCustomerInvoiceReceipt = customerInvoiceReceiptDao.dumpData();
-		List<Invoice> mappedInvoices = getMappedInvoices(mappedCustomerInvoiceReceipt);
-
+		List<Invoice> mappedInvoices = new ArrayList<>();
+		if (ContactTypeEnum.CUSTOMER.equals(type)) {
+			List<CustomerInvoiceReceipt> mappedCustomerInvoiceReceipt = customerInvoiceReceiptDao.dumpData();
+			mappedInvoices = getMappedCustomerInvoices(mappedCustomerInvoiceReceipt);
+		} else {
+			List<SupplierInvoicePayment> mappedsupplierInvoicePayment = supplierInvoicePaymentDao.dumpData();
+			mappedInvoices = getMappedSupplierInvoices(mappedsupplierInvoicePayment);
+		}
 		if (mappedInvoices != null && !mappedInvoices.isEmpty())
 			for (Invoice invoice : mappedInvoices) {
 				mappedInvIdSet.add(invoice.getId());
@@ -181,10 +190,18 @@ public class InvoiceServiceImpl extends InvoiceService {
 		return responseList;
 	}
 
-	private List<Invoice> getMappedInvoices(List<CustomerInvoiceReceipt> mappedCustomerInvoiceReceipt) {
+	private List<Invoice> getMappedCustomerInvoices(List<CustomerInvoiceReceipt> mappedCustomerInvoiceReceipt) {
 		List<Invoice> invoiceList = new ArrayList<Invoice>();
 		for (CustomerInvoiceReceipt customerInvoiceReceipt : mappedCustomerInvoiceReceipt) {
 			invoiceList.add(customerInvoiceReceipt.getCustomerInvoice());
+		}
+		return invoiceList;
+	}
+
+	private List<Invoice> getMappedSupplierInvoices(List<SupplierInvoicePayment> mappedCustomerInvoicePayment) {
+		List<Invoice> invoiceList = new ArrayList<Invoice>();
+		for (SupplierInvoicePayment supplierInvoicePayment : mappedCustomerInvoicePayment) {
+			invoiceList.add(supplierInvoicePayment.getSupplierInvoice());
 		}
 		return invoiceList;
 	}

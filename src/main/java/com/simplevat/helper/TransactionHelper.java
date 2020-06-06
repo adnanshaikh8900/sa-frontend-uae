@@ -8,6 +8,7 @@ package com.simplevat.helper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import com.simplevat.constant.PayMode;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.entity.Contact;
 import com.simplevat.entity.Expense;
+import com.simplevat.entity.Invoice;
+import com.simplevat.entity.Payment;
 import com.simplevat.entity.Receipt;
 import com.simplevat.entity.TransactionExpenses;
 import com.simplevat.entity.bankaccount.Transaction;
@@ -221,7 +224,8 @@ public class TransactionHelper {
 		return model;
 	}
 
-	public Receipt getEntity(Contact contact, BigDecimal totalAmt, TransactionCategory depositeToTransationCategory) {
+	public Receipt getReceiptEntity(Contact contact, BigDecimal totalAmt,
+			TransactionCategory depositeToTransationCategory) {
 		Receipt receipt = new Receipt();
 		receipt.setContact(contact);
 		receipt.setAmount(totalAmt);
@@ -234,6 +238,17 @@ public class TransactionHelper {
 				// bank transacton category id
 				depositeToTransationCategory);
 		return receipt;
+	}
+
+	public Payment getPaymentEntity(Contact contact, BigDecimal totalAmt, TransactionCategory transactionCategory,
+			Invoice invoice) {
+		Payment payment = new Payment();
+		payment.setSupplier(contact);
+		payment.setInvoiceAmount(totalAmt);
+		payment.setCurrency(invoice.getCurrency());
+		payment.setDepositeToTransactionCategory(transactionCategory);
+		payment.setPaymentDate(LocalDateTime.now());
+		return payment;
 	}
 
 }

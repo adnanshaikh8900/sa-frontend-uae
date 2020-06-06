@@ -39,6 +39,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
+import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
@@ -51,11 +52,14 @@ import com.simplevat.entity.CustomerInvoiceReceipt;
 import com.simplevat.entity.Expense;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
+import com.simplevat.entity.Payment;
 import com.simplevat.entity.Receipt;
+import com.simplevat.entity.SupplierInvoicePayment;
 import com.simplevat.entity.TransactionExpenses;
 import com.simplevat.entity.TransactionStatus;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.helper.TransactionHelper;
+import com.simplevat.model.ContactType;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
@@ -70,7 +74,9 @@ import com.simplevat.service.EmployeeService;
 import com.simplevat.service.ExpenseService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalService;
+import com.simplevat.service.PaymentService;
 import com.simplevat.service.ReceiptService;
+import com.simplevat.service.SupplierInvoicePaymentService;
 import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.TransactionExpensesService;
 import com.simplevat.service.VatCategoryService;
@@ -160,6 +166,12 @@ public class TransactionRestController {
 
 	@Autowired
 	private TransactionExpensesService transactionExpensesService;
+
+	@Autowired
+	private PaymentService paymentService;
+
+	@Autowired
+	private SupplierInvoicePaymentService supplierInvoicePaymentService;
 
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
@@ -325,7 +337,7 @@ public class TransactionRestController {
 					}
 
 					// CREATE RECEIPT
-					Receipt receipt = transactionHelper.getEntity(contact, totalAmt,
+					Receipt receipt = transactionHelper.getReceiptEntity(contact, totalAmt,
 							trnx.getBankAccount().getTransactionCategory());
 					receiptService.persist(receipt, userId);
 
@@ -443,7 +455,6 @@ public class TransactionRestController {
 
 					Contact contact = null;
 					BigDecimal totalAmt = BigDecimal.ZERO;
-					List<CustomerInvoiceReceipt> customerInvoiceReceiptList = new ArrayList<>();
 
 					for (ReconsileRequestLineItemModel explainParam : itemModels) {
 
@@ -461,30 +472,55 @@ public class TransactionRestController {
 								invoiceEntity.setDueAmount(BigDecimal.ZERO);
 								invoiceService.update(invoiceEntity);
 
-								// CREATE MAPPNG BETWEEN RECEIPT AND INVOICE
-								CustomerInvoiceReceipt customerInvoiceReceipt = new CustomerInvoiceReceipt();
-								customerInvoiceReceipt.setCustomerInvoice(invoiceEntity);
-								customerInvoiceReceipt.setPaidAmount(invoiceEntity.getTotalAmount());
-								customerInvoiceReceipt.setDeleteFlag(Boolean.FALSE);
-								customerInvoiceReceipt.setDueAmount(BigDecimal.ZERO);
-								customerInvoiceReceiptList.add(customerInvoiceReceipt);
+								if (ContactTypeEnum.CUSTOMER.getValue().equals(invoiceEntity.getType())) {
+									// CREATE MAPPNG BETWEEN RECEIPT AND INVOICE
+									CustomerInvoiceReceipt customerInvoiceReceipt = new CustomerInvoiceReceipt();
+									customerInvoiceReceipt.setCustomerInvoice(invoiceEntity);
+									customerInvoiceReceipt.setPaidAmount(invoiceEntity.getTotalAmount());
+									customerInvoiceReceipt.setDeleteFlag(Boolean.FALSE);
+									customerInvoiceReceipt.setDueAmount(BigDecimal.ZERO);
 
-								// CREATE RECEIPT
-								Receipt receipt = transactionHelper.getEntity(contact, totalAmt,
-										trnx.getBankAccount().getTransactionCategory());
-								receipt.setCreatedBy(userId);
-								receiptService.persist(receipt);
+									// CREATE RECEIPT
+									Receipt receipt = transactionHelper.getReceiptEntity(contact, totalAmt,
+											trnx.getBankAccount().getTransactionCategory());
+									receipt.setCreatedBy(userId);
+									receiptService.persist(receipt);
 
-								// POST JOURNAL FOR RECCEPT
-								Journal journalForReceipt = receiptRestHelper.receiptPosting(
-										new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
-										receipt.getDepositeToTransactionCategory());
-								journalService.persist(journalForReceipt);
+									// POST JOURNAL FOR RECCEPT
+									Journal journalForReceipt = receiptRestHelper.receiptPosting(
+											new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+											receipt.getDepositeToTransactionCategory());
+									journalService.persist(journalForReceipt);
 
-								// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
-								customerInvoiceReceipt.setReceipt(receipt);
-								customerInvoiceReceipt.setCreatedBy(userId);
-								customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+									// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
+									customerInvoiceReceipt.setReceipt(receipt);
+									customerInvoiceReceipt.setCreatedBy(userId);
+									customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+								} else {
+									// CREATE MAPPNG BETWEEN PAYMENT AND INVOICE
+									SupplierInvoicePayment supplierInvoicePayment = new SupplierInvoicePayment();
+									supplierInvoicePayment.setSupplierInvoice(invoiceEntity);
+									supplierInvoicePayment.setPaidAmount(invoiceEntity.getTotalAmount());
+									supplierInvoicePayment.setDeleteFlag(Boolean.FALSE);
+									supplierInvoicePayment.setDueAmount(BigDecimal.ZERO);
+
+									// CREATE PAYMENT
+									Payment payment = transactionHelper.getPaymentEntity(contact, totalAmt,
+											trnx.getBankAccount().getTransactionCategory(), invoiceEntity);
+									payment.setCreatedBy(userId);
+									paymentService.persist(payment);
+
+									// POST JOURNAL FOR RECCEPT
+									Journal journalForReceipt = receiptRestHelper.paymentPosting(
+											new PostingRequestModel(payment.getPaymentId(), payment.getInvoiceAmount()),
+											userId, payment.getDepositeToTransactionCategory());
+									journalService.persist(journalForReceipt);
+
+									// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
+									supplierInvoicePayment.setPayment(payment);
+									supplierInvoicePayment.setCreatedBy(userId);
+									supplierInvoicePaymentService.persist(supplierInvoicePayment);
+								}
 							}
 							// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
 							TransactionStatus status = new TransactionStatus();

@@ -460,6 +460,31 @@ public class TransactionRestController {
 												: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
 								invoiceEntity.setDueAmount(BigDecimal.ZERO);
 								invoiceService.update(invoiceEntity);
+
+								// CREATE MAPPNG BETWEEN RECEIPT AND INVOICE
+								CustomerInvoiceReceipt customerInvoiceReceipt = new CustomerInvoiceReceipt();
+								customerInvoiceReceipt.setCustomerInvoice(invoiceEntity);
+								customerInvoiceReceipt.setPaidAmount(invoiceEntity.getTotalAmount());
+								customerInvoiceReceipt.setDeleteFlag(Boolean.FALSE);
+								customerInvoiceReceipt.setDueAmount(BigDecimal.ZERO);
+								customerInvoiceReceiptList.add(customerInvoiceReceipt);
+
+								// CREATE RECEIPT
+								Receipt receipt = transactionHelper.getEntity(contact, totalAmt,
+										trnx.getBankAccount().getTransactionCategory());
+								receipt.setCreatedBy(userId);
+								receiptService.persist(receipt);
+
+								// POST JOURNAL FOR RECCEPT
+								Journal journalForReceipt = receiptRestHelper.receiptPosting(
+										new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+										receipt.getDepositeToTransactionCategory());
+								journalService.persist(journalForReceipt);
+
+								// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
+								customerInvoiceReceipt.setReceipt(receipt);
+								customerInvoiceReceipt.setCreatedBy(userId);
+								customerInvoiceReceiptService.persist(customerInvoiceReceipt);
 							}
 							// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
 							TransactionStatus status = new TransactionStatus();
@@ -471,30 +496,6 @@ public class TransactionRestController {
 
 							transactionStatusService.persist(status);
 
-							// CREATE MAPPNG BETWEEN RECEIPT AND INVOICE
-							CustomerInvoiceReceipt customerInvoiceReceipt = new CustomerInvoiceReceipt();
-							customerInvoiceReceipt.setCustomerInvoice(invoiceEntity);
-							customerInvoiceReceipt.setPaidAmount(invoiceEntity.getTotalAmount());
-							customerInvoiceReceipt.setDeleteFlag(Boolean.FALSE);
-							customerInvoiceReceipt.setDueAmount(BigDecimal.ZERO);
-							customerInvoiceReceiptList.add(customerInvoiceReceipt);
-
-							// CREATE RECEIPT
-							Receipt receipt = transactionHelper.getEntity(contact, totalAmt,
-									trnx.getBankAccount().getTransactionCategory());
-							receipt.setCreatedBy(userId);
-							receiptService.persist(receipt, userId);
-
-							// POST JOURNAL FOR RECCEPT
-							Journal journalForReceipt = receiptRestHelper.receiptPosting(
-									new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
-									receipt.getDepositeToTransactionCategory());
-							journalService.persist(journalForReceipt);
-
-							// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
-							customerInvoiceReceipt.setReceipt(receipt);
-							customerInvoiceReceipt.setCreatedBy(userId);
-							customerInvoiceReceiptService.persist(customerInvoiceReceipt);
 						} else {
 
 							TransactionExpenses status = new TransactionExpenses();

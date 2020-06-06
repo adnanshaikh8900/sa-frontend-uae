@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
 
@@ -22,7 +23,7 @@ import lombok.Data;
  */
 @Data
 public class TransactionPresistModel implements Serializable {
-
+	@JsonIgnore
 	private String DATE_FORMAT = "dd/MM/yyyy";
 
 	private Integer bankId;
@@ -47,10 +48,10 @@ public class TransactionPresistModel implements Serializable {
 	// Transafer To
 	private Integer reconsileBankId;
 
-	private String invoiceIdListStr;
+	private String explainParamListStr;
 
 	// SALES
-	private List<ReconsileRequestLineItemModel> invoiceIdList;
+	private List<ReconsileRequestLineItemModel> explainParamList;
 
 	private TransactionExplinationStatusEnum explinationStatusEnum;
 	

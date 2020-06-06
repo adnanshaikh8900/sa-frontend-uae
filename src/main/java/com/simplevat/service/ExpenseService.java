@@ -12,7 +12,7 @@ import com.simplevat.service.report.model.BankAccountTransactionReportModel;
 
 public abstract class ExpenseService extends SimpleVatService<Integer, Expense> {
 
-    public abstract List<Expense> getExpenses();
+    public abstract List<Expense> getExpenses(Integer userId, List<Integer> statusList);
     
     public abstract PaginationResponseModel getExpensesList(Map<ExpenseFIlterEnum, Object> filterMap,PaginationModel paginationMdel);
     public abstract Expense updateOrCreateExpense(Expense expense);
@@ -20,4 +20,6 @@ public abstract class ExpenseService extends SimpleVatService<Integer, Expense> 
     public abstract List<BankAccountTransactionReportModel> getExpensesForReport(Date startDate, Date endDate);
 
     public abstract void deleteByIds(List<Integer> ids);
+
+	public abstract List<Expense> getUnMappedExpenses(Integer userId); 
 }

@@ -277,7 +277,7 @@ public class TransactionRestController {
 				journal = reconsilationRestHelper.get(
 						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
 						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
-						trnx, itemModels);
+						trnx);
 
 				if (journal != null) {
 					journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
@@ -431,7 +431,7 @@ public class TransactionRestController {
 				journal = reconsilationRestHelper.get(
 						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
 						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
-						trnx, itemModels);
+						trnx);
 
 				if (journal != null) {
 					journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
@@ -439,7 +439,7 @@ public class TransactionRestController {
 					journalService.persist(journal);
 				}
 
-				if (transactionPresistModel.getExplainParamList() != null) {
+				if (itemModels != null && !itemModels.isEmpty()) {
 
 					Contact contact = null;
 					BigDecimal totalAmt = BigDecimal.ZERO;
@@ -482,6 +482,7 @@ public class TransactionRestController {
 							// CREATE RECEIPT
 							Receipt receipt = transactionHelper.getEntity(contact, totalAmt,
 									trnx.getBankAccount().getTransactionCategory());
+							receipt.setCreatedBy(userId);
 							receiptService.persist(receipt, userId);
 
 							// POST JOURNAL FOR RECCEPT

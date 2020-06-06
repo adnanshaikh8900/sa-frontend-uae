@@ -109,6 +109,9 @@ class BankTransactions extends React.Component {
 	};
 
 	initializeData = (search) => {
+		this.setState({
+			bankId: this.props.location.state.bankAccountId,
+		});
 		let { filterData } = this.state;
 		const data = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,

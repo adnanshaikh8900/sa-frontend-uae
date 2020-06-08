@@ -11,7 +11,7 @@ import com.simplevat.rest.PaginationResponseModel;
 
 public interface ExpenseDao extends Dao<Integer, Expense> {
 
-	public List<Expense> getAllExpenses();
+	public List<Expense> getAllExpenses(Integer userId, List<Integer> statusList);
 
 	public List<Object[]> getExpensePerMonth(Date startDate, Date endDate);
 

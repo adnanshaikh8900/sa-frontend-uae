@@ -264,4 +264,48 @@ public class ReceiptRestHelper {
 
 		return new ArrayList<>();
 	}
+	
+	public Journal paymentPosting(PostingRequestModel postingRequestModel, Integer userId,
+			TransactionCategory depositeToTransactionCategory) {
+		List<JournalLineItem> journalLineItemList = new ArrayList<>();
+
+		Map<String, Object> param = new HashMap<>();
+		param.put("referenceType", PostingReferenceTypeEnum.PAYMENT);
+		param.put("referenceId", postingRequestModel.getPostingRefId());
+		param.put("deleteFlag", false);
+		journalLineItemList = journalLineItemService.findByAttributes(param);
+
+		Journal journal = journalLineItemList != null && journalLineItemList.size() > 0
+				? journalLineItemList.get(0).getJournal()
+				: new Journal();
+		JournalLineItem journalLineItem1 = journal.getJournalLineItems() != null
+				&& journal.getJournalLineItems().size() > 0 ? journalLineItemList.get(0) : new JournalLineItem();
+		TransactionCategory transactionCategory = transactionCategoryService
+				.findTransactionCategoryByTransactionCategoryCode(
+						TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
+		journalLineItem1.setTransactionCategory(transactionCategory);
+		journalLineItem1.setDebitAmount(postingRequestModel.getAmount());
+		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
+		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
+		journalLineItem1.setCreatedBy(userId);
+		journalLineItem1.setJournal(journal);
+		journalLineItemList.add(journalLineItem1);
+
+		JournalLineItem journalLineItem2 = journal.getJournalLineItems() != null
+				&& journal.getJournalLineItems().size() > 0 ? journalLineItemList.get(1) : new JournalLineItem();
+		journalLineItem2.setTransactionCategory(depositeToTransactionCategory);
+		journalLineItem2.setCreditAmount(postingRequestModel.getAmount());
+		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
+		journalLineItem2.setReferenceId(postingRequestModel.getPostingRefId());
+		journalLineItem2.setCreatedBy(userId);
+		journalLineItem2.setJournal(journal);
+		journalLineItemList.add(journalLineItem2);
+
+		journal.setJournalLineItems(journalLineItemList);
+		journal.setCreatedBy(userId);
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.RECEIPT);
+		journal.setJournalDate(LocalDateTime.now());
+		return journal;
+	}
+
 }

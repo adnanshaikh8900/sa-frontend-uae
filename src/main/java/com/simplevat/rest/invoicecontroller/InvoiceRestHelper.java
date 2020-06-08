@@ -36,6 +36,8 @@ import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Project;
 import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.DropdownModel;
+import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.service.ConfigurationService;
 import com.simplevat.service.ContactService;
@@ -701,6 +703,23 @@ public class InvoiceRestHelper {
 				model.setReferenceNo(invoice.getReferenceNumber());
 				model.setTotalAount(invoice.getTotalAmount());
 
+				modelList.add(model);
+			}
+			return modelList;
+		}
+
+		return new ArrayList<>();
+
+	}
+
+	public List<InviceSingleLevelDropdownModel> getDropDownModelList(List<Invoice> invoiceList) {
+
+		if (invoiceList != null && !invoiceList.isEmpty()) {
+			List<InviceSingleLevelDropdownModel> modelList = new ArrayList<>();
+			for (Invoice invoice : invoiceList) {
+				InviceSingleLevelDropdownModel model = new InviceSingleLevelDropdownModel(invoice.getId(),
+						" (" + invoice.getTotalAmount() + " " + invoice.getCurrency().getCurrencyName() + ")",
+						invoice.getTotalAmount(), PostingReferenceTypeEnum.INVOICE);
 				modelList.add(model);
 			}
 			return modelList;

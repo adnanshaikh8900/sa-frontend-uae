@@ -39,7 +39,8 @@ import org.hibernate.annotations.ColumnDefault;
 /**
  * Created by mohsinh on 2/26/2017.
  */
-@NamedQueries({ @NamedQuery(name = "allExpenses", query = "SELECT e " + "FROM Expense e where e.deleteFlag = FALSE") })
+@NamedQueries({ @NamedQuery(name = "allExpenses", query = "SELECT e FROM Expense e where e.deleteFlag = FALSE"),
+		@NamedQuery(name = "postedExpenses", query = "SELECT e FROM Expense e where e.deleteFlag = FALSE and e.status in :status and e.createdBy = :userId order by e.expenseId desc") })
 @Entity
 @Table(name = "EXPENSE")
 @Data

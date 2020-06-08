@@ -205,12 +205,10 @@ class SupplierInvoice extends React.Component {
 	};
 
 	invoiceDueDate = (cell, row) => {
-		return row.invoiceDueDate
-			? moment(row.invoiceDueDate).format('DD/MM/YYYY')
-			: '';
+		return row.invoiceDueDate ? row.invoiceDueDate : '';
 	};
 	invoiceDate = (cell, row) => {
-		return row.invoiceDate ? moment(row.invoiceDate).format('DD/MM/YYYY') : '';
+		return row.invoiceDate ? row.invoiceDate : '';
 	};
 
 	toggleActionButton = (index) => {

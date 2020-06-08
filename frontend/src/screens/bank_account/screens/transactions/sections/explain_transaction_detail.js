@@ -85,7 +85,7 @@ class ExplainTrasactionDetail extends React.Component {
 		this.props.transactionDetailActions
 			.getTransactionDetail(selectedData.id)
 			.then((res) => {
-				this.getChartOfAccountCategoryList('D');
+				this.getChartOfAccountCategoryList(selectedData.debitCreditFlag);
 				this.setState(
 					{
 						loading: false,

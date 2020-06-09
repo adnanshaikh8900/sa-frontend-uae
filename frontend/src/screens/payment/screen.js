@@ -481,21 +481,17 @@ class Payment extends React.Component {
 												>
 													Receipt Date
 												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="invoiceReferenceNo"
-													dataSort
-												>
-													Reference #
-												</TableHeaderColumn>
 												<TableHeaderColumn dataField="supplierName" dataSort>
 													Supplier Name
+												</TableHeaderColumn>
+
+												<TableHeaderColumn dataField="paymentId" dataSort>
+													RECEIPT NO
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="invoiceAmount"
 													dataSort
 													dataFormat={this.renderAmount}
-													dataAlign="right"
-													width="10%"
 												>
 													Amount
 												</TableHeaderColumn>

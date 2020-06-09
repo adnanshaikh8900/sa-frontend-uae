@@ -33,7 +33,6 @@ import moment from 'moment';
 
 const mapStateToProps = (state) => {
 	return {
-		project_list: state.customer_invoice.project_list,
 		currency_list: state.customer_invoice.currency_list,
 		vat_list: state.customer_invoice.vat_list,
 		product_list: state.customer_invoice.product_list,
@@ -301,7 +300,6 @@ class CreateCustomerInvoice extends React.Component {
 
 	getInitialData = () => {
 		this.getInvoiceNo();
-		this.props.customerInvoiceActions.getProjectList();
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
 		this.props.customerInvoiceActions.getCurrencyList();
 		this.props.customerInvoiceActions.getCountryList();
@@ -809,7 +807,7 @@ class CreateCustomerInvoice extends React.Component {
 
 	render() {
 		const { data, discountOptions, initValue } = this.state;
-		const { project_list, currency_list, customer_list } = this.props;
+		const { currency_list, customer_list } = this.props;
 		return (
 			<div className="create-customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -965,32 +963,6 @@ class CreateCustomerInvoice extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="project">Project</Label>
-																	<Select
-																		className="select-default-width"
-																		options={
-																			project_list
-																				? selectOptionsFactory.renderOptions(
-																						'label',
-																						'value',
-																						project_list,
-																						'Project',
-																				  )
-																				: []
-																		}
-																		id="project"
-																		name="project"
-																		value={props.values.project}
-																		onChange={(option) =>
-																			props.handleChange('project')(option)
-																		}
-																	/>
-																</FormGroup>
-															</Col>
-														</Row>
-														<Row>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="contactId">

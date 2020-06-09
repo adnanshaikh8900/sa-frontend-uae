@@ -163,7 +163,7 @@ public class ReceiptRestHelper {
 	}
 
 	public List<CustomerInvoiceReceipt> getCustomerInvoiceReceiptEntity(String invoiceDueAmountModelListStr) {
-		if (invoiceDueAmountModelListStr != null && invoiceDueAmountModelListStr.isEmpty()) {
+		if (invoiceDueAmountModelListStr != null && ! invoiceDueAmountModelListStr.isEmpty()) {
 
 			ObjectMapper mapper = new ObjectMapper();
 			List<InvoiceDueAmountModel> itemModels = null;

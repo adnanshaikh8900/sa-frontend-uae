@@ -55,6 +55,7 @@ class Receipt extends React.Component {
 				invoiceId: '',
 				receiptReferenceCode: '',
 				receiptDate: '',
+				contactType: 2,
 			},
 			csvData: [],
 			view: false,
@@ -83,7 +84,8 @@ class Receipt extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.props.receiptActions.getContactList();
+		let { filterData } = this.state;
+		this.props.receiptActions.getContactList(filterData.contactType);
 		this.props.receiptActions.getInvoiceList();
 		this.initializeData();
 	};
@@ -508,14 +510,14 @@ class Receipt extends React.Component {
 												>
 													Receipt Date
 												</TableHeaderColumn>
-												<TableHeaderColumn dataField="referenceCode" dataSort>
+												{/* <TableHeaderColumn dataField="referenceCode" dataSort>
 													Reference Number
-												</TableHeaderColumn>
+												</TableHeaderColumn> */}
 												<TableHeaderColumn dataField="customerName" dataSort>
 													Customer Name
 												</TableHeaderColumn>
 												<TableHeaderColumn dataField="receiptId" dataSort>
-													Receipt #
+													Receipt No
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn
                             dataField="transactionType"
@@ -527,7 +529,6 @@ class Receipt extends React.Component {
 												<TableHeaderColumn
 													dataField="amount"
 													dataSort
-													dataAlign="right"
 													dataFormat={this.renderAmount}
 												>
 													Amount

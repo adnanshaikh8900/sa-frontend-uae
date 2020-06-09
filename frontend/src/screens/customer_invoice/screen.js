@@ -27,8 +27,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import moment from 'moment';
-
 import * as CustomerInvoiceActions from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
@@ -269,7 +267,7 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderVatAmount = (cell, row) => {
-		return row.vatAmount ? row.vatAmount.toFixed(2) : '';
+		return row.vatAmount === 0 ? row.vatAmount : row.vatAmount;
 	};
 
 	renderActions = (cell, row) => {
@@ -609,7 +607,7 @@ class CustomerInvoice extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-									<div className="mb-4 status-panel p-3">
+									{/* <div className="mb-4 status-panel p-3">
 										<Row>
 											<Col lg={3}>
 												<h5>Overdue</h5>
@@ -634,7 +632,7 @@ class CustomerInvoice extends React.Component {
 												<h3 className="status-title">0 day</h3>
 											</Col>
 										</Row>
-									</div>
+									</div> */}
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											<Button
@@ -707,19 +705,6 @@ class CustomerInvoice extends React.Component {
 												/>
 											</Col>
 											<Col lg={2} className="mb-1">
-												<Input
-													type="text"
-													placeholder="Reference Number"
-													value={filterData.referenceNumber}
-													onChange={(e) => {
-														this.handleChange(
-															e.target.value,
-															'referenceNumber',
-														);
-													}}
-												/>
-											</Col>
-											<Col lg={2} className="mb-1">
 												<DatePicker
 													className="form-control"
 													id="date"
@@ -754,7 +739,7 @@ class CustomerInvoice extends React.Component {
 													}}
 												/>
 											</Col>
-											<Col lg={1} className="mb-1">
+											<Col lg={2} className="mb-1">
 												<Input
 													type="text"
 													value={filterData.amount}
@@ -844,11 +829,7 @@ class CustomerInvoice extends React.Component {
 											>
 												Status
 											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="customerName"
-												dataSort
-												width="15%"
-											>
+											<TableHeaderColumn dataField="customerName" dataSort>
 												Customer Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
@@ -861,7 +842,6 @@ class CustomerInvoice extends React.Component {
 											<TableHeaderColumn
 												dataField="invoiceDate"
 												dataSort
-												width="13%"
 												dataFormat={this.invoiceDate}
 											>
 												Invoice Date
@@ -869,7 +849,6 @@ class CustomerInvoice extends React.Component {
 											<TableHeaderColumn
 												dataField="invoiceDueDate"
 												dataSort
-												width="10%"
 												dataFormat={this.invoiceDueDate}
 											>
 												Due Date
@@ -878,7 +857,6 @@ class CustomerInvoice extends React.Component {
 												dataField="totalAmount"
 												dataSort
 												dataFormat={this.renderInvoiceAmount}
-												dataAlign="right"
 											>
 												Invoice Amount
 											</TableHeaderColumn>
@@ -886,14 +864,12 @@ class CustomerInvoice extends React.Component {
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
-												dataAlign="right"
 											>
 												VAT Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
-												width="55"
 												dataFormat={this.renderActions}
 											></TableHeaderColumn>
 										</BootstrapTable>

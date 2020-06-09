@@ -201,7 +201,7 @@ class SupplierInvoice extends React.Component {
 	};
 
 	renderVatAmount = (cell, row) => {
-		return row.vatAmount ? row.vatAmount.toFixed(2) : '';
+		return row.vatAmount === 0 ? row.vatAmount : row.vatAmount;
 	};
 
 	invoiceDueDate = (cell, row) => {
@@ -622,7 +622,7 @@ class SupplierInvoice extends React.Component {
 
 							<Row>
 								<Col lg={12}>
-									<div className="mb-4 status-panel p-3">
+									{/* <div className="mb-4 status-panel p-3">
 										<Row>
 											<Col lg={3}>
 												<h5>Overdue</h5>
@@ -647,7 +647,7 @@ class SupplierInvoice extends React.Component {
 												<h3 className="status-title">0 day</h3>
 											</Col>
 										</Row>
-									</div>
+									</div> */}
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											<Button
@@ -720,19 +720,6 @@ class SupplierInvoice extends React.Component {
 												/>
 											</Col>
 											<Col lg={2} className="mb-1">
-												<Input
-													type="text"
-													value={filterData.referenceNumber}
-													placeholder="Reference Number"
-													onChange={(e) => {
-														this.handleChange(
-															e.target.value,
-															'referenceNumber',
-														);
-													}}
-												/>
-											</Col>
-											<Col lg={2} className="mb-1">
 												<DatePicker
 													className="form-control"
 													id="date"
@@ -767,7 +754,7 @@ class SupplierInvoice extends React.Component {
 													}}
 												/>
 											</Col>
-											<Col lg={1} className="mb-1">
+											<Col lg={2} className="mb-1">
 												<Input
 													type="text"
 													value={filterData.amount}
@@ -884,7 +871,6 @@ class SupplierInvoice extends React.Component {
 												dataField="totalAmount"
 												dataSort
 												dataFormat={this.renderInvoiceAmount}
-												dataAlign="right"
 											>
 												Invoice Amount
 											</TableHeaderColumn>
@@ -892,14 +878,12 @@ class SupplierInvoice extends React.Component {
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
-												dataAlign="right"
 											>
 												VAT Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
-												width="55"
 												dataFormat={this.renderActions}
 											></TableHeaderColumn>
 										</BootstrapTable>

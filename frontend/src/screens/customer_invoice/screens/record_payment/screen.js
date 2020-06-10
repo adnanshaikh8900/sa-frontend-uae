@@ -125,8 +125,14 @@ class RecordCustomerPayment extends React.Component {
 				paidInvoiceListStr: [
 					{
 						id: this.props.location.state.id.id,
-						date: this.props.location.state.id.invoiceDate,
-						dueDate: this.props.location.state.id.invoiceDueDate,
+						date: moment(
+							this.props.location.state.id.invoiceDate,
+							'DD/MM/YYYY',
+						).toDate(),
+						dueDate: moment(
+							this.props.location.state.id.invoiceDueDate,
+							'DD/MM/YYYY',
+						).toDate(),
 						paidAmount: this.props.location.state.id.invoiceAmount,
 						dueAmount: this.props.location.state.id.invoiceAmount,
 						referenceNo: this.props.location.state.id.invoiceNumber,
@@ -535,7 +541,7 @@ class RecordCustomerPayment extends React.Component {
 																			selected={props.values.receiptDate}
 																			onChange={(value) => {
 																				props.handleChange('receiptDate')(
-																					moment(value).format('DD/MM/YYYY'),
+																					value,
 																				);
 																			}}
 																			className={`form-control ${

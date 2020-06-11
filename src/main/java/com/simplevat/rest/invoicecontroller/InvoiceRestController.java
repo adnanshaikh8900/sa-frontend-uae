@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +80,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	private ChartUtil chartUtil;
 
 	@Autowired
-	private ExpenseRestHelper ExpenseRestHelper;
+	private ExpenseRestHelper expenseRestHelper;
 
 	@Autowired
 	private ExpenseService expenseService;
@@ -217,7 +216,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 			invoiceService.update(invoice, invoice.getId());
 			invoiceService.deleteJournaForInvoice(invoice);
-			if (invoice.getStatus() == InvoiceStatusEnum.POST.getValue()) {
+			if (invoice.getStatus().equals(InvoiceStatusEnum.POST.getValue())) {
 				// persist updated journal
 				Journal journal = invoiceRestHelper.invoicePosting(new PostingRequestModel(invoice.getId()), userId);
 				journalService.persist(journal);
@@ -301,7 +300,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	/**
 	 * getUnpaid invoice
 	 * 
-	 * @param id Contact Id
+	 * @param contactId Contact Id
 	 * @return list InvoiceDueAmountModel datalist
 	 */
 	@ApiOperation(value = "Get Overdue Amount Details")
@@ -321,7 +320,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	/**
 	 * Get Suggestion Invoices for transaction explanation
 	 * 
-	 * @param Integer Contact Id
+	 * @param contactId Contact Id
 	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
 	 */
 	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
@@ -343,7 +342,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	/**
 	 * Get Suggestion Invoices & expense for transaction explanation
 	 * 
-	 * @param Integer Contact Id
+	 * @param contactId Contact Id
 	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
 	 */
 	@ApiOperation(value = "Get Suggestion ofUnpaid Invoices for transaction explination")
@@ -356,9 +355,28 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			List<Invoice> invoiceList = invoiceService.getSuggestionInvoices(amount, contactId,
 					ContactTypeEnum.SUPPLIER, userId);
 			List<InviceSingleLevelDropdownModel> responseList = invoiceRestHelper.getDropDownModelList(invoiceList);
+			return new ResponseEntity<>(responseList, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-			List<Expense> expenseList = expenseService.getUnMappedExpenses(userId);
-			responseList.addAll(ExpenseRestHelper.getDropDoenModelList(expenseList));
+	/**
+	 * Get Suggestion Invoices & expense for transaction explanation
+	 *
+	 * @param amount select expenses < or = to the amount given
+	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
+	 */
+	@ApiOperation(value = "Get Suggestion ofUnpaid Expenses for transaction explination")
+	@GetMapping(value = "/getSuggestionExpenses")
+	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionExpenses(
+			@RequestParam("amount") BigDecimal amount,
+			HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			List<Expense> expenseList = expenseService.getUnMappedExpenses(userId,amount);
+			List<InviceSingleLevelDropdownModel> responseList = expenseRestHelper.getDropDoenModelList(expenseList);
 			return new ResponseEntity<>(responseList, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

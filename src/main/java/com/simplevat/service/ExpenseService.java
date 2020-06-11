@@ -1,5 +1,6 @@
 package com.simplevat.service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,5 +22,5 @@ public abstract class ExpenseService extends SimpleVatService<Integer, Expense> 
 
     public abstract void deleteByIds(List<Integer> ids);
 
-	public abstract List<Expense> getUnMappedExpenses(Integer userId); 
+	public abstract List<Expense> getUnMappedExpenses(Integer userId , BigDecimal amount);
 }

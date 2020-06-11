@@ -1,5 +1,6 @@
 package com.simplevat.dao;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import com.simplevat.rest.PaginationResponseModel;
 public interface ExpenseDao extends Dao<Integer, Expense> {
 
 	public List<Expense> getAllExpenses(Integer userId, List<Integer> statusList);
-
+	public List<Expense> getExpensesToMatch(Integer userId, List<Integer> statusList, BigDecimal amount);
 	public List<Object[]> getExpensePerMonth(Date startDate, Date endDate);
 
 	public List<Object[]> getExpenses(Date startDate, Date endDate);

@@ -169,8 +169,8 @@ public class DetailedGeneralLedgerRestHelper {
 						expenseMap = findOrGetFromDbEx(expenseMap, lineItem.getReferenceId());
 						Expense expense = expenseMap.get(lineItem.getReferenceId());
 						model.setAmount(expense.getExpenseAmount());
-						model.setDebitAmount(expense.getExpenseAmount());
-						model.setCreditAmount(new BigDecimal(0));
+						model.setDebitAmount(isDebit ? expense.getExpenseAmount(): new BigDecimal(0));
+						model.setCreditAmount(isDebit ? new BigDecimal(0):expense.getExpenseAmount());
 						model.setName(expense.getPayee() != null && !expense.getPayee().equals(" ") ? expense.getPayee()
 								: "");
 						break;

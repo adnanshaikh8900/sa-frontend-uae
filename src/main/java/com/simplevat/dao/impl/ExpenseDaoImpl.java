@@ -1,5 +1,6 @@
 package com.simplevat.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +45,20 @@ public class ExpenseDaoImpl extends AbstractDao<Integer, Expense> implements Exp
 		try {
 			TypedQuery<Expense> query = getEntityManager().createNamedQuery("postedExpenses", Expense.class)
 					.setParameter("status", statusList).setParameter("userId", userId);
+			expenseList = query.getResultList();
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return expenseList;
+	}
+
+	@Override
+	public List<Expense> getExpensesToMatch(Integer userId, List<Integer> statusList, BigDecimal amount) {
+
+		List<Expense> expenseList = null;
+		try {
+			TypedQuery<Expense> query = getEntityManager().createNamedQuery("getExpensesToMatch", Expense.class)
+					.setParameter("status", statusList).setParameter("userId", userId).setParameter("amount",amount);
 			expenseList = query.getResultList();
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

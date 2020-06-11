@@ -433,54 +433,6 @@ class CreateExpense extends React.Component {
                                     )}
                                 </FormGroup>
                               </Col>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="employee">Employee</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    id="employee"
-                                    name="employee"
-                                    options={
-                                      employee_list
-                                        ? selectOptionsFactory.renderOptions(
-                                          "label",
-                                          "value",
-                                          employee_list,
-                                          "Employee"
-                                        )
-                                        : []
-                                    }
-                                    value={props.values.employee}
-                                    onChange={(option) =>
-                                      props.handleChange("employee")(option)
-                                    }
-                                  />
-                                </FormGroup>
-                              </Col>
-                              <Col lg={4}>
-                                <FormGroup className="mb-3">
-                                  <Label htmlFor="project">Project</Label>
-                                  <Select
-                                    className="select-default-width"
-                                    id="project"
-                                    name="project"
-                                    options={
-                                      project_list
-                                        ? selectOptionsFactory.renderOptions(
-                                          "label",
-                                          "value",
-                                          project_list,
-                                          "Project"
-                                        )
-                                        : []
-                                    }
-                                    value={props.values.project}
-                                    onChange={(option) =>
-                                      props.handleChange("project")(option)
-                                    }
-                                  />
-                                </FormGroup>
-                              </Col>
                             </Row>
                             <Row>
                               <Col lg={4}>

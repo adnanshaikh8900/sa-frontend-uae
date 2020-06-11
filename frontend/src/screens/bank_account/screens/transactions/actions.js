@@ -155,6 +155,28 @@ export const getVendorInvoiceList = (param) => {
 			});
 	};
 };
+export const getExpensesList = (param) => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `rest/invoice/getSuggestionExpenses?amount=${param.amount}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: BANK_ACCOUNT.EXPENSE_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
 
 export const deleteTransactionById = (id) => {
 	return (dispatch) => {

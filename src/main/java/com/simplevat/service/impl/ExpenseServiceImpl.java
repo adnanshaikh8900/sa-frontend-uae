@@ -1,12 +1,10 @@
 package com.simplevat.service.impl;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +49,10 @@ public class ExpenseServiceImpl extends ExpenseService {
 		return expenseDao.getAllExpenses(userId, statusList);
 	}
 
+	public List<Expense> getExpensesToMatch(Integer userId, List<Integer> statusList, BigDecimal amount) {
+		return expenseDao.getExpensesToMatch(userId, statusList,amount);
+	}
+
 	@Override
 	public Expense updateOrCreateExpense(Expense expense) {
 		return this.update(expense, expense.getExpenseId());
@@ -85,26 +87,7 @@ public class ExpenseServiceImpl extends ExpenseService {
 	}
 
 	@Override
-	public List<Expense> getUnMappedExpenses(Integer userId) {
-		List<Expense> responseList = new ArrayList<>();
-
-		List<Expense> expList = getExpenses(userId, Arrays.asList(InvoiceStatusEnum.POST.getValue()));
-
-		List<Expense> mappedExp = transactionExpensesService.getMappedExpenses();
-
-		Set<Integer> mappedInvIdSet = new HashSet<>();
-		if (mappedExp != null && !mappedExp.isEmpty())
-			for (Expense expesne : mappedExp) {
-				mappedInvIdSet.add(expesne.getExpenseId());
-			}
-
-		if (expList != null && !expList.isEmpty()) {
-			for (Expense expense : expList) {
-				if (!mappedInvIdSet.contains(expense.getExpenseId())) {
-					responseList.add(expense);
-				}
-			}
-		}
-		return responseList;
+	public List<Expense> getUnMappedExpenses(Integer userId,BigDecimal amount) {
+		return expenseDao.getExpensesToMatch(userId, Arrays.asList(InvoiceStatusEnum.POST.getValue()),amount);
 	}
 }

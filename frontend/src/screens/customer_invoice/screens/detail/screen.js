@@ -304,6 +304,7 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	renderUnitPrice = (cell, row, props) => {
+		console.log('ss');
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {

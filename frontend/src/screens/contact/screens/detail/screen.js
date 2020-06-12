@@ -220,9 +220,6 @@ class DetailContact extends React.Component {
                             validationSchema={
                               Yup.object().shape({
                                 firstName: Yup.string().required("First Name is Required"),
-                                lastName: Yup.string().required("Last Name is Required"),
-                                middleName: Yup.string()
-                                  .required("Middle Name is Required"),
                                 contactType: Yup.string()
                                 .required("Contact Type is Required"),
                                 //       organization: Yup.string()
@@ -232,8 +229,6 @@ class DetailContact extends React.Component {
                                 email: Yup.string()
                                   .required("Email is Required")
                                   .email("Invalid Email"),
-                                telephone: Yup.number()
-                                  .required("Telephone Number is Required"),
                                 mobileNumber: Yup.string()
                                   .required("Mobile Number is required")
                                   .test('quantity', 'Invalid Mobile Number', (value) => {
@@ -243,32 +238,9 @@ class DetailContact extends React.Component {
                                       return false
                                     }
                                   }),
-                                //     addressLine1: Yup.string()
-                                //       .required("Address is required"),
-                                countryId: Yup.string().required("Country is Required")
-                                  .nullable(),
-                                stateId: Yup.string()
-                                  .when('countryId', {
-                                    is: (val) => val ? true : false,
-                                    then: Yup.string()
-                                      .required('State is Required')
-                                  }),
-                                //     stateRegion: Yup.string()
-                                //       .required("State is Required"),
-                                //     city: Yup.string()
-                                //       .required("City is Required"),
-                                postZipCode: Yup.string()
-                                  .required("Postal Code is Required"),
-                                //     billingEmail: Yup.string()
-                                //       .required("Billing Email is Required")
-                                //       .email('Invalid Email'),
-                                //     contractPoNumber: Yup.number()
-                                //       .required("Contract PoNumber is Required"),
-                                vatRegistrationNumber: Yup.string()
-                                  .required("Tax Registration Number is Required"),
-                                //       currencyCode: Yup.string()
-                                //       .required("Please Select Currency")
-                                //       .nullable(),
+                                      currencyCode: Yup.string()
+                                      .required("Please Select Currency")
+                                      .nullable(),
                               })
                             }
                           >
@@ -301,7 +273,7 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="middleName"><span className="text-danger">*</span>Middle Name</Label>
+                                      <Label htmlFor="middleName">Middle Name</Label>
                                       <Input
                                         type="text"
                                         id="middleName"
@@ -324,7 +296,7 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="lastName"><span className="text-danger">*</span>Last Name</Label>
+                                      <Label htmlFor="lastName">Last Name</Label>
                                       <Input
                                         type="text"
                                         id="lastName"
@@ -451,7 +423,7 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="telephone"><span className="text-danger">*</span>Telephone</Label>
+                                      <Label htmlFor="telephone">Telephone</Label>
                                       <Input
                                         type="text"
                                         id="telephone"
@@ -651,7 +623,7 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="postZipCode"><span className="text-danger">*</span>Post Zip Code</Label>
+                                      <Label htmlFor="postZipCode">Post Zip Code</Label>
                                       <Input
                                         type="text"
                                         id="postZipCode"
@@ -727,7 +699,7 @@ class DetailContact extends React.Component {
                                 <Row className="row-wrapper">
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="vatRegistrationNumber"><span className="text-danger">*</span>Tax Registration Number</Label>
+                                      <Label htmlFor="vatRegistrationNumber">Tax Registration Number</Label>
                                       <Input
                                         type="text"
                                         id="vatRegistrationNumber"
@@ -751,7 +723,7 @@ class DetailContact extends React.Component {
                                   </Col>
                                   <Col md="4">
                                     <FormGroup>
-                                      <Label htmlFor="currencyCode">Currency Code</Label>
+                                      <Label htmlFor="currencyCode"><span className="text-danger">*</span>Currency Code</Label>
                                       <Select
                                         options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}

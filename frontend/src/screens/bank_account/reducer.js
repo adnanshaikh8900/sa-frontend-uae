@@ -11,7 +11,7 @@ const initState = {
 	transaction_category_list: [],
 	project_list: [],
 	customer_invoice_list: [],
-	vendor_invoice_list: [],
+	expense_list: [],
 };
 
 const BankAccountReducer = (state = initState, action) => {
@@ -70,6 +70,12 @@ const BankAccountReducer = (state = initState, action) => {
 			return {
 				...state,
 				vendor_invoice_list: Object.assign([], payload),
+			};
+
+		case BANK_ACCOUNT.EXPENSE_LIST:
+			return {
+				...state,
+				expense_list: Object.assign([], payload),
 			};
 
 		case BANK_ACCOUNT.TRANSACTION_TYPE_LIST:

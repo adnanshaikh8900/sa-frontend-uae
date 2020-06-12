@@ -1004,6 +1004,14 @@ class CreateCustomerInvoice extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
+															</Col>
+															<Col>
+																<Label
+																	htmlFor="contactId"
+																	style={{ display: 'block' }}
+																>
+																	Add New Customer
+																</Label>
 																<Button
 																	type="button"
 																	color="primary"
@@ -1018,7 +1026,7 @@ class CreateCustomerInvoice extends React.Component {
 														</Row>
 														<hr />
 														<Row>
-															<Col lg={4}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term">
 																		<span className="text-danger">*</span>Terms{' '}
@@ -1072,7 +1080,7 @@ class CreateCustomerInvoice extends React.Component {
 																	)}
 																</FormGroup>
 															</Col>
-															<Col lg={4}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
@@ -1107,7 +1115,7 @@ class CreateCustomerInvoice extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={4}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="due_date">
 																		Invoice Due Date
@@ -1137,9 +1145,7 @@ class CreateCustomerInvoice extends React.Component {
 																	</div>
 																</FormGroup>
 															</Col>
-														</Row>
-														<Row>
-															<Col lg={4}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currency">
 																		<span className="text-danger">*</span>
@@ -1176,136 +1182,6 @@ class CreateCustomerInvoice extends React.Component {
 																			</div>
 																		)}
 																</FormGroup>
-															</Col>
-															<Col lg={4}>
-																<FormGroup className="mb-3">
-																	<Label htmlFor="contact_po_number">
-																		Contact PO Number
-																	</Label>
-																	<Input
-																		type="text"
-																		id="contact_po_number"
-																		name="contact_po_number"
-																		value={props.values.contact_po_number}
-																		placeholder="Contact PO Number"
-																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
-																			) {
-																				props.handleChange('contact_po_number')(
-																					option,
-																				);
-																			}
-																		}}
-																	/>
-																</FormGroup>
-															</Col>
-														</Row>
-
-														<hr />
-														<Row>
-															<Col lg={8}>
-																<Row>
-																	<Col lg={6}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="receiptNumber">
-																				Reciept Number
-																			</Label>
-																			<Input
-																				type="text"
-																				id="receiptNumber"
-																				name="receiptNumber"
-																				placeholder="Reciept Number"
-																				onChange={(option) => {
-																					if (
-																						option.target.value === '' ||
-																						this.regExBoth.test(
-																							option.target.value,
-																						)
-																					) {
-																						props.handleChange('receiptNumber')(
-																							option,
-																						);
-																					}
-																				}}
-																				value={props.values.receiptNumber}
-																			/>
-																		</FormGroup>
-																	</Col>
-																</Row>
-																<Row>
-																	<Col lg={12}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="receiptAttachmentDescription">
-																				Attachment Description
-																			</Label>
-																			<Input
-																				type="textarea"
-																				name="receiptAttachmentDescription"
-																				id="receiptAttachmentDescription"
-																				rows="5"
-																				placeholder="1024 characters..."
-																				onChange={(option) =>
-																					props.handleChange(
-																						'receiptAttachmentDescription',
-																					)(option)
-																				}
-																				value={
-																					props.values
-																						.receiptAttachmentDescription
-																				}
-																			/>
-																		</FormGroup>
-																	</Col>
-																</Row>
-															</Col>
-															<Col lg={4}>
-																<Row>
-																	<Col lg={12}>
-																		<FormGroup className="mb-3">
-																			<Field
-																				name="attachmentFile"
-																				render={({ field, form }) => (
-																					<div>
-																						<Label>Reciept Attachment</Label>{' '}
-																						<br />
-																						<Button
-																							color="primary"
-																							onClick={() => {
-																								document
-																									.getElementById('fileInput')
-																									.click();
-																							}}
-																							className="btn-square mr-3"
-																						>
-																							<i className="fa fa-upload"></i>{' '}
-																							Upload
-																						</Button>
-																						<input
-																							id="fileInput"
-																							ref={(ref) => {
-																								this.uploadFile = ref;
-																							}}
-																							type="file"
-																							style={{ display: 'none' }}
-																							onChange={(e) => {
-																								this.handleFileChange(e, props);
-																							}}
-																						/>
-																						{this.state.fileName}
-																					</div>
-																				)}
-																			/>
-																			{props.errors.attachmentFile &&
-																				props.touched.attachmentFile && (
-																					<div className="invalid-file">
-																						{props.errors.attachmentFile}
-																					</div>
-																				)}
-																		</FormGroup>
-																	</Col>
-																</Row>
 															</Col>
 														</Row>
 
@@ -1629,6 +1505,114 @@ class CreateCustomerInvoice extends React.Component {
 																</Col>
 															</Row>
 														) : null}
+														<hr />
+														<Row>
+															<Col lg={8}>
+																<Row>
+																	<Col lg={6}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="receiptNumber">
+																				Reciept Number
+																			</Label>
+																			<Input
+																				type="text"
+																				id="receiptNumber"
+																				name="receiptNumber"
+																				placeholder="Reciept Number"
+																				onChange={(option) => {
+																					if (
+																						option.target.value === '' ||
+																						this.regExBoth.test(
+																							option.target.value,
+																						)
+																					) {
+																						props.handleChange('receiptNumber')(
+																							option,
+																						);
+																					}
+																				}}
+																				value={props.values.receiptNumber}
+																			/>
+																		</FormGroup>
+																	</Col>
+																</Row>
+																<Row>
+																	<Col lg={12}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="receiptAttachmentDescription">
+																				Attachment Description
+																			</Label>
+																			<Input
+																				type="textarea"
+																				name="receiptAttachmentDescription"
+																				id="receiptAttachmentDescription"
+																				rows="5"
+																				placeholder="1024 characters..."
+																				onChange={(option) =>
+																					props.handleChange(
+																						'receiptAttachmentDescription',
+																					)(option)
+																				}
+																				value={
+																					props.values
+																						.receiptAttachmentDescription
+																				}
+																			/>
+																		</FormGroup>
+																	</Col>
+																</Row>
+															</Col>
+															<Col lg={4}>
+																<Row>
+																	<Col lg={12}>
+																		<FormGroup className="mb-3">
+																			<Field
+																				name="attachmentFile"
+																				render={({ field, form }) => (
+																					<div>
+																						<Label>Reciept Attachment</Label>{' '}
+																						<br />
+																						<Button
+																							color="primary"
+																							onClick={() => {
+																								document
+																									.getElementById('fileInput')
+																									.click();
+																							}}
+																							className="btn-square mr-3"
+																						>
+																							<i className="fa fa-upload"></i>{' '}
+																							Upload
+																						</Button>
+																						<input
+																							id="fileInput"
+																							ref={(ref) => {
+																								this.uploadFile = ref;
+																							}}
+																							type="file"
+																							style={{ display: 'none' }}
+																							onChange={(e) => {
+																								this.handleFileChange(e, props);
+																							}}
+																						/>
+																						{this.state.fileName}
+																					</div>
+																				)}
+																			/>
+																			{props.errors.attachmentFile &&
+																				props.touched.attachmentFile && (
+																					<div className="invalid-file">
+																						{props.errors.attachmentFile}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>
+															</Col>
+														</Row>
+
+														<hr />
+
 														<Row>
 															<Col
 																lg={12}

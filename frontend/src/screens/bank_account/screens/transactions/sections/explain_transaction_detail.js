@@ -55,7 +55,6 @@ class ExplainTrasactionDetail extends React.Component {
 			transactionCategoryList: [],
 			id: '',
 			dialog: null,
-			expenseType: 'EXPENSE',
 			totalAmount: '',
 		};
 
@@ -112,7 +111,10 @@ class ExplainTrasactionDetail extends React.Component {
 								? res.data.invoiceIdList
 								: '',
 							transactionCategoryLabel: res.data.transactionCategoryLabel,
-							expenseType: 'EXPENSE',
+							expenseType: {
+								value: 'EXPENSE',
+								id: 10,
+							},
 							invoiceError: '',
 						},
 					},
@@ -169,6 +171,11 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	getTransactionCategoryList = (type) => {
+		const data = {
+			value: 'EXPENSE',
+			id: type,
+		};
+		this.formRef.current.setFieldValue('expenseType', data, true);
 		this.setValue(null);
 		this.props.transactionsActions
 			.getTransactionCategoryListForExplain(type)
@@ -208,95 +215,106 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-		const {
-			bankId,
-			date,
-			reference,
-			description,
-			amount,
-			coaCategoryId,
-			transactionCategoryId,
-			vendorId,
-			employeeId,
-			invoiceIdList,
-			customerId,
-			vatId,
-			transactionId,
-		} = data;
 		if (
-			(invoiceIdList && coaCategoryId === 2) ||
-			(invoiceIdList && coaCategoryId === 10)
+			data.invoiceIdList &&
+			data.invoiceIdList.reduce(
+				(totalAmount, invoice) => totalAmount + invoice.amount,
+				0,
+			) > data.amount
 		) {
-			var result = invoiceIdList.map((o) => ({
-				id: o.value,
-				remainingInvoiceAmount: 0,
-				type: o.type,
-			}));
-		}
-		let formData = new FormData();
-		formData.append('transactionId', transactionId ? transactionId : '');
-		formData.append('bankId ', bankId ? bankId : '');
-		formData.append('date', date ? moment(date).format('DD/MM/YYYY') : '');
-		formData.append('description', description ? description : '');
-		formData.append('amount', amount ? amount : '');
-		formData.append('coaCategoryId', coaCategoryId ? coaCategoryId : '');
-		if (transactionCategoryId) {
-			formData.append(
-				'transactionCategoryId',
-				transactionCategoryId ? transactionCategoryId : '',
-			);
-		}
-		if (
-			(customerId && coaCategoryId === 10) ||
-			(customerId && coaCategoryId === 2)
-		) {
-			formData.append('customerId', customerId ? customerId : '');
-		}
-		if (vendorId && coaCategoryId === 10) {
-			formData.append('vendorId', vendorId ? vendorId : '');
-		}
-		if (vendorId && coaCategoryId === 10) {
-			formData.append('vatId', vatId ? vatId.value : '');
-		}
-		if (employeeId) {
-			formData.append('employeeId', employeeId ? employeeId.value : '');
-		}
-		if (
-			(invoiceIdList && coaCategoryId === 2) ||
-			(invoiceIdList && coaCategoryId === 10)
-		) {
-			formData.append(
-				'explainParamListStr',
-				invoiceIdList ? JSON.stringify(result) : '',
-			);
-		}
-		formData.append('reference', reference ? reference : '');
-		if (this.uploadFile.files[0]) {
-			formData.append('attachment', this.uploadFile.files[0]);
-		}
-		this.props.transactionDetailActions
-			.updateTransaction(formData)
-			.then((res) => {
-				if (res.status === 200) {
-					resetForm();
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'Transaction Detail Updated Successfully.',
-					);
-					//this.props.closeExplainTransactionModal(this.state.id);
-					//this.initializeData();
-					// this.props.history.push('/admin/banking/bank-account/transaction', {
-					//   bankId,
-					// });
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
+			alert();
+			return false;
+		} else {
+			const {
+				bankId,
+				date,
+				reference,
+				description,
+				amount,
+				coaCategoryId,
+				transactionCategoryId,
+				vendorId,
+				employeeId,
+				invoiceIdList,
+				customerId,
+				vatId,
+				transactionId,
+			} = data;
+			if (
+				(invoiceIdList && coaCategoryId === 2) ||
+				(invoiceIdList && coaCategoryId === 10)
+			) {
+				var result = invoiceIdList.map((o) => ({
+					id: o.value,
+					remainingInvoiceAmount: 0,
+					type: o.type,
+				}));
+			}
+			let formData = new FormData();
+			formData.append('transactionId', transactionId ? transactionId : '');
+			formData.append('bankId ', bankId ? bankId : '');
+			formData.append('date', date ? moment(date).format('DD/MM/YYYY') : '');
+			formData.append('description', description ? description : '');
+			formData.append('amount', amount ? amount : '');
+			formData.append('coaCategoryId', coaCategoryId ? coaCategoryId : '');
+			if (transactionCategoryId) {
+				formData.append(
+					'transactionCategoryId',
+					transactionCategoryId ? transactionCategoryId : '',
 				);
-			});
+			}
+			if (
+				(customerId && coaCategoryId === 10) ||
+				(customerId && coaCategoryId === 2)
+			) {
+				formData.append('customerId', customerId ? customerId : '');
+			}
+			if (vendorId && coaCategoryId === 10) {
+				formData.append('vendorId', vendorId ? vendorId : '');
+			}
+			if (vendorId && coaCategoryId === 10) {
+				formData.append('vatId', vatId ? vatId.value : '');
+			}
+			if (employeeId) {
+				formData.append('employeeId', employeeId ? employeeId.value : '');
+			}
+			if (
+				(invoiceIdList && coaCategoryId === 2) ||
+				(invoiceIdList && coaCategoryId === 10)
+			) {
+				formData.append(
+					'explainParamListStr',
+					invoiceIdList ? JSON.stringify(result) : '',
+				);
+			}
+			formData.append('reference', reference ? reference : '');
+			if (this.uploadFile.files[0]) {
+				formData.append('attachment', this.uploadFile.files[0]);
+			}
+			this.props.transactionDetailActions
+				.updateTransaction(formData)
+				.then((res) => {
+					if (res.status === 200) {
+						resetForm();
+						this.props.commonActions.tostifyAlert(
+							'success',
+							'Transaction Detail Updated Successfully.',
+						);
+						//this.props.closeExplainTransactionModal(this.state.id);
+						//this.initializeData();
+						// this.props.history.push('/admin/banking/bank-account/transaction', {
+						//   bankId,
+						// });
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+				});
+		}
 	};
 
 	closeTransaction = (id) => {
@@ -325,7 +343,17 @@ class ExplainTrasactionDetail extends React.Component {
 	// 		}
 	// 	}
 	// };
-
+	invoiceIdList = (option) => {
+		this.setState({
+			initValue: {
+				...this.state.initValue,
+				...{
+					invoiceIdList: option,
+				},
+			},
+		});
+		this.formRef.current.setFieldValue('invoiceIdList', option, true);
+	};
 	removeTransaction = (id) => {
 		this.props.transactionsActions
 			.deleteTransactionById(id)
@@ -398,38 +426,20 @@ class ExplainTrasactionDetail extends React.Component {
 														coaCategoryId: Yup.string().required(
 															'Transaction Type is Required',
 														),
-														// vendorId: Yup.string().when('coaCategoryId', {
-														// 	is: (value) => value === 10,
-														// 	then: Yup.string().required('Vendor is Required'),
-														// }),
-														// expenseType: Yup.string().required(
-														// 	'Expense List is Required',
-														// ),
 														vendorId: Yup.string().when('expenseType', {
-															is: (value) => value === 'SUPPLIER',
+															is: (item) => item.value === 'SUPPLIER',
 															then: Yup.string().required('Vendor Is Required'),
 														}),
-														// invoiceIdList: Yup.string().when('expenseType', {
-														// 	is: (value) =>
-														// 		value === 'EXPENSE' || value === 'SUPPLIER',
-														// 	then: Yup.string().required(
-														// 		'Expense Is Required',
-														// 	),
-														// }),
-														invoiceError: Yup.string().when('invoiceIdList', {
-															is: (value) =>
-																value.reduce(
-																	(totalAmount, invoice) =>
-																		totalAmount + invoice.amount,
-																	0,
-																) > this.state.initValue.amount,
+														invoiceIdList: Yup.string().when('expenseType', {
+															is: (item) =>
+																(item.id === 10 &&
+																	(item.value === 'EXPENSE' ||
+																		item.value === 'SUPPLIER')) ||
+																item.id === 2,
 															then: Yup.string().required(
-																'Invoice amount should not be greater than total amount',
+																'Invoice Is Required',
 															),
 														}),
-														// vendorId: Yup.string().required(
-														// 	'Customer is Required',
-														// ),
 														attachment: Yup.mixed()
 															.test(
 																'fileType',
@@ -585,16 +595,20 @@ class ExplainTrasactionDetail extends React.Component {
 																							name="producttypeone"
 																							value="EXPENSE"
 																							onChange={(value) => {
+																								const data = {
+																									value: 'EXPENSE',
+																									id: 10,
+																								};
 																								props.handleChange(
 																									'expenseType',
-																								)(value);
+																								)(data);
 																								this.getSuggestionExpenses(
 																									props.values.amount,
 																								);
 																							}}
 																							checked={
-																								props.values.expenseType ===
-																								'EXPENSE'
+																								props.values.expenseType
+																									.value === 'EXPENSE'
 																							}
 																						/>
 																						Explain Expense
@@ -611,13 +625,17 @@ class ExplainTrasactionDetail extends React.Component {
 																							name="producttypetwo"
 																							value="SUPPLIER"
 																							onChange={(value) => {
+																								const data = {
+																									value: 'SUPPLIER',
+																									id: 10,
+																								};
 																								props.handleChange(
 																									'expenseType',
-																								)(value);
+																								)(data);
 																							}}
 																							checked={
-																								props.values.expenseType ===
-																								'SUPPLIER'
+																								props.values.expenseType
+																									.value === 'SUPPLIER'
 																							}
 																						/>
 																						Explain Supplier Invoice
@@ -628,7 +646,8 @@ class ExplainTrasactionDetail extends React.Component {
 																	</Row>
 																)}
 															{props.values.coaCategoryId === 10 &&
-																props.values.expenseType === 'EXPENSE' && (
+																props.values.expenseType.value ===
+																	'EXPENSE' && (
 																	<Row>
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
@@ -643,7 +662,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							? expense_list.data
 																							: []
 																					}
-																					value={props.values.invoiceIdList}
+																					// value={props.values.invoiceIdList}
 																					onChange={(option) => {
 																						props.handleChange('invoiceIdList')(
 																							option,
@@ -663,116 +682,132 @@ class ExplainTrasactionDetail extends React.Component {
 																		</Col>
 																	</Row>
 																)}
-															{props.values.expenseType === 'SUPPLIER' && (
-																<Row>
-																	{props.values.coaCategoryId === 10 && (
-																		<Col lg={4}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="vendorId">Vendor</Label>
-																				<Select
-																					options={
-																						transactionCategoryList.dataList
-																							? transactionCategoryList
-																									.dataList[2].options
-																							: []
-																					}
-																					value={
-																						transactionCategoryList.dataList &&
-																						transactionCategoryList.dataList[2].options.find(
-																							(option) =>
-																								option.value ===
-																								+props.values.vendorId,
-																						)
-																					}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('vendorId')(
-																								option.value,
-																							);
-																						} else {
-																							props.handleChange('vendorId')(
-																								'',
-																							);
-																						}
-																						this.getSuggestionInvoicesFotVend(
-																							option.value,
-																							props.values.amount,
-																						);
-																					}}
-																					placeholder="Select Type"
-																					id="vendorId"
-																					name="vendorId"
-																					className={
-																						props.errors.vendorId &&
-																						props.touched.vendorId
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																			</FormGroup>
-																		</Col>
-																	)}
-																	{transactionCategoryList.dataList &&
-																		props.values.coaCategoryId === 10 &&
-																		props.values.vendorId && (
+															{props.values.expenseType &&
+																props.values.expenseType.value ===
+																	'SUPPLIER' && (
+																	<Row>
+																		{props.values.coaCategoryId === 10 && (
 																			<Col lg={4}>
 																				<FormGroup className="mb-3">
-																					<Label htmlFor="invoiceIdList">
-																						Invoice
+																					<Label htmlFor="vendorId">
+																						<span className="text-danger">
+																							*
+																						</span>
+																						Vendor
 																					</Label>
 																					<Select
-																						isMulti
 																						options={
-																							vendor_invoice_list
-																								? vendor_invoice_list.data
+																							transactionCategoryList.dataList
+																								? transactionCategoryList
+																										.dataList[2].options
 																								: []
 																						}
-																						value={props.values.invoiceIdList}
-																						// value={
-																						// 	vendor_invoice_list.data &&
-																						// 	vendor_invoice_list.data.find(
-																						// 		(option) =>
-																						// 			option.value ===
-																						// 			+props.values.invoiceIdList,
-																						// 	)
-																						// }
-																						// onChange={(option) => {
-																						// 	if (option && option.value) {
-																						// 		props.handleChange(
-																						// 			'invoiceIdList',
-																						// 		)(option);
-																						// 	} else {
-																						// 		props.handleChange(
-																						// 			'invoiceIdList',
-																						// 		)('');
-																						// 	}
-																						// }}
+																						value={
+																							props.values.vendorId
+																								? transactionCategoryList.dataList[2].options.find(
+																										(option) =>
+																											option.value ===
+																											+props.values.vendorId,
+																								  )
+																								: ''
+																						}
 																						onChange={(option) => {
-																							props.handleChange(
-																								'invoiceIdList',
-																							)(option);
+																							if (option && option.value) {
+																								props.handleChange('vendorId')(
+																									option.value,
+																								);
+																							} else {
+																								props.handleChange('vendorId')(
+																									'',
+																								);
+																							}
+																							this.getSuggestionInvoicesFotVend(
+																								option.value,
+																								props.values.amount,
+																							);
 																						}}
 																						placeholder="Select Type"
-																						id="invoiceIdList"
-																						name="invoiceIdList"
+																						id="vendorId"
+																						name="vendorId"
 																						className={
-																							props.errors.invoiceError &&
-																							props.touched.invoiceError
+																							props.errors.vendorId &&
+																							props.touched.vendorId
 																								? 'is-invalid'
 																								: ''
 																						}
 																					/>
-																					{props.errors.invoiceError &&
-																						props.touched.invoiceError && (
-																							<div className="invalid-feedback">
-																								{props.errors.invoiceError}
-																							</div>
-																						)}
 																				</FormGroup>
 																			</Col>
 																		)}
-																</Row>
-															)}
+																		{transactionCategoryList.dataList &&
+																			props.values.coaCategoryId === 10 &&
+																			props.values.vendorId && (
+																				<Col lg={4}>
+																					<FormGroup className="mb-3">
+																						<Label htmlFor="invoiceIdList">
+																							Invoice
+																						</Label>
+																						<Select
+																							isMulti
+																							options={
+																								vendor_invoice_list
+																									? vendor_invoice_list.data
+																									: []
+																							}
+																							onChange={(option) => {
+																								props.handleChange(
+																									'invoiceIdList',
+																								)(option);
+																								this.invoiceIdList(option);
+																							}}
+																							placeholder="Select Type"
+																							id="invoiceIdList"
+																							name="invoiceIdList"
+																							className={
+																								props.errors.invoiceIdList &&
+																								props.touched.invoiceIdList
+																									? 'is-invalid'
+																									: ''
+																							}
+																						/>
+																						{props.errors.invoiceIdList &&
+																							props.touched.invoiceIdList && (
+																								<div className="invalid-feedback">
+																									{props.errors.invoiceIdList}
+																								</div>
+																							)}
+																						{this.state.initValue
+																							.invoiceIdList &&
+																							this.state.initValue.invoiceIdList.reduce(
+																								(totalAmount, invoice) =>
+																									totalAmount + invoice.amount,
+																								0,
+																							) >
+																								this.state.initValue.amount && (
+																								<div
+																									className={
+																										this.state.initValue.invoiceIdList.reduce(
+																											(totalAmount, invoice) =>
+																												totalAmount +
+																												invoice.amount,
+																											0,
+																										) >
+																										this.state.initValue.amount
+																											? 'is-invalid'
+																											: ''
+																									}
+																								>
+																									<div className="invalid-feedback">
+																										Total Invoice Amount Is More
+																										Than The Transaction Amount
+																									</div>
+																								</div>
+																							)}
+																					</FormGroup>
+																				</Col>
+																			)}
+																	</Row>
+																)}
 															<Row>
 																{transactionCategoryList.dataList &&
 																	props.values.coaCategoryId === 2 && (
@@ -920,6 +955,68 @@ class ExplainTrasactionDetail extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	)} */}
+																{transactionCategoryList.categoriesList &&
+																	props.values.coaCategoryId !== 2 &&
+																	props.values.coaCategoryId !== 10 && (
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="transactionCategoryId">
+																					Category
+																				</Label>
+																				<Select
+																					options={
+																						transactionCategoryList
+																							? transactionCategoryList.categoriesList
+																							: []
+																					}
+																					// value={
+																					// 	transactionCategoryList.categoriesList
+																					// 		? transactionCategoryList.categoriesList
+																					// 				.find(
+																					// 					(item) =>
+																					// 						item.label ===
+																					// 						props.values
+																					// 							.transactionCategoryLabel,
+																					// 				)
+																					// 				.options.find(
+																					// 					(item) =>
+																					// 						item.value ===
+																					// 						+props.values
+																					// 							.transactionCategoryId,
+																					// 				)
+																					// 		: ''
+																					// }
+																					// value={
+																					// 	transactionCategoryList.categoriesList
+																					// 		? props.values
+																					// 				.transactionCategoryId
+																					// 		: ''
+																					// }
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							props.handleChange(
+																								'transactionCategoryId',
+																							)(option.value);
+																						} else {
+																							props.handleChange(
+																								'transactionCategoryId',
+																							)('');
+																						}
+																					}}
+																					placeholder="Select Category"
+																					id="transactionCategoryId"
+																					name="transactionCategoryId"
+																					className={
+																						props.errors
+																							.transactionCategoryId &&
+																						props.touched.transactionCategoryId
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																			</FormGroup>
+																		</Col>
+																	)}
 															</Row>
 															<Row>
 																<Col lg={8}>

@@ -274,30 +274,29 @@ class ExplainTrasactionDetail extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachment', this.uploadFile.files[0]);
 		}
-		alert();
-		// this.props.transactionDetailActions
-		// 	.updateTransaction(formData)
-		// 	.then((res) => {
-		// 		if (res.status === 200) {
-		// 			resetForm();
-		// 			this.props.commonActions.tostifyAlert(
-		// 				'success',
-		// 				'Transaction Detail Updated Successfully.',
-		// 			);
-		// 			//this.props.closeExplainTransactionModal(this.state.id);
-		// 			//this.initializeData();
-		// 			// this.props.history.push('/admin/banking/bank-account/transaction', {
-		// 			//   bankId,
-		// 			// });
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log(err);
-		// 		this.props.commonActions.tostifyAlert(
-		// 			'error',
-		// 			err && err.data ? err.data.message : 'Something Went Wrong',
-		// 		);
-		// 	});
+		this.props.transactionDetailActions
+			.updateTransaction(formData)
+			.then((res) => {
+				if (res.status === 200) {
+					resetForm();
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'Transaction Detail Updated Successfully.',
+					);
+					//this.props.closeExplainTransactionModal(this.state.id);
+					//this.initializeData();
+					// this.props.history.push('/admin/banking/bank-account/transaction', {
+					//   bankId,
+					// });
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
 	};
 
 	closeTransaction = (id) => {
@@ -356,7 +355,6 @@ class ExplainTrasactionDetail extends React.Component {
 			chartOfAccountCategoryList,
 			transactionCategoryList,
 		} = this.state;
-		console.log(initValue.coaCategoryId);
 		const {
 			customer_invoice_list,
 			vendor_invoice_list,
@@ -400,10 +398,22 @@ class ExplainTrasactionDetail extends React.Component {
 														coaCategoryId: Yup.string().required(
 															'Transaction Type is Required',
 														),
+														// vendorId: Yup.string().when('coaCategoryId', {
+														// 	is: (value) => value === 10,
+														// 	then: Yup.string().required('Vendor is Required'),
+														// }),
+														// expenseType: Yup.string().required(
+														// 	'Expense List is Required',
+														// ),
+														vendorId: Yup.string().when('expenseType', {
+															is: (value) => value === 'SUPPLIER',
+															then: Yup.string().required('Vendor Is Required'),
+														}),
 														// invoiceIdList: Yup.string().when('expenseType', {
-														// 	is: (value) => value === 'EXPENSE',
+														// 	is: (value) =>
+														// 		value === 'EXPENSE' || value === 'SUPPLIER',
 														// 	then: Yup.string().required(
-														// 		'Expense List is Required',
+														// 		'Expense Is Required',
 														// 	),
 														// }),
 														invoiceError: Yup.string().when('invoiceIdList', {
@@ -414,7 +424,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	0,
 																) > this.state.initValue.amount,
 															then: Yup.string().required(
-																'Invoice amount is greater than amount',
+																'Invoice amount should not be greater than total amount',
 															),
 														}),
 														// vendorId: Yup.string().required(
@@ -633,25 +643,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							? expense_list.data
 																							: []
 																					}
-																					// value={
-																					// 	expense_list.data &&
-																					// 	expense_list.data.find(
-																					// 		(option) =>
-																					// 			option.value ===
-																					// 			+props.values.invoiceIdList,
-																					// 	)
-																					// }
-																					// onChange={(option) => {
-																					// 	if (option && option.value) {
-																					// 		props.handleChange(
-																					// 			'invoiceIdList',
-																					// 		)(option);
-																					// 	} else {
-																					// 		props.handleChange(
-																					// 			'invoiceIdList',
-																					// 		)('');
-																					// 	}
-																					// }}
+																					value={props.values.invoiceIdList}
 																					onChange={(option) => {
 																						props.handleChange('invoiceIdList')(
 																							option,
@@ -735,6 +727,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								? vendor_invoice_list.data
 																								: []
 																						}
+																						value={props.values.invoiceIdList}
 																						// value={
 																						// 	vendor_invoice_list.data &&
 																						// 	vendor_invoice_list.data.find(

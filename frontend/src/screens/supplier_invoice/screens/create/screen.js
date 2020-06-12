@@ -831,63 +831,62 @@ class CreateSupplierInvoice extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		console.log(this.state.data);
-		// this.props.supplierInvoiceCreateActions
-		// 	.createInvoice(formData)
-		// 	.then((res) => {
-		// 		this.props.commonActions.tostifyAlert(
-		// 			'success',
-		// 			'New Invoice Created Successfully.',
-		// 		);
-		// 		if (this.state.createMore) {
-		// 			this.setState(
-		// 				{
-		// 					createMore: false,
-		// 					selectedContact: '',
-		// 					term: '',
-		// 					data: [
-		// 						{
-		// 							id: 0,
-		// 							description: '',
-		// 							quantity: '',
-		// 							unitPrice: '',
-		// 							vatCategoryId: '',
-		// 							subTotal: 0,
-		// 							productId: '',
-		// 						},
-		// 					],
-		// 					initValue: {
-		// 						...this.state.initValue,
-		// 						...{
-		// 							total_net: 0,
-		// 							invoiceVATAmount: 0,
-		// 							totalAmount: 0,
-		// 							discountType: '',
-		// 							discount: 0,
-		// 							discountPercentage: '',
-		// 						},
-		// 					},
-		// 				},
-		// 				() => {
-		// 					resetForm(this.state.initValue);
-		// 					this.getInvoiceNo();
-		// 					this.formRef.current.setFieldValue(
-		// 						'lineItemsString',
-		// 						this.state.data,
-		// 						false,
-		// 					);
-		// 				},
-		// 			);
-		// 		} else {
-		// 			this.props.history.push('/admin/expense/supplier-invoice');
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		this.props.commonActions.tostifyAlert(
-		// 			'error',
-		// 			err && err.data ? err.data.message : 'Something Went Wrong',
-		// 		);
-		// 	});
+		this.props.supplierInvoiceCreateActions
+			.createInvoice(formData)
+			.then((res) => {
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'New Invoice Created Successfully.',
+				);
+				if (this.state.createMore) {
+					this.setState(
+						{
+							createMore: false,
+							selectedContact: '',
+							term: '',
+							data: [
+								{
+									id: 0,
+									description: '',
+									quantity: '',
+									unitPrice: '',
+									vatCategoryId: '',
+									subTotal: 0,
+									productId: '',
+								},
+							],
+							initValue: {
+								...this.state.initValue,
+								...{
+									total_net: 0,
+									invoiceVATAmount: 0,
+									totalAmount: 0,
+									discountType: '',
+									discount: 0,
+									discountPercentage: '',
+								},
+							},
+						},
+						() => {
+							resetForm(this.state.initValue);
+							this.getInvoiceNo();
+							this.formRef.current.setFieldValue(
+								'lineItemsString',
+								this.state.data,
+								false,
+							);
+						},
+					);
+				} else {
+					this.props.history.push('/admin/expense/supplier-invoice');
+				}
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
 	};
 
 	openSupplierModal = (e) => {

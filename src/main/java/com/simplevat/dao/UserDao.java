@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.simplevat.constant.dbfilter.UserFilterEnum;
 import com.simplevat.entity.User;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
@@ -23,5 +24,7 @@ public interface UserDao extends Dao<Integer, User> {
     public void deleteByIds(List<Integer> ids);
 
 	public PaginationResponseModel getUserList(Map<UserFilterEnum, Object> filterMap,PaginationModel paginationModel);
+
+    public List<DropdownModel> getUserForDropdown();
 }
     

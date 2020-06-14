@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.simplevat.constant.dbfilter.UserFilterEnum;
 import com.simplevat.entity.User;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
@@ -26,5 +27,6 @@ public abstract class UserService extends SimpleVatService<Integer, User> {
 	public abstract PaginationResponseModel getUserList(Map<UserFilterEnum, Object> filterMap,PaginationModel paginationModel);
 
 	public abstract boolean updateForgotPasswordToken(User user);
-	
+
+	public abstract List<DropdownModel> getUserForDropdown();
 }

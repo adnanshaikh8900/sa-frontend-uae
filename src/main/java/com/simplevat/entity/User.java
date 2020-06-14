@@ -1,5 +1,6 @@
 package com.simplevat.entity;
 
+import com.simplevat.constant.CommonConstant;
 import com.simplevat.entity.converter.DateConverter;
 import java.io.Serializable;
 import lombok.Data;
@@ -28,7 +29,9 @@ import org.hibernate.annotations.ColumnDefault;
  * Created by mohsinh on 2/26/2017.
  */
 @NamedQueries({
-		@NamedQuery(name = "findAllUsers", query = "SELECT u FROM User u where u.deleteFlag = FALSE  ORDER BY u.isActive DESC,u.firstName ASC") })
+		@NamedQuery(name = "findAllUsers", query = "SELECT u FROM User u where u.deleteFlag = FALSE  ORDER BY u.isActive DESC,u.firstName ASC"),
+		@NamedQuery(name = "userForDropdown", query = "SELECT  new " + CommonConstant.DROPDOWN_MODEL_PACKAGE + "(c.userId , CONCAT(c.firstName,' ', c.lastName)) "
+				+ " FROM User c where c.deleteFlag = FALSE order by c.firstName, c.lastName ")})
 @Entity
 @Table(name = "USER")
 @Data

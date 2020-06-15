@@ -21,6 +21,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,20 +67,6 @@ import com.simplevat.rest.ReconsileRequestLineItemModel;
 import com.simplevat.rest.receiptcontroller.ReceiptRestHelper;
 import com.simplevat.rest.reconsilationcontroller.ReconsilationRestHelper;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.ChartOfAccountCategoryService;
-import com.simplevat.service.ContactService;
-import com.simplevat.service.CustomerInvoiceReceiptService;
-import com.simplevat.service.EmployeeService;
-import com.simplevat.service.ExpenseService;
-import com.simplevat.service.InvoiceService;
-import com.simplevat.service.JournalService;
-import com.simplevat.service.PaymentService;
-import com.simplevat.service.ReceiptService;
-import com.simplevat.service.SupplierInvoicePaymentService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.TransactionExpensesService;
-import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ChartOfAccountService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
@@ -173,6 +160,9 @@ public class TransactionRestController {
 	@Autowired
 	private SupplierInvoicePaymentService supplierInvoicePaymentService;
 
+	@Autowired
+	private UserService userService;
+
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAllTransaction(TransactionRequestFilterModel filterModel) {
@@ -250,7 +240,8 @@ public class TransactionRestController {
 					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
 				}
 				if (transactionPresistModel.getEmployeeId() != null) {
-					trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
+					//trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
+					trnx.setExplainationUser(userService.findByPK(transactionPresistModel.getEmployeeId()));
 				}
 				if (transactionPresistModel.getBankId() != null) {
 					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
@@ -404,7 +395,8 @@ public class TransactionRestController {
 					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
 				}
 				if (transactionPresistModel.getEmployeeId() != null) {
-					trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
+					trnx.setExplainationUser(userService.findByPK(transactionPresistModel.getEmployeeId()));
+					//trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
 				}
 				if (transactionPresistModel.getBankId() != null) {
 					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));

@@ -11,6 +11,7 @@ import com.simplevat.entity.MailEnum;
 import com.simplevat.entity.Role;
 import com.simplevat.entity.User;
 import com.simplevat.integration.MailIntegration;
+import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.CompanyService;
@@ -309,5 +310,9 @@ public class UserController{
 			}
 		});
 		t.start();
+	}
+	@GetMapping(value = "/getUserForDropdown")
+	public ResponseEntity<List<DropdownModel>> getEmployeesForDropdown(HttpServletRequest request) {
+		return new ResponseEntity<>(userService.getUserForDropdown(), HttpStatus.OK);
 	}
 }

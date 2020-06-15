@@ -31,17 +31,12 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Version;
 
+import com.simplevat.entity.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
-import com.simplevat.entity.ChartOfAccountCategory;
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.Employee;
-import com.simplevat.entity.Project;
-import com.simplevat.entity.TransactionStatus;
-import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.converter.DateConverter;
 
 import lombok.Data;
@@ -151,6 +146,11 @@ public class Transaction implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EXPLINTION_EMPLOYEE_ID")
 	private Employee explinationEmployee;
+
+	@Basic
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EXPLINTION_USER_ID")
+	private User explainationUser;
 
 	@Basic
 	@Column(name = "TRANSACTIN_CREATION_MODE", columnDefinition = "varchar(32) default 'MANUAL'")

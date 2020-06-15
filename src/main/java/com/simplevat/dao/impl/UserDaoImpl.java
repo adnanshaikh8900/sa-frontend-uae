@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.persistence.Query;
 
+import com.simplevat.rest.DropdownModel;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -94,5 +95,10 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
 		paginationModel.setSortingCol(dataTableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.USER));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
+	}
+
+	@Override
+	public List<DropdownModel> getUserForDropdown() {
+		return getEntityManager().createNamedQuery("userForDropdown", DropdownModel.class).getResultList();
 	}
 }

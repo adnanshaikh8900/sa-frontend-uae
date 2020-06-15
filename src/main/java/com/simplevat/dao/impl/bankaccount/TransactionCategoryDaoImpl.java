@@ -161,9 +161,8 @@ public class TransactionCategoryDaoImpl extends AbstractDao<Integer, Transaction
 
 	@Override
 	public List<TransactionCategory> getTransactionCatByChartOfAccountCategoryId(Integer chartOfAccountCategoryId) {
-		return getEntityManager().createNativeQuery(
-				"SELECT * FROM TRANSACTION_CATEGORY INNER JOIN CHART_OF_ACCOUNT on TRANSACTION_CATEGORY.CHART_OF_ACCOUNT_ID= CHART_OF_ACCOUNT.CHART_OF_ACCOUNT_ID INNER JOIN COA_COA_CATEGORY ON COA_COA_CATEGORY.CHART_OF_ACCOUNT_ID= CHART_OF_ACCOUNT.CHART_OF_ACCOUNT_ID WHERE COA_COA_CATEGORY.CHART_OF_ACCOUNT_CATEGORY_ID = :coaCategoryId",
-				TransactionCategory.class).setParameter("coaCategoryId", chartOfAccountCategoryId).getResultList();
+		return getEntityManager().createNativeQuery("SELECT * FROM TRANSACTION_CATEGORY WHERE TRANSACTION_CATEGORY_ID IN (SELECT TRANSACTION_CATEGORY_ID from coac_transaction_category where  CHART_OF_ACCOUNT_CATEGORY_ID = :coaCategoryId)",TransactionCategory.class)
+				.setParameter("coaCategoryId", chartOfAccountCategoryId).getResultList();
 	}
 
 	@Override

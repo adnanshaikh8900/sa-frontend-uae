@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.simplevat.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,6 @@ import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.ChartOfAccountCategoryService;
-import com.simplevat.service.ContactService;
-import com.simplevat.service.EmployeeService;
-import com.simplevat.service.InvoiceService;
-import com.simplevat.service.JournalService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.TransactionService;
 
 import static com.simplevat.constant.ErrorConstant.ERROR;
@@ -71,6 +64,9 @@ public class ReconsilationController {
 
 	@Autowired
 	private ContactService contactService;
+
+	@Autowired
+	private UserService userServiceNew;
 
 	@GetMapping(value = "/getByReconcilationCatCode")
 	public ResponseEntity<List<ReconsilationListModel>> getByReconcilationCatCode(
@@ -137,7 +133,8 @@ public class ReconsilationController {
 				return new ResponseEntity<>(
 						new ReconsilationCatDataModel(
 								Arrays.asList(new SingleLevelDropDownModel("User",
-										employeeService.getEmployeesForDropdown())),
+										userServiceNew.getUserForDropdown()/*
+										employeeService.getEmployeesForDropdown()*/)),
 								transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
 						HttpStatus.OK);
 

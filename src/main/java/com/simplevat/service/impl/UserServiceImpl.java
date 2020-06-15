@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.mail.MessagingException;
 
+import com.simplevat.rest.DropdownModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,5 +106,9 @@ public class UserServiceImpl extends UserService{
 		user.setForgotPasswordTokenExpiryDate(dateUtils.add(LocalDateTime.now(), 1));
 		persist(user);
 		return true;
+	}
+	@Override
+	public List<DropdownModel> getUserForDropdown(){
+	return 	getDao().getUserForDropdown();
 	}
 }

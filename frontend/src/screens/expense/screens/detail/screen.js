@@ -42,8 +42,6 @@ const mapStateToProps = (state) => {
   return ({
     expense_detail: state.expense.expense_detail,
     currency_list: state.expense.currency_list,
-    project_list: state.expense.project_list,
-    employee_list: state.expense.employee_list,
     vat_list: state.expense.vat_list,
     expense_categories_list: state.expense.expense_categories_list,
     bank_list: state.expense.bank_list,
@@ -99,8 +97,6 @@ class DetailExpense extends React.Component {
       this.props.expenseDetailActions.getExpenseDetail(this.props.location.state.expenseId).then((res) => {
         if (res.status === 200) {
           this.props.expenseActions.getCurrencyList();
-          this.props.expenseActions.getProjectList();
-          this.props.expenseActions.getEmployeeList();
           this.props.expenseActions.getExpenseCategoriesList();
           this.props.expenseActions.getBankList();
           this.props.expenseActions.getPaymentMode();
@@ -113,7 +109,6 @@ class DetailExpense extends React.Component {
               expenseDate: res.data.expenseDate ? moment(res.data.expenseDate).utc().format('YYYY-MM-DD') : '',
               currency: res.data.currencyCode ? res.data.currencyCode : '',
               expenseCategory: res.data.expenseCategory ? res.data.expenseCategory : '',
-              projectId: res.data.projectId ? res.data.projectId : '',
               expenseAmount: res.data.expenseAmount,
               vatCategoryId: res.data.vatCategoryId ? res.data.vatCategoryId : '',
               payMode: res.data.payMode ? res.data.payMode : '',
@@ -122,7 +117,6 @@ class DetailExpense extends React.Component {
               receiptNumber: res.data.receiptNumber,
               attachmentFile: res.data.attachmentFile,
               receiptAttachmentDescription: res.data.receiptAttachmentDescription,
-              employee: res.data.employeeId ? res.data.employeeId : '',
               fileName: res.data.fileName ? res.data.fileName : '',
               filePath: res.data.receiptAttachmentPath ? res.data.receiptAttachmentPath : '',
             },
@@ -149,10 +143,8 @@ class DetailExpense extends React.Component {
       payee,
       expenseDate,
       currency,
-      project,
       expenseCategory,
       expenseAmount,
-      employee,
       expenseDescription,
       receiptNumber,
       receiptAttachmentDescription,
@@ -173,14 +165,8 @@ class DetailExpense extends React.Component {
     if (expenseCategory && expenseCategory.value) {
       formData.append("expenseCategory", expenseCategory.value);
     }
-    if (employee && employee.value) {
-      formData.append("employeeId", employee.value);
-    }
     if (currency && currency.value) {
       formData.append("currencyCode", currency.value);
-    }
-    if (project && project.value) {
-      formData.append("projectId", project.value);
     }
     if (vatCategoryId && vatCategoryId.value) {
       formData.append("vatCategoryId", vatCategoryId.value);
@@ -423,32 +409,6 @@ class DetailExpense extends React.Component {
                                             {props.errors.currency}
                                           </div>
                                         )}
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="employee">Employee</Label>
-                                      <Select
-                                        className="select-default-width"
-                                        id="employee"
-                                        name="employee"
-                                        options={employee_list ? selectOptionsFactory.renderOptions('label', 'value', employee_list, 'Employee') : []}
-                                        value={employee_list && employee_list.find((option) => option.value === +props.values.employee)}
-                                        onChange={(option) => props.handleChange('employee')(option)}
-                                      />
-                                    </FormGroup>
-                                  </Col>
-                                  <Col lg={4}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor="project">Project</Label>
-                                      <Select
-                                        className="select-default-width"
-                                        id="project"
-                                        name="project"
-                                        options={project_list ? selectOptionsFactory.renderOptions('label', 'value', project_list, 'Project') : []}
-                                        value={project_list && project_list.find((option) => option.value === +props.values.projectId)}
-                                        onChange={(option) => props.handleChange('projectId')(option)}
-                                      />
                                     </FormGroup>
                                   </Col>
                                 </Row>

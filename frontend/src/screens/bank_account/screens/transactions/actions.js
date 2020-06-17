@@ -133,6 +133,30 @@ export const getCustomerInvoiceList = (param) => {
 			});
 	};
 };
+
+export const getCurrencyList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: 'rest/bank/getcurrenncy',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: BANK_ACCOUNT.CURRENCY_LIST,
+						payload: {
+							data: res.data,
+						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const getVendorInvoiceList = (param) => {
 	return (dispatch) => {
 		let data = {
@@ -169,6 +193,48 @@ export const getExpensesList = (param) => {
 						payload: {
 							data: res.data,
 						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getExpensesCategoriesList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/transactioncategory/getForExpenses',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: BANK_ACCOUNT.EXPENSE_CATEGORIES_LIST,
+						payload: res.data,
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getUserForDropdown = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/user/getUserForDropdown',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: BANK_ACCOUNT.USER_LIST,
+						payload: res.data,
 					});
 				}
 			})

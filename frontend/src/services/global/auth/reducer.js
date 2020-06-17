@@ -1,36 +1,35 @@
-import { AUTH } from 'constants/types'
+import { AUTH } from 'constants/types';
 
 const initState = {
-  is_authed: true,
-  profile: null
-}
+	is_authed: true,
+	profile: [],
+};
 
 const AuthReducer = (state = initState, action) => {
-  const { type, payload} = action
-  
-  switch(type){
+	const { type, payload } = action;
 
-    case AUTH.SIGNED_IN:
-      return {
-        ...state,
-        is_authed: true
-      }
+	switch (type) {
+		case AUTH.SIGNED_IN:
+			return {
+				...state,
+				is_authed: true,
+			};
 
-    case AUTH.SIGNED_OUT:
-      return {
-        ...state,
-        is_authed: false
-      }
-    
-    case AUTH.USER_PROFILE:
-      return {
-        ...state,
-        profile: Object.assign({}, payload.data)
-      }
+		case AUTH.SIGNED_OUT:
+			return {
+				...state,
+				is_authed: false,
+			};
 
-    default:
-        return state
-  }
-}
+		case AUTH.USER_PROFILE:
+			return {
+				...state,
+				profile: Object.assign({}, payload.data),
+			};
 
-export default AuthReducer
+		default:
+			return state;
+	}
+};
+
+export default AuthReducer;

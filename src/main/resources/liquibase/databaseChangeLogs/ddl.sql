@@ -160,3 +160,7 @@ alter table EXPLANATION_STATUS add constraint FKsbltb842k4hgrmpcg6a66oywp foreig
 
 --changeset 3/06/2020 SAURABH:ddl-10
 create table TRANSACTON_EXPENSES (ID integer not null auto_increment, CREATED_BY integer not null, CREATED_DATE datetime default CURRENT_TIMESTAMP, EXPLANATION_STATUS_NAME varchar(255) not null, LAST_UPDATED_BY integer, LAST_UPDATE_DATE datetime, REMANING_TO_EXLAIN_BALANCE decimal(19,2) default 0.00 not null, EXPENSE_ID integer, TRANSACTION_ID integer, primary key (ID));
+
+--changeset 14/06/2020 AFZAL:ddl-11
+ALTER TABLE TRANSACTON add column EXPLINTION_USER_ID integer;
+ALTER TABLE TRANSACTON add constraint FKuser foreign key (EXPLINTION_USER_ID) references User (USER_ID);

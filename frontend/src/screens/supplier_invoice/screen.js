@@ -84,7 +84,7 @@ class SupplierInvoice extends React.Component {
 		};
 
 		this.options = {
-			paginationPosition: 'top',
+			paginationPosition: 'bottom',
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
@@ -668,18 +668,6 @@ class SupplierInvoice extends React.Component {
 												/>
 											)}
 											<Button
-												color="primary"
-												className="btn-square"
-												onClick={() =>
-													this.props.history.push(
-														`/admin/expense/supplier-invoice/create`,
-													)
-												}
-											>
-												<i className="fas fa-plus mr-1" />
-												New Invoice
-											</Button>
-											<Button
 												color="warning"
 												className="btn-square"
 												onClick={this.bulkDelete}
@@ -811,6 +799,19 @@ class SupplierInvoice extends React.Component {
 											</Col>
 										</Row>
 									</div>
+									<Button
+										color="primary"
+										style={{ marginBottom: '10px' }}
+										className="btn-square"
+										onClick={() =>
+											this.props.history.push(
+												`/admin/expense/supplier-invoice/create`,
+											)
+										}
+									>
+										<i className="fas fa-plus mr-1" />
+										Add New Invoice
+									</Button>
 									<div>
 										<BootstrapTable
 											selectRow={this.selectRowProp}

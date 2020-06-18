@@ -321,6 +321,12 @@ public class DataListController {
 
 					parentCategory = getChartOfAccountCategory(debitCreditFlag, modelList, parentCategory, chartOfAccountCategory);
 				}
+				if ( debitCreditFlag.equals("D")){
+					modelList.add(new DropdownModel(001,"Create Expense"));
+					modelList.add(new DropdownModel(002,"Supplier Invoice"));
+					modelList.remove(new DropdownModel(10,"Expenses"));
+				}
+
 				assert parentCategory != null;
 				return new ResponseEntity<>(Arrays.asList(
 						new SingleLevelDropDownModel(parentCategory.getChartOfAccountCategoryName(), modelList)),

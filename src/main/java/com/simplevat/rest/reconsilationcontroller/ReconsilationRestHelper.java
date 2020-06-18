@@ -146,7 +146,7 @@ public class ReconsilationRestHelper {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		Journal journal = new Journal();
-		BigDecimal totalAmount = BigDecimal.ZERO;
+		BigDecimal totalAmount = transaction.getTransactionAmount();
 		// Considered invoice belongs to single type
 		boolean isCustomerInvoice = false;
 

@@ -163,4 +163,3 @@ create table TRANSACTON_EXPENSES (ID integer not null auto_increment, CREATED_BY
 
 --changeset 14/06/2020 AFZAL:ddl-11
 ALTER TABLE TRANSACTON add column EXPLINTION_USER_ID integer;
-ALTER TABLE TRANSACTON add constraint FKuser foreign key (EXPLINTION_USER_ID) references User (USER_ID);

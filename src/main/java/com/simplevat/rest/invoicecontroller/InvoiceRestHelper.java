@@ -590,9 +590,11 @@ public class InvoiceRestHelper {
 								: TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
 		journalLineItem1.setTransactionCategory(transactionCategory);
 		if (isCustomerInvoice)
-			journalLineItem1.setDebitAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
+			//journalLineItem1.setDebitAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
+		journalLineItem1.setDebitAmount(invoice.getTotalAmount());
 		else
-			journalLineItem1.setCreditAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
+			//journalLineItem1.setCreditAmount(invoice.getTotalAmount().subtract(invoice.getTotalVatAmount()));
+		journalLineItem1.setCreditAmount(invoice.getTotalAmount());
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
 		journalLineItem1.setCreatedBy(userId);
@@ -634,8 +636,8 @@ public class InvoiceRestHelper {
 			JournalLineItem journalLineItem = new JournalLineItem();
 			TransactionCategory inputVatCategory = transactionCategoryService
 					.findTransactionCategoryByTransactionCategoryCode(
-							isCustomerInvoice ? TransactionCategoryCodeEnum.INPUT_VAT.getCode()
-									: TransactionCategoryCodeEnum.OUTPUT_VAT.getCode());
+							isCustomerInvoice ? TransactionCategoryCodeEnum.OUTPUT_VAT.getCode()
+									: TransactionCategoryCodeEnum.INPUT_VAT.getCode());
 			journalLineItem.setTransactionCategory(inputVatCategory);
 			if (isCustomerInvoice)
 				journalLineItem.setCreditAmount(invoice.getTotalVatAmount());

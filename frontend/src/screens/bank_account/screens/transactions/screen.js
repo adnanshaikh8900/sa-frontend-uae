@@ -538,25 +538,6 @@ class BankTransactions extends React.Component {
 													Upload Statement
 												</Button>
 												<Button
-													color="primary"
-													className="btn-square"
-													onClick={() =>
-														this.props.history.push(
-															'/admin/banking/bank-account/transaction/create',
-															{
-																bankAccountId:
-																	this.props.location.state &&
-																	this.props.location.state.bankAccountId
-																		? this.props.location.state.bankAccountId
-																		: '',
-															},
-														)
-													}
-												>
-													<i className="fas fa-plus mr-1" />
-													New Transaction
-												</Button>
-												<Button
 													color="success"
 													className="btn-square"
 													onClick={() =>
@@ -655,6 +636,26 @@ class BankTransactions extends React.Component {
 												</Col>
 											</Row>
 										</div>
+										<Button
+											color="primary"
+											className="btn-square"
+											style={{ marginBottom: '10px' }}
+											onClick={() =>
+												this.props.history.push(
+													'/admin/banking/bank-account/transaction/create',
+													{
+														bankAccountId:
+															this.props.location.state &&
+															this.props.location.state.bankAccountId
+																? this.props.location.state.bankAccountId
+																: '',
+													},
+												)
+											}
+										>
+											<i className="fas fa-plus mr-1" />
+											Add New Transaction
+										</Button>
 										<div>
 											<BootstrapTable
 												keyField="id"

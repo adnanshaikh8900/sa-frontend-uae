@@ -1,15 +1,19 @@
 package com.simplevat.rest.datalistcontroller;
 
-import static com.simplevat.constant.ErrorConstant.ERROR;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.simplevat.constant.*;
+import com.simplevat.constant.dbfilter.*;
+import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.*;
+import com.simplevat.rest.productcontroller.ProductPriceModel;
+import com.simplevat.rest.productcontroller.ProductRestHelper;
 import com.simplevat.rest.vatcontroller.VatCategoryModel;
+import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
+import com.simplevat.service.*;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
+import com.simplevat.utils.ChartOfAccountCacheService;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,43 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.ContactTypeEnum;
-import com.simplevat.constant.InvoiceStatusEnum;
-import com.simplevat.constant.PayMode;
-import com.simplevat.constant.ProductPriceType;
-import com.simplevat.constant.dbfilter.CurrencyFilterEnum;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
-import com.simplevat.constant.dbfilter.ProductFilterEnum;
-import com.simplevat.constant.dbfilter.StateFilterEnum;
-import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
-import com.simplevat.entity.ChartOfAccountCategory;
-import com.simplevat.entity.Country;
-import com.simplevat.entity.IndustryType;
-import com.simplevat.entity.Product;
-import com.simplevat.entity.State;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.rest.DropdownModel;
-import com.simplevat.rest.EnumDropdownModel;
-import com.simplevat.rest.PaginationModel;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.SingleLevelDropDownModel;
-import com.simplevat.rest.productcontroller.ProductPriceModel;
-import com.simplevat.rest.productcontroller.ProductRestHelper;
-import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
-import com.simplevat.service.ChartOfAccountCategoryService;
-import com.simplevat.service.CountryService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.IndustryTypeService;
-import com.simplevat.service.ProductService;
-import com.simplevat.service.StateService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
-import com.simplevat.utils.ChartOfAccountCacheService;
+import java.util.*;
 
-import io.swagger.annotations.ApiOperation;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -321,7 +291,19 @@ public class DataListController {
 
 					parentCategory = getChartOfAccountCategory(debitCreditFlag, modelList, parentCategory, chartOfAccountCategory);
 				}
-				assert parentCategory != null;
+				if (debitCreditFlag.equals("D")) {
+					modelList.add(new DropdownModel(001, "Create Expense"));
+					modelList.add(new DropdownModel(002, "Supplier Invoice"));
+					Iterator<DropdownModel> iterator = modelList.iterator();
+					while (iterator.hasNext()) {
+						DropdownModel next = iterator.next();
+						if (next.getValue()== 10) {
+							iterator.remove();
+						}
+					}
+
+				}
+					assert parentCategory != null;
 				return new ResponseEntity<>(Arrays.asList(
 						new SingleLevelDropDownModel(parentCategory.getChartOfAccountCategoryName(), modelList)),
 						HttpStatus.OK);

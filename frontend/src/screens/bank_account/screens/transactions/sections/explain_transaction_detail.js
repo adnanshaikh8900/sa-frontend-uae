@@ -305,8 +305,8 @@ class ExplainTrasactionDetail extends React.Component {
 				);
 			}
 			if (
-				(vendorId && coaCategoryId.value === 10) ||
-				(vendorId && coaCategoryId.value === 1)
+				(vatId && coaCategoryId.value === 10) ||
+				(vatId && coaCategoryId.value === 1)
 			) {
 				formData.append('vatId', vatId ? vatId.value : '');
 			}

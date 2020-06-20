@@ -258,8 +258,6 @@ class ExplainTrasactionDetail extends React.Component {
 				transactionId,
 				expenseCategory,
 			} = data;
-			console.log(data);
-			console.log(coaCategoryId);
 			if (
 				(invoiceIdList && coaCategoryId === 2) ||
 				(invoiceIdList && coaCategoryId === 10)
@@ -295,10 +293,10 @@ class ExplainTrasactionDetail extends React.Component {
 			if (vendorId && coaCategoryId.value === 10) {
 				formData.append('vendorId', vendorId ? vendorId : '');
 			}
-			if (currencyCode && coaCategoryId.value === 1) {
+			if (currencyCode && coaCategoryId.label === 'Create Expense') {
 				formData.append('currencyCode', currencyCode ? currencyCode : '');
 			}
-			if (expenseCategory) {
+			if (expenseCategory && coaCategoryId.label === 'Create Expense') {
 				formData.append(
 					'expenseCategory',
 					expenseCategory ? expenseCategory.value : '',
@@ -306,14 +304,14 @@ class ExplainTrasactionDetail extends React.Component {
 			}
 			if (
 				(vatId && coaCategoryId.value === 10) ||
-				(vatId && coaCategoryId.value === 1)
+				(vatId && coaCategoryId.label === 'Create Expense')
 			) {
 				formData.append('vatId', vatId ? vatId.value : '');
 			}
 			if (employeeId) {
 				formData.append('employeeId', employeeId ? employeeId.value : '');
 			}
-			if (userId) {
+			if (userId && coaCategoryId.label === 'Create Expense') {
 				formData.append('userId', userId ? userId.value : '');
 			}
 			if (

@@ -292,8 +292,6 @@ public class DataListController {
 					parentCategory = getChartOfAccountCategory(debitCreditFlag, modelList, parentCategory, chartOfAccountCategory);
 				}
 				if (debitCreditFlag.equals("D")) {
-					modelList.add(new DropdownModel(001, "Create Expense"));
-					modelList.add(new DropdownModel(002, "Supplier Invoice"));
 					Iterator<DropdownModel> iterator = modelList.iterator();
 					while (iterator.hasNext()) {
 						DropdownModel next = iterator.next();
@@ -301,6 +299,8 @@ public class DataListController {
 							iterator.remove();
 						}
 					}
+					modelList.add(new DropdownModel(10, "Create Expense"));
+					modelList.add(new DropdownModel(10, "Supplier Invoice"));
 
 				}
 					assert parentCategory != null;

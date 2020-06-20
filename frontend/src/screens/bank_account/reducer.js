@@ -14,6 +14,8 @@ const initState = {
 	expense_list: [],
 	expense_categories_list: [],
 	user_list: [],
+	vendor_list: [],
+	vat_list: [],
 };
 
 const BankAccountReducer = (state = initState, action) => {
@@ -56,6 +58,12 @@ const BankAccountReducer = (state = initState, action) => {
 				transaction_category_list: Object.assign([], payload),
 			};
 
+		case BANK_ACCOUNT.VENDOR_LIST:
+			return {
+				...state,
+				vendor_list: Object.assign([], payload.data),
+			};
+
 		case BANK_ACCOUNT.PROJECT_LIST:
 			return {
 				...state,
@@ -95,6 +103,12 @@ const BankAccountReducer = (state = initState, action) => {
 			return {
 				...state,
 				transaction_type_list: Object.assign([], payload),
+			};
+
+		case BANK_ACCOUNT.VAT_LIST:
+			return {
+				...state,
+				vat_list: Object.assign([], payload.data),
 			};
 
 		default:

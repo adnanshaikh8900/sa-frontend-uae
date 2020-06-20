@@ -45,7 +45,6 @@ export const getTransactionList = (obj) => {
 };
 
 export const getTransactionCategoryList = () => {
-	console.log('Ss');
 	return (dispatch) => {
 		let data = {
 			method: 'get',
@@ -148,6 +147,27 @@ export const getCurrencyList = () => {
 						payload: {
 							data: res.data,
 						},
+					});
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getVendorList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `/rest/contact/getContactsForDropdown?contactType=1`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: BANK_ACCOUNT.VENDOR_LIST,
+						payload: res,
 					});
 				}
 			})
@@ -326,6 +346,27 @@ export const reconcileTransaction = (obj) => {
 			.then((res) => {
 				if (res.status === 200) {
 					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const getVatList = () => {
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: '/rest/vat/getList',
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					dispatch({
+						type: BANK_ACCOUNT.VAT_LIST,
+						payload: res.data,
+					});
 				}
 			})
 			.catch((err) => {

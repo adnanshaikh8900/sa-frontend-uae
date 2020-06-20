@@ -33,7 +33,7 @@ const mapStateToProps = (state) => {
 		transaction_category_list: state.bank_account.transaction_category_list,
 		transaction_type_list: state.bank_account.transaction_type_list,
 		project_list: state.bank_account.project_list,
-		invoice_list: state.bank_account.invoice_list,
+		customer_invoice_list: state.bank_account.customer_invoice_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -353,7 +353,7 @@ class CreateBankTransaction extends React.Component {
 			id: option.value,
 			type: this.state.cat_label === 'Money Received' ? 'CUSTOMER' : 'SUPLLIER',
 		};
-		this.props.transactionActions.getInvoiceList(data);
+		this.props.transactionActions.getCustomerInvoiceList(data);
 	};
 
 	render() {
@@ -363,7 +363,8 @@ class CreateBankTransaction extends React.Component {
 			transactionCategoryList,
 			categoriesList,
 		} = this.state;
-		const { invoice_list } = this.props;
+		const { customer_invoice_list } = this.props;
+		console.log(customer_invoice_list);
 		return (
 			<div className="create-bank-transaction-screen">
 				<div className="animated fadeIn">
@@ -753,11 +754,12 @@ class CreateBankTransaction extends React.Component {
 																				isMulti
 																				className="select-default-width"
 																				options={
-																					invoice_list.data
+																					customer_invoice_list &&
+																					customer_invoice_list.data
 																						? selectOptionsFactory.renderOptions(
-																								'totalAount',
-																								'id',
-																								invoice_list.data,
+																								'label',
+																								'value',
+																								customer_invoice_list.data,
 																								'Invoice',
 																						  )
 																						: []

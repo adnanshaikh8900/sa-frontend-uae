@@ -116,11 +116,9 @@ class ExplainTrasactionDetail extends React.Component {
 								? res.data.invoiceIdList
 								: '',
 							transactionCategoryLabel: res.data.transactionCategoryLabel,
-							expenseType: {
-								value: 'EXPENSE',
-								id: 10,
-							},
 							invoiceError: '',
+							expenseCategory: '',
+							currencyCode: '',
 						},
 					},
 					() => {
@@ -137,7 +135,6 @@ class ExplainTrasactionDetail extends React.Component {
 								this.state.initValue.amount,
 							);
 						}
-						console.log(this.state.initValue.customerId);
 					},
 				);
 			})
@@ -161,7 +158,7 @@ class ExplainTrasactionDetail extends React.Component {
 							const id = this.state.chartOfAccountCategoryList[0].options.find(
 								(option) => option.value === this.state.initValue.coaCategoryId,
 							);
-							this.getTransactionCategoryList(id.value);
+							this.getTransactionCategoryList(id);
 						}
 					},
 				);
@@ -176,14 +173,10 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	getTransactionCategoryList = (type) => {
-		const data = {
-			value: 'EXPENSE',
-			id: type,
-		};
-		this.formRef.current.setFieldValue('expenseType', data, true);
+		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
 		this.props.transactionsActions
-			.getTransactionCategoryListForExplain(type)
+			.getTransactionCategoryListForExplain(type.value)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState(
@@ -237,7 +230,6 @@ class ExplainTrasactionDetail extends React.Component {
 				0,
 			) > data.amount
 		) {
-			alert();
 			return false;
 		} else {
 			const {
@@ -259,8 +251,8 @@ class ExplainTrasactionDetail extends React.Component {
 				expenseCategory,
 			} = data;
 			if (
-				(invoiceIdList && coaCategoryId === 2) ||
-				(invoiceIdList && coaCategoryId === 10)
+				(invoiceIdList && coaCategoryId.label === 'Sales') ||
+				(invoiceIdList && coaCategoryId.label === 'Supplier Invoice')
 			) {
 				var result = invoiceIdList.map((o) => ({
 					id: o.value,
@@ -268,29 +260,29 @@ class ExplainTrasactionDetail extends React.Component {
 					type: o.type,
 				}));
 			}
+			let id;
+			if (coaCategoryId && coaCategoryId.value === 100) {
+				id = 10;
+			} else {
+				id = coaCategoryId.value;
+			}
 			let formData = new FormData();
 			formData.append('transactionId', transactionId ? transactionId : '');
 			formData.append('bankId ', bankId ? bankId : '');
 			formData.append('date', date ? moment(date).format('DD/MM/YYYY') : '');
 			formData.append('description', description ? description : '');
 			formData.append('amount', amount ? amount : '');
-			formData.append(
-				'coaCategoryId',
-				coaCategoryId ? coaCategoryId.value : '',
-			);
+			formData.append('coaCategoryId', coaCategoryId ? id : '');
 			if (transactionCategoryId) {
 				formData.append(
 					'transactionCategoryId',
 					transactionCategoryId ? transactionCategoryId : '',
 				);
 			}
-			if (
-				(customerId && coaCategoryId === 10) ||
-				(customerId && coaCategoryId === 2)
-			) {
+			if (customerId && coaCategoryId.value === 2) {
 				formData.append('customerId', customerId ? customerId : '');
 			}
-			if (vendorId && coaCategoryId.value === 10) {
+			if (vendorId && coaCategoryId.label === 'Supplier Invoice') {
 				formData.append('vendorId', vendorId ? vendorId : '');
 			}
 			if (currencyCode && coaCategoryId.label === 'Create Expense') {
@@ -315,8 +307,8 @@ class ExplainTrasactionDetail extends React.Component {
 				formData.append('userId', userId ? userId.value : '');
 			}
 			if (
-				(invoiceIdList && coaCategoryId === 2) ||
-				(invoiceIdList && coaCategoryId === 10)
+				(invoiceIdList && coaCategoryId.label === 'Sales') ||
+				(invoiceIdList && coaCategoryId.label === 'Supplier Invoice')
 			) {
 				formData.append(
 					'explainParamListStr',
@@ -465,23 +457,27 @@ class ExplainTrasactionDetail extends React.Component {
 														amount: Yup.string().required(
 															'Transaction Amount is Required',
 														),
-														coaCategoryId: Yup.string().required(
+														coaCategoryId: Yup.object().required(
 															'Transaction Type is Required',
 														),
+														// expenseCategory: Yup.string().required(
+														// 	'Expense Category is Required',
+														// ),
+														// currencyCode: Yup.string().required(
+														// 	'Currency Code is Required',
+														// ),
 														// vendorId: Yup.string().when('expenseType', {
 														// 	is: (item) => item.value === 'SUPPLIER',
 														// 	then: Yup.string().required('Vendor Is Required'),
 														// }),
-														// invoiceIdList: Yup.string().when('expenseType', {
-														// 	is: (item) =>
-														// 		(item.id === 10 &&
-														// 			(item.value === 'EXPENSE' ||
-														// 				item.value === 'SUPPLIER')) ||
-														// 		item.id === 2,
-														// 	then: Yup.string().required(
-														// 		'Invoice Is Required',
-														// 	),
-														// }),
+														invoiceIdList: Yup.string().when('coaCategoryId', {
+															is: (item) =>
+																item.label === 'Supplier Invoice' ||
+																item.label === 'Sales',
+															then: Yup.string().required(
+																'Invoice Is Required',
+															),
+														}),
 														attachment: Yup.mixed()
 															.test(
 																'fileType',
@@ -535,14 +531,14 @@ class ExplainTrasactionDetail extends React.Component {
 																			options={
 																				chartOfAccountCategoryList
 																					? chartOfAccountCategoryList
-																					: []
+																					: ''
 																			}
 																			value={
 																				chartOfAccountCategoryList[0] &&
 																				chartOfAccountCategoryList[0].options.find(
 																					(option) =>
 																						option.value ===
-																						+props.values.coaCategoryId,
+																						+props.values.coaCategoryId.value,
 																				)
 																			}
 																			onChange={(option) => {
@@ -560,7 +556,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					option.label !== 'Supplier Invoice'
 																				) {
 																					this.getTransactionCategoryList(
-																						option.value,
+																						option,
 																					);
 																				}
 																				if (option.label === 'Create Expense') {
@@ -697,9 +693,7 @@ class ExplainTrasactionDetail extends React.Component {
 																)} */}
 															{props.values.coaCategoryId &&
 																props.values.coaCategoryId.label ===
-																	'Create Expense' &&
-																props.values.expenseType.value ===
-																	'EXPENSE' && (
+																	'Create Expense' && (
 																	<Row>
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
@@ -718,13 +712,12 @@ class ExplainTrasactionDetail extends React.Component {
 																							  )
 																							: []
 																					}
-																					value={props.values.expenseCategory}
+																					// value={props.values.expenseCategory}
 																					onChange={(option) => {
 																						props.handleChange(
 																							'expenseCategory',
 																						)(option);
 																					}}
-																					placeholder="Select Type"
 																					id="expenseCategory"
 																					name="expenseCategory"
 																					className={
@@ -734,6 +727,12 @@ class ExplainTrasactionDetail extends React.Component {
 																							: ''
 																					}
 																				/>
+																				{props.errors.expenseCategory &&
+																					props.touched.expenseCategory && (
+																						<div className="invalid-feedback">
+																							{props.errors.expenseCategory}
+																						</div>
+																					)}
 																			</FormGroup>
 																		</Col>
 																		{props.values.coaCategoryId &&
@@ -1162,7 +1161,9 @@ class ExplainTrasactionDetail extends React.Component {
 																	props.values.coaCategoryId.label !==
 																		'Create Expense' &&
 																	props.values.coaCategoryId.label !==
-																		'Supplier Invoice' && (
+																		'Supplier Invoice' &&
+																	props.values.coaCategoryId.label !==
+																		'Sales' && (
 																		<Col lg={4}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="transactionCategoryId">
@@ -1352,7 +1353,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					placeholderText="Transaction Date"
 																					showMonthDropdown
 																					showYearDropdown
-																					dateFormat="dd/MM/yyyy"
+																					dateFormat="DD/MM/YYYY"
 																					dropdownMode="select"
 																					value={
 																						props.values.date

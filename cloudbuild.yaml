@@ -1,12 +1,12 @@
 steps:
-- name: 'gcr.io/gtt-project-prod/simplevat-maven-builder'
+- name: 'gcr.io/gtt-k8s/simplevat-maven-builder'
   entrypoint: 'mvn'
   args: ['verify', 'sonar:sonar','clean','package']
   id: mvn-build
   waitFor: ['-']
 - name: 'gcr.io/kaniko-project/executor:debug-edge'
   args:
-    - --destination=gcr.io/gtt-project-prod/simplevat:$TAG_NAME
+    - --destination=gcr.io/gtt-k8s/simplevat:$TAG_NAME
     - --cache=true
   id: docker-build-push
   waitFor:
@@ -15,11 +15,11 @@ steps:
   args:
     - 'rolling-update'
     - 'simplevat-dev-rep'
-    - '--image=gcr.io/gtt-project-prod/simplevat:$TAG_NAME'
+    - '--image=gcr.io/gtt-k8s/simplevat:$TAG_NAME'
     - '--namespace=simplevat-dev'
   env:
-    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s-prod'
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=gtt-k8s'
   waitFor:
   - docker-build-push
 timeout: 2400s

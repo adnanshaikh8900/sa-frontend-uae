@@ -161,7 +161,7 @@ public class DetailedGeneralLedgerRestHelper {
 						model.setAmount(tr.getTransactionAmount());
 						model.setDebitAmount(isDebit ? tr.getTransactionAmount() : new BigDecimal(0));
 						model.setCreditAmount(isDebit ? new BigDecimal(0) : tr.getTransactionAmount());
-						model.setName(tr.getBankAccount() != null ? tr.getBankAccount().getBankAccountName() : "");
+						model.setName(tr.getBankAccount() != null ? tr.getBankAccount().getBankName()+"-"+tr.getBankAccount().getBankAccountName() : "-");
 						break;
 
 					case EXPENSE:

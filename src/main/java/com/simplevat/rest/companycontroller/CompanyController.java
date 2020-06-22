@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.simplevat.constant.ErrorConstant;
 import com.simplevat.rest.DropdownModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

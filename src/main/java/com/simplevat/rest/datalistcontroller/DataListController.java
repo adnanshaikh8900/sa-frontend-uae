@@ -1,15 +1,19 @@
 package com.simplevat.rest.datalistcontroller;
 
-import static com.simplevat.constant.ErrorConstant.ERROR;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.simplevat.constant.*;
+import com.simplevat.constant.dbfilter.*;
+import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.ChartOfAccount;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.*;
+import com.simplevat.rest.productcontroller.ProductPriceModel;
+import com.simplevat.rest.productcontroller.ProductRestHelper;
 import com.simplevat.rest.vatcontroller.VatCategoryModel;
+import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
+import com.simplevat.service.*;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
+import com.simplevat.utils.ChartOfAccountCacheService;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,43 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.ContactTypeEnum;
-import com.simplevat.constant.InvoiceStatusEnum;
-import com.simplevat.constant.PayMode;
-import com.simplevat.constant.ProductPriceType;
-import com.simplevat.constant.dbfilter.CurrencyFilterEnum;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
-import com.simplevat.constant.dbfilter.ProductFilterEnum;
-import com.simplevat.constant.dbfilter.StateFilterEnum;
-import com.simplevat.constant.dbfilter.VatCategoryFilterEnum;
-import com.simplevat.entity.ChartOfAccountCategory;
-import com.simplevat.entity.Country;
-import com.simplevat.entity.IndustryType;
-import com.simplevat.entity.Product;
-import com.simplevat.entity.State;
-import com.simplevat.entity.bankaccount.ChartOfAccount;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.rest.DropdownModel;
-import com.simplevat.rest.EnumDropdownModel;
-import com.simplevat.rest.PaginationModel;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.SingleLevelDropDownModel;
-import com.simplevat.rest.productcontroller.ProductPriceModel;
-import com.simplevat.rest.productcontroller.ProductRestHelper;
-import com.simplevat.rest.vatcontroller.VatCategoryRestHelper;
-import com.simplevat.service.ChartOfAccountCategoryService;
-import com.simplevat.service.CountryService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.IndustryTypeService;
-import com.simplevat.service.ProductService;
-import com.simplevat.service.StateService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.VatCategoryService;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
-import com.simplevat.utils.ChartOfAccountCacheService;
+import java.util.*;
 
-import io.swagger.annotations.ApiOperation;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -223,7 +193,7 @@ public class DataListController {
 	@GetMapping(value = "/vatCategory")
 	public ResponseEntity< List<VatCategoryModel> > getVatCAtegory() {
 		try {
-			Map<VatCategoryFilterEnum, Object> filterDataMap = new HashMap();
+			Map<VatCategoryFilterEnum, Object> filterDataMap = new HashMap<>();
 			filterDataMap.put(VatCategoryFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 			filterDataMap.put(VatCategoryFilterEnum.DELETE_FLAG, false);
 
@@ -314,30 +284,26 @@ public class DataListController {
 			List<ChartOfAccountCategory> chartOfAccountCategoryList = chartOfAccountCategoryService.findAll();
 			if (chartOfAccountCategoryList != null && !chartOfAccountCategoryList.isEmpty()) {
 
-				List<DropdownModel> modelList = new ArrayList<DropdownModel>();
+				List<DropdownModel> modelList = new ArrayList<>();
 
 				ChartOfAccountCategory parentCategory = null;
 				for (ChartOfAccountCategory chartOfAccountCategory : chartOfAccountCategoryList) {
 
-					if (debitCreditFlag.equals("C") && chartOfAccountCategory.getParentChartOfAccount() != null
-							&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
-									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId())) {
-
-						modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
-								chartOfAccountCategory.getChartOfAccountCategoryName()));
-					} else if (debitCreditFlag.equals("D") && chartOfAccountCategory.getParentChartOfAccount() != null
-							&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
-									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
-						modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
-								chartOfAccountCategory.getChartOfAccountCategoryName()));
-					} else if ((debitCreditFlag.equals("C") && chartOfAccountCategory.getChartOfAccountCategoryId()
-							.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId()))
-							|| debitCreditFlag.equals("D") && chartOfAccountCategory.getChartOfAccountCategoryId()
-									.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
-						parentCategory = chartOfAccountCategory;
-					}
+					parentCategory = getChartOfAccountCategory(debitCreditFlag, modelList, parentCategory, chartOfAccountCategory);
 				}
-				assert parentCategory != null;
+				if (debitCreditFlag.equals("D")) {
+					Iterator<DropdownModel> iterator = modelList.iterator();
+					while (iterator.hasNext()) {
+						DropdownModel next = iterator.next();
+						if (next.getValue()== 10) {
+							iterator.remove();
+						}
+					}
+					modelList.add(new DropdownModel(10, "Create Expense"));
+					modelList.add(new DropdownModel(10, "Supplier Invoice"));
+
+				}
+					assert parentCategory != null;
 				return new ResponseEntity<>(Arrays.asList(
 						new SingleLevelDropDownModel(parentCategory.getChartOfAccountCategoryName(), modelList)),
 						HttpStatus.OK);
@@ -348,6 +314,27 @@ public class DataListController {
 			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	private ChartOfAccountCategory getChartOfAccountCategory(@RequestParam("debitCreditFlag") String debitCreditFlag, List<DropdownModel> modelList, ChartOfAccountCategory parentCategory, ChartOfAccountCategory chartOfAccountCategory) {
+		if (debitCreditFlag.equals("C") && chartOfAccountCategory.getParentChartOfAccount() != null
+				&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
+						.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId())) {
+
+			modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
+					chartOfAccountCategory.getChartOfAccountCategoryName()));
+		} else if (debitCreditFlag.equals("D") && chartOfAccountCategory.getParentChartOfAccount() != null
+				&& chartOfAccountCategory.getParentChartOfAccount().getChartOfAccountCategoryId()
+						.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
+			modelList.add(new DropdownModel(chartOfAccountCategory.getChartOfAccountCategoryId(),
+					chartOfAccountCategory.getChartOfAccountCategoryName()));
+		} else if ((debitCreditFlag.equals("C") && chartOfAccountCategory.getChartOfAccountCategoryId()
+				.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_RECEIVED.getId()))
+				|| debitCreditFlag.equals("D") && chartOfAccountCategory.getChartOfAccountCategoryId()
+						.equals(ChartOfAccountCategoryIdEnumConstant.MONEY_SPENT.getId())) {
+			parentCategory = chartOfAccountCategory;
+		}
+		return parentCategory;
 	}
 
 	@ApiOperation(value = "get Product List")

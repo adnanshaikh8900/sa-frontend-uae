@@ -18,7 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.ExpenseStatusEnum;
+import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.entity.Expense;
+import com.simplevat.entity.Invoice;
+import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.expensescontroller.ExpenseListModel;
 import com.simplevat.rest.expensescontroller.ExpenseModel;
 import com.simplevat.service.BankAccountService;
@@ -56,7 +59,7 @@ public class ExpenseRestHelper {
 
 	@Autowired
 	private TransactionCategoryService transactionCategoryService;
-	
+
 	@Autowired
 	private BankAccountService bankAccountService;
 
@@ -187,6 +190,23 @@ public class ExpenseRestHelper {
 			}
 			return expenseDtoList;
 		}
+		return new ArrayList<>();
+
+	}
+
+	public List<InviceSingleLevelDropdownModel> getDropDoenModelList(List<Expense> expenseList) {
+
+		if (expenseList != null && !expenseList.isEmpty()) {
+			List<InviceSingleLevelDropdownModel> modelList = new ArrayList<>();
+			for (Expense expense : expenseList) {
+				InviceSingleLevelDropdownModel model = new InviceSingleLevelDropdownModel(expense.getExpenseId(),
+						" (" + expense.getExpenseAmount() + " " + expense.getCurrency().getCurrencyName() + ")",
+						expense.getExpenseAmount(), PostingReferenceTypeEnum.EXPENSE);
+				modelList.add(model);
+			}
+			return modelList;
+		}
+
 		return new ArrayList<>();
 
 	}

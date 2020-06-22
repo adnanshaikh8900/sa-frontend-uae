@@ -63,7 +63,7 @@ class Payment extends React.Component {
 
 		this.options = {
 			//onRowClick: this.goToDetail,
-			paginationPosition: 'top',
+			paginationPosition: 'bottom',
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
@@ -342,18 +342,6 @@ class Payment extends React.Component {
 													/>
 												)}
 												<Button
-													color="primary"
-													className="btn-square"
-													onClick={() =>
-														this.props.history.push(
-															`/admin/expense/payment/create`,
-														)
-													}
-												>
-													<i className="fas fa-plus mr-1" />
-													New Payment
-												</Button>
-												<Button
 													color="warning"
 													className="btn-square"
 													onClick={this.bulkDeletePayments}
@@ -441,6 +429,17 @@ class Payment extends React.Component {
 												</Col>
 											</Row>
 										</div>
+										<Button
+											color="primary"
+											style={{ marginBottom: '10px' }}
+											className="btn-square"
+											onClick={() =>
+												this.props.history.push(`/admin/expense/payment/create`)
+											}
+										>
+											<i className="fas fa-plus mr-1" />
+											Add New Payment
+										</Button>
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}
@@ -481,21 +480,17 @@ class Payment extends React.Component {
 												>
 													Receipt Date
 												</TableHeaderColumn>
-												<TableHeaderColumn
-													dataField="invoiceReferenceNo"
-													dataSort
-												>
-													Reference #
-												</TableHeaderColumn>
 												<TableHeaderColumn dataField="supplierName" dataSort>
 													Supplier Name
+												</TableHeaderColumn>
+
+												<TableHeaderColumn dataField="paymentId" dataSort>
+													RECEIPT NO
 												</TableHeaderColumn>
 												<TableHeaderColumn
 													dataField="invoiceAmount"
 													dataSort
 													dataFormat={this.renderAmount}
-													dataAlign="right"
-													width="10%"
 												>
 													Amount
 												</TableHeaderColumn>

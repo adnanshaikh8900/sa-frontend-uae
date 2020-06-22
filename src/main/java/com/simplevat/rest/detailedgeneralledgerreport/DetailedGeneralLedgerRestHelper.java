@@ -161,7 +161,7 @@ public class DetailedGeneralLedgerRestHelper {
 						model.setAmount(tr.getTransactionAmount());
 						model.setDebitAmount(isDebit ? tr.getTransactionAmount() : new BigDecimal(0));
 						model.setCreditAmount(isDebit ? new BigDecimal(0) : tr.getTransactionAmount());
-						model.setName(tr.getBankAccount() != null ? tr.getBankAccount().getBankAccountName() : "");
+						model.setName(tr.getBankAccount() != null ? tr.getBankAccount().getBankName()+"-"+tr.getBankAccount().getBankAccountName() : "-");
 						break;
 
 					case EXPENSE:
@@ -169,8 +169,8 @@ public class DetailedGeneralLedgerRestHelper {
 						expenseMap = findOrGetFromDbEx(expenseMap, lineItem.getReferenceId());
 						Expense expense = expenseMap.get(lineItem.getReferenceId());
 						model.setAmount(expense.getExpenseAmount());
-						model.setDebitAmount(expense.getExpenseAmount());
-						model.setCreditAmount(new BigDecimal(0));
+						model.setDebitAmount(isDebit ? expense.getExpenseAmount(): new BigDecimal(0));
+						model.setCreditAmount(isDebit ? new BigDecimal(0):expense.getExpenseAmount());
 						model.setName(expense.getPayee() != null && !expense.getPayee().equals(" ") ? expense.getPayee()
 								: "");
 						break;
@@ -181,9 +181,26 @@ public class DetailedGeneralLedgerRestHelper {
 						Invoice invoice = invoiceMap.get(lineItem.getReferenceId());
 
 						model.setReferenceNo(journal.getJournlReferencenNo());
-						model.setAmount(invoice.getTotalAmount());
-						model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
-						model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+						//model.setAmount(invoice.getTotalAmount());
+						BigDecimal amount = BigDecimal.ZERO;
+						if(isDebit){
+							model.setCreditAmount(BigDecimal.ZERO);
+							model.setDebitAmount(lineItem.getDebitAmount());
+							amount=lineItem.getDebitAmount();
+						}
+						else{
+							model.setCreditAmount(lineItem.getCreditAmount());
+							model.setDebitAmount(BigDecimal.ZERO);
+							amount=lineItem.getCreditAmount();
+						}
+						model.setAmount(amount);
+						/*BigDecimal amountCredit = !isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO;
+						BigDecimal amountDebit = isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO;
+						model.setCreditAmount(amountCredit);
+						model.setDebitAmount(amountDebit);
+						model.setAmount(amountDebit.intValue()!=0?amountDebit:amountCredit);*/
+						//model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+						//model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
 						model.setName(invoice.getContact() != null
 								? invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName()
 								: "");

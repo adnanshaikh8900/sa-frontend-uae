@@ -417,7 +417,7 @@ class DetailSupplierInvoice extends React.Component {
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj[`${name}`] = e;
+				obj[`${name}`] = e.target.value;
 				idx = index;
 			}
 			return obj;
@@ -427,6 +427,7 @@ class DetailSupplierInvoice extends React.Component {
 			name === 'vatCategoryId' ||
 			name === 'quantity'
 		) {
+			console.log('ss');
 			form.setFieldValue(
 				field.name,
 				this.state.data[parseInt(idx, 10)][`${name}`],
@@ -1575,7 +1576,7 @@ class DetailSupplierInvoice extends React.Component {
 																				this.renderAccount(cell, rows, props)
 																			}
 																		>
-																			Product
+																			Account
 																		</TableHeaderColumn>
 																		<TableHeaderColumn
 																			dataField="description"

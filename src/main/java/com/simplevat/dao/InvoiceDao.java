@@ -13,6 +13,7 @@ import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,5 +38,7 @@ public interface InvoiceDao extends Dao<Integer, Invoice> {
 	public OverDueAmountDetailsModel getOverDueAmountDetails(Integer type);
 
 	public List<Invoice> getUnpaidInvoice(Integer customerId, ContactTypeEnum type);
+
+	public List<Invoice> getSuggestionUnpaidInvoices(BigDecimal amount, Integer contactId,ContactTypeEnum type,Integer userId);
 
 }

@@ -31,16 +31,12 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Version;
 
+import com.simplevat.entity.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simplevat.constant.TransactionCreationMode;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
-import com.simplevat.entity.ChartOfAccountCategory;
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.Employee;
-import com.simplevat.entity.Project;
-import com.simplevat.entity.VatCategory;
 import com.simplevat.entity.converter.DateConverter;
 
 import lombok.Data;
@@ -90,9 +86,9 @@ public class Transaction implements Serializable {
 	@Column(name = "DEBIT_CREDIT_FLAG")
 	private Character debitCreditFlag;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EXPLAINED_PROJECT_ID")
-	private Project project;
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "EXPLAINED_PROJECT_ID")
+//	private Project project;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EXPLAINED_TRANSACTION_CATEGORY_CODE")
@@ -152,6 +148,11 @@ public class Transaction implements Serializable {
 	private Employee explinationEmployee;
 
 	@Basic
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "EXPLINTION_USER_ID")
+	private User explainationUser;
+
+	@Basic
 	@Column(name = "TRANSACTIN_CREATION_MODE", columnDefinition = "varchar(32) default 'MANUAL'")
 	@Enumerated(EnumType.STRING)
 	private TransactionCreationMode creationMode;
@@ -191,11 +192,11 @@ public class Transaction implements Serializable {
 	@Column(name = "ENTRY_TYPE")
 	private Integer entryType;
 
-	@Column(name = "REFERENCE_ID")
-	private Integer referenceId;
-
-	@Column(name = "REFERENCE_TYPE")
-	private Integer referenceType;
+//	@Column(name = "REFERENCE_ID")
+//	private Integer referenceId;
+//
+//	@Column(name = "REFERENCE_TYPE")
+//	private Integer referenceType;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PARENT_TRANSACTION")

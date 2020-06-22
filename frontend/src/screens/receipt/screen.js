@@ -55,6 +55,7 @@ class Receipt extends React.Component {
 				invoiceId: '',
 				receiptReferenceCode: '',
 				receiptDate: '',
+				contactType: 2,
 			},
 			csvData: [],
 			view: false,
@@ -62,7 +63,7 @@ class Receipt extends React.Component {
 
 		this.options = {
 			//onRowClick: this.goToDetail,
-			paginationPosition: 'top',
+			paginationPosition: 'bottom',
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
@@ -83,7 +84,8 @@ class Receipt extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.props.receiptActions.getContactList();
+		let { filterData } = this.state;
+		this.props.receiptActions.getContactList(filterData.contactType);
 		this.props.receiptActions.getInvoiceList();
 		this.initializeData();
 	};
@@ -347,18 +349,6 @@ class Receipt extends React.Component {
 													/>
 												)}
 												<Button
-													color="primary"
-													className="btn-square"
-													onClick={() =>
-														this.props.history.push(
-															`/admin/revenue/receipt/create`,
-														)
-													}
-												>
-													<i className="fas fa-plus mr-1" />
-													New Receipt
-												</Button>
-												<Button
 													color="warning"
 													className="btn-square"
 													onClick={this.bulkDelete}
@@ -470,6 +460,17 @@ class Receipt extends React.Component {
 												</Col>
 											</Row>
 										</div>
+										<Button
+											color="primary"
+											style={{ marginBottom: '10px' }}
+											className="btn-square"
+											onClick={() =>
+												this.props.history.push(`/admin/revenue/receipt/create`)
+											}
+										>
+											<i className="fas fa-plus mr-1" />
+											Add New Receipt
+										</Button>
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}
@@ -508,14 +509,14 @@ class Receipt extends React.Component {
 												>
 													Receipt Date
 												</TableHeaderColumn>
-												<TableHeaderColumn dataField="referenceCode" dataSort>
+												{/* <TableHeaderColumn dataField="referenceCode" dataSort>
 													Reference Number
-												</TableHeaderColumn>
+												</TableHeaderColumn> */}
 												<TableHeaderColumn dataField="customerName" dataSort>
 													Customer Name
 												</TableHeaderColumn>
 												<TableHeaderColumn dataField="receiptId" dataSort>
-													Receipt #
+													Receipt No
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn
                             dataField="transactionType"
@@ -527,7 +528,6 @@ class Receipt extends React.Component {
 												<TableHeaderColumn
 													dataField="amount"
 													dataSort
-													dataAlign="right"
 													dataFormat={this.renderAmount}
 												>
 													Amount

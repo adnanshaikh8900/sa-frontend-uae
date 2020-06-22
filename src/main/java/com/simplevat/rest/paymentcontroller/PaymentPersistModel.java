@@ -15,13 +15,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PaymentPersistModel {
-//    private Integer paymentId;
-//    private Integer bankAccountId;
-//    private Integer contactId;
-//    private Integer currencyCode;
-//    private Integer projectId;
-//    private Date paymentDate;
-//    private String description;
 	private Boolean deleteFlag;
 
 	private Integer paymentId;

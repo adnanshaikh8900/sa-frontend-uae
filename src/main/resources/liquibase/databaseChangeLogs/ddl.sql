@@ -153,3 +153,16 @@ alter table PAYMENT add column PAYMENT_NO varchar(255);
 alter table PAYMENT add column REFERENCE_NO varchar(255);
 alter table PAYMENT add column DEPOSITE_TO_TRANSACTION_CATEGORY_ID integer;
 alter table PAYMENT add constraint FK477s0wc9n8l6oupyoqk4v2g3c foreign key (DEPOSITE_TO_TRANSACTION_CATEGORY_ID) references TRANSACTION_CATEGORY (TRANSACTION_CATEGORY_ID);
+
+--changeset 30/05/2020 SAURABH:ddl-9
+alter table EXPLANATION_STATUS add column INVOICE_ID integer;
+alter table EXPLANATION_STATUS add constraint FKsbltb842k4hgrmpcg6a66oywp foreign key (INVOICE_ID) references INVOICE (ID);
+
+--changeset 3/06/2020 SAURABH:ddl-10
+create table TRANSACTON_EXPENSES (ID integer not null auto_increment, CREATED_BY integer not null, CREATED_DATE datetime default CURRENT_TIMESTAMP, EXPLANATION_STATUS_NAME varchar(255) not null, LAST_UPDATED_BY integer, LAST_UPDATE_DATE datetime, REMANING_TO_EXLAIN_BALANCE decimal(19,2) default 0.00 not null, EXPENSE_ID integer, TRANSACTION_ID integer, primary key (ID));
+
+--changeset 14/06/2020 AFZAL:ddl-11
+ALTER TABLE TRANSACTON add column EXPLINTION_USER_ID integer;
+
+--changeset 20/06/2020 AFZAL:ddl-12
+ALTER TABLE EXPENSE add column USER_ID integer;

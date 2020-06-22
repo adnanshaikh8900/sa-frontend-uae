@@ -70,15 +70,10 @@ public class ReceiptRestHelper {
 				ReceiptModel model = new ReceiptModel();
 				model.setReceiptId(receipt.getId());
 				model.setAmount(receipt.getAmount());
-				// TODO remove once remove from front end list
 				model.setUnusedAmount(BigDecimal.ZERO);
 				model.setReferenceCode(receipt.getReferenceCode());
 				model.setReceiptNo(receipt.getReceiptNo());
-				if (receipt.getContact() != null) {
-					model.setContactId(receipt.getContact().getContactId());
-					model.setCustomerName(
-							receipt.getContact().getFirstName() + " " + receipt.getContact().getLastName());
-				}
+				getContact(receipt, model);
 
 				List<CustomerInvoiceReceipt> receiptEntryList = customerInvoiceReceiptService
 						.findForReceipt(receipt.getId());
@@ -98,6 +93,13 @@ public class ReceiptRestHelper {
 			}
 		}
 		return receiptModelList;
+	}
+
+	private void getContact(Receipt receipt, ReceiptModel model) {
+		if (receipt.getContact() != null) {
+			model.setContactId(receipt.getContact().getContactId());
+			model.setCustomerName(receipt.getContact().getFirstName() + " " + receipt.getContact().getLastName());
+		}
 	}
 
 	public Receipt getEntity(ReceiptRequestModel receiptRequestModel) {
@@ -160,27 +162,26 @@ public class ReceiptRestHelper {
 
 	}
 
-	public List<CustomerInvoiceReceipt> getCustomerInvoiceReceiptEntity(ReceiptRequestModel receiptRequestModel) {
-		if (receiptRequestModel.getPaidInvoiceListStr() != null
-				&& !receiptRequestModel.getPaidInvoiceListStr().isEmpty()) {
+	public List<CustomerInvoiceReceipt> getCustomerInvoiceReceiptEntity(String invoiceDueAmountModelListStr) {
+		if (invoiceDueAmountModelListStr != null && ! invoiceDueAmountModelListStr.isEmpty()) {
 
 			ObjectMapper mapper = new ObjectMapper();
+			List<InvoiceDueAmountModel> itemModels = null;
 			try {
-				List<InvoiceDueAmountModel> itemModels = mapper.readValue(receiptRequestModel.getPaidInvoiceListStr(),
+				itemModels = mapper.readValue(invoiceDueAmountModelListStr,
 						new TypeReference<List<InvoiceDueAmountModel>>() {
 						});
-				receiptRequestModel.setPaidInvoiceList(itemModels);
 			} catch (IOException ex) {
 				logger.error("Error", ex);
 			}
 
 			List<CustomerInvoiceReceipt> receiptList = new ArrayList<>();
-			for (InvoiceDueAmountModel dueAmountModel : receiptRequestModel.getPaidInvoiceList()) {
+			for (InvoiceDueAmountModel dueAmountModel : itemModels) {
 				CustomerInvoiceReceipt receipt = new CustomerInvoiceReceipt();
 				Invoice invoice = invoiceService.findByPK(dueAmountModel.getId());
-				invoice.setStatus(
-						dueAmountModel.getDueAmount().equals(dueAmountModel.getPaidAmount() ) ? InvoiceStatusEnum.PAID.getValue()
-								: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+				invoice.setStatus(dueAmountModel.getDueAmount().equals(dueAmountModel.getPaidAmount())
+						? InvoiceStatusEnum.PAID.getValue()
+						: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
 				receipt.setCustomerInvoice(invoice);
 				receipt.setPaidAmount(dueAmountModel.getPaidAmount());
 				receipt.setDeleteFlag(Boolean.FALSE);
@@ -263,4 +264,48 @@ public class ReceiptRestHelper {
 
 		return new ArrayList<>();
 	}
+	
+	public Journal paymentPosting(PostingRequestModel postingRequestModel, Integer userId,
+			TransactionCategory depositeToTransactionCategory) {
+		List<JournalLineItem> journalLineItemList = new ArrayList<>();
+
+		Map<String, Object> param = new HashMap<>();
+		param.put("referenceType", PostingReferenceTypeEnum.PAYMENT);
+		param.put("referenceId", postingRequestModel.getPostingRefId());
+		param.put("deleteFlag", false);
+		journalLineItemList = journalLineItemService.findByAttributes(param);
+
+		Journal journal = journalLineItemList != null && journalLineItemList.size() > 0
+				? journalLineItemList.get(0).getJournal()
+				: new Journal();
+		JournalLineItem journalLineItem1 = journal.getJournalLineItems() != null
+				&& journal.getJournalLineItems().size() > 0 ? journalLineItemList.get(0) : new JournalLineItem();
+		TransactionCategory transactionCategory = transactionCategoryService
+				.findTransactionCategoryByTransactionCategoryCode(
+						TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
+		journalLineItem1.setTransactionCategory(transactionCategory);
+		journalLineItem1.setDebitAmount(postingRequestModel.getAmount());
+		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
+		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
+		journalLineItem1.setCreatedBy(userId);
+		journalLineItem1.setJournal(journal);
+		journalLineItemList.add(journalLineItem1);
+
+		JournalLineItem journalLineItem2 = journal.getJournalLineItems() != null
+				&& journal.getJournalLineItems().size() > 0 ? journalLineItemList.get(1) : new JournalLineItem();
+		journalLineItem2.setTransactionCategory(depositeToTransactionCategory);
+		journalLineItem2.setCreditAmount(postingRequestModel.getAmount());
+		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
+		journalLineItem2.setReferenceId(postingRequestModel.getPostingRefId());
+		journalLineItem2.setCreatedBy(userId);
+		journalLineItem2.setJournal(journal);
+		journalLineItemList.add(journalLineItem2);
+
+		journal.setJournalLineItems(journalLineItemList);
+		journal.setCreatedBy(userId);
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.RECEIPT);
+		journal.setJournalDate(LocalDateTime.now());
+		return journal;
+	}
+
 }

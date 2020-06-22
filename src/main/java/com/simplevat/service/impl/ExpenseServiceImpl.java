@@ -1,7 +1,7 @@
 package com.simplevat.service.impl;
 
-import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
-import com.simplevat.dao.CompanyDao;
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.simplevat.constant.InvoiceStatusEnum;
+import com.simplevat.constant.dbfilter.ExpenseFIlterEnum;
+import com.simplevat.dao.CompanyDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.ExpenseDao;
 import com.simplevat.dao.ProjectDao;
@@ -18,6 +21,7 @@ import com.simplevat.entity.Expense;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.ExpenseService;
+import com.simplevat.service.TransactionExpensesService;
 import com.simplevat.service.report.model.BankAccountTransactionReportModel;
 import com.simplevat.utils.ChartUtil;
 
@@ -37,9 +41,16 @@ public class ExpenseServiceImpl extends ExpenseService {
 	@Autowired
 	ChartUtil util;
 
+	@Autowired
+	private TransactionExpensesService transactionExpensesService;
+
 	@Override
-	public List<Expense> getExpenses() {
-		return expenseDao.getAllExpenses();
+	public List<Expense> getExpenses(Integer userId, List<Integer> statusList) {
+		return expenseDao.getAllExpenses(userId, statusList);
+	}
+
+	public List<Expense> getExpensesToMatch(Integer userId, List<Integer> statusList, BigDecimal amount) {
+		return expenseDao.getExpensesToMatch(userId, statusList,amount);
 	}
 
 	@Override
@@ -70,8 +81,13 @@ public class ExpenseServiceImpl extends ExpenseService {
 	}
 
 	@Override
-	public PaginationResponseModel getExpensesList(Map<ExpenseFIlterEnum, Object> filterMap,PaginationModel paginationModel) {
-		return expenseDao.getExpenseList(filterMap,paginationModel);
+	public PaginationResponseModel getExpensesList(Map<ExpenseFIlterEnum, Object> filterMap,
+			PaginationModel paginationModel) {
+		return expenseDao.getExpenseList(filterMap, paginationModel);
 	}
 
+	@Override
+	public List<Expense> getUnMappedExpenses(Integer userId,BigDecimal amount) {
+		return expenseDao.getExpensesToMatch(userId, Arrays.asList(InvoiceStatusEnum.POST.getValue()),amount);
+	}
 }

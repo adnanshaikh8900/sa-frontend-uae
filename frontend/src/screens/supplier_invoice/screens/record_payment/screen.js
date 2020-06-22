@@ -126,8 +126,14 @@ class RecordSupplierPayment extends React.Component {
 				paidInvoiceListStr: [
 					{
 						id: this.props.location.state.id.id,
-						date: this.props.location.state.id.invoiceDate,
-						dueDate: this.props.location.state.id.invoiceDueDate,
+						date: moment(
+							this.props.location.state.id.invoiceDate,
+							'DD/MM/YYYY',
+						).toDate(),
+						dueDate: moment(
+							this.props.location.state.id.invoiceDueDate,
+							'DD/MM/YYYY',
+						).toDate(),
 						paidAmount: this.props.location.state.id.invoiceAmount,
 						dueAmount: this.props.location.state.id.invoiceAmount,
 						referenceNo: this.props.location.state.id.invoiceNumber,
@@ -223,9 +229,6 @@ class RecordSupplierPayment extends React.Component {
 			referenceCode,
 			deleteFlag,
 		} = data;
-		console.log(data);
-		console.log(JSON.stringify(this.state.initValue.paidInvoiceListStr));
-
 		let formData = new FormData();
 		formData.append('paymentNo', paymentNo !== null ? paymentNo : '');
 		formData.append(
@@ -535,7 +538,7 @@ class RecordSupplierPayment extends React.Component {
 																			selected={props.values.paymentDate}
 																			onChange={(value) => {
 																				props.handleChange('paymentDate')(
-																					moment(value).format('DD/MM/YYYY'),
+																					value,
 																				);
 																			}}
 																			className={`form-control ${

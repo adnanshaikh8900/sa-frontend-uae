@@ -1,5 +1,6 @@
 package com.simplevat.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -14,24 +15,25 @@ import org.springframework.stereotype.Service;
 import com.simplevat.constant.ContactTypeEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.dao.CustomerInvoiceReceiptDao;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.InvoiceDao;
 import com.simplevat.dao.JournalDao;
 import com.simplevat.dao.JournalLineItemDao;
+import com.simplevat.dao.SupplierInvoicePaymentDao;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.model.OverDueAmountDetailsModel;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.invoicecontroller.InvoiceRestController;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.DateUtils;
 
 @Service("SupplierInvoiceService")
 public class InvoiceServiceImpl extends InvoiceService {
-	private final Logger logger = LoggerFactory.getLogger(InvoiceRestController.class);
+	private final Logger logger = LoggerFactory.getLogger(InvoiceServiceImpl.class);
 
 	@Autowired
 	private InvoiceDao supplierInvoiceDao;
@@ -47,6 +49,12 @@ public class InvoiceServiceImpl extends InvoiceService {
 
 	@Autowired
 	private JournalLineItemDao journalLineItemDao;
+
+	@Autowired
+	private CustomerInvoiceReceiptDao customerInvoiceReceiptDao;
+
+	@Autowired
+	private SupplierInvoicePaymentDao supplierInvoicePaymentDao;
 
 	@Override
 	protected Dao<Integer, Invoice> getDao() {
@@ -74,7 +82,7 @@ public class InvoiceServiceImpl extends InvoiceService {
 		Invoice invoice = supplierInvoiceDao.getLastInvoice();
 		if (invoice != null) {
 			try {
-				return new Integer(invoice.getReferenceNumber()) + 1;
+				return Integer.valueOf(invoice.getReferenceNumber()) + 1;
 			} catch (Exception e) {
 				return 0;
 			}
@@ -99,9 +107,7 @@ public class InvoiceServiceImpl extends InvoiceService {
 
 	@Override
 	public OverDueAmountDetailsModel getOverDueAmountDetails(Integer type) {
-
-		OverDueAmountDetailsModel overDueAmountDetails = supplierInvoiceDao.getOverDueAmountDetails(type);
-		return overDueAmountDetails;
+    return supplierInvoiceDao.getOverDueAmountDetails(type);
 	}
 
 	/**
@@ -136,7 +142,21 @@ public class InvoiceServiceImpl extends InvoiceService {
 	 * @return list invoiceList
 	 */
 	@Override
-	public List<Invoice> getUnpaidInvoice(Integer contactId,ContactTypeEnum type) {
-		return supplierInvoiceDao.getUnpaidInvoice(contactId,type);
+	public List<Invoice> getUnpaidInvoice(Integer contactId, ContactTypeEnum type) {
+		return supplierInvoiceDao.getUnpaidInvoice(contactId, type);
 	}
+
+	/**
+	 * @author $@urabh : get invoice suggestion for transaction explanation created
+	 *         on:28/05/2020
+	 * @param Integer    contactId
+	 * @param BigDecimal amount
+	 * @return list invoiceList
+	 */
+	@Override
+	public List<Invoice> getSuggestionInvoices(BigDecimal amount, Integer contactId, ContactTypeEnum type,
+			Integer userId) {
+		return supplierInvoiceDao.getSuggestionUnpaidInvoices(amount, contactId, type, userId);
+	}
+
 }

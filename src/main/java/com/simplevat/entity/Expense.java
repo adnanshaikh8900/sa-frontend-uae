@@ -39,7 +39,10 @@ import org.hibernate.annotations.ColumnDefault;
 /**
  * Created by mohsinh on 2/26/2017.
  */
-@NamedQueries({ @NamedQuery(name = "allExpenses", query = "SELECT e " + "FROM Expense e where e.deleteFlag = FALSE") })
+@NamedQueries({ @NamedQuery(name = "allExpenses", query = "SELECT e FROM Expense e where e.deleteFlag = FALSE"),
+		@NamedQuery(name = "getExpensesToMatch", query =  "SELECT e FROM Expense e WHERE e.expenseId NOT IN (SELECT expense.expenseId from TransactionExpenses ) and e.expenseAmount <= :amount and e.deleteFlag = FALSE and e.status in :status and e.createdBy = :userId order by e.expenseId desc"),
+		@NamedQuery(name = "postedExpenses", query = "SELECT e FROM Expense e where e.deleteFlag = FALSE and e.status in :status and e.createdBy = :userId order by e.expenseId desc") })
+
 @Entity
 @Table(name = "EXPENSE")
 @Data
@@ -89,6 +92,11 @@ public class Expense implements Serializable {
 	@JoinColumn(name = "EMPLOYEE_ID")
 	@JsonManagedReference
 	private Employee employee;
+
+	@Basic
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "USER_ID")
+	private User userId;
 
 	@Basic
 	@Column(name = "RECEIPT_NUMBER", length = 20)

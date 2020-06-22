@@ -27,8 +27,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import moment from 'moment';
-
 import * as CustomerInvoiceActions from './actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
@@ -82,7 +80,7 @@ class CustomerInvoice extends React.Component {
 		};
 
 		this.options = {
-			paginationPosition: 'top',
+			paginationPosition: 'bottom',
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
@@ -262,16 +260,14 @@ class CustomerInvoice extends React.Component {
 		return row.invoiceAmount ? row.invoiceAmount.toFixed(2) : '';
 	};
 	invoiceDueDate = (cell, row) => {
-		return row.invoiceDueDate
-			? moment(row.invoiceDueDate).format('DD/MM/YYYY')
-			: '';
+		return row.invoiceDueDate ? row.invoiceDueDate : '';
 	};
 	invoiceDate = (cell, row) => {
-		return row.invoiceDate ? moment(row.invoiceDate).format('DD/MM/YYYY') : '';
+		return row.invoiceDate ? row.invoiceDate : '';
 	};
 
 	renderVatAmount = (cell, row) => {
-		return row.vatAmount ? row.vatAmount.toFixed(2) : '';
+		return row.vatAmount === 0 ? row.vatAmount : row.vatAmount;
 	};
 
 	renderActions = (cell, row) => {
@@ -566,7 +562,6 @@ class CustomerInvoice extends React.Component {
 			view,
 		} = this.state;
 		const { status_list, customer_list, customer_invoice_list } = this.props;
-
 		const customer_invoice_data =
 			this.props.customer_invoice_list && this.props.customer_invoice_list.data
 				? this.props.customer_invoice_list.data.map((customer) => ({
@@ -584,7 +579,6 @@ class CustomerInvoice extends React.Component {
 						vatAmount: customer.totalVatAmount,
 				  }))
 				: '';
-
 		return (
 			<div className="customer-invoice-screen">
 				<div className="animated fadeIn">
@@ -613,7 +607,7 @@ class CustomerInvoice extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-									<div className="mb-4 status-panel p-3">
+									{/* <div className="mb-4 status-panel p-3">
 										<Row>
 											<Col lg={3}>
 												<h5>Overdue</h5>
@@ -638,7 +632,7 @@ class CustomerInvoice extends React.Component {
 												<h3 className="status-title">0 day</h3>
 											</Col>
 										</Row>
-									</div>
+									</div> */}
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											<Button
@@ -658,18 +652,6 @@ class CustomerInvoice extends React.Component {
 													target="_blank"
 												/>
 											)}
-											<Button
-												color="primary"
-												className="btn-square"
-												onClick={() =>
-													this.props.history.push(
-														`/admin/revenue/customer-invoice/create`,
-													)
-												}
-											>
-												<i className="fas fa-plus mr-1" />
-												New Invoice
-											</Button>
 											<Button
 												color="warning"
 												className="btn-square"
@@ -711,19 +693,6 @@ class CustomerInvoice extends React.Component {
 												/>
 											</Col>
 											<Col lg={2} className="mb-1">
-												<Input
-													type="text"
-													placeholder="Reference Number"
-													value={filterData.referenceNumber}
-													onChange={(e) => {
-														this.handleChange(
-															e.target.value,
-															'referenceNumber',
-														);
-													}}
-												/>
-											</Col>
-											<Col lg={2} className="mb-1">
 												<DatePicker
 													className="form-control"
 													id="date"
@@ -758,7 +727,7 @@ class CustomerInvoice extends React.Component {
 													}}
 												/>
 											</Col>
-											<Col lg={1} className="mb-1">
+											<Col lg={2} className="mb-1">
 												<Input
 													type="text"
 													value={filterData.amount}
@@ -812,6 +781,19 @@ class CustomerInvoice extends React.Component {
 											</Col>
 										</Row>
 									</div>
+									<Button
+										color="primary"
+										className="btn-square"
+										style={{ marginBottom: '10px' }}
+										onClick={() =>
+											this.props.history.push(
+												`/admin/revenue/customer-invoice/create`,
+											)
+										}
+									>
+										<i className="fas fa-plus mr-1" />
+										Add New Invoice
+									</Button>
 									<div>
 										<BootstrapTable
 											selectRow={this.selectRowProp}
@@ -848,11 +830,7 @@ class CustomerInvoice extends React.Component {
 											>
 												Status
 											</TableHeaderColumn>
-											<TableHeaderColumn
-												dataField="customerName"
-												dataSort
-												width="15%"
-											>
+											<TableHeaderColumn dataField="customerName" dataSort>
 												Customer Name
 											</TableHeaderColumn>
 											<TableHeaderColumn
@@ -865,7 +843,6 @@ class CustomerInvoice extends React.Component {
 											<TableHeaderColumn
 												dataField="invoiceDate"
 												dataSort
-												width="13%"
 												dataFormat={this.invoiceDate}
 											>
 												Invoice Date
@@ -873,7 +850,6 @@ class CustomerInvoice extends React.Component {
 											<TableHeaderColumn
 												dataField="invoiceDueDate"
 												dataSort
-												width="10%"
 												dataFormat={this.invoiceDueDate}
 											>
 												Due Date
@@ -882,7 +858,6 @@ class CustomerInvoice extends React.Component {
 												dataField="totalAmount"
 												dataSort
 												dataFormat={this.renderInvoiceAmount}
-												dataAlign="right"
 											>
 												Invoice Amount
 											</TableHeaderColumn>
@@ -890,14 +865,12 @@ class CustomerInvoice extends React.Component {
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
-												dataAlign="right"
 											>
 												VAT Amount
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												className="text-right"
 												columnClassName="text-right"
-												width="55"
 												dataFormat={this.renderActions}
 											></TableHeaderColumn>
 										</BootstrapTable>

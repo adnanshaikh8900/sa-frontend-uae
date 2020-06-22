@@ -1,6 +1,6 @@
 steps:
   - name: gcr.io/cloud-builders/docker
-    args: ['build','-f','Dockerfile-maven','-t', 'gcr.io/gtt-k8s/simplevat-maven-builder:latest','.']
+    args: ['build','-f','./maven/Dockerfile-maven','-t', 'gcr.io/gtt-k8s/simplevat-maven-builder:latest','.']
 images: ['gcr.io/gtt-k8s/simplevat-maven-builder:latest']
 timeout: 2400s
 options:

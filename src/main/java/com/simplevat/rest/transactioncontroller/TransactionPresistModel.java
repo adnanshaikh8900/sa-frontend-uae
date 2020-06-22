@@ -40,6 +40,9 @@ public class TransactionPresistModel implements Serializable {
 	private Integer vatId;
 	private Integer vendorId;
 	private Integer customerId;
+	private Integer expenseCategory;
+	private Integer userId;
+	private Integer currencyCode;
 
 	// MONEY PAID TO USER
 	// MONEY RECEIVED FROM OTHER

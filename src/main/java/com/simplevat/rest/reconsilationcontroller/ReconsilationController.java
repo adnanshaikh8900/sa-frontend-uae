@@ -138,7 +138,25 @@ public class ReconsilationController {
 								transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
 						HttpStatus.OK);
 
-			case DEFAULT:
+				case TRANSFERD_TO:
+				case MONEY_SPENT_OTHERS:
+				case MONEY_SPENT:
+				case PURCHASE_OF_CAPITAL_ASSET:
+				case TRANSFER_FROM:
+				case REFUND_RECEIVED:
+				case INTEREST_RECEVIED:
+				case MONEY_RECEIVED_OTHERS:
+				case DISPOSAL_OF_CAPITAL_ASSET:
+				case MONEY_RECEIVED:
+
+					transactionCatList = transactionCategoryService
+							.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
+					if (transactionCatList != null && !transactionCatList.isEmpty())
+						return new ResponseEntity<>(
+								new ReconsilationCatDataModel(null,
+										transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
+								HttpStatus.OK);
+				case DEFAULT:
 				transactionCatList = transactionCategoryService
 						.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
 				if (transactionCatList != null && !transactionCatList.isEmpty())

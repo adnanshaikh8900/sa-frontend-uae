@@ -94,6 +94,11 @@ public class Expense implements Serializable {
 	private Employee employee;
 
 	@Basic
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "USER_ID")
+	private User userId;
+
+	@Basic
 	@Column(name = "RECEIPT_NUMBER", length = 20)
 	private String receiptNumber;
 

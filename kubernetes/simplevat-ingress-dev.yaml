@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: simplevat-ingress-dev
   namespace: simplevat-dev
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: simplevat-dev-ip
 spec:
   backend:
     serviceName: simplevat-service-dev
@@ -15,7 +17,3 @@ spec:
               serviceName: simplevat-service-dev
               servicePort: 80
             path: /*
-status:
-  loadBalancer:
-    ingress:
-      - ip: 34.102.148.191

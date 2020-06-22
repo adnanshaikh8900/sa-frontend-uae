@@ -163,3 +163,6 @@ create table TRANSACTON_EXPENSES (ID integer not null auto_increment, CREATED_BY
 
 --changeset 14/06/2020 AFZAL:ddl-11
 ALTER TABLE TRANSACTON add column EXPLINTION_USER_ID integer;
+
+--changeset 20/06/2020 AFZAL:ddl-12
+ALTER TABLE EXPENSE add column USER_ID integer;

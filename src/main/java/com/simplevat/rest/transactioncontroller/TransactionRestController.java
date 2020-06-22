@@ -5,6 +5,8 @@
  */
 package com.simplevat.rest.transactioncontroller;
 
+import com.simplevat.constant.*;
+
 import static com.simplevat.constant.ErrorConstant.ERROR;
 
 import java.io.IOException;
@@ -21,6 +23,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,24 +44,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.ContactTypeEnum;
-import com.simplevat.constant.FileTypeEnum;
-import com.simplevat.constant.InvoiceStatusEnum;
-import com.simplevat.constant.PostingReferenceTypeEnum;
-import com.simplevat.constant.TransactionCreationMode;
-import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.CustomerInvoiceReceipt;
-import com.simplevat.entity.Expense;
-import com.simplevat.entity.Invoice;
-import com.simplevat.entity.Journal;
-import com.simplevat.entity.Payment;
-import com.simplevat.entity.Receipt;
-import com.simplevat.entity.SupplierInvoicePayment;
-import com.simplevat.entity.TransactionExpenses;
-import com.simplevat.entity.TransactionStatus;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.helper.TransactionHelper;
 import com.simplevat.model.ContactType;
@@ -75,6 +63,7 @@ import com.simplevat.utils.DateFormatUtil;
 import com.simplevat.utils.FileHelper;
 
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -163,6 +152,10 @@ public class TransactionRestController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private CurrencyService currencyService;
+
+
 	@ApiOperation(value = "Get Transaction List")
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAllTransaction(TransactionRequestFilterModel filterModel) {
@@ -204,7 +197,7 @@ public class TransactionRestController {
 	@ApiOperation(value = "Add New Transaction", response = Transaction.class)
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> saveTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
-			HttpServletRequest request) {
+												  HttpServletRequest request) {
 
 		try {
 
@@ -240,7 +233,6 @@ public class TransactionRestController {
 					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
 				}
 				if (transactionPresistModel.getEmployeeId() != null) {
-					//trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
 					trnx.setExplainationUser(userService.findByPK(transactionPresistModel.getEmployeeId()));
 				}
 				if (transactionPresistModel.getBankId() != null) {
@@ -358,192 +350,653 @@ public class TransactionRestController {
 	@ApiOperation(value = "update Transaction", response = Transaction.class)
 	@PostMapping(value = "/update")
 	public ResponseEntity<String> updateTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
-			HttpServletRequest request) {
+													HttpServletRequest request) {
 
-		try {
+		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-			if (transactionPresistModel != null) {
-				// TRNSACTION ENTITY CREATION
-				Journal journal = null;
+		int chartOfAccountCategory = transactionPresistModel.getCoaCategoryId();
 
-				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-				Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId());
-				trnx.setLastUpdateBy(userId);
-				trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
-				boolean isDebit = ChartOfAccountCategoryIdEnumConstant.isDebitedFromBank(
-						trnx.getCoaCategory().getParentChartOfAccount().getChartOfAccountCategoryId());
-				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
-				trnx.setTransactionAmount(transactionPresistModel.getAmount());
-				trnx.setCreationMode(TransactionCreationMode.MANUAL);
-				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
-				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+		Transaction trnx = updateTransactionWithCommonFields(transactionPresistModel,userId);
+
+		switch(ChartOfAccountCategoryIdEnumConstant.get(chartOfAccountCategory))
+		{
+//---------------------------------------Expense Chart of Account Category----------------------------------
+			case EXPENSE:
+				if(transactionPresistModel.getExpenseCategory()!=null && transactionPresistModel.getExpenseCategory() !=0)
+				{
+					explainExpenses(transactionPresistModel, userId, trnx);
+				}
+				else
+				{  // Supplier Invoices
+					updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
+					// JOURNAL LINE ITEM FOR normal transaction
+					Journal journal = reconsilationRestHelper.invoiceReconsile(userId,trnx,false);
+						journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+								transactionPresistModel.getDATE_FORMAT()));
+						journalService.persist(journal);
+					List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
+					reconsileSupplierInvoices(userId, trnx, itemModels);
+				}
+				break;
+		case MONEY_PAID_TO_USER:
+				updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
+				Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
-				if (transactionPresistModel.getTransactionCategoryId() != null)
-					trnx.setExplainedTransactionCategory(
-							transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
-
-				if (transactionPresistModel.getDescription() != null) {
-					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
-				}
-				if (transactionPresistModel.getCustomerId() != null) {
-					trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
-				}
-				if (transactionPresistModel.getVatId() != null) {
-					trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
-				}
-				if (transactionPresistModel.getVendorId() != null) {
-					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
-				}
-				if (transactionPresistModel.getEmployeeId() != null) {
-					trnx.setExplainationUser(userService.findByPK(transactionPresistModel.getEmployeeId()));
-					//trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
-				}
-				if (transactionPresistModel.getBankId() != null) {
-					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
-				}
-				if (transactionPresistModel.getReconsileBankId() != null) {
-					trnx.setExplinationBankAccount(bankService.findByPK(transactionPresistModel.getReconsileBankId()));
-				}
-				if (transactionPresistModel.getReference() != null
-						&& !transactionPresistModel.getReference().isEmpty()) {
-					trnx.setReferenceStr(transactionPresistModel.getReference());
-				}
-				if (transactionPresistModel.getAttachmentFile() != null
-						&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
-					String filePath = fileHelper.saveFile(transactionPresistModel.getAttachmentFile(),
-							FileTypeEnum.TRANSATION);
-					trnx.setExplainedTransactionAttachmentFileName(
-							transactionPresistModel.getAttachmentFile().getOriginalFilename());
-					trnx.setExplainedTransactionAttachmentPath(filePath);
-				}
-				transactionService.persist(trnx);
-
-				List<ReconsileRequestLineItemModel> itemModels = new ArrayList<>();
-				if (transactionPresistModel.getExplainParamListStr() != null
-						&& !transactionPresistModel.getExplainParamListStr().isEmpty()) {
-					ObjectMapper mapper = new ObjectMapper();
-					try {
-						itemModels = mapper.readValue(transactionPresistModel.getExplainParamListStr(),
-								new TypeReference<List<ReconsileRequestLineItemModel>>() {
-								});
-					} catch (IOException ex) {
-						logger.error(ERROR, ex);
-					}
-				}
-
+				journalService.persist(journal);
+				break;
+			case TRANSFERD_TO:
+			case MONEY_SPENT:
+			case MONEY_SPENT_OTHERS:
+			case PURCHASE_OF_CAPITAL_ASSET:
+				updateTransactionForMoneySpent(trnx,transactionPresistModel);
+				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+						transactionPresistModel.getAmount(), userId, trnx);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+				break;
+//-----------------------------------------------------Sales Chart of Account Category-----------------------------------------
+			case SALES:
+				// Customer Invoices
+				updateTransactionForCustomerInvoices(trnx,transactionPresistModel);
 				// JOURNAL LINE ITEM FOR normal transaction
-				journal = reconsilationRestHelper.get(
-						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
-						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
-						trnx);
-
-				if (journal != null) {
+				 journal = reconsilationRestHelper.invoiceReconsile(userId,trnx,true);
+				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+						transactionPresistModel.getDATE_FORMAT()));
+				journalService.persist(journal);
+				List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
+				reconsileCustomerInvoices(userId, trnx, itemModels);
+				break;
+			case TRANSFER_FROM:
+			case REFUND_RECEIVED:
+			case INTEREST_RECEVIED:
+			case DISPOSAL_OF_CAPITAL_ASSET:
+			case MONEY_RECEIVED_FROM_USER:
+			case MONEY_RECEIVED_OTHERS:
+				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
+					journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+							transactionPresistModel.getAmount(), userId, trnx);
 					journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 							transactionPresistModel.getDATE_FORMAT()));
 					journalService.persist(journal);
-				}
+				break;
 
-				if (itemModels != null && !itemModels.isEmpty()) {
-
-					Contact contact = null;
-					BigDecimal totalAmt = BigDecimal.ZERO;
-
-					for (ReconsileRequestLineItemModel explainParam : itemModels) {
-
-						if (explainParam.getType().equals(PostingReferenceTypeEnum.INVOICE)) {
-							// Update invoice Payment status
-							Invoice invoiceEntity = invoiceService.findByPK(explainParam.getId());
-
-							contact = invoiceEntity.getContact();
-							totalAmt = totalAmt.add(invoiceEntity.getTotalAmount());
-							if (invoiceEntity.getStatus() < InvoiceStatusEnum.PAID.getValue()) {
-								invoiceEntity.setStatus(
-										explainParam.getRemainingInvoiceAmount().compareTo(BigDecimal.ZERO) == 0
-												? InvoiceStatusEnum.PAID.getValue()
-												: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
-								invoiceEntity.setDueAmount(BigDecimal.ZERO);
-								invoiceService.update(invoiceEntity);
-
-								if (ContactTypeEnum.CUSTOMER.getValue().equals(invoiceEntity.getType())) {
-									// CREATE MAPPNG BETWEEN RECEIPT AND INVOICE
-									CustomerInvoiceReceipt customerInvoiceReceipt = new CustomerInvoiceReceipt();
-									customerInvoiceReceipt.setCustomerInvoice(invoiceEntity);
-									customerInvoiceReceipt.setPaidAmount(invoiceEntity.getTotalAmount());
-									customerInvoiceReceipt.setDeleteFlag(Boolean.FALSE);
-									customerInvoiceReceipt.setDueAmount(BigDecimal.ZERO);
-
-									// CREATE RECEIPT
-									Receipt receipt = transactionHelper.getReceiptEntity(contact, totalAmt,
-											trnx.getBankAccount().getTransactionCategory());
-									receipt.setCreatedBy(userId);
-									receiptService.persist(receipt);
-
-									// POST JOURNAL FOR RECCEPT
-									Journal journalForReceipt = receiptRestHelper.receiptPosting(
-											new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
-											receipt.getDepositeToTransactionCategory());
-									journalService.persist(journalForReceipt);
-
-									// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
-									customerInvoiceReceipt.setReceipt(receipt);
-									customerInvoiceReceipt.setCreatedBy(userId);
-									customerInvoiceReceiptService.persist(customerInvoiceReceipt);
-								} else {
-									// CREATE MAPPNG BETWEEN PAYMENT AND INVOICE
-									SupplierInvoicePayment supplierInvoicePayment = new SupplierInvoicePayment();
-									supplierInvoicePayment.setSupplierInvoice(invoiceEntity);
-									supplierInvoicePayment.setPaidAmount(invoiceEntity.getTotalAmount());
-									supplierInvoicePayment.setDeleteFlag(Boolean.FALSE);
-									supplierInvoicePayment.setDueAmount(BigDecimal.ZERO);
-
-									// CREATE PAYMENT
-									Payment payment = transactionHelper.getPaymentEntity(contact, totalAmt,
-											trnx.getBankAccount().getTransactionCategory(), invoiceEntity);
-									payment.setCreatedBy(userId);
-									paymentService.persist(payment);
-
-									// POST JOURNAL FOR RECCEPT
-									Journal journalForReceipt = receiptRestHelper.paymentPosting(
-											new PostingRequestModel(payment.getPaymentId(), payment.getInvoiceAmount()),
-											userId, payment.getDepositeToTransactionCategory());
-									journalService.persist(journalForReceipt);
-
-									// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
-									supplierInvoicePayment.setPayment(payment);
-									supplierInvoicePayment.setCreatedBy(userId);
-									supplierInvoicePaymentService.persist(supplierInvoicePayment);
-								}
-							}
-							// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
-							TransactionStatus status = new TransactionStatus();
-							status.setCreatedBy(userId);
-							status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
-							status.setTransaction(trnx);
-							status.setRemainingToExplain(explainParam.getRemainingInvoiceAmount());
-							status.setInvoice(invoiceEntity);
-
-							transactionStatusService.persist(status);
-
-						} else {
-
-							TransactionExpenses status = new TransactionExpenses();
-							status.setCreatedBy(userId);
-							status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
-							status.setTransaction(trnx);
-							status.setRemainingToExplain(explainParam.getRemainingInvoiceAmount());
-							status.setExpense(expenseService.findByPK(explainParam.getId()));
-
-							transactionExpensesService.persist(status);
-						}
-					}
-				}
-
-				return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
-			}
-		} catch (Exception e) {
-			logger.error(ERROR, e);
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
+//		try {
+//
+//			if (transactionPresistModel != null) {
+//				// TRNSACTION ENTITY Updation
+//				Journal journal = null;
+//
+//				Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+//				Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId());
+//				trnx.setLastUpdateBy(userId);
+//				trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
+//				boolean isDebit = ChartOfAccountCategoryIdEnumConstant.isDebitedFromBank(
+//						trnx.getCoaCategory().getParentChartOfAccount().getChartOfAccountCategoryId());
+//				trnx.setDebitCreditFlag(isDebit ? 'D' : 'C');
+//				trnx.setTransactionAmount(transactionPresistModel.getAmount());
+//				trnx.setCreationMode(TransactionCreationMode.MANUAL);
+//				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
+//				trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+//						transactionPresistModel.getDATE_FORMAT()));
+//				if (transactionPresistModel.getTransactionCategoryId() != null)
+//					trnx.setExplainedTransactionCategory(
+//							transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId()));
+//
+//				if (transactionPresistModel.getDescription() != null) {
+//					trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
+//				}
+//				if (transactionPresistModel.getCustomerId() != null) {
+//					trnx.setExplinationCustomer(contactService.findByPK(transactionPresistModel.getCustomerId()));
+//				}
+//				if (transactionPresistModel.getVatId() != null) {
+//					trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
+//				}
+//				if (transactionPresistModel.getVendorId() != null) {
+//					trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
+//				}
+//				if (transactionPresistModel.getEmployeeId() != null) {
+//					trnx.setExplainationUser(userService.findByPK(transactionPresistModel.getEmployeeId()));
+//					//trnx.setExplinationEmployee(employeeService.findByPK(transactionPresistModel.getEmployeeId()));
+//				}
+//				if (transactionPresistModel.getBankId() != null) {
+//					trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+//				}
+//				if (transactionPresistModel.getReconsileBankId() != null) {
+//					trnx.setExplinationBankAccount(bankService.findByPK(transactionPresistModel.getReconsileBankId()));
+//				}
+//				if (transactionPresistModel.getReference() != null
+//						&& !transactionPresistModel.getReference().isEmpty()) {
+//					trnx.setReferenceStr(transactionPresistModel.getReference());
+//				}
+//				if (transactionPresistModel.getAttachmentFile() != null
+//						&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+//					String filePath = fileHelper.saveFile(transactionPresistModel.getAttachmentFile(),
+//							FileTypeEnum.TRANSATION);
+//					trnx.setExplainedTransactionAttachmentFileName(
+//							transactionPresistModel.getAttachmentFile().getOriginalFilename());
+//					trnx.setExplainedTransactionAttachmentPath(filePath);
+//				}
+//				transactionService.persist(trnx);
+//
+//				List<ReconsileRequestLineItemModel> itemModels = new ArrayList<>();
+//				if (transactionPresistModel.getExplainParamListStr() != null
+//						&& !transactionPresistModel.getExplainParamListStr().isEmpty()) {
+//					ObjectMapper mapper = new ObjectMapper();
+//					try {
+//						itemModels = mapper.readValue(transactionPresistModel.getExplainParamListStr(),
+//								new TypeReference<List<ReconsileRequestLineItemModel>>() {
+//								});
+//					} catch (IOException ex) {
+//						logger.error(ERROR, ex);
+//					}
+//				}
+//
+//				// JOURNAL LINE ITEM FOR normal transaction
+//				journal = reconsilationRestHelper.get(
+//						ChartOfAccountCategoryIdEnumConstant.get(transactionPresistModel.getCoaCategoryId()),
+//						transactionPresistModel.getTransactionCategoryId(), transactionPresistModel.getAmount(), userId,
+//						trnx);
+//
+//				if (journal != null) {
+//					journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+//							transactionPresistModel.getDATE_FORMAT()));
+//					journalService.persist(journal);
+//				}
+//
+//				if (itemModels != null && !itemModels.isEmpty()) {
+//
+//					Contact contact = null;
+//					BigDecimal totalAmt = BigDecimal.ZERO;
+//
+//					for (ReconsileRequestLineItemModel explainParam : itemModels) {
+//
+//						if (explainParam.getType().equals(PostingReferenceTypeEnum.INVOICE)) {
+//							// Update invoice Payment status
+//							Invoice invoiceEntity = invoiceService.findByPK(explainParam.getId());
+//
+//							contact = invoiceEntity.getContact();
+//							totalAmt = totalAmt.add(invoiceEntity.getTotalAmount());
+//							if (invoiceEntity.getStatus() < InvoiceStatusEnum.PAID.getValue()) {
+//								invoiceEntity.setStatus(
+//										explainParam.getRemainingInvoiceAmount().compareTo(BigDecimal.ZERO) == 0
+//												? InvoiceStatusEnum.PAID.getValue()
+//												: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+//								invoiceEntity.setDueAmount(BigDecimal.ZERO);
+//								invoiceService.update(invoiceEntity);
+//
+//								if (ContactTypeEnum.CUSTOMER.getValue().equals(invoiceEntity.getType())) {
+//									// CREATE MAPPNG BETWEEN RECEIPT AND INVOICE
+//									CustomerInvoiceReceipt customerInvoiceReceipt = new CustomerInvoiceReceipt();
+//									customerInvoiceReceipt.setCustomerInvoice(invoiceEntity);
+//									customerInvoiceReceipt.setPaidAmount(invoiceEntity.getTotalAmount());
+//									customerInvoiceReceipt.setDeleteFlag(Boolean.FALSE);
+//									customerInvoiceReceipt.setDueAmount(BigDecimal.ZERO);
+//
+//									// CREATE RECEIPT
+//									Receipt receipt = transactionHelper.getReceiptEntity(contact, totalAmt,
+//											trnx.getBankAccount().getTransactionCategory());
+//									receipt.setCreatedBy(userId);
+//									receiptService.persist(receipt);
+//
+//									// POST JOURNAL FOR RECCEPT
+//									Journal journalForReceipt = receiptRestHelper.receiptPosting(
+//											new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+//											receipt.getDepositeToTransactionCategory());
+//									journalService.persist(journalForReceipt);
+//
+//									// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
+//									customerInvoiceReceipt.setReceipt(receipt);
+//									customerInvoiceReceipt.setCreatedBy(userId);
+//									customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+//								} else {
+//									// CREATE MAPPNG BETWEEN PAYMENT AND INVOICE
+//									SupplierInvoicePayment supplierInvoicePayment = new SupplierInvoicePayment();
+//									supplierInvoicePayment.setSupplierInvoice(invoiceEntity);
+//									supplierInvoicePayment.setPaidAmount(invoiceEntity.getTotalAmount());
+//									supplierInvoicePayment.setDeleteFlag(Boolean.FALSE);
+//									supplierInvoicePayment.setDueAmount(BigDecimal.ZERO);
+//
+//									// CREATE PAYMENT
+//									Payment payment = transactionHelper.getPaymentEntity(contact, totalAmt,
+//											trnx.getBankAccount().getTransactionCategory(), invoiceEntity);
+//									payment.setCreatedBy(userId);
+//									paymentService.persist(payment);
+//
+//									// POST JOURNAL FOR RECCEPT
+//									Journal journalForReceipt = receiptRestHelper.paymentPosting(
+//											new PostingRequestModel(payment.getPaymentId(), payment.getInvoiceAmount()),
+//											userId, payment.getDepositeToTransactionCategory());
+//									journalService.persist(journalForReceipt);
+//
+//									// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
+//									supplierInvoicePayment.setPayment(payment);
+//									supplierInvoicePayment.setCreatedBy(userId);
+//									supplierInvoicePaymentService.persist(supplierInvoicePayment);
+//								}
+//							}
+//							// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
+//							TransactionStatus status = new TransactionStatus();
+//							status.setCreatedBy(userId);
+//							status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+//							status.setTransaction(trnx);
+//							status.setRemainingToExplain(explainParam.getRemainingInvoiceAmount());
+//							status.setInvoice(invoiceEntity);
+//
+//							transactionStatusService.persist(status);
+//
+//						} else {
+//
+//							TransactionExpenses status = new TransactionExpenses();
+//							status.setCreatedBy(userId);
+//							status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+//							status.setTransaction(trnx);
+//							status.setRemainingToExplain(explainParam.getRemainingInvoiceAmount());
+//							status.setExpense(expenseService.findByPK(explainParam.getId()));
+//
+//							transactionExpensesService.persist(status);
+//						}
+//					}
+//				}
+//
+//				return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
+//			}
+//		} catch (Exception e) {
+//			logger.error(ERROR, e);
+//		}
+		//return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	/**
+	 *
+	 * @param userId
+	 * @param trnx
+	 * @param itemModels
+	 */
+	private void reconsileCustomerInvoices(Integer userId, Transaction trnx, List<ReconsileRequestLineItemModel> itemModels) {
+		BigDecimal totalAmt = BigDecimal.ZERO;
+		for (ReconsileRequestLineItemModel explainParam : itemModels) {
+			// Update invoice Payment status
+			Invoice invoiceEntity = invoiceService.findByPK(explainParam.getId());
+			Contact contact =  invoiceEntity.getContact();
+			totalAmt = totalAmt.add(invoiceEntity.getTotalAmount());
+			if (invoiceEntity.getStatus() < InvoiceStatusEnum.PAID.getValue()) {
+				invoiceEntity.setStatus(
+						explainParam.getRemainingInvoiceAmount().compareTo(BigDecimal.ZERO) == 0
+								? InvoiceStatusEnum.PAID.getValue()
+								: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+				invoiceEntity.setDueAmount(BigDecimal.ZERO);
+				invoiceService.update(invoiceEntity);
+				// CREATE MAPPNG BETWEEN RECEIPT AND INVOICE
+				CustomerInvoiceReceipt customerInvoiceReceipt = new CustomerInvoiceReceipt();
+				customerInvoiceReceipt.setCustomerInvoice(invoiceEntity);
+				customerInvoiceReceipt.setPaidAmount(invoiceEntity.getTotalAmount());
+				customerInvoiceReceipt.setDeleteFlag(Boolean.FALSE);
+				customerInvoiceReceipt.setDueAmount(BigDecimal.ZERO);
+
+				// CREATE RECEIPT
+				Receipt receipt = transactionHelper.getReceiptEntity(contact, totalAmt,
+						trnx.getBankAccount().getTransactionCategory());
+				receipt.setCreatedBy(userId);
+				receiptService.persist(receipt);
+
+				// POST JOURNAL FOR RECCEPT
+				Journal journalForReceipt = receiptRestHelper.receiptPosting(
+						new PostingRequestModel(receipt.getId(), receipt.getAmount()), userId,
+						receipt.getDepositeToTransactionCategory());
+				journalService.persist(journalForReceipt);
+
+				// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
+				customerInvoiceReceipt.setReceipt(receipt);
+				customerInvoiceReceipt.setCreatedBy(userId);
+				customerInvoiceReceiptService.persist(customerInvoiceReceipt);
+			}
+			// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
+			TransactionStatus status = new TransactionStatus();
+			status.setCreatedBy(userId);
+			status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+			status.setTransaction(trnx);
+			status.setRemainingToExplain(explainParam.getRemainingInvoiceAmount());
+			status.setInvoice(invoiceEntity);
+			transactionStatusService.persist(status);
+		}
+	}
+
+	/**
+	 *
+	 * @param userId
+	 * @param trnx
+	 * @param itemModels
+	 */
+	private void reconsileSupplierInvoices(Integer userId, Transaction trnx, List<ReconsileRequestLineItemModel> itemModels) {
+		BigDecimal totalAmt = BigDecimal.ZERO;
+		for (ReconsileRequestLineItemModel explainParam : itemModels) {
+				// Update invoice Payment status
+			Invoice invoiceEntity = invoiceService.findByPK(explainParam.getId());
+			Contact contact =  invoiceEntity.getContact();
+			totalAmt = totalAmt.add(invoiceEntity.getTotalAmount());
+				if (invoiceEntity.getStatus() < InvoiceStatusEnum.PAID.getValue()) {
+					invoiceEntity.setStatus(
+							explainParam.getRemainingInvoiceAmount().compareTo(BigDecimal.ZERO) == 0
+									? InvoiceStatusEnum.PAID.getValue()
+									: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+					invoiceEntity.setDueAmount(BigDecimal.ZERO);
+					invoiceService.update(invoiceEntity);
+
+						// CREATE MAPPNG BETWEEN PAYMENT AND INVOICE
+						SupplierInvoicePayment supplierInvoicePayment = new SupplierInvoicePayment();
+						supplierInvoicePayment.setSupplierInvoice(invoiceEntity);
+						supplierInvoicePayment.setPaidAmount(invoiceEntity.getTotalAmount());
+						supplierInvoicePayment.setDeleteFlag(Boolean.FALSE);
+						supplierInvoicePayment.setDueAmount(BigDecimal.ZERO);
+
+                        //TODO for payment creation
+					/* 1. Check if payment already exist if not, only than create a new payment. Else update the payment accordingly
+					* */
+						// CREATE PAYMENT
+						Payment payment = transactionHelper.getPaymentEntity(contact, totalAmt,
+								trnx.getBankAccount().getTransactionCategory(), invoiceEntity);
+						payment.setCreatedBy(userId);
+						paymentService.persist(payment);
+
+						// POST JOURNAL FOR PAYMENT
+						Journal journalForReceipt = receiptRestHelper.paymentPosting(
+								new PostingRequestModel(payment.getPaymentId(), payment.getInvoiceAmount()),
+								userId, payment.getDepositeToTransactionCategory());
+						journalService.persist(journalForReceipt);
+
+						// SAVE DATE OF RECEIPT AND INVOICE MAPPING IN MIDDLE TABLE
+						supplierInvoicePayment.setPayment(payment);
+						supplierInvoicePayment.setCreatedBy(userId);
+						supplierInvoicePaymentService.persist(supplierInvoicePayment);
+				}
+				// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
+				TransactionStatus status = new TransactionStatus();
+				status.setCreatedBy(userId);
+				status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+				status.setTransaction(trnx);
+				status.setRemainingToExplain(explainParam.getRemainingInvoiceAmount());
+				status.setInvoice(invoiceEntity);
+				transactionStatusService.persist(status);
+		}
+	}
+
+	/**
+	 * This method with retrieve the invoice list from the TransactionPresistModel to List of ReconsileRequestLineItemModel
+	 * @param transactionPresistModel
+	 * @return list<ReconsileRequestLineItemModel>
+	 */
+	private List<ReconsileRequestLineItemModel> getReconsileRequestLineItemModels(@ModelAttribute TransactionPresistModel transactionPresistModel) {
+		List<ReconsileRequestLineItemModel> itemModels = new ArrayList<>();
+		if (transactionPresistModel.getExplainParamListStr() != null
+				&& !transactionPresistModel.getExplainParamListStr().isEmpty()) {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				itemModels = mapper.readValue(transactionPresistModel.getExplainParamListStr(),
+						new TypeReference<List<ReconsileRequestLineItemModel>>() {
+						});
+			} catch (IOException ex) {
+				logger.error(ERROR, ex);
+			}
+		}
+		return itemModels;
+	}
+
+	/**
+	 *
+	 * @param transactionPresistModel
+	 * @param userId
+	 * @param trnx
+	 */
+	private void explainExpenses(@ModelAttribute TransactionPresistModel transactionPresistModel, Integer userId, Transaction trnx) {
+		//create new expenses
+		Expense expense =  createNewExpense(transactionPresistModel,userId);
+		// create Journal entry for Expense
+		//Chart of account in expense and user
+		Journal journal = getJournalEntryForExpense(transactionPresistModel,expense,userId);
+		journalService.persist(journal);
+		// explain transaction
+		updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
+		// create Journal entry for Transaction explanation
+		//Employee reimbursement and bank
+		journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+				transactionPresistModel.getAmount(), userId, trnx);
+		journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+				transactionPresistModel.getDATE_FORMAT()));
+		journalService.persist(journal);
+	}
+
+	private Journal getJournalEntryForExpense(TransactionPresistModel postingRequestModel, Expense expense,Integer userId) {
+		List<JournalLineItem> journalLineItemList = new ArrayList<>();
+
+		Journal journal = new Journal();
+		JournalLineItem journalLineItem1 = new JournalLineItem();
+		TransactionCategory	transactionCategory = transactionCategoryService
+				.findTransactionCategoryByTransactionCategoryCode(
+						TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
+		journalLineItem1.setTransactionCategory(transactionCategory);
+
+		journalLineItem1.setCreditAmount(postingRequestModel.getAmount());
+		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journalLineItem1.setReferenceId(expense.getExpenseId());
+		journalLineItem1.setCreatedBy(userId);
+		journalLineItem1.setJournal(journal);
+		journalLineItemList.add(journalLineItem1);
+
+		JournalLineItem journalLineItem2 = new JournalLineItem();
+		TransactionCategory saleTransactionCategory = transactionCategoryService
+				.findByPK(expense.getTransactionCategory().getTransactionCategoryId());
+		journalLineItem2.setTransactionCategory(saleTransactionCategory);
+		journalLineItem2.setDebitAmount(postingRequestModel.getAmount());
+		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journalLineItem2.setReferenceId(expense.getExpenseId());
+		journalLineItem2.setCreatedBy(userId);
+		journalLineItem2.setJournal(journal);
+		journalLineItemList.add(journalLineItem2);
+
+		journal.setJournalLineItems(journalLineItemList);
+		journal.setCreatedBy(userId);
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journal.setJournalDate(LocalDateTime.now());
+		return journal;
+	}
+
+	private Expense createNewExpense(TransactionPresistModel model, Integer userId) {
+		Expense expense = new Expense();
+		expense.setStatus(ExpenseStatusEnum.PAID.getValue());
+		Expense.ExpenseBuilder expenseBuilder = expense.toBuilder();
+		expenseBuilder.expenseAmount(model.getAmount()).userId(userService.findByPK(model.getUserId()));
+		if (model.getDate() != null) {
+			expenseBuilder.expenseDate(dateFormatUtil.getDateStrAsLocalDateTime(model.getDate(),
+					model.getDATE_FORMAT()));
+		}
+		expenseBuilder.expenseDescription(model.getDescription());
+		if (model.getCurrencyCode() != null) {
+			expenseBuilder.currency(currencyService.findByPK(model.getCurrencyCode()));
+		}
+		if (model.getExpenseCategory() != null) {
+			expenseBuilder.transactionCategory(transactionCategoryService.findByPK(model.getExpenseCategory()));
+		}
+		if (model.getVatId() != null) {
+			expenseBuilder.vatCategory(vatCategoryService.findByPK(model.getVatId()));
+		}
+		if (model.getBankId() != null) {
+			expenseBuilder.bankAccount(bankAccountService.findByPK(model.getBankId()));
+		}
+		expenseBuilder.createdBy(userId).createdDate(LocalDateTime.now());
+		if (model.getAttachmentFile() != null && !model.getAttachmentFile().isEmpty()) {
+			String fileName = null;
+			try {
+				fileName = fileHelper.saveFile(model.getAttachmentFile(), FileTypeEnum.EXPENSE);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			expenseBuilder.receiptAttachmentFileName(model.getAttachmentFile().getOriginalFilename())
+					.receiptAttachmentPath(fileName);
+
+		}
+		expense =expenseBuilder.build();
+		expenseService.persist(expense);
+		return expense;
+	}
+
+	private void updateTransactionForMoneySpent(Transaction trnx, TransactionPresistModel transactionPresistModel) {
+		trnx.setDebitCreditFlag('D');
+		if (transactionPresistModel.getDescription() != null) {
+			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
+		}
+		if (transactionPresistModel.getBankId() != null) {
+			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+		}
+		if (transactionPresistModel.getReference() != null
+				&& !transactionPresistModel.getReference().isEmpty()) {
+			trnx.setReferenceStr(transactionPresistModel.getReference());
+		}
+		if (transactionPresistModel.getAttachmentFile() != null
+				&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+			String filePath = saveFileAttachment(transactionPresistModel.getAttachmentFile(),FileTypeEnum.TRANSATION);
+			trnx.setExplainedTransactionAttachmentFileName(
+					transactionPresistModel.getAttachmentFile().getOriginalFilename());
+			trnx.setExplainedTransactionAttachmentPath(filePath);
+		}
+		transactionService.persist(trnx);
+	}
+	private void updateTransactionForMoneyReceived(Transaction trnx, TransactionPresistModel transactionPresistModel) {
+		trnx.setDebitCreditFlag('C');
+		if (transactionPresistModel.getDescription() != null) {
+			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
+		}
+		if (transactionPresistModel.getBankId() != null) {
+			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+		}
+		if (transactionPresistModel.getReference() != null
+				&& !transactionPresistModel.getReference().isEmpty()) {
+			trnx.setReferenceStr(transactionPresistModel.getReference());
+		}
+		if (transactionPresistModel.getAttachmentFile() != null
+				&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+			String filePath = saveFileAttachment(transactionPresistModel.getAttachmentFile(),FileTypeEnum.TRANSATION);
+			trnx.setExplainedTransactionAttachmentFileName(
+					transactionPresistModel.getAttachmentFile().getOriginalFilename());
+			trnx.setExplainedTransactionAttachmentPath(filePath);
+		}
+		transactionService.persist(trnx);
+	}
+
+	private void updateTransactionForSupplierInvoices(Transaction trnx, TransactionPresistModel transactionPresistModel) {
+		trnx.setDebitCreditFlag('D');
+		if (transactionPresistModel.getDescription() != null) {
+			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
+		}
+		if (transactionPresistModel.getBankId() != null) {
+			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+		}
+		if (transactionPresistModel.getReference() != null
+				&& !transactionPresistModel.getReference().isEmpty()) {
+			trnx.setReferenceStr(transactionPresistModel.getReference());
+		}
+		if (transactionPresistModel.getVatId() != null) {
+			trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
+		}
+		if (transactionPresistModel.getVendorId() != null) {
+			trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getVendorId())));
+		}
+
+		if (transactionPresistModel.getAttachmentFile() != null
+				&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+			String filePath = saveFileAttachment( transactionPresistModel.getAttachmentFile(),FileTypeEnum.TRANSATION);
+			trnx.setExplainedTransactionAttachmentFileName(
+					transactionPresistModel.getAttachmentFile().getOriginalFilename());
+			trnx.setExplainedTransactionAttachmentPath(filePath);
+		}
+		transactionService.persist(trnx);
+	}
+	private void updateTransactionForCustomerInvoices(Transaction trnx, TransactionPresistModel transactionPresistModel) {
+		trnx.setDebitCreditFlag('C');
+		if (transactionPresistModel.getDescription() != null) {
+			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
+		}
+		if (transactionPresistModel.getBankId() != null) {
+			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+		}
+		if (transactionPresistModel.getReference() != null
+				&& !transactionPresistModel.getReference().isEmpty()) {
+			trnx.setReferenceStr(transactionPresistModel.getReference());
+		}
+		if (transactionPresistModel.getVatId() != null) {
+			trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
+		}
+		if (transactionPresistModel.getCustomerId() != null) {
+			trnx.setExplinationVendor((contactService.findByPK(transactionPresistModel.getCustomerId())));
+		}
+
+		if (transactionPresistModel.getAttachmentFile() != null
+				&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+			String filePath = saveFileAttachment( transactionPresistModel.getAttachmentFile(),FileTypeEnum.TRANSATION);
+			trnx.setExplainedTransactionAttachmentFileName(
+					transactionPresistModel.getAttachmentFile().getOriginalFilename());
+			trnx.setExplainedTransactionAttachmentPath(filePath);
+		}
+		transactionService.persist(trnx);
+	}
+	private Transaction updateTransactionWithCommonFields(TransactionPresistModel transactionPresistModel,int userId) {
+		Transaction trnx = transactionService.findByPK(transactionPresistModel.getTransactionId());
+		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionPresistModel.getCoaCategoryId());
+		trnx.setLastUpdateBy(userId);
+		trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
+		trnx.setTransactionAmount(transactionPresistModel.getAmount());
+		trnx.setCreationMode(TransactionCreationMode.IMPORT);
+		trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
+		trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+				transactionPresistModel.getDATE_FORMAT()));
+		trnx.setExplainedTransactionCategory(transactionCategory);
+		return trnx;
+	}
+	/*
+	 * This method will update the transaction for Money paid to user.
+	 * Fields to update
+	 * 1. Desc
+	 * 2.
+	 */
+	private void updateTransactionMoneyPaidToUser(Transaction trnx, TransactionPresistModel transactionPresistModel)
+	{
+		trnx.setDebitCreditFlag('D');
+		if (transactionPresistModel.getDescription() != null) {
+			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
+		}
+		if (transactionPresistModel.getEmployeeId() != null) {
+			trnx.setExplainationUser(userService.findByPK(transactionPresistModel.getEmployeeId()));
+		}
+		if (transactionPresistModel.getUserId() != null) {
+			trnx.setExplainationUser(userService.findByPK(transactionPresistModel.getUserId()));
+		}
+		if (transactionPresistModel.getBankId() != null) {
+			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+		}
+		if (transactionPresistModel.getReference() != null
+				&& !transactionPresistModel.getReference().isEmpty()) {
+			trnx.setReferenceStr(transactionPresistModel.getReference());
+		}
+		if (transactionPresistModel.getAttachmentFile() != null
+				&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+			String filePath = saveFileAttachment(transactionPresistModel.getAttachmentFile(),FileTypeEnum.TRANSATION);
+			trnx.setExplainedTransactionAttachmentFileName(
+					transactionPresistModel.getAttachmentFile().getOriginalFilename());
+			trnx.setExplainedTransactionAttachmentPath(filePath);
+		}
+		transactionService.persist(trnx);
+	}
+
+	private String saveFileAttachment( MultipartFile attachmentFile, FileTypeEnum fileTypeEnum) {
+		try{
+			return fileHelper.saveFile(attachmentFile,
+					fileTypeEnum);
+		}catch (IOException e){}
+		return null;
 	}
 
 	@ApiOperation(value = "Delete Transaction By ID")

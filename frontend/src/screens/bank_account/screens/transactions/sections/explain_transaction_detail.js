@@ -215,6 +215,20 @@ class ExplainTrasactionDetail extends React.Component {
 			this.props.transactionsActions.getCurrencyList();
 			this.props.transactionsActions.getUserForDropdown();
 			this.props.transactionsActions.getVatList();
+			this.props.transactionsActions
+				.getTransactionCategoryListForExplain(12)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								transactionCategoryList: res.data,
+							},
+							() => {
+								//console.log(this.state.transactionCategoryList);
+							},
+						);
+					}
+				});
 		}
 	};
 
@@ -622,6 +636,45 @@ class ExplainTrasactionDetail extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
+																{props.values.coaCategoryId &&
+																	props.values.coaCategoryId.label ===
+																		'Create Expense' && (
+																		<Col lg={4}>
+																			<FormGroup className="mb-3">
+																				<Label htmlFor="transactionCategoryId">
+																					Category
+																				</Label>
+																				<Select
+																					options={
+																						transactionCategoryList
+																							? transactionCategoryList.categoriesList
+																							: []
+																					}
+																					onChange={(option) => {
+																						if (option && option.value) {
+																							props.handleChange(
+																								'transactionCategoryId',
+																							)(option.value);
+																						} else {
+																							props.handleChange(
+																								'transactionCategoryId',
+																							)('');
+																						}
+																					}}
+																					placeholder="Select Category"
+																					id="transactionCategoryId"
+																					name="transactionCategoryId"
+																					className={
+																						props.errors
+																							.transactionCategoryId &&
+																						props.touched.transactionCategoryId
+																							? 'is-invalid'
+																							: ''
+																					}
+																				/>
+																			</FormGroup>
+																		</Col>
+																	)}
 															</Row>
 															{/* {transactionCategoryList.dataList &&
 																props.values.coaCategoryId === 10 && (
@@ -828,9 +881,6 @@ class ExplainTrasactionDetail extends React.Component {
 																				<Col lg={3}>
 																					<FormGroup className="mb-3">
 																						<Label htmlFor="currencyCode">
-																							<span className="text-danger">
-																								*
-																							</span>
 																							Currency
 																						</Label>
 																						<Select

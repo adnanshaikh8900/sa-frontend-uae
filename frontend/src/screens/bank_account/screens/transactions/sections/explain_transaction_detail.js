@@ -210,7 +210,6 @@ class ExplainTrasactionDetail extends React.Component {
 	// };
 
 	getExpensesCategoriesList = () => {
-		if (this.props.expense_categories_list.length <= 0) {
 			this.props.transactionsActions.getExpensesCategoriesList();
 			this.props.transactionsActions.getCurrencyList();
 			this.props.transactionsActions.getUserForDropdown();
@@ -229,7 +228,7 @@ class ExplainTrasactionDetail extends React.Component {
 						);
 					}
 				});
-		}
+
 	};
 
 	getVendorList = () => {

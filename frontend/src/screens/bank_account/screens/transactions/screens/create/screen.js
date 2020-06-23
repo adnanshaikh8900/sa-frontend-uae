@@ -103,19 +103,19 @@ class CreateBankTransaction extends React.Component {
 							value: 10,
 							label: 'Create Expense',
 						},
-						{
-							value: 100,
-							label: 'Supplier Invoice',
-						},
+						// {
+						// 	value: 100,
+						// 	label: 'Supplier Invoice',
+						// },
 					],
 				},
 				{
 					label: 'Money Received',
 					options: [
-						{
-							value: 2,
-							label: 'Sales',
-						},
+						// {
+						// 	value: 2,
+						// 	label: 'Sales',
+						// },
 						{
 							value: 3,
 							label: 'Transfered From',
@@ -350,6 +350,22 @@ class CreateBankTransaction extends React.Component {
 			this.props.transactionActions.getCurrencyList();
 			this.props.transactionActions.getUserForDropdown();
 			this.props.transactionActions.getVatList();
+			try {
+				this.props.transactionCreateActions
+					.getTransactionCategoryListForExplain(12)
+					.then((res) => {
+						if (res.status === 200) {
+							this.setState(
+								{
+									transactionCategoryList: res.data,
+								},
+								() => {},
+							);
+						}
+					});
+			} catch (err) {
+				console.log(err);
+			}
 		}
 	};
 	getVendorList = () => {
@@ -519,7 +535,7 @@ class CreateBankTransaction extends React.Component {
 												{(props) => (
 													<Form onSubmit={props.handleSubmit}>
 														<Row>
-															<Col lg={4}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="coaCategoryId">
 																		<span className="text-danger">*</span>
@@ -567,7 +583,7 @@ class CreateBankTransaction extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={4}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="date">
 																		<span className="text-danger">*</span>
@@ -604,7 +620,7 @@ class CreateBankTransaction extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={4}>
+															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="transactionAmount">
 																		<span className="text-danger">*</span>
@@ -641,6 +657,42 @@ class CreateBankTransaction extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
+															{props.values.coaCategoryId &&
+																props.values.coaCategoryId.label ===
+																	'Create Expense' && (
+																	<Col lg={3}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="transactionCategoryId">
+																				Transaction Category
+																			</Label>
+																			<Select
+																				className="select-default-width"
+																				options={
+																					transactionCategoryList
+																						? transactionCategoryList.categoriesList
+																						: []
+																				}
+																				// value={
+																				//   transactionCategoryList
+																				//     ? props.values.transactionCategoryId
+																				//     : ''
+																				// }
+																				id="transactionCategoryId"
+																				onChange={(option) => {
+																					if (option && option.value) {
+																						props.handleChange(
+																							'transactionCategoryId',
+																						)(option);
+																					} else {
+																						props.handleChange(
+																							'transactionCategoryId',
+																						)('');
+																					}
+																				}}
+																			/>
+																		</FormGroup>
+																	</Col>
+																)}
 														</Row>
 														<hr />
 														{props.values.coaCategoryId &&
@@ -841,7 +893,7 @@ class CreateBankTransaction extends React.Component {
 															props.values.coaCategoryId.label ===
 																'Supplier Invoice' && (
 																<Row>
-																	<Col lg={4}>
+																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="vendorId">
 																				<span className="text-danger">*</span>
@@ -887,7 +939,7 @@ class CreateBankTransaction extends React.Component {
 																		props.values.coaCategoryId.label ===
 																			'Supplier Invoice' &&
 																		props.values.vendorId && (
-																			<Col lg={4}>
+																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="invoiceIdList">
 																						Invoice
@@ -958,7 +1010,7 @@ class CreateBankTransaction extends React.Component {
 																'Supplier Invoice' &&
 															props.values.coaCategoryId.label !== 'Sales' && (
 																<Row>
-																	<Col lg={4}>
+																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="transactionCategoryId">
 																				Category
@@ -995,7 +1047,7 @@ class CreateBankTransaction extends React.Component {
 														{transactionCategoryList.dataList && (
 															<Row>
 																{props.values.coaCategoryId.value === 6 && (
-																	<Col lg={4}>
+																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="employeeId">User</Label>
 																			<Select
@@ -1018,7 +1070,7 @@ class CreateBankTransaction extends React.Component {
 																	</Col>
 																)}
 																{props.values.coaCategoryId.value === 12 && (
-																	<Col lg={4}>
+																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="employeeId">User</Label>
 																			<Select
@@ -1044,7 +1096,7 @@ class CreateBankTransaction extends React.Component {
 																{props.values.transactionAmount &&
 																	props.values.coaCategoryId.label ===
 																		'Sales' && (
-																		<Col lg={4}>
+																		<Col lg={3}>
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="customerId">
 																					Customer
@@ -1073,7 +1125,7 @@ class CreateBankTransaction extends React.Component {
 																		</Col>
 																	)}
 																{props.values.coaCategoryId.value === 2 && (
-																	<Col lg={4}>
+																	<Col lg={3}>
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="invoiceIdList">
 																				Invoice

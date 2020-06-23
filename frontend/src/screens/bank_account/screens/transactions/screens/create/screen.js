@@ -345,27 +345,25 @@ class CreateBankTransaction extends React.Component {
 	}
 
 	getExpensesCategoriesList = () => {
-		if (this.props.expense_categories_list.length <= 0) {
-			this.props.transactionActions.getExpensesCategoriesList();
-			this.props.transactionActions.getCurrencyList();
-			this.props.transactionActions.getUserForDropdown();
-			this.props.transactionActions.getVatList();
-			try {
-				this.props.transactionCreateActions
-					.getTransactionCategoryListForExplain(12)
-					.then((res) => {
-						if (res.status === 200) {
-							this.setState(
-								{
-									transactionCategoryList: res.data,
-								},
-								() => {},
-							);
-						}
-					});
-			} catch (err) {
-				console.log(err);
-			}
+		this.props.transactionActions.getExpensesCategoriesList();
+		this.props.transactionActions.getCurrencyList();
+		this.props.transactionActions.getUserForDropdown();
+		this.props.transactionActions.getVatList();
+		try {
+			this.props.transactionCreateActions
+				.getTransactionCategoryListForExplain(12)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								transactionCategoryList: res.data,
+							},
+							() => {},
+						);
+					}
+				});
+		} catch (err) {
+			console.log(err);
 		}
 	};
 	getVendorList = () => {

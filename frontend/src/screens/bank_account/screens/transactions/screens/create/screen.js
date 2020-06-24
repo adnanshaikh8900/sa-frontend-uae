@@ -97,7 +97,7 @@ class CreateBankTransaction extends React.Component {
 						},
 						{
 							value: 14,
-							label: 'Money Spent Others"',
+							label: 'Money Spent Others',
 						},
 						{
 							value: 10,
@@ -349,22 +349,6 @@ class CreateBankTransaction extends React.Component {
 		this.props.transactionActions.getCurrencyList();
 		this.props.transactionActions.getUserForDropdown();
 		this.props.transactionActions.getVatList();
-		try {
-			this.props.transactionCreateActions
-				.getTransactionCategoryListForExplain(12)
-				.then((res) => {
-					if (res.status === 200) {
-						this.setState(
-							{
-								transactionCategoryList: res.data,
-							},
-							() => {},
-						);
-					}
-				});
-		} catch (err) {
-			console.log(err);
-		}
 	};
 	getVendorList = () => {
 		this.props.transactionActions.getVendorList();
@@ -655,42 +639,6 @@ class CreateBankTransaction extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															{props.values.coaCategoryId &&
-																props.values.coaCategoryId.label ===
-																	'Create Expense' && (
-																	<Col lg={3}>
-																		<FormGroup className="mb-3">
-																			<Label htmlFor="transactionCategoryId">
-																				Transaction Category
-																			</Label>
-																			<Select
-																				className="select-default-width"
-																				options={
-																					transactionCategoryList
-																						? transactionCategoryList.categoriesList
-																						: []
-																				}
-																				// value={
-																				//   transactionCategoryList
-																				//     ? props.values.transactionCategoryId
-																				//     : ''
-																				// }
-																				id="transactionCategoryId"
-																				onChange={(option) => {
-																					if (option && option.value) {
-																						props.handleChange(
-																							'transactionCategoryId',
-																						)(option);
-																					} else {
-																						props.handleChange(
-																							'transactionCategoryId',
-																						)('');
-																					}
-																				}}
-																			/>
-																		</FormGroup>
-																	</Col>
-																)}
 														</Row>
 														<hr />
 														{props.values.coaCategoryId &&
@@ -824,9 +772,6 @@ class CreateBankTransaction extends React.Component {
 																			<Col lg={3}>
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="currencyCode">
-																						<span className="text-danger">
-																							*
-																						</span>
 																						Currency
 																					</Label>
 																					<Select

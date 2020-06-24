@@ -13,7 +13,7 @@ public class TransactionCategoryConsatant {
 
 	public static final int TRANSACTION_CATEGORY_INVOICE_PAYMENT = 1;
 	public static final int TRANSACTION_CATEGORY_PURCHASE = 43;
-
+	public static final int TRANSACTION_EMPLOYEE_REIMBURSEMENTS = 91;
 	private TransactionCategoryConsatant() {
 		// CREATED TO REMOVE SONAR ERROR
 	}

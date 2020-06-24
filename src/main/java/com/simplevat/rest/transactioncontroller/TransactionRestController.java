@@ -499,11 +499,21 @@ public class TransactionRestController {
 		//Chart of account in expense and user
 		Journal journal = getJournalEntryForExpense(transactionPresistModel,expense,userId);
 		journalService.persist(journal);
+		int transactionCategoryId = 0;
+		if(transactionPresistModel.getTransactionCategoryId()==null) {
+			transactionCategoryId = TransactionCategoryConsatant.TRANSACTION_EMPLOYEE_REIMBURSEMENTS;
+			TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryId);
+			trnx.setExplainedTransactionCategory(transactionCategory);
+		}
+		else
+		{
+			transactionCategoryId = transactionPresistModel.getTransactionCategoryId();
+		}
 		// explain transaction
 		updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 		// create Journal entry for Transaction explanation
 		//Employee reimbursement and bank
-		journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
+		journal = reconsilationRestHelper.getByTransactionType(transactionCategoryId,
 				transactionPresistModel.getAmount(), userId, trnx);
 		journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 				transactionPresistModel.getDATE_FORMAT()));

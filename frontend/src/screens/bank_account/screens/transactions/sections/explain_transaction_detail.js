@@ -899,15 +899,6 @@ class ExplainTrasactionDetail extends React.Component {
 																					options={
 																						vendor_list ? vendor_list : []
 																					}
-																					// value={
-																					// 	props.values.vendorId
-																					// 		? transactionCategoryList.dataList[2].options.find(
-																					// 				(option) =>
-																					// 					option.value ===
-																					// 					+props.values.vendorId,
-																					// 		  )
-																					// 		: ''
-																					// }
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('vendorId')(
@@ -1021,14 +1012,6 @@ class ExplainTrasactionDetail extends React.Component {
 																									.dataList[0].options
 																							: []
 																					}
-																					// value={
-																					// 	transactionCategoryList.dataList &&
-																					// 	transactionCategoryList.dataList[0].options.find(
-																					// 		(option) =>
-																					// 			option.value ===
-																					// 			+props.values.customerId,
-																					// 	)
-																					// }
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange('customerId')(
@@ -1072,25 +1055,6 @@ class ExplainTrasactionDetail extends React.Component {
 																							? customer_invoice_list.data
 																							: []
 																					}
-																					value={
-																						customer_invoice_list.data &&
-																						customer_invoice_list.data.find(
-																							(option) =>
-																								option.value ===
-																								+props.values.invoiceIdList,
-																						)
-																					}
-																					// onChange={(option) => {
-																					// 	if (option && option.value) {
-																					// 		props.handleChange(
-																					// 			'invoiceIdList',
-																					// 		)(option);
-																					// 	} else {
-																					// 		props.handleChange(
-																					// 			'invoiceIdList',
-																					// 		)('');
-																					// 	}
-																					// }}
 																					onChange={(option) => {
 																						props.handleChange('invoiceIdList')(
 																							option,
@@ -1109,49 +1073,6 @@ class ExplainTrasactionDetail extends React.Component {
 																			</FormGroup>
 																		</Col>
 																	)}
-																{/* {transactionCategoryList.categoriesList &&
-																	props.values.coaCategoryId === 10 && (
-																		<Col lg={4}>
-																			<FormGroup className="mb-3">
-																				<Label htmlFor="vatId">Vat</Label>
-																				<Select
-																					options={
-																						transactionCategoryList.dataList
-																							? transactionCategoryList
-																									.dataList[0].options
-																							: []
-																					}
-																					value={
-																						transactionCategoryList.dataList
-																							? transactionCategoryList.dataList[0].options.find(
-																									(option) =>
-																										option.value ===
-																										+props.values.vatId,
-																							  )
-																							: []
-																					}
-																					onChange={(option) => {
-																						if (option && option.value) {
-																							props.handleChange('vatId')(
-																								option,
-																							);
-																						} else {
-																							props.handleChange('vatId')('');
-																						}
-																					}}
-																					placeholder="Select Type"
-																					id="vatId"
-																					name="vatId"
-																					className={
-																						props.errors.vatId &&
-																						props.touched.vatId
-																							? 'is-invalid'
-																							: ''
-																					}
-																				/>
-																			</FormGroup>
-																		</Col>
-																	)} */}
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label !==
 																		'Create Expense' &&
@@ -1170,29 +1091,6 @@ class ExplainTrasactionDetail extends React.Component {
 																							? transactionCategoryList.categoriesList
 																							: []
 																					}
-																					// value={
-																					// 	transactionCategoryList.categoriesList
-																					// 		? transactionCategoryList.categoriesList
-																					// 				.find(
-																					// 					(item) =>
-																					// 						item.label ===
-																					// 						props.values
-																					// 							.transactionCategoryLabel,
-																					// 				)
-																					// 				.options.find(
-																					// 					(item) =>
-																					// 						item.value ===
-																					// 						+props.values
-																					// 							.transactionCategoryId,
-																					// 				)
-																					// 		: ''
-																					// }
-																					// value={
-																					// 	transactionCategoryList.categoriesList
-																					// 		? props.values
-																					// 				.transactionCategoryId
-																					// 		: ''
-																					// }
 																					onChange={(option) => {
 																						if (option && option.value) {
 																							props.handleChange(

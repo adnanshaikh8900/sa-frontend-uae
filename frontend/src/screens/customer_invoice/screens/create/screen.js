@@ -529,6 +529,7 @@ class CreateCustomerInvoice extends React.Component {
 		e.preventDefault();
 		const data = this.state.data;
 		newData = data.filter((obj) => obj.id !== id);
+		console.log(newData);
 		props.setFieldValue('lineItemsString', newData, true);
 		this.updateAmount(newData, props);
 	};
@@ -592,6 +593,7 @@ class CreateCustomerInvoice extends React.Component {
 				: discountAmount;
 		this.setState(
 			{
+				data,
 				initValue: {
 					...this.state.initValue,
 					...{
@@ -603,7 +605,6 @@ class CreateCustomerInvoice extends React.Component {
 				},
 			},
 			() => {
-				console.log(this.state.data);
 				if (props.values.discountType.value === 'PERCENTAGE') {
 					this.formRef.current.setFieldValue('discount', discount);
 				}

@@ -39,6 +39,7 @@ const mapStateToProps = (state) => {
 		expense_categories_list: state.expense.expense_categories_list,
 		bank_list: state.expense.bank_list,
 		pay_mode_list: state.expense.pay_mode_list,
+		user_list: state.expense.user_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -109,6 +110,7 @@ class CreateExpense extends React.Component {
 		this.props.expenseActions.getCurrencyList();
 		this.props.expenseActions.getBankList();
 		this.props.expenseActions.getPaymentMode();
+		this.props.expenseActions.getUserForDropdown();
 	};
 
 	handleSubmit = (data, resetForm) => {
@@ -128,7 +130,7 @@ class CreateExpense extends React.Component {
 			bankAccountId,
 		} = data;
 		let formData = new FormData();
-		formData.append('payee', payee);
+		formData.append('payee', payee.value);
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
@@ -202,12 +204,11 @@ class CreateExpense extends React.Component {
 		const { initValue, payMode } = this.state;
 		const {
 			currency_list,
-			project_list,
 			expense_categories_list,
-			employee_list,
 			vat_list,
 			bank_list,
 			pay_mode_list,
+			user_list,
 		} = this.props;
 
 		return (
@@ -348,36 +349,27 @@ class CreateExpense extends React.Component {
 															<Col lg={3}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="payee">
-																		<span className="text-danger">*</span>Payee
+																		<span className="text-danger">*</span> Payee
 																	</Label>
-																	<Input
-																		type="text"
-																		name="payee"
-																		id="payee"
-																		placeholder="Enter Payee"
+																	<Select
+																		options={user_list ? user_list : []}
 																		value={props.values.payee}
 																		onChange={(option) => {
-																			if (
-																				option.target.value === '' ||
-																				this.regExAlpha.test(
-																					option.target.value,
-																				)
-																			) {
+																			if (option && option.value) {
 																				props.handleChange('payee')(option);
+																			} else {
+																				props.handleChange('payee')('');
 																			}
 																		}}
+																		placeholder="Select Type"
+																		id="payee"
+																		name="payee"
 																		className={
 																			props.errors.payee && props.touched.payee
 																				? 'is-invalid'
 																				: ''
 																		}
 																	/>
-																	{props.errors.payee &&
-																		props.touched.payee && (
-																			<div className="invalid-feedback">
-																				{props.errors.payee}
-																			</div>
-																		)}
 																</FormGroup>
 															</Col>
 															<Col lg={3}>

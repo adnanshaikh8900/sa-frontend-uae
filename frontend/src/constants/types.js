@@ -76,6 +76,7 @@ export const EXPENSE = {
 	VAT_LIST: 'VAT_LIST',
 	BANK_LIST: 'BANK_LIST',
 	PAY_MODE: 'PAY_MODE',
+	USER_LIST: 'USER_LIST',
 };
 
 export const SETTINGS = {};

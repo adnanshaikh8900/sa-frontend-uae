@@ -283,10 +283,10 @@ class ExplainTrasactionDetail extends React.Component {
 			if (vendorId && coaCategoryId.label === 'Supplier Invoice') {
 				formData.append('vendorId', vendorId ? vendorId : '');
 			}
-			if (currencyCode && coaCategoryId.label === 'Create Expense') {
+			if (currencyCode && coaCategoryId.label === 'Expense') {
 				formData.append('currencyCode', currencyCode ? currencyCode : '');
 			}
-			if (expenseCategory && coaCategoryId.label === 'Create Expense') {
+			if (expenseCategory && coaCategoryId.label === 'Expense') {
 				formData.append(
 					'expenseCategory',
 					expenseCategory ? expenseCategory.value : '',
@@ -294,15 +294,12 @@ class ExplainTrasactionDetail extends React.Component {
 			}
 			if (
 				(vatId && coaCategoryId.value === 10) ||
-				(vatId && coaCategoryId.label === 'Create Expense')
+				(vatId && coaCategoryId.label === 'Expense')
 			) {
 				formData.append('vatId', vatId ? vatId.value : '');
 			}
 			if (employeeId) {
 				formData.append('employeeId', employeeId ? employeeId.value : '');
-			}
-			if (userId && coaCategoryId.label === 'Create Expense') {
-				formData.append('userId', userId ? userId.value : '');
 			}
 			if (
 				(invoiceIdList && coaCategoryId.label === 'Sales') ||
@@ -550,14 +547,14 @@ class ExplainTrasactionDetail extends React.Component {
 																					);
 																				}
 																				if (
-																					option.label !== 'Create Expense' &&
+																					option.label !== 'Expense' &&
 																					option.label !== 'Supplier Invoice'
 																				) {
 																					this.getTransactionCategoryList(
 																						option,
 																					);
 																				}
-																				if (option.label === 'Create Expense') {
+																				if (option.label === 'Expense') {
 																					this.getExpensesCategoriesList();
 																				}
 																				if (
@@ -691,7 +688,7 @@ class ExplainTrasactionDetail extends React.Component {
 																)} */}
 															{props.values.coaCategoryId &&
 																props.values.coaCategoryId.label ===
-																	'Create Expense' && (
+																	'Expense' && (
 																	<Row>
 																		<Col lg={3}>
 																			<FormGroup className="mb-3">
@@ -735,7 +732,7 @@ class ExplainTrasactionDetail extends React.Component {
 																		</Col>
 																		{props.values.coaCategoryId &&
 																			props.values.coaCategoryId.label ===
-																				'Create Expense' && (
+																				'Expense' && (
 																				<Col lg={3}>
 																					<FormGroup className="mb-3">
 																						<Label htmlFor="vatId">Vat</Label>
@@ -785,44 +782,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			)}
 																		{props.values.coaCategoryId &&
 																			props.values.coaCategoryId.label ===
-																				'Create Expense' && (
-																				<Col lg={3}>
-																					<FormGroup className="mb-3">
-																						<Label htmlFor="userId">
-																							Users
-																						</Label>
-																						<Select
-																							options={
-																								user_list ? user_list : []
-																							}
-																							value={props.values.userId}
-																							onChange={(option) => {
-																								if (option && option.value) {
-																									props.handleChange('userId')(
-																										option,
-																									);
-																								} else {
-																									props.handleChange('userId')(
-																										'',
-																									);
-																								}
-																							}}
-																							placeholder="Select Type"
-																							id="userId"
-																							name="userId"
-																							className={
-																								props.errors.userId &&
-																								props.touched.userId
-																									? 'is-invalid'
-																									: ''
-																							}
-																						/>
-																					</FormGroup>
-																				</Col>
-																			)}
-																		{props.values.coaCategoryId &&
-																			props.values.coaCategoryId.label ===
-																				'Create Expense' && (
+																				'Expense' && (
 																				<Col lg={3}>
 																					<FormGroup className="mb-3">
 																						<Label htmlFor="currencyCode">
@@ -1075,7 +1035,7 @@ class ExplainTrasactionDetail extends React.Component {
 																	)}
 																{props.values.coaCategoryId &&
 																	props.values.coaCategoryId.label !==
-																		'Create Expense' &&
+																		'Expense' &&
 																	props.values.coaCategoryId.label !==
 																		'Supplier Invoice' &&
 																	props.values.coaCategoryId.label !==

@@ -110,9 +110,6 @@ public class TransactionRestController {
 	private VatCategoryService vatCategoryService;
 
 	@Autowired
-	private EmployeeService employeeService;
-
-	@Autowired
 	private ContactService contactService;
 
 	@Autowired
@@ -494,14 +491,14 @@ public class TransactionRestController {
 	 */
 	private void explainExpenses(@ModelAttribute TransactionPresistModel transactionPresistModel, Integer userId, Transaction trnx) {
 		//create new expenses
-		Expense expense =  createNewExpense(transactionPresistModel,userId);
+		//Expense expense =  createNewExpense(transactionPresistModel,userId);
 		// create Journal entry for Expense
 		//Chart of account in expense and user
-		Journal journal = getJournalEntryForExpense(transactionPresistModel,expense,userId);
-		journalService.persist(journal);
+		//Journal journal = getJournalEntryForExpense(transactionPresistModel,expense,userId);
+		//journalService.persist(journal);
 		int transactionCategoryId = 0;
 		if(transactionPresistModel.getTransactionCategoryId()==null) {
-			transactionCategoryId = TransactionCategoryConsatant.TRANSACTION_EMPLOYEE_REIMBURSEMENTS;
+			transactionCategoryId = transactionPresistModel.getExpenseCategory();//TransactionCategoryConsatant.TRANSACTION_EMPLOYEE_REIMBURSEMENTS;
 			TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryId);
 			trnx.setExplainedTransactionCategory(transactionCategory);
 		}
@@ -513,8 +510,9 @@ public class TransactionRestController {
 		updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 		// create Journal entry for Transaction explanation
 		//Employee reimbursement and bank
-		journal = reconsilationRestHelper.getByTransactionType(transactionCategoryId,
-				transactionPresistModel.getAmount(), userId, trnx);
+		Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel,transactionCategoryId
+				, userId, trnx);
+
 		journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 				transactionPresistModel.getDATE_FORMAT()));
 		journalService.persist(journal);

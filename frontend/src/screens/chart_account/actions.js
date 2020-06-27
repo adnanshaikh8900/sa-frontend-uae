@@ -70,7 +70,25 @@ export const getTransactionCategoryList = (obj) => {
   }
 }
 
-
+export const getTransactionCategoryExportList = (obj) => {
+   return (dispatch) => {
+    let data = {
+      method: 'GET',
+      url: `/rest/transactioncategory/getExportList`,
+    }
+    return authApi(data).then((res) => {
+      if(!obj.paginationDisable){
+        dispatch({
+          type: CHART_ACCOUNT.TRANSACTION_CATEGORY_LIST,
+          payload: res.data
+        })
+      }
+      return res
+    }).catch((err) => {
+      throw err
+    })
+  }
+}
 
 
 export const removeBulk = (obj) => {

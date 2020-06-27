@@ -273,10 +273,10 @@ class ChartAccount extends React.Component {
 				paginationDisable: true,
 			};
 			this.props.chartOfAccountActions
-				.getTransactionCategoryList(obj)
+				.getTransactionCategoryExportList(obj)
 				.then((res) => {
 					if (res.status === 200) {
-						this.setState({ csvData: res.data.data, view: true }, () => {
+						this.setState({ csvData: res.data, view: true }, () => {
 							setTimeout(() => {
 								this.csvLink.current.link.click();
 							}, 0);

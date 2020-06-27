@@ -107,6 +107,22 @@ public class TranscationCategoryHelper {
 		return transactionCategoryModelList;
 	}
 
+	public List<TransactionCategoryExportModel> getExportListModel(List<TransactionCategory> transactionCategories) {
+		List<TransactionCategoryExportModel> transactionCategoryExportModelList = new ArrayList<>();
+
+		if (transactionCategories != null) {
+			for (TransactionCategory transactionCategory : transactionCategories) {
+				TransactionCategoryExportModel transactionCategoryExportModel = new TransactionCategoryExportModel();
+				transactionCategoryExportModel.setTransactionCategoryId(transactionCategory.getTransactionCategoryId());
+				transactionCategoryExportModel.setTransactionCategoryName(transactionCategory.getTransactionCategoryName());
+				transactionCategoryExportModel.setTransactionTypeName(transactionCategory.getChartOfAccount().getChartOfAccountName());
+				transactionCategoryExportModel.setTransactionCategoryCode(transactionCategory.getTransactionCategoryCode());
+				transactionCategoryExportModelList.add(transactionCategoryExportModel);
+			}
+		}
+		return transactionCategoryExportModelList;
+	}
+
 	public TransactionCategoryModel getModel(TransactionCategory transactionCategory) {
 		TransactionCategoryModel transactionCategoryModel = new TransactionCategoryModel();
 		BeanUtils.copyProperties(transactionCategory, transactionCategoryModel);

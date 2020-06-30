@@ -94,7 +94,7 @@ public class ReconsilationController {
 				param = new HashMap<>();
 				param.put("deleteFlag", false);
 				param.put("type", 2);
-				List<Invoice> invList = invoiceService.findByAttributes(param);
+				/*List<Invoice> invList = invoiceService.findByAttributes(param);
 				List<InviceSingleLevelDropdownModel> invModelList = new ArrayList<>();
 
 				for (Invoice invice : invList) {
@@ -107,7 +107,7 @@ public class ReconsilationController {
 				param = new HashMap<>();
 				param.put("label", "Sales Invoice");
 				param.put("options", invModelList);
-				list.add(param);
+				list.add(param);*/
 				transactionCatList = transactionCategoryService
 						.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
 				return new ResponseEntity<>(

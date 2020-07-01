@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.ReconcileStatus;
 import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
+import com.simplevat.rest.transactioncontroller.TransactionViewModel;
 import com.simplevat.service.VatCategoryService;
+import com.simplevat.utils.DateFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +31,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Component
 public class ReconsilationRestHelper {
+
+	@Autowired
+	private DateFormatUtil dateUtil;
+
 
 	@Autowired
 	private ExpenseService expenseService;
@@ -303,4 +310,20 @@ public class ReconsilationRestHelper {
 		journal.setJournalDate(LocalDateTime.now());
 		return journal;
 	}
+
+	public List<ReconcileStatusListModel> getModelList(Object reconcileStatusList) {
+
+		List<ReconcileStatusListModel> reconcileStatusModelList = new ArrayList<>();
+		for (ReconcileStatus reconcileStatus : (List<ReconcileStatus>) reconcileStatusList) {
+			ReconcileStatusListModel reconcileStatusListModel = new ReconcileStatusListModel();
+			reconcileStatusListModel.setReconciledDate(reconcileStatus.getReconciledDate() != null
+					? dateUtil.getLocalDateTimeAsString(reconcileStatus.getReconciledDate(), "dd-MM-yyyy")
+					: "-");
+			reconcileStatusListModel.setClosingBalance(reconcileStatus.getClosingBalance());
+			reconcileStatusListModel.setReconciledDuration(reconcileStatus.getReconciledDuration());
+			reconcileStatusModelList.add(reconcileStatusListModel);
+		}
+		return reconcileStatusModelList;
+}
+
 }

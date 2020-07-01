@@ -1,22 +1,30 @@
 
 package com.simplevat.rest.reconsilationcontroller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
+import com.simplevat.constant.dbfilter.TransactionFilterEnum;
+import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.entity.bankaccount.ReconcileStatus;
+import com.simplevat.entity.bankaccount.Transaction;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.transactioncontroller.TransactionRequestFilterModel;
 import com.simplevat.service.*;
+import com.simplevat.service.bankaccount.ReconcileStatusService;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.ReconsileCategoriesEnumConstant;
@@ -37,6 +45,12 @@ import static com.simplevat.constant.ErrorConstant.ERROR;
 public class ReconsilationController {
 
 	private final Logger logger = LoggerFactory.getLogger(ReconsilationController.class);
+
+	@Autowired
+	private ReconcileStatusService reconcileStatusService;
+
+	@Autowired
+	private BankAccountService bankAccountService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -171,6 +185,61 @@ public class ReconsilationController {
 			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+
+	@ApiOperation(value = "Get ReconcileStatusList")
+	@GetMapping(value = "/list")
+	public ResponseEntity<PaginationResponseModel> getAllReconcileStatus(ReconcileStatusRequestModel filterModel) {
+
+
+		Map<TransactionFilterEnum, Object> dataMap = new EnumMap<>(TransactionFilterEnum.class);
+
+		if (filterModel.getBankId() != null) {
+			dataMap.put(TransactionFilterEnum.BANK_ID, bankAccountService.findByPK(filterModel.getBankId()));
+		}
+
+		PaginationResponseModel response = reconcileStatusService.getAllReconcileStatusList(dataMap,filterModel);
+		if (response == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		response.setData(reconsilationRestHelper.getModelList(response.getData()));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	/*@ApiOperation(value = "Add New Product")
+	@PostMapping(value = "/save")
+	public ResponseEntity<String> save(@RequestBody ProductRequestModel productRequestModel, HttpServletRequest request) {
+		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			productRequestModel.setCreatedBy(userId);
+			Product product = productRestHelper.getEntity(productRequestModel);
+			product.setCreatedDate(LocalDateTime.now());
+			product.setDeleteFlag(Boolean.FALSE);
+			productService.persist(product);
+			return new ResponseEntity<>("Saved Successfully",HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}*/
+	@ApiOperation(value = "Add New ReconcileStatus")
+	@PostMapping(value = "/save")
+	public ResponseEntity<String> save(@RequestParam Integer bankAccountId, @RequestParam BigDecimal closingBalance) {
+		try {
+			ReconcileStatus reconcileStatus = new ReconcileStatus();
+			reconcileStatus.setBankAccount(bankAccountService.getBankAccountById(bankAccountId));
+			reconcileStatus.setClosingBalance(closingBalance);
+			reconcileStatus.setReconciledDuration("1 Month");
+			Date date = new Date();
+			reconcileStatus.setReconciledDate(Instant.ofEpochMilli(date.getTime())
+					.atZone(ZoneId.systemDefault()).toLocalDateTime());
+			reconcileStatusService.persist(reconcileStatus);
+			return new ResponseEntity<>("Saved Successfully",HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }

@@ -166,3 +166,6 @@ ALTER TABLE TRANSACTON add column EXPLINTION_USER_ID integer;
 
 --changeset 20/06/2020 AFZAL:ddl-12
 ALTER TABLE EXPENSE add column USER_ID integer;
+
+--changeset 01/07/2020 ADIL:ddl-13
+create table RECONCILESTATUS (RECONCILE_ID integer not null,  BANK_ACCOUNT_ID integer,RECONCILED_DATE datetime,RECONCILED_DURATION varchar (255),CLOSING_BALANCE DECIMAL (19,2),DELETE_FLAG bit default 0 not null,primary key (RECONCILE_ID)) engine=InnoDB DEFAULT CHARSET=utf8; ;

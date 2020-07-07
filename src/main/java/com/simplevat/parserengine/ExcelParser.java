@@ -234,7 +234,7 @@ public class ExcelParser implements TransactionFileParser {
 	private String isValidDate(String dateStr, DateFormat format) {
 		try {
 			// bydefault excel give dd/mm/yyyy convert to specific format
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yy");
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = formatter.parse(dateStr);
 
 			formatter = new SimpleDateFormat(format.getFormat());

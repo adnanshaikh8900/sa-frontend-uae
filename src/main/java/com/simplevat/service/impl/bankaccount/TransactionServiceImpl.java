@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.simplevat.constant.TransactionCreationMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -330,6 +331,8 @@ public class TransactionServiceImpl extends TransactionService {
 
 		try {
 			for (Transaction transaction : transactions) {
+				if(isAlreadyExistSimilarTransaction(transaction))
+					transaction.setCreationMode(TransactionCreationMode.POTENTIAL_DUPLICATE);
 				transactionDao.persist(transaction);
 			}
 			return true;
@@ -337,6 +340,11 @@ public class TransactionServiceImpl extends TransactionService {
 			logger.error("Error", e);
 			return false;
 		}
+	}
+
+	private boolean isAlreadyExistSimilarTransaction(Transaction transaction) {
+		return transactionDao.isAlreadyExistSimilarTransaction(transaction.getTransactionAmount(),transaction.getTransactionDate(),
+				transaction.getBankAccount());
 	}
 
 	@Override

@@ -79,4 +79,6 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
    public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId);
 
   public  Boolean matchClosingBalanceForReconcile(LocalDateTime reconcileDate, BigDecimal closingBalance, Integer bankId);
+
+   public boolean isAlreadyExistSimilarTransaction(BigDecimal transactionAmount, LocalDateTime transactionDate, BankAccount bankAccount);
 }

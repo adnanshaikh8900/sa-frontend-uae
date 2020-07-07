@@ -579,4 +579,16 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		List<Transaction> transactionList = query.getResultList();
 		return closingBalance.floatValue() == transactionList.get(0).getCurrentBalance().floatValue();
 	}
+
+	public boolean isAlreadyExistSimilarTransaction(BigDecimal transactionAmount, LocalDateTime transactionDate, BankAccount bankAccount)
+	{
+		StringBuilder queryBuilder = new StringBuilder("SELECT t FROM Transaction t " +
+				"WHERE t.creationMode = 'MANUAL' and t.bankAccount = :bankAccount and t.transactionDate =:transactionDate and t.transactionAmount=:transactionAmount");
+		TypedQuery<Transaction> query = getEntityManager().createQuery(queryBuilder.toString(),	Transaction.class);
+		query.setParameter("bankAccount",bankAccount);
+		query.setParameter("transactionDate", transactionDate);
+		query.setParameter("transactionAmount", transactionAmount);
+		List<Transaction> transactionList = query.getResultList();
+		return transactionList!=null && transactionList.size()>0;
+	}
 }

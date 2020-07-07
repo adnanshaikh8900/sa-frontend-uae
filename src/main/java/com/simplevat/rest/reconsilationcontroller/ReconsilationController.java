@@ -216,10 +216,11 @@ public class ReconsilationController {
 		}
 	}
 	@PostMapping(value = "/reconcilenow")
-	public ResponseEntity<String> reconcileNow(@ModelAttribute ReconcilationPersistModel reconcilationPersistModel,
+	public ResponseEntity<ReconcilationResponseModel> reconcileNow(@ModelAttribute ReconcilationPersistModel reconcilationPersistModel,
 											   HttpServletRequest request) {
 		try
 		{
+			ReconcilationResponseModel responseModel = new ReconcilationResponseModel();
 			LocalDateTime reconcileDate = reconsilationRestHelper.getDateFromRequest(reconcilationPersistModel);
 			ReconcileStatus status = reconsilationRestHelper.getReconcileStatus(reconcilationPersistModel);
 			LocalDateTime startDate = null;
@@ -254,22 +255,29 @@ public class ReconsilationController {
 					reconcileStatus.setBankAccount(bankAccountService.findByPK(reconcilationPersistModel.getBankId()));
 					reconcileStatus.setClosingBalance(closingBalance);
 					reconcileStatusService.persist(reconcileStatus);
-					return new ResponseEntity<>("Reconciled Successfully ",HttpStatus.OK);
+					responseModel.setStatus(1);
+					responseModel.setMessage("Reconciled Successfully..");
+					return new ResponseEntity<>(responseModel,HttpStatus.OK);
 				}
 				else
-				{
-					return new ResponseEntity<>("Failed Reconciling. Closing Balance does not matches with the bank transaction",HttpStatus.OK);
+				{   responseModel.setStatus(2);
+					responseModel.setMessage("Failed Reconciling. Closing Balance in System "+dbClosingBalance+" does not matches with the given Closing Balance");
+					return new ResponseEntity<>(responseModel,HttpStatus.OK);
 				}
 			}
 			else if(unexplainedTransaction ==-1)
 			{
-				return new ResponseEntity<>("The Transactions in Bank Account are already reconciled for the given date ",HttpStatus.OK);
+				responseModel.setStatus(3);
+				responseModel.setMessage("The Transactions in Bank Account are already reconciled for the given date");
+				return new ResponseEntity<>(responseModel,HttpStatus.OK);
 			}
 			else
 			{	/*
 			 *  Send unexplainedTransaction still pending to be explained.
 			 */
-				return new ResponseEntity<>("Failed Reconciling. Please update the unexplained transactions before reconciling",HttpStatus.OK);
+			responseModel.setStatus(4);
+			responseModel.setMessage("Failed Reconciling. Please update the remaining "+unexplainedTransaction+" unexplained transactions before reconciling");
+			return new ResponseEntity<>(responseModel,HttpStatus.OK);
 			}
 
 		} catch (Exception e) {

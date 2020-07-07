@@ -224,7 +224,7 @@ public class PaymentRestHelper {
 
 		journal.setJournalLineItems(journalLineItemList);
 		journal.setCreatedBy(userId);
-		journal.setPostingReferenceType(PostingReferenceTypeEnum.RECEIPT);
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.PAYMENT);
 		journal.setJournalDate(LocalDateTime.now());
 		return journal;
 	}

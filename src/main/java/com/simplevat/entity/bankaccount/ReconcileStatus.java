@@ -24,6 +24,10 @@ public class ReconcileStatus implements Serializable  {
     private BankAccount bankAccount;
 
     @Basic
+    @Column(name = "RECONCILED_START_DATE")
+    private LocalDateTime reconciledStartDate;
+
+    @Basic
     @Column(name = "RECONCILED_DATE")
     private LocalDateTime reconciledDate;
 

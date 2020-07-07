@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.service.TransactionCategoryClosingBalanceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
+import static com.simplevat.constant.ChartOfAccountConstant.BANK;
 import static com.simplevat.constant.ErrorConstant.ERROR;
 
 @RestController
@@ -46,6 +48,9 @@ public class TransactionCategoryBalanceController {
 	private TransactionCategoryBalanceService transactionCategoryBalanceService;
 
 	@Autowired
+	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+
+	@Autowired
 	private TransactionCategoryBalanceRestHelper transactionCategoryBalanceRestHelper;
 
 	@Autowired
@@ -60,7 +65,12 @@ public class TransactionCategoryBalanceController {
 			User user = userServiceNew.findByPK(userId);
 			TransactionCategoryBalance openingBalance = transactionCategoryBalanceRestHelper.getEntity(persistmodel);
 			openingBalance.setCreatedBy(user.getUserId());
+			if(openingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountId()== BANK)
+			{
+				transactionCategoryClosingBalanceService.addNewClosingBalance(openingBalance);
+			}
 			transactionCategoryBalanceService.persist(openingBalance);
+
 			return new ResponseEntity<>("Saved successfull",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

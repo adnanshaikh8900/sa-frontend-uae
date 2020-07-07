@@ -1,7 +1,11 @@
 package com.simplevat.rest.reconsilationcontroller;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +16,10 @@ import com.simplevat.entity.bankaccount.ReconcileStatus;
 import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
 import com.simplevat.rest.transactioncontroller.TransactionViewModel;
 import com.simplevat.service.VatCategoryService;
+import com.simplevat.service.bankaccount.ReconcileStatusService;
 import com.simplevat.utils.DateFormatUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,8 +36,15 @@ import com.simplevat.service.InvoiceService;
 import com.simplevat.service.TransactionCategoryService;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import static com.simplevat.constant.ErrorConstant.ERROR;
+
 @Component
 public class ReconsilationRestHelper {
+
+	private final Logger logger = LoggerFactory.getLogger(ReconsilationController.class);
+
+	@Autowired
+	private ReconcileStatusService reconcileStatusService;
 
 	@Autowired
 	private DateFormatUtil dateUtil;
@@ -325,5 +339,35 @@ public class ReconsilationRestHelper {
 		}
 		return reconcileStatusModelList;
 }
+
+	public LocalDateTime getDateFromRequest(ReconcilationPersistModel reconcilationPersistModel) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		LocalDateTime dateTime = null;
+		try {
+			dateTime = Instant.ofEpochMilli(dateFormat.parse(reconcilationPersistModel.getDate()).getTime())
+					.atZone(ZoneId.systemDefault()).toLocalDateTime();
+			return dateTime;
+		} catch (ParseException e) {
+			logger.error(ERROR, e);
+		}
+		return null;
+	}
+
+	public ReconcileStatus getReconcileStatus(@ModelAttribute ReconcilationPersistModel reconcilationPersistModel) {
+		ReconcileStatus status = null;
+		if (reconcilationPersistModel.getDate() != null && reconcilationPersistModel.getBankId()!=null) {
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			LocalDateTime dateTime = null;
+			try {
+				dateTime = Instant.ofEpochMilli(dateFormat.parse(reconcilationPersistModel.getDate()).getTime())
+						.atZone(ZoneId.systemDefault()).toLocalDateTime();
+			} catch (ParseException e) {
+				logger.error(ERROR, e);
+			}
+			status = reconcileStatusService.getAllReconcileStatusByBankAccountId(reconcilationPersistModel.getBankId(),dateTime);
+		}
+		return status;
+	}
 
 }

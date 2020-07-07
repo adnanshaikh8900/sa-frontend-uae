@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,13 @@ public class ReconcileStatusServiceImpl extends ReconcileStatusService  {
     public  List<ReconcileStatus> getAllReconcileStatusListByBankAccountId(Integer bankAccountId){
 
         return reconcilestatusDao.getAllReconcileStatusListByBankAccountId(bankAccountId);
+
+    }
+
+    @Override
+    public  ReconcileStatus getAllReconcileStatusByBankAccountId(Integer bankAccountId, LocalDateTime date){
+
+        return reconcilestatusDao.getAllReconcileStatusByBankAccountId(bankAccountId,date);
 
     }
 

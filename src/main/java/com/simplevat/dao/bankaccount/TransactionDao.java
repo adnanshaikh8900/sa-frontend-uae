@@ -3,6 +3,8 @@ package com.simplevat.dao.bankaccount;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.model.TransactionReportRestModel;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -70,4 +72,11 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,
 			PaginationModel paginationModel);
 
+   public Integer isTransactionsReadyForReconcile(LocalDateTime startDate, LocalDateTime endDate, Integer bankId);
+
+   public  LocalDateTime getTransactionStartDateToReconcile(LocalDateTime reconcileDate, Integer bankId);
+
+   public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId);
+
+  public  Boolean matchClosingBalanceForReconcile(LocalDateTime reconcileDate, BigDecimal closingBalance, Integer bankId);
 }

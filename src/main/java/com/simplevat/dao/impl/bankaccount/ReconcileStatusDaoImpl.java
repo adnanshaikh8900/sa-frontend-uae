@@ -11,6 +11,7 @@ import com.simplevat.rest.PaginationResponseModel;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,21 @@ public class ReconcileStatusDaoImpl extends AbstractDao<Integer,ReconcileStatus 
             return reconcileStatusList;
         }
         return new ArrayList<>();
+    }
+
+    @Override
+    public ReconcileStatus getAllReconcileStatusByBankAccountId(Integer bankAccountId, LocalDateTime date) {
+        TypedQuery<ReconcileStatus> query = getEntityManager().createQuery(
+                "SELECT r FROM ReconcileStatus r  WHERE r.deleteFlag = false AND r.bankAccount.bankAccountId =:bankAccountId " +
+                        "and r.reconciledDate <= :reconciledEndDate ORDER BY r.reconciledDate DESC",
+                ReconcileStatus.class);
+        query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
+        query.setParameter("reconciledEndDate", date);
+        List<ReconcileStatus> reconcileStatusList = query.getResultList();
+        if (reconcileStatusList != null && !reconcileStatusList.isEmpty()) {
+            return reconcileStatusList.get(0);
+        }
+        return null;
     }
 
     @Override

@@ -141,5 +141,12 @@ public abstract class SimpleVatService<PK, ENTITY> {
 
 		return null;
 	}
+	public ENTITY getLastElement(List<ENTITY> list) {
+
+		if (list != null && !list.isEmpty()) {
+			return list.get(list.size()-1);
+		}
+		return null;
+	}
 
 }

@@ -17,6 +17,7 @@ public class ChartOfAccountConstant {
 	public static final int REVENUE = 3;
 	public static final int EXPENSE = 4;
 	public static final int EQUITY = 5;
+	public static final int BANK = 7;
 
 	private ChartOfAccountConstant() {
 		// CREATED TO REMOVE SONAR ERROR

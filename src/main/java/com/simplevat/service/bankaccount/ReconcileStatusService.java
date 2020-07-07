@@ -6,12 +6,14 @@ import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.SimpleVatService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 public abstract class ReconcileStatusService extends SimpleVatService<Integer, ReconcileStatus> {
 
     public abstract List<ReconcileStatus> getAllReconcileStatusListByBankAccountId(Integer bankAccountId);
+    public abstract ReconcileStatus getAllReconcileStatusByBankAccountId(Integer bankAccountId, LocalDateTime date);
 
     public abstract PaginationResponseModel getAllReconcileStatusList(Map<TransactionFilterEnum, Object> filterModel,
                                                                   PaginationModel paginationModel);

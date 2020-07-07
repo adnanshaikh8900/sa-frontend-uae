@@ -363,5 +363,24 @@ public class TransactionServiceImpl extends TransactionService {
 			PaginationModel paginationModel) {
 		return transactionDao.getAllTransactionList(filterModel, paginationModel);
 	}
+	@Override
+	public Integer isTransactionsReadyForReconcile(LocalDateTime startDate, LocalDateTime endDate, Integer bankId){
+		return transactionDao.isTransactionsReadyForReconcile(startDate,endDate,bankId);
+	}
+	@Override
+	public  LocalDateTime getTransactionStartDateToReconcile(LocalDateTime reconcileDate, Integer bankId)
+	{
+		return transactionDao.getTransactionStartDateToReconcile(reconcileDate,bankId);
+	}
+	@Override
+	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId)
+	{
+		return transactionDao.updateTransactionStatusReconcile(startDate,reconcileDate,bankId);
+	}
+	@Override
+	public Boolean matchClosingBalanceForReconcile(LocalDateTime reconcileDate, BigDecimal closingBalance, Integer bankId)
+	{
+		return transactionDao.matchClosingBalanceForReconcile(reconcileDate,closingBalance,bankId);
+	}
 
 }

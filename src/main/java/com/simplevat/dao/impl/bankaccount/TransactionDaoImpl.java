@@ -2,10 +2,14 @@ package com.simplevat.dao.impl.bankaccount;
 
 import com.simplevat.constant.BankAccountConstant;
 import com.simplevat.constant.CommonColumnConstants;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.TransactionStatusConstant;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.model.TransactionReportRestModel;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -442,7 +446,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			filterBuilder.append(CommonColumnConstants.ORDER_BY);
 		}
 		TypedQuery<Transaction> query = getEntityManager().createQuery(
-				"SELECT t FROM Transaction t WHERE t.bankAccount.bankAccountId =:bankAccountId AND t.parentTransaction IS NULL"
+				"SELECT t FROM Transaction t WHERE t.bankAccount.bankAccountId =:bankAccountId AND t.transactionExplinationStatusEnum t.parentTransaction IS NULL"
 						+ builder.toString() + filterBuilder.toString() + "  t.transactionDate DESC",
 				Transaction.class);
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
@@ -497,5 +501,82 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 				.condition(filter.getCondition()).value(value).build()));
 		return new PaginationResponseModel(this.getResultCount(dbFilters),
 				this.executeQuery(dbFilters, paginationModel));
+	}
+
+	public Integer isTransactionsReadyForReconcile(LocalDateTime startDate, LocalDateTime endDate, Integer bankId){
+        String unExplainedFilterString = " in ('NOT_EXPLAIN') ";
+        String reconcileAndFullFilterString = " in ('Reconciled') ";
+
+        Integer getUnExplainedCount = getTransactionCountForReconcile(startDate,endDate,bankId,null,unExplainedFilterString);
+		if(getUnExplainedCount == 0) {
+		String reconcileDateFilterString=" > :startDate and t.transactionDate <= :endDate ";
+		Integer reconciledFullCount = getTransactionCountForReconcile(startDate, endDate, bankId,reconcileDateFilterString, reconcileAndFullFilterString);
+		if(reconciledFullCount == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+		}
+		return getUnExplainedCount;
+	}
+
+	public Integer getTransactionCountForReconcile(LocalDateTime startDate, LocalDateTime endDate, Integer bankId,
+												   String dateFilter,String filterQuery){
+
+		StringBuilder queryBuilder = new StringBuilder("SELECT count(t.transactionId) FROM Transaction t " +
+				"WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate ");
+		if(dateFilter==null)
+		{
+			queryBuilder.append("between :startDate and :endDate ");
+		}
+		else
+		{
+			queryBuilder.append(dateFilter);
+		}
+		queryBuilder.append(" and t.transactionExplinationStatusEnum").append(filterQuery);
+		TypedQuery<Long> query = getEntityManager().createQuery(queryBuilder.toString(),
+				Long.class);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
+		query.setParameter("endDate", endDate);
+		if(startDate != null)
+			query.setParameter("startDate", startDate);
+		long result = query.getSingleResult();
+		return (int)result;
+	}
+
+
+	public  LocalDateTime getTransactionStartDateToReconcile(LocalDateTime reconcileDate, Integer bankId)
+	{
+		StringBuilder queryBuilder = new StringBuilder("SELECT t FROM Transaction t " +
+				"WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <=:endDate order by t.transactionDate ASC");
+		TypedQuery<Transaction> query = getEntityManager().createQuery(queryBuilder.toString(),	Transaction.class);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
+		query.setParameter("endDate", reconcileDate);
+		List<Transaction> transactionList = query.getResultList();
+		return transactionList.get(0).getTransactionDate();
+	}
+
+	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId)
+	{
+		StringBuilder queryBuilder = new StringBuilder("Update Transaction t set t.transactionExplinationStatusEnum = '").append(TransactionExplinationStatusEnum.RECONCILED)
+				.append("' WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <= :endDate");
+		Query query = getEntityManager().createQuery(queryBuilder.toString());
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
+		query.setParameter("endDate", reconcileDate);
+		query.executeUpdate();
+		return "update query successful";
+	}
+	public  Boolean matchClosingBalanceForReconcile(LocalDateTime reconcileDate, BigDecimal closingBalance, Integer bankId){
+	  StringBuilder queryBuilder = new StringBuilder("SELECT t FROM Transaction t " +
+				"WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <=:endDate order by t.transactionDate DESC,t.transactionId DESC");
+		TypedQuery<Transaction> query = getEntityManager().createQuery(queryBuilder.toString(),	Transaction.class);
+		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);
+		query.setParameter("endDate", reconcileDate);
+		query.setMaxResults(1);
+		List<Transaction> transactionList = query.getResultList();
+		return closingBalance.floatValue() == transactionList.get(0).getCurrentBalance().floatValue();
 	}
 }

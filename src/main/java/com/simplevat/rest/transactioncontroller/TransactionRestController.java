@@ -165,6 +165,21 @@ public class TransactionRestController {
 		if (filterModel.getBankId() != null) {
 			dataMap.put(TransactionFilterEnum.BANK_ID, bankAccountService.findByPK(filterModel.getBankId()));
 		}
+		if(filterModel.getTransactionType()!=null)
+		{String transactionType = filterModel.getTransactionType();
+			if(transactionType.equalsIgnoreCase("POTENTIAL_DUPLICATE"))
+			{
+				dataMap.put(TransactionFilterEnum.CREATION_MODE, TransactionCreationMode.POTENTIAL_DUPLICATE);
+			}
+			else if(transactionType.equalsIgnoreCase("NOT_EXPLAIN"))
+			{
+				dataMap.put(TransactionFilterEnum.TRANSACTION_EXPLINATION_STATUS, TransactionExplinationStatusEnum.NOT_EXPLAIN);
+			}
+			else
+			{
+				dataMap.put(TransactionFilterEnum.TRANSACTION_EXPLINATION_STATUS_IN, TransactionExplinationStatusEnum.NOT_EXPLAIN);
+			}
+		}
 		if (filterModel.getTransactionDate() != null) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 			LocalDateTime dateTime = null;

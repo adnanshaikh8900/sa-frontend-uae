@@ -98,7 +98,9 @@ class ExplainTrasactionDetail extends React.Component {
 						initValue: {
 							bankId: bankId,
 							amount: res.data.amount ? res.data.amount : '',
-							date: res.data.date ? res.data.date : '',
+							date: res.data.date
+								? moment(res.data.date, 'DD/MM/YYYY').format('DD/MM/YYYY')
+								: '',
 							description: res.data.description ? res.data.description : '',
 							transactionCategoryId: res.data.transactionCategoryId
 								? res.data.transactionCategoryId
@@ -267,7 +269,10 @@ class ExplainTrasactionDetail extends React.Component {
 			let formData = new FormData();
 			formData.append('transactionId', transactionId ? transactionId : '');
 			formData.append('bankId ', bankId ? bankId : '');
-			formData.append('date', date ? moment(date).format('DD/MM/YYYY') : '');
+			formData.append(
+				'date',
+				typeof date === 'object' ? moment(date).format('DD/MM/YYYY') : date,
+			);
 			formData.append('description', description ? description : '');
 			formData.append('amount', amount ? amount : '');
 			formData.append('coaCategoryId', coaCategoryId ? id : '');
@@ -1206,7 +1211,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					placeholderText="Transaction Date"
 																					showMonthDropdown
 																					showYearDropdown
-																					dateFormat="DD/MM/YYYY"
+																					dateFormat="dd/MM/yyyy"
 																					dropdownMode="select"
 																					value={
 																						props.values.date

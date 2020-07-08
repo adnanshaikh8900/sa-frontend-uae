@@ -16,6 +16,7 @@ const initState = {
 	user_list: [],
 	vendor_list: [],
 	vat_list: [],
+	reconcile_list: [],
 };
 
 const BankAccountReducer = (state = initState, action) => {
@@ -103,6 +104,12 @@ const BankAccountReducer = (state = initState, action) => {
 			return {
 				...state,
 				transaction_type_list: Object.assign([], payload),
+			};
+
+		case BANK_ACCOUNT.RECONCILE_LIST:
+			return {
+				...state,
+				reconcile_list: Object.assign([], payload),
 			};
 
 		case BANK_ACCOUNT.VAT_LIST:

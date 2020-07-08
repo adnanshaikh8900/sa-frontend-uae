@@ -14,6 +14,7 @@ import {
 	BankTransactions,
 	CreateBankTransaction,
 	DetailBankTransaction,
+	ReconcileTransaction,
 	ImportBankStatement,
 	ImportTransaction,
 
@@ -145,6 +146,11 @@ const adminRoutes = [
 		path: '/admin/banking/bank-account/transaction/detail',
 		name: 'Detail',
 		component: DetailBankTransaction.screen,
+	},
+	{
+		path: '/admin/banking/bank-account/transaction/reconcile',
+		name: 'Reconcile',
+		component: ReconcileTransaction.screen,
 	},
 	{
 		path: '/admin/banking/bank-account/transaction',

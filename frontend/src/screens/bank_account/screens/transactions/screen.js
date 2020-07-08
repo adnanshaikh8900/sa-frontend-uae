@@ -9,6 +9,10 @@ import {
 	Row,
 	Col,
 	ButtonGroup,
+	TabPane,
+	Nav,
+	NavItem,
+	NavLink,
 } from 'reactstrap';
 import Select from 'react-select';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -83,6 +87,8 @@ class BankTransactions extends React.Component {
 			bankId: '',
 			expanded: [],
 			page: 1,
+			activeTab: new Array(3).fill('all'),
+			transactionType: 'all',
 		};
 
 		this.options = {
@@ -122,6 +128,7 @@ class BankTransactions extends React.Component {
 				...filterData,
 				...data,
 				id: this.props.location.state.bankAccountId,
+				transactionType: this.state.transactionType,
 			};
 			this.props.transactionsActions
 				.getTransactionList(postData)
@@ -262,6 +269,21 @@ class BankTransactions extends React.Component {
 		);
 	};
 	onSelectAll = (isSelected, rows) => {};
+
+	toggle = (tabPane, tab) => {
+		const newArray = this.state.activeTab.slice();
+		newArray[parseInt(tabPane, 10)] = tab;
+		this.setState(
+			{
+				activeTab: newArray,
+				transactionType: tab,
+			},
+			() => {
+				//console.log(this.state.transactionType);
+				this.initializeData();
+			},
+		);
+	};
 
 	onSizePerPageList = (sizePerPage) => {
 		if (this.options.sizePerPage !== sizePerPage) {
@@ -432,8 +454,10 @@ class BankTransactions extends React.Component {
 		function statusFormatter(cell, row) {
 			if (row.explinationStatusEnum === 'FULL') {
 				return <div>Explained</div>;
-			} else {
+			} else if (row.explinationStatusEnum === 'NOT_EXPLAIN') {
 				return <div>Not Explained</div>;
+			} else {
+				return <div>{row.explinationStatusEnum}</div>;
 			}
 		}
 
@@ -556,6 +580,25 @@ class BankTransactions extends React.Component {
 													<i className="fas fa-edit mr-1" />
 													Edit Account
 												</Button>
+												<Button
+													color="info"
+													className="btn-square"
+													onClick={() =>
+														this.props.history.push(
+															'/admin/banking/bank-account/transaction/reconcile',
+															{
+																bankAccountId:
+																	this.props.location.state &&
+																	this.props.location.state.bankAccountId
+																		? this.props.location.state.bankAccountId
+																		: '',
+															},
+														)
+													}
+												>
+													<i className="fas fa-edit mr-1" />
+													Reconcile
+												</Button>
 											</ButtonGroup>
 										</div>
 										<div className="py-3">
@@ -636,26 +679,61 @@ class BankTransactions extends React.Component {
 												</Col>
 											</Row>
 										</div>
-										<Button
-											color="primary"
-											className="btn-square"
-											style={{ marginBottom: '10px' }}
-											onClick={() =>
-												this.props.history.push(
-													'/admin/banking/bank-account/transaction/create',
-													{
-														bankAccountId:
-															this.props.location.state &&
-															this.props.location.state.bankAccountId
-																? this.props.location.state.bankAccountId
-																: '',
-													},
-												)
-											}
-										>
-											<i className="fas fa-plus mr-1" />
-											Add New Transaction
-										</Button>
+										<div className="d-flex justify-content-between">
+											<Nav tabs>
+												<NavItem>
+													<NavLink
+														active={this.state.activeTab[0] === 'all'}
+														onClick={() => {
+															this.toggle(0, 'all');
+														}}
+													>
+														All
+													</NavLink>
+												</NavItem>
+												<NavItem>
+													<NavLink
+														active={this.state.activeTab[0] === 'not_explain'}
+														onClick={() => {
+															this.toggle(0, 'not_explain');
+														}}
+													>
+														Not Explained
+													</NavLink>
+												</NavItem>
+												<NavItem>
+													<NavLink
+														active={
+															this.state.activeTab[0] === 'potential_duplicate'
+														}
+														onClick={() => {
+															this.toggle(0, 'potential_duplicate');
+														}}
+													>
+														Potential Duplicate
+													</NavLink>
+												</NavItem>
+											</Nav>
+											<Button
+												color="primary"
+												className="btn-square"
+												onClick={() =>
+													this.props.history.push(
+														'/admin/banking/bank-account/transaction/create',
+														{
+															bankAccountId:
+																this.props.location.state &&
+																this.props.location.state.bankAccountId
+																	? this.props.location.state.bankAccountId
+																	: '',
+														},
+													)
+												}
+											>
+												<i className="fas fa-plus mr-1" />
+												Add New Transaction
+											</Button>
+										</div>
 										<div>
 											<BootstrapTable
 												keyField="id"

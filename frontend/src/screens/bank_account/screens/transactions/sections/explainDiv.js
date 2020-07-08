@@ -855,7 +855,7 @@ class explainDiv extends React.Component {
 												this.moreDetails();
 											}}
 										>
-											More Details >>
+											More Details
 										</p>
 									) : (
 										<p
@@ -864,7 +864,7 @@ class explainDiv extends React.Component {
 												this.lessDetails();
 											}}
 										>
-											Less Details >>
+											Less Details
 										</p>
 									)}
 								</div>

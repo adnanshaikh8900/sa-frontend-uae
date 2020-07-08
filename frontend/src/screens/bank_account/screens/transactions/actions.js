@@ -12,11 +12,11 @@ export const getTransactionList = (obj) => {
 	let pageNo = obj.pageNo ? obj.pageNo : '';
 	let pageSize = obj.pageSize ? obj.pageSize : '';
 	let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false;
+	let transactionType = obj.transactionType ? obj.transactionType : '';
 
-	let param = `/rest/transaction/list?bankId=${id}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`;
+	let param = `/rest/transaction/list?bankId=${id}&transactionType=${transactionType}&chartOfAccountId=${chartOfAccountId}&pageNo=${pageNo}&pageSize=${pageSize}&paginationDisable=${paginationDisable}`;
 	if (transactionDate !== '') {
 		let date = moment(transactionDate).format('DD-MM-YYYY');
-		console.log(date);
 		param = param + `&transactionDate=${date}`;
 	}
 	return (dispatch) => {

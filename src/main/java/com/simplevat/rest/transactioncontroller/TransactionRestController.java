@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.simplevat.entity.*;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.*;
+import com.simplevat.service.impl.TransactionCategoryClosingBalanceServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,9 @@ public class TransactionRestController {
 	private TransactionService transactionService;
 
 	@Autowired
+	TransactionCategoryClosingBalanceServiceImpl transactionCategoryClosingBalanceService;
+
+	@Autowired
 	private BankAccountService bankAccountService;
 
 	@Autowired
@@ -108,9 +112,6 @@ public class TransactionRestController {
 
 	@Autowired
 	private VatCategoryService vatCategoryService;
-
-	@Autowired
-	private EmployeeService employeeService;
 
 	@Autowired
 	private ContactService contactService;
@@ -163,6 +164,21 @@ public class TransactionRestController {
 
 		if (filterModel.getBankId() != null) {
 			dataMap.put(TransactionFilterEnum.BANK_ID, bankAccountService.findByPK(filterModel.getBankId()));
+		}
+		if(filterModel.getTransactionType()!=null)
+		{String transactionType = filterModel.getTransactionType();
+			if(transactionType.equalsIgnoreCase("POTENTIAL_DUPLICATE"))
+			{
+				dataMap.put(TransactionFilterEnum.CREATION_MODE, TransactionCreationMode.POTENTIAL_DUPLICATE);
+			}
+			else if(transactionType.equalsIgnoreCase("NOT_EXPLAIN"))
+			{
+				dataMap.put(TransactionFilterEnum.TRANSACTION_EXPLINATION_STATUS, TransactionExplinationStatusEnum.NOT_EXPLAIN);
+			}
+			else
+			{
+				dataMap.put(TransactionFilterEnum.TRANSACTION_EXPLINATION_STATUS_IN, TransactionExplinationStatusEnum.NOT_EXPLAIN);
+			}
 		}
 		if (filterModel.getTransactionDate() != null) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -271,6 +287,10 @@ public class TransactionRestController {
 			default:
 				return new ResponseEntity<>("Chart of Category Id not sent correctly", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		if(transactionPresistModel.getIsValidForClosingBalance())
+		{
+			transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
+		}
 		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
 
 	}
@@ -352,6 +372,10 @@ public class TransactionRestController {
 			default:
 				return new ResponseEntity<>("Chart of Category Id not sent correctly", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		if(transactionPresistModel.getIsValidForClosingBalance())
+		{
+			transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
+		}
 		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
 	}
 
@@ -400,13 +424,7 @@ public class TransactionRestController {
 				customerInvoiceReceiptService.persist(customerInvoiceReceipt);
 			}
 			// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
-			TransactionStatus status = new TransactionStatus();
-			status.setCreatedBy(userId);
-			status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
-			status.setTransaction(trnx);
-			status.setRemainingToExplain(explainParam.getRemainingInvoiceAmount());
-			status.setInvoice(invoiceEntity);
-			transactionStatusService.persist(status);
+			createTransactionStatus(userId, trnx, explainParam, invoiceEntity);
 		}
 	}
 
@@ -455,14 +473,18 @@ public class TransactionRestController {
 				supplierInvoicePaymentService.persist(supplierInvoicePayment);
 			}
 			// CREATE MAPPING BETWEEN TRANSACTION AND JOURNAL
-			TransactionStatus status = new TransactionStatus();
-			status.setCreatedBy(userId);
-			status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
-			status.setTransaction(trnx);
-			status.setRemainingToExplain(explainParam.getRemainingInvoiceAmount());
-			status.setInvoice(invoiceEntity);
-			transactionStatusService.persist(status);
+			createTransactionStatus(userId, trnx, explainParam, invoiceEntity);
 		}
+	}
+
+	private void createTransactionStatus(Integer userId, Transaction trnx, ReconsileRequestLineItemModel explainParam, Invoice invoiceEntity) {
+		TransactionStatus status = new TransactionStatus();
+		status.setCreatedBy(userId);
+		status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+		status.setTransaction(trnx);
+		status.setRemainingToExplain(explainParam.getRemainingInvoiceAmount());
+		status.setInvoice(invoiceEntity);
+		transactionStatusService.persist(status);
 	}
 
 	/**
@@ -494,14 +516,14 @@ public class TransactionRestController {
 	 */
 	private void explainExpenses(@ModelAttribute TransactionPresistModel transactionPresistModel, Integer userId, Transaction trnx) {
 		//create new expenses
-		Expense expense =  createNewExpense(transactionPresistModel,userId);
+		//Expense expense =  createNewExpense(transactionPresistModel,userId);
 		// create Journal entry for Expense
 		//Chart of account in expense and user
-		Journal journal = getJournalEntryForExpense(transactionPresistModel,expense,userId);
-		journalService.persist(journal);
+		//Journal journal = getJournalEntryForExpense(transactionPresistModel,expense,userId);
+		//journalService.persist(journal);
 		int transactionCategoryId = 0;
 		if(transactionPresistModel.getTransactionCategoryId()==null) {
-			transactionCategoryId = TransactionCategoryConsatant.TRANSACTION_EMPLOYEE_REIMBURSEMENTS;
+			transactionCategoryId = transactionPresistModel.getExpenseCategory();//TransactionCategoryConsatant.TRANSACTION_EMPLOYEE_REIMBURSEMENTS;
 			TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryId);
 			trnx.setExplainedTransactionCategory(transactionCategory);
 		}
@@ -513,8 +535,9 @@ public class TransactionRestController {
 		updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 		// create Journal entry for Transaction explanation
 		//Employee reimbursement and bank
-		journal = reconsilationRestHelper.getByTransactionType(transactionCategoryId,
-				transactionPresistModel.getAmount(), userId, trnx);
+		Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel,transactionCategoryId
+				, userId, trnx);
+
 		journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 				transactionPresistModel.getDATE_FORMAT()));
 		journalService.persist(journal);
@@ -616,6 +639,18 @@ public class TransactionRestController {
 		transactionService.persist(trnx);
 	}
 	private void updateTransactionForMoneyReceived(Transaction trnx, TransactionPresistModel transactionPresistModel) {
+		updateTransactionDetails(trnx, transactionPresistModel);
+		if (transactionPresistModel.getAttachmentFile() != null
+				&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
+			String filePath = saveFileAttachment(transactionPresistModel.getAttachmentFile(),FileTypeEnum.TRANSATION);
+			trnx.setExplainedTransactionAttachmentFileName(
+					transactionPresistModel.getAttachmentFile().getOriginalFilename());
+			trnx.setExplainedTransactionAttachmentPath(filePath);
+		}
+		transactionService.persist(trnx);
+	}
+
+	private void updateTransactionDetails(Transaction trnx, TransactionPresistModel transactionPresistModel) {
 		trnx.setDebitCreditFlag('C');
 		if (transactionPresistModel.getDescription() != null) {
 			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
@@ -627,14 +662,6 @@ public class TransactionRestController {
 				&& !transactionPresistModel.getReference().isEmpty()) {
 			trnx.setReferenceStr(transactionPresistModel.getReference());
 		}
-		if (transactionPresistModel.getAttachmentFile() != null
-				&& !transactionPresistModel.getAttachmentFile().isEmpty()) {
-			String filePath = saveFileAttachment(transactionPresistModel.getAttachmentFile(),FileTypeEnum.TRANSATION);
-			trnx.setExplainedTransactionAttachmentFileName(
-					transactionPresistModel.getAttachmentFile().getOriginalFilename());
-			trnx.setExplainedTransactionAttachmentPath(filePath);
-		}
-		transactionService.persist(trnx);
 	}
 
 	private void updateTransactionForSupplierInvoices(Transaction trnx, TransactionPresistModel transactionPresistModel) {
@@ -666,17 +693,7 @@ public class TransactionRestController {
 		transactionService.persist(trnx);
 	}
 	private void updateTransactionForCustomerInvoices(Transaction trnx, TransactionPresistModel transactionPresistModel) {
-		trnx.setDebitCreditFlag('C');
-		if (transactionPresistModel.getDescription() != null) {
-			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
-		}
-		if (transactionPresistModel.getBankId() != null) {
-			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
-		}
-		if (transactionPresistModel.getReference() != null
-				&& !transactionPresistModel.getReference().isEmpty()) {
-			trnx.setReferenceStr(transactionPresistModel.getReference());
-		}
+		updateTransactionDetails(trnx, transactionPresistModel);
 		if (transactionPresistModel.getVatId() != null) {
 			trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
 		}
@@ -697,9 +714,17 @@ public class TransactionRestController {
 		Transaction trnx = null;
 		if(transactionPresistModel.getTransactionId()!=null) {
 			trnx = transactionService.findByPK(transactionPresistModel.getTransactionId());
+			if(trnx.getTransactionExplinationStatusEnum()!=TransactionExplinationStatusEnum.FULL)
+			{
+				transactionPresistModel.setIsValidForClosingBalance(true);
+//				transactionCategoryClosingBalanceService.updateRunningBalance(trnx.getCreatedBy(),trnx.getBankAccount().getTransactionCategory(),
+//						dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+//								transactionPresistModel.getDATE_FORMAT()),trnx.getTransactionAmount())
+			}
 		}
 		else{
 			trnx = new Transaction();
+			transactionPresistModel.setIsValidForClosingBalance(true);
 		}
 
 		trnx.setLastUpdateBy(userId);

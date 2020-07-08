@@ -9,7 +9,9 @@ public enum TransactionFilterEnum {
 	TRANSACTION_STATUS("transactionStatus"," =:transactionStatus"),
     DELETE_FLAG("deleteFlag", " = :deleteFlag"),
     ORDER_BY("transactionId", " = :transactionId"),
-    USER_ID("createdBy", "= :createdBy");
+    CREATION_MODE("creationMode", "= :creationMode"),
+    TRANSACTION_EXPLINATION_STATUS("transactionExplinationStatusEnum", "= :transactionExplinationStatusEnum"),
+    TRANSACTION_EXPLINATION_STATUS_IN("transactionExplinationStatusEnum", " != :transactionExplinationStatusEnum");
 
     @Getter
     String dbColumnName;

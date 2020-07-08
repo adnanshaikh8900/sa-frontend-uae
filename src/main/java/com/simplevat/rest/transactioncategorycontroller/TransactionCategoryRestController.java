@@ -105,6 +105,18 @@ public class TransactionCategoryRestController{
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@ApiOperation(value = "Get All Transaction Categories for export")
+	@GetMapping(value = "/getExportList")
+	public ResponseEntity<List<TransactionCategoryExportModel>> getAllTransactionCategoryForExport(HttpServletRequest request) {
+		List<TransactionCategory> response = transactionCategoryService.findAllTransactionCategory();
+		if (response == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		List<TransactionCategoryExportModel> exportList  = transcationCategoryHelper.getExportListModel(response);
+
+		return new ResponseEntity(exportList, HttpStatus.OK);
+	}
+
 	@ApiOperation(value = "Get Transaction Category By ID")
 	@GetMapping(value = "/getTransactionCategoryById")
 	public ResponseEntity<TransactionCategoryModel> getTransactionCategoryById(@RequestParam("id") Integer id) {

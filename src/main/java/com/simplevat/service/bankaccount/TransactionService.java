@@ -3,6 +3,7 @@ package com.simplevat.service.bankaccount;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.model.TransactionReportRestModel;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -91,5 +92,13 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
 
 	public abstract PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,
 			PaginationModel paginationModel);
+
+    public abstract Integer isTransactionsReadyForReconcile(LocalDateTime reconcileDate, LocalDateTime reconcileDate1, Integer bankId);
+
+	public abstract LocalDateTime getTransactionStartDateToReconcile(LocalDateTime reconcileDate, Integer bankId);
+
+	public abstract String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId);
+
+	public abstract Boolean matchClosingBalanceForReconcile(LocalDateTime reconcileDate, BigDecimal closingBalance, Integer bankId);
 
 }

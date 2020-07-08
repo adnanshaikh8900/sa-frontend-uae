@@ -61,4 +61,5 @@ public class TransactionPresistModel implements Serializable {
 	//for view 
 	private String transactionCategoryLabel;
 
+	private Boolean isValidForClosingBalance;
 }

@@ -299,8 +299,8 @@ public class DataListController {
 							iterator.remove();
 						}
 					}
-					modelList.add(new DropdownModel(10, "Create Expense"));
-					modelList.add(new DropdownModel(10, "Supplier Invoice"));
+					modelList.add(new DropdownModel(10, "Expense"));
+					modelList.add(new DropdownModel(100, "Supplier Invoice"));
 
 				}
 					assert parentCategory != null;

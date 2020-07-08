@@ -5,6 +5,7 @@
  */
 package com.simplevat.helper;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -12,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.simplevat.constant.TransactionCategoryCodeEnum;
+import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PostingRequestModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +24,6 @@ import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.ExpenseStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
-import com.simplevat.entity.Expense;
-import com.simplevat.entity.Invoice;
 import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.expensescontroller.ExpenseListModel;
 import com.simplevat.rest.expensescontroller.ExpenseModel;
@@ -95,7 +98,13 @@ public class ExpenseRestHelper {
 			expenseBuilder.transactionCategory(transactionCategoryService.findByPK(model.getExpenseCategory()));
 		}
 		if (model.getVatCategoryId() != null) {
-			expenseBuilder.vatCategory(vatCategoryService.findByPK(model.getVatCategoryId()));
+			VatCategory vatCategory = vatCategoryService.findByPK(model.getVatCategoryId());
+			expenseBuilder.vatCategory(vatCategory);
+			Float vatPercent = vatCategory.getVat().floatValue();
+			Float expenseAmount = model.getExpenseAmount().floatValue();
+			BigDecimal vatAmount = calculateVatAmount(vatPercent,expenseAmount);
+			BigDecimal totalExpenseAmount = BigDecimal.valueOf(model.getExpenseAmount().floatValue() + vatAmount.floatValue());
+			expenseBuilder.expenseAmount(totalExpenseAmount);
 		}
 		expenseBuilder.payMode(model.getPayMode());
 
@@ -105,7 +114,81 @@ public class ExpenseRestHelper {
 
 		return expenseBuilder.build();
 	}
+	public Journal expensePosting(PostingRequestModel postingRequestModel, Integer userId)
+	{
+		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
+		Journal journal = new Journal();
+		JournalLineItem journalLineItem1 = new JournalLineItem();
+		Expense expense = expenseService.findByPK(postingRequestModel.getPostingRefId());
+		switch(expense.getPayMode())
+		{
+			case BANK:
+				TransactionCategory transactionCategory = expense.getBankAccount().getTransactionCategory();
+				journalLineItem1.setTransactionCategory(transactionCategory);
+				break;
+			case CASH:
+				transactionCategory = transactionCategoryService
+						.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.PETTY_CASH.getCode());
+				journalLineItem1.setTransactionCategory(transactionCategory);
+				break;
+			default:
+				transactionCategory = transactionCategoryService
+						.findTransactionCategoryByTransactionCategoryCode(
+								TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
+				journalLineItem1.setTransactionCategory(transactionCategory);
+				break;
+		}
+		journalLineItem1.setCreditAmount(postingRequestModel.getAmount());
+		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
+		journalLineItem1.setCreatedBy(userId);
+		journalLineItem1.setJournal(journal);
+		journalLineItemList.add(journalLineItem1);
+
+		JournalLineItem journalLineItem2 = new JournalLineItem();
+		TransactionCategory saleTransactionCategory = transactionCategoryService
+				.findByPK(postingRequestModel.getPostingChartOfAccountId());
+		journalLineItem2.setTransactionCategory(saleTransactionCategory);
+		journalLineItem2.setDebitAmount(postingRequestModel.getAmount());
+		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journalLineItem2.setReferenceId(postingRequestModel.getPostingRefId());
+		journalLineItem2.setCreatedBy(userId);
+		journalLineItem2.setJournal(journal);
+		journalLineItemList.add(journalLineItem2);
+		if (expense.getVatCategory()!=null) {
+			VatCategory vatCategory = expense.getVatCategory();
+			BigDecimal vatPercent =  vatCategory.getVat();
+			BigDecimal vatAmount = calculateActualVatAmount(vatPercent,expense.getExpenseAmount());
+			BigDecimal actualDebitAmount = BigDecimal.valueOf(expense.getExpenseAmount().floatValue()-vatAmount.floatValue());
+			journalLineItem2.setDebitAmount(actualDebitAmount);
+			JournalLineItem journalLineItem = new JournalLineItem();
+			TransactionCategory inputVatCategory = transactionCategoryService
+					.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.INPUT_VAT.getCode());
+			journalLineItem.setTransactionCategory(inputVatCategory);
+			journalLineItem.setDebitAmount(vatAmount);
+			journalLineItem.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
+			journalLineItem.setReferenceId(postingRequestModel.getPostingRefId());
+			journalLineItem.setCreatedBy(userId);
+			journalLineItem.setJournal(journal);
+			journalLineItemList.add(journalLineItem);
+		}
+		journal.setJournalLineItems(journalLineItemList);
+		journal.setCreatedBy(userId);
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journal.setJournalDate(LocalDateTime.now());
+		return journal;
+	}
+
+	private BigDecimal calculateActualVatAmount(BigDecimal vatPercent, BigDecimal expenseAmount) {
+		float vatPercentFloat = vatPercent.floatValue()+100;
+		float expenseAmountFloat = expenseAmount.floatValue()/vatPercentFloat * 100;
+		return BigDecimal.valueOf(expenseAmount.floatValue()-expenseAmountFloat);
+	}
+
+	private BigDecimal calculateVatAmount(Float vatPercent, Float expenseAmount) {
+		return BigDecimal.valueOf(expenseAmount * (vatPercent/100));
+	}
 	public ExpenseModel getExpenseModel(Expense entity) {
 		try {
 			ExpenseModel expenseModel = new ExpenseModel();

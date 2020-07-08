@@ -5,33 +5,27 @@
  */
 package com.simplevat.dao.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.simplevat.constant.DatatableSortingFilterConstant;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.PaymentFilterEnum;
-import com.simplevat.dao.AbstractDao;
-import com.simplevat.dao.InvoiceDao;
-import com.simplevat.dao.JournalDao;
-import com.simplevat.dao.JournalLineItemDao;
-import com.simplevat.dao.PaymentDao;
-import com.simplevat.dao.SupplierInvoicePaymentDao;
+import com.simplevat.dao.*;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.Payment;
 import com.simplevat.entity.SupplierInvoicePayment;
 import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -76,20 +70,7 @@ public class PaymentDaoImpl extends AbstractDao<Integer, Payment> implements Pay
 				Payment payment = findByPK(id);
 
 				// Delete middle tabe mapping and update invoice stats as post/partially paid
-				List<SupplierInvoicePayment> receiptEntryList = supplierInvoicePaymentDao.findForPayment(id);
-				if (receiptEntryList != null && !receiptEntryList.isEmpty()) {
-					for (SupplierInvoicePayment receiptEntry : receiptEntryList) {
-						Invoice invoice = receiptEntry.getSupplierInvoice();
-						BigDecimal remainingAmt = invoice.getTotalAmount().subtract(payment.getInvoiceAmount());
-
-						invoice.setStatus(
-								remainingAmt.compareTo(BigDecimal.ZERO) == 0 ? InvoiceStatusEnum.POST.getValue()
-										: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
-						invoiceDao.update(invoice);
-						receiptEntry.setDeleteFlag(Boolean.TRUE);
-						supplierInvoicePaymentDao.update(receiptEntry);
-					}
-				}
+				deleteupdatestatus(id, payment);
 
 				// delete related journal
 				Map<String, Object> param = new HashMap<>();
@@ -107,6 +88,23 @@ public class PaymentDaoImpl extends AbstractDao<Integer, Payment> implements Pay
 				// delete payment
 				payment.setDeleteFlag(Boolean.TRUE);
 				update(payment);
+			}
+		}
+	}
+
+	private void deleteupdatestatus(Integer id, Payment payment) {
+		List<SupplierInvoicePayment> receiptEntryList = supplierInvoicePaymentDao.findForPayment(id);
+		if (receiptEntryList != null && !receiptEntryList.isEmpty()) {
+			for (SupplierInvoicePayment receiptEntry : receiptEntryList) {
+				Invoice invoice = receiptEntry.getSupplierInvoice();
+				BigDecimal remainingAmt = invoice.getTotalAmount().subtract(payment.getInvoiceAmount());
+
+				invoice.setStatus(
+						remainingAmt.compareTo(BigDecimal.ZERO) == 0 ? InvoiceStatusEnum.POST.getValue()
+								: InvoiceStatusEnum.PARTIALLY_PAID.getValue());
+				invoiceDao.update(invoice);
+				receiptEntry.setDeleteFlag(Boolean.TRUE);
+				supplierInvoicePaymentDao.update(receiptEntry);
 			}
 		}
 	}

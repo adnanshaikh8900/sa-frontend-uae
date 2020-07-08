@@ -59,7 +59,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                 param = new HashMap<>();
                 param.put("transactionCategory", category);
                 TransactionCategoryClosingBalance lastBalance = getLastElement(findByAttributes(param));
-                if(lastBalance == null) {
+                if(lastBalance == null && balance != null) {
                     balance = new TransactionCategoryClosingBalance();
                     balance.setTransactionCategory(category);
                     balance.setCreatedBy(transaction.getCreatedBy());
@@ -68,7 +68,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     balance.setClosingBalanceDate(transaction.getTransactionDate());
                     balanceList.add(balance);
                 }
-                else
+                else if(lastBalance != null)
                 {
                     balance = new TransactionCategoryClosingBalance();
                     balance.setTransactionCategory(lastBalance.getTransactionCategory());
@@ -84,6 +84,17 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                         balanceList.addAll(upperbalanceList);
                         isUpdateOpeningBalance = true;
                     }
+                }
+                else
+                {
+                    balance = new TransactionCategoryClosingBalance();
+                    balance.setTransactionCategory(category);
+                    balance.setCreatedBy(transaction.getCreatedBy());
+                    balance.setOpeningBalance(transactionAmount);
+                    balance.setEffectiveDate(new Date());
+                    balance.setClosingBalanceDate(transaction.getTransactionDate());
+                    balance.setClosingBalance(transactionAmount);
+                    balanceList.add(balance);
                 }
             }
             else

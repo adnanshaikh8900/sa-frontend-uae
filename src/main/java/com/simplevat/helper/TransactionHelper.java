@@ -5,27 +5,12 @@
  */
 package com.simplevat.helper;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.PayMode;
 import com.simplevat.constant.PostingReferenceTypeEnum;
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.Expense;
-import com.simplevat.entity.Invoice;
-import com.simplevat.entity.Payment;
-import com.simplevat.entity.Receipt;
-import com.simplevat.entity.TransactionExpenses;
+import com.simplevat.entity.*;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.entity.TransactionStatus;
 import com.simplevat.rest.ReconsileRequestLineItemModel;
 import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
 import com.simplevat.rest.transactioncontroller.TransactionViewModel;
@@ -34,6 +19,13 @@ import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.service.TransactionExpensesService;
 import com.simplevat.service.bankaccount.TransactionStatusService;
 import com.simplevat.utils.DateFormatUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

@@ -330,10 +330,11 @@ public class ReconsilationRestHelper {
 		List<ReconcileStatusListModel> reconcileStatusModelList = new ArrayList<>();
 		for (ReconcileStatus reconcileStatus : (List<ReconcileStatus>) reconcileStatusList) {
 			ReconcileStatusListModel reconcileStatusListModel = new ReconcileStatusListModel();
+			reconcileStatusListModel.setReconcileId(reconcileStatus.getReconcileId());
 			reconcileStatusListModel.setReconciledDate(reconcileStatus.getReconciledDate() != null
 					? dateUtil.getLocalDateTimeAsString(reconcileStatus.getReconciledDate(), "dd-MM-yyyy")
 					: "-");
-			reconcileStatusListModel.setClosingBalance(reconcileStatus.getClosingBalance());
+		    reconcileStatusListModel.setClosingBalance(reconcileStatus.getClosingBalance());
 			reconcileStatusListModel.setReconciledDuration(reconcileStatus.getReconciledDuration());
 			reconcileStatusModelList.add(reconcileStatusListModel);
 		}

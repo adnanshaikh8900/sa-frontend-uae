@@ -58,7 +58,8 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             if (balance == null) {
                 param = new HashMap<>();
                 param.put("transactionCategory", category);
-                TransactionCategoryClosingBalance lastBalance = getLastElement(findByAttributes(param));
+                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getClosingBalanceLessThanCurrentDate(transaction.getTransactionDate()
+                        ,category);//getLastElement(findByAttributes(param));
                 if(lastBalance == null && balance != null) {
                     balance = new TransactionCategoryClosingBalance();
                     balance.setTransactionCategory(category);
@@ -90,11 +91,17 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     balance = new TransactionCategoryClosingBalance();
                     balance.setTransactionCategory(category);
                     balance.setCreatedBy(transaction.getCreatedBy());
-                    balance.setOpeningBalance(transactionAmount);
+                    balance.setOpeningBalance(BigDecimal.ZERO);
                     balance.setEffectiveDate(new Date());
                     balance.setClosingBalanceDate(transaction.getTransactionDate());
-                    balance.setClosingBalance(transactionAmount);
+                    balance.setClosingBalance(BigDecimal.ZERO);
                     balanceList.add(balance);
+                    List<TransactionCategoryClosingBalance> upperbalanceList = transactionCategoryClosingBalanceDao.
+                            getClosingBalanceGreaterThanCurrentDate(balance.getClosingBalanceDate(),balance.getTransactionCategory());
+                    if(upperbalanceList.size() > 0) {
+                        balanceList.addAll(upperbalanceList);
+                        isUpdateOpeningBalance = true;
+                    }
                 }
             }
             else

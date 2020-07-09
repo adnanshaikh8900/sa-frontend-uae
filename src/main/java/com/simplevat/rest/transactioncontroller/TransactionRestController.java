@@ -372,7 +372,7 @@ public class TransactionRestController {
 			default:
 				return new ResponseEntity<>("Chart of Category Id not sent correctly", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		if(transactionPresistModel.getIsValidForClosingBalance())
+		if(transactionPresistModel.getIsValidForClosingBalance()!=null && transactionPresistModel.getIsValidForClosingBalance())
 		{
 			transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
 		}
@@ -516,11 +516,11 @@ public class TransactionRestController {
 	 */
 	private void explainExpenses(@ModelAttribute TransactionPresistModel transactionPresistModel, Integer userId, Transaction trnx) {
 		//create new expenses
-		//Expense expense =  createNewExpense(transactionPresistModel,userId);
+		Expense expense =  createNewExpense(transactionPresistModel,userId);
 		// create Journal entry for Expense
 		//Chart of account in expense and user
-		//Journal journal = getJournalEntryForExpense(transactionPresistModel,expense,userId);
-		//journalService.persist(journal);
+		Journal journal = getJournalEntryForExpense(transactionPresistModel,expense,userId);
+		journalService.persist(journal);
 		int transactionCategoryId = 0;
 		if(transactionPresistModel.getTransactionCategoryId()==null) {
 			transactionCategoryId = transactionPresistModel.getExpenseCategory();//TransactionCategoryConsatant.TRANSACTION_EMPLOYEE_REIMBURSEMENTS;
@@ -535,7 +535,7 @@ public class TransactionRestController {
 		updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 		// create Journal entry for Transaction explanation
 		//Employee reimbursement and bank
-		Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel,transactionCategoryId
+		 journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel,transactionCategoryId
 				, userId, trnx);
 
 		journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
@@ -812,6 +812,18 @@ public class TransactionRestController {
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@ApiOperation(value = "Update Transaction Status")
+	@PostMapping(value = "/changestatus")
+	public ResponseEntity<String> updateTransactions(@RequestBody DeleteModel ids) {
+		try {
+			transactionService.updateStatusByIds(ids.getIds(),TransactionCreationMode.POTENTIAL_DUPLICATE);
+			return new ResponseEntity<>("Transaction status mode updated successfully", HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 	@ApiOperation(value = "Get Transaction By ID")
 	@GetMapping(value = "/getById")
 	public ResponseEntity<TransactionPresistModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
@@ -834,4 +846,6 @@ public class TransactionRestController {
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+
 }

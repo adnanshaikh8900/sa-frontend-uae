@@ -365,7 +365,11 @@ public class TransactionServiceImpl extends TransactionService {
 	public void deleteByIds(ArrayList<Integer> ids) {
 		transactionDao.deleteByIds(ids);
 	}
-
+	@Override
+	public  void updateStatusByIds(ArrayList<Integer> ids, TransactionCreationMode potentialDuplicate)
+	{
+		transactionDao.updateStatusByIds(ids,potentialDuplicate);
+	}
 	@Override
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,
 			PaginationModel paginationModel) {

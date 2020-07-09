@@ -1,9 +1,6 @@
 package com.simplevat.dao.impl.bankaccount;
 
-import com.simplevat.constant.BankAccountConstant;
-import com.simplevat.constant.CommonColumnConstants;
-import com.simplevat.constant.TransactionExplinationStatusEnum;
-import com.simplevat.constant.TransactionStatusConstant;
+import com.simplevat.constant.*;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.model.TransactionReportRestModel;
@@ -488,6 +485,16 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			for (Integer id : ids) {
 				Transaction trnx = findByPK(id);
 				trnx.setDeleteFlag(Boolean.TRUE);
+				update(trnx);
+			}
+		}
+	}
+	public void updateStatusByIds(ArrayList<Integer> ids, TransactionCreationMode potentialDuplicate)
+	{
+		if (ids != null && !ids.isEmpty()) {
+			for (Integer id : ids) {
+				Transaction trnx = findByPK(id);
+				trnx.setCreationMode(potentialDuplicate);
 				update(trnx);
 			}
 		}

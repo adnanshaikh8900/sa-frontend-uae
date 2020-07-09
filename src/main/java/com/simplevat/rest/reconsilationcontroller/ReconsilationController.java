@@ -183,7 +183,7 @@ public class ReconsilationController {
 		if (filterModel.getBankId() != null) {
 			dataMap.put(TransactionFilterEnum.BANK_ID, bankAccountService.findByPK(filterModel.getBankId()));
 		}
-
+		dataMap.put(TransactionFilterEnum.DELETE_FLAG, false);
 		PaginationResponseModel response = reconcileStatusService.getAllReconcileStatusList(dataMap, filterModel);
 		if (response == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -232,12 +232,9 @@ public class ReconsilationController {
 			if (unexplainedTransaction == 0) {
 				//1 check if this matches with closing balance
 				BigDecimal closingBalance = reconcilationPersistModel.getClosingBalance();
-				;
 				BigDecimal dbClosingBalance = transactionCategoryClosingBalanceService.matchClosingBalanceForReconcile(reconcileDate,
 						bankAccountService.getBankAccountById(reconcilationPersistModel.getBankId()).getTransactionCategory());
-				boolean isClosingBalanceMatches = dbClosingBalance.equals(closingBalance);
-//				boolean isClosingBalanceMatches = transactionService.matchClosingBalanceForReconcile(reconcileDate,closingBalance,
-//						reconcilationPersistModel.getBankId());
+				boolean isClosingBalanceMatches = dbClosingBalance.compareTo(closingBalance)==0;
 				if (isClosingBalanceMatches) {
 					transactionService.updateTransactionStatusReconcile(startDate, reconcileDate, reconcilationPersistModel.getBankId());
 					ReconcileStatus reconcileStatus = new ReconcileStatus();

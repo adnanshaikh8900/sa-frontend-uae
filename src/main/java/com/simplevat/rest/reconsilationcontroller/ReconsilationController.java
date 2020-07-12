@@ -1,8 +1,10 @@
 
 package com.simplevat.rest.reconsilationcontroller;
 
+import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
 import com.simplevat.constant.ReconsileCategoriesEnumConstant;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.ChartOfAccountCategory;
 import com.simplevat.entity.bankaccount.ReconcileStatus;
@@ -236,7 +238,8 @@ public class ReconsilationController {
 						bankAccountService.getBankAccountById(reconcilationPersistModel.getBankId()).getTransactionCategory());
 				boolean isClosingBalanceMatches = dbClosingBalance.compareTo(closingBalance)==0;
 				if (isClosingBalanceMatches) {
-					transactionService.updateTransactionStatusReconcile(startDate, reconcileDate, reconcilationPersistModel.getBankId());
+					transactionService.updateTransactionStatusReconcile(startDate, reconcileDate, reconcilationPersistModel.getBankId(),
+							TransactionExplinationStatusEnum.FULL);
 					ReconcileStatus reconcileStatus = new ReconcileStatus();
 					reconcileStatus.setReconciledDate(reconcileDate);
 					reconcileStatus.setReconciledStartDate(startDate);
@@ -269,4 +272,15 @@ public class ReconsilationController {
 		}
 	}
 
+	@ApiOperation(value = "Delete Reconcile Status")
+	@DeleteMapping(value = "/deletes")
+	public ResponseEntity<String> deleteTransactions(@RequestBody DeleteModel ids) {
+		try {
+			reconcileStatusService.deleteByIds(ids.getIds());
+			return new ResponseEntity<>("Deleted reconcile status rows successfully", HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

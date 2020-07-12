@@ -54,6 +54,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 					+ "from Transaction t "
 					+ "where t.debitCreditFlag = 'c' and t.transactionDate BETWEEN :startDate AND :endDate "
 					+ (bankId != null ? " and t.bankAccount.bankAccountId =:bankId " : " ")
+					+" and t.transactionExplinationStatusEnum = 'FULL' "
 					+ "group by CONCAT(MONTH(t.transactionDate),'-' , Year(t.transactionDate))";
 
 			Query query = getEntityManager().createQuery(queryString)
@@ -566,9 +567,10 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		return transactionList.get(0).getTransactionDate();
 	}
 
-	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId)
+	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId,
+												   TransactionExplinationStatusEnum transactionExplinationStatusEnum)
 	{
-		StringBuilder queryBuilder = new StringBuilder("Update Transaction t set t.transactionExplinationStatusEnum = '").append(TransactionExplinationStatusEnum.RECONCILED)
+		StringBuilder queryBuilder = new StringBuilder("Update Transaction t set t.transactionExplinationStatusEnum = '").append(transactionExplinationStatusEnum)
 				.append("' WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <= :endDate");
 		Query query = getEntityManager().createQuery(queryBuilder.toString());
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);

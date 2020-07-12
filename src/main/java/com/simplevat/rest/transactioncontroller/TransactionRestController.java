@@ -535,7 +535,7 @@ public class TransactionRestController {
 		updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 		// create Journal entry for Transaction explanation
 		//Employee reimbursement and bank
-		 journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel,transactionCategoryId
+		journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel,transactionCategoryId
 				, userId, trnx);
 
 		journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
@@ -582,7 +582,9 @@ public class TransactionRestController {
 		Expense expense = new Expense();
 		expense.setStatus(ExpenseStatusEnum.PAID.getValue());
 		Expense.ExpenseBuilder expenseBuilder = expense.toBuilder();
-		expenseBuilder.expenseAmount(model.getAmount()).userId(userService.findByPK(model.getUserId()));
+		expenseBuilder.expenseAmount(model.getAmount());
+		if(model.getUserId()!=null)
+			expenseBuilder.userId(userService.findByPK(model.getUserId()));
 		if (model.getDate() != null) {
 			expenseBuilder.expenseDate(dateFormatUtil.getDateStrAsLocalDateTime(model.getDate(),
 					model.getDATE_FORMAT()));

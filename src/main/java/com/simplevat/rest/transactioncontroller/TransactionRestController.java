@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.service.*;
 import com.simplevat.service.impl.TransactionCategoryClosingBalanceServiceImpl;
@@ -291,8 +292,24 @@ public class TransactionRestController {
 		{
 			transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
 		}
+		updateBankCurrentBalance(trnx);
 		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
 
+	}
+
+	private void updateBankCurrentBalance(Transaction trnx) {
+		BankAccount bankAccount = trnx.getBankAccount();
+		BigDecimal currentBalance = trnx.getBankAccount().getCurrentBalance();
+		if (trnx.getDebitCreditFlag() == 'D')
+		{
+			currentBalance.subtract(trnx.getTransactionAmount());
+		}
+		else
+			{
+				currentBalance.add(trnx.getTransactionAmount());
+		}
+		bankAccount.setCurrentBalance(currentBalance);
+		bankAccountService.update(bankAccount);
 	}
 
 	@ApiOperation(value = "update Transaction", response = Transaction.class)

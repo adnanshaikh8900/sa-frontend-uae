@@ -54,10 +54,10 @@ public class CurrencyController {
 	UserService userServiceNew;
 
 	@ApiOperation(value = "Get Currency List", response = List.class)
-	@GetMapping
+	@GetMapping(value = "/getcurrency")
 	public ResponseEntity<List<Currency>> getCurrencies() {
 		try {
-			List<Currency> currencies = currencyService.getCurrencies();
+			List<Currency> currencies = currencyService.getCurrenciesProfile();
 			if (currencies != null && !currencies.isEmpty()) {
 				return new ResponseEntity<>(currencies, HttpStatus.OK);
 			} else {

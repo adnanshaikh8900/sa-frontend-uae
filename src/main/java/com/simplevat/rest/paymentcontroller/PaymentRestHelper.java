@@ -21,7 +21,6 @@ import com.simplevat.constant.FileTypeEnum;
 import com.simplevat.constant.InvoiceStatusEnum;
 import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
-import com.simplevat.entity.CustomerInvoiceReceipt;
 import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Journal;
 import com.simplevat.entity.JournalLineItem;
@@ -30,7 +29,6 @@ import com.simplevat.entity.SupplierInvoicePayment;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PostingRequestModel;
 import com.simplevat.rest.invoicecontroller.InvoiceDueAmountModel;
-import com.simplevat.rest.receiptcontroller.ReceiptRequestModel;
 import com.simplevat.service.ContactService;
 import com.simplevat.service.InvoiceService;
 import com.simplevat.service.JournalLineItemService;
@@ -188,7 +186,7 @@ public class PaymentRestHelper {
 
 	public Journal paymentPosting(PostingRequestModel postingRequestModel, Integer userId,
 			TransactionCategory depositeToTransactionCategory) {
-		List<JournalLineItem> journalLineItemList = new ArrayList<>();
+		List<JournalLineItem> journalLineItemList;
 
 		Map<String, Object> param = new HashMap<>();
 		param.put("referenceType", PostingReferenceTypeEnum.PAYMENT);

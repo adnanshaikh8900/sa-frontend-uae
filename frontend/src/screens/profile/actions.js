@@ -38,7 +38,7 @@ export const getCurrencyList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/bank/getcurrenncy'
+      url: 'rest/currency/getcurrency'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {

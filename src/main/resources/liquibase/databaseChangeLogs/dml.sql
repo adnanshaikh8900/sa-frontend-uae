@@ -5018,4 +5018,8 @@ INSERT INTO `COAC_TRANSACTION_CATEGORY` (`ID`, `CHART_OF_ACCOUNT_CATEGORY_ID`, `
 
 Delete From `COAC_TRANSACTION_CATEGORY` Where ID IN(1,3);
 
-
+--changeset 11/07/2020muzammil:dml-6
+UPDATE `bank_account_type` SET `NAME` = 'Saving' WHERE `bank_account_type`.`ID` = 1;
+UPDATE `bank_account_type` SET `NAME` = 'Current' WHERE `bank_account_type`.`ID` = 2;
+UPDATE `currency` SET `DELETE_FLAG` = b'1';
+DELETE FROM `coac_transaction_category` WHERE `ID` iN (90,91,92,93);

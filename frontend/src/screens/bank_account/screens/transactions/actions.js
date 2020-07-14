@@ -298,12 +298,11 @@ export const getChartOfCategoryList = (type) => {
 	};
 };
 
-export const getTransactionCategoryListForExplain = (id) => {
-	console.log(id);
+export const getTransactionCategoryListForExplain = (id, bankId) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`,
+			url: `rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}&bankId=${bankId}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -368,6 +367,23 @@ export const getVatList = () => {
 						payload: res.data,
 					});
 				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
+export const changeTransaction = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: 'rest/transaction/changestatus',
+			data: obj,
+		};
+		return authApi(data)
+			.then((res) => {
+				return res;
 			})
 			.catch((err) => {
 				throw err;

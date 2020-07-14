@@ -131,7 +131,6 @@ class ExplainTrasactionDetail extends React.Component {
 							);
 						}
 						if (this.state.initValue.vendorId) {
-							console.log(this.state.initValue.vendorId);
 							this.getSuggestionInvoicesFotVend(
 								this.state.initValue.vendorId,
 								this.state.initValue.amount,
@@ -178,7 +177,10 @@ class ExplainTrasactionDetail extends React.Component {
 		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
 		this.props.transactionsActions
-			.getTransactionCategoryListForExplain(type.value)
+			.getTransactionCategoryListForExplain(
+				type.value,
+				this.state.initValue.bankId,
+			)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState(
@@ -356,21 +358,6 @@ class ExplainTrasactionDetail extends React.Component {
 			),
 		});
 	};
-
-	// invoiceValidation = (value) => {
-	// 	if (value) {
-	// 		if (
-	// 			value.reduce(
-	// 				(totalAmount, invoice) => totalAmount + invoice.amount,
-	// 				0,
-	// 			) > this.state.initValue.amount
-	// 		) {
-	// 			return false;
-	// 		} else {
-	// 			return true;
-	// 		}
-	// 	}
-	// };
 	invoiceIdList = (option) => {
 		this.setState({
 			initValue: {
@@ -415,7 +402,6 @@ class ExplainTrasactionDetail extends React.Component {
 			customer_invoice_list,
 			vendor_invoice_list,
 			expense_categories_list,
-			user_list,
 			currency_list,
 			vendor_list,
 			vat_list,
@@ -460,16 +446,6 @@ class ExplainTrasactionDetail extends React.Component {
 														coaCategoryId: Yup.object().required(
 															'Transaction Type is Required',
 														),
-														// expenseCategory: Yup.string().required(
-														// 	'Expense Category is Required',
-														// ),
-														// currencyCode: Yup.string().required(
-														// 	'Currency Code is Required',
-														// ),
-														// vendorId: Yup.string().when('expenseType', {
-														// 	is: (item) => item.value === 'SUPPLIER',
-														// 	then: Yup.string().required('Vendor Is Required'),
-														// }),
 														invoiceIdList: Yup.string().when('coaCategoryId', {
 															is: (item) =>
 																item.label === 'Supplier Invoice' ||

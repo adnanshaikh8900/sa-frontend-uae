@@ -13,6 +13,10 @@ import {
 	Nav,
 	NavItem,
 	NavLink,
+	ButtonDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
 } from 'reactstrap';
 import Select from 'react-select';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -89,6 +93,8 @@ class BankTransactions extends React.Component {
 			page: 1,
 			activeTab: new Array(3).fill('all'),
 			transactionType: 'all',
+			nonexpand: [],
+			selected_id_list: [],
 		};
 
 		this.options = {
@@ -102,7 +108,6 @@ class BankTransactions extends React.Component {
 			mode: 'checkbox',
 			bgColor: 'rgba(0,0,0, 0.05)',
 			clickToSelect: true,
-			onSelect: this.onRowSelect,
 			onSelectAll: this.onSelectAll,
 		};
 		this.csvLink = React.createRef();
@@ -137,6 +142,11 @@ class BankTransactions extends React.Component {
 						this.setState({
 							loading: false,
 						});
+						res.data.data.map((item) => {
+							if (item.creationMode === 'POTENTIAL_DUPLICATE') {
+								this.state.nonexpand.push(item.id);
+							}
+						});
 					}
 				})
 				.catch((err) => {
@@ -151,38 +161,16 @@ class BankTransactions extends React.Component {
 		}
 	};
 
-	// toggleDangerModal () {
-	//   this.setState({
-	//     openDeleteModal: !this.state.openDeleteModal
-	//   })
-	// }
-
 	toggleActionButton = (row) => {
 		let temp = Object.assign({}, this.state.actionButtons);
-		if (temp[`${row.id}`]) {
-			temp[`${row.id}`] = false;
+		if (temp[parseInt(row, 10)]) {
+			temp[parseInt(row, 10)] = false;
 		} else {
-			temp[`${row.id}`] = true;
+			temp[parseInt(row, 10)] = true;
 		}
-		this.setState(
-			{
-				actionButtons: temp,
-				show: !this.state.show,
-				selectedData: row,
-			},
-			() => {
-				const activeClass = document.querySelector('.editTransactions');
-				const open = document.querySelector('.overlay');
-				const main = document.querySelector('.main');
-				open.classList.add('open');
-				main.classList.add('open');
-				if (activeClass.classList.contains('active')) {
-					activeClass.classList.remove('active');
-				} else {
-					activeClass.classList.add('active');
-				}
-			},
-		);
+		this.setState({
+			actionButtons: temp,
+		});
 	};
 
 	renderAccountNumber = (cell, row) => {
@@ -244,31 +232,7 @@ class BankTransactions extends React.Component {
 			show: !this.state.show,
 		});
 	}
-
-	onRowSelect = (row, isSelected, e) => {
-		console.log(isSelected);
-		let temp = Object.assign({}, this.state.actionButtons);
-		if (temp[`${row.id}`]) {
-			temp[`${row.id}`] = false;
-		} else {
-			temp[`${row.id}`] = true;
-		}
-		this.setState(
-			{
-				actionButtons: temp,
-				show: true,
-				selectedData: row,
-				selectedRow: row,
-			},
-			() => {
-				const activeClass = document.querySelector('.editTransactions');
-				const main = document.querySelector('.main');
-				main.classList.add('open');
-				activeClass.classList.add('active');
-			},
-		);
-	};
-	onSelectAll = (isSelected, rows) => {};
+	// onSelectAll = (isSelected, rows) => {};
 
 	toggle = (tabPane, tab) => {
 		const newArray = this.state.activeTab.slice();
@@ -440,6 +404,100 @@ class BankTransactions extends React.Component {
 		);
 	};
 
+	onRowSelect = (row) => {
+		let tempList = [];
+		if (row) {
+			tempList = Object.assign([], this.state.selected_id_list);
+			tempList.push(row);
+		} else {
+			this.state.selected_id_list.map((item) => {
+				if (item !== row) {
+					tempList.push(item);
+				}
+				return item;
+			});
+		}
+		this.setState(
+			{
+				selected_id_list: tempList,
+			},
+			() => {
+				let obj = {
+					ids: this.state.selected_id_list,
+				};
+				this.props.transactionsActions
+					.changeTransaction(obj)
+					.then(() => {
+						this.props.commonActions.tostifyAlert(
+							'success',
+							'Transaction status change successfully',
+						);
+						this.initializeData();
+						this.setState({
+							selected_id_list: [],
+						});
+					})
+					.catch((err) => {
+						this.props.commonActions.tostifyAlert(
+							'error',
+							err && err.data ? err.data.message : 'Something Went Wrong',
+						);
+					});
+			},
+		);
+	};
+
+	statusFormatter = (cell, row, extraData) => {
+		if (row.explinationStatusEnum === 'FULL') {
+			return <div>Explained</div>;
+		} else if (
+			row.explinationStatusEnum === 'NOT_EXPLAIN' &&
+			row.creationMode === 'IMPORT'
+		) {
+			return <div>Not Explained</div>;
+		} else if (row.creationMode === 'POTENTIAL_DUPLICATE') {
+			return (
+				<div>
+					<ButtonDropdown
+						isOpen={this.state.actionButtons[row.id]}
+						toggle={(e) => {
+							e.preventDefault();
+							this.toggleActionButton(row.id);
+						}}
+					>
+						<DropdownToggle
+							size="sm"
+							color="primary"
+							className="btn-brand icon"
+						>
+							{this.state.actionButtons[row.id] === true ? (
+								<i className="fas fa-chevron-up" />
+							) : (
+								<i className="fas fa-chevron-down" />
+							)}
+						</DropdownToggle>
+						<DropdownMenu right>
+							<DropdownItem
+								onClick={() => {
+									this.onRowSelect(row.id);
+								}}
+							>
+								<i className="fas fa-edit" /> Change Status
+							</DropdownItem>
+							<DropdownItem
+								onClick={() => {
+									this.closeTransaction(row.id);
+								}}
+							>
+								<i className="fa fa-trash" /> Delete
+							</DropdownItem>
+						</DropdownMenu>
+					</ButtonDropdown>
+				</div>
+			);
+		}
+	};
+
 	render() {
 		const {
 			loading,
@@ -450,16 +508,6 @@ class BankTransactions extends React.Component {
 			view,
 		} = this.state;
 		const { bank_transaction_list, transaction_type_list } = this.props;
-
-		function statusFormatter(cell, row) {
-			if (row.explinationStatusEnum === 'FULL') {
-				return <div>Explained</div>;
-			} else if (row.explinationStatusEnum === 'NOT_EXPLAIN') {
-				return <div>Not Explained</div>;
-			} else {
-				return <div>{row.explinationStatusEnum}</div>;
-			}
-		}
 
 		const columns = [
 			{
@@ -481,7 +529,8 @@ class BankTransactions extends React.Component {
 			{
 				dataField: 'explinationStatusEnum',
 				text: 'Status',
-				formatter: statusFormatter,
+				formatter: this.statusFormatter,
+				formatExtraData: this.state.actionButtons,
 			},
 		];
 		const expandRow = {
@@ -495,6 +544,7 @@ class BankTransactions extends React.Component {
 					selectedData={row}
 				/>
 			),
+			nonExpandable: this.state.nonexpand,
 			showExpandColumn: true,
 		};
 

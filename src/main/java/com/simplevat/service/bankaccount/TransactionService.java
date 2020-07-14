@@ -1,5 +1,7 @@
 package com.simplevat.service.bankaccount;
 
+import com.simplevat.constant.TransactionCreationMode;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.model.TransactionReportRestModel;
 
@@ -97,8 +99,9 @@ public abstract class TransactionService extends SimpleVatService<Integer, Trans
 
 	public abstract LocalDateTime getTransactionStartDateToReconcile(LocalDateTime reconcileDate, Integer bankId);
 
-	public abstract String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId);
+	public abstract String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId, TransactionExplinationStatusEnum full);
 
 	public abstract Boolean matchClosingBalanceForReconcile(LocalDateTime reconcileDate, BigDecimal closingBalance, Integer bankId);
 
+	public abstract void updateStatusByIds(ArrayList<Integer> ids, TransactionCreationMode potentialDuplicate);
 }

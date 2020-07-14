@@ -28,6 +28,22 @@ public class CurrencyServiceImpl extends CurrencyService {
 	}
 
 	@Override
+	public List<Currency> getCurrenciesProfile() {
+		return getDao().getCurrenciesProfile();
+	}
+
+
+	public void updateCurrencyProfile(Integer currencyCode){
+		Currency currentCurrency = getDefaultCurrency();
+		if(currentCurrency != null){
+			currentCurrency.setDeleteFlag(Boolean.TRUE);
+			getDao().update(currentCurrency);
+		}
+		Currency newCurrency = getCurrency(currencyCode);
+		newCurrency.setDeleteFlag(Boolean.FALSE);
+		getDao().update(newCurrency);
+	}
+	@Override
 	public Currency getCurrency(final int currencyCode) {
 		return getDao().getCurrency(currencyCode);
 	}
@@ -65,7 +81,7 @@ public class CurrencyServiceImpl extends CurrencyService {
 
 	@Override
 	public PaginationResponseModel getCurrencies(Map<CurrencyFilterEnum, Object> filterDataMap,
-			PaginationModel paginationModel) {
+												 PaginationModel paginationModel) {
 		return currencyDao.getCurrencies(filterDataMap, paginationModel);
 
 	}

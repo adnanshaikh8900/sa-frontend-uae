@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.simplevat.constant.TransactionCreationMode;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -365,7 +366,11 @@ public class TransactionServiceImpl extends TransactionService {
 	public void deleteByIds(ArrayList<Integer> ids) {
 		transactionDao.deleteByIds(ids);
 	}
-
+	@Override
+	public  void updateStatusByIds(ArrayList<Integer> ids, TransactionCreationMode potentialDuplicate)
+	{
+		transactionDao.updateStatusByIds(ids,potentialDuplicate);
+	}
 	@Override
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterModel,
 			PaginationModel paginationModel) {
@@ -381,9 +386,10 @@ public class TransactionServiceImpl extends TransactionService {
 		return transactionDao.getTransactionStartDateToReconcile(reconcileDate,bankId);
 	}
 	@Override
-	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId)
+	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId,
+												   TransactionExplinationStatusEnum transactionExplinationStatusEnum)
 	{
-		return transactionDao.updateTransactionStatusReconcile(startDate,reconcileDate,bankId);
+		return transactionDao.updateTransactionStatusReconcile(startDate,reconcileDate,bankId,transactionExplinationStatusEnum);
 	}
 	@Override
 	public Boolean matchClosingBalanceForReconcile(LocalDateTime reconcileDate, BigDecimal closingBalance, Integer bankId)

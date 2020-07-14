@@ -1,10 +1,13 @@
 package com.simplevat.dao.bankaccount;
 
+import com.simplevat.constant.TransactionCreationMode;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.model.TransactionReportRestModel;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -76,9 +79,12 @@ public interface TransactionDao extends Dao<Integer, Transaction> {
 
    public  LocalDateTime getTransactionStartDateToReconcile(LocalDateTime reconcileDate, Integer bankId);
 
-   public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId);
+   public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId,
+                                                  TransactionExplinationStatusEnum transactionExplinationStatusEnum);
 
   public  Boolean matchClosingBalanceForReconcile(LocalDateTime reconcileDate, BigDecimal closingBalance, Integer bankId);
 
    public boolean isAlreadyExistSimilarTransaction(BigDecimal transactionAmount, LocalDateTime transactionDate, BankAccount bankAccount);
+
+   public void updateStatusByIds(ArrayList<Integer> ids, TransactionCreationMode potentialDuplicate);
 }

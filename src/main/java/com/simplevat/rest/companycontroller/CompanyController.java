@@ -7,7 +7,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.entity.Currency;
 import com.simplevat.rest.DropdownModel;
+import com.simplevat.service.CurrencyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ public class CompanyController {
 
 	@Autowired
 	private CompanyService companyService;
+
+	@Autowired
+	private CurrencyService currencyService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -154,6 +159,7 @@ public class CompanyController {
 			company.setLastUpdateDate(LocalDateTime.now());
 			company.setLastUpdatedBy(userId);
 			companyService.update(company);
+			currencyService.updateCurrencyProfile(company.getCurrencyCode().getCurrencyCode());
 			return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

@@ -58,8 +58,9 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
             if (balance == null) {
                 param = new HashMap<>();
                 param.put("transactionCategory", category);
-                TransactionCategoryClosingBalance lastBalance = getLastElement(findByAttributes(param));
-                if(lastBalance == null) {
+                TransactionCategoryClosingBalance lastBalance = transactionCategoryClosingBalanceDao.getClosingBalanceLessThanCurrentDate(transaction.getTransactionDate()
+                        ,category);//getLastElement(findByAttributes(param));
+                if(lastBalance == null && balance != null) {
                     balance = new TransactionCategoryClosingBalance();
                     balance.setTransactionCategory(category);
                     balance.setCreatedBy(transaction.getCreatedBy());
@@ -68,7 +69,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     balance.setClosingBalanceDate(transaction.getTransactionDate());
                     balanceList.add(balance);
                 }
-                else
+                else if(lastBalance != null)
                 {
                     balance = new TransactionCategoryClosingBalance();
                     balance.setTransactionCategory(lastBalance.getTransactionCategory());
@@ -77,6 +78,23 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     balance.setEffectiveDate(new Date());
                     balance.setClosingBalanceDate(transaction.getTransactionDate());
                     balance.setClosingBalance(lastBalance.getClosingBalance());
+                    balanceList.add(balance);
+                    List<TransactionCategoryClosingBalance> upperbalanceList = transactionCategoryClosingBalanceDao.
+                            getClosingBalanceGreaterThanCurrentDate(balance.getClosingBalanceDate(),balance.getTransactionCategory());
+                    if(upperbalanceList.size() > 0) {
+                        balanceList.addAll(upperbalanceList);
+                        isUpdateOpeningBalance = true;
+                    }
+                }
+                else
+                {
+                    balance = new TransactionCategoryClosingBalance();
+                    balance.setTransactionCategory(category);
+                    balance.setCreatedBy(transaction.getCreatedBy());
+                    balance.setOpeningBalance(BigDecimal.ZERO);
+                    balance.setEffectiveDate(new Date());
+                    balance.setClosingBalanceDate(transaction.getTransactionDate());
+                    balance.setClosingBalance(BigDecimal.ZERO);
                     balanceList.add(balance);
                     List<TransactionCategoryClosingBalance> upperbalanceList = transactionCategoryClosingBalanceDao.
                             getClosingBalanceGreaterThanCurrentDate(balance.getClosingBalanceDate(),balance.getTransactionCategory());

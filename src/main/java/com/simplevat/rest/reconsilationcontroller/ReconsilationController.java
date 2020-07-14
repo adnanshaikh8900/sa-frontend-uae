@@ -1,20 +1,21 @@
 
 package com.simplevat.rest.reconsilationcontroller;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
-
 import com.simplevat.bank.model.DeleteModel;
+import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
+import com.simplevat.constant.ReconsileCategoriesEnumConstant;
+import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
+import com.simplevat.entity.ChartOfAccountCategory;
 import com.simplevat.entity.bankaccount.ReconcileStatus;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.SingleLevelDropDownModel;
+import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
+import com.simplevat.security.JwtTokenUtil;
 import com.simplevat.service.*;
 import com.simplevat.service.bankaccount.ReconcileStatusService;
+import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.service.impl.TransactionCategoryClosingBalanceServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -24,16 +25,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.ReconsileCategoriesEnumConstant;
-import com.simplevat.entity.ChartOfAccountCategory;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.rest.SingleLevelDropDownModel;
-import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
-import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.bankaccount.TransactionService;
-
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
 import static com.simplevat.constant.ErrorConstant.ERROR;
 
@@ -99,8 +96,9 @@ public class ReconsilationController {
 	}
 
 	@GetMapping(value = "/getTransactionCat")
-	public ResponseEntity getTransactionCategory(@RequestParam Integer chartOfAccountCategoryId) {
+	public ResponseEntity getTransactionCategory(ReconcilationRequestModel filterModel ) {
 		try {
+			Integer chartOfAccountCategoryId = filterModel.getChartOfAccountCategoryId();
 			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);
 			Map<String, Object> param = null;
 			List<TransactionCategory> transactionCatList = null;
@@ -142,10 +140,35 @@ public class ReconsilationController {
 							HttpStatus.OK);
 
 				case TRANSFERD_TO:
+				case TRANSFER_FROM:
+					transactionCatList = transactionCategoryService
+							.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
+					if (transactionCatList != null && !transactionCatList.isEmpty())
+					{
+						if(filterModel.getBankId() != null && filterModel.getBankId() != 0)
+						{
+							List<TransactionCategory> tempTransactionCatogaryList = new ArrayList<>();
+							TransactionCategory bankTransactionCategory = bankAccountService.getBankAccountById(filterModel.getBankId()).getTransactionCategory();
+							for(TransactionCategory transactionCategory : transactionCatList)
+							{
+
+								if(transactionCategory.getTransactionCategoryId() != bankTransactionCategory.getTransactionCategoryId())
+								{
+									tempTransactionCatogaryList.add(transactionCategory);
+								}
+							}
+							transactionCatList = tempTransactionCatogaryList;
+						}
+						return new ResponseEntity<>(
+								new ReconsilationCatDataModel(null,
+										transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
+							HttpStatus.OK);
+					}
+					break;
+
 				case MONEY_SPENT_OTHERS:
 				case MONEY_SPENT:
 				case PURCHASE_OF_CAPITAL_ASSET:
-				case TRANSFER_FROM:
 				case REFUND_RECEIVED:
 				case INTEREST_RECEVIED:
 				case MONEY_RECEIVED_OTHERS:
@@ -188,8 +211,8 @@ public class ReconsilationController {
 		if (filterModel.getBankId() != null) {
 			dataMap.put(TransactionFilterEnum.BANK_ID, bankAccountService.findByPK(filterModel.getBankId()));
 		}
-
-		PaginationResponseModel response = reconcileStatusService.getAllReconcileStatusList(dataMap,filterModel);
+		dataMap.put(TransactionFilterEnum.DELETE_FLAG, false);
+		PaginationResponseModel response = reconcileStatusService.getAllReconcileStatusList(dataMap, filterModel);
 		if (response == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -209,46 +232,40 @@ public class ReconsilationController {
 			reconcileStatus.setReconciledDate(Instant.ofEpochMilli(date.getTime())
 					.atZone(ZoneId.systemDefault()).toLocalDateTime());
 			reconcileStatusService.persist(reconcileStatus);
-			return new ResponseEntity<>("Saved Successfully",HttpStatus.OK);
+			return new ResponseEntity<>("Saved Successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 	@PostMapping(value = "/reconcilenow")
 	public ResponseEntity<ReconcilationResponseModel> reconcileNow(@ModelAttribute ReconcilationPersistModel reconcilationPersistModel,
-											   HttpServletRequest request) {
-		try
-		{
+																   HttpServletRequest request) {
+		try {
 			ReconcilationResponseModel responseModel = new ReconcilationResponseModel();
 			LocalDateTime reconcileDate = reconsilationRestHelper.getDateFromRequest(reconcilationPersistModel);
 			ReconcileStatus status = reconsilationRestHelper.getReconcileStatus(reconcilationPersistModel);
 			LocalDateTime startDate = null;
-			if(status == null)
-			{
-				startDate = transactionService.getTransactionStartDateToReconcile(reconcileDate,reconcilationPersistModel.getBankId());
-			}
-			else
-			{
+			if (status == null) {
+				startDate = transactionService.getTransactionStartDateToReconcile(reconcileDate, reconcilationPersistModel.getBankId());
+			} else {
 				startDate = status.getReconciledDate();
 			}
 			Integer unexplainedTransaction = 1;
-			if(startDate.isEqual(reconcileDate))
-				unexplainedTransaction= -1;
+			if (startDate.isEqual(reconcileDate))
+				unexplainedTransaction = -1;
 			else
-			 unexplainedTransaction = transactionService.isTransactionsReadyForReconcile(startDate,reconcileDate,reconcilationPersistModel.getBankId());
-			if(unexplainedTransaction==0)
-			{
+				unexplainedTransaction = transactionService.isTransactionsReadyForReconcile(startDate, reconcileDate, reconcilationPersistModel.getBankId());
+			if (unexplainedTransaction == 0) {
 				//1 check if this matches with closing balance
 				BigDecimal closingBalance = reconcilationPersistModel.getClosingBalance();
-				;
 				BigDecimal dbClosingBalance = transactionCategoryClosingBalanceService.matchClosingBalanceForReconcile(reconcileDate,
 						bankAccountService.getBankAccountById(reconcilationPersistModel.getBankId()).getTransactionCategory());
-				boolean isClosingBalanceMatches = dbClosingBalance.equals(closingBalance);
-//				boolean isClosingBalanceMatches = transactionService.matchClosingBalanceForReconcile(reconcileDate,closingBalance,
-//						reconcilationPersistModel.getBankId());
-				if(isClosingBalanceMatches) {
-					transactionService.updateTransactionStatusReconcile(startDate, reconcileDate, reconcilationPersistModel.getBankId());
+				boolean isClosingBalanceMatches = dbClosingBalance.compareTo(closingBalance)==0;
+				if (isClosingBalanceMatches) {
+					transactionService.updateTransactionStatusReconcile(startDate, reconcileDate, reconcilationPersistModel.getBankId(),
+							TransactionExplinationStatusEnum.FULL);
 					ReconcileStatus reconcileStatus = new ReconcileStatus();
 					reconcileStatus.setReconciledDate(reconcileDate);
 					reconcileStatus.setReconciledStartDate(startDate);
@@ -257,27 +274,22 @@ public class ReconsilationController {
 					reconcileStatusService.persist(reconcileStatus);
 					responseModel.setStatus(1);
 					responseModel.setMessage("Reconciled Successfully..");
-					return new ResponseEntity<>(responseModel,HttpStatus.OK);
+					return new ResponseEntity<>(responseModel, HttpStatus.OK);
+				} else {
+					responseModel.setStatus(2);
+					responseModel.setMessage("Failed Reconciling. Closing Balance in System " + dbClosingBalance + " does not matches with the given Closing Balance");
+					return new ResponseEntity<>(responseModel, HttpStatus.OK);
 				}
-				else
-				{   responseModel.setStatus(2);
-					responseModel.setMessage("Failed Reconciling. Closing Balance in System "+dbClosingBalance+" does not matches with the given Closing Balance");
-					return new ResponseEntity<>(responseModel,HttpStatus.OK);
-				}
-			}
-			else if(unexplainedTransaction ==-1)
-			{
+			} else if (unexplainedTransaction == -1) {
 				responseModel.setStatus(3);
 				responseModel.setMessage("The Transactions in Bank Account are already reconciled for the given date");
-				return new ResponseEntity<>(responseModel,HttpStatus.OK);
-			}
-			else
-			{	/*
+				return new ResponseEntity<>(responseModel, HttpStatus.OK);
+			} else {    /*
 			 *  Send unexplainedTransaction still pending to be explained.
 			 */
-			responseModel.setStatus(4);
-			responseModel.setMessage("Failed Reconciling. Please update the remaining "+unexplainedTransaction+" unexplained transactions before reconciling");
-			return new ResponseEntity<>(responseModel,HttpStatus.OK);
+				responseModel.setStatus(4);
+				responseModel.setMessage("Failed Reconciling. Please update the remaining " + unexplainedTransaction + " unexplained transactions before reconciling");
+				return new ResponseEntity<>(responseModel, HttpStatus.OK);
 			}
 
 		} catch (Exception e) {
@@ -286,16 +298,15 @@ public class ReconsilationController {
 		}
 	}
 
-//	@ApiOperation(value = "Delete Reconciled Entries")
-//	@DeleteMapping(value = "/deletes")
-//	public ResponseEntity<String> deleteProducts(@RequestBody DeleteModel ids) {
-//		try {
-//			productService.deleteByIds(ids.getIds());
-//			return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
-//		} catch (Exception e) {
-//			logger.error(ERROR, e);
-//		}
-//		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//
-//	}
+	@ApiOperation(value = "Delete Reconcile Status")
+	@DeleteMapping(value = "/deletes")
+	public ResponseEntity<String> deleteTransactions(@RequestBody DeleteModel ids) {
+		try {
+			reconcileStatusService.deleteByIds(ids.getIds());
+			return new ResponseEntity<>("Deleted reconcile status rows successfully", HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

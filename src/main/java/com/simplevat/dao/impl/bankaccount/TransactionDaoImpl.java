@@ -1,9 +1,6 @@
 package com.simplevat.dao.impl.bankaccount;
 
-import com.simplevat.constant.BankAccountConstant;
-import com.simplevat.constant.CommonColumnConstants;
-import com.simplevat.constant.TransactionExplinationStatusEnum;
-import com.simplevat.constant.TransactionStatusConstant;
+import com.simplevat.constant.*;
 import com.simplevat.constant.dbfilter.DbFilter;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.model.TransactionReportRestModel;
@@ -57,6 +54,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 					+ "from Transaction t "
 					+ "where t.debitCreditFlag = 'c' and t.transactionDate BETWEEN :startDate AND :endDate "
 					+ (bankId != null ? " and t.bankAccount.bankAccountId =:bankId " : " ")
+					+" and t.transactionExplinationStatusEnum = 'FULL' "
 					+ "group by CONCAT(MONTH(t.transactionDate),'-' , Year(t.transactionDate))";
 
 			Query query = getEntityManager().createQuery(queryString)
@@ -492,6 +490,16 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			}
 		}
 	}
+	public void updateStatusByIds(ArrayList<Integer> ids, TransactionCreationMode potentialDuplicate)
+	{
+		if (ids != null && !ids.isEmpty()) {
+			for (Integer id : ids) {
+				Transaction trnx = findByPK(id);
+				trnx.setCreationMode(potentialDuplicate);
+				update(trnx);
+			}
+		}
+	}
 
 	@Override
 	public PaginationResponseModel getAllTransactionList(Map<TransactionFilterEnum, Object> filterMap,
@@ -559,9 +567,10 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 		return transactionList.get(0).getTransactionDate();
 	}
 
-	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId)
+	public String updateTransactionStatusReconcile(LocalDateTime startDate, LocalDateTime reconcileDate, Integer bankId,
+												   TransactionExplinationStatusEnum transactionExplinationStatusEnum)
 	{
-		StringBuilder queryBuilder = new StringBuilder("Update Transaction t set t.transactionExplinationStatusEnum = '").append(TransactionExplinationStatusEnum.RECONCILED)
+		StringBuilder queryBuilder = new StringBuilder("Update Transaction t set t.transactionExplinationStatusEnum = '").append(transactionExplinationStatusEnum)
 				.append("' WHERE t.bankAccount.bankAccountId = :bankAccountId and t.transactionDate <= :endDate");
 		Query query = getEntityManager().createQuery(queryBuilder.toString());
 		query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankId);

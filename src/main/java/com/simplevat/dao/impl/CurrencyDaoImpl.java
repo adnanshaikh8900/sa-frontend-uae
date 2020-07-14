@@ -35,6 +35,10 @@ public class CurrencyDaoImpl extends AbstractDao<Integer, Currency> implements C
 	public List<Currency> getCurrencies() {
 		return this.executeNamedQuery("allCurrencies");
 	}
+	@Override
+	public List<Currency> getCurrenciesProfile() {
+		return this.executeNamedQuery("allCurrenciesProfile");
+	}
 
 	@Override
 	public Currency getDefaultCurrency() {

@@ -7,6 +7,7 @@ import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.service.SimpleVatService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,4 +18,6 @@ public abstract class ReconcileStatusService extends SimpleVatService<Integer, R
 
     public abstract PaginationResponseModel getAllReconcileStatusList(Map<TransactionFilterEnum, Object> filterModel,
                                                                   PaginationModel paginationModel);
+
+    public abstract void deleteByIds(ArrayList<Integer> ids);
 }

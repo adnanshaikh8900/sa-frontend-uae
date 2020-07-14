@@ -16,6 +16,8 @@ public interface CurrencyDao extends Dao<Integer, Currency> {
 
     List<Currency> getCurrencies();
 
+    List<Currency> getCurrenciesProfile();
+
     Currency getCurrency(final int currencyCode);
 
     Currency getDefaultCurrency();

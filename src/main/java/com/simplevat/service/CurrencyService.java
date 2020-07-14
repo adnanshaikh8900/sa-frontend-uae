@@ -16,6 +16,8 @@ public abstract class CurrencyService extends SimpleVatService<Integer, Currency
 
 	public abstract List<Currency> getCurrencies();
 
+	public abstract List<Currency> getCurrenciesProfile();
+
 	public abstract Currency getCurrency(final int currencyCode);
 
 	public abstract Currency getDefaultCurrency();
@@ -32,4 +34,6 @@ public abstract class CurrencyService extends SimpleVatService<Integer, Currency
 
 	public abstract PaginationResponseModel getCurrencies(Map<CurrencyFilterEnum, Object> filterDataMap,
 			PaginationModel paginationModel);
+
+	public abstract void updateCurrencyProfile(Integer currencyCode);
 }

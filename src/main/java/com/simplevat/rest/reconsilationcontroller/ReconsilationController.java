@@ -96,8 +96,9 @@ public class ReconsilationController {
 	}
 
 	@GetMapping(value = "/getTransactionCat")
-	public ResponseEntity getTransactionCategory(@RequestParam Integer chartOfAccountCategoryId) {
+	public ResponseEntity getTransactionCategory(ReconcilationRequestModel filterModel ) {
 		try {
+			Integer chartOfAccountCategoryId = filterModel.getChartOfAccountCategoryId();
 			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);
 			Map<String, Object> param = null;
 			List<TransactionCategory> transactionCatList = null;
@@ -139,10 +140,35 @@ public class ReconsilationController {
 							HttpStatus.OK);
 
 				case TRANSFERD_TO:
+				case TRANSFER_FROM:
+					transactionCatList = transactionCategoryService
+							.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
+					if (transactionCatList != null && !transactionCatList.isEmpty())
+					{
+						if(filterModel.getBankId() != null && filterModel.getBankId() != 0)
+						{
+							List<TransactionCategory> tempTransactionCatogaryList = new ArrayList<>();
+							TransactionCategory bankTransactionCategory = bankAccountService.getBankAccountById(filterModel.getBankId()).getTransactionCategory();
+							for(TransactionCategory transactionCategory : transactionCatList)
+							{
+
+								if(transactionCategory.getTransactionCategoryId() != bankTransactionCategory.getTransactionCategoryId())
+								{
+									tempTransactionCatogaryList.add(transactionCategory);
+								}
+							}
+							transactionCatList = tempTransactionCatogaryList;
+						}
+						return new ResponseEntity<>(
+								new ReconsilationCatDataModel(null,
+										transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
+							HttpStatus.OK);
+					}
+					break;
+
 				case MONEY_SPENT_OTHERS:
 				case MONEY_SPENT:
 				case PURCHASE_OF_CAPITAL_ASSET:
-				case TRANSFER_FROM:
 				case REFUND_RECEIVED:
 				case INTEREST_RECEVIED:
 				case MONEY_RECEIVED_OTHERS:

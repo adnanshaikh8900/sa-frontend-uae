@@ -25,13 +25,17 @@ import javax.persistence.Transient;
 @NamedQueries({
     @NamedQuery(name = "allCurrencies",
             query = "SELECT c "
-            + "FROM Currency c where c.deleteFlag=false ORDER BY c.defaultFlag DESC, c.orderSequence,c.currencyDescription ASC ")
-})
+            + "FROM Currency c where c.deleteFlag=false ORDER BY c.defaultFlag DESC, c.orderSequence,c.currencyDescription ASC "),
+        @NamedQuery(name = "allCurrenciesProfile",
+                query = "SELECT c "
+                        + "FROM Currency c  ORDER BY c.defaultFlag DESC, c.orderSequence,c.currencyDescription ASC ")
+        })
 
 @Entity
 @Table(name = "CURRENCY")
 @Data
 public class Currency implements Serializable {
+
 
     @Id
     @Column(name = "CURRENCY_CODE")

@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simplevat.entity.TransactionCategoryBalance;
+import com.simplevat.entity.TransactionCategoryClosingBalance;
+import com.simplevat.service.*;
+import com.simplevat.utils.DateFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,18 +20,15 @@ import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.model.BankModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.BankAccountStatusService;
-import com.simplevat.service.BankAccountTypeService;
-import com.simplevat.service.CountryService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.TransactionCategoryService;
 
 @Component
 public class BankAccountRestHelper {
 
 	@Autowired
 	BankAccountService bankAccountService;
+
+	@Autowired
+	private DateFormatUtil dateUtil;
 
 	@Autowired
 	BankAccountStatusService bankAccountStatusService;
@@ -219,4 +220,30 @@ public class BankAccountRestHelper {
 		}
 	}
 
+	public TransactionCategoryBalance getOpeningBalanceEntity(BankAccount bankAccount) {
+
+		TransactionCategoryBalance openingBalance = new TransactionCategoryBalance();
+		openingBalance.setCreatedBy(bankAccount.getCreatedBy());
+		openingBalance.setEffectiveDate(dateUtil.getDate());
+		openingBalance.setRunningBalance(bankAccount.getOpeningBalance());
+		openingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
+		openingBalance.setTransactionCategory(bankAccount.getTransactionCategory());
+		openingBalance.setLastUpdateBy(bankAccount.getLastUpdatedBy());
+		openingBalance.setDeleteFlag(bankAccount.getDeleteFlag());
+		//openingBalance.setCreatedDate(bankAccount.getCreatedDate());
+		//openingBalance.setLastUpdateDate(bankAccount.getLastUpdateDate());
+		return  openingBalance;
+	}
+
+	public TransactionCategoryClosingBalance getClosingBalanceEntity(BankAccount bankAccount) {
+		TransactionCategoryClosingBalance closingBalance = new TransactionCategoryClosingBalance();
+		closingBalance.setClosingBalance(bankAccount.getOpeningBalance());
+		closingBalance.setClosingBalanceDate(bankAccount.getCreatedDate());
+		closingBalance.setCreatedBy(bankAccount.getCreatedBy());
+		closingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
+		closingBalance.setEffectiveDate(dateUtil.getDate());
+		closingBalance.setDeleteFlag(bankAccount.getDeleteFlag());
+		//closingBalance.setCreatedDate(bankAccount.getCreatedDate());
+		return  closingBalance;
+	}
 }

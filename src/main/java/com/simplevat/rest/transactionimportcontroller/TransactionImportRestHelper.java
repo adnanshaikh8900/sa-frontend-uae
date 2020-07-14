@@ -307,9 +307,9 @@ public class TransactionImportRestHelper {
 						if (dataMap.containsKey(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName())) {
 							trnx.setTransactionAmount(new BigDecimal(Float.valueOf(data)));
 							if (dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()).equals("C")) {
-								currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
+								currentBalance = currentBalance.add(trnx.getTransactionAmount());
 							} else {
-								currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
+								currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
 							}
 							trnx.setDebitCreditFlag(
 									((String) dataMap.get(TransactionEnum.CREDIT_DEBIT_FLAG.getDisplayName()))
@@ -321,7 +321,7 @@ public class TransactionImportRestHelper {
 									BigDecimal debitAmt = BigDecimal.valueOf((Float.valueOf(data)));
 									if (debitAmt.compareTo(BigDecimal.ZERO) > 0) {
 										trnx.setTransactionAmount(debitAmt);
-										currentBalance = currentBalance.subtract(trnx.getTransactionAmount(), mc);
+										currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
 										trnx.setDebitCreditFlag('D');
 									}
 								}
@@ -332,7 +332,7 @@ public class TransactionImportRestHelper {
 									BigDecimal creditAmt = BigDecimal.valueOf(Float.valueOf(data));
 									if (creditAmt.compareTo(BigDecimal.ZERO) > 0) {
 										trnx.setTransactionAmount(creditAmt);
-										currentBalance = currentBalance.add(trnx.getTransactionAmount(), mc);
+										currentBalance = currentBalance.add(trnx.getTransactionAmount());
 										trnx.setDebitCreditFlag('C');
 									}
 								}
@@ -366,8 +366,10 @@ public class TransactionImportRestHelper {
 				trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.NOT_EXPLAIN);
 				transactions.add(trnx);
 				System.out.println(trnx.toString());
-			}
 
+			}
+			bankAcc.setCurrentBalance(currentBalance);
+			bankAccountService.update(bankAcc);
 			return transactions;
 		}
 		return null;

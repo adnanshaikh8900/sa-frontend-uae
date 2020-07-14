@@ -61,8 +61,8 @@ public class BankAccountRestHelper {
 				model.setCurrancyName(
 						acc.getBankAccountCurrency() != null ? acc.getBankAccountCurrency().getCurrencyIsoCode() : "-");
 				model.setName(acc.getBankName());
-				model.setOpeningBalance(acc.getOpeningBalance() != null ? acc.getOpeningBalance().doubleValue() : 0);
-
+				//model.setOpeningBalance(acc.getOpeningBalance() != null ? acc.getOpeningBalance().doubleValue() : 0);
+				model.setOpeningBalance(acc.getCurrentBalance() != null ? acc.getCurrentBalance().doubleValue() : 0);
 				modelList.add(model);
 			}
 			pagiantionResponseModel.setData(modelList);

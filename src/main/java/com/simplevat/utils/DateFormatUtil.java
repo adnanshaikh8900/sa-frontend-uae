@@ -5,12 +5,14 @@
  */
 package com.simplevat.utils;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -76,5 +78,22 @@ public class DateFormatUtil {
 	public String getDateAsString(Date date, String format) {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(format);
 		return dateFormatter.format(date);
+	}
+	public String getDateAsString(){
+		Date date = Calendar.getInstance().getTime();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		return dateFormat.format(date);
+
+	}
+
+	public Date getDate(){
+		Date date = Calendar.getInstance().getTime();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			return dateFormat.parse(dateFormat.format(date));
+		} catch (ParseException e) {
+			return  Calendar.getInstance().getTime();
+		}
+
 	}
 }

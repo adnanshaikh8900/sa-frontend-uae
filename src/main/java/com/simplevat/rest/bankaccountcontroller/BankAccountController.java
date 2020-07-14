@@ -10,7 +10,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.entity.*;
 import com.simplevat.model.DashBoardBankDataModel;
+import com.simplevat.rest.transactioncategorybalancecontroller.TransactionCategoryBalanceRestHelper;
+import com.simplevat.rest.transactioncategorybalancecontroller.TransactioncategoryBalancePersistModel;
+import com.simplevat.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.dbfilter.BankAccounrFilterEnum;
-import com.simplevat.entity.Country;
-import com.simplevat.entity.Currency;
-import com.simplevat.entity.User;
 import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.entity.bankaccount.BankAccountStatus;
 import com.simplevat.entity.bankaccount.BankAccountType;
 import com.simplevat.model.BankModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.BankAccountStatusService;
-import com.simplevat.service.BankAccountTypeService;
-import com.simplevat.service.CountryService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.UserService;
 import com.simplevat.service.bankaccount.TransactionService;
 
 import io.swagger.annotations.ApiOperation;
@@ -63,10 +58,23 @@ public class BankAccountController{
 	private BankAccountService bankAccountService;
 
 	@Autowired
+	private CoacTransactionCategoryService coacTransactionCategoryService;
+	@Autowired
+	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+
+
+	@Autowired
+	private TransactionCategoryBalanceService transactionCategoryBalanceService;
+
+	@Autowired
+	private TransactionCategoryBalanceRestHelper transactionCategoryBalanceRestHelper;
+
+	@Autowired
 	private BankAccountStatusService bankAccountStatusService;
 
 	@Autowired
 	private UserService userServiceNew;
+
 
 	@Autowired
 	private CurrencyService currencyService;
@@ -134,7 +142,23 @@ public class BankAccountController{
 					bankAccount.setCreatedDate(LocalDateTime.now());
 					bankAccount.setCreatedBy(user.getUserId());
 				}
+
 				bankAccountService.persist(bankAccount);
+				/*
+
+				Added by Adil
+				Date - 12-07-2020
+				New feature
+				Addition of opening balance while creating bank account
+
+				 */
+				TransactionCategoryBalance   openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount);
+				TransactionCategoryClosingBalance closingBalance = bankAccountRestHelper.getClosingBalanceEntity(bankAccount);
+
+				transactionCategoryBalanceService.persist(openingBalance);
+				transactionCategoryClosingBalanceService.persist(closingBalance);
+			//	coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
+				//		bankAccount.getTransactionCategory());
 				return new ResponseEntity<>("Save Successfull..",HttpStatus.OK);
 			}
 		} catch (Exception e) {

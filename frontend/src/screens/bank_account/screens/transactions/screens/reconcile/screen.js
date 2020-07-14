@@ -131,7 +131,6 @@ class ReconcileTransaction extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
-		alert();
 		const bankAccountId = this.props.location.state.bankAccountId;
 		const { closingBalance, date } = data;
 		let formData = new FormData();

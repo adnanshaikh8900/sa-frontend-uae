@@ -24,7 +24,7 @@ public class ReconcileStatusDaoImpl extends AbstractDao<Integer,ReconcileStatus 
                 "SELECT r FROM ReconcileStatus r  WHERE r.deleteFlag = false AND r.bankAccount.bankAccountId =:bankAccountId ORDER BY r.reconciledDate DESC ",
                 ReconcileStatus.class);
         query.setParameter(BankAccountConstant.BANK_ACCOUNT_ID, bankAccountId);
-        query.setMaxResults(0);
+        query.setMaxResults(1);
         List<ReconcileStatus> reconcileStatusList = query.getResultList();
         if (reconcileStatusList != null && !reconcileStatusList.isEmpty()) {
             return reconcileStatusList;

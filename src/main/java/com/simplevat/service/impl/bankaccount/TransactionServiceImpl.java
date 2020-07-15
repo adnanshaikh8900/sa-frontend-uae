@@ -105,7 +105,7 @@ public class TransactionServiceImpl extends TransactionService {
 			}
 			super.persist(transaction, null, getActivity(transaction, "Created"));
 			BigDecimal balanceAmount = transaction.getCurrentBalance();
-			updateAccountBalance(balanceAmount, transaction);
+			//updateAccountBalance(balanceAmount, transaction);
 		} else {
 			BigDecimal differenceAmount = transaction.getTransactionAmount();
 			if (transaction.getDebitCreditFlag() == 'D') {
@@ -140,7 +140,7 @@ public class TransactionServiceImpl extends TransactionService {
 			} else {
 				balance = balance.add(transaction.getTransactionAmount());
 			}
-			updateAccountBalance(balance, transaction);
+			//updateAccountBalance(balance, transaction);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class TransactionServiceImpl extends TransactionService {
 				transaction.setCurrentBalance(transaction.getCurrentBalance().add(differenceAmount));
 			}
 			updateLatestTransaction(differenceAmount, transaction);
-			updateAccountBalance(balanceAmount, transaction);
+			//updateAccountBalance(balanceAmount, transaction);
 		}
 		transaction = super.update(transaction, null, getActivity(transaction, "Updated"));
 		return transaction;
@@ -199,7 +199,7 @@ public class TransactionServiceImpl extends TransactionService {
 		}
 		updateOrCreateTransaction(transaction);
 		updateLatestTransaction(diffAmount, transaction);
-		updateAccountBalance(balanceAmount, transaction);
+		//updateAccountBalance(balanceAmount, transaction);
 
 		// Find invoices
 		 

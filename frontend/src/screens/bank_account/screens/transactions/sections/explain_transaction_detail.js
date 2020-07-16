@@ -572,7 +572,6 @@ class ExplainTrasactionDetail extends React.Component {
 																			type="text"
 																			id="amount"
 																			name="amount"
-
 																			placeholder="Amount"
 																			onChange={(option) => {
 																				if (

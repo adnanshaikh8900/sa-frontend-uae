@@ -60,7 +60,6 @@ class ChartAccount extends React.Component {
 
 		this.options = {
 			onRowClick: this.goToDetailPage,
-			paginationPosition: 'top',
 			page: 1,
 			sizePerPage: 10,
 			onSizePerPageList: this.onSizePerPageList,
@@ -366,14 +365,6 @@ class ChartAccount extends React.Component {
 													/>
 												)}
 												<Button
-													color="primary"
-													className="btn-square"
-													onClick={this.goToCreatePage}
-												>
-													<i className="fas fa-plus mr-1" />
-													New Account
-												</Button>
-												<Button
 													color="warning"
 													className="btn-square"
 													onClick={this.bulkDelete}
@@ -467,6 +458,14 @@ class ChartAccount extends React.Component {
 												</Row>
 											</form>
 										</div>
+										<Button
+											color="primary"
+											className="btn-square"
+											onClick={this.goToCreatePage}
+										>
+											<i className="fas fa-plus mr-1" />
+											Add New Account
+										</Button>
 										<div>
 											<BootstrapTable
 												selectRow={this.selectRowProp}

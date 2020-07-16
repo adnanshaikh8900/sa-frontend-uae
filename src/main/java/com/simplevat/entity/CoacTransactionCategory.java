@@ -26,14 +26,13 @@ import java.io.Serializable;
 public class CoacTransactionCategory implements Serializable {
 	@Id
 	@Column(name = "ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "TRANSACTION_CATEGORY_ID")
 	private TransactionCategory transactionCategory;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "CHART_OF_ACCOUNT_CATEGORY_ID ")
 	private ChartOfAccountCategory chartOfAccountCategory;
 

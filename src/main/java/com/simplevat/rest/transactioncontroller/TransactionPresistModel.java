@@ -62,4 +62,9 @@ public class TransactionPresistModel implements Serializable {
 	private String transactionCategoryLabel;
 
 	private Boolean isValidForClosingBalance;
+
+	private Boolean isValidForCurrentBalance;
+
+	private BigDecimal oldTransactionAmount;
+
 }

@@ -777,10 +777,6 @@ class CreateProduct extends React.Component {
 																						.salesTransactionCategoryId
 																				: ''
 																		}
-																		defaultValue={{
-																			value: 79,
-																			label: 'Exchange Gain',
-																		}}
 																		id="salesTransactionCategoryId"
 																		onChange={(option) => {
 																			if (option && option.value) {

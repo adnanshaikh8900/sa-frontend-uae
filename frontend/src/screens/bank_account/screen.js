@@ -326,9 +326,6 @@ class BankAccount extends React.Component {
 						>
 							<i className="fas fa-eye" /> View Transactions
 						</DropdownItem>
-						<DropdownItem>
-							<i className="fas fa-sync" /> Synch
-						</DropdownItem>
 						<DropdownItem
 							onClick={() => this.closeBankAccount(row.bankAccountId)}
 						>
@@ -392,11 +389,13 @@ class BankAccount extends React.Component {
 			<div>
 				<div>
 					<label className="font-weight-bold mr-2">Book Balance : </label>
-					<label className="badge badge-success mb-0">2034234</label>
+					<label className="badge badge-success mb-0">
+						{row.closingBalance}
+					</label>
 				</div>
 				<div>
 					<label className="font-weight-bold mr-2">Date : </label>
-					<label>2019/12/05</label>
+					<label>{row.reconcileDate}</label>
 				</div>
 			</div>
 		);
@@ -578,17 +577,9 @@ class BankAccount extends React.Component {
 														target="_blank"
 													/>
 												)}
-												<Button
-													color="warning"
-													className="btn-square"
-													onClick={this.bulkDeleteBankAccount}
-												>
-													<i className="fa glyphicon glyphicon-trash fa-trash mr-1" />
-													Bulk Delete
-												</Button>
 											</ButtonGroup>
 										</div>
-										<div className="py-3">
+										{/* <div className="py-3">
 											<h5>Filter : </h5>
 											<Row>
 												<Col lg={2} className="mb-1">
@@ -683,7 +674,7 @@ class BankAccount extends React.Component {
 													</Button>
 												</Col>
 											</Row>
-										</div>
+										</div> */}
 										<Button
 											color="primary"
 											className="btn-square"

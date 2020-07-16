@@ -452,7 +452,7 @@ class BankTransactions extends React.Component {
 			return <div>Explained</div>;
 		} else if (
 			row.explinationStatusEnum === 'NOT_EXPLAIN' &&
-			row.creationMode === 'IMPORT'
+			row.creationMode !== 'POTENTIAL_DUPLICATE'
 		) {
 			return <div>Not Explained</div>;
 		} else if (row.creationMode === 'POTENTIAL_DUPLICATE') {
@@ -654,7 +654,7 @@ class BankTransactions extends React.Component {
 										<div className="py-3">
 											<h6>Filter : </h6>
 											<Row>
-												<Col lg={3} className="mb-1">
+												{/* <Col lg={3} className="mb-1">
 													<Select
 														className=""
 														options={statusOptions}
@@ -691,7 +691,7 @@ class BankTransactions extends React.Component {
 														placeholder="Transaction Type"
 														value={filterData.chartOfAccountId}
 													/>
-												</Col>
+												</Col> */}
 												<Col lg={3} className="mb-1">
 													<DatePicker
 														className="form-control"

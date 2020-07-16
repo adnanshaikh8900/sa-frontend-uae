@@ -6,7 +6,9 @@ import java.util.List;
 
 import com.simplevat.entity.TransactionCategoryBalance;
 import com.simplevat.entity.TransactionCategoryClosingBalance;
+import com.simplevat.entity.bankaccount.*;
 import com.simplevat.service.*;
+import com.simplevat.service.bankaccount.ReconcileStatusService;
 import com.simplevat.utils.DateFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,10 +16,6 @@ import org.springframework.stereotype.Component;
 import com.simplevat.constant.DefaultTypeConstant;
 import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.Currency;
-import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.bankaccount.BankAccountStatus;
-import com.simplevat.entity.bankaccount.BankAccountType;
-import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.model.BankModel;
 import com.simplevat.rest.PaginationResponseModel;
 
@@ -35,6 +33,9 @@ public class BankAccountRestHelper {
 
 	@Autowired
 	CurrencyService currencyService;
+
+	@Autowired
+	ReconcileStatusService reconcileStatusService;
 
 	@Autowired
 	BankAccountTypeService bankAccountTypeService;
@@ -61,8 +62,15 @@ public class BankAccountRestHelper {
 				model.setCurrancyName(
 						acc.getBankAccountCurrency() != null ? acc.getBankAccountCurrency().getCurrencyIsoCode() : "-");
 				model.setName(acc.getBankName());
-				model.setOpeningBalance(acc.getOpeningBalance() != null ? acc.getOpeningBalance().doubleValue() : 0);
-
+				List<ReconcileStatus> reconcileStatusList = reconcileStatusService.getAllReconcileStatusListByBankAccountId(acc.getBankAccountId());
+				if(reconcileStatusList != null && !reconcileStatusList.isEmpty())
+				{
+					ReconcileStatus reconcileStatus = reconcileStatusList.get(0);
+					model.setReconcileDate(reconcileStatus.getReconciledDate()+ "");
+					model.setClosingBalance(reconcileStatus.getClosingBalance());
+				}
+				//model.setOpeningBalance(acc.getOpeningBalance() != null ? acc.getOpeningBalance().doubleValue() : 0);
+				model.setOpeningBalance(acc.getCurrentBalance() != null ? acc.getCurrentBalance().doubleValue() : 0);
 				modelList.add(model);
 			}
 			pagiantionResponseModel.setData(modelList);

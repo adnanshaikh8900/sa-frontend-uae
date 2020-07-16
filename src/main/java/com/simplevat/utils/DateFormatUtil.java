@@ -63,6 +63,12 @@ public class DateFormatUtil {
 
 	}
 
+	public LocalDateTime getDateStrAsLocalDateTime(Date date, String format) {
+		LocalDateTime dob = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		return dob;
+
+	}
+
 	public Date getDateStrAsDate(String strDate, String format) {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(format);
 		Date d;
@@ -87,7 +93,11 @@ public class DateFormatUtil {
 	}
 
 	public Date getDate(){
-		Date date = Calendar.getInstance().getTime();
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MINUTE,0);
+		calendar.set(Calendar.HOUR,0);
+		calendar.set(Calendar.SECOND,0);
+		Date date = calendar.getTime();
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			return dateFormat.parse(dateFormat.format(date));

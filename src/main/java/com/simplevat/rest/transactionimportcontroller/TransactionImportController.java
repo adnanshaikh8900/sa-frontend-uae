@@ -16,17 +16,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.constant.FileTypeEnum;
+import com.simplevat.entity.bankaccount.Transaction;
+import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.simplevat.constant.TransactionCreditDebitConstant;
@@ -164,13 +162,21 @@ public class TransactionImportController{
 				transaction1.setTransactionAmount(
 						BigDecimal.valueOf(Double.parseDouble(transaction.getDebit().replace(",", ""))));
 				transaction1.setDebitCreditFlag(TransactionCreditDebitConstant.DEBIT);
+				BigDecimal currentBalance =  bankAccount.getCurrentBalance();
+				currentBalance.subtract(transaction.getAmount());
+				bankAccount.setCurrentBalance(currentBalance);
+
 			}
 			if (transaction.getCredit() != null && !transaction.getCredit().trim().isEmpty()) {
 				transaction1.setTransactionAmount(
 						BigDecimal.valueOf(Double.parseDouble(transaction.getCredit().replace(",", ""))));
 				transaction1.setDebitCreditFlag(TransactionCreditDebitConstant.CREDIT);
+				BigDecimal currentBalance = bankAccount.getCurrentBalance();
+				currentBalance.add(transaction.getAmount());
+				bankAccount.setCurrentBalance(currentBalance);
 			}
 			transactionService.persist(transaction1);
+			bankAccountService.update(bankAccount);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
@@ -227,4 +233,4 @@ public class TransactionImportController{
 		return new ResponseEntity<>(dataMap, HttpStatus.OK);
 	}
 
-}
+		}

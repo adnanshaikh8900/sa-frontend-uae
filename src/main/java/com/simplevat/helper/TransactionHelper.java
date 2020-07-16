@@ -126,6 +126,7 @@ public class TransactionHelper {
 			transactionModel.setDebitCreditFlag(transaction.getDebitCreditFlag());
 			transactionModel.setDescription(transaction.getTransactionDescription());
 			transactionModel.setExplinationStatusEnum(transaction.getTransactionExplinationStatusEnum());
+			transactionModel.setCreationMode(transaction.getCreationMode());
 			transactionModelList.add(transactionModel);
 		}
 

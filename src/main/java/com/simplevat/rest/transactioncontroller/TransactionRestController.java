@@ -393,6 +393,31 @@ public class TransactionRestController {
 		{
 			transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
 		}
+		if (transactionPresistModel.getIsValidForCurrentBalance()!=null && transactionPresistModel.getIsValidForCurrentBalance()){
+
+			BigDecimal oldTransactionAmount = transactionPresistModel.getOldTransactionAmount();
+			BigDecimal newTransactionAmount =transactionPresistModel.getAmount();
+			BigDecimal currentBalance = trnx.getBankAccount().getCurrentBalance();
+
+			BigDecimal updateTransactionAmount= BigDecimal.ZERO;
+			updateTransactionAmount=newTransactionAmount.subtract(oldTransactionAmount);
+			if(trnx.getDebitCreditFlag() == 'C'){
+
+				currentBalance= currentBalance.subtract(oldTransactionAmount);
+				currentBalance= currentBalance.add(newTransactionAmount);
+			}
+			else{
+				currentBalance= currentBalance.add(oldTransactionAmount);
+				currentBalance= currentBalance.subtract(newTransactionAmount);
+			}
+
+			BankAccount bankAccount =trnx.getBankAccount();
+			bankAccount.setCurrentBalance(currentBalance);
+			bankAccountService.update(bankAccount);
+			trnx.setTransactionAmount(updateTransactionAmount);
+			transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
+
+		}
 		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
 	}
 
@@ -732,7 +757,11 @@ public class TransactionRestController {
 	private Transaction updateTransactionWithCommonFields(TransactionPresistModel transactionPresistModel,int userId,TransactionCreationMode mode) {
 		Transaction trnx = null;
 		if(transactionPresistModel.getTransactionId()!=null) {
+
+
 			trnx = transactionService.findByPK(transactionPresistModel.getTransactionId());
+			BigDecimal oldTransactionAmount = trnx.getTransactionAmount();
+			BigDecimal newTransactionAmount =transactionPresistModel.getAmount();
 			if(trnx.getTransactionExplinationStatusEnum()!=TransactionExplinationStatusEnum.FULL)
 			{
 				transactionPresistModel.setIsValidForClosingBalance(true);
@@ -740,6 +769,13 @@ public class TransactionRestController {
 //						dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 //								transactionPresistModel.getDATE_FORMAT()),trnx.getTransactionAmount())
 			}
+
+			else if(trnx.getTransactionExplinationStatusEnum() == TransactionExplinationStatusEnum.FULL
+					&& oldTransactionAmount.compareTo(newTransactionAmount) != 0) {
+				transactionPresistModel.setIsValidForCurrentBalance(true);
+				transactionPresistModel.setOldTransactionAmount(oldTransactionAmount);
+			}
+
 		}
 		else{
 			trnx = new Transaction();

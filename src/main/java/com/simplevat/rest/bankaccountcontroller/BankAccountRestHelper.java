@@ -66,7 +66,7 @@ public class BankAccountRestHelper {
 				if(reconcileStatusList != null && !reconcileStatusList.isEmpty())
 				{
 					ReconcileStatus reconcileStatus = reconcileStatusList.get(0);
-					model.setReconcileDate(reconcileStatus.getReconciledDate()+ "");
+					model.setReconcileDate(dateUtil.getLocalDateTimeAsString(reconcileStatus.getReconciledDate(), "dd-MM-yyyy"));
 					model.setClosingBalance(reconcileStatus.getClosingBalance());
 				}
 				//model.setOpeningBalance(acc.getOpeningBalance() != null ? acc.getOpeningBalance().doubleValue() : 0);

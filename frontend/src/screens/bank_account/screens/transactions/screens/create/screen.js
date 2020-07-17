@@ -394,7 +394,10 @@ class CreateBankTransaction extends React.Component {
 		this.setValue(null);
 		try {
 			this.props.transactionCreateActions
-				.getTransactionCategoryListForExplain(type.value)
+				.getTransactionCategoryListForExplain(
+					type.value,
+					this.props.location.state.bankAccountId,
+				)
 				.then((res) => {
 					if (res.status === 200) {
 						this.setState(

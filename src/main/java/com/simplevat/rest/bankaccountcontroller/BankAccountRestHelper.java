@@ -246,7 +246,7 @@ public class BankAccountRestHelper {
 	public TransactionCategoryClosingBalance getClosingBalanceEntity(BankAccount bankAccount) {
 		TransactionCategoryClosingBalance closingBalance = new TransactionCategoryClosingBalance();
 		closingBalance.setClosingBalance(bankAccount.getOpeningBalance());
-		closingBalance.setClosingBalanceDate(bankAccount.getCreatedDate());
+		closingBalance.setClosingBalanceDate(dateUtil.getDateStrAsLocalDateTime(dateUtil.getDate(),"dd/MM/yyyy"));
 		closingBalance.setCreatedBy(bankAccount.getCreatedBy());
 		closingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
 		closingBalance.setEffectiveDate(dateUtil.getDate());

@@ -302,11 +302,11 @@ public class TransactionRestController {
 		BigDecimal currentBalance = trnx.getBankAccount().getCurrentBalance();
 		if (trnx.getDebitCreditFlag() == 'D')
 		{
-			currentBalance.subtract(trnx.getTransactionAmount());
+			currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
 		}
 		else
-			{
-				currentBalance.add(trnx.getTransactionAmount());
+		{
+			currentBalance =	currentBalance.add(trnx.getTransactionAmount());
 		}
 		bankAccount.setCurrentBalance(currentBalance);
 		bankAccountService.update(bankAccount);

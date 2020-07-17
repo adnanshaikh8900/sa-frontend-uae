@@ -154,11 +154,11 @@ public class BankAccountController{
 				 */
 				TransactionCategoryBalance   openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount);
 				TransactionCategoryClosingBalance closingBalance = bankAccountRestHelper.getClosingBalanceEntity(bankAccount);
-
+				closingBalance.setTransactionCategory(bankAccount.getTransactionCategory());
 				transactionCategoryBalanceService.persist(openingBalance);
 				transactionCategoryClosingBalanceService.persist(closingBalance);
-			//	coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
-				//		bankAccount.getTransactionCategory());
+				coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
+						bankAccount.getTransactionCategory());
 				return new ResponseEntity<>("Save Successfull..",HttpStatus.OK);
 			}
 		} catch (Exception e) {

@@ -21,11 +21,11 @@ export const createTransaction = (obj) => {
 	};
 };
 
-export const getTransactionCategoryListForExplain = (id) => {
+export const getTransactionCategoryListForExplain = (id, bankId) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`,
+			url: `rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}&bankId=${bankId}`,
 		};
 		return authApi(data)
 			.then((res) => {

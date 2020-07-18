@@ -2,7 +2,6 @@ package com.simplevat.rest.taxescontroller;
 
 import lombok.Getter;
 
-import java.math.BigDecimal;
 
 public enum TaxesFilterEnum {
 

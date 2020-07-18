@@ -2,10 +2,6 @@ package com.simplevat.dao.impl;
 
 import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
 import com.simplevat.constant.CommonColumnConstants;
-import com.simplevat.constant.DatatableSortingFilterConstant;
-import com.simplevat.constant.dbfilter.DbFilter;
-import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
-import com.simplevat.rest.PaginationModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.financialreport.CreditDebitAggregator;
 import com.simplevat.rest.financialreport.FinancialReportRequestModel;

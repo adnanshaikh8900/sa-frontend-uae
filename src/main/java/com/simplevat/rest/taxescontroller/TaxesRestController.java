@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -42,7 +40,7 @@ public class TaxesRestController {
     private JournalLineItemService journalLineItemService;
 
     @Autowired
-    TaxesRestHelper taxesRestHelper;
+    private TaxesRestHelper taxesRestHelper;
 
 
     @ApiOperation(value = "Get Vat Transation list")

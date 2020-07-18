@@ -6,9 +6,12 @@ import java.util.Map;
 
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.rest.financialreport.CreditDebitAggregator;
 import com.simplevat.rest.financialreport.FinancialReportRequestModel;
+import com.simplevat.rest.taxescontroller.TaxesFilterEnum;
+import com.simplevat.rest.taxescontroller.TaxesFilterModel;
 
 public abstract class JournalLineItemService extends SimpleVatService<Integer, JournalLineItem> {
 
@@ -20,4 +23,6 @@ public abstract class JournalLineItemService extends SimpleVatService<Integer, J
 
 	public abstract Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
 			FinancialReportRequestModel reportRequestModel);
+
+	public abstract PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel);
 }

@@ -31,6 +31,7 @@ import {
 	Profile,
 	ImportTransaction,
 	OpeningBalance,
+	VatTransactions,
 } from 'screens';
 
 const reducer = combineReducers({
@@ -45,6 +46,7 @@ const reducer = combineReducers({
 	expense: Expense.reducer,
 	settings: GeneralSettings.reducer,
 	customer_invoice: CustomerInvoice.reducer,
+	vat_transactions: VatTransactions.reducer,
 	receipt: Receipt.reducer,
 	supplier_invoice: SupplierInvoice.reducer,
 	product: Product.reducer,

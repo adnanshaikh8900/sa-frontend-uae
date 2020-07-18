@@ -156,3 +156,22 @@ export const removeBulk = (obj) => {
 			});
 	};
 };
+
+export const getTransactionCategoryListForExplain = (id) => {
+	console.log(id);
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url: `rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

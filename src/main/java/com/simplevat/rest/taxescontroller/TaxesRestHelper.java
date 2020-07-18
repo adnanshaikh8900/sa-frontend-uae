@@ -16,20 +16,20 @@ import java.util.List;
 @Service
 public class TaxesRestHelper {
 
-@Autowired
-    InvoiceService invoiceService;
+    @Autowired
+    private InvoiceService invoiceService;
 
     @Autowired
-    ExpenseService expenseService;
+    private ExpenseService expenseService;
 
     @Autowired
-    PaymentService paymentService;
+    private PaymentService paymentService;
 
     @Autowired
-    ReceiptService receiptService;
+    private ReceiptService receiptService;
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
     public  List<VatListModel> getListModel(Object vatTransation) {
         List<VatListModel> vatListModels = new ArrayList<>();
@@ -81,6 +81,7 @@ public class TaxesRestHelper {
                             model.setVatAmount( journalLineItem.getDebitAmount() != null ? journalLineItem.getDebitAmount() :
                                     journalLineItem.getCreditAmount());
                         }
+                        break;
                     default:
                         break;
                 }

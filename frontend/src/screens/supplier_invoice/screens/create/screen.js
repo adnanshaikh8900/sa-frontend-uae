@@ -20,7 +20,7 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
-import * as transactionCreateActions from '../../../bank_account/screens/transactions/actions';
+import * as ProductActions from '../../../product/actions';
 
 import { SupplierModal } from '../../sections';
 
@@ -48,12 +48,9 @@ const mapDispatchToProps = (dispatch) => {
 			SupplierInvoiceActions,
 			dispatch,
 		),
+		ProductActions: bindActionCreators(ProductActions, dispatch),
 		supplierInvoiceCreateActions: bindActionCreators(
 			SupplierInvoiceCreateActions,
-			dispatch,
-		),
-		transactionCreateActions: bindActionCreators(
-			transactionCreateActions,
 			dispatch,
 		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
@@ -75,7 +72,7 @@ class CreateSupplierInvoice extends React.Component {
 				{
 					id: 0,
 					description: '',
-					quantity: '',
+					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
@@ -320,9 +317,8 @@ class CreateSupplierInvoice extends React.Component {
 
 	purchaseCategory = () => {
 		try {
-			this.props.transactionCreateActions
-				.getTransactionCategoryListForExplain('10')
-				.then((res) => {
+			this.props.ProductActions.getTransactionCategoryListForExplain('10').then(
+				(res) => {
 					if (res.status === 200) {
 						this.setState(
 							{
@@ -331,7 +327,8 @@ class CreateSupplierInvoice extends React.Component {
 							() => {},
 						);
 					}
-				});
+				},
+			);
 		} catch (err) {
 			console.log(err);
 		}

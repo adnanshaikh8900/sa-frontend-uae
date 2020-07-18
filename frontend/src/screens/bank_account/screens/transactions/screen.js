@@ -520,7 +520,7 @@ class BankTransactions extends React.Component {
 			},
 			{
 				dataField: 'depositeAmount',
-				text: 'Deposite Amount',
+				text: 'Deposit Amount',
 			},
 			{
 				dataField: 'withdrawalAmount',

@@ -21,7 +21,6 @@ import * as Yup from 'yup';
 import './style.scss';
 
 import * as ProductActions from '../../actions';
-import * as transactionCreateActions from '../../../bank_account/screens/transactions/actions';
 import { CommonActions } from 'services/global';
 
 import { WareHouseModal } from '../../sections';
@@ -37,10 +36,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		productActions: bindActionCreators(ProductActions, dispatch),
-		transactionCreateActions: bindActionCreators(
-			transactionCreateActions,
-			dispatch,
-		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -105,7 +100,7 @@ class CreateProduct extends React.Component {
 
 	salesCategory = () => {
 		try {
-			this.props.transactionCreateActions
+			this.props.productActions
 				.getTransactionCategoryListForExplain('2')
 				.then((res) => {
 					if (res.status === 200) {
@@ -125,7 +120,7 @@ class CreateProduct extends React.Component {
 	};
 	purchaseCategory = () => {
 		try {
-			this.props.transactionCreateActions
+			this.props.productActions
 				.getTransactionCategoryListForExplain('10')
 				.then((res) => {
 					if (res.status === 200) {

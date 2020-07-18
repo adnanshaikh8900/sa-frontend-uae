@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.taxescontroller.TaxesFilterEnum;
+import com.simplevat.rest.taxescontroller.TaxesFilterModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.simplevat.rest.financialreport.CreditDebitAggregator;
@@ -64,5 +67,10 @@ public class JournalLineItemServiceImpl extends JournalLineItemService {
 	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
 			FinancialReportRequestModel financialReportRequestModel) {
 		return journalLineItemDao.getAggregateTransactionCategoryMap(financialReportRequestModel);
+	}
+
+	@Override
+	public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel) {
+		return journalLineItemDao.getVatTransactionList(filterMap, paginationModel);
 	}
 }

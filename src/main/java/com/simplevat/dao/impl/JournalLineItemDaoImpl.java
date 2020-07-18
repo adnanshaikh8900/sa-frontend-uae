@@ -2,8 +2,15 @@ package com.simplevat.dao.impl;
 
 import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
 import com.simplevat.constant.CommonColumnConstants;
+import com.simplevat.constant.DatatableSortingFilterConstant;
+import com.simplevat.constant.dbfilter.DbFilter;
+import com.simplevat.constant.dbfilter.InvoiceFilterEnum;
+import com.simplevat.rest.PaginationModel;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.financialreport.CreditDebitAggregator;
 import com.simplevat.rest.financialreport.FinancialReportRequestModel;
+import com.simplevat.rest.taxescontroller.TaxesFilterEnum;
+import com.simplevat.rest.taxescontroller.TaxesFilterModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +110,22 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 	public List<JournalLineItem> getListByTransactionCategory(TransactionCategory transactionCategory) {
 		return getEntityManager().createNamedQuery("getListByTransactionCategory")
 				.setParameter("transactionCategory", transactionCategory).getResultList();
+	}
+
+	@Override
+	public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel){
+		PaginationResponseModel response = new PaginationResponseModel();
+		TypedQuery<JournalLineItem> typedQuery = getEntityManager().createNamedQuery("getVatTransationList", JournalLineItem.class );
+		if (paginationModel != null && !paginationModel.isPaginationDisable()) {
+			typedQuery.setFirstResult(paginationModel.getPageNo());
+			typedQuery.setMaxResults(paginationModel.getPageSize());
+		}
+		List<JournalLineItem> journalLineItemList = typedQuery.getResultList();
+		if (journalLineItemList != null && !journalLineItemList.isEmpty()){
+			response.setCount(journalLineItemList.size());
+			response.setData(journalLineItemList);
+		}
+			return response;
 	}
 
 	@Override

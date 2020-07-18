@@ -10,9 +10,12 @@ import java.util.Map;
 
 import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.rest.financialreport.CreditDebitAggregator;
 import com.simplevat.rest.financialreport.FinancialReportRequestModel;
+import com.simplevat.rest.taxescontroller.TaxesFilterEnum;
+import com.simplevat.rest.taxescontroller.TaxesFilterModel;
 
 /**
  *
@@ -26,4 +29,7 @@ public interface JournalLineItemDao extends Dao<Integer, JournalLineItem> {
 	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(FinancialReportRequestModel financialReportRequestModel);
 
 	public List<JournalLineItem> getListByTransactionCategory(TransactionCategory transactionCategory);
+
+    public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> map, TaxesFilterModel paginationResponseModel);
+
 }

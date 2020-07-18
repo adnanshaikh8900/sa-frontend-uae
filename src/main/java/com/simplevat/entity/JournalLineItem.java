@@ -40,6 +40,7 @@ import lombok.Data;
 @NamedQueries({
 		@NamedQuery(name = "getListByFrmToDateWthPagintion", query = " select jn from JournalLineItem jn INNER join Journal j on j.id = jn.journal.id where j.journalDate BETWEEN :startDate and :endDate"),
 		@NamedQuery(name = "getListByTransactionCategory", query = " select jn from JournalLineItem jn where jn.transactionCategory = :transactionCategory") })
+		@NamedQuery(name = "getVatTransationList",query =  "select jn FROM JournalLineItem jn WHERE jn.transactionCategory.transactionCategoryId IN (88,94)")
 public class JournalLineItem implements Serializable {
 	/**
 	 *

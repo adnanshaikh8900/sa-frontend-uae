@@ -1,16 +1,21 @@
-// import { VAT_TRANSACTIONS } from 'constants/types'
+import { VAT_TRANSACTIONS } from 'constants/types';
 
 const initState = {
-}
+	vat_transaction_list: [],
+};
 
 const VatTransactionsReducer = (state = initState, action) => {
-  const { type} = action
-  
-  switch(type) {
+	const { type, payload } = action;
 
-    default:
-      return state
-  }
-}
+	switch (type) {
+		case VAT_TRANSACTIONS.VAT_TRANSACTION_LIST:
+			return {
+				...state,
+				vat_transaction_list: Object.assign([], payload.data),
+			};
+		default:
+			return state;
+	}
+};
 
-export default VatTransactionsReducer
+export default VatTransactionsReducer;

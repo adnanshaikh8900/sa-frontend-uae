@@ -22,7 +22,8 @@ public abstract class JournalLineItemService extends SimpleVatService<Integer, J
 	public abstract BigDecimal updateCurrentBalance(TransactionCategory transactionCategory, BigDecimal balance);
 
 	public abstract Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
-			FinancialReportRequestModel reportRequestModel);
+			FinancialReportRequestModel reportRequestModel, String reportType);
+
 
 	public abstract PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel);
 }

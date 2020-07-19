@@ -124,9 +124,10 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			return response;
 	}
 
+
 	@Override
 	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
-			FinancialReportRequestModel financialReportRequestModel) {
+			FinancialReportRequestModel financialReportRequestModel, String reportType) {
 		LocalDateTime fromDate = null;
 		LocalDateTime toDate = null;
 		Map<Integer, CreditDebitAggregator> aggregatedTransactionMap = new HashMap<>();
@@ -141,28 +142,26 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			LOGGER.error(ERROR, e);
 		}
 		try {
+			List<Object[]> resultList =null;
+			switch (reportType){
 
-			StoredProcedureQuery storedProcedureQuery = getEntityManager()
-					.createStoredProcedureQuery("profitAndLossStoredProcedure");
-			storedProcedureQuery.registerStoredProcedureParameter("incomeCode", String.class, ParameterMode.IN);
-			storedProcedureQuery.registerStoredProcedureParameter("costOfGoodsSoldCode", String.class,
-					ParameterMode.IN);
-			storedProcedureQuery.registerStoredProcedureParameter("adminExpenseCode", String.class, ParameterMode.IN);
-			storedProcedureQuery.registerStoredProcedureParameter("otherExpenseCode", String.class, ParameterMode.IN);
-			storedProcedureQuery.registerStoredProcedureParameter(CommonColumnConstants.START_DATE, LocalDateTime.class, ParameterMode.IN);
-			storedProcedureQuery.registerStoredProcedureParameter(CommonColumnConstants.END_DATE, LocalDateTime.class, ParameterMode.IN);
+				case "ProfitAndLoss":
+					resultList = getProfitLossReport(fromDate, toDate);
 
-			storedProcedureQuery.setParameter("incomeCode", ChartOfAccountCategoryCodeEnum.INCOME.getCode());
-			storedProcedureQuery.setParameter("costOfGoodsSoldCode",
-					ChartOfAccountCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode());
-			storedProcedureQuery.setParameter("adminExpenseCode",
-					ChartOfAccountCategoryCodeEnum.ADMIN_EXPENSE.getCode());
-			storedProcedureQuery.setParameter("otherExpenseCode",
-					ChartOfAccountCategoryCodeEnum.OTHER_EXPENSE.getCode());
-			storedProcedureQuery.setParameter(CommonColumnConstants.START_DATE, fromDate);
-			storedProcedureQuery.setParameter(CommonColumnConstants.END_DATE, toDate);
-			storedProcedureQuery.execute();
-			List<Object[]> resultList = storedProcedureQuery.getResultList();
+					break;
+
+				case "BalanceSheet":
+					resultList = getBalanceSheetReport(fromDate, toDate);
+
+					break;
+
+				default:
+					break;
+
+			}
+			if(resultList == null){
+				return aggregatedTransactionMap;
+			}
 			int code = 0;
 			for (Object[] object : resultList) {
 				String transactionCategoryName = (String) object[0];
@@ -182,4 +181,70 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		}
 		return aggregatedTransactionMap;
 	}
+
+	private List<Object[]> getBalanceSheetReport(LocalDateTime fromDate, LocalDateTime toDate) {
+
+		StoredProcedureQuery storedProcedureQuery = getEntityManager()
+				.createStoredProcedureQuery("balanceSheetStoredProcedure");
+		storedProcedureQuery.registerStoredProcedureParameter("currentAssetCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("bankCode", String.class,
+				ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("otherCurrentAssetCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("accountReceivableCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("accountPayableCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("fixedAssetCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("currentLiabilityCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("otherLiabilityCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("equityCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter(CommonColumnConstants.START_DATE, LocalDateTime.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter(CommonColumnConstants.END_DATE, LocalDateTime.class, ParameterMode.IN);
+
+		storedProcedureQuery.setParameter("currentAssetCode", ChartOfAccountCategoryCodeEnum.CURRENT_ASSET.getCode());
+		storedProcedureQuery.setParameter("bankCode",
+				ChartOfAccountCategoryCodeEnum.BANK.getCode());
+		storedProcedureQuery.setParameter("otherCurrentAssetCode",
+				ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_ASSET.getCode());
+		storedProcedureQuery.setParameter("accountReceivableCode",
+				ChartOfAccountCategoryCodeEnum.ACCOUNTS_RECEIVABLE.getCode());
+		storedProcedureQuery.setParameter("accountPayableCode",
+				ChartOfAccountCategoryCodeEnum.ACCOUNTS_PAYABLE.getCode());
+		storedProcedureQuery.setParameter("fixedAssetCode",
+				ChartOfAccountCategoryCodeEnum.FIXED_ASSET.getCode());
+		storedProcedureQuery.setParameter("currentLiabilityCode",
+				ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_LIABILITIES.getCode());
+		storedProcedureQuery.setParameter("otherLiabilityCode",
+				ChartOfAccountCategoryCodeEnum.OTHER_LIABILITY.getCode());
+		storedProcedureQuery.setParameter("equityCode",
+				ChartOfAccountCategoryCodeEnum.EQUITY.getCode());
+		storedProcedureQuery.setParameter(CommonColumnConstants.START_DATE, fromDate);
+		storedProcedureQuery.setParameter(CommonColumnConstants.END_DATE, toDate);
+		storedProcedureQuery.execute();
+		return (List<Object[]>) storedProcedureQuery.getResultList();
+
+	}
+
+	private List<Object[]> getProfitLossReport(LocalDateTime fromDate, LocalDateTime toDate) {
+		StoredProcedureQuery storedProcedureQuery = getEntityManager()
+				.createStoredProcedureQuery("profitAndLossStoredProcedure");
+		storedProcedureQuery.registerStoredProcedureParameter("incomeCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("costOfGoodsSoldCode", String.class,
+				ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("adminExpenseCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter("otherExpenseCode", String.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter(CommonColumnConstants.START_DATE, LocalDateTime.class, ParameterMode.IN);
+		storedProcedureQuery.registerStoredProcedureParameter(CommonColumnConstants.END_DATE, LocalDateTime.class, ParameterMode.IN);
+
+		storedProcedureQuery.setParameter("incomeCode", ChartOfAccountCategoryCodeEnum.INCOME.getCode());
+		storedProcedureQuery.setParameter("costOfGoodsSoldCode",
+				ChartOfAccountCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode());
+		storedProcedureQuery.setParameter("adminExpenseCode",
+				ChartOfAccountCategoryCodeEnum.ADMIN_EXPENSE.getCode());
+		storedProcedureQuery.setParameter("otherExpenseCode",
+				ChartOfAccountCategoryCodeEnum.OTHER_EXPENSE.getCode());
+		storedProcedureQuery.setParameter(CommonColumnConstants.START_DATE, fromDate);
+		storedProcedureQuery.setParameter(CommonColumnConstants.END_DATE, toDate);
+		storedProcedureQuery.execute();
+		return (List<Object[]>) storedProcedureQuery.getResultList();
+	}
 }
+

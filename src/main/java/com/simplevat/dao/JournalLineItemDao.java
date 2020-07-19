@@ -26,7 +26,8 @@ public interface JournalLineItemDao extends Dao<Integer, JournalLineItem> {
 	public void deleteByJournalId(Integer journalId);
 
 	public List<JournalLineItem> getList(ReportRequestModel reportRequestModel);
-	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(FinancialReportRequestModel financialReportRequestModel);
+	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(FinancialReportRequestModel financialReportRequestModel, String reportType);
+
 
 	public List<JournalLineItem> getListByTransactionCategory(TransactionCategory transactionCategory);
 

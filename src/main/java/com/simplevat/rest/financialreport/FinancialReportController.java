@@ -43,4 +43,23 @@ public class FinancialReportController {
 		return new ResponseEntity<>(profitAndLossResponseModel, HttpStatus.OK);
 	}
 
+	@ApiOperation(value = "Get BalanceSheet Report")
+	@GetMapping(value = "/balanceSheet")
+	public ResponseEntity<BalanceSheetResponseModel> getFormatBalanceSheet(FinancialReportRequestModel reportRequestModel){
+		Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
+		filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
+		BalanceSheetResponseModel balanceSheetResponseModel=financialReportRestHelper.getBalanceSheetReport(reportRequestModel);
+
+		try {
+			if (balanceSheetResponseModel == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+		}
+		return new ResponseEntity<>(balanceSheetResponseModel, HttpStatus.OK);
+	}
 }
+
+
+

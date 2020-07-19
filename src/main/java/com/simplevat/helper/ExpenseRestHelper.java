@@ -17,6 +17,14 @@ import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.*;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PostingRequestModel;
+import com.simplevat.service.UserService;
+import com.simplevat.service.VatCategoryService;
+import com.simplevat.service.CurrencyService;
+import com.simplevat.service.ProjectService;
+import com.simplevat.service.EmployeeService;
+import com.simplevat.service.ExpenseService;
+import com.simplevat.service.TransactionCategoryService;
+import com.simplevat.service.BankAccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +35,6 @@ import com.simplevat.constant.PostingReferenceTypeEnum;
 import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.expensescontroller.ExpenseListModel;
 import com.simplevat.rest.expensescontroller.ExpenseModel;
-import com.simplevat.service.BankAccountService;
-import com.simplevat.service.CurrencyService;
-import com.simplevat.service.EmployeeService;
-import com.simplevat.service.ExpenseService;
-import com.simplevat.service.ProjectService;
-import com.simplevat.service.TransactionCategoryService;
-import com.simplevat.service.VatCategoryService;
 import com.simplevat.utils.FileHelper;
 
 /**
@@ -67,6 +68,9 @@ public class ExpenseRestHelper {
 	private BankAccountService bankAccountService;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private FileHelper fileHelper;
 
 	public Expense getExpenseEntity(ExpenseModel model) {
@@ -76,6 +80,10 @@ public class ExpenseRestHelper {
 			expense = expenseService.findByPK(model.getExpenseId());
 		}
 		Expense.ExpenseBuilder expenseBuilder = expense.toBuilder();
+		if (model.getPayee() != null) {
+
+			 expenseBuilder.userId(userService.findByPK(Integer.parseInt(model.getPayee())));
+		}
 		expenseBuilder.expenseAmount(model.getExpenseAmount()).payee(model.getPayee());
 		if (model.getExpenseDate() != null) {
 			LocalDateTime expenseDate = Instant.ofEpochMilli(model.getExpenseDate().getTime())
@@ -255,7 +263,12 @@ public class ExpenseRestHelper {
 				ExpenseListModel expenseModel = new ExpenseListModel();
 				expenseModel.setReceiptNumber(expense.getReceiptNumber());
 				expenseModel.setExpenseId(expense.getExpenseId());
-				expenseModel.setPayee(expense.getPayee());
+				if(expense.getUserId() != null){
+					expenseModel.setPayee(expense.getUserId().getFirstName() +" "+ expense.getUserId().getLastName());
+				}
+				else {
+					expenseModel.setPayee("Company Expense");
+				}
 				expenseModel.setExpenseDescription(expense.getExpenseDescription());
 				if (expense.getExpenseDate() != null) {
 					Date date = Date.from(expense.getExpenseDate().atZone(ZoneId.systemDefault()).toInstant());

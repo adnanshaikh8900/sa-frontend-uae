@@ -36,6 +36,7 @@ public class TaxesRestHelper {
         if (vatTransation != null) {
             for (JournalLineItem journalLineItem : (List<JournalLineItem>) vatTransation) {
                 VatListModel model = new VatListModel();
+                model.setId(journalLineItem.getId());
                 model.setVatType(journalLineItem.getTransactionCategory().getTransactionCategoryName());
                 model.setReferenceType(journalLineItem.getReferenceType().getDisplayName());
                 model.setDate(journalLineItem.getCreatedDate());

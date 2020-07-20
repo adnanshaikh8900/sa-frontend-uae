@@ -301,23 +301,23 @@ class VatTransactions extends React.Component {
 											? vat_transaction_data.count
 											: 0,
 									}}
-									csvFileName="tempdata.csv"
+									csvFileName="VatTransactionReport.csv"
 									ref={(node) => {
 										this.table = node;
 									}}
 								>
-									<TableHeaderColumn dataField="amount">
-										Amount
-									</TableHeaderColumn>
-									<TableHeaderColumn dataField="vatAmount">
-										Vat Amount
-									</TableHeaderColumn>
 									<TableHeaderColumn dataField="date">Date</TableHeaderColumn>
 									<TableHeaderColumn dataField="referenceType">
 										Reference Type
 									</TableHeaderColumn>
 									<TableHeaderColumn dataField="vatType">
 										Vat Type
+									</TableHeaderColumn>
+									<TableHeaderColumn isKey dataField="amount">
+										Amount
+									</TableHeaderColumn>
+									<TableHeaderColumn dataField="vatAmount">
+										Vat Amount
 									</TableHeaderColumn>
 								</BootstrapTable>
 							</div>

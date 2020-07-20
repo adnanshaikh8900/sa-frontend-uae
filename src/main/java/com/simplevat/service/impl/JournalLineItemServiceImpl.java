@@ -65,12 +65,15 @@ public class JournalLineItemServiceImpl extends JournalLineItemService {
 
 	@Override
 	public Map<Integer, CreditDebitAggregator> getAggregateTransactionCategoryMap(
-			FinancialReportRequestModel financialReportRequestModel) {
-		return journalLineItemDao.getAggregateTransactionCategoryMap(financialReportRequestModel);
+			FinancialReportRequestModel financialReportRequestModel, String reportType) {
+		return journalLineItemDao.getAggregateTransactionCategoryMap(financialReportRequestModel,reportType);
 	}
 
 	@Override
 	public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> filterMap, TaxesFilterModel paginationModel) {
 		return journalLineItemDao.getVatTransactionList(filterMap, paginationModel);
 	}
+
+
+
 }

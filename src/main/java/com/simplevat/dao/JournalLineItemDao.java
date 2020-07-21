@@ -5,6 +5,7 @@
  */
 package com.simplevat.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,5 +33,7 @@ public interface JournalLineItemDao extends Dao<Integer, JournalLineItem> {
 	public List<JournalLineItem> getListByTransactionCategory(TransactionCategory transactionCategory);
 
     public PaginationResponseModel getVatTransactionList(Map<TaxesFilterEnum, Object> map, TaxesFilterModel paginationResponseModel);
+
+	public 	Map<Integer, CreditDebitAggregator> getTaxReport(Date startDate, Date endDate);
 
 }

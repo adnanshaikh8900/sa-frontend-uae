@@ -2,6 +2,7 @@ package com.simplevat.service.impl;
 
 import java.math.BigDecimal;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -74,6 +75,9 @@ public class JournalLineItemServiceImpl extends JournalLineItemService {
 		return journalLineItemDao.getVatTransactionList(filterMap, paginationModel);
 	}
 
+	@Override
+	public 	Map<Integer, CreditDebitAggregator> getTaxReport(Date startdate, Date endDate) {
+		return journalLineItemDao.getTaxReport(startdate, endDate);
 
-
+	}
 }

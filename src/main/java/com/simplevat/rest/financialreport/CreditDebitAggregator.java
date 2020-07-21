@@ -26,6 +26,19 @@ public class CreditDebitAggregator {
     {
         return creditAmount+debitAmount;
     }
+    public Double getActualAmount()
+    {
+        if (creditAmount>debitAmount){
+        Double differenceAmount= creditAmount-debitAmount;
+        return differenceAmount;
+        }
+        else{
+            Double differenceAmount=debitAmount-creditAmount;
+        return differenceAmount;
+        }
+
+    }
+
     public String getTransactionCategoryCode() {
         return transactionCategoryCode;
     }

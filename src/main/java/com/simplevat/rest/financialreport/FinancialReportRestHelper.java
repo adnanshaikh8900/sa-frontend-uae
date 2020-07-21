@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
+import com.simplevat.model.TrialBalanceResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,7 @@ public class FinancialReportRestHelper {
 
 			Map<String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = getChartOfAccountCodeEnumMapForBalanceSheet();
 			Double totalCurrentAssets = (double) 0;
+			Double totalAccumulatedDepriciation = (double) 0;
 			Double totalOtherCurrentAssets = (double) 0;
 			Double totalFixedAssets = (double) 0;
 			Double totalAccountReceivable =(double)0;
@@ -68,6 +70,9 @@ public class FinancialReportRestHelper {
 					case FIXED_ASSET:
 						balanceSheetResponseModel.getFixedAssets().put(transactionCategoryName,
 								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
+						if(transactionCategoryName.contains("Depreciation")){
+							totalAccumulatedDepriciation+=creditDebitAggregator.getTotalAmount();
+						}
 						totalFixedAssets += creditDebitAggregator.getTotalAmount();
 						break;
 
@@ -106,20 +111,23 @@ public class FinancialReportRestHelper {
 				}
 			}
 			balanceSheetResponseModel.setTotalBank(BigDecimal.valueOf(totalBank));
+			totalCurrentAssets+=totalBank+totalAccountReceivable+totalOtherCurrentAssets;
 			balanceSheetResponseModel.setTotalCurrentAssets(BigDecimal.valueOf(totalCurrentAssets));
+
 			balanceSheetResponseModel.setTotalOtherCurrentAssets(BigDecimal.valueOf(totalOtherCurrentAssets));
+			totalFixedAssets=totalFixedAssets-totalAccumulatedDepriciation;
 			balanceSheetResponseModel.setTotalFixedAssets(BigDecimal.valueOf(totalFixedAssets));
-			double totalAssets = totalCurrentAssets+totalOtherCurrentAssets+totalBank+totalAccountReceivable+totalFixedAssets;
+			double totalAssets = totalCurrentAssets+totalFixedAssets;
 			balanceSheetResponseModel.setTotalAssets(BigDecimal.valueOf(totalAssets));
 
 
-			balanceSheetResponseModel.setTotalLiability(BigDecimal.valueOf(totalLiability));
+			balanceSheetResponseModel.setTotalOtherLiability(BigDecimal.valueOf(totalOtherLiability));
 			balanceSheetResponseModel.setTotalOtherCurrentLiability(BigDecimal.valueOf(totalOtherCurrentLiability));
-			double totalLiabilities = totalLiability+totalOtherCurrentLiability+totalAccountPayable;
+			double totalLiabilities = totalOtherLiability+totalOtherCurrentLiability+totalAccountPayable;
 			balanceSheetResponseModel.setTotalLiability(BigDecimal.valueOf(totalLiabilities));
 
 			balanceSheetResponseModel.setTotalEquities(BigDecimal.valueOf(totalEquities));
-			double totalEquity = totalEquities;
+
 
 
 			double totalLiabilityEquities =totalLiabilities+totalEquities;
@@ -239,5 +247,127 @@ public class FinancialReportRestHelper {
 		}
 		return stringChartOfAccountCategoryCodeEnumHashMap;
 	}
+    public TrialBalanceResponseModel getTrialBalanceReport(FinancialReportRequestModel reportRequestModel) {
+        TrialBalanceResponseModel trialBalanceResponseModel = new TrialBalanceResponseModel();
+        Map<Integer, CreditDebitAggregator> aggregatedTransactionMap = journalLineItemService.getAggregateTransactionCategoryMap(reportRequestModel,"TrialBalance");
+        if (aggregatedTransactionMap != null && !aggregatedTransactionMap.isEmpty()) {
+            Map<String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = getChartOfAccountCodeEnumMapForTrialBalance();
+            Double totalDebitAmount = (double) 0;
+			Double totalCreditAmount = (double) 0;
 
+            for (Map.Entry<Integer,CreditDebitAggregator> entry : aggregatedTransactionMap.entrySet())
+            {
+                CreditDebitAggregator creditDebitAggregator = entry.getValue();
+                String transactionCategoryCode = creditDebitAggregator.getTransactionCategoryCode();
+                String transactionCategoryName = creditDebitAggregator.getTransactionCategoryName();
+                ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = chartOfAccountCategoryCodeEnumMap.get(transactionCategoryCode);
+                switch (chartOfAccountCategoryCodeEnum)
+                {
+                    case ACCOUNTS_RECEIVABLE:
+                        trialBalanceResponseModel.getAccountReceivable().put(transactionCategoryName,
+                                BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
+						totalDebitAmount += creditDebitAggregator.getActualAmount();
+                        break;
+
+                    case BANK:
+                        trialBalanceResponseModel.getBank().put(transactionCategoryName,
+                                BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
+						totalDebitAmount +=creditDebitAggregator.getActualAmount();
+                        break;
+                    case OTHER_CURRENT_ASSET:
+                        if (transactionCategoryName.equalsIgnoreCase("Input Vat"))
+                        {
+                            trialBalanceResponseModel.getAssets().put(transactionCategoryName,
+                                    BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
+							totalDebitAmount +=creditDebitAggregator.getActualAmount();
+                        }
+                        break;
+                    case FIXED_ASSET:
+                        trialBalanceResponseModel.getFixedAsset().put(transactionCategoryName,
+                                BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+						if(transactionCategoryName.contains("Depreciation")){
+							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Credit");
+							totalCreditAmount +=creditDebitAggregator.getActualAmount();
+						}
+						else {
+							totalDebitAmount +=creditDebitAggregator.getActualAmount();
+							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
+						}
+                        break;
+
+                    case ACCOUNTS_PAYABLE:
+                        trialBalanceResponseModel.getAccountpayable().put(transactionCategoryName,
+                                BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Credit");
+						totalCreditAmount += creditDebitAggregator.getActualAmount();
+                        break;
+                    case OTHER_LIABILITY:
+
+                    	trialBalanceResponseModel.getLiabilities().put(transactionCategoryName,
+								BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Credit");
+                    	totalCreditAmount += creditDebitAggregator.getActualAmount();
+
+                        break;
+                    case EQUITY:
+                        if(transactionCategoryName.equalsIgnoreCase("Drawing")||
+                                transactionCategoryName.equalsIgnoreCase("Owner's Capital"))
+
+                        {
+                            trialBalanceResponseModel.getEquities().put(transactionCategoryName,
+                                    BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
+                            totalDebitAmount +=creditDebitAggregator.getActualAmount();
+                        }
+                        else if( transactionCategoryName.equalsIgnoreCase("Owner's Equity")||
+								transactionCategoryName.equalsIgnoreCase("Retained Earnings")){
+							trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Credit");
+							totalCreditAmount +=creditDebitAggregator.getActualAmount();
+                        }
+                        break;
+                    case INCOME:
+
+                            trialBalanceResponseModel.getIncome().put(transactionCategoryName,
+                                    BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Credit");
+							totalCreditAmount +=creditDebitAggregator.getActualAmount();
+
+                        break;
+                    case ADMIN_EXPENSE:
+                    case OTHER_EXPENSE:
+                        trialBalanceResponseModel.getExpense().put(transactionCategoryName,
+                                BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+						trialBalanceResponseModel.getTransactionCategoryMapper().put(transactionCategoryName,"Debit");
+						totalDebitAmount  +=creditDebitAggregator.getActualAmount();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            trialBalanceResponseModel.setTotalCreditAmount(BigDecimal.valueOf(totalCreditAmount));
+            trialBalanceResponseModel.setTotalDebitAmount(BigDecimal.valueOf(totalDebitAmount));
+
+        }
+        return trialBalanceResponseModel;
+    }
+    /**
+     *
+     * @return
+     */
+    private  Map<String,ChartOfAccountCategoryCodeEnum> getChartOfAccountCodeEnumMapForTrialBalance() {
+        Map<String,ChartOfAccountCategoryCodeEnum>  stringChartOfAccountCategoryCodeEnumHashMap = new HashMap<>();
+        Map <String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnumMap();
+        for (Map.Entry<String,ChartOfAccountCategoryCodeEnum> enumEntry : chartOfAccountCategoryCodeEnumMap.entrySet())
+        {
+            String chartOfAccountCode = enumEntry.getKey();
+            if(chartOfAccountCode.startsWith("01") || chartOfAccountCode.startsWith("02") ||
+                    chartOfAccountCode.startsWith("03") || chartOfAccountCode.startsWith("04") ||
+                    chartOfAccountCode.startsWith("05"))
+                stringChartOfAccountCategoryCodeEnumHashMap.put(chartOfAccountCode,enumEntry.getValue());
+        }
+        return stringChartOfAccountCategoryCodeEnumHashMap;
+    }
 }

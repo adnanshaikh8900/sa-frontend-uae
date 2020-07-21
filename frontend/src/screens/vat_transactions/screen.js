@@ -290,7 +290,7 @@ class VatTransactions extends React.Component {
 									data={vat_transaction_data ? vat_transaction_data : []}
 									hover
 									remote
-									//keyField="id"
+									keyField="id"
 									pagination={
 										vat_transaction_data && vat_transaction_data.length > 0
 											? true

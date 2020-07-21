@@ -88,11 +88,11 @@ export default {
 					url: '/admin/taxes/vat-transactions',
 					icon: 'fas fa-exchange-alt',
 				},
-				{
-					name: 'VAT Filings',
-					url: '/admin/taxes/reports-filing',
-					icon: 'fas fa-file-text',
-				},
+				// {
+				// 	name: 'VAT Filings',
+				// 	url: '/admin/taxes/reports-filing',
+				// 	icon: 'fas fa-file-text',
+				// },
 			],
 		},
 		{

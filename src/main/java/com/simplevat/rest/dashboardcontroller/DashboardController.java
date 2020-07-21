@@ -30,10 +30,10 @@ public class DashboardController {
 	private final Logger logger = LoggerFactory.getLogger(FinancialReportController.class);
 
 	@Autowired
-	ChartUtil chartUtil;
+	private ChartUtil chartUtil;
 
 	@Autowired
-	JournalLineItemService journalLineItemService;
+	private JournalLineItemService journalLineItemService;
 
 
 	@GetMapping(value = "/getVatReport")

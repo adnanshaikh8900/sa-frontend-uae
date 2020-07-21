@@ -7,7 +7,6 @@ import com.simplevat.rest.financialreport.CreditDebitAggregator;
 import com.simplevat.rest.financialreport.FinancialReportRequestModel;
 import com.simplevat.rest.taxescontroller.TaxesFilterEnum;
 import com.simplevat.rest.taxescontroller.TaxesFilterModel;
-import com.simplevat.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

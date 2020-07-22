@@ -3,6 +3,7 @@ package com.simplevat.rest.financialreport;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.simplevat.model.TrialBalanceResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,23 @@ public class FinancialReportController {
 		}
 		return new ResponseEntity<>(balanceSheetResponseModel, HttpStatus.OK);
 	}
+
+    @ApiOperation(value = "GetTrial Balance Report")
+    @GetMapping(value = "/trialBalanceReport")
+    public ResponseEntity<TrialBalanceResponseModel> getTrialBalanceReport(FinancialReportRequestModel reportRequestModel) {
+        Map<DateFormatFilterEnum, Object> filterDataMap = new EnumMap<>(DateFormatFilterEnum.class);
+        filterDataMap.put(DateFormatFilterEnum.DELETE_FLAG, false);
+        TrialBalanceResponseModel trialBalanceResponseModel = financialReportRestHelper.getTrialBalanceReport(reportRequestModel);
+        try {
+            if (trialBalanceResponseModel == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            logger.error(ERROR, e);
+        }
+        return new ResponseEntity<>(trialBalanceResponseModel, HttpStatus.OK);
+    }
+
 }
 
 

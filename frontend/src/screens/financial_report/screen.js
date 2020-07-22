@@ -88,7 +88,7 @@ class FinancialReport extends React.Component {
 											this.toggle(0, '3');
 										}}
 									>
-										Cash Flow Statement
+										Trial Balance
 									</NavLink>
 								</NavItem>
 							</Nav>

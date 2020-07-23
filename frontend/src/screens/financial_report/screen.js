@@ -31,7 +31,7 @@ class FinancialReport extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			activeTab: new Array(3).fill('1'),
+			activeTab: new Array(3).fill('2'),
 		};
 	}
 

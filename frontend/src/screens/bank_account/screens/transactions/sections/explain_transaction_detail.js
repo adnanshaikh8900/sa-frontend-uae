@@ -209,9 +209,9 @@ class ExplainTrasactionDetail extends React.Component {
 		this.props.transactionsActions.getVendorInvoiceList(data);
 	};
 
-	// getUserList = () => {
-	// 	this.props.transactionsActions.getUserForDropdown();
-	// };
+	getUserList = () => {
+		this.props.transactionsActions.getUserForDropdown();
+	};
 
 	getExpensesCategoriesList = () => {
 		this.props.transactionsActions.getExpensesCategoriesList();

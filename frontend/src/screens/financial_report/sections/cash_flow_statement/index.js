@@ -75,18 +75,23 @@ class CashFlowStatement extends React.Component {
 				nonOperatingIncomeExpense: 0.0,
 				netProfitLoss: 0.0,
 				transactionCategoryMapper: {},
+				totalCreditAmount: 5300.0,
+				totalDebitAmount: 12500.0,
 				expense: {},
 				income: {},
 				equities: {},
 				liabilities: {},
 				assets: {},
+				fixedAsset: {},
+				accountReceivable: {},
+				accountpayable: {},
+				bank: {},
 			},
 		};
 		this.columnHeader = [
 			{ label: 'Account', value: 'Account', sort: true },
-			{ label: 'Account Code', value: 'Account Code', sort: false },
 			{ label: 'Net Debit', value: 'Net Debit', sort: false },
-			{ label: 'Net Cebit', value: 'Net Cebit', sort: false },
+			{ label: 'Net Cebit', value: 'Net Credit', sort: false },
 		];
 	}
 
@@ -116,19 +121,6 @@ class CashFlowStatement extends React.Component {
 			startDate: initValue.startDate,
 			endDate: initValue.endDate,
 		};
-		// this.props.financialReportActions
-		// 	.getProfitAndLossReport(postData)
-		// 	.then((res) => {
-		// 		if (res.status === 200) {
-		// 			this.setState({
-		// 				data: res.data,
-		// 				loading: false,
-		// 			});
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		this.setState({ loading: false });
-		// 	});
 		this.props.financialReportActions
 			.getTrialBalanceReport(postData)
 			.then((res) => {
@@ -308,7 +300,6 @@ class CashFlowStatement extends React.Component {
 																<td className="mainLable">Assets</td>
 																<td></td>
 																<td></td>
-																<td></td>
 															</tr>
 															{Object.keys(this.state.data['assets']).map(
 																(item) => (
@@ -340,13 +331,11 @@ class CashFlowStatement extends React.Component {
 																<td className="mainLable">Liabilities</td>
 																<td></td>
 																<td></td>
-																<td></td>
 															</tr>
 															{Object.keys(this.state.data['liabilities']).map(
 																(item) => (
 																	<tr>
 																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0"></td>
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
@@ -372,13 +361,11 @@ class CashFlowStatement extends React.Component {
 																<td className="mainLable">Equities</td>
 																<td></td>
 																<td></td>
-																<td></td>
 															</tr>
 															{Object.keys(this.state.data['equities']).map(
 																(item) => (
 																	<tr>
 																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0"></td>
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
@@ -404,13 +391,11 @@ class CashFlowStatement extends React.Component {
 																<td className="mainLable">Income</td>
 																<td></td>
 																<td></td>
-																<td></td>
 															</tr>
 															{Object.keys(this.state.data['income']).map(
 																(item) => (
 																	<tr>
 																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0"></td>
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
@@ -436,13 +421,11 @@ class CashFlowStatement extends React.Component {
 																<td className="mainLable">Expense</td>
 																<td></td>
 																<td></td>
-																<td></td>
 															</tr>
 															{Object.keys(this.state.data['expense']).map(
 																(item) => (
 																	<tr>
 																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0"></td>
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
@@ -464,6 +447,11 @@ class CashFlowStatement extends React.Component {
 																	</tr>
 																),
 															)}
+															<tr>
+																<td className="mainLable">Total</td>
+																<td>{this.state.data['totalDebitAmount']}</td>
+																<td>{this.state.data['totalCreditAmount']}</td>
+															</tr>
 														</>
 													) : (
 														<tr className="mainLable">

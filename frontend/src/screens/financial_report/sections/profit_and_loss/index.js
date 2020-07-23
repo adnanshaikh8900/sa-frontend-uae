@@ -80,7 +80,7 @@ class ProfitAndLossReport extends React.Component {
     };
     this.columnHeader = [
       { label: 'Account', value: 'Account', sort: true },
-      { label: 'Account Code', value: 'Account Code', sort: false },
+      { label: '', value: 'Account Code', sort: false },
       { label: 'Total', value: 'Total', sort: true },
     ];
   }

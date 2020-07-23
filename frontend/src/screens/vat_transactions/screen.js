@@ -25,7 +25,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import './style.scss';
 
 const mapStateToProps = (state) => {
-	console.log(state);
 	return {
 		vat_transaction_list: state.vat_transactions.vat_transaction_list,
 	};
@@ -313,7 +312,7 @@ class VatTransactions extends React.Component {
 									<TableHeaderColumn dataField="vatType">
 										Vat Type
 									</TableHeaderColumn>
-									<TableHeaderColumn isKey dataField="amount">
+									<TableHeaderColumn dataField="amount">
 										Amount
 									</TableHeaderColumn>
 									<TableHeaderColumn dataField="vatAmount">

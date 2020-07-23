@@ -65,42 +65,54 @@ class BalanceSheet extends React.Component {
 				direction: 'desc',
 			},
 			data: {
-				totalOperatingIncome: 0.0,
-				totalCostOfGoodsSold: 0.0,
-				grossProfit: 0.0,
-				totalOperatingExpense: 0.0,
-				operatingProfit: 0.0,
-				totalNonOperatingIncome: 0.0,
-				totalNonOperatingExpense: 0.0,
-				nonOperatingIncomeExpense: 0.0,
-				netProfitLoss: 0.0,
-				transactionCategoryMapper: {
-					'Capital Asset Depreciation Brought Forward': 'Credit',
-					Sales: 'Credit',
-					'Capital Asset Brought Forward': 'Debit',
-					'Accommodation and Meals': 'Credit',
-					'Accountancy Fees': 'Debit',
-					'Retained Earnings': 'Credit',
-					'Input VAT': 'Debit',
-					'SBI-Adil khan': 'Debit',
-					'SBI-Imran khan': 'Debit',
-					'Accounts Payable': 'Credit',
+				totalCurrentAssets: 3300.0,
+				totalFixedAssets: 2300.0,
+				totalAssets: 27700.0,
+				totalOtherCurrentAssets: 2300.0,
+				totalBank: 19800.0,
+				totalOtherLiability: null,
+				totalAccountReceivable: null,
+				totalAccountPayable: null,
+				totalOtherCurrentLiability: 2000.0,
+				totalLiability: 4300.0,
+				totalEquities: 1600.0,
+				totalLiabilityEquities: 5900.0,
+				currentAssets: {
+					'Trade Debtors': 1100.0,
+					Inventory: 1100.0,
+					'Unpaid Shares': 1100.0,
 				},
-				expense: {
-					'Accommodation and Meals': 5200.0,
-					'Accountancy Fees': 3400.0,
+				otherCurrentAssets: {
+					'Employee Advance': 1200.0,
+					'Advance Tax': 1100.0,
+					'Input VAT': 0.0,
 				},
-				income: { Sales: 1200.0 },
-				equities: {},
-				liabilities: {},
-				assets: {},
+				bank: {
+					'SBI-Adil khan': 13600.0,
+					'SBI-Imran khan': 6200.0,
+				},
+				fixedAssets: {
+					'Capital Asset Depreciation Brought Forward': 1200.0,
+					'Capital Asset Brought Forward': 1100.0,
+				},
+				otherLiability: {},
+				otherCurrentLiability: {
+					'Employee Reimbursements': 2000.0,
+				},
+				equities: {
+					'Owners Current Account': 1000.0,
+					'Retained Earnings': 600.0,
+				},
+				accountReceivable: {},
+				accountPayable: {
+					'Accounts Payable': 2300.0,
+				},
 			},
 		};
 		this.columnHeader = [
 			{ label: 'Account', value: 'Account', sort: true },
 			{ label: 'Account Code', value: 'Account Code', sort: false },
-			{ label: 'Net Debit', value: 'Net Debit', sort: false },
-			{ label: 'Net Cebit', value: 'Net Cebit', sort: false },
+			{ label: 'Total', value: 'Total', sort: false },
 		];
 	}
 
@@ -130,25 +142,12 @@ class BalanceSheet extends React.Component {
 			startDate: initValue.startDate,
 			endDate: initValue.endDate,
 		};
-		// this.props.financialReportActions
-		// 	.getProfitAndLossReport(postData)
-		// 	.then((res) => {
-		// 		if (res.status === 200) {
-		// 			this.setState({
-		// 				data: res.data,
-		// 				loading: false,
-		// 			});
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		this.setState({ loading: false });
-		// 	});
 		this.props.financialReportActions
-			.getTrialBalanceReport(postData)
+			.getBalanceReport(postData)
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({
-						//data: res.data,
+						data: res.data,
 						loading: false,
 					});
 				}
@@ -188,10 +187,6 @@ class BalanceSheet extends React.Component {
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
 		const { profile } = this.props;
-		console.log(this.state.data['expense']);
-		console.log(
-			this.state.data['transactionCategoryMapper']['Accommodation and Meals'],
-		);
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -322,27 +317,53 @@ class BalanceSheet extends React.Component {
 																<td className="mainLable">Assets</td>
 																<td></td>
 																<td></td>
+															</tr>
+															<tr>
+																<td className="mainLable">Current Assets</td>
+																<td></td>
 																<td></td>
 															</tr>
-															{Object.keys(this.state.data['assets']).map(
+															{Object.keys(
+																this.state.data['currentAssets'],
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item}</td>
+																	<td className="pt-0 pb-0"></td>
+																	<td className="pt-0 pb-0 text-right">
+																		{this.state.data['currentAssets']
+																			? this.state.data['currentAssets'][
+																					`${item}`
+																			  ].toFixed(2)
+																			: ''}
+																	</td>
+																</tr>
+															))}
+															<tr className="mainLable">
+																<td className="mainLable">
+																	Total Current Assets
+																</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalCurrentAssets']
+																		? this.state.data[
+																				'totalCurrentAssets'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
+															<tr>
+																<td className="mainLable">Fixed Assets</td>
+																<td></td>
+																<td></td>
+															</tr>
+															{Object.keys(this.state.data['fixedAssets']).map(
 																(item) => (
 																	<tr>
 																		<td className="pt-0 pb-0">{item}</td>
 																		<td className="pt-0 pb-0"></td>
 																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['assets'][
-																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
-																		</td>
-																		<td className="pt-0 pb-0">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['assets'][
+																			{this.state.data['fixedAssets']
+																				? this.state.data['fixedAssets'][
 																						`${item}`
 																				  ].toFixed(2)
 																				: ''}
@@ -350,41 +371,147 @@ class BalanceSheet extends React.Component {
 																	</tr>
 																),
 															)}
-															<tr>
-																<td className="mainLable">Liabilities</td>
+															<tr className="mainLable">
+																<td className="mainLable">
+																	Total Fixed Assets
+																</td>
 																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalFixedAssets']
+																		? this.state.data[
+																				'totalFixedAssets'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
+															<tr>
+																<td className="mainLable">Bank</td>
 																<td></td>
 																<td></td>
 															</tr>
-															{Object.keys(this.state.data['liabilities']).map(
+															{Object.keys(this.state.data['bank']).map(
 																(item) => (
 																	<tr>
 																		<td className="pt-0 pb-0">{item}</td>
 																		<td className="pt-0 pb-0"></td>
 																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['liabilities'][
+																			{this.state.data['bank']
+																				? this.state.data['bank'][
 																						`${item}`
 																				  ].toFixed(2)
-																				: ''}
-																		</td>
-																		<td>
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['liabilities'][
-																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																				: ' '}
 																		</td>
 																	</tr>
 																),
 															)}
-															<tr>
-																<td className="mainLable">Equities</td>
+															<tr className="mainLable">
+																<td className="mainLable">Total Bank</td>
 																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalBank']
+																		? this.state.data['totalBank'].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable text-right">
+																	Total Assets
+																</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalAssets']
+																		? this.state.data['totalAssets'].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
+															<tr>
+																<td className="mainLable">
+																	Liabilities & Equities
+																</td>
+																<td></td>
+																<td></td>
+															</tr>
+															<tr>
+																<td className="mainLable">Other Liability</td>
+																<td></td>
+																<td></td>
+															</tr>
+															{Object.keys(
+																this.state.data['otherLiability'],
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item}</td>
+																	<td className="pt-0 pb-0"></td>
+																	<td className="pt-0 pb-0 text-right">
+																		{this.state.data['otherLiability']
+																			? this.state.data['otherLiability'][
+																					`${item}`
+																			  ].toFixed(2)
+																			: ''}
+																	</td>
+																</tr>
+															))}
+															<tr className="mainLable">
+																<td className="mainLable">
+																	Total Other Liability
+																</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalOtherLiability']
+																		? this.state.data[
+																				'totalOtherLiability'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
+															<tr>
+																<td className="mainLable">
+																	Other Current Liability
+																</td>
+																<td></td>
+																<td></td>
+															</tr>
+															{Object.keys(
+																this.state.data['otherCurrentLiability'],
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item}</td>
+																	<td className="pt-0 pb-0"></td>
+																	<td className="pt-0 pb-0 text-right">
+																		{this.state.data['otherCurrentLiability']
+																			? this.state.data[
+																					'otherCurrentLiability'
+																			  ][`${item}`].toFixed(2)
+																			: ''}
+																	</td>
+																</tr>
+															))}
+															<tr className="mainLable">
+																<td className="mainLable">
+																	Total Other Current Liability
+																</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalOtherCurrentLiability']
+																		? this.state.data[
+																				'totalOtherCurrentLiability'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
+															<tr className="mainLable">
+																<td className="mainLable">Total Liability</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalLiability']
+																		? this.state.data['totalLiability'].toFixed(
+																				2,
+																		  )
+																		: ''}
+																</td>
+															</tr>
+															<tr>
+																<td className="mainLable">equities</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -394,18 +521,7 @@ class BalanceSheet extends React.Component {
 																		<td className="pt-0 pb-0">{item}</td>
 																		<td className="pt-0 pb-0"></td>
 																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['equities'][
-																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
-																		</td>
-																		<td>
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
+																			{this.state.data['equities']
 																				? this.state.data['equities'][
 																						`${item}`
 																				  ].toFixed(2)
@@ -414,70 +530,30 @@ class BalanceSheet extends React.Component {
 																	</tr>
 																),
 															)}
-															<tr>
-																<td className="mainLable">Income</td>
+															<tr className="mainLable">
+																<td className="mainLable">Total Equity</td>
 																<td></td>
-																<td></td>
-																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalEquities']
+																		? this.state.data['totalEquities'].toFixed(
+																				2,
+																		  )
+																		: ''}
+																</td>
 															</tr>
-															{Object.keys(this.state.data['income']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0"></td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['income'][
-																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
-																		</td>
-																		<td>
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['income'][
-																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
-																		</td>
-																	</tr>
-																),
-															)}
-															<tr>
-																<td className="mainLable">Expense</td>
+															<tr className="mainLable">
+																<td className="mainLable text-right">
+																	Total Liability Equities
+																</td>
 																<td></td>
-																<td></td>
-																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalLiabilityEquities']
+																		? this.state.data[
+																				'totalLiabilityEquities'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
 															</tr>
-															{Object.keys(this.state.data['expense']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0"></td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['expense'][
-																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
-																		</td>
-																		<td>
-																			{this.state.data[
-																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['expense'][
-																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
-																		</td>
-																	</tr>
-																),
-															)}
 														</>
 													) : (
 														<tr className="mainLable">

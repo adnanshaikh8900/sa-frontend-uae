@@ -41,3 +41,24 @@ export const getTrialBalanceReport = (postData) => {
 			});
 	};
 };
+
+export const getBalanceReport = (postData) => {
+	const { startDate, endDate } = postData;
+	let url = `rest/financialReport/balanceSheet?startDate=${startDate}&endDate=${endDate}`;
+
+	return (dispatch) => {
+		let data = {
+			method: 'get',
+			url,
+		};
+		return authApi(data)
+			.then((res) => {
+				if (res.status === 200) {
+					return res;
+				}
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};

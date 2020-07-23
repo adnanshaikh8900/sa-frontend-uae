@@ -74,23 +74,9 @@ class CashFlowStatement extends React.Component {
 				totalNonOperatingExpense: 0.0,
 				nonOperatingIncomeExpense: 0.0,
 				netProfitLoss: 0.0,
-				transactionCategoryMapper: {
-					'Capital Asset Depreciation Brought Forward': 'Credit',
-					Sales: 'Credit',
-					'Capital Asset Brought Forward': 'Debit',
-					'Accommodation and Meals': 'Credit',
-					'Accountancy Fees': 'Debit',
-					'Retained Earnings': 'Credit',
-					'Input VAT': 'Debit',
-					'SBI-Adil khan': 'Debit',
-					'SBI-Imran khan': 'Debit',
-					'Accounts Payable': 'Credit',
-				},
-				expense: {
-					'Accommodation and Meals': 5200.0,
-					'Accountancy Fees': 3400.0,
-				},
-				income: { Sales: 1200.0 },
+				transactionCategoryMapper: {},
+				expense: {},
+				income: {},
 				equities: {},
 				liabilities: {},
 				assets: {},
@@ -148,7 +134,7 @@ class CashFlowStatement extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({
-						//data: res.data,
+						data: res.data,
 						loading: false,
 					});
 				}

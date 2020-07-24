@@ -334,10 +334,11 @@ public class TransactionRestController {
 				{  // Supplier Invoices
 					updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
 					// JOURNAL LINE ITEM FOR normal transaction
-					Journal journal = reconsilationRestHelper.invoiceReconsile(userId,trnx,false);
-					journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-							transactionPresistModel.getDATE_FORMAT()));
-					journalService.persist(journal);
+					Journal journal = null;
+//					reconsilationRestHelper.invoiceReconsile(userId,trnx,false);
+//					journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+//							transactionPresistModel.getDATE_FORMAT()));
+//					journalService.persist(journal);
 					List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
 					reconsileSupplierInvoices(userId, trnx, itemModels);
 				}
@@ -366,10 +367,10 @@ public class TransactionRestController {
 				// Customer Invoices
 				updateTransactionForCustomerInvoices(trnx,transactionPresistModel);
 				// JOURNAL LINE ITEM FOR normal transaction
-				journal = reconsilationRestHelper.invoiceReconsile(userId,trnx,true);
-				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
-						transactionPresistModel.getDATE_FORMAT()));
-				journalService.persist(journal);
+//				journal = reconsilationRestHelper.invoiceReconsile(userId,trnx,true);
+//				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
+//						transactionPresistModel.getDATE_FORMAT()));
+//				journalService.persist(journal);
 				List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
 				reconsileCustomerInvoices(userId, trnx, itemModels);
 				break;
@@ -561,8 +562,8 @@ public class TransactionRestController {
 		Expense expense =  createNewExpense(transactionPresistModel,userId);
 		// create Journal entry for Expense
 		//Chart of account in expense and user
-		Journal journal = getJournalEntryForExpense(transactionPresistModel,expense,userId);
-		journalService.persist(journal);
+		Journal journal = null;//getJournalEntryForExpense(transactionPresistModel,expense,userId);
+		//journalService.persist(journal);
 		int transactionCategoryId = 0;
 		if(transactionPresistModel.getTransactionCategoryId()==null) {
 			transactionCategoryId = transactionPresistModel.getExpenseCategory();//TransactionCategoryConsatant.TRANSACTION_EMPLOYEE_REIMBURSEMENTS;

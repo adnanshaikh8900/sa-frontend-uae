@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.simplevat.service.TransactionCategoryClosingBalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,9 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 
 	@Autowired
 	private TransactionCategoryBalanceDao transactionCategoryBalanceDao;
+
+	@Autowired
+	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
 	@Override
 	protected Dao<Integer, TransactionCategoryBalance> getDao() {
@@ -84,6 +88,7 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 			balance.setRunningBalance(runningBalance);
 			balanceList.add(balance);
 			transactionCategoryBalanceDao.update(balance);
+			transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
 			return balance.getRunningBalance();
 		}
 

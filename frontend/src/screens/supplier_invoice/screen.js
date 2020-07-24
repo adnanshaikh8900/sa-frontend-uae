@@ -622,7 +622,7 @@ class SupplierInvoice extends React.Component {
 
 							<Row>
 								<Col lg={12}>
-									{/* <div className="mb-4 status-panel p-3">
+									<div className="mb-4 status-panel p-3">
 										<Row>
 											<Col lg={3}>
 												<h5>Overdue</h5>
@@ -647,7 +647,7 @@ class SupplierInvoice extends React.Component {
 												<h3 className="status-title">0 day</h3>
 											</Col>
 										</Row>
-									</div> */}
+									</div>
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											<Button

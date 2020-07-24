@@ -147,7 +147,7 @@ class BalanceSheet extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({
-						data: res.data,
+						//data: res.data,
 						loading: false,
 					});
 				}
@@ -285,7 +285,7 @@ class BalanceSheet extends React.Component {
 												? profile.company['companyName']
 												: ''}
 											<br style={{ marginBottom: '5px' }} />
-											Detailed General Ledger
+											Detailed Balance Report
 											<br style={{ marginBottom: '5px' }} />
 											From {initValue.startDate} To {initValue.endDate}
 										</p>
@@ -338,52 +338,6 @@ class BalanceSheet extends React.Component {
 																	</td>
 																</tr>
 															))}
-															<tr className="mainLable">
-																<td className="mainLable">
-																	Total Current Assets
-																</td>
-																<td></td>
-																<td className="text-right">
-																	{this.state.data['totalCurrentAssets']
-																		? this.state.data[
-																				'totalCurrentAssets'
-																		  ].toFixed(2)
-																		: ''}
-																</td>
-															</tr>
-															<tr>
-																<td className="mainLable">Fixed Assets</td>
-																<td></td>
-																<td></td>
-															</tr>
-															{Object.keys(this.state.data['fixedAssets']).map(
-																(item) => (
-																	<tr>
-																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0"></td>
-																		<td className="pt-0 pb-0 text-right">
-																			{this.state.data['fixedAssets']
-																				? this.state.data['fixedAssets'][
-																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
-																		</td>
-																	</tr>
-																),
-															)}
-															<tr className="mainLable">
-																<td className="mainLable">
-																	Total Fixed Assets
-																</td>
-																<td></td>
-																<td className="text-right">
-																	{this.state.data['totalFixedAssets']
-																		? this.state.data[
-																				'totalFixedAssets'
-																		  ].toFixed(2)
-																		: ''}
-																</td>
-															</tr>
 															<tr>
 																<td className="mainLable">Bank</td>
 																<td></td>
@@ -405,14 +359,53 @@ class BalanceSheet extends React.Component {
 																),
 															)}
 															<tr className="mainLable">
-																<td className="mainLable">Total Bank</td>
+																<td className="text-right">
+																	Total Current Assets
+																</td>
 																<td></td>
 																<td className="text-right">
-																	{this.state.data['totalBank']
-																		? this.state.data['totalBank'].toFixed(2)
+																	{this.state.data['totalCurrentAssets']
+																		? this.state.data[
+																				'totalCurrentAssets'
+																		  ].toFixed(2)
 																		: ''}
 																</td>
 															</tr>
+															<br />
+															<tr>
+																<td className="mainLable">Fixed Assets</td>
+																<td></td>
+																<td></td>
+															</tr>
+															{Object.keys(this.state.data['fixedAssets']).map(
+																(item) => (
+																	<tr>
+																		<td className="pt-0 pb-0">{item}</td>
+																		<td className="pt-0 pb-0"></td>
+																		<td className="pt-0 pb-0 text-right">
+																			{this.state.data['fixedAssets']
+																				? this.state.data['fixedAssets'][
+																						`${item}`
+																				  ].toFixed(2)
+																				: ''}
+																		</td>
+																	</tr>
+																),
+															)}
+															<tr className="mainLable">
+																<td className="text-right">
+																	Total Fixed Assets
+																</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalFixedAssets']
+																		? this.state.data[
+																				'totalFixedAssets'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
+															<br />
 															<tr className="mainLable">
 																<td className="mainLable text-right">
 																	Total Assets
@@ -424,6 +417,7 @@ class BalanceSheet extends React.Component {
 																		: ''}
 																</td>
 															</tr>
+															<br />
 															<tr>
 																<td className="mainLable">
 																	Liabilities & Equities
@@ -452,7 +446,7 @@ class BalanceSheet extends React.Component {
 																</tr>
 															))}
 															<tr className="mainLable">
-																<td className="mainLable">
+																<td className="mainLable text-right">
 																	Total Other Liability
 																</td>
 																<td></td>
@@ -464,6 +458,7 @@ class BalanceSheet extends React.Component {
 																		: ''}
 																</td>
 															</tr>
+															<br />
 															<tr>
 																<td className="mainLable">
 																	Other Current Liability
@@ -487,7 +482,7 @@ class BalanceSheet extends React.Component {
 																</tr>
 															))}
 															<tr className="mainLable">
-																<td className="mainLable">
+																<td className="mainLable text-right">
 																	Total Other Current Liability
 																</td>
 																<td></td>
@@ -499,8 +494,11 @@ class BalanceSheet extends React.Component {
 																		: ''}
 																</td>
 															</tr>
+															<br />
 															<tr className="mainLable">
-																<td className="mainLable">Total Liability</td>
+																<td className="mainLable text-right">
+																	Total Liability
+																</td>
 																<td></td>
 																<td className="text-right">
 																	{this.state.data['totalLiability']
@@ -510,8 +508,9 @@ class BalanceSheet extends React.Component {
 																		: ''}
 																</td>
 															</tr>
+															<br />
 															<tr>
-																<td className="mainLable">equities</td>
+																<td className="mainLable">Equities</td>
 																<td></td>
 																<td></td>
 															</tr>
@@ -531,7 +530,9 @@ class BalanceSheet extends React.Component {
 																),
 															)}
 															<tr className="mainLable">
-																<td className="mainLable">Total Equity</td>
+																<td className="mainLable text-right">
+																	Total Equity
+																</td>
 																<td></td>
 																<td className="text-right">
 																	{this.state.data['totalEquities']

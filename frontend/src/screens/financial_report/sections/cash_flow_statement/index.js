@@ -305,7 +305,6 @@ class CashFlowStatement extends React.Component {
 																(item) => (
 																	<tr>
 																		<td className="pt-0 pb-0">{item}</td>
-																		<td className="pt-0 pb-0"></td>
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'

@@ -653,7 +653,10 @@ public class InvoiceRestHelper {
 		journal.setJournalLineItems(journalLineItemList);
 		journal.setCreatedBy(userId);
 		journal.setPostingReferenceType(PostingReferenceTypeEnum.INVOICE);
-		journal.setJournalDate(LocalDateTime.now());
+		if(invoice!=null)
+			journal.setJournalDate(invoice.getInvoiceDate());
+		else
+			journal.setJournalDate(LocalDateTime.now());
 
 		return journal;
 	}

@@ -51,14 +51,14 @@ public class FinancialReportRestHelper {
 				switch (chartOfAccountCategoryCodeEnum) {
 					case BANK:
 						balanceSheetResponseModel.getBank().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-						totalBank += creditDebitAggregator.getTotalAmount();
+								BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+						totalBank += creditDebitAggregator.getActualAmount();
 						break;
 
 					case CURRENT_ASSET:
 						balanceSheetResponseModel.getCurrentAssets().put(transactionCategoryName,
-								BigDecimal.valueOf(creditDebitAggregator.getTotalAmount()));
-						totalCurrentAssets += creditDebitAggregator.getTotalAmount();
+								BigDecimal.valueOf(creditDebitAggregator.getActualAmount()));
+						totalCurrentAssets += creditDebitAggregator.getActualAmount();
 						break;
 
 					case ACCOUNTS_RECEIVABLE:

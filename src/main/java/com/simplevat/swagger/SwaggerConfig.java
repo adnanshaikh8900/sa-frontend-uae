@@ -35,7 +35,7 @@ public class SwaggerConfig {
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     public static final Contact DEFAULT_CONTACT = new Contact(
-            "Mohsin", "http://www.in28minutes.com", "in28minutes@gmail.com");
+            "Mohsin", "https://www.simplevat.com/", "mohsin.hashmi@gulftranstech.com");
 
     public static final ApiInfo DEFAULT_API_INFO = new ApiInfo(
             "Simple Vat Application", "Vat Simplified", "1.0",

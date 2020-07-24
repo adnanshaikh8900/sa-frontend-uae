@@ -1,13 +1,16 @@
 package com.simplevat.service.impl;
 
+import com.simplevat.constant.ChartOfAccountConstant;
 import com.simplevat.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
 import com.simplevat.dao.Dao;
 import com.simplevat.dao.TransactionCategoryClosingBalanceDao;
+import com.simplevat.entity.JournalLineItem;
 import com.simplevat.entity.TransactionCategoryBalance;
 import com.simplevat.entity.TransactionCategoryClosingBalance;
 import com.simplevat.entity.bankaccount.Transaction;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.service.TransactionCategoryClosingBalanceService;
 import com.simplevat.utils.DateFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -35,14 +39,50 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
     public PaginationResponseModel getAll(Map<TransactionCategoryBalanceFilterEnum, Object> filterMap) {
         return transactionCategoryClosingBalanceDao.getAll(filterMap);
     }
+    public List<TransactionCategoryClosingBalance> getList(ReportRequestModel reportRequestModel)
+    {
+        return transactionCategoryClosingBalanceDao.getList(reportRequestModel);
+    }
 
+    public void updateClosingBalance(JournalLineItem lineItem)
+    {
+        TransactionCategory category = lineItem.getTransactionCategory();
+        if(isVaildTransactionCategory(category))
+        {
+            Transaction transaction = new Transaction();
+            LocalDateTime journalDate = lineItem.getJournal().getJournalDate().truncatedTo(ChronoUnit.DAYS);
+            boolean isDebit = (lineItem.getDebitAmount() != null && !BigDecimal.ZERO.equals(lineItem.getDebitAmount()))
+                    ? Boolean.TRUE
+                    : Boolean.FALSE;
+            if(isDebit)
+                transaction.setDebitCreditFlag('C');
+            else
+                transaction.setDebitCreditFlag('D');
+            transaction.setCreatedBy(lineItem.getCreatedBy());
+            transaction.setTransactionDate(journalDate);
+            BigDecimal transactionAmount = lineItem.getDebitAmount() != null ? lineItem.getDebitAmount():lineItem.getCreditAmount();
+            if(lineItem.getDeleteFlag())
+                transactionAmount = transactionAmount.negate();
+            transaction.setTransactionAmount(transactionAmount);
+            updateClosingBalance(transaction,category);
+        }
+    }
+
+    private boolean isVaildTransactionCategory(TransactionCategory category) {
+        return category.getChartOfAccount().getChartOfAccountId() != ChartOfAccountConstant.BANK;
+    }
     @Override
-    // TODO Remain for update completed create and delete
-    // TODO Need to split this method as get amount and update TransactionCategoryBalance
-    public synchronized BigDecimal updateClosingBalance(Transaction transaction) {
-        List<TransactionCategoryClosingBalance> balanceList = new ArrayList<>();
+    public BigDecimal updateClosingBalance(Transaction transaction) {
         if (transaction != null) {
             TransactionCategory category = transaction.getBankAccount().getTransactionCategory();
+            return updateClosingBalance(transaction,category);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    public synchronized BigDecimal updateClosingBalance(Transaction transaction,TransactionCategory category) {
+        List<TransactionCategoryClosingBalance> balanceList = new ArrayList<>();
+        if (transaction != null) {
             boolean isUpdateOpeningBalance=false;
             boolean isDebit = transaction.getDebitCreditFlag().equals('D')
                     ? Boolean.TRUE

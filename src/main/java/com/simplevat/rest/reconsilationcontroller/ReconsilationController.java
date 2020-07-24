@@ -7,8 +7,10 @@ import com.simplevat.constant.ReconsileCategoriesEnumConstant;
 import com.simplevat.constant.TransactionExplinationStatusEnum;
 import com.simplevat.constant.dbfilter.TransactionFilterEnum;
 import com.simplevat.entity.ChartOfAccountCategory;
+import com.simplevat.entity.Invoice;
 import com.simplevat.entity.bankaccount.ReconcileStatus;
 import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.rest.InviceSingleLevelDropdownModel;
 import com.simplevat.rest.PaginationResponseModel;
 import com.simplevat.rest.SingleLevelDropDownModel;
 import com.simplevat.rest.transactioncategorycontroller.TranscationCategoryHelper;
@@ -109,6 +111,21 @@ public class ReconsilationController {
 					param = new HashMap<>();
 					param.put("deleteFlag", false);
 					param.put("type", 2);
+					List<Invoice> invList = invoiceService.findByAttributes(param);
+				List<InviceSingleLevelDropdownModel> invModelList = new ArrayList<>();
+
+				for (Invoice invice : invList) {
+					invModelList.add(new InviceSingleLevelDropdownModel(invice.getId(), invice.getReferenceNumber()
+							+ " (" + invice.getTotalAmount() + " " + invice.getCurrency().getCurrencyName()+")",
+							invice.getTotalAmount()));
+				}
+
+				list.add(new SingleLevelDropDownModel("Customer", contactService.getContactForDropdown(2)));
+				param = new HashMap<>();
+				param.put("label", "Sales Invoice");
+				param.put("options", invModelList);
+				//list.add(param);
+				list.add(param);
 					transactionCatList = transactionCategoryService
 							.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
 					return new ResponseEntity<>(
@@ -149,10 +166,15 @@ public class ReconsilationController {
 						{
 							List<TransactionCategory> tempTransactionCatogaryList = new ArrayList<>();
 							TransactionCategory bankTransactionCategory = bankAccountService.getBankAccountById(filterModel.getBankId()).getTransactionCategory();
+							Integer bankTransactionCategoryId = bankTransactionCategory.getTransactionCategoryId();
 							for(TransactionCategory transactionCategory : transactionCatList)
 							{
-
-								if(transactionCategory.getTransactionCategoryId() != bankTransactionCategory.getTransactionCategoryId())
+                             Integer transactionCategoryId = transactionCategory.getTransactionCategoryId();
+								if(transactionCategoryId == bankTransactionCategoryId)
+								{
+									//tempTransactionCatogaryList.add(transactionCategory);
+								}
+								else
 								{
 									tempTransactionCatogaryList.add(transactionCategory);
 								}
@@ -253,7 +275,7 @@ public class ReconsilationController {
 				startDate = status.getReconciledDate();
 			}
 			Integer unexplainedTransaction = 1;
-			if (startDate.isEqual(reconcileDate))
+			if (startDate.isEqual(reconcileDate) && status !=null)
 				unexplainedTransaction = -1;
 			else
 				unexplainedTransaction = transactionService.isTransactionsReadyForReconcile(startDate, reconcileDate, reconcilationPersistModel.getBankId());

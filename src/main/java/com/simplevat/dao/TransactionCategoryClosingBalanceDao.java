@@ -4,6 +4,7 @@ import com.simplevat.constant.dbfilter.TransactionCategoryBalanceFilterEnum;
 import com.simplevat.entity.TransactionCategoryClosingBalance;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,4 +23,6 @@ public interface TransactionCategoryClosingBalanceDao extends Dao<Integer, Trans
                                                                                             TransactionCategory transactionCategory);
 
     public TransactionCategoryClosingBalance getLastClosingBalanceByDate(TransactionCategory category);
+
+    public List<TransactionCategoryClosingBalance> getList(ReportRequestModel reportRequestModel);
 }

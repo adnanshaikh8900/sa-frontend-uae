@@ -2,31 +2,16 @@ package com.simplevat.rest.detailedgeneralledgerreport;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.time.ZoneId;
+import java.util.*;
 
+import com.simplevat.entity.*;
+import com.simplevat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.simplevat.constant.PostingReferenceTypeEnum;
-import com.simplevat.entity.Contact;
-import com.simplevat.entity.Expense;
-import com.simplevat.entity.Invoice;
-import com.simplevat.entity.Journal;
-import com.simplevat.entity.JournalLineItem;
-import com.simplevat.entity.Payment;
-import com.simplevat.entity.Receipt;
 import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.service.ExpenseService;
-import com.simplevat.service.InvoiceService;
-import com.simplevat.service.JournalLineItemService;
-import com.simplevat.service.PaymentService;
-import com.simplevat.service.ReceiptService;
 import com.simplevat.service.bankaccount.TransactionService;
 import com.simplevat.utils.DateFormatUtil;
 
@@ -53,6 +38,9 @@ public class DetailedGeneralLedgerRestHelper {
 
 	@Autowired
 	private DateFormatUtil dateUtil;
+
+	@Autowired
+	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
 
 	public Map<Integer, Expense> findOrGetFromDbEx(Map<Integer, Expense> expenseMap, Integer id) {
 
@@ -104,7 +92,8 @@ public class DetailedGeneralLedgerRestHelper {
 		List<Object> resposneList = new ArrayList<>();
 
 		List<JournalLineItem> itemList = journalLineItemService.getList(reportRequestModel);
-
+		List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getList(reportRequestModel);
+Map<Integer,TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = processTransactionCategoryClosingBalance(closingBalanceList);
 		if (itemList != null && !itemList.isEmpty()) {
 
 			Map<Integer, List<JournalLineItem>> map = new HashMap<>();
@@ -118,7 +107,7 @@ public class DetailedGeneralLedgerRestHelper {
 					if (map.containsKey(item.getTransactionCategory().getTransactionCategoryId())) {
 						map.get(item.getTransactionCategory().getTransactionCategoryId()).add(item);
 					} else {
-						List<JournalLineItem> jlList = new ArrayList<JournalLineItem>();
+						List<JournalLineItem> jlList = new ArrayList<>();
 						jlList.add(item);
 						map.put(item.getTransactionCategory().getTransactionCategoryId(), jlList);
 					}
@@ -250,12 +239,51 @@ public class DetailedGeneralLedgerRestHelper {
 
 					dataList.add(model);
 				}
+				if(transactionCategoryClosingBalanceMap.get(item)!=null)
+				{
+					TransactionCategoryClosingBalance transactionCategoryClosingBalance = transactionCategoryClosingBalanceMap.get(item);
+					DetailedGeneralLedgerReportListModel tempopeningBalanceModel = dataList.get(0);
+					DetailedGeneralLedgerReportListModel openingBalanceModel = new DetailedGeneralLedgerReportListModel();
+					openingBalanceModel.setDate("As on "+reportRequestModel.getStartDate());
+					openingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getOpeningBalance());
+					openingBalanceModel.setAmount(transactionCategoryClosingBalance.getOpeningBalance());
+					openingBalanceModel.setTransactionTypeName(tempopeningBalanceModel.getTransactionTypeName());
+					openingBalanceModel.setPostingReferenceTypeEnum("Opening Balance");
+					dataList.add(0,openingBalanceModel);
+					DetailedGeneralLedgerReportListModel closingBalanceModel = new DetailedGeneralLedgerReportListModel();
+					closingBalanceModel.setDate("As on "+reportRequestModel.getEndDate());
+					closingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getClosingBalance());
+					closingBalanceModel.setAmount(transactionCategoryClosingBalance.getClosingBalance());
+					closingBalanceModel.setPostingReferenceTypeEnum("Closing Balance");
+					dataList.add(closingBalanceModel);
+				}
 				resposneList.add(dataList);
 			}
 
 		}
 
 		return resposneList;
+	}
+
+	private Map<Integer, TransactionCategoryClosingBalance> processTransactionCategoryClosingBalance(List<TransactionCategoryClosingBalance> closingBalanceList) {
+		Map<Integer, TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = new HashMap<>();
+		for(TransactionCategoryClosingBalance transactionCategoryClosingBalance :closingBalanceList)
+		{
+			TransactionCategoryClosingBalance tempTransactionCategoryClosingBalance = transactionCategoryClosingBalanceMap.get(transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryId());
+
+			if(tempTransactionCategoryClosingBalance==null)
+			{
+				tempTransactionCategoryClosingBalance = new TransactionCategoryClosingBalance();
+				tempTransactionCategoryClosingBalance.setOpeningBalance(transactionCategoryClosingBalance.getOpeningBalance());
+				tempTransactionCategoryClosingBalance.setClosingBalance(transactionCategoryClosingBalance.getClosingBalance());
+				tempTransactionCategoryClosingBalance.setClosingBalanceDate(transactionCategoryClosingBalance.getClosingBalanceDate());
+				transactionCategoryClosingBalanceMap.put(transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryId(),tempTransactionCategoryClosingBalance);
+			}
+			else
+				tempTransactionCategoryClosingBalance.setOpeningBalance(transactionCategoryClosingBalance.getOpeningBalance());
+			tempTransactionCategoryClosingBalance.setCreatedDate(Date.from(transactionCategoryClosingBalance.getClosingBalanceDate().atZone(ZoneId.systemDefault()).toInstant()));
+		}
+		return transactionCategoryClosingBalanceMap;
 	}
 
 }

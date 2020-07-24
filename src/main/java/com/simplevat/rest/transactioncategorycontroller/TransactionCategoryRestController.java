@@ -67,12 +67,12 @@ public class TransactionCategoryRestController{
 
 	@ApiOperation(value = "Get All Transaction Categories for the Loggedin User and the Master data")
 	@GetMapping(value = "/gettransactioncategory")
-	public ResponseEntity<List<TransactionCategory>> getAllTransactionCategory(HttpServletRequest request) {
+	public ResponseEntity<List<TransactionCategoryModel>> getAllTransactionCategory(HttpServletRequest request) {
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		List<TransactionCategory> transactionCategories = transactionCategoryService
-				.findAllTransactionCategoryByUserId(userId);
+		List<TransactionCategory> transactionCategories = transactionCategoryService.findAllTransactionCategory();
+			//	.findAllTransactionCategoryByUserId(userId);
 		if (transactionCategories != null) {
-			return new ResponseEntity<>(transactionCategories, HttpStatus.OK);
+			return new ResponseEntity<>(transcationCategoryHelper.getListModel(transactionCategories), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 

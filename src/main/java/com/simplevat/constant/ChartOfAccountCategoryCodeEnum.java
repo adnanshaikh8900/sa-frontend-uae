@@ -12,7 +12,7 @@ public enum ChartOfAccountCategoryCodeEnum {
     CURRENT_ASSET("01-04"),
     FIXED_ASSET("01-05"),
     OTHER_CURRENT_ASSET("01-06"),
-    STOCK("01-01"),
+    STOCK("01-07"),
     ACCOUNTS_PAYABLE("02-01"),
     OTHER_CURRENT_LIABILITIES("02-02"),
     OTHER_LIABILITY("02-03"),

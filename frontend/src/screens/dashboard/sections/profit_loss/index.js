@@ -59,7 +59,7 @@ class ProfitAndLoss extends Component {
 
 	render() {
 		return (
-			<div className="animated fadeIn">
+			<div className="animated fadeIn" style={{ zIndex: '-1' }}>
 				<Card className="profit-card">
 					<CardBody className="tab-card">
 						<div className="flex-wrapper">

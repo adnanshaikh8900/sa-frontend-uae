@@ -177,7 +177,7 @@ public class TransactionDaoImpl extends AbstractDao<Integer, Transaction> implem
 			builder.append("and t.transactionDate BETWEEN :startDate AND :lastDate ");
 		}
 		TypedQuery<Transaction> query = getEntityManager()
-				.createQuery("SELECT t FROM Transaction t WHERE t.deleteFlag = false " + builder.toString()
+				.createQuery("SELECT t FROM Transaction t WHERE t.deleteFlag = false and t.transactionExplinationStatusEnum = 'FULL' " + builder.toString()
 						+ "ORDER BY t.transactionDate ASC", Transaction.class);
 		if (transactionTypeId != null) {
 			query.setParameter("transactionTypeCode", transactionTypeId);

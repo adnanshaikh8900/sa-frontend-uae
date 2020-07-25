@@ -128,11 +128,11 @@ class ProfitAndLoss extends Component {
 										<Progress
 											className="income"
 											color="success"
-											value="90"
+											value={this.props.profit_loss['Income']}
 										></Progress>
 										<div className="data-item small">
 											<div>
-												<h3>$ 180, 40</h3>
+												<h3>{this.props.profit_loss['Income']}</h3>
 												<p>INCOME</p>
 											</div>
 										</div>
@@ -141,11 +141,11 @@ class ProfitAndLoss extends Component {
 										<Progress
 											className="expense"
 											color="warning"
-											value="20"
+											value={this.props.profit_loss['Expense']}
 										></Progress>
 										<div className="data-item small">
 											<div>
-												<h3>$ 180, 40</h3>
+												<h3>{this.props.profit_loss['Expense']}</h3>
 												<p>EXPENSES</p>
 											</div>
 										</div>

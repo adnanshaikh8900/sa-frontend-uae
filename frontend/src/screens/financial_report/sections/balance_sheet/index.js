@@ -147,7 +147,7 @@ class BalanceSheet extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({
-						//data: res.data,
+						data: res.data,
 						loading: false,
 					});
 				}
@@ -285,7 +285,7 @@ class BalanceSheet extends React.Component {
 												? profile.company['companyName']
 												: ''}
 											<br style={{ marginBottom: '5px' }} />
-											Detailed Balance Report
+											Balance Sheet
 											<br style={{ marginBottom: '5px' }} />
 											From {initValue.startDate} To {initValue.endDate}
 										</p>

@@ -66,6 +66,8 @@ class Header extends Component {
 				<AppSidebarToggler className="d-lg-none" display="md" mobile />
 				<AppNavbarBrand
 					className="p-2"
+					tag={NavLink}
+					to={'/admin/dashboard'}
 					full={{
 						src: logo,
 						width: '100%',
@@ -82,16 +84,6 @@ class Header extends Component {
 				<AppSidebarToggler className="d-md-down-none" display="lg">
 					<i className="fa fa-list-ul header-sidebar-icon"></i>
 				</AppSidebarToggler>
-				<Nav className="d-md-down-none" navbar>
-					<NavItem className="px-3">
-						<NavLink to="/admin/dashboard" className="nav-link">
-							Dashboard
-						</NavLink>
-					</NavItem>
-					{/* <NavItem className="px-3">
-            <NavLink to="/admin/settings" className="nav-link">Settings</NavLink>
-          </NavItem> */}
-				</Nav>
 				<Nav className="ml-auto" navbar>
 					<NavItem>
 						<AppAsideToggler className="d-md-down-none">

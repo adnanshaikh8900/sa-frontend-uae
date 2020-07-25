@@ -100,22 +100,22 @@ class ProfitAndLoss extends Component {
 						<TabContent activeTab={this.state.activeTab[0]}>
 							<TabPane tabId="1">
 								<div className="flex-wrapper">
-									<div className="data-info">
-										<div className="data-item">
+									<div className="data-info align-items-center">
+										<div className="data-item m-0">
 											<div>
 												<h3>{this.props.profit_loss['Income']}</h3>
 												<p>INCOME</p>
 											</div>
 										</div>
-										<img alt="minus" src={minusIcon} />
-										<div className="data-item">
+										<img alt="minus" src={minusIcon} className="m-0" />
+										<div className="data-item m-0">
 											<div>
 												<h3> {this.props.profit_loss['Expense']}</h3>
 												<p>EXPENSES</p>
 											</div>
 										</div>
-										<img alt="sum" src={equalIcon} />
-										<div className="data-item total">
+										<img alt="sum" src={equalIcon} className="m-0" />
+										<div className="data-item total m-0">
 											<div>
 												<h3>{this.props.profit_loss['NetProfit']}</h3>
 												<p>PROFIT</p>
@@ -158,20 +158,32 @@ class ProfitAndLoss extends Component {
 										<div className="data-info">
 											<div className="data-item">
 												<div>
-													<h3>{this.props.taxes['Tax payable']}</h3>
-													<p>Tax Payable</p>
-												</div>
-											</div>
-											<div className="data-item">
-												<div>
-													<h3>{this.props.taxes['InputVat']}</h3>
+													<h3>
+														{this.props.taxes['InputVat']
+															? this.props.taxes['InputVat']
+															: 0}
+													</h3>
 													<p>Input Vat</p>
 												</div>
 											</div>
 											<div className="data-item total">
 												<div>
-													<h3>{this.props.taxes['OutputVat']}</h3>
+													<h3>
+														{this.props.taxes['OutputVat']
+															? this.props.taxes['OutputVat']
+															: 0}
+													</h3>
 													<p>Output Vat</p>
+												</div>
+											</div>
+											<div className="data-item">
+												<div>
+													<h3>
+														{this.props.taxes['Tax payable']
+															? this.props.taxes['Tax payable']
+															: 0}
+													</h3>
+													<p>Tax Payable</p>
 												</div>
 											</div>
 										</div>

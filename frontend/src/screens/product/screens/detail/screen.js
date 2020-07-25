@@ -29,7 +29,6 @@ import { WareHouseModal } from '../../sections';
 import { Loader, ConfirmDeleteModal } from 'components';
 import { selectOptionsFactory } from 'utils';
 import * as DetailProductActions from './actions';
-import * as transactionCreateActions from '../../../bank_account/screens/transactions/actions';
 import { CommonActions } from 'services/global';
 
 const mapStateToProps = (state) => {
@@ -42,10 +41,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		productActions: bindActionCreators(ProductActions, dispatch),
-		transactionCreateActions: bindActionCreators(
-			transactionCreateActions,
-			dispatch,
-		),
 		detailProductActions: bindActionCreators(DetailProductActions, dispatch),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
@@ -151,7 +146,7 @@ class DetailProduct extends React.Component {
 
 	salesCategory = () => {
 		try {
-			this.props.transactionCreateActions
+			this.props.productActions
 				.getTransactionCategoryListForExplain('2')
 				.then((res) => {
 					if (res.status === 200) {
@@ -171,7 +166,7 @@ class DetailProduct extends React.Component {
 	};
 	purchaseCategory = () => {
 		try {
-			this.props.transactionCreateActions
+			this.props.productActions
 				.getTransactionCategoryListForExplain('10')
 				.then((res) => {
 					if (res.status === 200) {

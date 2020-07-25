@@ -457,7 +457,10 @@ class DetailedGeneralLedgerReport extends React.Component {
 																					</td>
 																					<td style={{ width: '13%' }}>
 																						{/* {row['name']} */}
-																						{row.transactionTypeName}
+																						{row['postingReferenceTypeEnum'] !==
+																						'Opening Balance'
+																							? row.transactionTypeName
+																							: ''}
 																					</td>
 																					<td style={{ width: '13%' }}>
 																						{/* {row['postingReferenceTypeEnum']} */}
@@ -485,38 +488,57 @@ class DetailedGeneralLedgerReport extends React.Component {
 																							</p>
 																						)}
 																					</td>
-																					<td style={{ width: '15%' }}>
-																						{row.creditAmount > 0 && (
+																					{row['postingReferenceTypeEnum'] !==
+																					'Opening Balance' ? (
+																						<td style={{ width: '15%' }}>
+																							{row.creditAmount > 0 && (
+																								<p
+																									className="text-right"
+																									onClick={() =>
+																										this.getInvoice(
+																											row[
+																												'postingReferenceType'
+																											],
+																											row['invoiceType'],
+																											row['referenceId'],
+																										)
+																									}
+																								>
+																									{row.creditAmount.toFixed(2)}
+																								</p>
+																							)}
+																						</td>
+																					) : (
+																						<td>
 																							<p
+																								style={{ color: '#000000' }}
 																								className="text-right"
-																								onClick={() =>
-																									this.getInvoice(
-																										row['postingReferenceType'],
-																										row['invoiceType'],
-																										row['referenceId'],
-																									)
-																								}
 																							>
 																								{row.creditAmount.toFixed(2)}
 																							</p>
-																						)}
-																					</td>
-																					<td
-																						className="amount-col text-right"
-																						style={{ width: '15%' }}
-																						onClick={() =>
-																							this.getInvoice(
-																								row['postingReferenceType'],
-																								row['invoiceType'],
-																								row['referenceId'],
-																							)
-																						}
-																					>
-																						{`${row.amount.toFixed(2)}`}
-																						{`${row.debitAmount}` > 0
-																							? 'Dr'
-																							: 'Cr'}
-																					</td>
+																						</td>
+																					)}
+																					{row['postingReferenceTypeEnum'] !==
+																					'Opening Balance' ? (
+																						<td
+																							className="amount-col text-right"
+																							style={{ width: '15%' }}
+																							onClick={() =>
+																								this.getInvoice(
+																									row['postingReferenceType'],
+																									row['invoiceType'],
+																									row['referenceId'],
+																								)
+																							}
+																						>
+																							{`${row.amount.toFixed(2)}`}
+																							{`${row.debitAmount}` > 0
+																								? 'Dr'
+																								: 'Cr'}
+																						</td>
+																					) : (
+																						<td></td>
+																					)}
 																				</tr>
 																			);
 																		})}

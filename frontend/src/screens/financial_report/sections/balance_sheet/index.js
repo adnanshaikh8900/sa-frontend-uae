@@ -147,7 +147,7 @@ class BalanceSheet extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({
-						//data: res.data,
+						data: res.data,
 						loading: false,
 					});
 				}
@@ -229,18 +229,14 @@ class BalanceSheet extends React.Component {
 															<CSVLink
 																data={csvData}
 																className="csv-btn"
-																filename={'detailGeneralLedger.csv'}
+																filename={'balancesheet.csv'}
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
 														</DropdownItem>
 														<DropdownItem
 															onClick={() => {
-																this.exportFile(
-																	csvData,
-																	'detailGeneralLedger',
-																	'xls',
-																);
+																this.exportFile(csvData, 'balancesheet', 'xls');
 															}}
 														>
 															XLS (Microsoft Excel 1997-2004 Compatible)
@@ -249,7 +245,7 @@ class BalanceSheet extends React.Component {
 															onClick={() => {
 																this.exportFile(
 																	csvData,
-																	'detailGeneralLedger',
+																	'balancesheet',
 																	'xlsx',
 																);
 															}}
@@ -285,7 +281,7 @@ class BalanceSheet extends React.Component {
 												? profile.company['companyName']
 												: ''}
 											<br style={{ marginBottom: '5px' }} />
-											Detailed Balance Report
+											Balance Sheet
 											<br style={{ marginBottom: '5px' }} />
 											From {initValue.startDate} To {initValue.endDate}
 										</p>

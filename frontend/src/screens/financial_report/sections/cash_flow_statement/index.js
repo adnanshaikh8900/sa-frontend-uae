@@ -65,33 +65,50 @@ class CashFlowStatement extends React.Component {
 				direction: 'desc',
 			},
 			data: {
-				totalOperatingIncome: 0.0,
-				totalCostOfGoodsSold: 0.0,
-				grossProfit: 0.0,
-				totalOperatingExpense: 0.0,
-				operatingProfit: 0.0,
-				totalNonOperatingIncome: 0.0,
-				totalNonOperatingExpense: 0.0,
-				nonOperatingIncomeExpense: 0.0,
-				netProfitLoss: 0.0,
-				transactionCategoryMapper: {},
+				transactionCategoryMapper: {
+					'Capital Asset Depreciation Brought Forward': 'Credit',
+					Sales: 'Credit',
+					'Capital Asset Brought Forward': 'Debit',
+					'Accommodation and Meals': 'Debit',
+					'Accountancy Fees': 'Debit',
+					'Retained Earnings': 'Credit',
+					'Input VAT': 'Debit',
+					'SBI-Adil khan': 'Debit',
+					'SBI-Imran khan': 'Debit',
+					'Accounts Payable': 'Credit',
+				},
+				assets: {
+					'Input VAT': 0.0,
+				},
+				fixedAsset: {
+					'Capital Asset Depreciation Brought Forward': 1200.0,
+					'Capital Asset Brought Forward': 1100.0,
+				},
+				liabilities: {},
+				equities: {},
+				income: {
+					Sales: 1200.0,
+				},
+				expense: {
+					'Accommodation and Meals': 5200.0,
+					'Accountancy Fees': 3400.0,
+				},
+				accountReceivable: {},
+				accountpayable: {
+					'Accounts Payable': 2300.0,
+				},
+				bank: {
+					'SBI-Adil khan': 2400.0,
+					'SBI-Imran khan': 400.0,
+				},
 				totalCreditAmount: 5300.0,
 				totalDebitAmount: 12500.0,
-				expense: {},
-				income: {},
-				equities: {},
-				liabilities: {},
-				assets: {},
-				fixedAsset: {},
-				accountReceivable: {},
-				accountpayable: {},
-				bank: {},
 			},
 		};
 		this.columnHeader = [
 			{ label: 'Account', value: 'Account', sort: true },
 			{ label: 'Net Debit', value: 'Net Debit', sort: false },
-			{ label: 'Net Cebit', value: 'Net Credit', sort: false },
+			{ label: 'Net Credit', value: 'Net Credit', sort: false },
 		];
 	}
 
@@ -212,18 +229,14 @@ class CashFlowStatement extends React.Component {
 															<CSVLink
 																data={csvData}
 																className="csv-btn"
-																filename={'detailGeneralLedger.csv'}
+																filename={'trialBalance.csv'}
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
 														</DropdownItem>
 														<DropdownItem
 															onClick={() => {
-																this.exportFile(
-																	csvData,
-																	'detailGeneralLedger',
-																	'xls',
-																);
+																this.exportFile(csvData, 'trialBalance', 'xls');
 															}}
 														>
 															XLS (Microsoft Excel 1997-2004 Compatible)
@@ -232,7 +245,7 @@ class CashFlowStatement extends React.Component {
 															onClick={() => {
 																this.exportFile(
 																	csvData,
-																	'detailGeneralLedger',
+																	'trialBalance',
 																	'xlsx',
 																);
 															}}
@@ -268,7 +281,7 @@ class CashFlowStatement extends React.Component {
 												? profile.company['companyName']
 												: ''}
 											<br style={{ marginBottom: '5px' }} />
-											Detailed General Ledger
+											Trial Balance Report
 											<br style={{ marginBottom: '5px' }} />
 											From {initValue.startDate} To {initValue.endDate}
 										</p>
@@ -404,7 +417,7 @@ class CashFlowStatement extends React.Component {
 																				  ].toFixed(2)
 																				: ''}
 																		</td>
-																		<td>
+																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit'
@@ -447,9 +460,13 @@ class CashFlowStatement extends React.Component {
 																),
 															)}
 															<tr>
-																<td className="mainLable">Total</td>
-																<td>{this.state.data['totalDebitAmount']}</td>
-																<td>{this.state.data['totalCreditAmount']}</td>
+																<td className="mainLable text-right">Total</td>
+																<td className="text-right">
+																	{this.state.data['totalDebitAmount']}
+																</td>
+																<td className="text-right">
+																	{this.state.data['totalCreditAmount']}
+																</td>
 															</tr>
 														</>
 													) : (

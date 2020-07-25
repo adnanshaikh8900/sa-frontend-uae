@@ -143,7 +143,7 @@ class CashFlowStatement extends React.Component {
 			.then((res) => {
 				if (res.status === 200) {
 					this.setState({
-						//	data: res.data,
+						data: res.data,
 						loading: false,
 					});
 				}

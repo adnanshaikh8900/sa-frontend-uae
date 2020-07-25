@@ -460,6 +460,51 @@ class CashFlowStatement extends React.Component {
 																),
 															)}
 															<tr>
+																<td className="mainLable">
+																	Account Receivable
+																</td>
+																<td className="text-right">
+																	{this.state.data['transactionCategoryMapper'][
+																		'Accounts Receivable'
+																	] === 'Debit'
+																		? this.state.data['accountReceivable'][
+																				'Accounts Receivable'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+																<td className="text-right">
+																	{this.state.data['transactionCategoryMapper'][
+																		'Accounts Receivable'
+																	] === 'Credit'
+																		? this.state.data['accountReceivable'][
+																				'Accounts Receivable'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
+															<tr>
+																<td className="mainLable">Account Payable</td>
+																<td className="text-right">
+																	{' '}
+																	{this.state.data['transactionCategoryMapper'][
+																		'Accounts Payable'
+																	] === 'Debit'
+																		? this.state.data['accountpayable'][
+																				'Accounts Payable'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+																<td className="text-right">
+																	{this.state.data['transactionCategoryMapper'][
+																		'Accounts Payable'
+																	] === 'Credit'
+																		? this.state.data['accountpayable'][
+																				'Accounts Payable'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
+															<tr>
 																<td className="mainLable text-right">Total</td>
 																<td className="text-right">
 																	{this.state.data['totalDebitAmount']}

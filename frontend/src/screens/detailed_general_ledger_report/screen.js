@@ -293,6 +293,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 			chart_of_account_list,
 		} = this.state;
 		const { profile } = this.props;
+		console.log(this.state.detailedGeneralLedgerList);
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -472,24 +473,45 @@ class DetailedGeneralLedgerReport extends React.Component {
 																					<td style={{ width: '8%' }}>
 																						{row['referenceNo']}
 																					</td>
-																					<td style={{ width: '12%' }}>
-																						{row.debitAmount > 0 && (
-																							<p
-																								className="text-right"
-																								onClick={() =>
-																									this.getInvoice(
-																										row['postingReferenceType'],
-																										row['invoiceType'],
-																										row['referenceId'],
-																									)
-																								}
-																							>
-																								{row.debitAmount.toFixed(2)}
-																							</p>
-																						)}
-																					</td>
 																					{row['postingReferenceTypeEnum'] !==
-																					'Opening Balance' ? (
+																						'Opening Balance' &&
+																					row['postingReferenceTypeEnum'] !==
+																						'Closing Balance' ? (
+																						<td style={{ width: '15%' }}>
+																							{row.debitAmount > 0 && (
+																								<p
+																									className="text-right"
+																									onClick={() =>
+																										this.getInvoice(
+																											row[
+																												'postingReferenceType'
+																											],
+																											row['invoiceType'],
+																											row['referenceId'],
+																										)
+																									}
+																								>
+																									{row.debitAmount.toFixed(2)}
+																								</p>
+																							)}
+																						</td>
+																					) : (
+																						<td>
+																							<p
+																								style={{ color: '#000000' }}
+																								className="text-right"
+																							>
+																								{row.debitAmount !== null
+																									? row.debitAmount.toFixed(2)
+																									: ''}
+																							</p>
+																						</td>
+																					)}
+
+																					{row['postingReferenceTypeEnum'] !==
+																						'Opening Balance' &&
+																					row['postingReferenceTypeEnum'] !==
+																						'Closing Balance' ? (
 																						<td style={{ width: '15%' }}>
 																							{row.creditAmount > 0 && (
 																								<p
@@ -514,12 +536,16 @@ class DetailedGeneralLedgerReport extends React.Component {
 																								style={{ color: '#000000' }}
 																								className="text-right"
 																							>
-																								{row.creditAmount.toFixed(2)}
+																								{row.creditAmount !== null
+																									? row.creditAmount.toFixed(2)
+																									: ''}
 																							</p>
 																						</td>
 																					)}
 																					{row['postingReferenceTypeEnum'] !==
-																					'Opening Balance' ? (
+																						'Opening Balance' &&
+																					row['postingReferenceTypeEnum'] !==
+																						'Closing Balance' ? (
 																						<td
 																							className="amount-col text-right"
 																							style={{ width: '15%' }}

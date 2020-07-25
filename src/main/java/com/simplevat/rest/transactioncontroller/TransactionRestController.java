@@ -178,7 +178,10 @@ public class TransactionRestController {
 			}
 			else
 			{
-				dataMap.put(TransactionFilterEnum.TRANSACTION_EXPLINATION_STATUS_IN, TransactionExplinationStatusEnum.NOT_EXPLAIN);
+				dataMap.put(TransactionFilterEnum.TRANSACTION_EXPLINATION_STATUS_IN,TransactionExplinationStatusEnum.NOT_EXPLAIN);
+				dataMap.put(TransactionFilterEnum.TRANSACTION_EXPLINATION_STATUS_IN,TransactionExplinationStatusEnum.FULL);
+				dataMap.put(TransactionFilterEnum.TRANSACTION_EXPLINATION_STATUS_IN,TransactionExplinationStatusEnum.RECONCILED);
+				dataMap.put(TransactionFilterEnum.TRANSACTION_EXPLINATION_STATUS_IN,TransactionExplinationStatusEnum.PARIAL);
 			}
 		}
 		if (filterModel.getTransactionDate() != null) {

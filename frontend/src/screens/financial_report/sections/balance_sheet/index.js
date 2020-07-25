@@ -65,48 +65,31 @@ class BalanceSheet extends React.Component {
 				direction: 'desc',
 			},
 			data: {
-				totalCurrentAssets: 3300.0,
-				totalFixedAssets: 2300.0,
-				totalAssets: 27700.0,
-				totalOtherCurrentAssets: 2300.0,
-				totalBank: 19800.0,
-				totalOtherLiability: null,
-				totalAccountReceivable: null,
-				totalAccountPayable: null,
-				totalOtherCurrentLiability: 2000.0,
-				totalLiability: 4300.0,
-				totalEquities: 1600.0,
-				totalLiabilityEquities: 5900.0,
-				currentAssets: {
-					'Trade Debtors': 1100.0,
-					Inventory: 1100.0,
-					'Unpaid Shares': 1100.0,
-				},
+				totalCurrentAssets: 24136.36,
+				totalFixedAssets: 0,
+				totalAssets: 24136.36,
+				totalOtherCurrentAssets: 386.36,
+				totalBank: 3750,
+				totalOtherLiability: 0,
+				totalAccountReceivable: 20000,
+				totalAccountPayable: 22250,
+				totalOtherCurrentLiability: 7750,
+				totalLiability: 30000,
+				totalEquities: 0,
+				totalLiabilityEquities: 30000,
+				currentAssets: {},
 				otherCurrentAssets: {
-					'Employee Advance': 1200.0,
-					'Advance Tax': 1100.0,
-					'Input VAT': 0.0,
+					'Input VAT': 386.36,
 				},
 				bank: {
-					'SBI-Adil khan': 13600.0,
-					'SBI-Imran khan': 6200.0,
+					'Axis Bank-Afzal Khan': 3750,
 				},
-				fixedAssets: {
-					'Capital Asset Depreciation Brought Forward': 1200.0,
-					'Capital Asset Brought Forward': 1100.0,
-				},
+				fixedAssets: {},
 				otherLiability: {},
 				otherCurrentLiability: {
-					'Employee Reimbursements': 2000.0,
+					'Employee Reimbursements': 7750,
 				},
-				equities: {
-					'Owners Current Account': 1000.0,
-					'Retained Earnings': 600.0,
-				},
-				accountReceivable: {},
-				accountPayable: {
-					'Accounts Payable': 2300.0,
-				},
+				equities: {},
 			},
 		};
 		this.columnHeader = [
@@ -354,6 +337,41 @@ class BalanceSheet extends React.Component {
 																	</tr>
 																),
 															)}
+															<tr>
+																<td className="mainLable">
+																	Account Receivable
+																</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalAccountReceivable']
+																		? this.state.data[
+																				'totalAccountReceivable'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
+															<tr>
+																<td className="mainLable">
+																	Other Current Assets
+																</td>
+																<td></td>
+																<td></td>
+															</tr>
+															{Object.keys(
+																this.state.data['otherCurrentAssets'],
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item}</td>
+																	<td className="pt-0 pb-0"></td>
+																	<td className="pt-0 pb-0 text-right">
+																		{this.state.data['otherCurrentAssets']
+																			? this.state.data['otherCurrentAssets'][
+																					`${item}`
+																			  ].toFixed(2)
+																			: ' '}
+																	</td>
+																</tr>
+															))}
 															<tr className="mainLable">
 																<td className="text-right">
 																	Total Current Assets
@@ -538,9 +556,20 @@ class BalanceSheet extends React.Component {
 																		: ''}
 																</td>
 															</tr>
+															<tr className="">
+																<td className="mainLable">Accounts Payable</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalAccountPayable']
+																		? this.state.data[
+																				'totalAccountPayable'
+																		  ].toFixed(2)
+																		: ''}
+																</td>
+															</tr>
 															<tr className="mainLable">
 																<td className="mainLable text-right">
-																	Total Liability Equities
+																	Total Liability & Equities
 																</td>
 																<td></td>
 																<td className="text-right">

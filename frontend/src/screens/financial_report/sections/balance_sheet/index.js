@@ -313,7 +313,7 @@ class BalanceSheet extends React.Component {
 																			? this.state.data['currentAssets'][
 																					`${item}`
 																			  ].toFixed(2)
-																			: ''}
+																			: 0}
 																	</td>
 																</tr>
 															))}
@@ -332,7 +332,7 @@ class BalanceSheet extends React.Component {
 																				? this.state.data['bank'][
 																						`${item}`
 																				  ].toFixed(2)
-																				: ' '}
+																				: 0}
 																		</td>
 																	</tr>
 																),
@@ -347,7 +347,7 @@ class BalanceSheet extends React.Component {
 																		? this.state.data[
 																				'totalAccountReceivable'
 																		  ].toFixed(2)
-																		: ''}
+																		: 0}
 																</td>
 															</tr>
 															<tr>
@@ -368,7 +368,7 @@ class BalanceSheet extends React.Component {
 																			? this.state.data['otherCurrentAssets'][
 																					`${item}`
 																			  ].toFixed(2)
-																			: ' '}
+																			: 0}
 																	</td>
 																</tr>
 															))}
@@ -382,7 +382,7 @@ class BalanceSheet extends React.Component {
 																		? this.state.data[
 																				'totalCurrentAssets'
 																		  ].toFixed(2)
-																		: ''}
+																		: 0}
 																</td>
 															</tr>
 															<br />
@@ -401,7 +401,7 @@ class BalanceSheet extends React.Component {
 																				? this.state.data['fixedAssets'][
 																						`${item}`
 																				  ].toFixed(2)
-																				: ''}
+																				: 0}
 																		</td>
 																	</tr>
 																),
@@ -416,7 +416,7 @@ class BalanceSheet extends React.Component {
 																		? this.state.data[
 																				'totalFixedAssets'
 																		  ].toFixed(2)
-																		: ''}
+																		: 0}
 																</td>
 															</tr>
 															<br />
@@ -428,7 +428,7 @@ class BalanceSheet extends React.Component {
 																<td className="text-right">
 																	{this.state.data['totalAssets']
 																		? this.state.data['totalAssets'].toFixed(2)
-																		: ''}
+																		: 0}
 																</td>
 															</tr>
 															<br />
@@ -455,7 +455,7 @@ class BalanceSheet extends React.Component {
 																			? this.state.data['otherLiability'][
 																					`${item}`
 																			  ].toFixed(2)
-																			: ''}
+																			: 0}
 																	</td>
 																</tr>
 															))}
@@ -469,7 +469,7 @@ class BalanceSheet extends React.Component {
 																		? this.state.data[
 																				'totalOtherLiability'
 																		  ].toFixed(2)
-																		: ''}
+																		: 0}
 																</td>
 															</tr>
 															<br />
@@ -491,7 +491,7 @@ class BalanceSheet extends React.Component {
 																			? this.state.data[
 																					'otherCurrentLiability'
 																			  ][`${item}`].toFixed(2)
-																			: ''}
+																			: 0}
 																	</td>
 																</tr>
 															))}
@@ -505,7 +505,7 @@ class BalanceSheet extends React.Component {
 																		? this.state.data[
 																				'totalOtherCurrentLiability'
 																		  ].toFixed(2)
-																		: ''}
+																		: 0}
 																</td>
 															</tr>
 															<br />
@@ -519,7 +519,7 @@ class BalanceSheet extends React.Component {
 																		? this.state.data['totalLiability'].toFixed(
 																				2,
 																		  )
-																		: ''}
+																		: 0}
 																</td>
 															</tr>
 															<br />
@@ -538,7 +538,7 @@ class BalanceSheet extends React.Component {
 																				? this.state.data['equities'][
 																						`${item}`
 																				  ].toFixed(2)
-																				: ''}
+																				: 0}
 																		</td>
 																	</tr>
 																),
@@ -553,7 +553,7 @@ class BalanceSheet extends React.Component {
 																		? this.state.data['totalEquities'].toFixed(
 																				2,
 																		  )
-																		: ''}
+																		: 0}
 																</td>
 															</tr>
 															<tr className="">
@@ -564,7 +564,7 @@ class BalanceSheet extends React.Component {
 																		? this.state.data[
 																				'totalAccountPayable'
 																		  ].toFixed(2)
-																		: ''}
+																		: 0}
 																</td>
 															</tr>
 															<tr className="mainLable">
@@ -577,7 +577,7 @@ class BalanceSheet extends React.Component {
 																		? this.state.data[
 																				'totalLiabilityEquities'
 																		  ].toFixed(2)
-																		: ''}
+																		: 0}
 																</td>
 															</tr>
 														</>

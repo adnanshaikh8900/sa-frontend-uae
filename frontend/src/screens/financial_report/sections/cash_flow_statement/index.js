@@ -340,6 +340,66 @@ class CashFlowStatement extends React.Component {
 																),
 															)}
 															<tr>
+																<td className="mainLable">Fixed Assets</td>
+																<td></td>
+																<td></td>
+															</tr>
+															{Object.keys(this.state.data['fixedAsset']).map(
+																(item) => (
+																	<tr>
+																		<td className="pt-0 pb-0">{item}</td>
+																		<td className="pt-0 pb-0 text-right">
+																			{this.state.data[
+																				'transactionCategoryMapper'
+																			][`${item}`] === 'Debit'
+																				? this.state.data['fixedAsset'][
+																						`${item}`
+																				  ].toFixed(2)
+																				: ''}
+																		</td>
+																		<td className="pt-0 pb-0">
+																			{this.state.data[
+																				'transactionCategoryMapper'
+																			][`${item}`] === 'Credit'
+																				? this.state.data['fixedAsset'][
+																						`${item}`
+																				  ].toFixed(2)
+																				: ''}
+																		</td>
+																	</tr>
+																),
+															)}
+															<tr>
+																<td className="mainLable">Bank </td>
+																<td></td>
+																<td></td>
+															</tr>
+															{Object.keys(this.state.data['bank']).map(
+																(item) => (
+																	<tr>
+																		<td className="pt-0 pb-0">{item}</td>
+																		<td className="pt-0 pb-0 text-right">
+																			{this.state.data[
+																				'transactionCategoryMapper'
+																			][`${item}`] === 'Debit'
+																				? this.state.data['bank'][
+																						`${item}`
+																				  ].toFixed(2)
+																				: ''}
+																		</td>
+																		<td className="pt-0 pb-0">
+																			{this.state.data[
+																				'transactionCategoryMapper'
+																			][`${item}`] === 'Credit'
+																				? this.state.data['bank'][
+																						`${item}`
+																				  ].toFixed(2)
+																				: ''}
+																		</td>
+																	</tr>
+																),
+															)}
+															<tr>
 																<td className="mainLable">Liabilities</td>
 																<td></td>
 																<td></td>
@@ -357,7 +417,7 @@ class CashFlowStatement extends React.Component {
 																				  ].toFixed(2)
 																				: ''}
 																		</td>
-																		<td>
+																		<td className="text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit'

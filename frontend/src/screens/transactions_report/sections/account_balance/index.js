@@ -84,8 +84,8 @@ class AccountBalances extends React.Component {
 
 	getAccountBalanceData = () => {
 		this.props.accountBalanceData.getAccountBalanceReport();
-		this.props.accountBalanceData.getTransactionTypeList();
-		this.props.accountBalanceData.getTransactionCategoryList();
+		//this.props.accountBalanceData.getTransactionTypeList();
+		//this.props.accountBalanceData.getTransactionCategoryList();
 		this.props.accountBalanceData.getAccountTypeList();
 	};
 

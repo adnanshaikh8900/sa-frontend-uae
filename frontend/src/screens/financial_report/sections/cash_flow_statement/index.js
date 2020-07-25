@@ -108,7 +108,7 @@ class CashFlowStatement extends React.Component {
 		this.columnHeader = [
 			{ label: 'Account', value: 'Account', sort: true },
 			{ label: 'Net Debit', value: 'Net Debit', sort: false },
-			{ label: 'Net Cebit', value: 'Net Credit', sort: false },
+			{ label: 'Net Credit', value: 'Net Credit', sort: false },
 		];
 	}
 
@@ -229,18 +229,14 @@ class CashFlowStatement extends React.Component {
 															<CSVLink
 																data={csvData}
 																className="csv-btn"
-																filename={'detailGeneralLedger.csv'}
+																filename={'trialBalance.csv'}
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
 														</DropdownItem>
 														<DropdownItem
 															onClick={() => {
-																this.exportFile(
-																	csvData,
-																	'detailGeneralLedger',
-																	'xls',
-																);
+																this.exportFile(csvData, 'trialBalance', 'xls');
 															}}
 														>
 															XLS (Microsoft Excel 1997-2004 Compatible)
@@ -249,7 +245,7 @@ class CashFlowStatement extends React.Component {
 															onClick={() => {
 																this.exportFile(
 																	csvData,
-																	'detailGeneralLedger',
+																	'trialBalance',
 																	'xlsx',
 																);
 															}}

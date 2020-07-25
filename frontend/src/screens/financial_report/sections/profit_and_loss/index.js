@@ -198,29 +198,21 @@ class ProfitAndLossReport extends React.Component {
 															<CSVLink
 																data={csvData}
 																className="csv-btn"
-																filename={'detailGeneralLedger.csv'}
+																filename={'profitloss.csv'}
 															>
 																CSV (Comma Separated Value)
 															</CSVLink>
 														</DropdownItem>
 														<DropdownItem
 															onClick={() => {
-																this.exportFile(
-																	csvData,
-																	'detailGeneralLedger',
-																	'xls',
-																);
+																this.exportFile(csvData, 'profitloss', 'xls');
 															}}
 														>
 															XLS (Microsoft Excel 1997-2004 Compatible)
 														</DropdownItem>
 														<DropdownItem
 															onClick={() => {
-																this.exportFile(
-																	csvData,
-																	'detailGeneralLedger',
-																	'xlsx',
-																);
+																this.exportFile(csvData, 'profitloss', 'xlsx');
 															}}
 														>
 															XLSX (Microsoft Excel)

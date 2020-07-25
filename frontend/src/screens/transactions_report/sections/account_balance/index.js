@@ -216,7 +216,7 @@ class AccountBalances extends React.Component {
 											}
 										/>
 									</Col>
-									<Col lg={2} className="mb-1">
+									{/* <Col lg={2} className="mb-1">
 										<Select
 											className=""
 											// options={colourOptions}
@@ -260,7 +260,7 @@ class AccountBalances extends React.Component {
 											}
 											// onChange={this.changeType}
 										/>
-									</Col>
+									</Col> */}
 									<Col lg={2} className="mb-1">
 										<Button
 											color="secondary"

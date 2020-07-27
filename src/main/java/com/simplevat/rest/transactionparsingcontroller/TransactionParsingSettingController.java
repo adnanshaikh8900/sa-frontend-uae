@@ -73,6 +73,7 @@ public class TransactionParsingSettingController {
 
 		case "xlsx":
 		case "xlx":
+			case "xls":
 			dataMap = excelParser.parseSmaple(model);
 			break;
 

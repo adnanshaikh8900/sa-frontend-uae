@@ -93,9 +93,8 @@ public class DetailedGeneralLedgerRestHelper {
 
 		List<JournalLineItem> itemList = journalLineItemService.getList(reportRequestModel);
 		List<TransactionCategoryClosingBalance> closingBalanceList = transactionCategoryClosingBalanceService.getList(reportRequestModel);
-Map<Integer,TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = processTransactionCategoryClosingBalance(closingBalanceList);
-		if (itemList != null && !itemList.isEmpty()) {
-
+	    if (itemList != null && !itemList.isEmpty()) {
+			Map<Integer,TransactionCategoryClosingBalance> transactionCategoryClosingBalanceMap = processTransactionCategoryClosingBalance(closingBalanceList);
 			Map<Integer, List<JournalLineItem>> map = new HashMap<>();
 			Map<Integer, Expense> expenseMap = new HashMap<>();
 			Map<Integer, Transaction> transactionMap = new HashMap<>();
@@ -141,94 +140,102 @@ Map<Integer,TransactionCategoryClosingBalance> transactionCategoryClosingBalance
 							&& new BigDecimal(0).equals(lineItem.getDebitAmount())) ? Boolean.TRUE : Boolean.FALSE;
 
 					switch (postingType) {
-					case BANK_ACCOUNT:
-					case TRANSACTION_RECONSILE:
-					case TRANSACTION_RECONSILE_INVOICE:
-						transactionMap = findOrGetFromDbTr(transactionMap, lineItem.getReferenceId());
-						Transaction tr = transactionMap.get(lineItem.getReferenceId());
+						case BANK_ACCOUNT:
+						case TRANSACTION_RECONSILE:
+						case TRANSACTION_RECONSILE_INVOICE:
+							transactionMap = findOrGetFromDbTr(transactionMap, lineItem.getReferenceId());
+							Transaction tr = transactionMap.get(lineItem.getReferenceId());
 
-						model.setAmount(tr.getTransactionAmount());
-						model.setDebitAmount(isDebit ? tr.getTransactionAmount() : new BigDecimal(0));
-						model.setCreditAmount(isDebit ? new BigDecimal(0) : tr.getTransactionAmount());
-						model.setName(tr.getBankAccount() != null ? tr.getBankAccount().getBankName()+"-"+tr.getBankAccount().getBankAccountName() : "-");
-						break;
-
-					case EXPENSE:
-
-						expenseMap = findOrGetFromDbEx(expenseMap, lineItem.getReferenceId());
-						Expense expense = expenseMap.get(lineItem.getReferenceId());
-						model.setAmount(expense.getExpenseAmount());
-						model.setDebitAmount(isDebit ? expense.getExpenseAmount(): new BigDecimal(0));
-						model.setCreditAmount(isDebit ? new BigDecimal(0):expense.getExpenseAmount());
-						model.setName(expense.getPayee() != null && !expense.getPayee().equals(" ") ? expense.getPayee()
-								: "");
-						break;
-
-					case INVOICE:
-
-						invoiceMap = findOrGetFromDbIn(invoiceMap, lineItem.getReferenceId());
-						Invoice invoice = invoiceMap.get(lineItem.getReferenceId());
-
-						model.setReferenceNo(journal.getJournlReferencenNo());
-						//model.setAmount(invoice.getTotalAmount());
-						BigDecimal amount = BigDecimal.ZERO;
-						if(isDebit){
-							model.setCreditAmount(BigDecimal.ZERO);
+							model.setAmount(lineItem.getDebitAmount()!=null?lineItem.getDebitAmount():lineItem.getCreditAmount());
+//							model.setDebitAmount(isDebit ? tr.getTransactionAmount() : new BigDecimal(0));
+//							model.setCreditAmount(isDebit ? new BigDecimal(0) : tr.getTransactionAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
-							amount=lineItem.getDebitAmount();
-						}
-						else{
-							model.setCreditAmount(lineItem.getCreditAmount());
-							model.setDebitAmount(BigDecimal.ZERO);
-							amount=lineItem.getCreditAmount();
-						}
-						model.setAmount(amount);
+							model.setCreditAmount( lineItem.getCreditAmount());
+							model.setName(tr.getBankAccount() != null ? tr.getBankAccount().getBankName()+"-"+tr.getBankAccount().getBankAccountName() : "-");
+							break;
+
+						case EXPENSE:
+
+							expenseMap = findOrGetFromDbEx(expenseMap, lineItem.getReferenceId());
+							Expense expense = expenseMap.get(lineItem.getReferenceId());
+							model.setPostingReferenceTypeEnum(PostingReferenceTypeEnum.EXPENSE.getDisplayName());
+							model.setAmount(expense.getExpenseAmount());
+							model.setDebitAmount(isDebit ? expense.getExpenseAmount(): new BigDecimal(0));
+							model.setCreditAmount(isDebit ? new BigDecimal(0):expense.getExpenseAmount());
+							if(expense.getUserId()!=null)
+							{
+								model.setName(expense.getUserId().getFirstName()+" "+expense.getUserId().getLastName());
+							}
+							else {
+								model.setName(expense.getPayee());
+							}
+							break;
+
+						case INVOICE:
+
+							invoiceMap = findOrGetFromDbIn(invoiceMap, lineItem.getReferenceId());
+							Invoice invoice = invoiceMap.get(lineItem.getReferenceId());
+
+							model.setReferenceNo(journal.getJournlReferencenNo());
+							//model.setAmount(invoice.getTotalAmount());
+							BigDecimal amount = BigDecimal.ZERO;
+							if(isDebit){
+								model.setCreditAmount(BigDecimal.ZERO);
+								model.setDebitAmount(lineItem.getDebitAmount());
+								amount=lineItem.getDebitAmount();
+							}
+							else{
+								model.setCreditAmount(lineItem.getCreditAmount());
+								model.setDebitAmount(BigDecimal.ZERO);
+								amount=lineItem.getCreditAmount();
+							}
+							model.setAmount(amount);
 						/*BigDecimal amountCredit = !isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO;
 						BigDecimal amountDebit = isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO;
 						model.setCreditAmount(amountCredit);
 						model.setDebitAmount(amountDebit);
 						model.setAmount(amountDebit.intValue()!=0?amountDebit:amountCredit);*/
-						//model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
-						//model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
-						model.setName(invoice.getContact() != null
-								? invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName()
-								: "");
-						model.setTransactonRefNo(invoice.getReferenceNumber());
-						model.setInvoiceType(invoice.getType());
-						break;
+							//model.setCreditAmount(!isDebit ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+							//model.setDebitAmount(isDebit ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+							model.setName(invoice.getContact() != null
+									? invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName()
+									: "");
+							model.setTransactonRefNo(invoice.getReferenceNumber());
+							model.setInvoiceType(invoice.getType());
+							break;
 
-					case MANUAL:
-						model.setReferenceNo(journal.getJournlReferencenNo());
-						model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
-						model.setCreditAmount(lineItem.getCreditAmount());
-						model.setDebitAmount(lineItem.getDebitAmount());
-						model.setName(lineItem.getContact() != null
-								? lineItem.getContact().getFirstName() + " " + lineItem.getContact().getLastName()
-								: "");
-						break;
+						case MANUAL:
+							model.setReferenceNo(journal.getJournlReferencenNo());
+							model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
+							model.setCreditAmount(lineItem.getCreditAmount());
+							model.setDebitAmount(lineItem.getDebitAmount());
+							model.setName(lineItem.getContact() != null
+									? lineItem.getContact().getFirstName() + " " + lineItem.getContact().getLastName()
+									: "");
+							break;
 
-					case RECEIPT:
-					case PAYMENT:
+						case RECEIPT:
+						case PAYMENT:
 
-						model.setReferenceNo(journal.getJournlReferencenNo());
-						model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
-						model.setCreditAmount(lineItem.getCreditAmount());
-						model.setDebitAmount(lineItem.getDebitAmount());
-						Contact contact = null;
-						if (postingType.equals(PostingReferenceTypeEnum.RECEIPT)) {
-							receiptMap = findOrGetFromDbReceipt(receiptMap, lineItem.getReferenceId());
-							Receipt receipt = receiptMap.get(lineItem.getReferenceId());
-							contact = receipt.getContact();
-						} else {
-							paymentMap = findOrGetFromDbPaymnt(paymentMap, lineItem.getReferenceId());
-							Payment payment = paymentMap.get(lineItem.getReferenceId());
-							contact = payment.getSupplier();
-						}
-						model.setName(contact != null ? contact.getFirstName() + " " + contact.getLastName() : "");
-						break;
+							model.setReferenceNo(journal.getJournlReferencenNo());
+							model.setAmount(isDebit ? lineItem.getDebitAmount() : lineItem.getCreditAmount());
+							model.setCreditAmount(lineItem.getCreditAmount());
+							model.setDebitAmount(lineItem.getDebitAmount());
+							Contact contact = null;
+							if (postingType.equals(PostingReferenceTypeEnum.RECEIPT)) {
+								receiptMap = findOrGetFromDbReceipt(receiptMap, lineItem.getReferenceId());
+								Receipt receipt = receiptMap.get(lineItem.getReferenceId());
+								contact = receipt.getContact();
+							} else {
+								paymentMap = findOrGetFromDbPaymnt(paymentMap, lineItem.getReferenceId());
+								Payment payment = paymentMap.get(lineItem.getReferenceId());
+								contact = payment.getSupplier();
+							}
+							model.setName(contact != null ? contact.getFirstName() + " " + contact.getLastName() : "");
+							break;
 
-					case PURCHASE:
-						break;
+						case PURCHASE:
+							break;
 					}
 
 					model.setAmount(
@@ -239,23 +246,25 @@ Map<Integer,TransactionCategoryClosingBalance> transactionCategoryClosingBalance
 
 					dataList.add(model);
 				}
+
 				if(transactionCategoryClosingBalanceMap.get(item)!=null)
 				{
 					TransactionCategoryClosingBalance transactionCategoryClosingBalance = transactionCategoryClosingBalanceMap.get(item);
-					DetailedGeneralLedgerReportListModel tempopeningBalanceModel = dataList.get(0);
-					DetailedGeneralLedgerReportListModel openingBalanceModel = new DetailedGeneralLedgerReportListModel();
-					openingBalanceModel.setDate("As on "+reportRequestModel.getStartDate());
-					openingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getOpeningBalance());
-					openingBalanceModel.setAmount(transactionCategoryClosingBalance.getOpeningBalance());
-					openingBalanceModel.setTransactionTypeName(tempopeningBalanceModel.getTransactionTypeName());
-					openingBalanceModel.setPostingReferenceTypeEnum("Opening Balance");
-					dataList.add(0,openingBalanceModel);
-					DetailedGeneralLedgerReportListModel closingBalanceModel = new DetailedGeneralLedgerReportListModel();
-					closingBalanceModel.setDate("As on "+reportRequestModel.getEndDate());
-					closingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getClosingBalance());
-					closingBalanceModel.setAmount(transactionCategoryClosingBalance.getClosingBalance());
-					closingBalanceModel.setPostingReferenceTypeEnum("Closing Balance");
-					dataList.add(closingBalanceModel);
+					updateOpeningClosingBalance(dataList,reportRequestModel,transactionCategoryClosingBalance);
+//					DetailedGeneralLedgerReportListModel tempopeningBalanceModel = dataList.get(0);
+//					DetailedGeneralLedgerReportListModel openingBalanceModel = new DetailedGeneralLedgerReportListModel();
+//					openingBalanceModel.setDate("As on "+reportRequestModel.getStartDate());
+//					openingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getOpeningBalance());
+//					openingBalanceModel.setAmount(transactionCategoryClosingBalance.getOpeningBalance());
+//					openingBalanceModel.setTransactionTypeName(tempopeningBalanceModel.getTransactionTypeName());
+//					openingBalanceModel.setPostingReferenceTypeEnum("Opening Balance");
+//					dataList.add(0,openingBalanceModel);
+//					DetailedGeneralLedgerReportListModel closingBalanceModel = new DetailedGeneralLedgerReportListModel();
+//					closingBalanceModel.setDate("As on "+reportRequestModel.getEndDate());
+//					closingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getClosingBalance());
+//					closingBalanceModel.setAmount(transactionCategoryClosingBalance.getClosingBalance());
+//					closingBalanceModel.setPostingReferenceTypeEnum("Closing Balance");
+//					dataList.add(closingBalanceModel);
 				}
 				resposneList.add(dataList);
 			}
@@ -263,6 +272,50 @@ Map<Integer,TransactionCategoryClosingBalance> transactionCategoryClosingBalance
 		}
 
 		return resposneList;
+	}
+
+	private void updateOpeningClosingBalance(List<DetailedGeneralLedgerReportListModel> dataList, ReportRequestModel reportRequestModel,
+											 TransactionCategoryClosingBalance transactionCategoryClosingBalance) {
+		BigDecimal creditAmount = BigDecimal.ZERO;
+		BigDecimal debitAmount = BigDecimal.ZERO;
+		String transactionTypeName = dataList.get(0).getTransactionTypeName();
+		for(DetailedGeneralLedgerReportListModel model : dataList )
+		{
+			creditAmount = creditAmount.add(model.getCreditAmount()!=null?model.getCreditAmount():BigDecimal.ZERO);
+			debitAmount = debitAmount.add(model.getDebitAmount()!=null?model.getDebitAmount():BigDecimal.ZERO);
+		}
+		boolean isCredit = creditAmount.longValue() >= debitAmount.longValue() ;
+		DetailedGeneralLedgerReportListModel openingBalanceModel = new DetailedGeneralLedgerReportListModel();
+		DetailedGeneralLedgerReportListModel closingBalanceModel = new DetailedGeneralLedgerReportListModel();
+		DetailedGeneralLedgerReportListModel tempopeningBalanceModel = dataList.get(0);
+		openingBalanceModel.setDate("As on "+reportRequestModel.getStartDate());
+		BigDecimal openingBalance = transactionCategoryClosingBalance.getOpeningBalance();
+		if(transactionCategoryClosingBalance.getOpeningBalance().longValue()<=0) {
+			openingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getOpeningBalance());
+			//openingBalanceModel.setDebitAmount(BigDecimal.ZERO);
+		}else {
+			//openingBalanceModel.setCreditAmount(BigDecimal.ZERO);
+			openingBalanceModel.setDebitAmount(transactionCategoryClosingBalance.getOpeningBalance());
+		}openingBalanceModel.setAmount(transactionCategoryClosingBalance.getOpeningBalance());
+		openingBalanceModel.setTransactionTypeName(transactionTypeName);
+		openingBalanceModel.setPostingReferenceTypeEnum("Opening Balance");
+		dataList.add(0,openingBalanceModel);
+
+		closingBalanceModel.setDate("As on "+reportRequestModel.getEndDate());
+
+		BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
+		if(closingBalance.longValue()<0)
+			closingBalance= closingBalance.negate();
+		if(isCredit) {
+			closingBalanceModel.setCreditAmount(closingBalance);
+			//closingBalanceModel.setDebitAmount(BigDecimal.ZERO);
+		}
+		else {
+			//closingBalanceModel.setCreditAmount(BigDecimal.ZERO);
+			closingBalanceModel.setDebitAmount(closingBalance);
+		}
+		closingBalanceModel.setPostingReferenceTypeEnum("Closing Balance");
+		dataList.add(closingBalanceModel);
 	}
 
 	private Map<Integer, TransactionCategoryClosingBalance> processTransactionCategoryClosingBalance(List<TransactionCategoryClosingBalance> closingBalanceList) {

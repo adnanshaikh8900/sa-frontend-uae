@@ -14,7 +14,6 @@ import java.util.Map;
 import com.simplevat.entity.*;
 import com.simplevat.entity.bankaccount.ReconcileStatus;
 import com.simplevat.rest.transactioncontroller.TransactionPresistModel;
-import com.simplevat.rest.transactioncontroller.TransactionViewModel;
 import com.simplevat.service.VatCategoryService;
 import com.simplevat.service.bankaccount.ReconcileStatusService;
 import com.simplevat.utils.DateFormatUtil;
@@ -101,7 +100,7 @@ public class ReconsilationRestHelper {
 		Journal journal = null;
 		switch (chartOfAccountCategoryIdEnumConstant) {
 		default:
-			journal = getByTransactionType(transactionCategoryCode, amount, userId, transaction);
+			journal = getByTransactionType(transactionCategoryCode, amount, userId, transaction, false);
 			break;
 
 		case SALES:
@@ -118,18 +117,12 @@ public class ReconsilationRestHelper {
 	}
 
 	public Journal getByTransactionType(Integer transactionCategoryCode, BigDecimal amount, int userId,
-			Transaction transaction) {
+										Transaction transaction, boolean isdebitFromBank) {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
 
 		ChartOfAccount transactionType = transactionCategory.getChartOfAccount();
-
-		boolean isdebitFromBank = transactionType.getChartOfAccountId().equals(ChartOfAccountConstant.MONEY_IN)
-				|| (transactionType.getParentChartOfAccount() != null
-						&& transactionType.getParentChartOfAccount().getChartOfAccountId() != null
-						&& transactionType.getParentChartOfAccount().getChartOfAccountId()
-								.equals(ChartOfAccountConstant.MONEY_IN)) ? Boolean.TRUE : Boolean.FALSE;
 
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
@@ -167,7 +160,7 @@ public class ReconsilationRestHelper {
 
 	public Journal getByTransactionType(@ModelAttribute TransactionPresistModel transactionPresistModel,
 										Integer transactionCategoryCode, int userId,
-										Transaction transaction) {
+										Transaction transaction, Expense expense) {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 		BigDecimal amount = transactionPresistModel.getAmount();
 		TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionCategoryCode);
@@ -188,8 +181,8 @@ public class ReconsilationRestHelper {
 		} else {
 			journalLineItem1.setCreditAmount(amount);
 		}
-		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
-		journalLineItem1.setReferenceId(transaction.getTransactionId());
+		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journalLineItem1.setReferenceId(expense.getExpenseId());
 		journalLineItem1.setCreatedBy(userId);
 		journalLineItem1.setJournal(journal);
 		journalLineItemList.add(journalLineItem1);
@@ -201,8 +194,8 @@ public class ReconsilationRestHelper {
 		} else {
 			journalLineItem2.setCreditAmount(transaction.getTransactionAmount());
 		}
-		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
-		journalLineItem2.setReferenceId(transaction.getTransactionId());
+		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
+		journalLineItem2.setReferenceId(expense.getExpenseId());
 		journalLineItem2.setCreatedBy(transaction.getCreatedBy());
 		journalLineItem2.setJournal(journal);
 
@@ -217,8 +210,8 @@ public class ReconsilationRestHelper {
 					.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.INPUT_VAT.getCode());
 			journalLineItem.setTransactionCategory(inputVatCategory);
 			journalLineItem.setDebitAmount(vatAmount);
-			journalLineItem.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
-			journalLineItem.setReferenceId(transaction.getTransactionId());
+			journalLineItem.setReferenceType(PostingReferenceTypeEnum.EXPENSE);
+			journalLineItem.setReferenceId(expense.getExpenseId());
 			journalLineItem.setCreatedBy(userId);
 			journalLineItem.setJournal(journal);
 			journalLineItemList.add(journalLineItem);
@@ -226,7 +219,7 @@ public class ReconsilationRestHelper {
 		journalLineItemList.add(journalLineItem2);
 		journal.setJournalLineItems(journalLineItemList);
 		journal.setCreatedBy(transaction.getCreatedBy());
-		journal.setPostingReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
+		journal.setPostingReferenceType(PostingReferenceTypeEnum.EXPENSE);
 		journal.setJournalDate(LocalDateTime.now());
 		return journal;
 	}

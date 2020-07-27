@@ -59,7 +59,7 @@ public class DashboardController {
 			Map<String,BigDecimal> output = new HashMap<>();
 			if (vatReportMap != null && !vatReportMap.isEmpty()) {
 
-				Map<String, ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = getChartOfAccountCodeEnumMapForProfitLoss();
+				Map<String, ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = getChartOfAccountCodeEnumMapForVatReport();
 				Double totalInputVat = (double) 0;
 				Double totalOutputVat = (double) 0;
 
@@ -95,6 +95,18 @@ public class DashboardController {
 
 
 	private  Map<String,ChartOfAccountCategoryCodeEnum> getChartOfAccountCodeEnumMapForProfitLoss() {
+		Map<String,ChartOfAccountCategoryCodeEnum>  stringChartOfAccountCategoryCodeEnumHashMap = new HashMap<>();
+		Map <String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnumMap();
+		for (Map.Entry<String,ChartOfAccountCategoryCodeEnum> enumEntry : chartOfAccountCategoryCodeEnumMap.entrySet())
+		{
+			String chartOfAccountCode = enumEntry.getKey();
+			if(chartOfAccountCode.startsWith("03")||chartOfAccountCode.startsWith("04"))
+				stringChartOfAccountCategoryCodeEnumHashMap.put(chartOfAccountCode,enumEntry.getValue());
+		}
+		return stringChartOfAccountCategoryCodeEnumHashMap;
+	}
+
+	private  Map<String,ChartOfAccountCategoryCodeEnum> getChartOfAccountCodeEnumMapForVatReport() {
 		Map<String,ChartOfAccountCategoryCodeEnum>  stringChartOfAccountCategoryCodeEnumHashMap = new HashMap<>();
 		Map <String,ChartOfAccountCategoryCodeEnum> chartOfAccountCategoryCodeEnumMap = ChartOfAccountCategoryCodeEnum.getChartOfAccountCategoryCodeEnumMap();
 		for (Map.Entry<String,ChartOfAccountCategoryCodeEnum> enumEntry : chartOfAccountCategoryCodeEnumMap.entrySet())

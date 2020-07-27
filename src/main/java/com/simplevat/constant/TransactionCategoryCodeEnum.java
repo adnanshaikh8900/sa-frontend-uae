@@ -21,6 +21,7 @@ public enum TransactionCategoryCodeEnum {
 	EXPENSE("04"),
 	INPUT_VAT("01-06-004"),
 	OUTPUT_VAT("02-02-004"),
+    EMPLOYEE_REIMBURSEMENT("02-02-001"),
 	UNDEPOSTED_FUND("01-04-006");
 	
 	

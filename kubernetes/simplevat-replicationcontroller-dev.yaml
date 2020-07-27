@@ -18,12 +18,12 @@ spec:
     spec:
       containers:
         - name: simplevat
-          image: gcr.io/gtt-k8s/simplevat:0-0-2-beta-4-39
+          image: gcr.io/gtt-k8s/simplevat:0-0-1-rc-02exit
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /login
+              path: /
               port: 8080
             periodSeconds: 1
             timeoutSeconds: 1
@@ -49,7 +49,7 @@ spec:
             - name: SIMPLEVAT_TOKEN
               value: XXXX
             - name: SIMPLEVAT_RELEASE
-              value: 0-0-2-beta-4-04
+              value: 0-0-1-rc-01
             - name: SIMPLEVAT_DB_HOST
               value: gtt-prod-cloudsql-proxy-service.cloudsql-proxy
             - name: SIMPLEVAT_DB

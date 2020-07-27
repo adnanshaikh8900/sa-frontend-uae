@@ -1,26 +1,62 @@
 // If you want to override variables do it here
-@import "variables";
+@import 'variables';
 
 // Import styles with default layout.
 // If you are going to use dark layout please comment next line
-@import "~@coreui/coreui-pro/scss/coreui.scss";
+@import '~@coreui/coreui-pro/scss/coreui.scss';
 
 // Import styles with dark layout
 // If you want to use dark layout uncomment next line
 //@import "~@coreui/coreui-pro/scss/themes/dark/coreui-dark.scss";
 
 // Temp fix for reactstrap
-@import "~@coreui/coreui-pro/scss/_dropdown-menu-right.scss";
+@import '~@coreui/coreui-pro/scss/_dropdown-menu-right.scss';
 
 // If you want to add something do it here
-@import "custom";
+@import 'custom';
 
 // ie fixes
-@import "ie-fix";
+@import 'ie-fix';
 
 // temp fixes
-@import "fixes";
+@import 'fixes';
 
 // Spinkit
 $spinkit-spinner-color: $body-color;
 @import '~spinkit/scss/spinkit.scss';
+
+.card-header {
+	color: #6a4bc4 !important;
+}
+.btn-primary,
+.page-item.active .page-link {
+	background-color: #54e0c4;
+	border-color: #54e0c4;
+}
+.btn-primary:disabled {
+	background-color: #54e0c4;
+	border-color: #54e0c4;
+}
+.btn-primary:hover {
+	background-color: #6a4bc4;
+	border-color: #6a4bc4;
+}
+.badge-primary {
+	background-color: #6a4bc4;
+}
+.bank-account-screen .bank-account-table .my-link {
+	color: #6a4bc4;
+}
+.breadcrumb-item {
+	a {
+		color: #6a4bc4 !important;
+	}
+}
+.table {
+	.icon {
+		background-color: #6a4bc4;
+	}
+}
+.card-columns .card {
+	margin-bottom: 1.5rem;
+}

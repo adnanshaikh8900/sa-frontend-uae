@@ -247,7 +247,7 @@ public class TransactionRestController {
 			case MONEY_PAID_TO_USER:
 				updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 				Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx);
+						transactionPresistModel.getAmount(), userId, trnx,false);
 				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
 				journalService.persist(journal);
@@ -258,7 +258,7 @@ public class TransactionRestController {
 			case PURCHASE_OF_CAPITAL_ASSET:
 				updateTransactionForMoneySpent(trnx,transactionPresistModel);
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx);
+						transactionPresistModel.getAmount(), userId, trnx, false);
 				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
 				journalService.persist(journal);
@@ -283,7 +283,7 @@ public class TransactionRestController {
 			case MONEY_RECEIVED_OTHERS:
 				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx);
+						transactionPresistModel.getAmount(), userId, trnx, true);
 				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
 				journalService.persist(journal);
@@ -293,9 +293,9 @@ public class TransactionRestController {
 		}
 		if(transactionPresistModel.getIsValidForClosingBalance())
 		{
-			transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
+		//	transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
 		}
-		updateBankCurrentBalance(trnx);
+		//updateBankCurrentBalance(trnx);
 		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
 
 	}
@@ -349,7 +349,7 @@ public class TransactionRestController {
 			case MONEY_PAID_TO_USER:
 				updateTransactionMoneyPaidToUser(trnx,transactionPresistModel);
 				Journal journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx);
+						transactionPresistModel.getAmount(), userId, trnx, false);
 				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
 				journalService.persist(journal);
@@ -360,7 +360,7 @@ public class TransactionRestController {
 			case PURCHASE_OF_CAPITAL_ASSET:
 				updateTransactionForMoneySpent(trnx,transactionPresistModel);
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx);
+						transactionPresistModel.getAmount(), userId, trnx, true);
 				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
 				journalService.persist(journal);
@@ -385,7 +385,7 @@ public class TransactionRestController {
 			case MONEY_RECEIVED_OTHERS:
 				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
 				journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel.getTransactionCategoryId(),
-						transactionPresistModel.getAmount(), userId, trnx);
+						transactionPresistModel.getAmount(), userId, trnx, true);
 				journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 						transactionPresistModel.getDATE_FORMAT()));
 				journalService.persist(journal);
@@ -395,7 +395,7 @@ public class TransactionRestController {
 		}
 		if(transactionPresistModel.getIsValidForClosingBalance()!=null && transactionPresistModel.getIsValidForClosingBalance())
 		{
-			transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
+		//	transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
 		}
 		if (transactionPresistModel.getIsValidForCurrentBalance()!=null && transactionPresistModel.getIsValidForCurrentBalance()){
 
@@ -419,7 +419,7 @@ public class TransactionRestController {
 			bankAccount.setCurrentBalance(currentBalance);
 			bankAccountService.update(bankAccount);
 			trnx.setTransactionAmount(updateTransactionAmount);
-			transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
+			//transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
 
 		}
 		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
@@ -582,7 +582,7 @@ public class TransactionRestController {
 		// create Journal entry for Transaction explanation
 		//Employee reimbursement and bank
 		journal = reconsilationRestHelper.getByTransactionType(transactionPresistModel,transactionCategoryId
-				, userId, trnx);
+				, userId, trnx,expense);
 
 		journal.setJournalDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 				transactionPresistModel.getDATE_FORMAT()));
@@ -629,8 +629,13 @@ public class TransactionRestController {
 		expense.setStatus(ExpenseStatusEnum.PAID.getValue());
 		Expense.ExpenseBuilder expenseBuilder = expense.toBuilder();
 		expenseBuilder.expenseAmount(model.getAmount());
-		if(model.getUserId()!=null)
+		if(model.getUserId()!=null) {
 			expenseBuilder.userId(userService.findByPK(model.getUserId()));
+		}
+		else
+		{
+			expenseBuilder.payee("Company Expense");
+		}
 		if (model.getDate() != null) {
 			expenseBuilder.expenseDate(dateFormatUtil.getDateStrAsLocalDateTime(model.getDate(),
 					model.getDATE_FORMAT()));

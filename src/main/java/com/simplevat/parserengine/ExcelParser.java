@@ -63,10 +63,13 @@ public class ExcelParser implements TransactionFileParser {
 						Map<String, String> dataeMap = new LinkedHashMap<>();
 						row.forEach(cell -> {
 							String cellValue = dataFormatter.formatCellValue(cell);
+							if(!cellValue.isEmpty())
+							{
 							if (cell.getRow().getRowNum() == firstRowIndex) {
 								indexHeaderMap.put(cell.getColumnIndex(), cellValue);
 							} else if (cell.getRow().getRowNum() > firstRowIndex) {
 								dataeMap.put(indexHeaderMap.get(cell.getColumnIndex()), cellValue);
+							}
 							}
 						});
 						if (!dataeMap.isEmpty())

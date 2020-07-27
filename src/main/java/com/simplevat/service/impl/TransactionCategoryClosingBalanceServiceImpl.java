@@ -55,9 +55,9 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     ? Boolean.TRUE
                     : Boolean.FALSE;
             if(isDebit)
-                transaction.setDebitCreditFlag('C');
-            else
                 transaction.setDebitCreditFlag('D');
+            else
+                transaction.setDebitCreditFlag('C');
             transaction.setCreatedBy(lineItem.getCreatedBy());
             transaction.setTransactionDate(journalDate);
             BigDecimal transactionAmount = lineItem.getDebitAmount() != null ? lineItem.getDebitAmount():lineItem.getCreditAmount();
@@ -69,7 +69,7 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
     }
 
     private boolean isVaildTransactionCategory(TransactionCategory category) {
-        return category.getChartOfAccount().getChartOfAccountId() != ChartOfAccountConstant.BANK;
+        return true;//category.getChartOfAccount().getChartOfAccountId() != ChartOfAccountConstant.BANK;
     }
     @Override
     public BigDecimal updateClosingBalance(Transaction transaction) {

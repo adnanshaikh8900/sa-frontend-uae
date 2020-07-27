@@ -222,6 +222,7 @@ public class TransactionImportController{
 
 		case "xlsx":
 		case "xlx":
+			case "xls":
 			dataMap = excelParser.parseImportData(model, file);
 			break;
 			default:

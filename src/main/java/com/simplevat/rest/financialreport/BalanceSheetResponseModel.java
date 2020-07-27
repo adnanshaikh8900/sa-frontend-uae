@@ -18,7 +18,6 @@ public class BalanceSheetResponseModel {
 
     private BigDecimal totalOtherCurrentAssets;
 
-
     private BigDecimal totalBank;
 
     private BigDecimal totalOtherLiability;
@@ -39,11 +38,7 @@ public class BalanceSheetResponseModel {
 
     private Map<String,BigDecimal> otherCurrentAssets  = new HashMap<>();
 
-    private Map<String,BigDecimal> AccountReceivable  = new HashMap<>();
-
-    private Map<String,BigDecimal> AccountPayable = new HashMap<>();
-
-    private Map<String,BigDecimal> bank  = new HashMap<>();
+     private Map<String,BigDecimal> bank  = new HashMap<>();
 
     private Map<String,BigDecimal> fixedAssets  = new HashMap<>();
 
@@ -52,5 +47,4 @@ public class BalanceSheetResponseModel {
     private Map<String,BigDecimal> otherCurrentLiability  = new HashMap<>();
 
     private Map<String,BigDecimal> equities  = new HashMap<>();
-
 }

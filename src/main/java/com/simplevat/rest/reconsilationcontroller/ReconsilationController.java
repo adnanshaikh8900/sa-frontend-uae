@@ -284,6 +284,8 @@ public class ReconsilationController {
 				BigDecimal closingBalance = reconcilationPersistModel.getClosingBalance();
 				BigDecimal dbClosingBalance = transactionCategoryClosingBalanceService.matchClosingBalanceForReconcile(reconcileDate,
 						bankAccountService.getBankAccountById(reconcilationPersistModel.getBankId()).getTransactionCategory());
+				if(dbClosingBalance.longValue()<0)
+					dbClosingBalance = dbClosingBalance.negate();
 				boolean isClosingBalanceMatches = dbClosingBalance.compareTo(closingBalance)==0;
 				if (isClosingBalanceMatches) {
 					transactionService.updateTransactionStatusReconcile(startDate, reconcileDate, reconcilationPersistModel.getBankId(),

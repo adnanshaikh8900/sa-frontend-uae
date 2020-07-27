@@ -129,23 +129,30 @@ public class ExpenseRestHelper {
 		Journal journal = new Journal();
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 		Expense expense = expenseService.findByPK(postingRequestModel.getPostingRefId());
-		switch(expense.getPayMode())
+		if(expense.getPayMode()!=null) {
+			switch (expense.getPayMode()) {
+				case BANK:
+					TransactionCategory transactionCategory = expense.getBankAccount().getTransactionCategory();
+					journalLineItem1.setTransactionCategory(transactionCategory);
+					break;
+				case CASH:
+					transactionCategory = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.PETTY_CASH.getCode());
+					journalLineItem1.setTransactionCategory(transactionCategory);
+					break;
+				default:
+					transactionCategory = transactionCategoryService
+							.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.EMPLOYEE_REIMBURSEMENT.getCode());
+					journalLineItem1.setTransactionCategory(transactionCategory);
+					break;
+			}
+		}
+		else
 		{
-			case BANK:
-				TransactionCategory transactionCategory = expense.getBankAccount().getTransactionCategory();
-				journalLineItem1.setTransactionCategory(transactionCategory);
-				break;
-			case CASH:
-				transactionCategory = transactionCategoryService
-						.findTransactionCategoryByTransactionCategoryCode(TransactionCategoryCodeEnum.PETTY_CASH.getCode());
-				journalLineItem1.setTransactionCategory(transactionCategory);
-				break;
-			default:
-				transactionCategory = transactionCategoryService
-						.findTransactionCategoryByTransactionCategoryCode(
-								TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode());
-				journalLineItem1.setTransactionCategory(transactionCategory);
-				break;
+			TransactionCategory transactionCategory = transactionCategoryService
+					.findTransactionCategoryByTransactionCategoryCode(
+							TransactionCategoryCodeEnum.EMPLOYEE_REIMBURSEMENT.getCode());
+			journalLineItem1.setTransactionCategory(transactionCategory);
 		}
 		journalLineItem1.setCreditAmount(postingRequestModel.getAmount());
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.EXPENSE);

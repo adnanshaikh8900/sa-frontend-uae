@@ -101,7 +101,6 @@ class AdminLayout extends React.Component {
 								<AppSidebarNav navConfig={navigation} {...this.props} />
 							</Suspense>
 							<AppSidebarFooter />
-							<AppSidebarMinimizer />
 						</AppSidebar>
 						<main className="main">
 							<div className="breadcrumb-container">

@@ -97,7 +97,18 @@ class RevenueAndExpense extends Component {
 			datasets: [
 				{
 					data: revenueValueArr,
-					backgroundColor: ['#54e0c4'],
+					backgroundColor: [
+						'#6A4BC4',
+						'#006BDE',
+						'#0081E0',
+						'#0091CC',
+						'#009CAC',
+						'#00A587',
+						'rgba(102, 16, 242, 1)',
+						'rgba(111, 66, 193, 1)',
+						'rgba(232, 62, 140, 1)',
+						'rgba(32, 201, 151, 1)',
+					],
 					hoverBackgroundColor: [
 						'rgba(32, 168, 216, 1)',
 						'rgba(77, 189, 116, 1)',

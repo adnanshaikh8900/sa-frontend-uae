@@ -84,7 +84,7 @@
 
 		.nav-link {
 			color: #6a4bc4;
-			text-transform: uppercase;
+			text-transform: capitalize;
 			font-weight: 600;
 			.nav-icon {
 				color: #6a4bc4;
@@ -92,9 +92,9 @@
 		}
 		.nav-link.active {
 			background: transparent;
-			color: #54e0c4;
+			color: #6a4bc4;
 			.nav-icon {
-				color: #54e0c4;
+				color: #6a4bc4;
 			}
 		}
 		.nav-link.active:hover {
@@ -110,9 +110,10 @@
 				background: #ffffff !important;
 			}
 			.nav-link {
-				color: #6600f0;
+				color: #333333;
+				text-transform: capitalize;
 				.nav-icon {
-					color: #6600f0;
+					color: #333333;
 				}
 			}
 			.nav-link:hover {
@@ -137,17 +138,17 @@
 			}
 		}
 		.nav-dropdown.open {
-			background: #6a4bc4;
+			background: #e4e3e4;
 			.nav-link {
-				color: #ffffff;
+				color: #000000;
 				.nav-icon {
-					color: #ffffff;
+					color: #000000;
 				}
 			}
 			.nav-dropdown-items {
 				.nav-link {
 					color: #777777;
-					font-size: 12px;
+					font-size: 14px;
 					.nav-icon {
 						color: #777777;
 					}

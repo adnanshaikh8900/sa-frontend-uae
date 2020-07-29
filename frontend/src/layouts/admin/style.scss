@@ -68,9 +68,9 @@
 	}
 
 	.sidebar {
-		background: #222239;
-		box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05),
-			0 1px 5px 0 rgba(63, 63, 68, 0.15);
+		background: transparent;
+		// box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05),
+		// 	0 1px 5px 0 rgba(63, 63, 68, 0.15);
 
 		.ps-container {
 			.nav-dropdown-items {
@@ -83,36 +83,36 @@
 		}
 
 		.nav-link {
-			color: #ffffff;
+			color: #6a4bc4;
 			text-transform: uppercase;
 			font-weight: 600;
 			.nav-icon {
-				color: #ffffff;
+				color: #6a4bc4;
 			}
 		}
 		.nav-link.active {
-			background: #222239;
+			background: transparent;
 			color: #54e0c4;
 			.nav-icon {
 				color: #54e0c4;
 			}
 		}
 		.nav-link.active:hover {
-			background: #20a8d8;
+			background: #54e0c4;
 			color: #ffffff;
 			.nav-icon {
 				color: #ffffff;
 			}
 		}
 		.nav-dropdown {
-			background: #222239;
+			background: transparent;
 			.nav-dropdown-items {
 				background: #ffffff !important;
 			}
 			.nav-link {
-				color: #fff;
+				color: #6600f0;
 				.nav-icon {
-					color: #fff;
+					color: #6600f0;
 				}
 			}
 			.nav-link:hover {
@@ -125,11 +125,11 @@
 				background: #222239;
 				color: #54e0c4;
 				.nav-icon {
-					color: #20a8d8;
+					color: #54e0c4;
 				}
 			}
 			.nav-link.active:hover {
-				background: #20a8d8;
+				background: #54e0c4;
 				color: #ffffff;
 				.nav-icon {
 					color: #ffffff;
@@ -137,11 +137,20 @@
 			}
 		}
 		.nav-dropdown.open {
-			background: #ffffff;
+			background: #6a4bc4;
 			.nav-link {
-				color: #37474f;
+				color: #ffffff;
 				.nav-icon {
-					color: #37474f;
+					color: #ffffff;
+				}
+			}
+			.nav-dropdown-items {
+				.nav-link {
+					color: #777777;
+					font-size: 12px;
+					.nav-icon {
+						color: #777777;
+					}
 				}
 			}
 			.nav-link:hover {
@@ -158,7 +167,7 @@
 				}
 			}
 			.nav-link.active:hover {
-				background: #20a8d8;
+				background: #54e0c4;
 				color: #ffffff;
 				.nav-icon {
 					color: #ffffff;
@@ -170,7 +179,10 @@
 			background-color: #ffffff !important;
 		}
 		.sidebar-minimizer:hover {
-			background-color: #20a8d8 !important;
+			background-color: #54e0c4 !important;
 		}
 	}
+}
+.sidebar .nav-link:hover {
+	background-color: #54e0c4 !important;
 }

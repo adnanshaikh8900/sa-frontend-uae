@@ -117,7 +117,6 @@ class DetailCustomerInvoice extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.props.customerInvoiceActions.getVatList();
-						this.props.customerInvoiceActions.getProjectList();
 						this.props.customerInvoiceActions.getCustomerList(
 							this.state.contactType,
 						);
@@ -988,41 +987,6 @@ class DetailCustomerInvoice extends React.Component {
 																</Col>
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="project">Project</Label>
-																		<Select
-																			className="select-default-width"
-																			options={
-																				project_list
-																					? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							project_list,
-																							'Project',
-																					  )
-																					: []
-																			}
-																			id="project"
-																			name="project"
-																			value={
-																				project_list &&
-																				project_list.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.project,
-																				)
-																			}
-																			onChange={(option) =>
-																				props.handleChange('project')(
-																					option.value,
-																				)
-																			}
-																		/>
-																	</FormGroup>
-																</Col>
-															</Row>
-															<Row>
-																<Col lg={4}>
-																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
 																			<span className="text-danger">*</span>
 																			Customer Name
@@ -1072,6 +1036,14 @@ class DetailCustomerInvoice extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
+																</Col>
+																<Col>
+																	<Label
+																		htmlFor="contactId"
+																		style={{ display: 'block' }}
+																	>
+																		Add New Customer
+																	</Label>
 																	<Button
 																		type="button"
 																		color="primary"

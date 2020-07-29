@@ -60,3 +60,32 @@ $spinkit-spinner-color: $body-color;
 .card-columns .card {
 	margin-bottom: 1.5rem;
 }
+.btn-link {
+	color: #6a4bc4;
+}
+.tab-content {
+	border: none;
+}
+.nav-tabs .nav-link {
+	border: none;
+}
+.card .nav-link {
+	font-weight: 600;
+}
+// a {
+// 	color: #6a4bc4 !important;
+// }
+.app-footer .text-primary {
+	color: #6a4bc4 !important;
+}
+.btn-primary:focus,
+.btn-primary.focus {
+	background-color: #54e0c4 !important;
+	border-color: #54e0c4 !important;
+}
+.transactions-report-screen .card-header {
+	padding: 0.75rem 1.25rem !important;
+}
+.badge-info {
+	background-color: #6a4bc4;
+}

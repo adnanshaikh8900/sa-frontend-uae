@@ -627,10 +627,6 @@ class CustomerInvoice extends React.Component {
 													{this.state.overDueAmountDetails.overDueAmountMonthly}
 												</h3>
 											</Col>
-											<Col lg={3}>
-												<h5>Average Time to Get Paid</h5>
-												<h3 className="status-title">0 day</h3>
-											</Col>
 										</Row>
 									</div>
 									<div className="d-flex justify-content-end">

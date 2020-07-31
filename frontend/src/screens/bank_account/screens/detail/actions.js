@@ -8,7 +8,7 @@ export const getAccountTypeList = () => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: 'rest/bank/getaccounttype'
+      url: '/rest/bank/getaccounttype'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -29,7 +29,7 @@ export const getCurrencyList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/bank/getcurrenncy'
+      url: '/rest/bank/getcurrenncy'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -50,7 +50,7 @@ export const getCountryList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/datalist/getcountry'
+      url: '/rest/datalist/getcountry'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -72,7 +72,7 @@ export const getBankAccountByID = (_id) => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: `rest/bank/getbyid?id=${_id}`
+      url: `/rest/bank/getbyid?id=${_id}`
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -89,7 +89,7 @@ export const getBankAccountByID = (_id) => {
 
 export const updateBankAccount = (obj) => {
   return (dispatch) => {
-    let url = `rest/bank/${obj.bankAccountId}?bankAccountId=${obj.bankAccountId}`
+    let url = `/rest/bank/${obj.bankAccountId}?bankAccountId=${obj.bankAccountId}`
     delete obj['bankAccountId']
     for (let key in obj) {
         if(obj.hasOwnProperty(key)) {
@@ -113,7 +113,7 @@ export const removeBankAccountByID = (_id) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: `rest/bank/${_id}`
+      url: `/rest/bank/${_id}`
     }
     return authApi(data).then((res) => {
       return res

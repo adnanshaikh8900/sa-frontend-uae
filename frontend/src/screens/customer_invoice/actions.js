@@ -19,7 +19,7 @@ export const getCustomerInvoiceList = (postObj) => {
 		: false;
 
 	return (dispatch) => {
-		let param = `rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
+		let param = `/rest/invoice/getList?contact=${customerName}&type=${contactType}&referenceNumber=${referenceNumber}&amount=${amount}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		if (invoiceDate) {
 			let date = moment(invoiceDate).format('DD-MM-YYYY');
 			param = param + `&invoiceDate=${date}`;
@@ -57,7 +57,7 @@ export const getProjectList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/project/getProjectsForDropdown',
+			url: '/rest/project/getProjectsForDropdown',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -81,7 +81,7 @@ export const getCustomerList = (nameCode) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/contact/getContactsForDropdown?contactType=${contactType}`,
+			url: `/rest/contact/getContactsForDropdown?contactType=${contactType}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -105,7 +105,7 @@ export const getCurrencyList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/bank/getcurrenncy',
+			url: '/rest/bank/getcurrenncy',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -127,7 +127,7 @@ export const getVatList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/datalist/vatCategory',
+			url: '/rest/datalist/vatCategory',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -150,7 +150,7 @@ export const getProductList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/datalist/product?priceType=SALES`,
+			url: `/rest/datalist/product?priceType=SALES`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -172,7 +172,7 @@ export const getDepositList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/datalist/receipt/tnxCat`,
+			url: `/rest/datalist/receipt/tnxCat`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -196,7 +196,7 @@ export const getContactList = (nameCode) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/contact/getContactList?contactType=${contactType}`,
+			url: `/rest/contact/getContactList?contactType=${contactType}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -240,7 +240,7 @@ export const createCustomer = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: 'rest/contact/save',
+			url: '/rest/contact/save',
 			data: obj,
 		};
 		return authApi(data)
@@ -274,7 +274,7 @@ export const getCountryList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/datalist/getcountry',
+			url: '/rest/datalist/getcountry',
 		};
 		return authApi(data)
 			.then((res) => {

@@ -6,7 +6,7 @@ export const createEmployee = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: 'rest/employee/save',
+      url: '/rest/employee/save',
       data: obj
     }
     return authApi(data).then((res) => {

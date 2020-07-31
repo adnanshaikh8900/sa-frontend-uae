@@ -6,7 +6,7 @@ export const updateProduct = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'POST',
-      url: `rest/product/update`,
+      url: `/rest/product/update`,
       data: obj
     }
 
@@ -22,7 +22,7 @@ export const getProductById = (id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/product/getProductById?id=${id}`
+      url: `/rest/product/getProductById?id=${id}`
     }
 
     return authApi(data).then((res) => {

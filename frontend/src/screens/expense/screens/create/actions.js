@@ -4,7 +4,7 @@ export const createExpense = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: 'rest/expense/save',
+			url: '/rest/expense/save',
 			data: obj,
 		};
 		return authFileUploadApi(data)

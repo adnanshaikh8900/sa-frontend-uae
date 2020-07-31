@@ -9,7 +9,7 @@ export const getTransactionByID = (id) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/transaction/edittransactioncategory?id=${id}`
+      url: `/rest/transaction/edittransactioncategory?id=${id}`
     }
 
     return authApi(data).then((res) => {
@@ -37,7 +37,7 @@ export const getTransactionTypes = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/transaction/gettransactiontype`
+      url: `/rest/transaction/gettransactiontype`
     }
 
     return authApi(data).then((res) => {
@@ -58,7 +58,7 @@ export const getParentCategoryCodeListData = (code, val) => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/transaction/getparenttransaction?TransactionTypeCode=${code}&transcationTxt=${val}`
+      url: `/rest/transaction/getparenttransaction?TransactionTypeCode=${code}&transcationTxt=${val}`
     }
 
     return authApi(data).then((res) => {
@@ -78,7 +78,7 @@ export const getTransactionVatCategories = () => {
   return (dispatch) => {
     let data = {
       method: 'GET',
-      url: `rest/transaction/getvatcategories`
+      url: `/rest/transaction/getvatcategories`
     }
 
     return authApi(data).then((res) => {
@@ -98,7 +98,7 @@ export const createAndUpdateTransaction = (transaction) => {
   return (dispatch) => {
     let data = {
       method: 'POST',
-      url: `rest/transaction/savetransaction?id=1`,
+      url: `/rest/transaction/savetransaction?id=1`,
       data: transaction
     }
 

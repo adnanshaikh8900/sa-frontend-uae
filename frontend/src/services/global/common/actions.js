@@ -1,6 +1,7 @@
 import { COMMON } from 'constants/types'
 import {
   api,
+    authApi,
 } from 'utils'
 
 export const startRequest = () => {
@@ -49,7 +50,7 @@ export const getSimpleVATVersion = () => {
       method: 'get',
       url: '/rest/config/getreleasenumber'
     }
-    return api(data).then((res) => {
+    return authApi(data).then((res) => {
       dispatch({
         type: COMMON.VAT_VERSION,
         payload: {

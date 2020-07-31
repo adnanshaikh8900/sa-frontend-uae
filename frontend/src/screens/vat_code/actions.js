@@ -68,7 +68,7 @@ export const getVatByID = (id) => {
 //   return (dispatch) => {
 //     let data = {
 //       method: 'POST',
-//       url: `rest/vat/savevat?id=1`,
+//       url: `/rest/vat/savevat?id=1`,
 //       data: bat
 //     }
 

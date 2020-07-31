@@ -23,7 +23,7 @@ export const vatTransactionList = (postObj) => {
 	// 	: false;
 
 	return (dispatch) => {
-		let param = `rest/taxes/getVatTransationList`;
+		let param = `/rest/taxes/getVatTransationList`;
 		let data = {
 			method: 'get',
 			url: param,

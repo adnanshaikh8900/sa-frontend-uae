@@ -4,7 +4,7 @@ export const createPayment = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: 'rest/payment/save',
+			url: '/rest/payment/save',
 			data: obj,
 		};
 		return authFileUploadApi(data)

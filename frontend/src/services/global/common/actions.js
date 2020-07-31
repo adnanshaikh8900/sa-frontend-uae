@@ -1,5 +1,5 @@
 import { COMMON } from 'constants/types';
-import { api, authApi } from 'utils';
+import { authApi } from 'utils';
 
 export const startRequest = () => {
 	return (dispatch) => {
@@ -44,9 +44,9 @@ export const getSimpleVATVersion = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: '/config/getreleasenumber',
+			url: '/rest/config/getreleasenumber',
 		};
-		return api(data)
+		return authApi(data)
 			.then((res) => {
 				dispatch({
 					type: COMMON.VAT_VERSION,

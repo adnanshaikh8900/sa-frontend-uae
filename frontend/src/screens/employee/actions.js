@@ -35,7 +35,7 @@ export const getCurrencyList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/bank/getcurrenncy'
+      url: '/rest/bank/getcurrenncy'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -53,7 +53,7 @@ export const removeBulkEmployee = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: 'rest/employee/deletes',
+      url: '/rest/employee/deletes',
       data: obj
     }
     return authApi(data).then((res) => {

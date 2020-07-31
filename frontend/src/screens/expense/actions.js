@@ -15,7 +15,7 @@ export const getExpenseList = (obj) => {
 	let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false;
 
 	return (dispatch) => {
-		let param = `rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
+		let param = `/rest/expense/getList?payee=${payee}&transactionCategoryId=${transactionCategoryId}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
 		if (expenseDate) {
 			let date = moment(expenseDate).format('DD-MM-YYYY');
 			param = param + `&expenseDate=${date}`;
@@ -44,7 +44,7 @@ export const getSupplierList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/contact/getContactsForDropdown?contactType=1',
+			url: '/rest/contact/getContactsForDropdown?contactType=1',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -65,7 +65,7 @@ export const getCurrencyList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/bank/getcurrenncy',
+			url: '/rest/bank/getcurrenncy',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -86,7 +86,7 @@ export const getProjectList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/project/getProjectsForDropdown',
+			url: '/rest/project/getProjectsForDropdown',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -107,7 +107,7 @@ export const removeBulkExpenses = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'delete',
-			url: 'rest/expense/deletes',
+			url: '/rest/expense/deletes',
 			data: obj,
 		};
 		return authApi(data)
@@ -126,7 +126,7 @@ export const getBankAccountList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/bank/getbanklist',
+			url: '/rest/bank/getbanklist',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -147,7 +147,7 @@ export const getCustomerList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/contact/contactcustomerlist',
+			url: '/rest/contact/contactcustomerlist',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -168,7 +168,7 @@ export const getPaymentList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/payment/getlist',
+			url: '/rest/payment/getlist',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -232,7 +232,7 @@ export const getEmployeeList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: 'rest/employee/getEmployeesForDropdown',
+			url: '/rest/employee/getEmployeesForDropdown',
 		};
 
 		return authApi(data)

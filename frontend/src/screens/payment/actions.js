@@ -8,7 +8,7 @@ export const getCurrencyList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/bank/getcurrenncy'
+      url: '/rest/bank/getcurrenncy'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -84,7 +84,7 @@ export const getProjectList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/project/getProjectsForDropdown'
+      url: '/rest/project/getProjectsForDropdown'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -110,7 +110,7 @@ export const getPaymentList = (obj) => {
   let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false
   
   return (dispatch) => {
-    let param = `rest/payment/getlist?supplierId=${supplierId}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
+    let param = `/rest/payment/getlist?supplierId=${supplierId}&invoiceAmount=${invoiceAmount}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`
     if (paymentDate) {
       let date = moment(paymentDate).format('DD-MM-YYYY')
       param = param + `&paymentDate=${date}`
@@ -138,7 +138,7 @@ export const removeBulkPayments = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: 'rest/payment/deletes',
+      url: '/rest/payment/deletes',
       data: obj
     }
     return authApi(data).then((res) => {
@@ -153,7 +153,7 @@ export const createSupplier = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: 'rest/contact/save',
+      url: '/rest/contact/save',
       data: obj
     }
     return authApi(data).then((res) => {
@@ -185,7 +185,7 @@ export const getCountryList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/datalist/getcountry'
+      url: '/rest/datalist/getcountry'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {

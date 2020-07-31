@@ -39,7 +39,7 @@ export const createAndSaveProduct = (product) => {
 	return (dispatch) => {
 		let data = {
 			method: 'POST',
-			url: `rest/product/save`,
+			url: `/rest/product/save`,
 			data: product,
 		};
 
@@ -98,7 +98,7 @@ export const getProductVatCategoryList = () => {
 		const state = getState();
 		let data = {
 			method: 'GET',
-			url: 'rest/datalist/vatCategory',
+			url: '/rest/datalist/vatCategory',
 		};
 		if (Object.keys(state.product.vat_list).length === 0) {
 			return authApi(data)
@@ -142,7 +142,7 @@ export const removeBulk = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'delete',
-			url: 'rest/product/deletes',
+			url: '/rest/product/deletes',
 			data: obj,
 		};
 		return authApi(data)
@@ -162,7 +162,7 @@ export const getTransactionCategoryListForExplain = (id) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`,
+			url: `/rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}`,
 		};
 		return authApi(data)
 			.then((res) => {

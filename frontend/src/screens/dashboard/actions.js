@@ -33,7 +33,7 @@ export const getInvoiceGraphData = (daterange) => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: 'rest/invoice/getChartData?monthCount=' + daterange,
+			url: '/rest/invoice/getChartData?monthCount=' + daterange,
 		};
 
 		return authApi(data)
@@ -105,7 +105,7 @@ export const getProfitAndLossData = (daterange) => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: 'rest/dashboardReport/profitandloss?monthNo=' + daterange,
+			url: '/rest/dashboardReport/profitandloss?monthNo=' + daterange,
 		};
 
 		return authApi(data)
@@ -128,7 +128,7 @@ export const getTaxes = (daterange) => {
 	return (dispatch) => {
 		let data = {
 			method: 'GET',
-			url: 'rest/dashboardReport/getVatReport?monthNo=' + daterange,
+			url: '/rest/dashboardReport/getVatReport?monthNo=' + daterange,
 		};
 
 		return authApi(data)

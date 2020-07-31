@@ -38,7 +38,7 @@ export const getCurrencyList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/currency/getcurrency'
+      url: '/rest/currency/getcurrency'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -57,7 +57,7 @@ export const getCountryList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/datalist/getcountry'
+      url: '/rest/datalist/getcountry'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {

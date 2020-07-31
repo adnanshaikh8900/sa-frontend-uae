@@ -114,7 +114,7 @@ export const getCustomerInvoiceList = (param) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/invoice/getSuggestionInvoicesFotCust?amount=${param.amount}&id=${param.id}`,
+			url: `/rest/invoice/getSuggestionInvoicesFotCust?amount=${param.amount}&id=${param.id}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -137,7 +137,7 @@ export const getCurrencyList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/bank/getcurrenncy',
+			url: '/rest/bank/getcurrenncy',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -181,7 +181,7 @@ export const getVendorInvoiceList = (param) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/invoice/getSuggestionInvoicesFotVend?amount=${param.amount}&id=${param.id}`,
+			url: `/rest/invoice/getSuggestionInvoicesFotVend?amount=${param.amount}&id=${param.id}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -203,7 +203,7 @@ export const getExpensesList = (param) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/invoice/getSuggestionExpenses?amount=${param.amount}`,
+			url: `/rest/invoice/getSuggestionExpenses?amount=${param.amount}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -302,7 +302,7 @@ export const getTransactionCategoryListForExplain = (id, bankId) => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: `rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}&bankId=${bankId}`,
+			url: `/rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}&bankId=${bankId}`,
 		};
 		return authApi(data)
 			.then((res) => {
@@ -378,7 +378,7 @@ export const changeTransaction = (obj) => {
 	return (dispatch) => {
 		let data = {
 			method: 'post',
-			url: 'rest/transaction/changestatus',
+			url: '/rest/transaction/changestatus',
 			data: obj,
 		};
 		return authApi(data)

@@ -7,7 +7,7 @@ export const getAccountTypeList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/bank/getaccounttype'
+      url: '/rest/bank/getaccounttype'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -28,7 +28,7 @@ export const getCurrencyList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/bank/getcurrenncy'
+      url: '/rest/bank/getcurrenncy'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -87,7 +87,7 @@ export const deleteBankAccount = (_id) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: `rest/bank/deletebank?id=${_id}`
+      url: `/rest/bank/deletebank?id=${_id}`
     }
     return authApi(data).then((res) => {
       return res
@@ -102,7 +102,7 @@ export const removeBankAccountByID = (_id) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: `rest/bank/${_id}`
+      url: `/rest/bank/${_id}`
     }
     return authApi(data).then((res) => {
       return res
@@ -116,7 +116,7 @@ export const removeBulkBankAccount = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: 'rest/bank/multiple',
+      url: '/rest/bank/multiple',
       data: obj
     }
     return authApi(data).then((res) => {

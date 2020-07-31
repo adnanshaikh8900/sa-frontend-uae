@@ -95,7 +95,7 @@ export const removeBulk = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'delete',
-      url: 'rest/transactioncategory/deleteTransactionCategories',
+      url: '/rest/transactioncategory/deleteTransactionCategories',
       data: obj
     }
     return authApi(data).then((res) => {

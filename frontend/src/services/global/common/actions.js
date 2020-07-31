@@ -47,7 +47,7 @@ export const getSimpleVATVersion = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: '/config/getreleasenumber'
+      url: '/rest/config/getreleasenumber'
     }
     return api(data).then((res) => {
       dispatch({

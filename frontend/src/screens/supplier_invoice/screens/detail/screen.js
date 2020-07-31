@@ -134,7 +134,6 @@ class DetailSupplierInvoice extends React.Component {
 				.then((res) => {
 					if (res.status === 200) {
 						this.props.supplierInvoiceActions.getVatList();
-						this.props.supplierInvoiceActions.getProjectList();
 						this.props.supplierInvoiceActions.getSupplierList(
 							this.state.contactType,
 						);
@@ -1074,41 +1073,6 @@ class DetailSupplierInvoice extends React.Component {
 																</Col>
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
-																		<Label htmlFor="project">Project</Label>
-																		<Select
-																			className="select-default-width"
-																			options={
-																				project_list
-																					? selectOptionsFactory.renderOptions(
-																							'label',
-																							'value',
-																							project_list,
-																							'Project',
-																					  )
-																					: []
-																			}
-																			id="project"
-																			name="project"
-																			value={
-																				project_list &&
-																				project_list.find(
-																					(option) =>
-																						option.value ===
-																						+props.values.project,
-																				)
-																			}
-																			onChange={(option) =>
-																				props.handleChange('project')(
-																					option.value,
-																				)
-																			}
-																		/>
-																	</FormGroup>
-																</Col>
-															</Row>
-															<Row>
-																<Col lg={4}>
-																	<FormGroup className="mb-3">
 																		<Label htmlFor="contactId">
 																			<span className="text-danger">*</span>
 																			Supplier Name
@@ -1158,15 +1122,6 @@ class DetailSupplierInvoice extends React.Component {
 																				</div>
 																			)}
 																	</FormGroup>
-																	<Button
-																		type="button"
-																		color="primary"
-																		className="btn-square mr-3 mb-3"
-																		onClick={this.openSupplierModal}
-																	>
-																		<i className="fa fa-plus"></i> Add a
-																		Supplier
-																	</Button>
 																</Col>
 															</Row>
 															<hr />

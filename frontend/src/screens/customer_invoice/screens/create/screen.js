@@ -68,7 +68,7 @@ class CreateCustomerInvoice extends React.Component {
 				{
 					id: 0,
 					description: '',
-					quantity: '',
+					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
@@ -90,7 +90,7 @@ class CreateCustomerInvoice extends React.Component {
 					{
 						id: 0,
 						description: '',
-						quantity: '',
+						quantity: 1,
 						unitPrice: '',
 						vatCategoryId: '',
 						productId: '',
@@ -452,6 +452,7 @@ class CreateCustomerInvoice extends React.Component {
 			result.description,
 			true,
 		);
+		this.updateAmount(data, props);
 	};
 
 	renderProduct = (cell, row, props) => {

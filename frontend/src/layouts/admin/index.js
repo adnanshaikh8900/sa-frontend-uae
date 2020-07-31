@@ -54,6 +54,7 @@ class AdminLayout extends React.Component {
 				this.props.history.push('/login');
 			});
 			this.props.commonActions.getSimpleVATVersion();
+			this.props.commonActions.getCurrencyList();
 			const toastifyAlert = (status, message) => {
 				if (!message) {
 					message = 'Unexpected Error';

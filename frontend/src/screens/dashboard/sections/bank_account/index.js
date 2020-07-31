@@ -51,6 +51,7 @@ class BankAccount extends Component {
 	};
 
 	componentDidMount = () => {
+		console.log(this.props);
 		this.props.DashboardActions.getBankAccountTypes().then((res) => {
 			if (res.status === 200) {
 				let val =

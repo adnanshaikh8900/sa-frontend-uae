@@ -291,7 +291,7 @@ class CashFlowStatement extends React.Component {
 									) : (
 										<div className="table-wrapper">
 											<Table responsive className="table-bordered">
-												<thead className="thead-dark">
+												<thead className="thead-dark table-custom-head">
 													<tr className="header-row">
 														{this.columnHeader.map((column, index) => {
 															return (

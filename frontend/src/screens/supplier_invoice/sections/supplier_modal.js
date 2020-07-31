@@ -84,13 +84,13 @@ class SupplierModal extends React.Component {
 				}
 			})
 			.catch((err) => {
-				this.displayMsg();
+				this.displayMsg(err);
 				this.formikRef.current.setSubmitting(false);
 			});
 	};
 
-	displayMsg = () => {
-		toast.error('Something Went Wrong... ', {
+	displayMsg = (err) => {
+		toast.error(`${err.data}`, {
 			position: toast.POSITION.TOP_RIGHT,
 		});
 	};

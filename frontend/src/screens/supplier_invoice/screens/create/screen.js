@@ -95,7 +95,7 @@ class CreateSupplierInvoice extends React.Component {
 					{
 						id: 0,
 						description: '',
-						quantity: '',
+						quantity: 1,
 						unitPrice: '',
 						vatCategoryId: '',
 						subTotal: 0,

@@ -90,3 +90,15 @@ $spinkit-spinner-color: $body-color;
 .badge-success {
 	background-color: #6a4bc4;
 }
+.card-body th {
+	font-weight: 600 !important;
+}
+.card-body .btn-square {
+	border-radius: 40px !important;
+	box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03),
+		0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03),
+		0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05),
+		0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03) !important;
+	padding-left: 20px !important;
+	padding-right: 20px !important;
+}

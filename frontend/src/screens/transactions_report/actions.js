@@ -13,7 +13,7 @@ export const getCustomerInvoiceReport = (inputObj) => {
   return (dispatch) => {
     let data ={
       method: 'post',
-      url: `rest/transactionreport/customerInvoiceReport?${refNumber}&${contactId}`,
+      url: `/rest/transactionreport/customerInvoiceReport?${refNumber}&${contactId}`,
       data: inputObj    
     }
     return authApi(data).then((res) => {
@@ -44,9 +44,9 @@ let transactionTypeCode,transactionCategoryId,accountId
    
     let data ={
       method: 'post',
-      url: `rest/transactionreport/accountBalanceReport?${transactionTypeCode}&${transactionCategoryId}&${accountId}`,
-      // url: `rest/transactionreport/accountBalanceReport`,      
-      // url: `rest/transactionreport/accountBalanceReport?transactionTypeCode=${transactionTypeCode}&transactionCategoryId=${transactionCategoryId}`,
+      url: `/rest/transactionreport/accountBalanceReport?${transactionTypeCode}&${transactionCategoryId}&${accountId}`,
+      // url: `/rest/transactionreport/accountBalanceReport`,
+      // url: `/rest/transactionreport/accountBalanceReport?transactionTypeCode=${transactionTypeCode}&transactionCategoryId=${transactionCategoryId}`,
       
       data: postObj
     }
@@ -73,7 +73,7 @@ export const getContactNameList = () => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: 'rest/contact/contactlist'
+      url: '/rest/contact/contactlist'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -94,7 +94,7 @@ export const getAccountTypeList = () => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: 'rest/bank/getaccounttype'
+      url: '/rest/bank/getaccounttype'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -115,7 +115,7 @@ export const getTransactionTypeList = () => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: 'rest/transactionreport/getTransactionTypes'
+      url: '/rest/transactionreport/getTransactionTypes'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {
@@ -136,7 +136,7 @@ export const getTransactionCategoryList = () => {
   return (dispatch) => {
     let data ={
       method: 'get',
-      url: 'rest/transactioncategory/gettransactioncategory'
+      url: '/rest/transactioncategory/gettransactioncategory'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {

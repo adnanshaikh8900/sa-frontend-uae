@@ -5,7 +5,7 @@ export const getAccountTypeList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/bank/getaccounttype',
+			url: '/rest/bank/getaccounttype',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -28,7 +28,7 @@ export const getCurrencyList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/bank/getcurrenncy',
+			url: '/rest/bank/getcurrenncy',
 		};
 		return authApi(data)
 			.then((res) => {
@@ -51,7 +51,7 @@ export const getCountryList = () => {
 	return (dispatch) => {
 		let data = {
 			method: 'get',
-			url: 'rest/datalist/getcountry',
+			url: '/rest/datalist/getcountry',
 		};
 		return authApi(data)
 			.then((res) => {

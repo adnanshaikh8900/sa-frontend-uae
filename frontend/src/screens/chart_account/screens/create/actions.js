@@ -6,7 +6,7 @@ export const createTransactionCategory = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: `rest/transactioncategory/save`,
+      url: `/rest/transactioncategory/save`,
       data: obj
     }
 

@@ -7,7 +7,7 @@ export const getGeneralSettingDetail = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: `rest/companySetting/get`,
+      url: `/rest/companySetting/get`,
     }
 
     return authApi(data).then((res) => {
@@ -23,7 +23,7 @@ export const updateGeneralSettings = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: `rest/companySetting/update`,
+      url: `/rest/companySetting/update`,
       data: obj
     }
 

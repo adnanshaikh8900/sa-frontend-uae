@@ -6,7 +6,7 @@ export const getTransactionCategoryById = (id) => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: `rest/transactioncategory/getTransactionCategoryById?id=${id}`,
+      url: `/rest/transactioncategory/getTransactionCategoryById?id=${id}`,
     }
 
     return authApi(data).then((res) => {

@@ -24,7 +24,7 @@ export const getCountryList = () => {
   return (dispatch) => {
     let data = {
       method: 'get',
-      url: 'rest/datalist/getcountry'
+      url: '/rest/datalist/getcountry'
     }
     return authApi(data).then((res) => {
       if (res.status === 200) {

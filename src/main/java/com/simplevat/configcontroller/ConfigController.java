@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiOperation;
 
 
 @RestController
-@RequestMapping("/config")
+@RequestMapping("/rest/config")
 public class ConfigController{
 
 	@Autowired
@@ -25,9 +25,6 @@ public class ConfigController{
 		SimpleVatConfigModel config = new SimpleVatConfigModel();
 		if (env.getProperty(ConfigurationConstants.SIMPLEVAT_RELEASE) != null && !env.getProperty(ConfigurationConstants.SIMPLEVAT_RELEASE).isEmpty()) {
 			config.setSimpleVatRelease(env.getProperty("SIMPLEVAT_RELEASE"));
-		}
-		else if (env.getProperty(ConfigurationConstants.GAE_VERSION) != null && !env.getProperty(ConfigurationConstants.GAE_VERSION).isEmpty()) {
-			config.setSimpleVatRelease(env.getProperty(ConfigurationConstants.GAE_VERSION));
 		}
 		else {
 			config.setSimpleVatRelease("Unknown");

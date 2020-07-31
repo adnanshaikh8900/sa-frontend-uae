@@ -21,7 +21,7 @@ export const updateJournal = (obj) => {
   return (dispatch) => {
     let data = {
       method: 'post',
-      url: 'rest/journal/update',
+      url: '/rest/journal/update',
       data: obj
     }
     return authApi(data).then((res) => {

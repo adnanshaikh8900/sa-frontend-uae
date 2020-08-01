@@ -69,6 +69,8 @@ class ProfitAndLossReport extends React.Component {
 				operatingProfit: 0.0,
 				totalNonOperatingIncome: 0.0,
 				totalNonOperatingExpense: 0.0,
+				nonOperatingIncome: {},
+				nonOperatingExpense: {},
 				nonOperatingIncomeExpense: 0.0,
 				netProfitLoss: 0.0,
 				operatingIncome: {},
@@ -394,7 +396,41 @@ class ProfitAndLossReport extends React.Component {
 															</tr>
 															<tr>
 																<td className="mainLable">
-																	Non Operating Income/Expense
+																	Non Operating Income
+																</td>
+																<td></td>
+																<td></td>
+															</tr>
+															{Object.keys(
+																this.state.data['nonOperatingIncome'],
+															).map((item) => (
+																<tr>
+																	<td className="pt-0 pb-0">{item}</td>
+																	<td className="pt-0 pb-0"></td>
+																	<td className="pt-0 pb-0 text-right">
+																		{this.state.data['nonOperatingIncome'][
+																			`${item}`
+																		].toFixed(2)}
+																	</td>
+																</tr>
+															))}
+															<tr>
+																<td className="mainLable">
+																	Total Non Operating Income
+																</td>
+																<td></td>
+																<td className="text-right">
+																	{this.state.data['totalNonOperatingIncome'] !=
+																	null
+																		? this.state.data[
+																				'totalNonOperatingIncome'
+																		  ].toFixed(2)
+																		: '0.0'}
+																</td>
+															</tr>
+															<tr>
+																<td className="mainLable">
+																	Non Operating Expense
 																</td>
 																<td></td>
 																<td></td>
@@ -414,7 +450,7 @@ class ProfitAndLossReport extends React.Component {
 															))}
 															<tr>
 																<td className="mainLable">
-																	Total Non Operating Income/Expense
+																	Total Non Operating Expense
 																</td>
 																<td></td>
 																<td className="text-right">
@@ -424,7 +460,7 @@ class ProfitAndLossReport extends React.Component {
 																		? this.state.data[
 																				'totalNonOperatingExpense'
 																		  ].toFixed(2)
-																		: ''}
+																		: '0.0'}
 																</td>
 															</tr>
 															<tr>

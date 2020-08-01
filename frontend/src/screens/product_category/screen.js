@@ -417,6 +417,7 @@ class ProductCategory extends React.Component {
 										<Button
 											color="primary"
 											className="btn-square"
+											style={{ marginBottom: '10px' }}
 											onClick={() =>
 												this.props.history.push(
 													`/admin/master/product-category/create`,

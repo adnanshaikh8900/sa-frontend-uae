@@ -462,6 +462,7 @@ class ChartAccount extends React.Component {
 											color="primary"
 											className="btn-square"
 											onClick={this.goToCreatePage}
+											style={{ marginBottom: '10px' }}
 										>
 											<i className="fas fa-plus mr-1" />
 											Add New Account

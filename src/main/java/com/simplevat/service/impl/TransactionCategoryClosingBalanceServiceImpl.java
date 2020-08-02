@@ -44,6 +44,11 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
         return transactionCategoryClosingBalanceDao.getList(reportRequestModel);
     }
 
+    public List<TransactionCategoryClosingBalance> getListByChartOfAccountIds(ReportRequestModel reportRequestModel)
+    {
+        return transactionCategoryClosingBalanceDao.getListByChartOfAccountIds(reportRequestModel);
+    }
+
     public void updateClosingBalance(JournalLineItem lineItem)
     {
         TransactionCategory category = lineItem.getTransactionCategory();

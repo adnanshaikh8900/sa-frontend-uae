@@ -36,13 +36,11 @@ public enum ChartOfAccountCategoryCodeEnum {
         if ( code == null || code.isEmpty() ) {
             return null;
         }
-        for(String key : getChartOfAccountCategoryCodeEnumMap().keySet()) {
-            if (code.equals(chartOfAccountCategoryCodeEnumMap.get(key).getCode())) {
-                return chartOfAccountCategoryCodeEnumMap.get(key);
-            }
+        if (chartOfAccountCategoryCodeEnumMap == null) {
+            initChartOfAccountCategoryCodeEnumMap();
         }
-        return null;
-    }
+          return chartOfAccountCategoryCodeEnumMap.get(code);
+      }
 
     public static Map <String,ChartOfAccountCategoryCodeEnum> getChartOfAccountCategoryCodeEnumMap() {
         if (chartOfAccountCategoryCodeEnumMap == null) {

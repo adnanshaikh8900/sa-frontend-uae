@@ -71,6 +71,44 @@ private DateFormatUtil dateUtil;
         return list != null && !list.isEmpty() ? list : null;
     }
 
+    public List<TransactionCategoryClosingBalance> getListByChartOfAccountIds(ReportRequestModel reportRequestModel)
+    {
+        LocalDateTime fromDate = null;
+        LocalDateTime toDate = null;
+        String chartOfAccountCodes = reportRequestModel.getChartOfAccountCodes();
+        try {
+            fromDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getStartDate(), CommonColumnConstants.DD_MM_YYYY);
+        } catch (Exception e) {
+            LOGGER.error("Exception is ", e);
+        }
+        try {
+            toDate = dateUtil.getDateStrAsLocalDateTime(reportRequestModel.getEndDate(), CommonColumnConstants.DD_MM_YYYY);
+        } catch (Exception e) {
+            LOGGER.error(ERROR, e);
+        }
+
+        String queryStr = "select cb from TransactionCategoryClosingBalance cb where cb.deleteFlag = false and cb.closingBalanceDate " +
+                "BETWEEN :startDate and :endDate and cb.transactionCategory.chartOfAccount.chartOfAccountCode in ("+chartOfAccountCodes+") order by cb.closingBalanceDate DESC  ";
+
+        TypedQuery<TransactionCategoryClosingBalance> query = getEntityManager().createQuery(queryStr, TransactionCategoryClosingBalance.class);
+        if (fromDate != null) {
+            query.setParameter(CommonColumnConstants.START_DATE, fromDate);
+        }
+        if (toDate != null) {
+            query.setParameter(CommonColumnConstants.END_DATE, toDate);
+        }
+//        if (reportRequestModel.getChartOfAccountId() != null) {
+//            query.setParameter("transactionCategoryId", reportRequestModel.getChartOfAccountId());
+//        }
+//        if (reportRequestModel.getReportBasis() != null && !reportRequestModel.getReportBasis().isEmpty()
+//                && reportRequestModel.getReportBasis().equals("CASH")) {
+//            query.setParameter("transactionCategoryIdList",
+//                    Arrays.asList(TransactionCategoryCodeEnum.ACCOUNT_RECEIVABLE.getCode(),
+//                            TransactionCategoryCodeEnum.ACCOUNT_PAYABLE.getCode()));
+//        }
+        List<TransactionCategoryClosingBalance> list = query.getResultList();
+        return list != null && !list.isEmpty() ? list : null;
+    }
     @Override
     public PaginationResponseModel getAll(Map<TransactionCategoryBalanceFilterEnum, Object> filterMap) {
         List<DbFilter> dbFilters = new ArrayList<>();

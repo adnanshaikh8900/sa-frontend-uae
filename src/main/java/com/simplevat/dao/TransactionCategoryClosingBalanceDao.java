@@ -25,4 +25,5 @@ public interface TransactionCategoryClosingBalanceDao extends Dao<Integer, Trans
     public TransactionCategoryClosingBalance getLastClosingBalanceByDate(TransactionCategory category);
 
     public List<TransactionCategoryClosingBalance> getList(ReportRequestModel reportRequestModel);
+    public List<TransactionCategoryClosingBalance> getListByChartOfAccountIds(ReportRequestModel reportRequestModel);
 }

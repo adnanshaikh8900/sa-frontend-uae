@@ -65,6 +65,7 @@ class DetailCustomerInvoice extends React.Component {
 		this.state = {
 			loading: true,
 			dialog: false,
+			disabled: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: 'Percentage' },
@@ -664,6 +665,7 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	handleSubmit = (data) => {
+		this.setState({ disabled: true });
 		const { current_customer_id, term } = this.state;
 		const {
 			receiptAttachmentDescription,
@@ -737,6 +739,7 @@ class DetailCustomerInvoice extends React.Component {
 		this.props.customerInvoiceDetailActions
 			.updateInvoice(formData)
 			.then((res) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
 					'Invoice Updated Successfully.',
@@ -744,6 +747,7 @@ class DetailCustomerInvoice extends React.Component {
 				this.props.history.push('/admin/revenue/customer-invoice');
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -1763,9 +1767,12 @@ class DetailCustomerInvoice extends React.Component {
 																			type="submit"
 																			color="primary"
 																			className="btn-square mr-3"
+																			disabled={this.state.disabled}
 																		>
 																			<i className="fa fa-dot-circle-o"></i>{' '}
-																			Update
+																			{this.state.disabled
+																				? 'Updating...'
+																				: 'Create'}
 																		</Button>
 																		<Button
 																			color="secondary"

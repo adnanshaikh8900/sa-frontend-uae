@@ -59,6 +59,7 @@ class CreateCustomerInvoice extends React.Component {
 		super(props);
 		this.state = {
 			loading: false,
+			disabled: false,
 			discountOptions: [
 				{ value: 'FIXED', label: 'Fixed' },
 				{ value: 'PERCENTAGE', label: 'Percentage' },
@@ -625,6 +626,7 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 		const {
 			receiptAttachmentDescription,
 			receiptNumber,
@@ -640,10 +642,6 @@ class CreateCustomerInvoice extends React.Component {
 			discountPercentage,
 			notes,
 		} = data;
-		console.log(data);
-		console.log(
-			moment(moment(invoiceDate).format('DD/MM/YYYY'), 'DD/MM/YYYY').toDate(),
-		);
 		const { term } = this.state;
 		const formData = new FormData();
 		formData.append(
@@ -706,6 +704,7 @@ class CreateCustomerInvoice extends React.Component {
 		this.props.customerInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
 					'New Invoice Created Successfully.',
@@ -754,6 +753,7 @@ class CreateCustomerInvoice extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -1625,6 +1625,7 @@ class CreateCustomerInvoice extends React.Component {
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: false },
@@ -1635,12 +1636,15 @@ class CreateCustomerInvoice extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		Create
+																		{this.state.disabled
+																			? 'Creating...'
+																			: 'Create'}
 																	</Button>
 																	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{
@@ -1652,8 +1656,10 @@ class CreateCustomerInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i> Create and
-																		More
+																		<i className="fa fa-repeat"></i>
+																		{this.state.disabled
+																			? 'Creating...'
+																			: 'Create and More'}
 																	</Button>
 																	<Button
 																		color="secondary"

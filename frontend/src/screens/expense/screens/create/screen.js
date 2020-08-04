@@ -56,6 +56,7 @@ class CreateExpense extends React.Component {
 		this.state = {
 			loading: false,
 			createMore: false,
+			disabled: false,
 			initValue: {
 				payee: '',
 				expenseDate: '',
@@ -114,6 +115,7 @@ class CreateExpense extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 		const {
 			payee,
 			expenseDate,
@@ -163,30 +165,32 @@ class CreateExpense extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		this.props.expenseCreateActions
-			.createExpense(formData)
-			.then((res) => {
-				if (res.status === 200) {
-					resetForm(this.state.initValue);
-					this.props.commonActions.tostifyAlert(
-						'success',
-						'New Expense Created Successfully.',
-					);
-					if (this.state.createMore) {
-						this.setState({
-							createMore: false,
-						});
-					} else {
-						this.props.history.push('/admin/expense/expense');
-					}
-				}
-			})
-			.catch((err) => {
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-			});
+		// this.props.expenseCreateActions
+		// 	.createExpense(formData)
+		// 	.then((res) => {
+		// 		this.setState({ disabled: false });
+		// 		if (res.status === 200) {
+		// 			resetForm(this.state.initValue);
+		// 			this.props.commonActions.tostifyAlert(
+		// 				'success',
+		// 				'New Expense Created Successfully.',
+		// 			);
+		// 			if (this.state.createMore) {
+		// 				this.setState({
+		// 					createMore: false,
+		// 				});
+		// 			} else {
+		// 				this.props.history.push('/admin/expense/expense');
+		// 			}
+		// 		}
+		// 	})
+		// 	.catch((err) => {
+		// 		this.setState({ disabled: false });
+		// 		this.props.commonActions.tostifyAlert(
+		// 			'error',
+		// 			err && err.data ? err.data.message : 'Something Went Wrong',
+		// 		);
+		// 	});
 	};
 
 	handleFileChange = (e, props) => {
@@ -257,7 +261,7 @@ class CreateExpense extends React.Component {
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(/^[0-9]*$/, 'Enter a Valid Amount'),
-													payMode: Yup.string().required(
+													payMode: Yup.object().required(
 														'Pay Through is Required',
 													),
 													bankAccountId: Yup.string().when('payMode', {
@@ -732,6 +736,7 @@ class CreateExpense extends React.Component {
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: false },
@@ -742,12 +747,15 @@ class CreateExpense extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		Create
+																		{this.state.disabled
+																			? 'Creating...'
+																			: 'Create'}
 																	</Button>
 																	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: true },
@@ -757,8 +765,10 @@ class CreateExpense extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i> Create and
-																		More
+																		<i className="fa fa-repeat"></i>
+																		{this.state.disabled
+																			? 'Creating...'
+																			: 'Create and More'}
 																	</Button>
 																	<Button
 																		color="secondary"

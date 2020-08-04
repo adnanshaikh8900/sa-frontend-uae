@@ -67,7 +67,7 @@ class CreateSupplierInvoice extends React.Component {
 				{ value: 'PERCENTAGE', label: 'Percentage' },
 			],
 			discount_option: '',
-
+			disabled: false,
 			data: [
 				{
 					id: 0,
@@ -766,6 +766,7 @@ class CreateSupplierInvoice extends React.Component {
 	};
 
 	handleSubmit = (data, resetForm) => {
+		this.setState({ disabled: true });
 		const {
 			receiptAttachmentDescription,
 			receiptNumber,
@@ -831,6 +832,7 @@ class CreateSupplierInvoice extends React.Component {
 		this.props.supplierInvoiceCreateActions
 			.createInvoice(formData)
 			.then((res) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'success',
 					'New Invoice Created Successfully.',
@@ -879,6 +881,7 @@ class CreateSupplierInvoice extends React.Component {
 				}
 			})
 			.catch((err) => {
+				this.setState({ disabled: false });
 				this.props.commonActions.tostifyAlert(
 					'error',
 					err && err.data ? err.data.message : 'Something Went Wrong',
@@ -1782,6 +1785,7 @@ class CreateSupplierInvoice extends React.Component {
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: false },
@@ -1792,12 +1796,15 @@ class CreateSupplierInvoice extends React.Component {
 																		}}
 																	>
 																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		Create
+																		{this.state.disabled
+																			? 'Creating...'
+																			: 'Create'}
 																	</Button>
 																	<Button
 																		type="button"
 																		color="primary"
 																		className="btn-square mr-3"
+																		disabled={this.state.disabled}
 																		onClick={() => {
 																			this.setState(
 																				{ createMore: true },
@@ -1807,8 +1814,10 @@ class CreateSupplierInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i> Create and
-																		More
+																		<i className="fa fa-repeat"></i>
+																		{this.state.disabled
+																			? 'Creating...'
+																			: 'Create and More'}
 																	</Button>
 																	<Button
 																		type="button"

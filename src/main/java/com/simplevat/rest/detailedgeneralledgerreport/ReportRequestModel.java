@@ -13,5 +13,6 @@ public class ReportRequestModel extends PaginationModel implements Serializable 
 	private String endDate;
 	private Integer chartOfAccountId;
 	private String reportBasis;
+	private String chartOfAccountCodes;
 
 }

@@ -289,7 +289,7 @@ public class ReconsilationController {
 				boolean isClosingBalanceMatches = dbClosingBalance.compareTo(closingBalance)==0;
 				if (isClosingBalanceMatches) {
 					transactionService.updateTransactionStatusReconcile(startDate, reconcileDate, reconcilationPersistModel.getBankId(),
-							TransactionExplinationStatusEnum.FULL);
+							TransactionExplinationStatusEnum.RECONCILED);
 					ReconcileStatus reconcileStatus = new ReconcileStatus();
 					reconcileStatus.setReconciledDate(reconcileDate);
 					reconcileStatus.setReconciledStartDate(startDate);

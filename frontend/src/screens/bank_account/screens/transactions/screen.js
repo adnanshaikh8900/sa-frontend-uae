@@ -450,7 +450,10 @@ class BankTransactions extends React.Component {
 	statusFormatter = (cell, row, extraData) => {
 		if (row.explinationStatusEnum === 'FULL') {
 			return <div>Explained</div>;
-		} else if (
+		}else if (row.explinationStatusEnum === 'RECONCILED') {
+			return <div>Reconciled</div>;
+		}
+		else if (
 			row.explinationStatusEnum === 'NOT_EXPLAIN' &&
 			row.creationMode !== 'POTENTIAL_DUPLICATE'
 		) {

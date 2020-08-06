@@ -208,7 +208,7 @@ class DetailCustomerInvoice extends React.Component {
 					}
 				});
 		} else {
-			this.props.history.push('/admin/revenue/customer-invoice');
+			this.props.history.push('/admin/income/customer-invoice');
 		}
 	};
 
@@ -744,7 +744,7 @@ class DetailCustomerInvoice extends React.Component {
 					'success',
 					'Invoice Updated Successfully.',
 				);
-				this.props.history.push('/admin/revenue/customer-invoice');
+				this.props.history.push('/admin/income/customer-invoice');
 			})
 			.catch((err) => {
 				this.setState({ disabled: false });
@@ -805,7 +805,7 @@ class DetailCustomerInvoice extends React.Component {
 						'success',
 						'Data Deleted Successfully',
 					);
-					this.props.history.push('/admin/revenue/customer-invoice');
+					this.props.history.push('/admin/income/customer-invoice');
 				}
 			})
 			.catch((err) => {
@@ -1779,7 +1779,7 @@ class DetailCustomerInvoice extends React.Component {
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/revenue/customer-invoice',
+																					'/admin/income/customer-invoice',
 																				);
 																			}}
 																		>

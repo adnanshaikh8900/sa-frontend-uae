@@ -41,17 +41,17 @@ export default {
 		},
 		{
 			name: 'Income',
-			url: '/admin/revenue',
+			url: '/admin/income',
 			icon: 'far fa-address-book',
 			children: [
 				{
 					name: 'Customer Invoices',
-					url: '/admin/revenue/customer-invoice',
+					url: '/admin/income/customer-invoice',
 					icon: 'far fa-address-card',
 				},
 				{
 					name: 'Income Receipts',
-					url: '/admin/revenue/receipt',
+					url: '/admin/income/receipt',
 					icon: 'fa fa-file-o',
 				},
 			],

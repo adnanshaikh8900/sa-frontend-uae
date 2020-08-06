@@ -119,7 +119,7 @@ class Receipt extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		this.props.history.push('/admin/revenue/receipt/detail', {
+		this.props.history.push('/admin/income/receipt/detail', {
 			id: row.receiptId,
 		});
 	};
@@ -392,7 +392,7 @@ class Receipt extends React.Component {
 														}}
 													/>
 												</Col>
-												<Col lg={3} className="mb-1">
+												<Col lg={2} className="mb-1">
 													<Select
 														options={
 															invoice_list
@@ -440,7 +440,7 @@ class Receipt extends React.Component {
 														}}
 													/>
 												</Col>
-												<Col lg={1} className="pl-0 pr-0">
+												<Col lg={3} className="pl-0 pr-0">
 													<Button
 														type="button"
 														color="primary"
@@ -465,7 +465,7 @@ class Receipt extends React.Component {
 											style={{ marginBottom: '10px' }}
 											className="btn-square"
 											onClick={() =>
-												this.props.history.push(`/admin/revenue/receipt/create`)
+												this.props.history.push(`/admin/income/receipt/create`)
 											}
 										>
 											<i className="fas fa-plus mr-1" />
@@ -516,7 +516,7 @@ class Receipt extends React.Component {
 													Customer Name
 												</TableHeaderColumn>
 												<TableHeaderColumn dataField="receiptId" dataSort>
-													Receipt No
+													Receipt Number
 												</TableHeaderColumn>
 												{/* <TableHeaderColumn
                             dataField="transactionType"

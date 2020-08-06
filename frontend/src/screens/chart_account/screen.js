@@ -310,6 +310,12 @@ class ChartAccount extends React.Component {
 		);
 	};
 
+	customName(cell, row) {
+		if (row.transactionCategoryName.length > 15) {
+			return `${cell}`;
+		}
+	}
+
 	render() {
 		const {
 			loading,
@@ -437,7 +443,7 @@ class ChartAccount extends React.Component {
 															/>
 														</FormGroup>
 													</Col>
-													<Col lg={1} className="pl-0 pr-0">
+													<Col lg={3} className="pl-0 pr-0">
 														<Button
 															type="button"
 															color="primary"
@@ -508,6 +514,7 @@ class ChartAccount extends React.Component {
 												<TableHeaderColumn
 													dataField="transactionCategoryName"
 													dataSort
+													columnTitle={this.customName}
 												>
 													Name
 												</TableHeaderColumn>
@@ -521,7 +528,9 @@ class ChartAccount extends React.Component {
 												<TableHeaderColumn
 													dataField="isEditable"
 													dataFormat={this.editFormatter}
-												></TableHeaderColumn>
+												>
+													Status
+												</TableHeaderColumn>
 											</BootstrapTable>
 										</div>
 									</Col>

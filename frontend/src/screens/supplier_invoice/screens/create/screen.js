@@ -718,7 +718,6 @@ class CreateSupplierInvoice extends React.Component {
 	updateAmount = (data, props) => {
 		const { vat_list } = this.props;
 		const { discountPercentage, discountAmount } = this.state;
-
 		let total_net = 0;
 		let total = 0;
 		let total_vat = 0;
@@ -728,29 +727,32 @@ class CreateSupplierInvoice extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
-			let val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			let val = discountPercentage
+				? ((+obj.unitPrice -
+						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						vat *
+						obj.quantity) /
+				  100
+				: (+obj.unitPrice * vat * obj.quantity) / 100;
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId
-					? +obj.unitPrice * obj.quantity + val
-					: 0;
+				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
 			total = total_vat + total_net;
 			return obj;
 		});
+
 		const discount =
 			props.values.discountType.value === 'PERCENTAGE'
-				? (total_net * discountPercentage) / 100
+				? +((total_net * discountPercentage) / 100).toFixed(2)
 				: discountAmount;
-
 		this.setState(
 			{
 				data,
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net,
+						total_net: discount ? total_net - discount : total_net,
 						invoiceVATAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,

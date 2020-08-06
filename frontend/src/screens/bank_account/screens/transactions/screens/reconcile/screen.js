@@ -91,7 +91,7 @@ class ReconcileTransaction extends React.Component {
 		];
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-
+		this.regDecimal = /^\d*\.?\d*$/;
 		this.formRef = React.createRef();
 	}
 
@@ -251,7 +251,7 @@ class ReconcileTransaction extends React.Component {
 																<Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="closingBalance">
-																			Clsoing Balance
+																			Closing Balance
 																		</Label>
 																		<Input
 																			type="text"
@@ -261,7 +261,9 @@ class ReconcileTransaction extends React.Component {
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regEx.test(option.target.value)
+																					this.regDecimal.test(
+																						option.target.value,
+																					)
 																				) {
 																					props.handleChange('closingBalance')(
 																						option,

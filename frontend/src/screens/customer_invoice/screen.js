@@ -218,7 +218,7 @@ class CustomerInvoice extends React.Component {
 			<label
 				className="mb-0 my-link"
 				onClick={() =>
-					this.props.history.push('/admin/revenue/customer-invoice/detail')
+					this.props.history.push('/admin/income/customer-invoice/detail')
 				}
 			>
 				{row.transactionCategoryName}
@@ -290,7 +290,7 @@ class CustomerInvoice extends React.Component {
 								<div
 									onClick={() => {
 										this.props.history.push(
-											'/admin/revenue/customer-invoice/detail',
+											'/admin/income/customer-invoice/detail',
 											{ id: row.id },
 										);
 									}}
@@ -313,10 +313,9 @@ class CustomerInvoice extends React.Component {
             </DropdownItem> */}
 						<DropdownItem
 							onClick={() =>
-								this.props.history.push(
-									'/admin/revenue/customer-invoice/view',
-									{ id: row.id },
-								)
+								this.props.history.push('/admin/income/customer-invoice/view', {
+									id: row.id,
+								})
 							}
 						>
 							<i className="fas fa-eye" /> View
@@ -325,7 +324,7 @@ class CustomerInvoice extends React.Component {
 							<DropdownItem
 								onClick={() =>
 									this.props.history.push(
-										'/admin/revenue/customer-invoice/record-payment',
+										'/admin/income/customer-invoice/record-payment',
 										{ id: row },
 									)
 								}
@@ -757,7 +756,7 @@ class CustomerInvoice extends React.Component {
 													placeholder="Status"
 												/>
 											</Col>
-											<Col lg={1} className="pl-0 pr-0">
+											<Col lg={2} className="pl-0 pr-0">
 												<Button
 													type="button"
 													color="primary"
@@ -783,7 +782,7 @@ class CustomerInvoice extends React.Component {
 										style={{ marginBottom: '10px' }}
 										onClick={() =>
 											this.props.history.push(
-												`/admin/revenue/customer-invoice/create`,
+												`/admin/income/customer-invoice/create`,
 											)
 										}
 									>

@@ -262,7 +262,7 @@ class RecordCustomerPayment extends React.Component {
 					'success',
 					'Invoice Updated Successfully.',
 				);
-				this.props.history.push('/admin/revenue/customer-invoice');
+				this.props.history.push('/admin/income/customer-invoice');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -322,7 +322,7 @@ class RecordCustomerPayment extends React.Component {
 						'success',
 						'Data Deleted Successfully',
 					);
-					this.props.history.push('/admin/revenue/customer-invoice');
+					this.props.history.push('/admin/income/customer-invoice');
 				}
 			})
 			.catch((err) => {
@@ -781,7 +781,7 @@ class RecordCustomerPayment extends React.Component {
 																			className="btn-square"
 																			onClick={() => {
 																				this.props.history.push(
-																					'/admin/revenue/customer-invoice',
+																					'/admin/income/customer-invoice',
 																				);
 																			}}
 																		>

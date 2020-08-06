@@ -458,6 +458,8 @@ class BankTransactions extends React.Component {
 			row.creationMode !== 'POTENTIAL_DUPLICATE'
 		) {
 			return <div>Not Explained</div>;
+		} else if (row.explinationStatusEnum === 'RECONCILED') {
+			return <div>Reconciled</div>;
 		} else if (row.creationMode === 'POTENTIAL_DUPLICATE') {
 			return (
 				<div>

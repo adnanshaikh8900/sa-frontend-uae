@@ -188,7 +188,7 @@ class CreateReceipt extends React.Component {
 					'success',
 					'Invoice Updated Successfully.',
 				);
-				this.props.history.push('/admin/revenue/customer-invoice');
+				this.props.history.push('/admin/income/customer-invoice');
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -789,7 +789,7 @@ class CreateReceipt extends React.Component {
 																						className="btn-square"
 																						onClick={() => {
 																							this.props.history.push(
-																								'/admin/revenue/receipt',
+																								'/admin/income/receipt',
 																							);
 																						}}
 																					>

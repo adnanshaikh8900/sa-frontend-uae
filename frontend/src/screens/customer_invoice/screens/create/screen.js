@@ -315,7 +315,7 @@ class CreateCustomerInvoice extends React.Component {
 				data: data.concat({
 					id: this.state.idCount + 1,
 					description: '',
-					quantity: '',
+					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
 					productId: '',
@@ -577,12 +577,15 @@ class CreateCustomerInvoice extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			// let val = (((+obj.unitPrice) * vat) / 100)
-			let val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			let val = discountPercentage
+				? ((+obj.unitPrice -
+						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						vat *
+						obj.quantity) /
+				  100
+				: (+obj.unitPrice * vat * obj.quantity) / 100;
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId
-					? +obj.unitPrice * obj.quantity + val
-					: 0;
+				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
 			total = total_vat + total_net;
@@ -599,7 +602,7 @@ class CreateCustomerInvoice extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net,
+						total_net: discount ? total_net - discount : total_net,
 						invoiceVATAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,
@@ -749,7 +752,7 @@ class CreateCustomerInvoice extends React.Component {
 						},
 					);
 				} else {
-					this.props.history.push('/admin/revenue/customer-invoice');
+					this.props.history.push('/admin/income/customer-invoice');
 				}
 			})
 			.catch((err) => {
@@ -1656,7 +1659,7 @@ class CreateCustomerInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i>
+																		<i className="fa fa-repeat"></i>{' '}
 																		{this.state.disabled
 																			? 'Creating...'
 																			: 'Create and More'}
@@ -1666,7 +1669,7 @@ class CreateCustomerInvoice extends React.Component {
 																		className="btn-square"
 																		onClick={() => {
 																			this.props.history.push(
-																				'/admin/revenue/customer-invoice',
+																				'/admin/income/customer-invoice',
 																			);
 																		}}
 																	>

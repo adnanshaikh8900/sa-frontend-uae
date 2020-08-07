@@ -610,19 +610,19 @@ class CustomerInvoice extends React.Component {
 										<Row>
 											<Col lg={3}>
 												<h5>Overdue</h5>
-												<h3 className="status-title">
+												<h3>
 													{this.state.overDueAmountDetails.overDueAmount}
 												</h3>
 											</Col>
 											<Col lg={3}>
 												<h5>Due Within This Week</h5>
-												<h3 className="status-title">
+												<h3>
 													{this.state.overDueAmountDetails.overDueAmountWeekly}
 												</h3>
 											</Col>
 											<Col lg={3}>
 												<h5>Due Within 30 Days</h5>
-												<h3 className="status-title">
+												<h3>
 													{this.state.overDueAmountDetails.overDueAmountMonthly}
 												</h3>
 											</Col>
@@ -631,8 +631,8 @@ class CustomerInvoice extends React.Component {
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											<Button
-												color="success"
-												className="btn-square"
+												color="primary"
+												className="btn-square mr-1"
 												onClick={() => this.getCsvData()}
 											>
 												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -646,10 +646,10 @@ class CustomerInvoice extends React.Component {
 													ref={this.csvLink}
 													target="_blank"
 												/>
-											)}
+											)} 
 											<Button
-												color="warning"
-												className="btn-square"
+												color="primary"
+												className="btn-square "
 												onClick={this.bulkDelete}
 												disabled={selectedRows.length === 0}
 											>
@@ -818,22 +818,22 @@ class CustomerInvoice extends React.Component {
 											}}
 										>
 											<TableHeaderColumn
-												width="230"
-												dataField="status"
-												dataFormat={this.renderInvoiceStatus}
-												dataSort
-											>
-												Status
-											</TableHeaderColumn>
-											<TableHeaderColumn dataField="customerName" dataSort>
-												Customer Name
-											</TableHeaderColumn>
-											<TableHeaderColumn
 												dataField="invoiceNumber"
 												// dataFormat={this.renderInvoiceNumber}
 												dataSort
 											>
 												Invoice Number
+											</TableHeaderColumn>
+											<TableHeaderColumn dataField="customerName" dataSort>
+												Customer Name
+											</TableHeaderColumn>
+											<TableHeaderColumn
+												width="200"
+												dataField="status"
+												dataFormat={this.renderInvoiceStatus}
+												dataSort
+											>
+												Status
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="invoiceDate"

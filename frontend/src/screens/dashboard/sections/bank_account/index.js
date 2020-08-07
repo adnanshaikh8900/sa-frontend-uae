@@ -179,13 +179,13 @@ class BankAccount extends Component {
 									<div className="data-info">
 										<div className="data-item">
 											<div>
-												<h3>${this.props.bank_account_graph.balance}</h3>
+												<h3>{this.props.bank_account_graph.balance}</h3>
 												<p>BALANCE</p>
 											</div>
 										</div>
 										<div className="data-item">
 											<div>
-												<h3>${this.state.totalBalance}</h3>
+												<h3>{this.state.totalBalance}</h3>
 												<p>ALL ACCOUNTS</p>
 											</div>
 										</div>

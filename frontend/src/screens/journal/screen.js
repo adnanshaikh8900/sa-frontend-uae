@@ -395,8 +395,8 @@ class Journal extends React.Component {
                       <div className="d-flex justify-content-end">
                         <ButtonGroup size="sm">
                           <Button
-                            color="success"
-                            className="btn-square"
+                            color="primary"
+                            className="btn-square mr-1"
                             onClick={() => this.getCsvData()}
                           >
                             <i className="fa glyphicon glyphicon-export fa-download mr-1" />Export To CSV
@@ -410,15 +410,15 @@ class Journal extends React.Component {
                           />}
                           <Button
                             color="primary"
-                            className="btn-square"
+                            className="btn-square mr-1"
                             onClick={() => this.props.history.push(`/admin/accountant/journal/create`)}
                           >
                             <i className="fas fa-plus mr-1" />
                             New Journal
                           </Button>
                           <Button
-                            color="warning"
-                            className="btn-square"
+                            color="primary"
+                            className="btn-square mr-1"
                             onClick={this.bulkDeleteJournal}
                             disabled={selectedRows.length === 0}
                           >

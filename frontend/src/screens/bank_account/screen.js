@@ -561,7 +561,7 @@ class BankAccount extends React.Component {
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
 												<Button
-													color="success"
+													color="primary"
 													className="btn-square"
 													onClick={() => this.getCsvData()}
 												>
@@ -724,6 +724,14 @@ class BankAccount extends React.Component {
 												}}
 											>
 												<TableHeaderColumn
+													dataField="bankAccountNo"
+													dataFormat={this.renderAccountNumber}
+													dataSort
+													width="15%"
+												>
+													Account Number
+												</TableHeaderColumn>
+												<TableHeaderColumn
 													dataField="name"
 													dataSort
 													width="10%"
@@ -731,29 +739,20 @@ class BankAccount extends React.Component {
 													Bank
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													dataFormat={this.renderAccountType}
-													dataField="bankAccountTypeName"
-													dataSort
-													width="15%"
-												>
-													Account Type
-												</TableHeaderColumn>
-												<TableHeaderColumn
 													dataField="accounName"
 													dataSort
-													width="15%"
+													width="18%"
 												>
 													Account Name
 												</TableHeaderColumn>
 												<TableHeaderColumn
-													dataField="bankAccountNo"
-													dataFormat={this.renderAccountNumber}
+													dataFormat={this.renderAccountType}
+													dataField="bankAccountTypeName"
 													dataSort
-													width="18%"
+													width="12%"
 												>
-													Account Number
+													Account Type
 												</TableHeaderColumn>
-
 												<TableHeaderColumn
 													dataFormat={this.renderCurrency}
 													dataSort

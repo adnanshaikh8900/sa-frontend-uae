@@ -500,8 +500,8 @@ class Expense extends React.Component {
 									<div className="d-flex justify-content-end">
 										<ButtonGroup size="sm">
 											<Button
-												color="success"
-												className="btn-square"
+												color="primary"
+												className="btn-square mr-1"
 												onClick={() => this.getCsvData()}
 											>
 												<i className="fa glyphicon glyphicon-export fa-download mr-1" />
@@ -517,8 +517,8 @@ class Expense extends React.Component {
 												/>
 											)}
 											<Button
-												color="warning"
-												className="btn-square"
+												color="primary"
+												className="btn-square mr-1"
 												onClick={this.bulkDeleteExpenses}
 												disabled={selectedRows.length === 0}
 											>
@@ -689,7 +689,7 @@ class Expense extends React.Component {
 												dataSort
 												width="20%"
 											>
-												Transaction Category
+												Expense Category
 											</TableHeaderColumn>
 											<TableHeaderColumn
 												dataField="expenseAmount"

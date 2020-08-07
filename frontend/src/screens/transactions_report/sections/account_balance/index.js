@@ -143,9 +143,9 @@ class AccountBalances extends React.Component {
 							<div className="flex-wrap d-flex align-items-start justify-content-between">
 								<div className="info-block">
 									<h4>
-										Company Name -{' '}
+										{/* Company Name -{' '} */}
 										<small>
-											<i>Transactions</i>
+											{/* <i>Transactions</i> */}
 										</small>
 									</h4>
 								</div>
@@ -154,7 +154,7 @@ class AccountBalances extends React.Component {
 										<FormGroup>
 											<ButtonGroup className="mr-3">
 												<Button
-													color="success"
+													color="primary"
 													className="btn-square"
 													onClick={() => this.table.handleExportCSV()}
 												>
@@ -263,7 +263,7 @@ class AccountBalances extends React.Component {
 									</Col> */}
 									<Col lg={2} className="mb-1">
 										<Button
-											color="secondary"
+											color="primary"
 											className="btn-square"
 											type="submit"
 											name="submit"

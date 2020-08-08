@@ -223,7 +223,7 @@ class VatTransactions extends React.Component {
 									<FormGroup>
 										<ButtonGroup className="mr-3">
 											<Button
-												color="success"
+												color="primary"
 												className="btn-square"
 												onClick={() => this.table.handleExportCSV()}
 											>

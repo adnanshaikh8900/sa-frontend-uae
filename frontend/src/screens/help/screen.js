@@ -55,14 +55,14 @@ class Help extends React.Component {
 												Find detailed answers to the most common questions you
 												might have while using our site
 											</p>
-											<div className="d-flex">
-												<button className="btn-pill btn btn-danger btn-lg">
+											<div className="d-flex justify-content-center">
+												<button className="btn-pill btn btn-primary btn-lg">
 													<i className="icon-phone icons font-2xl d-block"></i>
 												</button>
-												<button className="btn-pill btn btn-danger btn-lg">
+												<button className="btn-pill btn btn-primary btn-lg">
 													<i className="cui-comment-square icons font-2xl d-block"></i>
 												</button>
-												<button className="btn-pill btn btn-danger btn-lg">
+												<button className="btn-pill btn btn-primary btn-lg">
 													<i
 														className="cui-envelope-closed icons font-2xl d-block"
 														style={{ marginTop: -5 }}

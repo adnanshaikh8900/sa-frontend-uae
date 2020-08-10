@@ -191,6 +191,7 @@ class Receipt extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		const message = 'Warning: This Income Receipt will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -198,6 +199,7 @@ class Receipt extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -222,7 +224,7 @@ class Receipt extends React.Component {
 				this.initializeData();
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Receipt Deleted Successfully',
+					'Income Receipt Deleted Successfully',
 				);
 				if (receipt_list && receipt_list.length > 0) {
 					this.setState({

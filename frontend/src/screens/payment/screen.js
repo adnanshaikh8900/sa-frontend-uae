@@ -124,6 +124,7 @@ class Payment extends React.Component {
 
 	bulkDeletePayments = () => {
 		let { selectedRows } = this.state;
+		const message = 'Warning: This Payment Receipt will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -131,6 +132,7 @@ class Payment extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulkPayments}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});
@@ -160,7 +162,7 @@ class Payment extends React.Component {
 			.then((res) => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Payment Deleted Successfully',
+					'Payment Receipt Deleted Successfully',
 				);
 				this.initializeData();
 				if (payment_list.length > 0) {

@@ -1192,25 +1192,6 @@ class CreateCustomerInvoice extends React.Component {
 
 														<hr />
 														<Row>
-															<Col lg={12} className="mb-3">
-																<Button
-																	color="primary"
-																	className={`btn-square mr-3 ${
-																		this.checkedRow() ? `disabled-cursor` : ``
-																	} `}
-																	onClick={this.addRow}
-																	title={
-																		this.checkedRow()
-																			? `Please add detail to add more`
-																			: ''
-																	}
-																	disabled={this.checkedRow() ? true : false}
-																>
-																	<i className="fa fa-plus"></i> Add More
-																</Button>
-															</Col>
-														</Row>
-														<Row>
 															{props.errors.lineItemsString &&
 																typeof props.errors.lineItemsString ===
 																	'string' && (
@@ -1272,7 +1253,7 @@ class CreateCustomerInvoice extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price (All)
+																		Unit Price 
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="vat"
@@ -1288,13 +1269,30 @@ class CreateCustomerInvoice extends React.Component {
 																		className="text-right"
 																		columnClassName="text-right"
 																	>
-																		Sub Total (All)
+																		Sub Total 
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
 														</Row>
 														{this.state.data.length > 0 ? (
 															<Row>
+																<Col lg={8} className="mb-3">
+																<Button
+																	color="primary"
+																	className={`btn-square mr-3 ${
+																		this.checkedRow() ? `disabled-cursor` : ``
+																	} `}
+																	onClick={this.addRow}
+																	title={
+																		this.checkedRow()
+																			? `Please add detail to add more`
+																			: ''
+																	}
+																	disabled={this.checkedRow() ? true : false}
+																>
+																	<i className="fa fa-plus"></i> Add More
+																</Button>
+																</Col>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">Notes</Label>

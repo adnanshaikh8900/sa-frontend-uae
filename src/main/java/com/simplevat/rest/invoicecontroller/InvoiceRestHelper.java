@@ -617,6 +617,10 @@ public class InvoiceRestHelper {
 				BigDecimal amntWithoutVat = sortedLineItem.getUnitPrice()
 						.multiply(BigDecimal.valueOf(sortedLineItem.getQuantity()));
 				totalAmount = totalAmount.add(amntWithoutVat);
+				if(invoice.getDiscount()!=null)
+				{
+					totalAmount = totalAmount.subtract(invoice.getDiscount());
+				}
 			}
 			JournalLineItem journalLineItem = new JournalLineItem();
 			journalLineItem.setTransactionCategory(tnxcatMap.get(categoryId));

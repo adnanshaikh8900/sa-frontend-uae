@@ -58,6 +58,9 @@ public class BankAccountController{
 	private BankAccountService bankAccountService;
 
 	@Autowired
+	protected JournalService journalService;
+
+	@Autowired
 	private CoacTransactionCategoryService coacTransactionCategoryService;
 	@Autowired
 	private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
@@ -153,10 +156,14 @@ public class BankAccountController{
 
 				 */
 				TransactionCategoryBalance   openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount);
-				TransactionCategoryClosingBalance closingBalance = bankAccountRestHelper.getClosingBalanceEntity(bankAccount);
-				closingBalance.setTransactionCategory(bankAccount.getTransactionCategory());
+				//TransactionCategoryClosingBalance closingBalance = bankAccountRestHelper.getClosingBalanceEntity(bankAccount);
+				Journal openBalanceJournal = bankAccountRestHelper.getJournalEntries(bankAccount);
+				if (openBalanceJournal != null) {
+					journalService.persist(openBalanceJournal);
+				}
+				//closingBalance.setTransactionCategory(bankAccount.getTransactionCategory());
 				transactionCategoryBalanceService.persist(openingBalance);
-				transactionCategoryClosingBalanceService.persist(closingBalance);
+				//transactionCategoryClosingBalanceService.persist(closingBalance);
 				coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
 						bankAccount.getTransactionCategory());
 				return new ResponseEntity<>("Save Successfull..",HttpStatus.OK);

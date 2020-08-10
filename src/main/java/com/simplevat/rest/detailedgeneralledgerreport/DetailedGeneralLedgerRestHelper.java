@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.BankAccount;
 import com.simplevat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,9 @@ public class DetailedGeneralLedgerRestHelper {
 
 	@Autowired
 	private TransactionService transactionalService;
+
+	@Autowired
+	private BankAccountService bankAccountService;
 
 	@Autowired
 	private ExpenseService expenseService;
@@ -69,6 +73,15 @@ public class DetailedGeneralLedgerRestHelper {
 		return transactionMap;
 	}
 
+	public Map<Integer, BankAccount> findOrGetFromDbBn(Map<Integer, BankAccount> bankAccountMap, Integer id) {
+
+		if (!bankAccountMap.containsKey(id)) {
+			BankAccount bankAccount = bankAccountService.findByPK(id);
+			bankAccountMap.put(bankAccount.getBankAccountId(), bankAccount);
+		}
+		return bankAccountMap;
+	}
+
 	public Map<Integer, Payment> findOrGetFromDbPaymnt(Map<Integer, Payment> paymentMap, Integer id) {
 
 		if (!paymentMap.containsKey(id)) {
@@ -98,6 +111,7 @@ public class DetailedGeneralLedgerRestHelper {
 			Map<Integer, List<JournalLineItem>> map = new HashMap<>();
 			Map<Integer, Expense> expenseMap = new HashMap<>();
 			Map<Integer, Transaction> transactionMap = new HashMap<>();
+			Map<Integer, BankAccount> bankAccountMap = new HashMap<>();
 			Map<Integer, Invoice> invoiceMap = new HashMap<>();
 			Map<Integer, Receipt> receiptMap = new HashMap<>();
 			Map<Integer, Payment> paymentMap = new HashMap<>();
@@ -141,27 +155,31 @@ public class DetailedGeneralLedgerRestHelper {
 
 					switch (postingType) {
 						case BANK_ACCOUNT:
+							bankAccountMap = findOrGetFromDbBn(bankAccountMap, lineItem.getReferenceId());
+							BankAccount bn = bankAccountMap.get(lineItem.getReferenceId());
+							model.setAmount(lineItem.getDebitAmount()!=null?lineItem.getDebitAmount():lineItem.getCreditAmount());
+							model.setDebitAmount(lineItem.getDebitAmount());
+							model.setCreditAmount( lineItem.getCreditAmount());
+							model.setName( bn.getBankName()+"-"+bn.getBankAccountName());
+							break;
+
 						case TRANSACTION_RECONSILE:
 						case TRANSACTION_RECONSILE_INVOICE:
 							transactionMap = findOrGetFromDbTr(transactionMap, lineItem.getReferenceId());
 							Transaction tr = transactionMap.get(lineItem.getReferenceId());
-
 							model.setAmount(lineItem.getDebitAmount()!=null?lineItem.getDebitAmount():lineItem.getCreditAmount());
-//							model.setDebitAmount(isDebit ? tr.getTransactionAmount() : new BigDecimal(0));
-//							model.setCreditAmount(isDebit ? new BigDecimal(0) : tr.getTransactionAmount());
 							model.setDebitAmount(lineItem.getDebitAmount());
 							model.setCreditAmount( lineItem.getCreditAmount());
 							model.setName(tr.getBankAccount() != null ? tr.getBankAccount().getBankName()+"-"+tr.getBankAccount().getBankAccountName() : "-");
 							break;
 
 						case EXPENSE:
-
 							expenseMap = findOrGetFromDbEx(expenseMap, lineItem.getReferenceId());
 							Expense expense = expenseMap.get(lineItem.getReferenceId());
 							model.setPostingReferenceTypeEnum(PostingReferenceTypeEnum.EXPENSE.getDisplayName());
-							model.setAmount(expense.getExpenseAmount());
-							model.setDebitAmount(isDebit ? expense.getExpenseAmount(): new BigDecimal(0));
-							model.setCreditAmount(isDebit ? new BigDecimal(0):expense.getExpenseAmount());
+							model.setAmount(isDebit ? lineItem.getDebitAmount(): lineItem.getCreditAmount());
+							model.setDebitAmount(isDebit ? lineItem.getDebitAmount(): new BigDecimal(0));
+							model.setCreditAmount(isDebit ? new BigDecimal(0):lineItem.getCreditAmount());
 							if(expense.getUserId()!=null)
 							{
 								model.setName(expense.getUserId().getFirstName()+" "+expense.getUserId().getLastName());
@@ -291,7 +309,7 @@ public class DetailedGeneralLedgerRestHelper {
 		openingBalanceModel.setDate("As on "+reportRequestModel.getStartDate());
 		BigDecimal openingBalance = transactionCategoryClosingBalance.getOpeningBalance();
 		if(transactionCategoryClosingBalance.getOpeningBalance().longValue()<=0) {
-			openingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getOpeningBalance());
+			openingBalanceModel.setCreditAmount(transactionCategoryClosingBalance.getOpeningBalance().negate());
 			//openingBalanceModel.setDebitAmount(BigDecimal.ZERO);
 		}else {
 			//openingBalanceModel.setCreditAmount(BigDecimal.ZERO);

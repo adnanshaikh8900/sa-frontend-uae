@@ -748,53 +748,23 @@ class CreateExpense extends React.Component {
 														<Row>
 															<Col lg={12} className="mt-5">
 																<FormGroup className="text-right">
-																	<Button
-																		type="button"
-																		color="primary"
-																		className="btn-square mr-3"
-																		disabled={this.state.disabled}
-																		onClick={() => {
-																			this.setState(
-																				{ createMore: false },
-																				() => {
-																					props.handleSubmit();
-																				},
-																			);
-																		}}
-																	>
-																		<i className="fa fa-dot-circle-o"></i>{' '}
-																		{this.state.disabled
-																			? 'Creating...'
-																			: 'Create'}
+																<Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
+																		this.setState({ createMore: false }, () => {
+																			props.handleSubmit()
+																		})
+																	}}>
+																		<i className="fa fa-dot-circle-o"></i> Create
 																	</Button>
-																	<Button
-																		type="button"
-																		color="primary"
-																		className="btn-square mr-3"
-																		disabled={this.state.disabled}
-																		onClick={() => {
-																			this.setState(
-																				{ createMore: true },
-																				() => {
-																					props.handleSubmit();
-																				},
-																			);
-																		}}
-																	>
-																		<i className="fa fa-repeat"></i>
-																		{this.state.disabled
-																			? 'Creating...'
-																			: 'Create and More'}
+																	<Button name="button" color="primary" className="btn-square mr-3"
+																			onClick={() => {
+																				this.setState({ createMore: true }, () => {
+																					props.handleSubmit()
+																				})
+																			}}>
+																		<i className="fa fa-refresh"></i> Create and More
 																	</Button>
-																	<Button
-																		color="secondary"
-																		className="btn-square"
-																		onClick={() => {
-																			this.props.history.push(
-																				'/admin/expense/expense',
-																			);
-																		}}
-																	>
+																	<Button color="secondary" className="btn-square"
+																			onClick={() => { this.props.history.push('/admin/settings/user') }}>
 																		<i className="fa fa-ban"></i> Cancel
 																	</Button>
 																</FormGroup>

@@ -199,7 +199,7 @@ class RevenueAndExpense extends Component {
 									<div className="data-info">
 										<div className="data-item">
 											<div>
-												<h3>${outstanding.toFixed(2)}</h3>
+												<h3>{outstanding.toFixed(2)}</h3>
 												<p>OUTSTANDING</p>
 											</div>
 										</div>
@@ -234,7 +234,7 @@ class RevenueAndExpense extends Component {
 									<div className="data-info">
 										<div className="data-item">
 											<div>
-												<h3>${outstanding.toFixed(2)}</h3>
+												<h3>{outstanding.toFixed(2)}</h3>
 												<p>OUTSTANDING</p>
 											</div>
 										</div>

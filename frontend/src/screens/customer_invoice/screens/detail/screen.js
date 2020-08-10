@@ -1255,7 +1255,7 @@ class DetailCustomerInvoice extends React.Component {
 																			)}
 																	</FormGroup>
 																</Col>
-																<Col lg={4}>
+																{/* <Col lg={4}>
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="contact_po_number">
 																			Contact PO Number
@@ -1280,7 +1280,7 @@ class DetailCustomerInvoice extends React.Component {
 																			}}
 																		/>
 																	</FormGroup>
-																</Col>
+																</Col> */}
 															</Row>
 
 															<hr />

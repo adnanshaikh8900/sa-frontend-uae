@@ -55,8 +55,8 @@ import org.hibernate.annotations.ColumnDefault;
 		@NamedQuery(name = "updateStatus", query = "Update Invoice i set i.status = :status where id = :id "),
 		@NamedQuery(name = "lastInvoice", query = "from Invoice i order by i.id desc"),
 		@NamedQuery(name = "activeInvoicesByDateRange", query = "from Invoice i where i.invoiceDate between :startDate and :endDate and i.deleteFlag = false"),
-		@NamedQuery(name = "overDueAmount", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2"),
-		@NamedQuery(name = "overDueAmountWeeklyMonthly", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status = 2 and i.invoiceDueDate between :startDate and :endDate"),
+		@NamedQuery(name = "overDueAmount", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status in (2,3)"),
+		@NamedQuery(name = "overDueAmountWeeklyMonthly", query = "SELECT Sum(i.totalAmount) from Invoice i where i.type = :type and i.status in (2,3) and i.invoiceDueDate between :startDate and :endDate"),
 		@NamedQuery(name = "unpaidInvoices", query = "from Invoice i where i.status in :status and i.contact.contactId = :id and i.type =:type and i.deleteFlag = false order by i.id desc"),
 		@NamedQuery(name = "suggestionUnpaidInvoices", query = "Select i from Invoice i where i.status in :status and i.id not in (Select ts.invoice.id from TransactionStatus ts ) and  i.contact.contactId = :id and  i.type =:type and i.deleteFlag = false and i.totalAmount <= :amount and i.createdBy = :userId order by i.id desc ")
 

@@ -2,22 +2,22 @@ apiVersion: v1
 kind: ReplicationController
 metadata:
   labels:
-    app: simplevat
-  name: simplevat-dev-rep
-  namespace: simplevat-dev
+    app: simplevat-waqas
+  name: simplevat-waqas-rep
+  namespace: simplevat-test
 spec:
   replicas: 3
   selector:
-    app: simplevat
+    app: simplevat-waqas
     deployment: v-1
   template:
     metadata:
       labels:
-        app: simplevat
+        app: simplevat-waqas
         deployment: v-1
     spec:
       containers:
-        - name: simplevat
+        - name: simplevat-waqas
           image: gcr.io/gtt-k8s/simplevat:0-0-1-rc-07
           ports:
           - containerPort: 8080
@@ -45,19 +45,19 @@ spec:
             - name: SIMPLEVAT_SMTP_STARTTLS_ENABLE
               value: "true"
             - name: SIMPLEVAT_ENVIRONMENT
-              value: dev
+              value: waqas
             - name: SIMPLEVAT_SUBDOMAIN
-              value: dev
+              value: test
             - name: SIMPLEVAT_TOKEN
               value: XXXX
             - name: SIMPLEVAT_RELEASE
               value: 0-0-1-rc-07
             - name: SIMPLEVAT_HOST
-              value: http://k8s.dev.simplevat.com
+              value: http://waqas.test.simplevat.com
             - name: SIMPLEVAT_DB_HOST
               value: gtt-prod-cloudsql-proxy-service.cloudsql-proxy
             - name: SIMPLEVAT_DB
-              value: simplevat_db
+              value: simplevat_waqas_db
             - name: SIMPLEVAT_DB_USER
               valueFrom:
                 secretKeyRef:

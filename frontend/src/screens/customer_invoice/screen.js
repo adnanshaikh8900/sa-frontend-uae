@@ -396,7 +396,7 @@ class CustomerInvoice extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const msg = 'Test';
+		const message = 'Warning: This Customer Invoice will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -404,7 +404,7 @@ class CustomerInvoice extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
-						message={msg}
+						message={message}
 					/>
 				),
 			});
@@ -430,7 +430,7 @@ class CustomerInvoice extends React.Component {
 					this.initializeData();
 					this.props.commonActions.tostifyAlert(
 						'success',
-						'Invoice Deleted Successfully',
+						' Customer invoice deleted successfully ',
 					);
 					if (customer_invoice_list && customer_invoice_list.length > 0) {
 						this.setState({

@@ -338,12 +338,15 @@ class BankAccount extends React.Component {
 	};
 
 	closeBankAccount = (_id) => {
+		const message = 'Warning: This Bank Account will be deleted permanently and cannot be recovered. '
 		this.setState({
+			
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={() => this.removeBankAccount(_id)}
 					cancelHandler={this.removeDialog}
+					message={message}
 				/>
 			),
 		});
@@ -356,7 +359,7 @@ class BankAccount extends React.Component {
 			.then(() => {
 				this.props.commonActions.tostifyAlert(
 					'success',
-					'Bank Account Deleted Successfully',
+					'Bank account deleted successfully  ',
 				);
 				this.initializeData();
 				let tempList = [];
@@ -434,6 +437,7 @@ class BankAccount extends React.Component {
 
 	bulkDeleteBankAccount = () => {
 		let { selected_id_list } = this.state;
+		const message = 'Warning: This Bank Account will be deleted permanently and cannot be recovered. '
 		if (selected_id_list.length > 0) {
 			this.setState({
 				dialog: (
@@ -441,6 +445,7 @@ class BankAccount extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulkBankAccount}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});

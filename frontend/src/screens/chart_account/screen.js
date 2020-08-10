@@ -326,6 +326,17 @@ class ChartAccount extends React.Component {
 			filterData,
 		} = this.state;
 		const { transaction_category_list, transaction_type_list } = this.props;
+		const customStyles = {
+			control: (base, state) => ({
+				...base,
+				borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+				boxShadow: state.isFocused ? null : null,
+				boxShadow: 'none',
+				'&:hover': {
+					borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+				},
+			}),
+		};
 		return (
 			<div className="chart-account-screen">
 				<div className="animated fadeIn">
@@ -414,6 +425,7 @@ class ChartAccount extends React.Component {
 													<Col lg={3} className="mb-1">
 														<FormGroup className="mb-3">
 															<Select
+																styles={customStyles}
 																options={
 																	transaction_type_list
 																		? selectOptionsFactory.renderOptions(

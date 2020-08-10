@@ -158,7 +158,7 @@ class CreateBankTransaction extends React.Component {
 		];
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
-
+		this.regDecimal = /^\d*\.?\d*$/;
 		this.formRef = React.createRef();
 	}
 
@@ -616,7 +616,9 @@ class CreateBankTransaction extends React.Component {
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regEx.test(option.target.value)
+																				this.regDecimal.test(
+																					option.target.value,
+																				)
 																			) {
 																				props.handleChange('transactionAmount')(
 																					option,

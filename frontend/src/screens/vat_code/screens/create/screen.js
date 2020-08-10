@@ -51,7 +51,7 @@ class CreateVatCode extends React.Component {
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regEx = /^[0-9\d]+$/;
-		this.vatCode = /[a-zA-Z0-9]+$/;
+		this.vatCode = /[a-zA-Z0-9 ]+$/;
 	}
 
 	componentDidMount = () => {

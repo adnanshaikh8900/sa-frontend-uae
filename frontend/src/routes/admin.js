@@ -460,7 +460,7 @@ const adminRoutes = [
 	{
 		redirect: true,
 		path: '/admin/master',
-		pathTo: '/admin/master/chart-accounts',
+		pathTo: '/admin/master/chart-account',
 		name: 'Master',
 	},
 

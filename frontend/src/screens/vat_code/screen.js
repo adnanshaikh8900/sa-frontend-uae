@@ -288,7 +288,7 @@ class VatCode extends React.Component {
 						<CardHeader>
 							<div className="h4 mb-0 d-flex align-items-center">
 								<i className="nav-icon icon-briefcase" />
-								<span className="ml-2">Vat Code</span>
+								<span className="ml-2">Vat Categories</span>
 							</div>
 						</CardHeader>
 						<CardBody>
@@ -356,7 +356,7 @@ class VatCode extends React.Component {
 														}}
 													/>
 												</Col>
-												<Col lg={1} className="pl-0 pr-0">
+												<Col lg={3} className="pl-0 pr-0">
 													<Button
 														type="button"
 														color="primary"

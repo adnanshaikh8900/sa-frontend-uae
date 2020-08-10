@@ -165,32 +165,32 @@ class CreateExpense extends React.Component {
 		if (this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		// this.props.expenseCreateActions
-		// 	.createExpense(formData)
-		// 	.then((res) => {
-		// 		this.setState({ disabled: false });
-		// 		if (res.status === 200) {
-		// 			resetForm(this.state.initValue);
-		// 			this.props.commonActions.tostifyAlert(
-		// 				'success',
-		// 				'New Expense Created Successfully.',
-		// 			);
-		// 			if (this.state.createMore) {
-		// 				this.setState({
-		// 					createMore: false,
-		// 				});
-		// 			} else {
-		// 				this.props.history.push('/admin/expense/expense');
-		// 			}
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		this.setState({ disabled: false });
-		// 		this.props.commonActions.tostifyAlert(
-		// 			'error',
-		// 			err && err.data ? err.data.message : 'Something Went Wrong',
-		// 		);
-		// 	});
+		this.props.expenseCreateActions
+			.createExpense(formData)
+			.then((res) => {
+				this.setState({ disabled: false });
+				if (res.status === 200) {
+					resetForm(this.state.initValue);
+					this.props.commonActions.tostifyAlert(
+						'success',
+						'New Expense Created Successfully.',
+					);
+					if (this.state.createMore) {
+						this.setState({
+							createMore: false,
+						});
+					} else {
+						this.props.history.push('/admin/expense/expense');
+					}
+				}
+			})
+			.catch((err) => {
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
 	};
 
 	handleFileChange = (e, props) => {
@@ -214,7 +214,17 @@ class CreateExpense extends React.Component {
 			pay_mode_list,
 			user_list,
 		} = this.props;
-
+		const customStyles = {
+			control: (base, state) => ({
+				...base,
+				borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+				boxShadow: state.isFocused ? null : null,
+				boxShadow: 'none',
+				'&:hover': {
+					borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+				},
+			}),
+		};
 		return (
 			<div className="create-expense-screen">
 				<div className="animated fadeIn">
@@ -317,6 +327,7 @@ class CreateExpense extends React.Component {
 																		Expense Category
 																	</Label>
 																	<Select
+																		styles={customStyles}
 																		id="expenseCategory"
 																		name="expenseCategory"
 																		options={
@@ -356,6 +367,7 @@ class CreateExpense extends React.Component {
 																		<span className="text-danger">*</span> Payee
 																	</Label>
 																	<Select
+																		styles={customStyles}
 																		options={user_list ? user_list : []}
 																		value={props.values.payee}
 																		onChange={(option) => {
@@ -417,6 +429,7 @@ class CreateExpense extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
+																		styles={customStyles}
 																		id="currencyCode"
 																		name="currencyCode"
 																		options={
@@ -491,6 +504,7 @@ class CreateExpense extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="vatCategoryId">Tax</Label>
 																	<Select
+																		styles={customStyles}
 																		className="select-default-width"
 																		id="vatCategoryId"
 																		name="vatCategoryId"
@@ -521,6 +535,7 @@ class CreateExpense extends React.Component {
 																		Through
 																	</Label>
 																	<Select
+																		styles={customStyles}
 																		id="payMode"
 																		name="payMode"
 																		options={
@@ -566,6 +581,7 @@ class CreateExpense extends React.Component {
 																			<span className="text-danger">*</span>Bank
 																		</Label>
 																		<Select
+																			styles={customStyles}
 																			id="bankAccountId"
 																			name="bankAccountId"
 																			options={

@@ -160,6 +160,7 @@ th {
 		border-radius: 0 !important;
 		.modal-header {
 			border-radius: 0 !important;
+			background-color: #6a4bc4;
 			button.close {
 				display: none;
 				span {
@@ -172,6 +173,10 @@ th {
 		}
 		.modal-footer {
 			border-radius: 0 !important;
+			button {
+				border-radius: 40px !important;
+				padding: 5px 40px;
+			}
 		}
 	}
 }
@@ -296,6 +301,10 @@ th {
 		width: 63.7% !important;
 		transition: width 3s;
 	}
+}
+
+.form-control {
+	height: calc(1.5em + 0.75rem + 4px) !important;
 }
 
 //responsive

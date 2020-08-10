@@ -396,6 +396,7 @@ class CustomerInvoice extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		const msg = 'Test';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -403,6 +404,7 @@ class CustomerInvoice extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
+						message={msg}
 					/>
 				),
 			});

@@ -784,7 +784,7 @@ class CreateExpense extends React.Component {
 																		className="btn-square"
 																		onClick={() => {
 																			this.props.history.push(
-																				'/admin/settings/user',
+																				'/admin/Expense/Expense',
 																			);
 																		}}
 																	>

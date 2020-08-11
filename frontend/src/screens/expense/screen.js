@@ -595,7 +595,7 @@ class Expense extends React.Component {
 													/>
 												</FormGroup>
 											</Col>
-											<Col lg={1} className="pl-0 pr-0">
+											<Col lg={3} className="pl-0 pr-0">
 												<Button
 													type="button"
 													color="primary"

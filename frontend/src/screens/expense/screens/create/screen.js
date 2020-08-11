@@ -219,7 +219,6 @@ class CreateExpense extends React.Component {
 				...base,
 				borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
 				boxShadow: state.isFocused ? null : null,
-				boxShadow: 'none',
 				'&:hover': {
 					borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
 				},
@@ -748,23 +747,47 @@ class CreateExpense extends React.Component {
 														<Row>
 															<Col lg={12} className="mt-5">
 																<FormGroup className="text-right">
-																<Button type="button" color="primary" className="btn-square mr-3" onClick={() => {
-																		this.setState({ createMore: false }, () => {
-																			props.handleSubmit()
-																		})
-																	}}>
-																		<i className="fa fa-dot-circle-o"></i> Create
+																	<Button
+																		type="button"
+																		color="primary"
+																		className="btn-square mr-3"
+																		onClick={() => {
+																			this.setState(
+																				{ createMore: false },
+																				() => {
+																					props.handleSubmit();
+																				},
+																			);
+																		}}
+																	>
+																		<i className="fa fa-dot-circle-o"></i>{' '}
+																		Create
 																	</Button>
-																	<Button name="button" color="primary" className="btn-square mr-3"
-																			onClick={() => {
-																				this.setState({ createMore: true }, () => {
-																					props.handleSubmit()
-																				})
-																			}}>
-																		<i className="fa fa-refresh"></i> Create and More
+																	<Button
+																		name="button"
+																		color="primary"
+																		className="btn-square mr-3"
+																		onClick={() => {
+																			this.setState(
+																				{ createMore: true },
+																				() => {
+																					props.handleSubmit();
+																				},
+																			);
+																		}}
+																	>
+																		<i className="fa fa-refresh"></i> Create and
+																		More
 																	</Button>
-																	<Button color="secondary" className="btn-square"
-																			onClick={() => { this.props.history.push('/admin/settings/user') }}>
+																	<Button
+																		color="secondary"
+																		className="btn-square"
+																		onClick={() => {
+																			this.props.history.push(
+																				'/admin/settings/user',
+																			);
+																		}}
+																	>
 																		<i className="fa fa-ban"></i> Cancel
 																	</Button>
 																</FormGroup>

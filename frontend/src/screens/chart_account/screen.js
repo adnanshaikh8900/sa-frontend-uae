@@ -193,6 +193,7 @@ class ChartAccount extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		const message = 'Test';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -200,6 +201,7 @@ class ChartAccount extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});

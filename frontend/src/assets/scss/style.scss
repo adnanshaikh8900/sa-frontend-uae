@@ -48,6 +48,16 @@ $spinkit-spinner-color: $body-color;
 	color: #6a4bc4;
 	text-decoration: underline;
 }
+.btn-secondary {
+	color: #fff;
+	background-color: #3f6fcf;
+	border-color: #3f6fcf;
+}
+.btn-secondary:hover {
+	color: #fff;
+	background-color: #6a4bc4;
+	border-color: #6a4bc4;
+}
 .breadcrumb-item {
 	a {
 		color: #6a4bc4 !important;

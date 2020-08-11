@@ -348,7 +348,6 @@ class ExplainTrasactionDetail extends React.Component {
 	};
 
 	closeTransaction = (id) => {
-		alert();
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
@@ -359,14 +358,17 @@ class ExplainTrasactionDetail extends React.Component {
 		});
 	};
 	invoiceIdList = (option) => {
-		this.setState({
-			initValue: {
-				...this.state.initValue,
-				...{
-					invoiceIdList: option,
+		this.setState(
+			{
+				initValue: {
+					...this.state.initValue,
+					...{
+						invoiceIdList: option,
+					},
 				},
 			},
-		});
+			() => {},
+		);
 		this.formRef.current.setFieldValue('invoiceIdList', option, true);
 	};
 	removeTransaction = (id) => {
@@ -578,7 +580,9 @@ class ExplainTrasactionDetail extends React.Component {
 																					option.target.value === '' ||
 																					this.regEx.test(option.target.value)
 																				) {
-																					props.handleChange('amount')(option);
+																					props.handleChange('amount')(
+																						option.target.value,
+																					);
 																				}
 																			}}
 																			value={props.values.amount}
@@ -910,8 +914,7 @@ class ExplainTrasactionDetail extends React.Component {
 																								(totalAmount, invoice) =>
 																									totalAmount + invoice.amount,
 																								0,
-																							) >
-																								this.state.initValue.amount && (
+																							) > props.values.amount && (
 																								<div
 																									className={
 																										this.state.initValue.invoiceIdList.reduce(
@@ -919,8 +922,7 @@ class ExplainTrasactionDetail extends React.Component {
 																												totalAmount +
 																												invoice.amount,
 																											0,
-																										) >
-																										this.state.initValue.amount
+																										) > props.values.amount
 																											? 'is-invalid'
 																											: ''
 																									}
@@ -999,6 +1001,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						props.handleChange('invoiceIdList')(
 																							option,
 																						);
+																						this.invoiceIdList(option);
 																					}}
 																					placeholder="Select Type"
 																					id="invoiceIdList"
@@ -1010,6 +1013,36 @@ class ExplainTrasactionDetail extends React.Component {
 																							: ''
 																					}
 																				/>
+																				{props.errors.invoiceIdList &&
+																					props.touched.invoiceIdList && (
+																						<div className="invalid-feedback">
+																							{props.errors.invoiceIdList}
+																						</div>
+																					)}
+																				{this.state.initValue.invoiceIdList &&
+																					this.state.initValue.invoiceIdList.reduce(
+																						(totalAmount, invoice) =>
+																							totalAmount + invoice.amount,
+																						0,
+																					) > props.values.amount && (
+																						<div
+																							className={
+																								this.state.initValue.invoiceIdList.reduce(
+																									(totalAmount, invoice) =>
+																										totalAmount +
+																										invoice.amount,
+																									0,
+																								) > props.values.amount
+																									? 'is-invalid'
+																									: ''
+																							}
+																						>
+																							<div className="invalid-feedback">
+																								Total Invoice Amount Is More
+																								Than The Transaction Amount
+																							</div>
+																						</div>
+																					)}
 																			</FormGroup>
 																		</Col>
 																	)}

@@ -193,7 +193,8 @@ class ChartAccount extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message = 'Test';
+		const message =
+			'Warning: This Chart Of Account will be deleted permanently and cannot be recovered. ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -333,7 +334,6 @@ class ChartAccount extends React.Component {
 				...base,
 				borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
 				boxShadow: state.isFocused ? null : null,
-				boxShadow: 'none',
 				'&:hover': {
 					borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
 				},

@@ -626,7 +626,7 @@ public class TransactionRestController {
 
 	private Expense createNewExpense(TransactionPresistModel model, Integer userId) {
 		Expense expense = new Expense();
-		expense.setStatus(ExpenseStatusEnum.PAID.getValue());
+		expense.setStatus(ExpenseStatusEnum.POST.getValue());
 		Expense.ExpenseBuilder expenseBuilder = expense.toBuilder();
 		expenseBuilder.expenseAmount(model.getAmount());
 		if(model.getUserId()!=null) {

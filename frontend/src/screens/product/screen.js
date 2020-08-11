@@ -157,6 +157,7 @@ class Product extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
+		const message = 'Warning: This Product will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -164,6 +165,7 @@ class Product extends React.Component {
 						isOpen={true}
 						okHandler={this.removeBulk}
 						cancelHandler={this.removeDialog}
+						message={message}
 					/>
 				),
 			});

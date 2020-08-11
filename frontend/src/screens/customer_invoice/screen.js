@@ -396,7 +396,7 @@ class CustomerInvoice extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message = 'Warning: This Customer Invoice will be deleted permanently and cannot be recovered.  ';
+		const message = 'Warning: This Customer nvoice will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (

@@ -914,22 +914,28 @@ class ExplainTrasactionDetail extends React.Component {
 																								(totalAmount, invoice) =>
 																									totalAmount + invoice.amount,
 																								0,
-																							) > props.values.amount && (
+																							) !== props.values.amount && (
 																								<div
 																									className={
 																										this.state.initValue.invoiceIdList.reduce(
 																											(totalAmount, invoice) =>
-																												totalAmount +
-																												invoice.amount,
+																												parseInt(
+																													totalAmount +
+																														invoice.amount,
+																												),
 																											0,
-																										) > props.values.amount
+																										) !==
+																										parseInt(
+																											props.values.amount,
+																										)
 																											? 'is-invalid'
 																											: ''
 																									}
 																								>
 																									<div className="invalid-feedback">
-																										Total Invoice Amount Is More
-																										Than The Transaction Amount
+																										Total Invoice Amount Is Not
+																										Equal to the Transaction
+																										Amount please create invoice
 																									</div>
 																								</div>
 																							)}
@@ -1022,24 +1028,31 @@ class ExplainTrasactionDetail extends React.Component {
 																				{this.state.initValue.invoiceIdList &&
 																					this.state.initValue.invoiceIdList.reduce(
 																						(totalAmount, invoice) =>
-																							totalAmount + invoice.amount,
+																							parseInt(
+																								totalAmount + invoice.amount,
+																							),
 																						0,
-																					) > props.values.amount && (
+																					) !==
+																						parseInt(props.values.amount) && (
 																						<div
 																							className={
 																								this.state.initValue.invoiceIdList.reduce(
 																									(totalAmount, invoice) =>
-																										totalAmount +
-																										invoice.amount,
+																										parseInt(
+																											totalAmount +
+																												invoice.amount,
+																										),
 																									0,
-																								) > props.values.amount
+																								) !==
+																								parseInt(props.values.amount)
 																									? 'is-invalid'
 																									: ''
 																							}
 																						>
 																							<div className="invalid-feedback">
-																								Total Invoice Amount Is More
-																								Than The Transaction Amount
+																								Total Invoice Amount Is Not
+																								Equal to the Transaction Amount
+																								please create invoice
 																							</div>
 																						</div>
 																					)}

@@ -45,6 +45,13 @@ public class FinancialReportRestHelper {
 			BigDecimal totalOtherCurrentLiability = BigDecimal.ZERO;
 			BigDecimal totalOtherLiability = BigDecimal.ZERO;
 			BigDecimal totalEquities = BigDecimal.ZERO;
+//Profit and Loss
+			BigDecimal totalOperatingIncome = BigDecimal.ZERO;
+			BigDecimal totalCostOfGoodsSold = BigDecimal.ZERO;
+			BigDecimal totalOperatingExpense = BigDecimal.ZERO;
+
+			BigDecimal totalNonOperatingIncome = BigDecimal.ZERO;
+			BigDecimal totalNonOperatingExpense = BigDecimal.ZERO;
 
 			BigDecimal totalBank = BigDecimal.ZERO;
 
@@ -105,7 +112,23 @@ public class FinancialReportRestHelper {
 						balanceSheetResponseModel.getEquities().put(transactionCategoryName,closingBalance);
 						totalEquities = totalEquities.add(closingBalance);
 						break;
-
+					case INCOME:
+						if (transactionCategoryName.equalsIgnoreCase("Sales") ||
+								transactionCategoryName.equalsIgnoreCase("Other Charges")) {
+							totalOperatingIncome = totalOperatingIncome.add(closingBalance);
+						} else {
+							totalNonOperatingIncome = totalNonOperatingIncome.add(closingBalance);
+						}
+						break;
+					case ADMIN_EXPENSE:
+						totalOperatingExpense = totalOperatingExpense.add(closingBalance);
+						break;
+					case OTHER_EXPENSE:
+						totalNonOperatingExpense = totalNonOperatingExpense.add(closingBalance);
+						break;
+					case COST_OF_GOODS_SOLD:
+						totalCostOfGoodsSold = totalCostOfGoodsSold.add(closingBalance);
+						break;
 					default:
 						break;
 				}
@@ -119,10 +142,13 @@ public class FinancialReportRestHelper {
 			balanceSheetResponseModel.setTotalFixedAssets(totalFixedAssets);
 			BigDecimal totalAssets = totalCurrentAssets.add(totalFixedAssets);
 			balanceSheetResponseModel.setTotalAssets(totalAssets);
-
+			BigDecimal totalIncome = totalOperatingIncome.add(totalNonOperatingIncome);
+			BigDecimal totalExpense = totalCostOfGoodsSold.add(totalOperatingExpense).add(totalNonOperatingExpense);
+			BigDecimal netProfitLoss = totalIncome.subtract(totalExpense);
+			balanceSheetResponseModel.getOtherLiability().put("Retained Earnings",netProfitLoss);
 			balanceSheetResponseModel.setTotalOtherLiability(totalOtherLiability);
 			balanceSheetResponseModel.setTotalOtherCurrentLiability(totalOtherCurrentLiability);
-			BigDecimal totalLiabilities = totalOtherLiability.add(totalOtherCurrentLiability).add(totalAccountPayable);
+			BigDecimal totalLiabilities = totalOtherLiability.add(totalOtherCurrentLiability).add(totalAccountPayable).add(netProfitLoss);
 			balanceSheetResponseModel.setTotalLiability(totalLiabilities);
 			balanceSheetResponseModel.setTotalAccountPayable(totalAccountPayable);
 			balanceSheetResponseModel.setTotalEquities(totalEquities);
@@ -233,7 +259,11 @@ public class FinancialReportRestHelper {
 						.append("'").append(ChartOfAccountCategoryCodeEnum.ACCOUNTS_PAYABLE.getCode()).append("',")
 						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_CURRENT_LIABILITIES.getCode()).append("',")
 						.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_LIABILITY.getCode()).append("',")
-						.append("'").append(ChartOfAccountCategoryCodeEnum.EQUITY.getCode()).append("'");
+						.append("'").append(ChartOfAccountCategoryCodeEnum.EQUITY.getCode()).append("',");
+				builder.append("'").append(ChartOfAccountCategoryCodeEnum.INCOME.getCode()).append("',")
+					.append("'").append(ChartOfAccountCategoryCodeEnum.ADMIN_EXPENSE.getCode()).append("',")
+					.append("'").append(ChartOfAccountCategoryCodeEnum.COST_OF_GOODS_SOLD.getCode()).append("',")
+					.append("'").append(ChartOfAccountCategoryCodeEnum.OTHER_EXPENSE.getCode()).append("'");
 				break;
 			case "TrailBalance":
 				builder.append("'").append(ChartOfAccountCategoryCodeEnum.INCOME.getCode()).append("',")

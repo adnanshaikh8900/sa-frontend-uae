@@ -295,7 +295,7 @@ public class TransactionRestController {
 		{
 		//	transactionCategoryClosingBalanceService.updateClosingBalance(trnx);
 		}
-		//updateBankCurrentBalance(trnx);
+		updateBankCurrentBalance(trnx);
 		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
 
 	}

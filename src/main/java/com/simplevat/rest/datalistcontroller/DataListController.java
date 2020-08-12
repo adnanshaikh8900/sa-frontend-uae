@@ -138,16 +138,14 @@ public class DataListController {
 			List<DropdownModel> dropdownModels = new ArrayList<>();
 			if (statusEnums != null && !statusEnums.isEmpty()) {
 				for (InvoiceStatusEnum statusEnum : statusEnums) {
-					dropdownModels.add(new DropdownModel(statusEnum.getValue(), statusEnum.getDesc()));
-				}
-				Iterator<DropdownModel> iterator = dropdownModels.iterator();
-				while (iterator.hasNext()) {
-					DropdownModel next = iterator.next();
-					if (next.getValue() == 1 || next.getValue() == 4 || next.getValue() == 5) {
-						iterator.remove();
+					switch (statusEnum) {
+						case PENDING:
+						case SAVED:
+						case POST:
+							dropdownModels.add(new DropdownModel(statusEnum.getValue(), statusEnum.getDesc()));
+							break;
 					}
 				}
-
 				return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

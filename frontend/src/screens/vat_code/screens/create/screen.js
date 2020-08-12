@@ -50,6 +50,7 @@ class CreateVatCode extends React.Component {
 			createMore: false,
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
+		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
 		this.regEx = /^[0-9\d]+$/;
 		this.vatCode = /[a-zA-Z0-9 ]+$/;
 	}
@@ -199,7 +200,7 @@ class CreateVatCode extends React.Component {
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||
-																		this.regEx.test(option.target.value)
+																		this.regExDecimal.test(option.target.value)
 																	) {
 																		props.handleChange('vat')(option);
 																	}

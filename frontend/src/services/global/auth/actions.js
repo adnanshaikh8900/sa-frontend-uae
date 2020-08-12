@@ -43,7 +43,7 @@ export const logIn = (obj) => {
 				dispatch({
 					type: AUTH.SIGNED_IN,
 				});
-				window['sessionStorage'].setItem('accessToken', res.data.token);
+				window['localStorage'].setItem('accessToken', res.data.token);
 				// window['sessionStorage'].setItem('userId', res.data.userId);
 
 				return res;
@@ -56,7 +56,7 @@ export const logIn = (obj) => {
 
 export const logOut = () => {
 	return (dispatch) => {
-		window['sessionStorage'].clear();
+		window['localStorage'].clear();
 
 		dispatch({
 			type: AUTH.SIGNED_OUT,

@@ -77,7 +77,7 @@ class CreateExpense extends React.Component {
 			fileName: '',
 			payMode: '',
 		};
-
+		this.formRef = React.createRef();
 		this.options = {
 			paginationPosition: 'top',
 		};
@@ -108,7 +108,23 @@ class CreateExpense extends React.Component {
 	initializeData = () => {
 		this.props.expenseActions.getVatList();
 		this.props.expenseActions.getExpenseCategoriesList();
-		this.props.expenseActions.getCurrencyList();
+		this.props.expenseActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currency: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currency',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 		this.props.expenseActions.getBankList();
 		this.props.expenseActions.getPaymentMode();
 		this.props.expenseActions.getUserForDropdown();
@@ -245,6 +261,7 @@ class CreateExpense extends React.Component {
 										<Col lg={12}>
 											<Formik
 												initialValues={initValue}
+												ref={this.formRef}
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
 
@@ -441,7 +458,21 @@ class CreateExpense extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.currency}
+																		value={
+																			currency_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.currency,
+																				)
+																		}
 																		onChange={(option) =>
 																			props.handleChange('currency')(option)
 																		}
@@ -784,7 +815,7 @@ class CreateExpense extends React.Component {
 																		className="btn-square"
 																		onClick={() => {
 																			this.props.history.push(
-																				'/admin/settings/user',
+																				'/admin/expense/expense',
 																			);
 																		}}
 																	>

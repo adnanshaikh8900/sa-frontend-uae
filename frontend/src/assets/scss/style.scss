@@ -29,7 +29,8 @@ $spinkit-spinner-color: $body-color;
 	color: #6a4bc4 !important;
 }
 .btn-primary,
-.page-item.active .page-link {
+.page-item.active .page-link,
+.btn-square {
 	background-color: #54e0c4;
 	border-color: #54e0c4;
 }
@@ -37,7 +38,8 @@ $spinkit-spinner-color: $body-color;
 	background-color: #54e0c4;
 	border-color: #54e0c4;
 }
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-square:hover {
 	background-color: #6a4bc4;
 	border-color: #6a4bc4;
 }

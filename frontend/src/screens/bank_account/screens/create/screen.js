@@ -61,6 +61,7 @@ class CreateBankAccount extends React.Component {
 			},
 			currentData: {},
 		};
+		this.formRef = React.createRef();
 		this.regExAlpha = /^[a-zA-Z_ ]+$/;
 		this.regEx = /^[0-9\d]+$/;
 		this.regExBoth = /[a-zA-Z0-9]+$/;
@@ -79,7 +80,23 @@ class CreateBankAccount extends React.Component {
 
 	initializeData = () => {
 		this.props.createBankAccountActions.getAccountTypeList();
-		this.props.createBankAccountActions.getCurrencyList();
+		this.props.createBankAccountActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currency: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currency',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 		this.props.createBankAccountActions.getCountryList();
 	};
 
@@ -171,13 +188,15 @@ class CreateBankAccount extends React.Component {
 										<Col lg={12}>
 											<Formik
 												initialValues={initialVals}
+												ref={this.formRef}
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
 												}}
 												validationSchema={Yup.object().shape({
-													account_name: Yup.string().required(
-														'Account Name is Required',
-													),
+													account_name: Yup.string()
+														.required('Account Name is Required')
+														.min(2, 'Account Name Is Too Short!')
+														.max(20, 'Account Name Is Too Long!'),
 													opening_balance: Yup.string().required(
 														'Opening Balance is Required',
 													),
@@ -187,18 +206,21 @@ class CreateBankAccount extends React.Component {
 													account_type: Yup.string().required(
 														'Account Type is required',
 													),
-													bank_name: Yup.string().required(
-														'Bank Name is Required',
-													),
-													account_number: Yup.string().required(
-														'Account Number is Required',
-													),
+													bank_name: Yup.string()
+														.required('Bank Name is Required')
+														.min(2, 'Bank Name Is Too Short!')
+														.max(20, 'Bank Name Is Too Long!'),
+													account_number: Yup.string()
+														.required('Account Number is Required')
+														.min(2, 'Account Number Is Too Short!')
+														.max(20, 'Account Number Is Too Long!'),
 													account_is_for: Yup.string().required(
 														'Account for is required',
 													),
-													ifsc_code: Yup.string().required(
-														'IFSC Code is Required',
-													),
+													ifsc_code: Yup.string()
+														.required('IFSC Code is Required')
+														.min(2, 'IFSC Code Is Too Short!')
+														.max(20, 'IFSC Code Is Too Long!'),
 													swift_code: Yup.string().matches(this.swiftRegex, {
 														message: 'Please enter valid Swift Code.',
 														excludeEmptyString: false,
@@ -266,7 +288,21 @@ class CreateBankAccount extends React.Component {
 																				  )
 																				: []
 																		}
-																		value={props.values.currency}
+																		value={
+																			currency_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.currency,
+																				)
+																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
 																				props.handleChange('currency')(option);
@@ -519,6 +555,9 @@ class CreateBankAccount extends React.Component {
 																	<Select
 																		id="country"
 																		name="country"
+																		getOptionValue={(option) =>
+																			option.countryName
+																		}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(

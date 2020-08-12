@@ -242,7 +242,13 @@ class InvoiceTemplate extends Component {
 												{currencyData[0] && currencyData[0].currencySymbol
 													? `${currencyData[0].currencySymbol}`
 													: ''}
-												{totalNet ? totalNet : 0.0}{' '}
+												{invoiceData.discount ? (
+													<span>
+														{totalNet ? totalNet - invoiceData.discount : 0.0}{' '}
+													</span>
+												) : (
+													<span>{totalNet ? totalNet : 0.0} </span>
+												)}
 											</td>
 										</tr>
 										<tr style={{ textAlign: 'right' }}>

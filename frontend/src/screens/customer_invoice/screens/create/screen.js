@@ -302,7 +302,23 @@ class CreateCustomerInvoice extends React.Component {
 	getInitialData = () => {
 		this.getInvoiceNo();
 		this.props.customerInvoiceActions.getCustomerList(this.state.contactType);
-		this.props.customerInvoiceActions.getCurrencyList();
+		this.props.customerInvoiceActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currency: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currency',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 		this.props.customerInvoiceActions.getCountryList();
 		this.props.customerInvoiceActions.getVatList();
 		this.props.customerInvoiceActions.getProductList();
@@ -388,14 +404,35 @@ class CreateCustomerInvoice extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
-					<Input
-						type="select"
+					<Select
+						options={
+							vat_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										vat_list,
+										'Vat',
+								  )
+								: []
+						}
+						value={
+							vat_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', vat_list, 'Vat')
+								.find((option) => option.value === +row.vatCategoryId)
+						}
+						id="vatCategoryId"
 						onChange={(e) => {
-							this.selectItem(e, row, 'vatCategoryId', form, field, props);
-							// this.formRef.current.props.handleChange(field.name)(e.value)
+							this.selectItem(
+								e.value,
+								row,
+								'vatCategoryId',
+								form,
+								field,
+								props,
+							);
 						}}
-						value={row.vatCategoryId}
-						className={`form-control ${
+						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
@@ -406,18 +443,7 @@ class CreateCustomerInvoice extends React.Component {
 								? 'is-invalid'
 								: ''
 						}`}
-					>
-						{vatList
-							? vatList.map((obj) => {
-									// obj.name = obj.name === 'default' ? '0' : obj.name
-									return (
-										<option value={obj.id} key={obj.id}>
-											{obj.vat}
-										</option>
-									);
-							  })
-							: ''}
-					</Input>
+					/>
 				)}
 			/>
 		);
@@ -577,13 +603,20 @@ class CreateCustomerInvoice extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			let val = discountPercentage
-				? ((+obj.unitPrice -
+			if (props.values.discountType.value === 'PERCENTAGE') {
+				var val =
+					((+obj.unitPrice -
 						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
 						vat *
 						obj.quantity) /
-				  100
-				: (+obj.unitPrice * vat * obj.quantity) / 100;
+					100;
+			} else if (props.values.discountType.value === 'FIXED') {
+				var val =
+					(obj.unitPrice - discountAmount / data.length) *
+					((vat * obj.quantity) / 100);
+			} else {
+				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			}
 			obj.subTotal =
 				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
@@ -1169,7 +1202,21 @@ class CreateCustomerInvoice extends React.Component {
 																		}
 																		id="currency"
 																		name="currency"
-																		value={props.values.currency}
+																		value={
+																			currency_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.currency,
+																				)
+																		}
 																		onChange={(option) =>
 																			props.handleChange('currency')(option)
 																		}
@@ -1253,7 +1300,7 @@ class CreateCustomerInvoice extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price 
+																		Unit Price
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="vat"
@@ -1269,7 +1316,7 @@ class CreateCustomerInvoice extends React.Component {
 																		className="text-right"
 																		columnClassName="text-right"
 																	>
-																		Sub Total 
+																		Sub Total
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1277,21 +1324,21 @@ class CreateCustomerInvoice extends React.Component {
 														{this.state.data.length > 0 ? (
 															<Row>
 																<Col lg={8} className="mb-3">
-																<Button
-																	color="primary"
-																	className={`btn-square mr-3 ${
-																		this.checkedRow() ? `disabled-cursor` : ``
-																	} `}
-																	onClick={this.addRow}
-																	title={
-																		this.checkedRow()
-																			? `Please add detail to add more`
-																			: ''
-																	}
-																	disabled={this.checkedRow() ? true : false}
-																>
-																	<i className="fa fa-plus"></i> Add More
-																</Button>
+																	<Button
+																		color="primary"
+																		className={`btn-square mr-3 ${
+																			this.checkedRow() ? `disabled-cursor` : ``
+																		} `}
+																		onClick={this.addRow}
+																		title={
+																			this.checkedRow()
+																				? `Please add detail to add more`
+																				: ''
+																		}
+																		disabled={this.checkedRow() ? true : false}
+																	>
+																		<i className="fa fa-plus"></i> Add More
+																	</Button>
 																</Col>
 																<Col lg={8}>
 																	<FormGroup className="py-2">

@@ -129,7 +129,6 @@ class CreateSupplierInvoice extends React.Component {
 		this.formRef = React.createRef();
 		this.file_size = 1024000;
 		this.supported_format = [
-			'',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -308,7 +307,23 @@ class CreateSupplierInvoice extends React.Component {
 	getInitialData = () => {
 		this.getInvoiceNo();
 		this.props.supplierInvoiceActions.getSupplierList(this.state.contactType);
-		this.props.supplierInvoiceActions.getCurrencyList();
+		this.props.supplierInvoiceActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currency: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currency',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 		this.props.supplierInvoiceActions.getVatList();
 		this.props.supplierInvoiceActions.getCountryList();
 		this.props.supplierInvoiceActions.getProductList();
@@ -341,7 +356,7 @@ class CreateSupplierInvoice extends React.Component {
 				data: data.concat({
 					id: this.state.idCount + 1,
 					description: '',
-					quantity: '',
+					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
@@ -718,6 +733,7 @@ class CreateSupplierInvoice extends React.Component {
 	updateAmount = (data, props) => {
 		const { vat_list } = this.props;
 		const { discountPercentage, discountAmount } = this.state;
+		console.log(discountAmount);
 		let total_net = 0;
 		let total = 0;
 		let total_vat = 0;
@@ -727,13 +743,20 @@ class CreateSupplierInvoice extends React.Component {
 					? vat_list.findIndex((item) => item.id === +obj.vatCategoryId)
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
-			let val = discountPercentage
-				? ((+obj.unitPrice -
+			if (props.values.discountType.value === 'PERCENTAGE') {
+				var val =
+					((+obj.unitPrice -
 						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
 						vat *
 						obj.quantity) /
-				  100
-				: (+obj.unitPrice * vat * obj.quantity) / 100;
+					100;
+			} else if (props.values.discountType.value === 'FIXED') {
+				var val =
+					(obj.unitPrice - discountAmount / data.length) *
+					((vat * obj.quantity) / 100);
+			} else {
+				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			}
 			obj.subTotal =
 				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
@@ -1013,7 +1036,6 @@ class CreateSupplierInvoice extends React.Component {
 																		'quantity',
 																		'Quantity Should be Greater than 1',
 																		(value) => {
-																			console.log(value);
 																			if (value > 0) {
 																				return true;
 																			} else {
@@ -1322,7 +1344,21 @@ class CreateSupplierInvoice extends React.Component {
 																		}
 																		id="currency"
 																		name="currency"
-																		value={props.values.currency}
+																		value={
+																			currency_list &&
+																			selectCurrencyFactory
+																				.renderOptions(
+																					'currencyName',
+																					'currencyCode',
+																					currency_list,
+																					'Currency',
+																				)
+																				.find(
+																					(option) =>
+																						option.value ===
+																						+props.values.currency,
+																				)
+																		}
 																		onChange={(option) =>
 																			props.handleChange('currency')(option)
 																		}

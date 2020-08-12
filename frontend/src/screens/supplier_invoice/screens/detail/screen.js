@@ -714,15 +714,25 @@ class DetailSupplierInvoice extends React.Component {
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 			// let val = (((+obj.unitPrice) * vat) / 100)
-			let val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			if (props.values.discountType.value === 'PERCENTAGE') {
+				var val =
+					((+obj.unitPrice -
+						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						vat *
+						obj.quantity) /
+					100;
+			} else if (props.values.discountType.value === 'FIXED') {
+				var val =
+					(obj.unitPrice - discountAmount / data.length) *
+					((vat * obj.quantity) / 100);
+			} else {
+				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			}
 			obj.subTotal =
-				obj.unitPrice && obj.vatCategoryId
-					? +obj.unitPrice * obj.quantity + val
-					: 0;
+				obj.unitPrice && obj.vatCategoryId ? +obj.unitPrice * obj.quantity : 0;
 			total_net = +(total_net + +obj.unitPrice * obj.quantity);
 			total_vat = +(total_vat + val);
 			total = total_vat + total_net;
-
 			return obj;
 		});
 		const discount =
@@ -736,7 +746,7 @@ class DetailSupplierInvoice extends React.Component {
 				initValue: {
 					...this.state.initValue,
 					...{
-						total_net,
+						total_net: discount ? total_net - discount : total_net,
 						invoiceVATAmount: total_vat,
 						discount: total_net > discount ? discount : 0,
 						totalAmount: total_net > discount ? total - discount : total,
@@ -744,7 +754,7 @@ class DetailSupplierInvoice extends React.Component {
 				},
 			},
 			() => {
-				if (props.values.discountType === 'PERCENTAGE') {
+				if (props.values.discountType.value === 'PERCENTAGE') {
 					this.formRef.current.setFieldValue('discount', discount);
 				}
 			},

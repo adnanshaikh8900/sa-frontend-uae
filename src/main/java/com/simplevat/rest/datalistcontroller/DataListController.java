@@ -138,7 +138,13 @@ public class DataListController {
 			List<DropdownModel> dropdownModels = new ArrayList<>();
 			if (statusEnums != null && !statusEnums.isEmpty()) {
 				for (InvoiceStatusEnum statusEnum : statusEnums) {
-					dropdownModels.add(new DropdownModel(statusEnum.getValue(), statusEnum.getDesc()));
+					switch (statusEnum) {
+						case PENDING:
+						case SAVED:
+						case POST:
+							dropdownModels.add(new DropdownModel(statusEnum.getValue(), statusEnum.getDesc()));
+							break;
+					}
 				}
 				return new ResponseEntity<>(dropdownModels, HttpStatus.OK);
 			} else {

@@ -552,7 +552,7 @@ class CreateProduct extends React.Component {
 																</FormGroup>
 															</Col>
 														</Row>
-														<Row>
+														{/* <Row>
 															<Col lg={12}>
 																<FormGroup check inline className="mb-3">
 																	<Input
@@ -574,7 +574,7 @@ class CreateProduct extends React.Component {
 																	</Label>
 																</FormGroup>
 															</Col>
-														</Row>
+														</Row> */}
 
 														{/* <Row>
                               <Col lg={4}>

@@ -1238,6 +1238,23 @@ class CreateCustomerInvoice extends React.Component {
 														</Row>
 
 														<hr />
+														<Col lg={8} className="mb-3">
+															<Button
+																color="primary"
+																className={`btn-square mr-3 ${
+																	this.checkedRow() ? `disabled-cursor` : ``
+																} `}
+																onClick={this.addRow}
+																title={
+																	this.checkedRow()
+																		? `Please add detail to add more`
+																		: ''
+																}
+																disabled={this.checkedRow() ? true : false}
+															>
+																<i className="fa fa-plus"></i> Add More
+															</Button>
+														</Col>
 														<Row>
 															{props.errors.lineItemsString &&
 																typeof props.errors.lineItemsString ===
@@ -1323,23 +1340,6 @@ class CreateCustomerInvoice extends React.Component {
 														</Row>
 														{this.state.data.length > 0 ? (
 															<Row>
-																<Col lg={8} className="mb-3">
-																	<Button
-																		color="primary"
-																		className={`btn-square mr-3 ${
-																			this.checkedRow() ? `disabled-cursor` : ``
-																		} `}
-																		onClick={this.addRow}
-																		title={
-																			this.checkedRow()
-																				? `Please add detail to add more`
-																				: ''
-																		}
-																		disabled={this.checkedRow() ? true : false}
-																	>
-																		<i className="fa fa-plus"></i> Add More
-																	</Button>
-																</Col>
 																<Col lg={8}>
 																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">Notes</Label>

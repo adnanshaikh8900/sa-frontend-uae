@@ -815,7 +815,11 @@ class CreateExpense extends React.Component {
 																		className="btn-square"
 																		onClick={() => {
 																			this.props.history.push(
+<<<<<<< HEAD
 																				'/admin/expense/expense',
+=======
+																				'/admin/Expense/Expense',
+>>>>>>> upstream/develop
 																			);
 																		}}
 																	>

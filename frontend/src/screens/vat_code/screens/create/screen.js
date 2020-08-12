@@ -53,6 +53,7 @@ class CreateVatCode extends React.Component {
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
 		this.regEx = /^[0-9\d]+$/;
 		this.vatCode = /[a-zA-Z0-9 ]+$/;
+		this.regDecimal = /^\d*\.?\d*$/;
 	}
 
 	componentDidMount = () => {

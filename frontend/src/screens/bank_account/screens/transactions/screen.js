@@ -770,12 +770,7 @@ class BankTransactions extends React.Component {
 											</Nav>
 											<Button
 												color="primary"
-<<<<<<< HEAD
 												className="btn-square pull-right"
-=======
-												className="btn-square"
- 												style={{ marginBottom: '10px' }}
->>>>>>> upstream/develop
 												onClick={() =>
 													this.props.history.push(
 														'/admin/banking/bank-account/transaction/create',

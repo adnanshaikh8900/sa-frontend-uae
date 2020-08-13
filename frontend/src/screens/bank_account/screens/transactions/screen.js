@@ -733,8 +733,8 @@ class BankTransactions extends React.Component {
 												</Col>
 											</Row>
 										</div>
-										<div className="d-flex justify-content-between">
-											<Nav tabs>
+										<div>
+											<Nav tabs className="pull-left">
 												<NavItem>
 													<NavLink
 														active={this.state.activeTab[0] === 'all'}
@@ -770,8 +770,7 @@ class BankTransactions extends React.Component {
 											</Nav>
 											<Button
 												color="primary"
-												className="btn-square"
- 												style={{ marginBottom: '10px' }}
+												className="btn-square pull-right"
 												onClick={() =>
 													this.props.history.push(
 														'/admin/banking/bank-account/transaction/create',

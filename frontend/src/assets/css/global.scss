@@ -108,7 +108,6 @@ div.Select.is-invalid {
 			vertical-align: top;
 			border-left: 0px !important;
 			border-right: 0px !important;
-			overflow: hidden;
 			.btn-group {
 				position: inherit !important;
 			}
@@ -122,6 +121,9 @@ div.Select.is-invalid {
 			border-left: 0px !important;
 			border-right: 0px !important;
 		}
+	}
+	.cursor-pointer td {
+		overflow: hidden;
 	}
 	.react-bs-table-tool-bar {
 		.btn {

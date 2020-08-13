@@ -46,7 +46,7 @@ class AdminLayout extends React.Component {
 	}
 
 	componentDidMount() {
-		if (!window['sessionStorage'].getItem('accessToken')) {
+		if (!window['localStorage'].getItem('accessToken')) {
 			this.props.history.push('/login');
 		} else {
 			this.props.authActions.checkAuthStatus().catch((err) => {

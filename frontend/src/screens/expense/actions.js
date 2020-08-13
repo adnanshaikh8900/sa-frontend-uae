@@ -72,8 +72,11 @@ export const getCurrencyList = () => {
 				if (res.status === 200) {
 					dispatch({
 						type: EXPENSE.CURRENCY_LIST,
-						payload: res.data,
+						payload: {
+							data: res.data,
+						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {

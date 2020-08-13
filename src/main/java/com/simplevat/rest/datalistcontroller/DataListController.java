@@ -223,7 +223,11 @@ public class DataListController {
 			if (payModes != null && !payModes.isEmpty()) {
 				List<EnumDropdownModel> modelList = new ArrayList<>();
 				for (PayMode payMode : payModes)
-					modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
+					switch (payMode){
+						case BANK:
+							modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
+					}
+
 				return new ResponseEntity<>(modelList, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

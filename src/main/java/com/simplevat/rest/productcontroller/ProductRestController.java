@@ -68,7 +68,11 @@ public class ProductRestController {
 				filterDataMap.put(ProductFilterEnum.PRODUCT_VAT_PERCENTAGE,
 						vatCategoryService.findByPK(filterModel.getVatPercentage()));
 			}
+			if(filterModel.getOrder()!=null && filterModel.getOrder().equalsIgnoreCase("desc"))
 			filterDataMap.put(ProductFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
+			else
+				filterDataMap.put(ProductFilterEnum.ORDER_BY, ORDERBYENUM.ASC);
+
 			if (filterModel.getProductPriceType() != null) {
 				filterDataMap.put(ProductFilterEnum.PRODUCT_PRICE_TYPE,
 						Arrays.asList(filterModel.getProductPriceType(), ProductPriceType.BOTH));

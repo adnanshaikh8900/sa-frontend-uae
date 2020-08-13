@@ -7,14 +7,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.simplevat.entity.Currency;
 import com.simplevat.rest.DropdownModel;
-import com.simplevat.service.CurrencyService;
+import com.simplevat.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +29,6 @@ import com.simplevat.constant.dbfilter.CompanyFilterEnum;
 import com.simplevat.entity.Company;
 import com.simplevat.entity.User;
 import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.CompanyService;
-import com.simplevat.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -49,10 +47,19 @@ public class CompanyController {
 	private CurrencyService currencyService;
 
 	@Autowired
+	private CompanyTypeService companyTypeService;
+
+	@Autowired
+	private IndustryTypeService industryTypeService;
+
+	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
 	private CompanyRestHelper companyRestHelper;
+
+	@Autowired
+	private RoleService roleService;
 
 	@Autowired
 	private UserService userService;
@@ -143,6 +150,50 @@ public class CompanyController {
 			company.setCreatedDate(LocalDateTime.now());
 			company.setDeleteFlag(Boolean.FALSE);
 			companyService.persist(company);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@ApiOperation(value = "Register New Company")
+	@PostMapping(value = "/register")
+	public ResponseEntity<String> save(@ModelAttribute RegistrationModel registrationModel, HttpServletRequest request) {
+		try {
+			String password = registrationModel.getPassword();
+			if (password != null && !password.trim().isEmpty()) {
+				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				String encodedPassword = passwordEncoder.encode(password);
+				registrationModel.setPassword(encodedPassword);
+			}
+			User user = new User();
+			user.setFirstName(registrationModel.getFirstName());
+			user.setLastName(registrationModel.getLastName());
+			user.setUserEmail(registrationModel.getEmail());
+			user.setPassword(registrationModel.getPassword());
+			user.setRole(roleService.findByPK(1));
+			user.setCreatedBy(1);
+			user.setIsActive(true);
+			userService.persist(user);
+			Company company = new Company();
+			company.setCompanyName(registrationModel.getCompanyName());
+			if (registrationModel.getCompanyTypeCode() != null) {
+				company.setCompanyTypeCode(companyTypeService.findByPK(registrationModel.getCompanyTypeCode()));
+			}
+			if (registrationModel.getIndustryTypeCode() != null) {
+				company.setIndustryTypeCode(industryTypeService.findByPK(registrationModel.getIndustryTypeCode()));
+			}
+			if (registrationModel.getCurrencyCode() != null) {
+				company.setCurrencyCode(currencyService.findByPK(registrationModel.getCurrencyCode()));
+			}
+			company.setCreatedBy(user.getUserId());
+			company.setCreatedDate(LocalDateTime.now());
+			company.setDeleteFlag(Boolean.FALSE);
+			companyService.persist(company);
+			user.setCompany(company);
+			userService.update(user);
+
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);

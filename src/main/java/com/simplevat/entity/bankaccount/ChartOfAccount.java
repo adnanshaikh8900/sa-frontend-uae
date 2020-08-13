@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
  * Created by mohsinh on 2/26/2017.
  */
 @NamedQueries({
-		@NamedQuery(name = "findAllChartOfAccount", query = "SELECT c FROM ChartOfAccount c where c.deleteFlag=false ORDER BY c.defaltFlag DESC , c.orderSequence,c.chartOfAccountName ASC"),
+		@NamedQuery(name = "findAllChartOfAccount", query = "SELECT c FROM ChartOfAccount c where c.chartOfAccountId > 5 and c.deleteFlag=false ORDER BY c.defaltFlag DESC , c.orderSequence,c.chartOfAccountName ASC"),
 		@NamedQuery(name = "findAllChildChartOfAccount", query = "SELECT c FROM ChartOfAccount c where c.deleteFlag=false and c.parentChartOfAccount != null ORDER BY c.defaltFlag DESC , c.orderSequence,c.chartOfAccountName ASC"),
 		@NamedQuery(name = "findMoneyInChartOfAccount", query = "SELECT c FROM ChartOfAccount c where c.deleteFlag=false AND c.parentChartOfAccount.chartOfAccountId = 1 ORDER BY c.defaltFlag DESC , c.orderSequence,c.chartOfAccountName ASC"),
 		@NamedQuery(name = "findMoneyOutChartOfAccount", query = "SELECT c FROM ChartOfAccount c where c.deleteFlag=false AND c.parentChartOfAccount.chartOfAccountId = 7 ORDER BY c.defaltFlag DESC , c.orderSequence,c.chartOfAccountName ASC") })

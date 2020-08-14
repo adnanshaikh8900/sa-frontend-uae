@@ -110,9 +110,11 @@ public class ProductRestHelper {
 				item = itemList != null && !itemList.isEmpty() ? itemList.get(0) : new ProductLineItem();
 			}
 			item.setUnitPrice(productModel.getSalesUnitPrice());
+			product.setUnitPrice(productModel.getSalesUnitPrice());
 			item.setCreatedBy(productModel.getCreatedBy());
 			item.setDeleteFlag(false);
 			item.setDescription(productModel.getSalesDescription());
+			product.setProductDescription(productModel.getSalesDescription());
 			item.setTransactioncategory(
 					transactionCategoryService.findByPK(productModel.getSalesTransactionCategoryId()));
 			item.setProduct(product);

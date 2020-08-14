@@ -120,15 +120,16 @@ class BankTransactions extends React.Component {
 	};
 
 	initializeData = (search) => {
-		this.setState({
-			bankId: this.props.location.state.bankAccountId,
-		});
+		console.log(this.props);
 		let { filterData } = this.state;
 		const data = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage,
 		};
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
+			this.setState({
+				bankId: this.props.location.state.bankAccountId,
+			});
 			const postData = {
 				...filterData,
 				...data,

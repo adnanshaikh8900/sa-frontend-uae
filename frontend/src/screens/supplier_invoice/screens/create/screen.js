@@ -1027,9 +1027,6 @@ class CreateSupplierInvoice extends React.Component {
 														)
 														.of(
 															Yup.object().shape({
-																description: Yup.string().required(
-																	'Value is Required',
-																),
 																quantity: Yup.string()
 																	.required('Value is Required')
 																	.test(
@@ -1508,7 +1505,7 @@ class CreateSupplierInvoice extends React.Component {
 																			value={props.values.notes}
 																		/>
 																	</FormGroup>
-																	
+
 																	<Row>
 																		<Col lg={6}>
 																			<FormGroup className="mb-3">
@@ -1605,7 +1602,7 @@ class CreateSupplierInvoice extends React.Component {
 																		/>
 																	</FormGroup>
 																</Col>
-																
+
 																<Col lg={4}>
 																	<div className="">
 																		<div className="total-item p-2">

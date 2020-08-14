@@ -219,6 +219,7 @@ class InvoiceTemplate extends Component {
 										#
 									</th>
 									{/* <th style={{ padding: '0.5rem' }}>Item</th> */}
+									<th style={{ padding: '0.5rem' }}>Product Name</th>
 									<th style={{ padding: '0.5rem' }}>Description</th>
 									<th className="center" style={{ padding: '0.5rem' }}>
 										Quantity
@@ -239,6 +240,7 @@ class InvoiceTemplate extends Component {
 										return (
 											<tr key={index}>
 												<td className="center">{index + 1}</td>
+												<td>{item.productName}</td>
 												<td>{item.description}</td>
 												<td>{item.quantity}</td>
 												<td style={{ textAlign: 'right', width: '20%' }}>

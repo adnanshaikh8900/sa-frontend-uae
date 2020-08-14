@@ -87,7 +87,6 @@ class CreateExpense extends React.Component {
 
 		this.file_size = 1024000;
 		this.supported_format = [
-			'',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

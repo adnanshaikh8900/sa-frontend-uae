@@ -516,7 +516,14 @@ class CreateCustomerInvoice extends React.Component {
 						<Input
 							type="select"
 							onChange={(e) => {
-								this.selectItem(e, row, 'productId', form, field, props);
+								this.selectItem(
+									e.target.value,
+									row,
+									'productId',
+									form,
+									field,
+									props,
+								);
 								this.prductValue(e, row, 'productId', form, field, props);
 								// this.formRef.current.props.handleChange(field.name)(e.value)
 							}}
@@ -741,8 +748,8 @@ class CreateCustomerInvoice extends React.Component {
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
 		}
-		if (currency !== null && currency.value) {
-			formData.append('currencyCode', currency.value);
+		if (currency !== null && currency) {
+			formData.append('currencyCode', currency);
 		}
 		if (project !== null && project.value) {
 			formData.append('projectId', project.value);
@@ -750,65 +757,65 @@ class CreateCustomerInvoice extends React.Component {
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		//console.log(this.state.data);
-		this.props.customerInvoiceCreateActions
-			.createInvoice(formData)
-			.then((res) => {
-				this.setState({ disabled: false });
-				this.props.commonActions.tostifyAlert(
-					'success',
-					'New Invoice Created Successfully.',
-				);
-				if (this.state.createMore) {
-					this.setState(
-						{
-							createMore: false,
-							selectedContact: '',
-							term: '',
-							data: [
-								{
-									id: 0,
-									description: '',
-									quantity: '',
-									unitPrice: '',
-									vatCategoryId: '',
-									subTotal: 0,
-									productId: '',
-								},
-							],
-							initValue: {
-								...this.state.initValue,
-								...{
-									total_net: 0,
-									invoiceVATAmount: 0,
-									totalAmount: 0,
-									discountType: '',
-									discount: 0,
-									discountPercentage: '',
-								},
-							},
-						},
-						() => {
-							resetForm(this.state.initValue);
-							this.getInvoiceNo();
-							this.formRef.current.setFieldValue(
-								'lineItemsString',
-								this.state.data,
-								false,
-							);
-						},
-					);
-				} else {
-					this.props.history.push('/admin/income/customer-invoice');
-				}
-			})
-			.catch((err) => {
-				this.setState({ disabled: false });
-				this.props.commonActions.tostifyAlert(
-					'error',
-					err && err.data ? err.data.message : 'Something Went Wrong',
-				);
-			});
+		console.log(currency);
+		// this.props.customerInvoiceCreateActions
+		// 	.createInvoice(formData)
+		// 	.then((res) => {
+		// 		this.setState({ disabled: false });
+		// 		this.props.commonActions.tostifyAlert(
+		// 			'success',
+		// 			'New Invoice Created Successfully.',
+		// 		);
+		// 		if (this.state.createMore) {
+		// 			this.setState(
+		// 				{
+		// 					createMore: false,
+		// 					selectedContact: '',
+		// 					term: '',
+		// 					data: [
+		// 						{
+		// 							id: 0,
+		// 							description: '',
+		// 							quantity: '',
+		// 							unitPrice: '',
+		// 							vatCategoryId: '',
+		// 							subTotal: 0,
+		// 							productId: '',
+		// 						},
+		// 					],
+		// 					initValue: {
+		// 						...this.state.initValue,
+		// 						...{
+		// 							total_net: 0,
+		// 							invoiceVATAmount: 0,
+		// 							totalAmount: 0,
+		// 							discountType: '',
+		// 							discount: 0,
+		// 							discountPercentage: '',
+		// 						},
+		// 					},
+		// 				},
+		// 				() => {
+		// 					resetForm(this.state.initValue);
+		// 					this.getInvoiceNo();
+		// 					this.formRef.current.setFieldValue(
+		// 						'lineItemsString',
+		// 						this.state.data,
+		// 						false,
+		// 					);
+		// 				},
+		// 			);
+		// 		} else {
+		// 			this.props.history.push('/admin/income/customer-invoice');
+		// 		}
+		// 	})
+		// 	.catch((err) => {
+		// 		this.setState({ disabled: false });
+		// 		this.props.commonActions.tostifyAlert(
+		// 			'error',
+		// 			err && err.data ? err.data.message : 'Something Went Wrong',
+		// 		);
+		// 	});
 	};
 
 	openCustomerModal = (props) => {

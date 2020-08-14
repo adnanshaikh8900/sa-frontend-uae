@@ -845,8 +845,8 @@ class CreateSupplierInvoice extends React.Component {
 		if (contactId && contactId.value) {
 			formData.append('contactId', contactId.value);
 		}
-		if (currency !== null && currency.value) {
-			formData.append('currencyCode', currency.value);
+		if (currency !== null && currency) {
+			formData.append('currencyCode', currency);
 		}
 		if (project !== null && project.value) {
 			formData.append('projectId', project.value);

@@ -83,7 +83,6 @@ class DetailBankTransaction extends React.Component {
   };
 
   initializeData = () => {
-    console.log(this.props.location.state);
     this.props.transactionActions.getTransactionCategoryList();
     this.props.transactionActions.getTransactionTypeList();
     this.props.transactionActions.getProjectList();

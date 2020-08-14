@@ -161,7 +161,6 @@ class ImportBankStatement extends React.Component {
 
 	render() {
 		const { templateList, initValue } = this.state;
-		const bankId = this.props.location.state.bankAccountId;
 		return (
 			<div className="import-bank-statement-screen">
 				<div className="animated fadeIn">
@@ -559,7 +558,8 @@ class ImportBankStatement extends React.Component {
 																this.props.history.push(
 																	'/admin/banking/bank-account/transaction',
 																	{
-																		bankId,
+																		bankAccountId: this.props.location.state
+																			.bankAccountId,
 																	},
 																);
 															}}

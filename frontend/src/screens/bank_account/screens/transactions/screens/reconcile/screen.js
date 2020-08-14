@@ -306,8 +306,8 @@ class ReconcileTransaction extends React.Component {
 																				this.props.history.push(
 																					'/admin/banking/bank-account/transaction',
 																					{
-																						bankAccountId:
-																							initValue.bankAccountId,
+																						bankAccountId: this.props.location
+																							.state.bankAccountId,
 																					},
 																				)
 																			}

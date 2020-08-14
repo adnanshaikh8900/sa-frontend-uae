@@ -167,14 +167,14 @@ class CreateBankTransaction extends React.Component {
 	};
 
 	initializeData = () => {
-		console.log(this.props.location.state.bankAccountId);
+		//console.log(this.props.location.state.bankAccountId);
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
 			this.setState(
 				{
 					id: this.props.location.state.bankAccountId,
 				},
 				() => {
-					console.log(this.state.id);
+					//console.log(this.state.id);
 				},
 			);
 			// this.props.transactionActions.getTransactionCategoryList();
@@ -438,7 +438,6 @@ class CreateBankTransaction extends React.Component {
 			vendor_list,
 			vat_list,
 		} = this.props;
-		console.log(customer_invoice_list);
 		return (
 			<div className="create-bank-transaction-screen">
 				<div className="animated fadeIn">

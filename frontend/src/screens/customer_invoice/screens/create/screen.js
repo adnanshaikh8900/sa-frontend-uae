@@ -123,6 +123,7 @@ class CreateCustomerInvoice extends React.Component {
 
 		this.file_size = 1024000;
 		this.supported_format = [
+			'',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -1555,6 +1556,113 @@ class CreateCustomerInvoice extends React.Component {
 															</Row>
 														) : null}
 														<hr />
+														<Row>
+															<Col lg={8}>
+																<Row>
+																	<Col lg={6}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="receiptNumber">
+																				Reciept Number
+																			</Label>
+																			<Input
+																				type="text"
+																				id="receiptNumber"
+																				name="receiptNumber"
+																				placeholder="Reciept Number"
+																				onChange={(option) => {
+																					if (
+																						option.target.value === '' ||
+																						this.regExBoth.test(
+																							option.target.value,
+																						)
+																					) {
+																						props.handleChange('receiptNumber')(
+																							option,
+																						);
+																					}
+																				}}
+																				value={props.values.receiptNumber}
+																			/>
+																		</FormGroup>
+																	</Col>
+																</Row>
+																<Row>
+																	<Col lg={12}>
+																		<FormGroup className="mb-3">
+																			<Label htmlFor="receiptAttachmentDescription">
+																				Attachment Description
+																			</Label>
+																			<Input
+																				type="textarea"
+																				name="receiptAttachmentDescription"
+																				id="receiptAttachmentDescription"
+																				rows="5"
+																				placeholder="1024 characters..."
+																				onChange={(option) =>
+																					props.handleChange(
+																						'receiptAttachmentDescription',
+																					)(option)
+																				}
+																				value={
+																					props.values
+																						.receiptAttachmentDescription
+																				}
+																			/>
+																		</FormGroup>
+																	</Col>
+																</Row>
+															</Col>
+															<Col lg={4}>
+																<Row>
+																	<Col lg={12}>
+																		<FormGroup className="mb-3">
+																			<Field
+																				name="attachmentFile"
+																				render={({ field, form }) => (
+																					<div>
+																						<Label>Reciept Attachment</Label>{' '}
+																						<br />
+																						<Button
+																							color="primary"
+																							onClick={() => {
+																								document
+																									.getElementById('fileInput')
+																									.click();
+																							}}
+																							className="btn-square mr-3"
+																						>
+																							<i className="fa fa-upload"></i>{' '}
+																							Upload
+																						</Button>
+																						<input
+																							id="fileInput"
+																							ref={(ref) => {
+																								this.uploadFile = ref;
+																							}}
+																							type="file"
+																							style={{ display: 'none' }}
+																							onChange={(e) => {
+																								this.handleFileChange(e, props);
+																							}}
+																						/>
+																						{this.state.fileName}
+																					</div>
+																				)}
+																			/>
+																			{props.errors.attachmentFile &&
+																				props.touched.attachmentFile && (
+																					<div className="invalid-file">
+																						{props.errors.attachmentFile}
+																					</div>
+																				)}
+																		</FormGroup>
+																	</Col>
+																</Row>
+															</Col>
+														</Row>
+
+														<hr />
+
 														<Row>
 															<Col
 																lg={12}

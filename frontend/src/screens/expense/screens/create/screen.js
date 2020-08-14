@@ -759,7 +759,7 @@ class CreateExpense extends React.Component {
 																								this.handleFileChange(e, props);
 																							}}
 																						/>
-																						{this.state.fileName}
+																						{this.state.initValue.fileName}
 																					</div>
 																				)}
 																			/>

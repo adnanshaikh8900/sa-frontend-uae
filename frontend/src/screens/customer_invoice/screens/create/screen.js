@@ -355,12 +355,12 @@ class CreateCustomerInvoice extends React.Component {
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
-		e.preventDefault();
+		//e.preventDefault();
 		let data = this.state.data;
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj[`${name}`] = e.target.value;
+				obj[`${name}`] = e;
 				idx = index;
 			}
 			return obj;
@@ -743,65 +743,64 @@ class CreateCustomerInvoice extends React.Component {
 		if (this.uploadFile && this.uploadFile.files && this.uploadFile.files[0]) {
 			formData.append('attachmentFile', this.uploadFile.files[0]);
 		}
-		console.log(currency);
-		// this.props.customerInvoiceCreateActions
-		// 	.createInvoice(formData)
-		// 	.then((res) => {
-		// 		this.setState({ disabled: false });
-		// 		this.props.commonActions.tostifyAlert(
-		// 			'success',
-		// 			'New Invoice Created Successfully.',
-		// 		);
-		// 		if (this.state.createMore) {
-		// 			this.setState(
-		// 				{
-		// 					createMore: false,
-		// 					selectedContact: '',
-		// 					term: '',
-		// 					data: [
-		// 						{
-		// 							id: 0,
-		// 							description: '',
-		// 							quantity: '',
-		// 							unitPrice: '',
-		// 							vatCategoryId: '',
-		// 							subTotal: 0,
-		// 							productId: '',
-		// 						},
-		// 					],
-		// 					initValue: {
-		// 						...this.state.initValue,
-		// 						...{
-		// 							total_net: 0,
-		// 							invoiceVATAmount: 0,
-		// 							totalAmount: 0,
-		// 							discountType: '',
-		// 							discount: 0,
-		// 							discountPercentage: '',
-		// 						},
-		// 					},
-		// 				},
-		// 				() => {
-		// 					resetForm(this.state.initValue);
-		// 					this.getInvoiceNo();
-		// 					this.formRef.current.setFieldValue(
-		// 						'lineItemsString',
-		// 						this.state.data,
-		// 						false,
-		// 					);
-		// 				},
-		// 			);
-		// 		} else {
-		// 			this.props.history.push('/admin/income/customer-invoice');
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		this.setState({ disabled: false });
-		// 		this.props.commonActions.tostifyAlert(
-		// 			'error',
-		// 			err && err.data ? err.data.message : 'Something Went Wrong',
-		// 		);
-		// 	});
+		this.props.customerInvoiceCreateActions
+			.createInvoice(formData)
+			.then((res) => {
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'success',
+					'New Invoice Created Successfully.',
+				);
+				if (this.state.createMore) {
+					this.setState(
+						{
+							createMore: false,
+							selectedContact: '',
+							term: '',
+							data: [
+								{
+									id: 0,
+									description: '',
+									quantity: '',
+									unitPrice: '',
+									vatCategoryId: '',
+									subTotal: 0,
+									productId: '',
+								},
+							],
+							initValue: {
+								...this.state.initValue,
+								...{
+									total_net: 0,
+									invoiceVATAmount: 0,
+									totalAmount: 0,
+									discountType: '',
+									discount: 0,
+									discountPercentage: '',
+								},
+							},
+						},
+						() => {
+							resetForm(this.state.initValue);
+							this.getInvoiceNo();
+							this.formRef.current.setFieldValue(
+								'lineItemsString',
+								this.state.data,
+								false,
+							);
+						},
+					);
+				} else {
+					this.props.history.push('/admin/income/customer-invoice');
+				}
+			})
+			.catch((err) => {
+				this.setState({ disabled: false });
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+			});
 	};
 
 	openCustomerModal = (props) => {

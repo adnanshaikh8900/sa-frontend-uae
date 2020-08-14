@@ -178,7 +178,7 @@ class CreateCustomerInvoice extends React.Component {
 						type="text"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
-							this.selectItem(e, row, 'description', form, field);
+							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
 						placeholder="Description"
 						className={`form-control ${
@@ -216,7 +216,14 @@ class CreateCustomerInvoice extends React.Component {
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
-								this.selectItem(e, row, 'quantity', form, field, props);
+								this.selectItem(
+									e.target.value,
+									row,
+									'quantity',
+									form,
+									field,
+									props,
+								);
 							}
 						}}
 						placeholder="Quantity"
@@ -255,7 +262,14 @@ class CreateCustomerInvoice extends React.Component {
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
-								this.selectItem(e, row, 'unitPrice', form, field, props);
+								this.selectItem(
+									e.target.value,
+									row,
+									'unitPrice',
+									form,
+									field,
+									props,
+								);
 							}
 						}}
 						placeholder="Unit Price"
@@ -891,17 +905,12 @@ class CreateCustomerInvoice extends React.Component {
 													invoiceDate: Yup.string().required(
 														'Invoice Date is Required',
 													),
-													// invoiceDueDate: Yup.string()
-													// 	.required('Invoice Due Date is Required'),
 													lineItemsString: Yup.array()
 														.required(
 															'Atleast one invoice sub detail is mandatory',
 														)
 														.of(
 															Yup.object().shape({
-																description: Yup.string().required(
-																	'Value is Required',
-																),
 																quantity: Yup.string()
 																	.required('Value is Required')
 																	.test(

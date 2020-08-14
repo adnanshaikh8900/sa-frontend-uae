@@ -165,8 +165,8 @@ class CreateExpense extends React.Component {
 		if (employee && employee.value) {
 			formData.append('employeeId', employee.value);
 		}
-		if (currency && currency.value) {
-			formData.append('currencyCode', currency.value);
+		if (currency) {
+			formData.append('currencyCode', currency);
 		}
 		if (vatCategoryId && vatCategoryId.value) {
 			formData.append('vatCategoryId', vatCategoryId.value);

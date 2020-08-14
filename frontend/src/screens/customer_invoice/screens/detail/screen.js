@@ -1772,7 +1772,7 @@ class DetailCustomerInvoice extends React.Component {
 																			<i className="fa fa-dot-circle-o"></i>{' '}
 																			{this.state.disabled
 																				? 'Updating...'
-																				: 'Create'}
+																				: 'Update'}
 																		</Button>
 																		<Button
 																			color="secondary"

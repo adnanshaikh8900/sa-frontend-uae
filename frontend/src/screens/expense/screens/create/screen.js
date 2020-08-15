@@ -147,7 +147,7 @@ class CreateExpense extends React.Component {
 			bankAccountId,
 		} = data;
 		let formData = new FormData();
-		formData.append('payee', payee.value);
+		formData.append('payee', payee.value?payee.value:'');
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);

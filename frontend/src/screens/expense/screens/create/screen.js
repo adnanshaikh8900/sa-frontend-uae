@@ -276,7 +276,6 @@ class CreateExpense extends React.Component {
 													expenseCategory: Yup.string().required(
 														'Expense Category is required',
 													),
-													payee: Yup.string().required('Payee is required'),
 													expenseDate: Yup.date().required(
 														'Expense Date is Required',
 													),
@@ -378,9 +377,7 @@ class CreateExpense extends React.Component {
 															</Col>
 															<Col lg={3}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="payee">
-																		<span className="text-danger">*</span> Payee
-																	</Label>
+																	<Label htmlFor="payee">Payee</Label>
 																	<Select
 																		styles={customStyles}
 																		options={user_list ? user_list : []}

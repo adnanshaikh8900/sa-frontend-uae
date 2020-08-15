@@ -602,7 +602,21 @@ class DetailCustomerInvoice extends React.Component {
 					: '';
 			const vat = index !== '' ? vat_list[`${index}`].vat : 0;
 			// let val = (((+obj.unitPrice) * vat) / 100)
-			let val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			if (props.values.discountType.value === 'PERCENTAGE') {
+				var val =
+					((+obj.unitPrice -
+						+((obj.unitPrice * discountPercentage) / 100).toFixed(2)) *
+						vat *
+						obj.quantity) /
+					100;
+			} else if (props.values.discountType.value === 'FIXED') {
+				console.log(obj.unitPrice - discountAmount);
+				var val =
+					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
+					(vat / 100);
+			} else {
+				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
+			}
 			obj.subTotal =
 				obj.unitPrice && obj.vatCategoryId
 					? +obj.unitPrice * obj.quantity + val

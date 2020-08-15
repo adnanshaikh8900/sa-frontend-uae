@@ -752,8 +752,8 @@ class CreateSupplierInvoice extends React.Component {
 					100;
 			} else if (props.values.discountType.value === 'FIXED') {
 				var val =
-					(obj.unitPrice - discountAmount / data.length) *
-					((vat * obj.quantity) / 100);
+					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
+					(vat / 100);
 			} else {
 				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
 			}

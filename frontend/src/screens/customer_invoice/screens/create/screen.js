@@ -632,9 +632,10 @@ class CreateCustomerInvoice extends React.Component {
 						obj.quantity) /
 					100;
 			} else if (props.values.discountType.value === 'FIXED') {
+				console.log(obj.unitPrice - discountAmount);
 				var val =
-					(obj.unitPrice - discountAmount / data.length) *
-					((vat * obj.quantity) / 100);
+					(obj.unitPrice * obj.quantity - discountAmount / data.length) *
+					(vat / 100);
 			} else {
 				var val = (+obj.unitPrice * vat * obj.quantity) / 100;
 			}

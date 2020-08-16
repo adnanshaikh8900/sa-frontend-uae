@@ -4,15 +4,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -110,8 +104,13 @@ public class ExcelParser implements TransactionFileParser {
 				DataFormatter dataFormatter = new DataFormatter();
 
 				Sheet sheet = workbook.getSheetAt(0);
-
-				for (Row row : sheet) {
+				Iterator<Row> iterator = sheet.rowIterator();
+				while(iterator.hasNext()) {
+					Row row = iterator.next();
+					if(isEmptyRow(row))
+						continue;
+					//				}
+//				for (Row row : sheet) {
 					Map<String, String> dataMap = new LinkedHashMap<>();
 
 					for (Cell cell : row) {
@@ -140,7 +139,9 @@ public class ExcelParser implements TransactionFileParser {
 								// chcek for credit amount
 								if (displayName.equals(TransactionEnum.CR_AMOUNT.getDisplayName())) {
 									try {
-										new BigDecimal(cellValue);
+										if(cellValue!=null&&cellValue.trim().isEmpty())
+											cellValue ="0";
+										new BigDecimal(cellValue.trim());
 									} catch (Exception e) {
 										errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap,
 												cell.getRow().getRowNum(), cell.getColumnIndex());
@@ -151,7 +152,9 @@ public class ExcelParser implements TransactionFileParser {
 								// chcek for Debit amount
 								if (displayName.equals(TransactionEnum.DR_AMOUNT.getDisplayName())) {
 									try {
-										new BigDecimal(cellValue);
+										if(cellValue!=null&&cellValue.trim().isEmpty())
+											cellValue ="0";
+										new BigDecimal(cellValue.trim());
 									} catch (Exception e) {
 										errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap,
 												cell.getRow().getRowNum(), cell.getColumnIndex());
@@ -182,7 +185,16 @@ public class ExcelParser implements TransactionFileParser {
 		return new HashMap<>();
 
 	}
-
+	boolean isEmptyRow(Row row){
+		boolean isEmptyRow = true;
+		for(int cellNum = row.getFirstCellNum(); cellNum < row.getLastCellNum(); cellNum++){
+			Cell cell = row.getCell(cellNum);
+			if(cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK && StringUtils.isNotBlank(cell.toString())){
+				isEmptyRow = false;
+			}
+		}
+		return isEmptyRow;
+	}
 	@Override
 	public List<com.simplevat.entity.bankaccount.Transaction> getModelListFromFile(
 			TransactionParsingSettingDetailModel model, MultipartFile file, Integer bankId) {
@@ -237,7 +249,7 @@ public class ExcelParser implements TransactionFileParser {
 	private String isValidDate(String dateStr, DateFormat format) {
 		try {
 			// bydefault excel give dd/mm/yyyy convert to specific format
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat formatter = new SimpleDateFormat(format.getFormat());
 			Date date = formatter.parse(dateStr);
 
 			formatter = new SimpleDateFormat(format.getFormat());

@@ -285,9 +285,6 @@ class CreateExpense extends React.Component {
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(/^[0-9]*$/, 'Enter a Valid Amount'),
-													payMode: Yup.object().required(
-														'Pay Through is Required',
-													),
 													bankAccountId: Yup.string().when('payMode', {
 														is: (val) =>
 															val['value'] === 'BANK' ? true : false,

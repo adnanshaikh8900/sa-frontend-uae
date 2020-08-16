@@ -138,7 +138,7 @@ public class FinancialReportRestHelper {
 				}
 			}
 			balanceSheetResponseModel.setTotalBank(totalBank);
-			totalCurrentAssets = totalCurrentAssets.add(totalAccountReceivable).add(totalOtherCurrentAssets);
+			totalCurrentAssets = totalCurrentAssets.add(totalAccountReceivable).add(totalOtherCurrentAssets).add(totalBank);
 			balanceSheetResponseModel.setTotalCurrentAssets(totalCurrentAssets);
 			balanceSheetResponseModel.setTotalAccountReceivable(totalAccountReceivable);
 			balanceSheetResponseModel.setTotalOtherCurrentAssets(totalOtherCurrentAssets);
@@ -149,6 +149,8 @@ public class FinancialReportRestHelper {
 			BigDecimal totalIncome = totalOperatingIncome.add(totalNonOperatingIncome);
 			BigDecimal totalExpense = totalCostOfGoodsSold.add(totalOperatingExpense).add(totalNonOperatingExpense);
 			BigDecimal netProfitLoss = totalIncome.subtract(totalExpense);
+//			if(netProfitLoss.longValue()<0)
+//				netProfitLoss = netProfitLoss.negate();
 			balanceSheetResponseModel.getOtherLiability().put("Retained Earnings",netProfitLoss);
 			balanceSheetResponseModel.setTotalOtherLiability(totalOtherLiability);
 			balanceSheetResponseModel.setTotalOtherCurrentLiability(totalOtherCurrentLiability);

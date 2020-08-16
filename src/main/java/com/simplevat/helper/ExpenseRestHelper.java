@@ -80,7 +80,7 @@ public class ExpenseRestHelper {
 			expense = expenseService.findByPK(model.getExpenseId());
 		}
 		Expense.ExpenseBuilder expenseBuilder = expense.toBuilder();
-		if (model.getPayee() != null) {
+		if (model.getPayee() != null && !model.getPayee().isEmpty()) {
 
 			 expenseBuilder.userId(userService.findByPK(Integer.parseInt(model.getPayee())));
 		}

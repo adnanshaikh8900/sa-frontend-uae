@@ -127,7 +127,7 @@ public class CsvParser implements TransactionFileParser {
 					for (String data : splitList) {
 						if (headerIndexMap.containsKey(cellCount)) {
 							String displayName = headerIndexMap.get(cellCount).getDisplayName();
-							dataMap.put(displayName, data);
+
 
 							// check for date format
 							if (model.getDateFormatId() != null
@@ -137,6 +137,7 @@ public class CsvParser implements TransactionFileParser {
 									DateFormat format = dateformatDao.findByPK(model.getDateFormatId());
 									SimpleDateFormat formatter = new SimpleDateFormat(format.getFormat());
 									formatter.parse(data);
+									dataMap.put(displayName, data);
 								} catch (ParseException e) {
 									// errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
 									// cellCount);
@@ -145,9 +146,12 @@ public class CsvParser implements TransactionFileParser {
 							}
 
 							// chcek for credit amount
-							if (displayName.equals(TransactionEnum.CR_AMOUNT.getDisplayName())) {
+							else if (displayName.equals(TransactionEnum.CR_AMOUNT.getDisplayName())) {
 								try {
-									new BigDecimal(data);
+									if(data!=null&&data.trim().isEmpty())
+										data ="0";
+									new BigDecimal(data.trim());
+									dataMap.put(displayName, data.trim());
 								} catch (Exception e) {
 									// errorRowCellIndexMap = addErrorCellInRow(errorRowCellIndexMap, rowCount,
 									// cellCount);
@@ -156,12 +160,19 @@ public class CsvParser implements TransactionFileParser {
 							}
 
 							// chcek for Debit amount
-							if (displayName.equals(TransactionEnum.DR_AMOUNT.getDisplayName())) {
+							else if (displayName.equals(TransactionEnum.DR_AMOUNT.getDisplayName())) {
 								try {
-									new BigDecimal(data);
+									if(data!=null&&data.trim().isEmpty())
+										data ="0";
+									new BigDecimal(data.trim());
+									dataMap.put(displayName, data.trim());
 								} catch (Exception e) {
 									errorList.add(rowCount + "," + cellCount);
 								}
+							}
+							else
+							{
+								dataMap.put(displayName, data.trim());
 							}
 						}
 						cellCount++;

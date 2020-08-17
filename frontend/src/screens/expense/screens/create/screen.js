@@ -147,7 +147,7 @@ class CreateExpense extends React.Component {
 			bankAccountId,
 		} = data;
 		let formData = new FormData();
-		formData.append('payee', payee.value);
+		formData.append('payee', payee.value?payee.value:'');
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
@@ -285,9 +285,6 @@ class CreateExpense extends React.Component {
 													expenseAmount: Yup.string()
 														.required('Amount is Required')
 														.matches(/^[0-9]*$/, 'Enter a Valid Amount'),
-													payMode: Yup.object().required(
-														'Pay Through is Required',
-													),
 													bankAccountId: Yup.string().when('payMode', {
 														is: (val) =>
 															val['value'] === 'BANK' ? true : false,

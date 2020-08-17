@@ -80,11 +80,12 @@ public class ExpenseRestHelper {
 			expense = expenseService.findByPK(model.getExpenseId());
 		}
 		Expense.ExpenseBuilder expenseBuilder = expense.toBuilder();
-		if (model.getPayee() != null) {
+		if (model.getPayee() != null && !model.getPayee().isEmpty() && !model.getPayee().equalsIgnoreCase("undefined") ) {
 
 			 expenseBuilder.userId(userService.findByPK(Integer.parseInt(model.getPayee())));
+			expenseBuilder.payee(model.getPayee());
 		}
-		expenseBuilder.expenseAmount(model.getExpenseAmount()).payee(model.getPayee());
+		expenseBuilder.expenseAmount(model.getExpenseAmount());
 		if (model.getExpenseDate() != null) {
 			LocalDateTime expenseDate = Instant.ofEpochMilli(model.getExpenseDate().getTime())
 					.atZone(ZoneId.systemDefault()).toLocalDateTime();

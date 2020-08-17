@@ -60,12 +60,12 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
                     ? Boolean.TRUE
                     : Boolean.FALSE;
             if(isDebit)
-                transaction.setDebitCreditFlag('D');
-            else
                 transaction.setDebitCreditFlag('C');
+            else
+                transaction.setDebitCreditFlag('D');
             transaction.setCreatedBy(lineItem.getCreatedBy());
             transaction.setTransactionDate(journalDate);
-            BigDecimal transactionAmount = lineItem.getDebitAmount() != null ? lineItem.getDebitAmount():lineItem.getCreditAmount();
+            BigDecimal transactionAmount = isDebit ? lineItem.getDebitAmount():lineItem.getCreditAmount();
             if(lineItem.getDeleteFlag())
                 transactionAmount = transactionAmount.negate();
             transaction.setTransactionAmount(transactionAmount);

@@ -67,6 +67,10 @@ public class FinancialReportRestHelper {
 				if (chartOfAccountCategoryCodeEnum == null)
 					continue;
 				switch (chartOfAccountCategoryCodeEnum) {
+					case CASH:
+						balanceSheetResponseModel.getCurrentAssets().put(transactionCategoryName,closingBalance);
+						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
+						break;
 					case BANK:
 						balanceSheetResponseModel.getBank().put(transactionCategoryName,closingBalance);
 						totalBank = totalBank.add(closingBalance);
@@ -74,7 +78,7 @@ public class FinancialReportRestHelper {
 
 					case CURRENT_ASSET:
 						balanceSheetResponseModel.getCurrentAssets().put(transactionCategoryName,closingBalance);
-						totalCurrentAssets = totalBank.add(closingBalance);
+						totalCurrentAssets = totalCurrentAssets.add(closingBalance);
 						break;
 
 					case ACCOUNTS_RECEIVABLE:
@@ -134,7 +138,7 @@ public class FinancialReportRestHelper {
 				}
 			}
 			balanceSheetResponseModel.setTotalBank(totalBank);
-			totalCurrentAssets = totalBank.add(totalAccountReceivable).add(totalOtherCurrentAssets);
+			totalCurrentAssets = totalCurrentAssets.add(totalAccountReceivable).add(totalOtherCurrentAssets).add(totalBank);
 			balanceSheetResponseModel.setTotalCurrentAssets(totalCurrentAssets);
 			balanceSheetResponseModel.setTotalAccountReceivable(totalAccountReceivable);
 			balanceSheetResponseModel.setTotalOtherCurrentAssets(totalOtherCurrentAssets);
@@ -145,6 +149,8 @@ public class FinancialReportRestHelper {
 			BigDecimal totalIncome = totalOperatingIncome.add(totalNonOperatingIncome);
 			BigDecimal totalExpense = totalCostOfGoodsSold.add(totalOperatingExpense).add(totalNonOperatingExpense);
 			BigDecimal netProfitLoss = totalIncome.subtract(totalExpense);
+//			if(netProfitLoss.longValue()<0)
+//				netProfitLoss = netProfitLoss.negate();
 			balanceSheetResponseModel.getOtherLiability().put("Retained Earnings",netProfitLoss);
 			balanceSheetResponseModel.setTotalOtherLiability(totalOtherLiability);
 			balanceSheetResponseModel.setTotalOtherCurrentLiability(totalOtherCurrentLiability);
@@ -336,6 +342,7 @@ public class FinancialReportRestHelper {
 						break;
 
 					case BANK:
+					case CASH:
 						trialBalanceResponseModel.getBank().put(transactionCategoryName,
 								closingBalance);
 						if(isDebitFlag) {

@@ -54,6 +54,30 @@ export const logIn = (obj) => {
 	};
 };
 
+export const register = (obj) => {
+	return (dispatch) => {
+		let data = {
+			method: 'post',
+			url: '/rest/company/register',
+			data: obj,
+		};
+		return api(data)
+			.then((res) => {
+				console.log(res);
+				// dispatch({
+				// 	type: AUTH.REGISTER,
+				// });
+				//window['localStorage'].setItem('accessToken', res.data.token);
+				// window['sessionStorage'].setItem('userId', res.data.userId);
+
+				//return res;
+			})
+			.catch((err) => {
+				throw err;
+			});
+	};
+};
+
 export const logOut = () => {
 	return (dispatch) => {
 		window['localStorage'].clear();

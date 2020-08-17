@@ -8,6 +8,7 @@ import DateRangePicker2 from './datepicker';
 import ConfirmDeleteModal from './confirm_delete_modal';
 import ImageUploader from './react-image-upload';
 import SidebarComponent from './sidebar';
+import Tooltip from './tooltip';
 import * as CustomStyles from './react-select';
 
 export {
@@ -22,4 +23,5 @@ export {
 	ImageUploader,
 	SidebarComponent,
 	CustomStyles,
+	Tooltip,
 };

@@ -12,6 +12,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -20,7 +21,6 @@ import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import * as CustomerInvoiceCreateActions from './actions';
 import * as CustomerInvoiceActions from '../../actions';
-
 import { CustomerModal } from '../../sections';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -1084,7 +1084,16 @@ class CreateCustomerInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term">
 																		<span className="text-danger">*</span>Terms{' '}
-																		<i className="fa fa-question-circle"></i>
+																		<i
+																			id="UncontrolledTooltipExample"
+																			className="fa fa-question-circle"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="UncontrolledTooltipExample"
+																		>
+																			Hello world!
+																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
 																		options={

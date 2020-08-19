@@ -12,6 +12,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 
@@ -422,6 +423,16 @@ class CreateProduct extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="productCode">
 																		Product Code
+																		<i
+																			id="ProductCodeTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="ProductCodeTooltip"
+																		>
+																		Product Code - Enter the unique identifier code for the product 
+																		</UncontrolledTooltip>
 																	</Label>
 																	<Input
 																		type="text"
@@ -710,6 +721,16 @@ class CreateProduct extends React.Component {
 																	<Label htmlFor="salesUnitPrice">
 																		<span className="text-danger">*</span>{' '}
 																		Selling Price
+																		<i
+																			id="SellingTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="SellingTooltip"
+																		>
+																		Selling price – The price at which your product is sold 
+																		</UncontrolledTooltip>
 																	</Label>
 																	<Input
 																		type="text"
@@ -886,6 +907,16 @@ class CreateProduct extends React.Component {
 																	<Label htmlFor="salesUnitPrice">
 																		<span className="text-danger">*</span>{' '}
 																		Purchase Price
+																		<i
+																			id="PurchaseTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="PurchaseTooltip"
+																		>
+																			Purchase price – The amount of money you paid for the product 
+																		</UncontrolledTooltip>
 																	</Label>
 																	<Input
 																		type="text"

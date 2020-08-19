@@ -54,6 +54,8 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+const invoiceimage = require('assets/images/invoice/invoice.png');
+
 class SupplierInvoice extends React.Component {
 	constructor(props) {
 		super(props);
@@ -606,7 +608,7 @@ class SupplierInvoice extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-										<i className="fas fa-address-book" />
+										<img alt="invoiceimage" src={invoiceimage} style={{'width':'40px'}} />
 										<span className="ml-2">Supplier Invoices</span>
 									</div>
 								</Col>

@@ -12,6 +12,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import _ from 'lodash';
@@ -494,6 +495,17 @@ class CreateBankAccount extends React.Component {
 																	<Label htmlFor="ifsc_code">
 																		<span className="text-danger">*</span>IFSC
 																		Code
+																		<i
+																			id="IFSCcodeToolTip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="IFSCcodeToolTip"
+																		>
+																			<p> IFSC code –  11-digit unique bank branch identifier code And Should be in capital and numbers  </p> 
+																			
+																		</UncontrolledTooltip>
 																	</Label>
 																	<Input
 																		type="text"
@@ -526,7 +538,19 @@ class CreateBankAccount extends React.Component {
 															</Col>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="swift_code">Swift Code</Label>
+																	<Label htmlFor="swift_code">Swift Code
+																	<i
+																			id="SwiftCodeToolTip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="SwiftCodeToolTip"
+																		>
+																			<p> Swift Code - Bank identifier code  </p> 
+																			
+																		</UncontrolledTooltip>
+																		</Label>
 																	<Input
 																		type="text"
 																		id="swift_code"

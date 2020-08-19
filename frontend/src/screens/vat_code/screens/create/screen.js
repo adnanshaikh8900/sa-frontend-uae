@@ -12,6 +12,7 @@ import {
 	Label,
 	Row,
 	Col,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
@@ -169,6 +170,16 @@ class CreateVatCode extends React.Component {
 															<Label htmlFor="name">
 																<span className="text-danger">*</span>Vat Code
 																Name
+																<i
+																			id="VatCodeTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="VatCodeTooltip"
+																		>
+																		VAT Code Name – Enter the unique identifier VAT code name 
+																		</UncontrolledTooltip>
 															</Label>
 															<Input
 																type="text"
@@ -201,6 +212,16 @@ class CreateVatCode extends React.Component {
 														<FormGroup>
 															<Label htmlFor="name">
 																<span className="text-danger">*</span>Percentage
+																<i
+																			id="VatPercentTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="VatPercentTooltip"
+																		>
+																		Percentage – Enter the VAT percentage charged by your country 
+																		</UncontrolledTooltip>
 															</Label>
 															<Input
 																type="text"

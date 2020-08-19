@@ -48,6 +48,9 @@ public class TransactionCategoryClosingBalanceServiceImpl extends TransactionCat
     {
         return transactionCategoryClosingBalanceDao.getListByChartOfAccountIds(reportRequestModel);
     }
+    public TransactionCategoryClosingBalance getLastClosingBalanceByDate(TransactionCategory category){
+        return transactionCategoryClosingBalanceDao.getLastClosingBalanceByDate(category);
+    }
 
     public void updateClosingBalance(JournalLineItem lineItem)
     {

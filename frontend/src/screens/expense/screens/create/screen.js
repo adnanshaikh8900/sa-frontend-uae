@@ -341,6 +341,7 @@ class CreateExpense extends React.Component {
 																		styles={customStyles}
 																		id="expenseCategory"
 																		name="expenseCategory"
+																		placeholder="Select Expense Category"
 																		options={
 																			expense_categories_list
 																				? selectOptionsFactory.renderOptions(
@@ -531,6 +532,7 @@ class CreateExpense extends React.Component {
 																		className="select-default-width"
 																		id="vatCategoryId"
 																		name="vatCategoryId"
+																		placeholder="Select Tax "
 																		options={
 																			vat_list
 																				? selectOptionsFactory.renderOptions(
@@ -561,6 +563,8 @@ class CreateExpense extends React.Component {
 																		styles={customStyles}
 																		id="payMode"
 																		name="payMode"
+																		placeholder="Select Pay
+																		Through"
 																		options={
 																			pay_mode_list
 																				? selectOptionsFactory.renderOptions(

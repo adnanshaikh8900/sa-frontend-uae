@@ -12,6 +12,7 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -444,6 +445,7 @@ class CreateSupplierInvoice extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
+						placeholder="Select Vat"
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1144,6 +1146,7 @@ class CreateSupplierInvoice extends React.Component {
 																	<Select
 																		id="contactId"
 																		name="contactId"
+																		placeholder= "Select Supplier Name"
 																		options={
 																			supplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -1200,7 +1203,21 @@ class CreateSupplierInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term">
 																		<span className="text-danger">*</span>Terms{' '}
-																		<i className="fa fa-question-circle"></i>
+																	
+																		<i
+																			id="UncontrolledTooltipExample"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="UncontrolledTooltipExample"
+																		>
+																			<p> Terms- The duration given to a buyer for the payment.</p> 
+																			<p>Net 7 – payment due in 7 days from the invoice date </p>	
+																			<p>	Net 10 – payment due in 10 days from the invoice date </p>	
+																			<p>	Net 30 – payment due in 30 days from the invoice date </p>	
+
+																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
 																		options={
@@ -1215,6 +1232,7 @@ class CreateSupplierInvoice extends React.Component {
 																		}
 																		id="term"
 																		name="term"
+																		placeholder="Select Terms"
 																		value={this.state.term}
 																		onChange={(option) => {
 																			props.handleChange('term')(option);
@@ -1466,7 +1484,17 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price (All)
+																		Unit Price 
+																		<i
+																			id="UnitPriceToolTip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="UnitPriceToolTip"
+																		>
+																		Unit Price – Price of a single product or service 
+																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="vat"
@@ -1482,7 +1510,7 @@ class CreateSupplierInvoice extends React.Component {
 																		className="text-right"
 																		columnClassName="text-right"
 																	>
-																		Sub Total (All)
+																		Sub Total 
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>

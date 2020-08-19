@@ -12,6 +12,7 @@ import {
 	Label,
 	Row,
 	Col,
+	UncontrolledTooltip,
 } from 'reactstrap';
 import _ from 'lodash';
 import { Loader } from 'components';
@@ -185,6 +186,17 @@ class CreateProductCategory extends React.Component {
 																<Label htmlFor="productCategoryCode">
 																	<span className="text-danger">*</span>Product
 																	Category Code
+																	<i
+																		id="ProductcatcodeTooltip"
+																		className="fa fa-question-circle ml-1"
+																	></i>
+																	<UncontrolledTooltip
+																		placement="right"
+																		target="ProductcatcodeTooltip"
+																	>
+																		Product Category Code - Enter the unique
+																		identifier code for the product
+																	</UncontrolledTooltip>
 																</Label>
 																<Input
 																	type="text"

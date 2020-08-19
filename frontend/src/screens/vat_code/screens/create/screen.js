@@ -30,7 +30,6 @@ import { Formik } from 'formik';
 const mapStateToProps = (state) => {
 	return {
 		vat_row: state.vat.vat_row,
-		vat_list: state.vat.vat_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -48,6 +47,7 @@ class CreateVatCode extends React.Component {
 			initValue: { name: '', vat: '' },
 			loading: false,
 			createMore: false,
+			vat_list: [],
 		};
 		this.regExAlpha = /^[a-zA-Z ]+$/;
 		this.regExDecimal = /^[0-9]*(\.[0-9]{0,2})?$/;
@@ -57,7 +57,13 @@ class CreateVatCode extends React.Component {
 	}
 
 	componentDidMount = () => {
-		// this.props.vatActions.getVatList()
+		this.props.vatActions.getVatList().then((res) => {
+			if (res.status === 200) {
+				this.setState({
+					vat_list: res.data.data,
+				});
+			}
+		});
 	};
 
 	// Save Updated Field's Value to State
@@ -104,11 +110,13 @@ class CreateVatCode extends React.Component {
 	};
 
 	render() {
-		const { loading } = this.state;
-		const { vat_list } = this.props;
-		const VatList = vat_list.map((item) => {
-			return item.name;
-		});
+		const { loading, vat_list } = this.state;
+
+		if (vat_list) {
+			var VatList = vat_list.map((item) => {
+				return item.name;
+			});
+		}
 
 		return (
 			<div className="vat-code-create-screen">
@@ -167,6 +175,7 @@ class CreateVatCode extends React.Component {
 																id="name"
 																name="name"
 																placeholder="Enter Vat Code Name"
+																onBlur={props.handleBlur}
 																onChange={(option) => {
 																	if (
 																		option.target.value === '' ||

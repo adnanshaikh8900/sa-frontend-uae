@@ -161,6 +161,12 @@ class ExplainTrasactionDetail extends React.Component {
 							);
 							this.getTransactionCategoryList(id);
 						}
+						if (this.state.initValue.coaCategoryId === 10) {
+							this.props.transactionsActions.getExpensesCategoriesList();
+							this.props.transactionsActions.getCurrencyList();
+							this.props.transactionsActions.getUserForDropdown();
+							this.props.transactionsActions.getVatList();
+						}
 					},
 				);
 			}
@@ -176,23 +182,25 @@ class ExplainTrasactionDetail extends React.Component {
 	getTransactionCategoryList = (type) => {
 		this.formRef.current.setFieldValue('coaCategoryId', type, true);
 		this.setValue(null);
-		this.props.transactionsActions
-			.getTransactionCategoryListForExplain(
-				type.value,
-				this.state.initValue.bankId,
-			)
-			.then((res) => {
-				if (res.status === 200) {
-					this.setState(
-						{
-							transactionCategoryList: res.data,
-						},
-						() => {
-							//console.log(this.state.transactionCategoryList);
-						},
-					);
-				}
-			});
+		if (this.state.initValue.coaCategoryId !== 10) {
+			this.props.transactionsActions
+				.getTransactionCategoryListForExplain(
+					type.value,
+					this.state.initValue.bankId,
+				)
+				.then((res) => {
+					if (res.status === 200) {
+						this.setState(
+							{
+								transactionCategoryList: res.data,
+							},
+							() => {
+								//console.log(this.state.transactionCategoryList);
+							},
+						);
+					}
+				});
+		}
 	};
 	getSuggestionInvoicesFotCust = (option, amount) => {
 		const data = {
@@ -545,6 +553,12 @@ class ExplainTrasactionDetail extends React.Component {
 																				) {
 																					this.getVendorList();
 																				}
+																				this.formRef.current.setFieldValue(
+																					'transactionCategoryLabel',
+																					'',
+																					true,
+																				);
+																				this.setValue(null);
 																			}}
 																			placeholder="Select Type"
 																			id="coaCategoryId"
@@ -691,11 +705,27 @@ class ExplainTrasactionDetail extends React.Component {
 																							  )
 																							: []
 																					}
+																					value={
+																						expense_categories_list &&
+																						selectOptionsFactory
+																							.renderOptions(
+																								'transactionCategoryName',
+																								'transactionCategoryId',
+																								expense_categories_list,
+																								'Expense Category',
+																							)
+																							.find(
+																								(option) =>
+																									option.value ===
+																									props.values
+																										.transactionCategoryId,
+																							)
+																					}
 																					// value={props.values.expenseCategory}
 																					onChange={(option) => {
 																						props.handleChange(
-																							'expenseCategory',
-																						)(option);
+																							'transactionCategoryId',
+																						)(option.value);
 																					}}
 																					id="expenseCategory"
 																					name="expenseCategory"
@@ -731,15 +761,21 @@ class ExplainTrasactionDetail extends React.Component {
 																									  )
 																									: []
 																							}
-																							// value={
-																							// 	transactionCategoryList.dataList
-																							// 		? transactionCategoryList.dataList[0].options.find(
-																							// 				(option) =>
-																							// 					option.value ===
-																							// 					+props.values.vatId,
-																							// 		  )
-																							// 		: []
-																							// }
+																							value={
+																								vat_list &&
+																								selectOptionsFactory
+																									.renderOptions(
+																										'name',
+																										'id',
+																										vat_list,
+																										'Tax',
+																									)
+																									.find(
+																										(option) =>
+																											option.value ===
+																											props.values.vatId,
+																									)
+																							}
 																							onChange={(option) => {
 																								if (option && option.value) {
 																									props.handleChange('vatId')(
@@ -1083,11 +1119,31 @@ class ExplainTrasactionDetail extends React.Component {
 																								'transactionCategoryId',
 																							)(option.value);
 																						} else {
+																							console.log('sss');
 																							props.handleChange(
 																								'transactionCategoryId',
 																							)('');
 																						}
 																					}}
+																					value={
+																						transactionCategoryList.categoriesList &&
+																						props.values
+																							.transactionCategoryLabel
+																							? transactionCategoryList.categoriesList
+																									.find(
+																										(item) =>
+																											item.label ===
+																											props.values
+																												.transactionCategoryLabel,
+																									)
+																									.options.find(
+																										(item) =>
+																											item.value ===
+																											+props.values
+																												.transactionCategoryId,
+																									)
+																							: console.log('')
+																					}
 																					placeholder="Select Category"
 																					id="transactionCategoryId"
 																					name="transactionCategoryId"

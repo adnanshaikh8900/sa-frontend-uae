@@ -47,4 +47,6 @@ public class BankModel implements Serializable {
     private Integer createdBy;
 
     private Integer bankAccountType;
+
+    private BigDecimal closingBalance;
 }

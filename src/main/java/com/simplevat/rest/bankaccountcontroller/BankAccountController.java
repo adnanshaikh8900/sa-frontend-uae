@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.model.DashBoardBankDataModel;
 import com.simplevat.rest.transactioncategorybalancecontroller.TransactionCategoryBalanceRestHelper;
 import com.simplevat.rest.transactioncategorybalancecontroller.TransactioncategoryBalancePersistModel;
@@ -264,12 +265,17 @@ public class BankAccountController{
 	public ResponseEntity<BankModel> getById(@RequestParam("id") Integer id) {
 		try {
 			BankAccount bankAccount = bankAccountService.findByPK(id);
+			TransactionCategoryClosingBalance closingBalance = transactionCategoryClosingBalanceService.
+					getLastClosingBalanceByDate(bankAccount.getTransactionCategory());
+			BankModel bankModel = bankAccountRestHelper.getModel(bankAccount);
+			bankModel.setClosingBalance(closingBalance.getClosingBalance());
+
 
 			if (bankAccount == null) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
 
-			return new ResponseEntity<>(bankAccountRestHelper.getModel(bankAccount), HttpStatus.OK);
+			return new ResponseEntity<>( bankModel, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
@@ -330,4 +336,5 @@ public class BankAccountController{
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
 }

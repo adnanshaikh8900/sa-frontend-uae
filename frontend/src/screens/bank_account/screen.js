@@ -259,6 +259,9 @@ class BankAccount extends React.Component {
 				onClick={() =>
 					this.props.history.push('/admin/banking/bank-account/transaction', {
 						bankAccountId: row.bankAccountId,
+						closingBalance: row.closingBalance,
+						openingBalance: row.openingBalance,
+						accounName: row.accounName,
 					})
 				}
 			>
@@ -320,6 +323,9 @@ class BankAccount extends React.Component {
 									'/admin/banking/bank-account/transaction',
 									{
 										bankAccountId: row.bankAccountId,
+										closingBalance: row.closingBalance,
+										openingBalance: row.openingBalance,
+										accounName: row.accounName,
 									},
 								);
 							}}
@@ -338,9 +344,9 @@ class BankAccount extends React.Component {
 	};
 
 	closeBankAccount = (_id) => {
-		const message = 'Warning: This Bank Account will be deleted permanently and cannot be recovered. '
+		const message =
+			'Warning: This Bank Account will be deleted permanently and cannot be recovered. ';
 		this.setState({
-			
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
@@ -437,7 +443,8 @@ class BankAccount extends React.Component {
 
 	bulkDeleteBankAccount = () => {
 		let { selected_id_list } = this.state;
-		const message = 'Warning: This Bank Account will be deleted permanently and cannot be recovered. '
+		const message =
+			'Warning: This Bank Account will be deleted permanently and cannot be recovered. ';
 		if (selected_id_list.length > 0) {
 			this.setState({
 				dialog: (

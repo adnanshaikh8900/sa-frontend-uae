@@ -89,6 +89,9 @@ class BankTransactions extends React.Component {
 			rowId: null,
 			show: false,
 			bankId: '',
+			openingBalance: '',
+			closingBalance: '',
+			accounName: '',
 			expanded: [],
 			page: 1,
 			activeTab: new Array(3).fill('all'),
@@ -120,15 +123,18 @@ class BankTransactions extends React.Component {
 	};
 
 	initializeData = (search) => {
-		console.log(this.props);
 		let { filterData } = this.state;
 		const data = {
 			pageNo: this.options.page ? this.options.page - 1 : 0,
 			pageSize: this.options.sizePerPage,
 		};
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
+			console.log(this.props.location.state);
 			this.setState({
 				bankId: this.props.location.state.bankAccountId,
+				openingBalance: this.props.location.state.openingBalance,
+				closingBalance: this.props.location.state.closingBalance,
+				accounName: this.props.location.state.accounName,
 			});
 			const postData = {
 				...filterData,
@@ -578,6 +584,22 @@ class BankTransactions extends React.Component {
 							) : (
 								<Row>
 									<Col lg={12}>
+										<div className="mb-4 status-panel p-3">
+											<Row>
+												<Col lg={3}>
+													<h5>Account Name</h5>
+													<h3>{this.state.accounName}</h3>
+												</Col>
+												<Col lg={3}>
+													<h5>Opening Balance</h5>
+													<h3>{this.state.openingBalance}</h3>
+												</Col>
+												<Col lg={3}>
+													<h5>Closing Balance</h5>
+													<h3>{this.state.closingBalance}</h3>
+												</Col>
+											</Row>
+										</div>
 										<div className="d-flex justify-content-end">
 											<ButtonGroup size="sm">
 												<Button

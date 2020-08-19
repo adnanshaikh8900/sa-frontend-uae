@@ -28,5 +28,7 @@ public abstract class TransactionCategoryClosingBalanceService extends SimpleVat
     public abstract List<TransactionCategoryClosingBalance> getList(ReportRequestModel reportRequestModel);
 
     public abstract List<TransactionCategoryClosingBalance> getListByChartOfAccountIds(ReportRequestModel reportRequestModel);
+
+    public abstract TransactionCategoryClosingBalance getLastClosingBalanceByDate(TransactionCategory category);
 }
 

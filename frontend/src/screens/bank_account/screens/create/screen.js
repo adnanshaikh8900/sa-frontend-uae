@@ -126,7 +126,7 @@ class CreateBankAccount extends React.Component {
 		} = data;
 		let obj = {
 			bankAccountName: account_name,
-			bankAccountCurrency: currency ? currency.value : '',
+			bankAccountCurrency: currency ? currency : '',
 			openingBalance: opening_balance,
 			bankAccountType: account_type ? account_type.value : '',
 			bankName: bank_name,

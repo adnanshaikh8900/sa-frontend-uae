@@ -123,7 +123,6 @@ class CreateCustomerInvoice extends React.Component {
 
 		this.file_size = 1024000;
 		this.supported_format = [
-			'',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -436,6 +435,7 @@ class CreateCustomerInvoice extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
+						placeholder = "Select Vat"
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -1026,6 +1026,7 @@ class CreateCustomerInvoice extends React.Component {
 																	<Select
 																		id="contactId"
 																		name="contactId"
+																		placeholder = "Select Customer name"
 																		options={
 																			customer_list
 																				? selectOptionsFactory.renderOptions(
@@ -1086,13 +1087,20 @@ class CreateCustomerInvoice extends React.Component {
 																		<span className="text-danger">*</span>Terms{' '}
 																		<i
 																			id="UncontrolledTooltipExample"
-																			className="fa fa-question-circle"
+																			className="fa fa-question-circle ml-1"
 																		></i>
 																		<UncontrolledTooltip
 																			placement="right"
 																			target="UncontrolledTooltipExample"
 																		>
-																			Hello world!
+																			<p> Terms- The duration given to a buyer for the payment.</p> 
+
+																			<p>Net 7 – payment due in 7 days from the invoice date </p>	
+
+																			<p>	Net 10 – payment due in 10 days from the invoice date </p>	
+
+																			<p>	Net 30 – payment due in 30 days from the invoice date </p>	
+
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
@@ -1108,6 +1116,7 @@ class CreateCustomerInvoice extends React.Component {
 																		}
 																		id="term"
 																		name="term"
+																		placeholder = "Select Terms "
 																		value={this.state.term}
 																		onChange={(option) => {
 																			props.handleChange('term')(option);
@@ -1342,7 +1351,17 @@ class CreateCustomerInvoice extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price
+																		Unit Price 
+																		<i
+																			id="UnitPriceTooltip"
+																			className="fa fa-question-circle ml-1"
+																		></i>
+																		<UncontrolledTooltip
+																			placement="right"
+																			target="UnitPriceTooltip"
+																		>
+																		Unit Price – Price of a single product or service 
+																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
 																		dataField="vat"

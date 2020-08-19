@@ -224,10 +224,9 @@ public class DataListController {
 				List<EnumDropdownModel> modelList = new ArrayList<>();
 				for (PayMode payMode : payModes)
 					switch (payMode){
-						default:
 						case BANK:
 							modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
-					break;
+							break;
 				}
 
 

@@ -32,6 +32,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
 import * as TransactionsActions from './actions';
+import * as detailBankAccountActions from './../detail/actions';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import { CSVLink } from 'react-csv';
@@ -48,6 +49,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		transactionsActions: bindActionCreators(TransactionsActions, dispatch),
+		detailBankAccountActions: bindActionCreators(
+			detailBankAccountActions,
+			dispatch,
+		),
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
@@ -120,6 +125,22 @@ class BankTransactions extends React.Component {
 		this.props.transactionsActions.getTransactionTypeList();
 		this.initializeData();
 		//this.setState({ bankId: this.props.location.state.bankAccountId });
+		this.props.detailBankAccountActions
+			.getBankAccountByID(this.props.location.state.bankAccountId)
+			.then((res) => {
+				this.setState({
+					openingBalance: res.openingBalance,
+					closingBalance: res.closingBalance,
+					accounName: res.bankAccountName,
+				});
+			})
+			.catch((err) => {
+				this.props.commonActions.tostifyAlert(
+					'error',
+					err && err.data ? err.data.message : 'Something Went Wrong',
+				);
+				this.props.history.push('/admin/banking/bank-account');
+			});
 	};
 
 	initializeData = (search) => {
@@ -591,11 +612,11 @@ class BankTransactions extends React.Component {
 													<h3>{this.state.accounName}</h3>
 												</Col>
 												<Col lg={3}>
-													<h5>Opening Balance</h5>
+													<h5>Current Bank Balance</h5>
 													<h3>{this.state.openingBalance}</h3>
 												</Col>
 												<Col lg={3}>
-													<h5>Closing Balance</h5>
+													<h5>SimpleVat Balance</h5>
 													<h3>{this.state.closingBalance}</h3>
 												</Col>
 											</Row>

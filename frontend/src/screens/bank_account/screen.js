@@ -397,7 +397,7 @@ class BankAccount extends React.Component {
 		return (
 			<div>
 				<div>
-					<label className="font-weight-bold mr-2">Book Balance : </label>
+					<label className="font-weight-bold mr-2">Reconciled Balance : </label>
 					<label className="badge badge-success mb-0">
 						{row.closingBalance}
 					</label>

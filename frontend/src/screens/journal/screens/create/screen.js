@@ -243,7 +243,7 @@ class CreateJournal extends React.Component {
 				name={`journalLineItems.${idx}.description`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+						type="text"  maxLength='100'
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
 							this.selectItem(e, row, 'description', form, field);
@@ -707,7 +707,7 @@ class CreateJournal extends React.Component {
 																		Journal Reference #
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='20'
 																		id="journalReferenceNo"
 																		name="journalReferenceNo"
 																		placeholder="Reference Number"
@@ -733,11 +733,11 @@ class CreateJournal extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="description">Notes</Label>
 																	<Input
-																		type="textarea"
+																		type="textarea" maxLength='255'
 																		name="description"
 																		id="description"
 																		rows="5"
-																		placeholder="1024 characters..."
+																		placeholder="Notes"
 																		value={props.values.description || ''}
 																		onChange={(value) => {
 																			props.handleChange('description')(value);

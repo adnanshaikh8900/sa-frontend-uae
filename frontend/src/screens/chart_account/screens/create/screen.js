@@ -189,7 +189,7 @@ class CreateChartAccount extends React.Component {
 																<span className="text-danger">*</span>Name
 															</Label>
 															<Input
-																type="text"
+																type="text" maxLength='50'
 																id="transactionCategoryName"
 																name="transactionCategoryName"
 																placeholder="Enter Name"
@@ -248,6 +248,7 @@ class CreateChartAccount extends React.Component {
 															<Select
 																id="chartOfAccount"
 																name="chartOfAccount"
+																placeholder='Select type'
 																value={props.values.chartOfAccount}
 																// size="1"
 																onChange={(val) => {

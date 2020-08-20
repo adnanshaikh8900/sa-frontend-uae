@@ -417,13 +417,13 @@ class CreateProduct extends React.Component {
 																			<span className="text-danger">*</span>Name
 																		</Label>
 																		<Input
-																			type="text"
+																			type="text" maxLength='70'
 																			id="productName"
 																			name="productName"
 																			onChange={(option) => {
 																				if (
 																					option.target.value === '' ||
-																					this.regExAlpha.test(
+																					this.regExBoth.test(
 																						option.target.value,
 																					)
 																				) {
@@ -466,12 +466,11 @@ class CreateProduct extends React.Component {
 																				placement="right"
 																				target="ProductCodeTooltip"
 																			>
-																				Product Code - Enter the unique
-																				identifier code for the product
+																				Product Code - Unique identifier code for the product 
 																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																			type="text"
+																			type="text" maxLength='70'
 																			id="productCode"
 																			name="productCode"
 																			placeholder="Enter Product Code"
@@ -513,6 +512,7 @@ class CreateProduct extends React.Component {
 																			}
 																			id="productCategoryId"
 																			name="productCategoryId"
+																			placeholder="Select Product Category"
 																			value={props.values.productCategoryId}
 																			onChange={(option) => {
 																				// this.setState({
@@ -572,6 +572,7 @@ class CreateProduct extends React.Component {
 																			}
 																			id="vatCategoryId"
 																			name="vatCategoryId"
+																			placeholder="Select Vat Category"
 																			value={props.values.vatCategoryId}
 																			onChange={(option) => {
 																				// this.setState({
@@ -761,9 +762,19 @@ class CreateProduct extends React.Component {
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">*</span>{' '}
 																			Selling Price
+																			<i
+																				id="SalesTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="SalesTooltip"
+																			>
+																				Selling price – Price at which your product is sold 
+																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																			type="text"
+																			type="text" maxLength='10'
 																			id="salesUnitPrice"
 																			name="salesUnitPrice"
 																			placeholder="Enter Selling Price"
@@ -866,7 +877,7 @@ class CreateProduct extends React.Component {
 																					? false
 																					: true
 																			}
-																			type="textarea"
+																			type="textarea"maxLength='200'
 																			name="salesDescription"
 																			id="salesDescription"
 																			rows="3"
@@ -938,9 +949,19 @@ class CreateProduct extends React.Component {
 																		<Label htmlFor="salesUnitPrice">
 																			<span className="text-danger">*</span>{' '}
 																			Purchase Price
+																			<i
+																				id="PurchaseTooltip"
+																				className="fa fa-question-circle ml-1"
+																			></i>
+																			<UncontrolledTooltip
+																				placement="right"
+																				target="PurchaseTooltip"
+																			>
+																				Purchase price – Amount of money you paid for the product 
+																			</UncontrolledTooltip>
 																		</Label>
 																		<Input
-																			type="text"
+																			type="text" maxLength='10'
 																			id="purchaseUnitPrice"
 																			name="purchaseUnitPrice"
 																			placeholder="Enter Selling Price"
@@ -979,19 +1000,9 @@ class CreateProduct extends React.Component {
 
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="salesUnitPrice">
-																			<span className="text-danger">*</span>{' '}
-																			Purchase Price
-																			<i
-																				id="PurchaseTooltip"
-																				className="fa fa-question-circle ml-1"
-																			></i>
-																			<UncontrolledTooltip
-																				placement="right"
-																				target="PurchaseTooltip"
-																			>
-																				Purchase price – The amount of money you
-																				paid for the product
-																			</UncontrolledTooltip>
+																			<span className="text-danger">*</span>{' '}	
+																			Account
+																			
 																		</Label>
 																		<Select
 																			isDisabled={
@@ -1057,7 +1068,7 @@ class CreateProduct extends React.Component {
 																					? false
 																					: true
 																			}
-																			type="textarea"
+																			type="textarea" maxLength='200'
 																			name="purchaseDescription"
 																			id="purchaseDescription"
 																			rows="3"

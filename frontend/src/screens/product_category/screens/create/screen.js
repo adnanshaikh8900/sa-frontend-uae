@@ -194,12 +194,11 @@ class CreateProductCategory extends React.Component {
 																		placement="right"
 																		target="ProductcatcodeTooltip"
 																	>
-																		Product Category Code - Enter the unique
-																		identifier code for the product
+																		Product Category Code - Unique identifier code of the product 
 																	</UncontrolledTooltip>
 																</Label>
 																<Input
-																	type="text"
+																	type="text" maxLength='20'
 																	id="productCategoryCode"
 																	name="productCategoryCode"
 																	placeholder="Enter Product Category Code"
@@ -235,7 +234,7 @@ class CreateProductCategory extends React.Component {
 																	Category Name
 																</Label>
 																<Input
-																	type="text"
+																	type="text" maxLength='50'
 																	id="productCategoryName"
 																	name="productCategoryName"
 																	placeholder="Enter Product Category Name"

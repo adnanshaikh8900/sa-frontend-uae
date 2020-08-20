@@ -58,6 +58,8 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+const invoiceimage = require('assets/images/invoice/invoice.png');
+
 class CreateSupplierInvoice extends React.Component {
 	constructor(props) {
 		super(props);
@@ -217,7 +219,7 @@ class CreateSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+						type="text" maxLength='10'
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
@@ -264,7 +266,7 @@ class CreateSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-						type="text"
+						type="text" maxLength='10'
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
@@ -977,7 +979,7 @@ class CreateSupplierInvoice extends React.Component {
 		const { currency_list, supplier_list } = this.props;
 		return (
 			<div className="create-supplier-invoice-screen">
-				<div className="animated fadeIn">
+				<div className=" fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
 							<Card>
@@ -985,7 +987,7 @@ class CreateSupplierInvoice extends React.Component {
 									<Row>
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
-												<i className="fas fa-address-book" />
+											<img alt="invoiceimage" src={invoiceimage} style={{'width':'40px'}} />
 												<span className="ml-2">Create Invoice</span>
 											</div>
 										</Col>
@@ -1212,10 +1214,10 @@ class CreateSupplierInvoice extends React.Component {
 																			placement="right"
 																			target="UncontrolledTooltipExample"
 																		>
-																			<p> Terms- The duration given to a buyer for the payment.</p> 
-																			<p>Net 7 – payment due in 7 days from the invoice date </p>	
-																			<p>	Net 10 – payment due in 10 days from the invoice date </p>	
-																			<p>	Net 30 – payment due in 30 days from the invoice date </p>	
+																			<p> Terms- The duration given to a buyer for payment.</p> 
+																			<p>Net 7 – payment due in 7 days from invoice date </p>	
+																			<p>	Net 10 – payment due in 10 days from invoice date </p>	
+																			<p>	Net 30 – payment due in 30 days from invoice date </p>	
 
 																		</UncontrolledTooltip>
 																	</Label>
@@ -1522,11 +1524,11 @@ class CreateSupplierInvoice extends React.Component {
 																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">Notes</Label>
 																		<Input
-																			type="textarea"
+																			type="textarea" maxLength='255'
 																			name="notes"
 																			id="notes"
 																			rows="6"
-																			placeholder="notes..."
+																			placeholder="Notes"
 																			onChange={(option) =>
 																				props.handleChange('notes')(option)
 																			}
@@ -1541,7 +1543,7 @@ class CreateSupplierInvoice extends React.Component {
 																					Reciept Number
 																				</Label>
 																				<Input
-																					type="text"
+																					type="text" maxLength='50'
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					placeholder="Reciept Number"
@@ -1613,11 +1615,11 @@ class CreateSupplierInvoice extends React.Component {
 																			Attachment Description
 																		</Label>
 																		<Input
-																			type="textarea"
+																			type="textarea" maxLength='255'
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
-																			placeholder="1024 characters..."
+																			placeholder="Receipt Attachment Description"
 																			onChange={(option) =>
 																				props.handleChange(
 																					'receiptAttachmentDescription',
@@ -1684,7 +1686,7 @@ class CreateSupplierInvoice extends React.Component {
 																								id="discountPercentage"
 																								name="discountPercentage"
 																								placeholder="Discount Percentage"
-																								type="text"
+																								type="text" maxLength='5'
 																								value={
 																									props.values
 																										.discountPercentage
@@ -1727,7 +1729,7 @@ class CreateSupplierInvoice extends React.Component {
 																						<Input
 																							id="discount"
 																							name="discount"
-																							type="text"
+																							type="text" maxLength='7'
 																							disabled={
 																								props.values.discountType &&
 																								props.values.discountType
@@ -1866,10 +1868,10 @@ class CreateSupplierInvoice extends React.Component {
 																			);
 																		}}
 																	>
-																		<i className="fa fa-repeat"></i>
+																		<i className="fa fa-repeat mr-1"></i>
 																		{this.state.disabled
 																			? 'Creating...'
-																			: 'Create and More'}
+																			: 'Create & More'}
 																	</Button>
 																	<Button
 																		type="button"

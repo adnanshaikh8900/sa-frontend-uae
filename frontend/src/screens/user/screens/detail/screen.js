@@ -126,14 +126,18 @@ class DetailUser extends React.Component {
 	};
 
 	deleteUser = () => {
+		
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
 					isOpen={true}
 					okHandler={this.removeUser}
 					cancelHandler={this.removeDialog}
+					message="Warning: This User will be deleted permanently and cannot be recovered. "
 				/>
+				
 			),
+
 		});
 	};
 
@@ -724,6 +728,7 @@ class DetailUser extends React.Component {
 																			color="danger"
 																			className="btn-square"
 																			onClick={this.deleteUser}
+																			
 																		>
 																			<i className="fa fa-trash"></i> Delete
 																		</Button>

@@ -230,7 +230,7 @@ class CreateUser extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="select"><span className="text-danger">*</span>First Name</Label>
                                       <Input
-                                        type="text"
+                                        type="text" maxLength='26'
                                         id="firstName"
                                         name="firstName"
                                         value={props.values.firstName}
@@ -249,8 +249,8 @@ class CreateUser extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="select"><span className="text-danger">*</span>Last Name</Label>
                                       <Input
-                                        type="text"
-                                        id="lastName"
+                                        type="text" maxLength='26'
+                                        id="lastName" 
                                         name="lastName"
                                         placeholder ="Last Name"
                                         value={props.values.lastName}
@@ -270,7 +270,7 @@ class CreateUser extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="email"><span className="text-danger">*</span>Email ID</Label>
                                       <Input
-                                        type="text"
+                                        type="text" maxLength='80'
                                         id="email"
                                         name="email"
                                         placeholder="Enter Email ID"

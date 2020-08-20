@@ -261,7 +261,7 @@ class CreateContact extends React.Component {
 																		Name
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='26'
 																		id="firstName"
 																		name="firstName"
 																		placeholder="Enter First Name"
@@ -297,7 +297,7 @@ class CreateContact extends React.Component {
 																		Middle Name
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='26'
 																		id="middleName "
 																		name="middleName "
 																		placeholder="Enter Middle Name"
@@ -333,7 +333,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="lastName">Last Name</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='26'
 																		id="lastName"
 																		name="lastName"
 																		placeholder="Enter Last Name"
@@ -418,7 +418,7 @@ class CreateContact extends React.Component {
 																		Organization Name
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='50'
 																		id="organization"
 																		name="organization"
 																		placeholder="Enter Organization Name"
@@ -454,14 +454,14 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="select">PO Box Number</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='8'
 																		id="poBoxNumber"
 																		name="poBoxNumber"
 																		placeholder="Enter PO Box Number"
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('poBoxNumber')(
 																					option,
@@ -492,7 +492,7 @@ class CreateContact extends React.Component {
 																		<span className="text-danger">*</span>Email
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='80'
 																		id="email"
 																		name="email"
 																		placeholder="Enter Email Address"
@@ -601,7 +601,7 @@ class CreateContact extends React.Component {
 																		Address Line1
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='100'
 																		id="addressLine1"
 																		name="addressLine1"
 																		placeholder="Enter Address Line1"
@@ -639,7 +639,7 @@ class CreateContact extends React.Component {
 																		Address Line2
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='100'
 																		id="addressLine2"
 																		name="addressLine2"
 																		placeholder="Enter Address Line2"
@@ -665,7 +665,7 @@ class CreateContact extends React.Component {
 																		Address Line3
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='100'
 																		id="addressLine3"
 																		name="addressLine3"
 																		placeholder="Enter Address Line3"
@@ -792,6 +792,7 @@ class CreateContact extends React.Component {
 																		placeholder="Enter City"
 																		id="city"
 																		name="city"
+																		type="text"maxLength='20'
 																		className={
 																			props.errors.city && props.touched.city
 																				? 'is-invalid'
@@ -813,14 +814,14 @@ class CreateContact extends React.Component {
 																		Post Zip Code
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='8'
 																		id="postZipCode"
 																		name="postZipCode"
 																		placeholder="Enter Postal Zip Code"
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExBoth.test(option.target.value)
+																				this.regEx.test(option.target.value)
 																			) {
 																				props.handleChange('postZipCode')(
 																					option,
@@ -854,7 +855,7 @@ class CreateContact extends React.Component {
 																		Billing Email
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='80'
 																		id="billingEmail"
 																		name="billingEmail"
 																		placeholder="Enter Billing Email Address"
@@ -883,14 +884,14 @@ class CreateContact extends React.Component {
 																		Contract PO Number
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='8'
 																		id="contractPoNumber"
 																		name="contractPoNumber"
 																		placeholder="Enter Contract PO Number"
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
-																				this.regExAddress.test(
+																				this.regEx.test(
 																					option.target.value,
 																				)
 																			) {
@@ -923,7 +924,7 @@ class CreateContact extends React.Component {
 																		Tax Registration Number
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='20'
 																		id="vatRegistrationNumber"
 																		name="vatRegistrationNumber"
 																		placeholder="Enter Tax Registration Number"

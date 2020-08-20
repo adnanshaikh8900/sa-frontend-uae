@@ -238,7 +238,7 @@ class CreateBankAccount extends React.Component {
 																		Account Name
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='50'
 																		id="account_name"
 																		name="account_name"
 																		placeholder="Enter Account Name"
@@ -421,7 +421,7 @@ class CreateBankAccount extends React.Component {
 																		Name
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='100'
 																		id="bank_name"
 																		name="bank_name"
 																		placeholder="Enter Bank Name"
@@ -458,7 +458,7 @@ class CreateBankAccount extends React.Component {
 																		Account Number
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='50'
 																		id="account_number"
 																		name="account_number"
 																		placeholder="Enter Account Number"
@@ -508,7 +508,7 @@ class CreateBankAccount extends React.Component {
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='11'
 																		id="ifsc_code"
 																		name="ifsc_code"
 																		placeholder="Enter IFSC Code"
@@ -552,7 +552,7 @@ class CreateBankAccount extends React.Component {
 																		</UncontrolledTooltip>
 																		</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='11'
 																		id="swift_code"
 																		name="swift_code"
 																		placeholder="Enter Swift Code"

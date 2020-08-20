@@ -424,7 +424,7 @@ class User extends React.Component {
                               onChange={(option) => { this.handleChange(option.value, 'companyId') }}
                             />
                           </Col> */}
-                          <Col lg={1} className="pl-0 pr-0">
+                          <Col lg={3} className="pl-0 pr-0">
                             <Button type="button" color="primary" className="btn-square mr-1" onClick={this.handleSearch}>
                               <i className="fa fa-search"></i>
                             </Button>

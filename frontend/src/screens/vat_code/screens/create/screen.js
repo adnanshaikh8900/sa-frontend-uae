@@ -178,11 +178,11 @@ class CreateVatCode extends React.Component {
 																			placement="right"
 																			target="VatCodeTooltip"
 																		>
-																		VAT Code Name – Enter the unique identifier VAT code name 
+																		VAT Code Name – Unique identifier VAT code name 
 																		</UncontrolledTooltip>
 															</Label>
 															<Input
-																type="text"
+																type="text"maxLength='30'
 																id="name"
 																name="name"
 																placeholder="Enter Vat Code Name"
@@ -220,11 +220,11 @@ class CreateVatCode extends React.Component {
 																			placement="right"
 																			target="VatPercentTooltip"
 																		>
-																		Percentage – Enter the VAT percentage charged by your country 
+																		Percentage –  VAT percentage charged by your country 
 																		</UncontrolledTooltip>
 															</Label>
 															<Input
-																type="text"
+																type="text" maxLength='5'
 																id="vat"
 																name="vat"
 																placeholder="Enter Percentage"

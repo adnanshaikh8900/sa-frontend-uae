@@ -493,7 +493,7 @@ class CreateExpense extends React.Component {
 																		<span className="text-danger">*</span>Amount
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='10'
 																		name="expenseAmount"
 																		id="expenseAmount"
 																		rows="5"
@@ -652,11 +652,11 @@ class CreateExpense extends React.Component {
 																		Description
 																	</Label>
 																	<Input
-																		type="textarea"
+																		type="textarea"maxLength='255'
 																		name="expenseDescription"
 																		id="expenseDescription"
 																		rows="5"
-																		placeholder="1024 characters..."
+																		placeholder="Expense Description"
 																		onChange={(option) =>
 																			props.handleChange('expenseDescription')(
 																				option,
@@ -677,7 +677,7 @@ class CreateExpense extends React.Component {
 																				Reciept Number
 																			</Label>
 																			<Input
-																				type="text"
+																				type="text" maxLength='50'
 																				id="receiptNumber"
 																				name="receiptNumber"
 																				placeholder="Enter Reciept Number"
@@ -705,11 +705,11 @@ class CreateExpense extends React.Component {
 																				Attachment Description
 																			</Label>
 																			<Input
-																				type="textarea"
+																				type="textarea" maxLength='255'
 																				name="receiptAttachmentDescription"
 																				id="receiptAttachmentDescription"
 																				rows="5"
-																				placeholder="1024 characters..."
+																				placeholder="Receipt Attachment Description"
 																				onChange={(option) =>
 																					props.handleChange(
 																						'receiptAttachmentDescription',

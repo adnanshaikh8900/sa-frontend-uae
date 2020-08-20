@@ -229,14 +229,14 @@ public class BankAccountRestHelper {
 		}
 	}
 
-	public TransactionCategoryBalance getOpeningBalanceEntity(BankAccount bankAccount) {
+	public TransactionCategoryBalance getOpeningBalanceEntity(BankAccount bankAccount,TransactionCategory transactionCategory) {
 
 		TransactionCategoryBalance openingBalance = new TransactionCategoryBalance();
 		openingBalance.setCreatedBy(bankAccount.getCreatedBy());
 		openingBalance.setEffectiveDate(dateUtil.getDate());
 		openingBalance.setRunningBalance(bankAccount.getOpeningBalance());
 		openingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
-		openingBalance.setTransactionCategory(bankAccount.getTransactionCategory());
+		openingBalance.setTransactionCategory(transactionCategory);
 		openingBalance.setLastUpdateBy(bankAccount.getLastUpdatedBy());
 		openingBalance.setDeleteFlag(bankAccount.getDeleteFlag());
 		//openingBalance.setCreatedDate(bankAccount.getCreatedDate());
@@ -244,7 +244,7 @@ public class BankAccountRestHelper {
 		return  openingBalance;
 	}
 
-	public TransactionCategoryClosingBalance getClosingBalanceEntity(BankAccount bankAccount) {
+	public TransactionCategoryClosingBalance getClosingBalanceEntity(BankAccount bankAccount, TransactionCategory transactionCategory) {
 		TransactionCategoryClosingBalance closingBalance = new TransactionCategoryClosingBalance();
 		closingBalance.setClosingBalance(bankAccount.getOpeningBalance());
 		closingBalance.setClosingBalanceDate(dateUtil.getDateStrAsLocalDateTime(dateUtil.getDate(),"dd/MM/yyyy"));
@@ -252,7 +252,7 @@ public class BankAccountRestHelper {
 		closingBalance.setOpeningBalance(bankAccount.getOpeningBalance());
 		closingBalance.setEffectiveDate(dateUtil.getDate());
 		closingBalance.setDeleteFlag(bankAccount.getDeleteFlag());
-		//closingBalance.setCreatedDate(bankAccount.getCreatedDate());
+		closingBalance.setTransactionCategory(transactionCategory);
 		return  closingBalance;
 	}
 

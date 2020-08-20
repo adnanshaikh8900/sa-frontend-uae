@@ -11,26 +11,21 @@ import com.simplevat.constant.dbfilter.ORDERBYENUM;
 import com.simplevat.entity.Contact;
 import com.simplevat.rest.DropdownModel;
 import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.service.ContactService;
-
-
 import com.simplevat.security.JwtTokenUtil;
-import java.time.LocalDateTime;
-import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-
+import com.simplevat.service.ContactService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.simplevat.constant.ErrorConstant.ERROR;
 
@@ -102,7 +97,7 @@ public class ContactController {
 			List<Contact> existingContact = contactService.findByAttributes(param);
 
 			if (existingContact != null && !existingContact.isEmpty()) {
-				return new ResponseEntity("Allready exists.", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity("Email Already exists.", HttpStatus.BAD_REQUEST);
 			}
 			
 			Contact contact = contactHelper.getEntity(contactPersistModel);

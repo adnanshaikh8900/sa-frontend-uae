@@ -41,6 +41,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 // import 'react-images-uploader/font.css'
 
 import './style.scss'
+import PhoneInput from 'react-phone-number-input'
 
 const mapStateToProps = (state) => {
   return ({
@@ -1049,17 +1050,33 @@ class Profile extends React.Component {
                                           </Col>
                                           <Col lg={4}>
                                             <FormGroup className="mb-3">
-                                              <Label htmlFor="product_code">Phone Number</Label>
-                                              <Input
-                                                type="text"
-                                                id="phoneNumber"
-                                                name="phoneNumber"
-                                                placeholder="Enter Phone Number"
-                                                value={props.values.phoneNumber}
-                                                onChange={(option) => {
-                                                  if (option.target.value === '' || this.regEx.test(option.target.value)) { props.handleChange('phoneNumber')(option) }
-                                                }}
-                                              />
+                                            <Label htmlFor="phoneNumber">
+																	        	<span className="text-danger">*</span>Mobile
+																	          	Number
+																	              </Label>
+                                                <PhoneInput
+																	            	  defaultCountry="AE"
+																		              international
+																		              value={props.values.phoneNumber}
+																		              placeholder="Enter Mobile Number"
+																		              onChange={(option) => {
+																			            props.handleChange('phoneNumber')(
+																				          option,
+																		          	  );
+																		              }}
+																		                  className={
+																		                	props.errors.phoneNumber &&
+																			                props.touched.phoneNumber
+																			            	? 'is-invalid'
+																			              	: ''
+																	                  	}
+																                	/>
+																	{props.errors.phoneNumber &&
+																		props.touched.phoneNumber && (
+																			<div className="invalid-feedback">
+																				{props.errors.phoneNumber}
+																			</div>
+																		)}
                                             </FormGroup>
                                           </Col>
                                         </Row>

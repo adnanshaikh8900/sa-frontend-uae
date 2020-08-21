@@ -64,7 +64,6 @@ class Journal extends React.Component {
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top',
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
@@ -470,17 +469,34 @@ class Journal extends React.Component {
                           selectRow={this.selectRowProp}
                           search={false}
                           options={this.options}
-                          data={journal_list && journal_list.data ? journal_list.data : []}
+                          data={
+                            journal_list && journal_list.data
+                              ? journal_list.data
+                              : []
+                          }
                           version="4"
                           hover
                           keyField="journalId"
-                          pagination={journal_list && journal_list.data && journal_list.data.length ? true : false}
+                          pagination={
+                            journal_list &&
+                            journal_list.data &&
+                            journal_list.data.length > 0
+                              ? true
+                              : false
+                          }
                           remote
-                          fetchInfo={{ dataTotalSize: journal_list.count ? journal_list.count : 0 }}
+                          fetchInfo={{
+                            dataTotalSize: journal_list.count
+                              ? journal_list.count
+                              : 0,
+                          }}
                           // totalSize={journal_list ? journal_list.length : 0}
                           className="journal-table"
                           trClassName="cursor-pointer"
-                          ref={(node) => this.table = node}
+                          csvFileName="Journal.csv"
+                          ref={(node) => {
+                            this.table = node;
+                          }}
                         >
                           <TableHeaderColumn
                             dataField="journalDate"

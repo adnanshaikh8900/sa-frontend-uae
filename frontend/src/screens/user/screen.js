@@ -76,7 +76,6 @@ class User extends React.Component {
 
     this.options = {
       onRowClick: this.goToDetail,
-      paginationPosition: 'top',
       page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,

@@ -149,7 +149,7 @@ export default {
 				// },
 				{
 					name: 'VAT Category',
-					url: '/admin/master/vat-code',
+					url: '/admin/master/vat-category',
 					icon: 'icon-briefcase',
 				},
 				{

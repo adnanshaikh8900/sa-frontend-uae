@@ -302,6 +302,7 @@ class ExplainTrasactionDetail extends React.Component {
 				formData.append('currencyCode', currencyCode ? currencyCode : '');
 			}
 			if (expenseCategory && coaCategoryId.label === 'Expense') {
+				console.log(expenseCategory.value);
 				formData.append(
 					'expenseCategory',
 					expenseCategory ? expenseCategory.value : '',
@@ -329,29 +330,25 @@ class ExplainTrasactionDetail extends React.Component {
 			if (this.uploadFile.files[0]) {
 				formData.append('attachment', this.uploadFile.files[0]);
 			}
-			this.props.transactionDetailActions
-				.updateTransaction(formData)
-				.then((res) => {
-					if (res.status === 200) {
-						resetForm();
-						this.props.commonActions.tostifyAlert(
-							'success',
-							'Transaction Detail Updated Successfully.',
-						);
-						//this.props.closeExplainTransactionModal(this.state.id);
-						//this.initializeData();
-						// this.props.history.push('/admin/banking/bank-account/transaction', {
-						//   bankId,
-						// });
-					}
-				})
-				.catch((err) => {
-					console.log(err);
-					this.props.commonActions.tostifyAlert(
-						'error',
-						err && err.data ? err.data.message : 'Something Went Wrong',
-					);
-				});
+			// this.props.transactionDetailActions
+			// 	.updateTransaction(formData)
+			// 	.then((res) => {
+			// 		if (res.status === 200) {
+			// 			resetForm();
+			// 			this.props.commonActions.tostifyAlert(
+			// 				'success',
+			// 				'Transaction Detail Updated Successfully.',
+			// 			);
+			// 			this.props.closeExplainTransactionModal(this.state.id);
+			// 		}
+			// 	})
+			// 	.catch((err) => {
+			// 		console.log(err);
+			// 		this.props.commonActions.tostifyAlert(
+			// 			'error',
+			// 			err && err.data ? err.data.message : 'Something Went Wrong',
+			// 		);
+			// 	});
 		}
 	};
 
@@ -717,15 +714,14 @@ class ExplainTrasactionDetail extends React.Component {
 																							.find(
 																								(option) =>
 																									option.value ===
-																									props.values
-																										.transactionCategoryId,
+																									props.values.expenseCategory,
 																							)
 																					}
 																					// value={props.values.expenseCategory}
 																					onChange={(option) => {
 																						props.handleChange(
-																							'transactionCategoryId',
-																						)(option.value);
+																							'expenseCategory',
+																						)(option);
 																					}}
 																					id="expenseCategory"
 																					name="expenseCategory"

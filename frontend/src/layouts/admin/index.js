@@ -101,6 +101,7 @@ class AdminLayout extends React.Component {
 							<Suspense>
 								<AppSidebarNav navConfig={navigation} {...this.props} />
 							</Suspense>
+							<AppSidebarMinimizer />
 							<AppSidebarFooter />
 						</AppSidebar>
 						<main className="main">

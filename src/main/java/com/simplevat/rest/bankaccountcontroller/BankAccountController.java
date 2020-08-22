@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.*;
 import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.model.DashBoardBankDataModel;
@@ -93,6 +94,9 @@ public class BankAccountController{
 	private BankAccountRestHelper bankAccountRestHelper;
 
 	@Autowired
+	private TransactionCategoryService transactionCategoryService;
+
+	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
@@ -156,15 +160,24 @@ public class BankAccountController{
 				Addition of opening balance while creating bank account
 
 				 */
-				TransactionCategoryBalance   openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount);
-				//TransactionCategoryClosingBalance closingBalance = bankAccountRestHelper.getClosingBalanceEntity(bankAccount);
-				Journal openBalanceJournal = bankAccountRestHelper.getJournalEntries(bankAccount);
-				if (openBalanceJournal != null) {
-					journalService.persist(openBalanceJournal);
-				}
-				//closingBalance.setTransactionCategory(bankAccount.getTransactionCategory());
+				TransactionCategoryBalance   openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount,bankAccount.getTransactionCategory());
+			    TransactionCategoryClosingBalance closingBalance = bankAccountRestHelper
+						.getClosingBalanceEntity(bankAccount,bankAccount.getTransactionCategory());
+				closingBalance.setTransactionCategory(bankAccount.getTransactionCategory());
 				transactionCategoryBalanceService.persist(openingBalance);
-				//transactionCategoryClosingBalanceService.persist(closingBalance);
+				transactionCategoryClosingBalanceService.persist(closingBalance);
+
+				TransactionCategory transactionCategory = transactionCategoryService
+						.findTransactionCategoryByTransactionCategoryCode(
+								TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET.getCode());
+				openingBalance = bankAccountRestHelper.getOpeningBalanceEntity(bankAccount,transactionCategory);
+				transactionCategoryBalanceService.persist(openingBalance);
+				closingBalance = bankAccountRestHelper
+						.getClosingBalanceEntity(bankAccount,transactionCategory);
+				closingBalance.setOpeningBalance(bankAccount.getOpeningBalance().negate());
+				closingBalance.setClosingBalance(bankAccount.getOpeningBalance().negate());
+				transactionCategoryClosingBalanceService.persist(closingBalance);
+
 				coacTransactionCategoryService.addCoacTransactionCategory(bankAccount.getTransactionCategory().getChartOfAccount(),
 						bankAccount.getTransactionCategory());
 				return new ResponseEntity<>("Save Successfull..",HttpStatus.OK);

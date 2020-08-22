@@ -1,11 +1,12 @@
 package com.simplevat.rest.validationcontroller;
 
 import com.simplevat.entity.Contact;
+import com.simplevat.entity.Invoice;
 import com.simplevat.entity.Product;
 import com.simplevat.entity.VatCategory;
-import com.simplevat.service.ContactService;
-import com.simplevat.service.ProductService;
-import com.simplevat.service.VatCategoryService;
+import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.service.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,15 @@ public class ValidationController {
 
     @Autowired
     private ContactService contactService;
+
+    @Autowired
+    private TransactionCategoryService transactionCategoryService;
+
+    @Autowired
+    private BankAccountService bankAccountService;
+
+    @Autowired
+    private InvoiceService invoiceService;
 
     @ApiOperation(value = "Validate entries before adding to the system")
     @GetMapping(value = "/validate")
@@ -64,8 +74,34 @@ public class ValidationController {
                         return new ResponseEntity("Contact email already exists", HttpStatus.OK);
                     else
                         return new ResponseEntity("Contact email does not exists", HttpStatus.OK);
+                case 4:  //Chart of Account
+                    param = new HashMap<>();
+                    param.put("transactionCategoryName",validationModel.getName());
+                    List<TransactionCategory> transactionCategoryList = transactionCategoryService.findByAttributes(param);
+                    if(transactionCategoryList!= null && transactionCategoryList.size()>0)
+                        return new ResponseEntity("Chart Of Account already exists", HttpStatus.OK);
+                    else
+                        return new ResponseEntity("Chart Of Account does not exists", HttpStatus.OK);
+                case 5:
+                    param = new HashMap<>();
+                    param.put("accountNumber",validationModel.getName());
+                    List<BankAccount> bankAccountList = bankAccountService.findByAttributes(param);
+                    if(bankAccountList!= null && bankAccountList.size()>0)
+                        return new ResponseEntity("Bank Account already exists", HttpStatus.OK);
+                    else
+                        return new ResponseEntity("Bank Account does not exists", HttpStatus.OK);
+                case 6:
+                    param = new HashMap<>();
+                    param.put("referenceNumber",validationModel.getName());
+                    List<Invoice> invoiceList = invoiceService.findByAttributes(param);
+                    if(invoiceList!= null && invoiceList.size()>0)
+                        return new ResponseEntity("Invoice Number already exists", HttpStatus.OK);
+                    else
+                        return new ResponseEntity("Invoice Number does not exists", HttpStatus.OK);
                 default:
                     return new ResponseEntity("Bad request", HttpStatus.BAD_REQUEST);
+
+
             }
         }
         return new ResponseEntity("Bad request", HttpStatus.BAD_REQUEST);

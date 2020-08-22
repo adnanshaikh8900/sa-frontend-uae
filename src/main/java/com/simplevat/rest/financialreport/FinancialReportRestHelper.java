@@ -316,10 +316,10 @@ public class FinancialReportRestHelper {
 				String transactionCategoryCode = transactionCategoryClosingBalance.getTransactionCategory().getChartOfAccount().getChartOfAccountCode();
 				String transactionCategoryName = transactionCategoryClosingBalance.getTransactionCategory().getTransactionCategoryName();
 				BigDecimal closingBalance = transactionCategoryClosingBalance.getClosingBalance();
-				Boolean isDebitFlag = false;
+				Boolean isDebitFlag = true;
 				if(closingBalance.longValue()<0)
 				{	closingBalance = closingBalance.negate();
-					isDebitFlag = true;
+					isDebitFlag = false;
 
 				}
 				ChartOfAccountCategoryCodeEnum chartOfAccountCategoryCodeEnum = ChartOfAccountCategoryCodeEnum.

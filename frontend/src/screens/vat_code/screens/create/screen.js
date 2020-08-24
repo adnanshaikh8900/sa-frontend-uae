@@ -101,7 +101,7 @@ class CreateVatCode extends React.Component {
 							createMore: false,
 						});
 					} else {
-						this.props.history.push('/admin/master/vat-code');
+						this.props.history.push('/admin/master/vat-category');
 					}
 				}
 			})
@@ -171,18 +171,20 @@ class CreateVatCode extends React.Component {
 																<span className="text-danger">*</span>Vat Code
 																Name
 																<i
-																			id="VatCodeTooltip"
-																			className="fa fa-question-circle ml-1"
-																		></i>
-																		<UncontrolledTooltip
-																			placement="right"
-																			target="VatCodeTooltip"
-																		>
-																		VAT Code Name – Unique identifier VAT code name 
-																		</UncontrolledTooltip>
+																	id="VatCodeTooltip"
+																	className="fa fa-question-circle ml-1"
+																></i>
+																<UncontrolledTooltip
+																	placement="right"
+																	target="VatCodeTooltip"
+																>
+																	VAT Code Name – Unique identifier VAT code
+																	name
+																</UncontrolledTooltip>
 															</Label>
 															<Input
-																type="text"maxLength='30'
+																type="text"
+																maxLength="30"
 																id="name"
 																name="name"
 																placeholder="Enter Vat Code Name"
@@ -213,18 +215,20 @@ class CreateVatCode extends React.Component {
 															<Label htmlFor="name">
 																<span className="text-danger">*</span>Percentage
 																<i
-																			id="VatPercentTooltip"
-																			className="fa fa-question-circle ml-1"
-																		></i>
-																		<UncontrolledTooltip
-																			placement="right"
-																			target="VatPercentTooltip"
-																		>
-																		Percentage –  VAT percentage charged by your country 
-																		</UncontrolledTooltip>
+																	id="VatPercentTooltip"
+																	className="fa fa-question-circle ml-1"
+																></i>
+																<UncontrolledTooltip
+																	placement="right"
+																	target="VatPercentTooltip"
+																>
+																	Percentage – VAT percentage charged by your
+																	country
+																</UncontrolledTooltip>
 															</Label>
 															<Input
-																type="text" maxLength='5'
+																type="text"
+																maxLength="5"
 																id="vat"
 																name="vat"
 																placeholder="Enter Percentage"
@@ -282,7 +286,7 @@ class CreateVatCode extends React.Component {
 																className="btn-square"
 																onClick={() => {
 																	this.props.history.push(
-																		'/admin/master/vat-code',
+																		'/admin/master/vat-category',
 																	);
 																}}
 															>

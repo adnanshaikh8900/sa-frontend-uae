@@ -413,18 +413,18 @@ const adminRoutes = [
 		component: Project.screen,
 	},
 	{
-		path: '/admin/master/vat-code/create',
+		path: '/admin/master/vat-category/create',
 		name: 'Create',
 		component: CreateVatCode.screen,
 	},
 	{
-		path: '/admin/master/vat-code/detail',
+		path: '/admin/master/vat-category/detail',
 		name: 'Detail',
 		component: DetailVatCode.screen,
 	},
 	{
-		path: '/admin/master/vat-code',
-		name: 'Vat Code',
+		path: '/admin/master/vat-category',
+		name: 'Vat Category',
 		component: VatCode.screen,
 	},
 	{

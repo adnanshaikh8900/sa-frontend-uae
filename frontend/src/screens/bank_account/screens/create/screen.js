@@ -197,7 +197,7 @@ class CreateBankAccount extends React.Component {
 													account_name: Yup.string()
 														.required('Account Name is Required')
 														.min(2, 'Account Name Is Too Short!')
-														.max(20, 'Account Name Is Too Long!'),
+														.max(30, 'Account Name Is Too Long!'),
 													opening_balance: Yup.string().required(
 														'Opening Balance is Required',
 													),
@@ -218,14 +218,9 @@ class CreateBankAccount extends React.Component {
 													account_is_for: Yup.string().required(
 														'Account for is required',
 													),
-													ifsc_code: Yup.string()
-														.required('IFSC Code is Required')
-														.min(2, 'IFSC Code Is Too Short!')
-														.max(20, 'IFSC Code Is Too Long!'),
-													swift_code: Yup.string().matches(this.swiftRegex, {
-														message: 'Please enter valid Swift Code.',
-														excludeEmptyString: false,
-													}),
+													swift_code: Yup.string().required(
+														'Please Enter Valid Swift Code',
+													),
 												})}
 											>
 												{(props) => (
@@ -238,7 +233,8 @@ class CreateBankAccount extends React.Component {
 																		Account Name
 																	</Label>
 																	<Input
-																		type="text" maxLength='50'
+																		type="text"
+																		maxLength="50"
 																		id="account_name"
 																		name="account_name"
 																		placeholder="Enter Account Name"
@@ -421,7 +417,8 @@ class CreateBankAccount extends React.Component {
 																		Name
 																	</Label>
 																	<Input
-																		type="text" maxLength='100'
+																		type="text"
+																		maxLength="100"
 																		id="bank_name"
 																		name="bank_name"
 																		placeholder="Enter Bank Name"
@@ -458,7 +455,8 @@ class CreateBankAccount extends React.Component {
 																		Account Number
 																	</Label>
 																	<Input
-																		type="text" maxLength='50'
+																		type="text"
+																		maxLength="50"
 																		id="account_number"
 																		name="account_number"
 																		placeholder="Enter Account Number"
@@ -493,8 +491,7 @@ class CreateBankAccount extends React.Component {
 															<Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="ifsc_code">
-																		<span className="text-danger">*</span>IFSC
-																		Code
+																		IFSC Code
 																		<i
 																			id="IFSCcodeToolTip"
 																			className="fa fa-question-circle ml-1"
@@ -503,12 +500,17 @@ class CreateBankAccount extends React.Component {
 																			placement="right"
 																			target="IFSCcodeToolTip"
 																		>
-																			<p> IFSC code –  11-digit unique bank branch identifier code And Should be in capital and numbers  </p> 
-																			
+																			<p>
+																				{' '}
+																				IFSC code – 11-digit unique bank branch
+																				identifier code And Should be in capital
+																				and numbers{' '}
+																			</p>
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Input
-																		type="text" maxLength='11'
+																		type="text"
+																		maxLength="11"
 																		id="ifsc_code"
 																		name="ifsc_code"
 																		placeholder="Enter IFSC Code"
@@ -538,8 +540,9 @@ class CreateBankAccount extends React.Component {
 															</Col>
 															<Col lg={4}>
 																<FormGroup className="mb-3">
-																	<Label htmlFor="swift_code">Swift Code
-																	<i
+																	<Label htmlFor="swift_code">
+																		Swift Code
+																		<i
 																			id="SwiftCodeToolTip"
 																			className="fa fa-question-circle ml-1"
 																		></i>
@@ -547,12 +550,12 @@ class CreateBankAccount extends React.Component {
 																			placement="right"
 																			target="SwiftCodeToolTip"
 																		>
-																			<p> Swift Code - Bank identifier code  </p> 
-																			
+																			<p> Swift Code - Bank identifier code </p>
 																		</UncontrolledTooltip>
-																		</Label>
+																	</Label>
 																	<Input
-																		type="text" maxLength='11'
+																		type="text"
+																		maxLength="11"
 																		id="swift_code"
 																		name="swift_code"
 																		placeholder="Enter Swift Code"

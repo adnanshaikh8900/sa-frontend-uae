@@ -141,7 +141,9 @@ class VatCode extends React.Component {
 	};
 
 	goToDetail = (row) => {
-		this.props.history.push('/admin/master/vat-code/detail', { id: row.id });
+		this.props.history.push('/admin/master/vat-category/detail', {
+			id: row.id,
+		});
 	};
 
 	// Show Success Toast
@@ -172,7 +174,8 @@ class VatCode extends React.Component {
 	// Delete Vat By ID
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message = 'Warning: This Vat Code will be deleted permanently and cannot be recovered.  ';
+		const message =
+			'Warning: This Vat Code will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -383,7 +386,9 @@ class VatCode extends React.Component {
 											className="btn-square"
 											style={{ marginBottom: '10px' }}
 											onClick={() =>
-												this.props.history.push(`/admin/master/vat-code/create`)
+												this.props.history.push(
+													`/admin/master/vat-category/create`,
+												)
 											}
 										>
 											<i className="fas fa-plus mr-1" />

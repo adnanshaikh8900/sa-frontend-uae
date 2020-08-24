@@ -150,13 +150,6 @@ class BankTransactions extends React.Component {
 			pageSize: this.options.sizePerPage,
 		};
 		if (this.props.location.state && this.props.location.state.bankAccountId) {
-			console.log(this.props.location.state);
-			this.setState({
-				bankId: this.props.location.state.bankAccountId,
-				openingBalance: this.props.location.state.openingBalance,
-				closingBalance: this.props.location.state.closingBalance,
-				accounName: this.props.location.state.accounName,
-			});
 			const postData = {
 				...filterData,
 				...data,
@@ -572,12 +565,13 @@ class BankTransactions extends React.Component {
 					closeExplainTransactionModal={(e) => {
 						this.closeExplainTransactionModal(e);
 					}}
-					bankId={this.state.bankId}
+					bankId={this.props.location.state.bankAccountId}
 					selectedData={row}
 				/>
 			),
 			nonExpandable: this.state.nonexpand,
 			showExpandColumn: true,
+			expanded: [],
 		};
 
 		return (

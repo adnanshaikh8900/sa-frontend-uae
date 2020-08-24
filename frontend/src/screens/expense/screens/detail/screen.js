@@ -72,7 +72,8 @@ class DetailExpense extends React.Component {
 		this.regExBoth = /[a-zA-Z0-9]+$/;
 
 		this.supported_format = [
-			'',
+			'image/png',
+			'image/jpeg',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

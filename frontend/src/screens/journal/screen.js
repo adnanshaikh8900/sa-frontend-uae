@@ -64,7 +64,7 @@ class Journal extends React.Component {
 
     this.options = {
       onRowClick: this.goToDetail,
-      page: 1,
+        page: 1,
       sizePerPage: 10,
       onSizePerPageList: this.onSizePerPageList,
       onPageChange: this.onPageChange,

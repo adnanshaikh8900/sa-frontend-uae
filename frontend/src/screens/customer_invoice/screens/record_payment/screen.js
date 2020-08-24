@@ -106,6 +106,8 @@ class RecordCustomerPayment extends React.Component {
 
 		this.file_size = 1024000;
 		this.supported_format = [
+			'image/png',
+			'image/jpeg',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

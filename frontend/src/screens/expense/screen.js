@@ -197,17 +197,19 @@ class Expense extends React.Component {
 						)}
 					</DropdownToggle>
 					<DropdownMenu right>
-						<DropdownItem>
-							<div
-								onClick={() => {
-									this.props.history.push('/admin/expense/expense/detail', {
-										expenseId: row['expenseId'],
-									});
-								}}
-							>
-								<i className="fas fa-edit" /> Edit
-							</div>
-						</DropdownItem>
+						{row.expenseStatus !== 'Post' && (
+							<DropdownItem>
+								<div
+									onClick={() => {
+										this.props.history.push('/admin/expense/expense/detail', {
+											expenseId: row['expenseId'],
+										});
+									}}
+								>
+									<i className="fas fa-edit" /> Edit
+								</div>
+							</DropdownItem>
+						)}
 						{row.expenseStatus !== 'Post' && (
 							<DropdownItem
 								onClick={() => {
@@ -339,7 +341,8 @@ class Expense extends React.Component {
 
 	bulkDeleteExpenses = () => {
 		const { selectedRows } = this.state;
-		const message = 'Warning: This Expense will be deleted permanently and cannot be recovered.  ';
+		const message =
+			'Warning: This Expense will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (

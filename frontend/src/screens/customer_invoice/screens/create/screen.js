@@ -259,7 +259,8 @@ class CreateCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-						type="text" maxLength='10'
+						type="text"
+						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
@@ -437,7 +438,7 @@ class CreateCustomerInvoice extends React.Component {
 								.find((option) => option.value === +row.vatCategoryId)
 						}
 						id="vatCategoryId"
-						placeholder = "Select Vat"
+						placeholder="Select Vat"
 						onChange={(e) => {
 							this.selectItem(
 								e.value,
@@ -879,7 +880,11 @@ class CreateCustomerInvoice extends React.Component {
 									<Row>
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
-											<img alt="invoiceimage" src={invoiceimage} style={{'width':'40px'}} />
+												<img
+													alt="invoiceimage"
+													src={invoiceimage}
+													style={{ width: '40px' }}
+												/>
 												<span className="ml-2">Create Invoice</span>
 											</div>
 										</Col>
@@ -1028,7 +1033,7 @@ class CreateCustomerInvoice extends React.Component {
 																	<Select
 																		id="contactId"
 																		name="contactId"
-																		placeholder = "Select Customer name"
+																		placeholder="Select Customer name"
 																		options={
 																			customer_list
 																				? selectOptionsFactory.renderOptions(
@@ -1095,14 +1100,28 @@ class CreateCustomerInvoice extends React.Component {
 																			placement="right"
 																			target="UncontrolledTooltipExample"
 																		>
-																			<p> Terms- The duration given to a buyer for payment.</p> 
+																			<p>
+																				{' '}
+																				Terms- The duration given to a buyer for
+																				payment.
+																			</p>
 
-																			<p>Net 7 – payment due in 7 days from invoice date </p>	
+																			<p>
+																				Net 7 – payment due in 7 days from
+																				invoice date{' '}
+																			</p>
 
-																			<p>	Net 10 – payment due in 10 days from invoice date </p>	
+																			<p>
+																				{' '}
+																				Net 10 – payment due in 10 days from
+																				invoice date{' '}
+																			</p>
 
-																			<p>	Net 30 – payment due in 30 days from invoice date </p>	
-
+																			<p>
+																				{' '}
+																				Net 30 – payment due in 30 days from
+																				invoice date{' '}
+																			</p>
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
@@ -1118,7 +1137,7 @@ class CreateCustomerInvoice extends React.Component {
 																		}
 																		id="term"
 																		name="term"
-																		placeholder = "Select Terms "
+																		placeholder="Select Terms "
 																		value={this.state.term}
 																		onChange={(option) => {
 																			props.handleChange('term')(option);
@@ -1353,7 +1372,7 @@ class CreateCustomerInvoice extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price 
+																		Unit Price
 																		<i
 																			id="UnitPriceTooltip"
 																			className="fa fa-question-circle ml-1"
@@ -1362,7 +1381,8 @@ class CreateCustomerInvoice extends React.Component {
 																			placement="right"
 																			target="UnitPriceTooltip"
 																		>
-																		Unit Price – Price of a single product or service 
+																			Unit Price – Price of a single product or
+																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
@@ -1390,7 +1410,8 @@ class CreateCustomerInvoice extends React.Component {
 																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">Notes</Label>
 																		<Input
-																			type="textarea" maxLength='255'
+																			type="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -1408,7 +1429,8 @@ class CreateCustomerInvoice extends React.Component {
 																					Reciept Number
 																				</Label>
 																				<Input
-																					type="text" maxLength='100'
+																					type="text"
+																					maxLength="100"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					placeholder="Reciept Number"
@@ -1462,7 +1484,19 @@ class CreateCustomerInvoice extends React.Component {
 																									);
 																								}}
 																							/>
-																							{this.state.fileName}
+																							{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
 																						</div>
 																					)}
 																				/>
@@ -1480,7 +1514,8 @@ class CreateCustomerInvoice extends React.Component {
 																			Attachment Description
 																		</Label>
 																		<Input
-																			type="textarea" maxLength='255'
+																			type="textarea"
+																			maxLength="255"
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
@@ -1550,7 +1585,8 @@ class CreateCustomerInvoice extends React.Component {
 																								id="discountPercentage"
 																								name="discountPercentage"
 																								placeholder="Discount Percentage"
-																								type="text" maxLength='5'
+																								type="text"
+																								maxLength="5"
 																								value={
 																									props.values
 																										.discountPercentage
@@ -1593,7 +1629,8 @@ class CreateCustomerInvoice extends React.Component {
 																						<Input
 																							id="discount"
 																							name="discount"
-																							type="text" maxLength='10'
+																							type="text"
+																							maxLength="10"
 																							disabled={
 																								props.values.discountType &&
 																								props.values.discountType

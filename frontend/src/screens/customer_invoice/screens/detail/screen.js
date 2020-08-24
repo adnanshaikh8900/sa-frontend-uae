@@ -240,7 +240,7 @@ class DetailCustomerInvoice extends React.Component {
 						type="text"
 						value={row['description'] !== '' ? row['description'] : ''}
 						onChange={(e) => {
-							this.selectItem(e, row, 'description', form, field);
+							this.selectItem(e.target.value, row, 'description', form, field);
 						}}
 						placeholder="Description"
 						className={`form-control 
@@ -279,7 +279,14 @@ class DetailCustomerInvoice extends React.Component {
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
-								this.selectItem(e, row, 'quantity', form, field, props);
+								this.selectItem(
+									e.target.value,
+									row,
+									'quantity',
+									form,
+									field,
+									props,
+								);
 							}
 						}}
 						placeholder="Quantity"
@@ -322,7 +329,14 @@ class DetailCustomerInvoice extends React.Component {
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
-								this.selectItem(e, row, 'unitPrice', form, field, props);
+								this.selectItem(
+									e.target.value,
+									row,
+									'unitPrice',
+									form,
+									field,
+									props,
+								);
 							}
 						}}
 						placeholder="Unit Price"
@@ -376,12 +390,12 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	selectItem = (e, row, name, form, field, props) => {
-		e.preventDefault();
+		//e.preventDefault();
 		let data = this.state.data;
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
-				obj[`${name}`] = e.target.value;
+				obj[`${name}`] = e;
 				idx = index;
 			}
 			return obj;
@@ -425,15 +439,36 @@ class DetailCustomerInvoice extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
-					<Input
-						type="select"
+					<Select
+						options={
+							vat_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										vat_list,
+										'Vat',
+								  )
+								: []
+						}
+						value={
+							vat_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', vat_list, 'Vat')
+								.find((option) => option.value === +row.vatCategoryId)
+						}
+						id="vatCategoryId"
+						placeholder="Select Vat"
 						onChange={(e) => {
-							this.selectItem(e, row, 'vatCategoryId', form, field, props);
-							// this.formRef.current.props.handleChange(field.name)(e.value)
+							this.selectItem(
+								e.value,
+								row,
+								'vatCategoryId',
+								form,
+								field,
+								props,
+							);
 						}}
-						value={row.vatCategoryId}
-						className={`form-control 
-            ${
+						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].vatCategoryId &&
@@ -444,18 +479,7 @@ class DetailCustomerInvoice extends React.Component {
 								? 'is-invalid'
 								: ''
 						}`}
-					>
-						{vatList
-							? vatList.map((obj) => {
-									// obj.name = obj.name === 'default' ? '0' : obj.name
-									return (
-										<option value={obj.id} key={obj.id}>
-											{obj.vat}
-										</option>
-									);
-							  })
-							: ''}
-					</Input>
+					/>
 				)}
 			/>
 		);
@@ -515,7 +539,14 @@ class DetailCustomerInvoice extends React.Component {
 					<Input
 						type="select"
 						onChange={(e) => {
-							this.selectItem(e, row, 'productId', form, field, props);
+							this.selectItem(
+								e.target.value,
+								row,
+								'productId',
+								form,
+								field,
+								props,
+							);
 							this.prductValue(e, row, 'productId', form, field, props);
 							// this.formRef.current.props.handleChange(field.name)(e.value)
 						}}

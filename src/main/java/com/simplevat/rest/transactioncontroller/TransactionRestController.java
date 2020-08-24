@@ -5,10 +5,41 @@
  */
 package com.simplevat.rest.transactioncontroller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simplevat.bank.model.DeleteModel;
 import com.simplevat.constant.*;
+import com.simplevat.constant.dbfilter.ORDERBYENUM;
+import com.simplevat.constant.dbfilter.TransactionFilterEnum;
+import com.simplevat.entity.*;
+import com.simplevat.entity.bankaccount.BankAccount;
+import com.simplevat.entity.bankaccount.Transaction;
+import com.simplevat.entity.bankaccount.TransactionCategory;
+import com.simplevat.helper.TransactionHelper;
+import com.simplevat.rest.PaginationResponseModel;
+import com.simplevat.rest.PostingRequestModel;
+import com.simplevat.rest.ReconsileRequestLineItemModel;
+import com.simplevat.rest.receiptcontroller.ReceiptRestHelper;
+import com.simplevat.rest.reconsilationcontroller.ReconsilationRestHelper;
+import com.simplevat.security.JwtTokenUtil;
+import com.simplevat.service.*;
+import com.simplevat.service.bankaccount.ChartOfAccountService;
+import com.simplevat.service.bankaccount.TransactionService;
+import com.simplevat.service.bankaccount.TransactionStatusService;
+import com.simplevat.service.impl.TransactionCategoryClosingBalanceServiceImpl;
+import com.simplevat.utils.ChartUtil;
+import com.simplevat.utils.DateFormatUtil;
+import com.simplevat.utils.FileHelper;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import static com.simplevat.constant.ErrorConstant.ERROR;
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -21,50 +52,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import com.simplevat.entity.*;
-import com.simplevat.entity.bankaccount.BankAccount;
-import com.simplevat.entity.bankaccount.TransactionCategory;
-import com.simplevat.service.*;
-import com.simplevat.service.impl.TransactionCategoryClosingBalanceServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.simplevat.bank.model.DeleteModel;
-import com.simplevat.constant.ChartOfAccountCategoryIdEnumConstant;
-import com.simplevat.constant.dbfilter.ORDERBYENUM;
-import com.simplevat.constant.dbfilter.TransactionFilterEnum;
-import com.simplevat.entity.bankaccount.Transaction;
-import com.simplevat.helper.TransactionHelper;
-import com.simplevat.rest.PaginationResponseModel;
-import com.simplevat.rest.PostingRequestModel;
-import com.simplevat.rest.ReconsileRequestLineItemModel;
-import com.simplevat.rest.receiptcontroller.ReceiptRestHelper;
-import com.simplevat.rest.reconsilationcontroller.ReconsilationRestHelper;
-import com.simplevat.security.JwtTokenUtil;
-import com.simplevat.service.bankaccount.ChartOfAccountService;
-import com.simplevat.service.bankaccount.TransactionService;
-import com.simplevat.service.bankaccount.TransactionStatusService;
-import com.simplevat.utils.ChartUtil;
-import com.simplevat.utils.DateFormatUtil;
-import com.simplevat.utils.FileHelper;
-
-import io.swagger.annotations.ApiOperation;
-import org.springframework.web.multipart.MultipartFile;
+import static com.simplevat.constant.ErrorConstant.ERROR;
 
 /**
  *
@@ -799,6 +787,7 @@ public class TransactionRestController {
 		trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
 		trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 				transactionPresistModel.getDATE_FORMAT()));
+		trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
 
 		if(transactionPresistModel.getTransactionCategoryId()!=null) {
 			//Pota Grandchild

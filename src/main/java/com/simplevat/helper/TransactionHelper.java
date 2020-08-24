@@ -150,7 +150,9 @@ public class TransactionHelper {
 	public TransactionPresistModel getModel(Transaction transaction) {
 
 		TransactionPresistModel model = new TransactionPresistModel();
+		model.setBankId(transaction.getBankAccount().getBankAccountId());
 		model.setTransactionId(transaction.getTransactionId());
+
 		if (transaction.getCoaCategory() != null)
 			model.setCoaCategoryId(transaction.getCoaCategory().getChartOfAccountCategoryId());
 		if (transaction.getExplainedTransactionCategory() != null) {
@@ -161,8 +163,10 @@ public class TransactionHelper {
 		model.setAmount(transaction.getTransactionAmount());
 		if (transaction.getTransactionDate() != null)
 			model.setDate(dateUtil.getLocalDateTimeAsString(transaction.getTransactionDate(), model.getDATE_FORMAT()));
+		model.setCurrencyCode(transaction.getBankAccount().getBankAccountCurrency().getCurrencyCode());
 		model.setDescription(transaction.getExplainedTransactionDescription());
 		model.setReference(transaction.getReferenceStr());
+
 
 		// EXPENSE
 		if (transaction.getVatCategory() != null)
@@ -171,6 +175,10 @@ public class TransactionHelper {
 			model.setVendorId(transaction.getExplinationVendor().getContactId());
 		if (transaction.getExplinationCustomer() != null)
 			model.setCustomerId(transaction.getExplinationCustomer().getContactId());
+		if (transaction.getExplainedTransactionCategory() != null)
+			model.setExpenseCategory(transaction.getExplainedTransactionCategory().getTransactionCategoryId());
+
+
 
 		// MONEY PAID TO USER
 		// MONEY RECEIVED FROM OTHER

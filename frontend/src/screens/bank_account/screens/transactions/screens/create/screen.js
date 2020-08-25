@@ -76,6 +76,7 @@ class CreateBankTransaction extends React.Component {
 				vatId: '',
 				vendorId: '',
 				employeeId: '',
+				currencyCode: '',
 			},
 			transactionCategoryList: [],
 			totalAmount: '',
@@ -257,6 +258,7 @@ class CreateBankTransaction extends React.Component {
 		if (currencyCode && coaCategoryId.label === 'Expense') {
 			formData.append('currencyCode', currencyCode ? currencyCode : '');
 		}
+		console.log(currencyCode);
 		if (
 			(customerId &&
 				coaCategoryId.value &&
@@ -344,7 +346,23 @@ class CreateBankTransaction extends React.Component {
 
 	getExpensesCategoriesList = () => {
 		this.props.transactionActions.getExpensesCategoriesList();
-		this.props.transactionActions.getCurrencyList();
+		this.props.transactionActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currencyCode: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currencyCode',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 		this.props.transactionActions.getUserForDropdown();
 		this.props.transactionActions.getVatList();
 	};
@@ -468,9 +486,13 @@ class CreateBankTransaction extends React.Component {
 													transactionDate: Yup.date().required(
 														'Transaction Date is Required',
 													),
-													transactionAmount: Yup.string().required(
-														'Transaction Amount is Required',
-													),
+													transactionAmount: Yup.string()
+														.required('Transaction Amount is Required')
+														.test(
+															'transactionAmount',
+															'Transaction Amount Must Be Greater Than 0',
+															(value) => value > 0,
+														),
 													coaCategoryId: Yup.string().required(
 														'Transaction Type is Required',
 													),
@@ -768,7 +790,7 @@ class CreateBankTransaction extends React.Component {
 																								.find(
 																									(option) =>
 																										option.value ===
-																										+props.values.currency,
+																										+props.values.currencyCode,
 																								)
 																						}
 																						onChange={(option) => {
@@ -1157,7 +1179,19 @@ class CreateBankTransaction extends React.Component {
 																								this.handleFileChange(e, props);
 																							}}
 																						/>
-																						{this.state.fileName}
+																						{this.state.fileName && (
+																							<div>
+																								<i
+																									className="fa fa-close"
+																									onClick={() =>
+																										this.setState({
+																											fileName: '',
+																										})
+																									}
+																								></i>{' '}
+																								{this.state.fileName}
+																							</div>
+																						)}
 																					</div>
 																				)}
 																			/>

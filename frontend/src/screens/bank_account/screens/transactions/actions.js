@@ -148,6 +148,7 @@ export const getCurrencyList = () => {
 							data: res.data,
 						},
 					});
+					return res;
 				}
 			})
 			.catch((err) => {

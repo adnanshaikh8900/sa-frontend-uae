@@ -119,11 +119,12 @@ class ExplainTrasactionDetail extends React.Component {
 								: '',
 							transactionCategoryLabel: res.data.transactionCategoryLabel,
 							invoiceError: '',
-							expenseCategory: '',
-							currencyCode: '',
+							expenseCategory: res.data.expenseCategory,
+							currencyCode: parseInt(res.data.currencyCode),
 						},
 					},
 					() => {
+						console.log(this.state.initValue.currencyCode);
 						if (this.state.initValue.customerId) {
 							this.getSuggestionInvoicesFotCust(
 								this.state.initValue.customerId,
@@ -223,7 +224,23 @@ class ExplainTrasactionDetail extends React.Component {
 
 	getExpensesCategoriesList = () => {
 		this.props.transactionsActions.getExpensesCategoriesList();
-		this.props.transactionsActions.getCurrencyList();
+		this.props.transactionsActions.getCurrencyList().then((response) => {
+			this.setState({
+				initValue: {
+					...this.state.initValue,
+					...{
+						currency: response.data
+							? parseInt(response.data[0].currencyCode)
+							: '',
+					},
+				},
+			});
+			this.formRef.current.setFieldValue(
+				'currency',
+				response.data[0].currencyCode,
+				true,
+			);
+		});
 		this.props.transactionsActions.getUserForDropdown();
 		this.props.transactionsActions.getVatList();
 	};
@@ -260,6 +277,7 @@ class ExplainTrasactionDetail extends React.Component {
 				transactionId,
 				expenseCategory,
 			} = data;
+			console.log(data);
 			if (
 				(invoiceIdList && coaCategoryId.label === 'Sales') ||
 				(invoiceIdList && coaCategoryId.label === 'Supplier Invoice')
@@ -302,7 +320,6 @@ class ExplainTrasactionDetail extends React.Component {
 				formData.append('currencyCode', currencyCode ? currencyCode : '');
 			}
 			if (expenseCategory && coaCategoryId.label === 'Expense') {
-				console.log(expenseCategory.value);
 				formData.append(
 					'expenseCategory',
 					expenseCategory ? expenseCategory.value : '',
@@ -312,7 +329,7 @@ class ExplainTrasactionDetail extends React.Component {
 				(vatId && coaCategoryId.value === 10) ||
 				(vatId && coaCategoryId.label === 'Expense')
 			) {
-				formData.append('vatId', vatId ? vatId.value : '');
+				formData.append('vatId', vatId ? vatId : '');
 			}
 			if (employeeId) {
 				formData.append('employeeId', employeeId ? employeeId.value : '');
@@ -330,25 +347,25 @@ class ExplainTrasactionDetail extends React.Component {
 			if (this.uploadFile.files[0]) {
 				formData.append('attachment', this.uploadFile.files[0]);
 			}
-			// this.props.transactionDetailActions
-			// 	.updateTransaction(formData)
-			// 	.then((res) => {
-			// 		if (res.status === 200) {
-			// 			resetForm();
-			// 			this.props.commonActions.tostifyAlert(
-			// 				'success',
-			// 				'Transaction Detail Updated Successfully.',
-			// 			);
-			// 			this.props.closeExplainTransactionModal(this.state.id);
-			// 		}
-			// 	})
-			// 	.catch((err) => {
-			// 		console.log(err);
-			// 		this.props.commonActions.tostifyAlert(
-			// 			'error',
-			// 			err && err.data ? err.data.message : 'Something Went Wrong',
-			// 		);
-			// 	});
+			this.props.transactionDetailActions
+				.updateTransaction(formData)
+				.then((res) => {
+					if (res.status === 200) {
+						resetForm();
+						this.props.commonActions.tostifyAlert(
+							'success',
+							'Transaction Detail Updated Successfully.',
+						);
+						this.props.closeExplainTransactionModal(this.state.id);
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+					this.props.commonActions.tostifyAlert(
+						'error',
+						err && err.data ? err.data.message : 'Something Went Wrong',
+					);
+				});
 		}
 	};
 
@@ -443,24 +460,31 @@ class ExplainTrasactionDetail extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values, resetForm);
 													}}
+													validate={(values) => {
+														let errors = {};
+														if (
+															values.coaCategoryId.label ===
+																'Supplier Invoice' ||
+															values.coaCategoryId.label === 'Sales'
+														) {
+															errors.invoiceIdList = 'Invoice is  required';
+														}
+														return errors;
+													}}
 													validationSchema={Yup.object().shape({
 														date: Yup.string().required(
 															'Transaction Date is Required',
 														),
-														amount: Yup.string().required(
-															'Transaction Amount is Required',
-														),
+														amount: Yup.string()
+															.required('Transaction Amount is Required')
+															.test(
+																'amount',
+																'Transaction Amount Must Be Greater Than 0',
+																(value) => value > 0,
+															),
 														coaCategoryId: Yup.object().required(
 															'Transaction Type is Required',
 														),
-														invoiceIdList: Yup.string().when('coaCategoryId', {
-															is: (item) =>
-																item.label === 'Supplier Invoice' ||
-																item.label === 'Sales',
-															then: Yup.string().required(
-																'Invoice Is Required',
-															),
-														}),
 														attachment: Yup.mixed()
 															.test(
 																'fileType',
@@ -775,7 +799,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							onChange={(option) => {
 																								if (option && option.value) {
 																									props.handleChange('vatId')(
-																										option,
+																										option.value,
 																									);
 																								} else {
 																									props.handleChange('vatId')(
@@ -829,7 +853,8 @@ class ExplainTrasactionDetail extends React.Component {
 																									.find(
 																										(option) =>
 																											option.value ===
-																											+props.values.currency,
+																											+props.values
+																												.currencyCode,
 																									)
 																							}
 																							onChange={(option) => {

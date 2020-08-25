@@ -101,6 +101,26 @@ class CreateBankAccount extends React.Component {
 		this.props.createBankAccountActions.getCountryList();
 	};
 
+	validationCheck = (value) => {
+		const data = {
+			moduleType: 5,
+			name: value,
+		};
+		this.props.createBankAccountActions
+			.checkValidation(data)
+			.then((response) => {
+				if (response.data === 'Bank Account already exists') {
+					this.setState({
+						exist: true,
+					});
+				} else {
+					this.setState({
+						exist: false,
+					});
+				}
+			});
+	};
+
 	handleChange = (e, name) => {
 		this.setState({
 			currentData: _.set(
@@ -192,6 +212,14 @@ class CreateBankAccount extends React.Component {
 												ref={this.formRef}
 												onSubmit={(values, { resetForm }) => {
 													this.handleSubmit(values, resetForm);
+												}}
+												validate={(values) => {
+													let errors = {};
+													if (this.state.exist === true) {
+														errors.account_number =
+															'Account Number is already exist';
+													}
+													return errors;
 												}}
 												validationSchema={Yup.object().shape({
 													account_name: Yup.string()
@@ -461,6 +489,7 @@ class CreateBankAccount extends React.Component {
 																		name="account_number"
 																		placeholder="Enter Account Number"
 																		value={props.values.account_number}
+																		onBlur={props.handleBlur('account_number')}
 																		onChange={(option) => {
 																			if (
 																				option.target.value === '' ||
@@ -470,6 +499,7 @@ class CreateBankAccount extends React.Component {
 																					option,
 																				);
 																			}
+																			this.validationCheck(option.target.value);
 																		}}
 																		className={
 																			props.errors.account_number &&

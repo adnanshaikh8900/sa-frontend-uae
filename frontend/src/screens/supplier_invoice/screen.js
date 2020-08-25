@@ -634,23 +634,52 @@ class SupplierInvoice extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="mb-4 status-panel p-3">
-										<Row>
-											<Col lg={3}>
-												<h5>Overdue</h5>
-												<h3>{this.state.overDueAmountDetails.overDueAmount}</h3>
-											</Col>
-											<Col lg={3}>
-												<h5>Due Within This Week</h5>
-												<h3>
-													{this.state.overDueAmountDetails.overDueAmountWeekly}
-												</h3>
-											</Col>
-											<Col lg={3}>
-												<h5>Due Within 30 Days</h5>
-												<h3>
-													{this.state.overDueAmountDetails.overDueAmountMonthly}
-												</h3>
-											</Col>
+										<Row className="align-items-center justify-content-around">
+											<div className="h4 mb-0 d-flex align-items-center">
+												<img
+													alt="invoiceimage"
+													src={invoiceimage}
+													style={{ width: '80px' }}
+												/>
+												<div>
+													<h5>Overdue</h5>
+													<h3 className="invoice-detail">
+														{this.state.overDueAmountDetails.overDueAmount}
+													</h3>
+												</div>
+											</div>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<img
+													alt="invoiceimage"
+													src={invoiceimage}
+													style={{ width: '80px' }}
+												/>
+												<div>
+													<h5>Due Within This Week</h5>
+													<h3 className="invoice-detail">
+														{
+															this.state.overDueAmountDetails
+																.overDueAmountWeekly
+														}
+													</h3>
+												</div>
+											</div>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<img
+													alt="invoiceimage"
+													src={invoiceimage}
+													style={{ width: '80px' }}
+												/>
+												<div>
+													<h5>Due Within 30 Days</h5>
+													<h3 className="invoice-detail">
+														{
+															this.state.overDueAmountDetails
+																.overDueAmountMonthly
+														}
+													</h3>
+												</div>
+											</div>
 										</Row>
 									</div>
 									<div className="d-flex justify-content-end">
@@ -784,7 +813,7 @@ class SupplierInvoice extends React.Component {
 													placeholder="Status"
 												/>
 											</Col>
-											<Col lg={1} className="pl-0 pr-0">
+											<Col lg={2} className="pl-0 pr-0">
 												<Button
 													type="button"
 													color="primary"

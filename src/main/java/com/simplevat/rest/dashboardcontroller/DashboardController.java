@@ -1,11 +1,14 @@
 package com.simplevat.rest.dashboardcontroller;
 
 import com.simplevat.constant.ChartOfAccountCategoryCodeEnum;
+import com.simplevat.constant.TransactionCategoryCodeEnum;
 import com.simplevat.entity.TransactionCategoryClosingBalance;
+import com.simplevat.entity.bankaccount.TransactionCategory;
 import com.simplevat.rest.detailedgeneralledgerreport.ReportRequestModel;
 import com.simplevat.rest.financialreport.FinancialReportController;
 import com.simplevat.rest.financialreport.FinancialReportRestHelper;
 import com.simplevat.service.TransactionCategoryClosingBalanceService;
+import com.simplevat.service.TransactionCategoryService;
 import com.simplevat.utils.ChartUtil;
 import com.simplevat.utils.DateFormatUtil;
 import io.swagger.annotations.ApiOperation;
@@ -41,6 +44,9 @@ public class DashboardController {
 
 	@Autowired
 	TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
+
+	@Autowired
+	TransactionCategoryService transactionCategoryService;
 
 
 	@GetMapping(value = "/getVatReport")
@@ -82,13 +88,21 @@ public class DashboardController {
 					switch (chartOfAccountCategoryCodeEnum)
 					{
 						case OTHER_CURRENT_LIABILITIES:
-							output.put("OutputVat", closingBalance);
-							totalOutputVat = totalOutputVat.add(closingBalance);
-							break;
+							TransactionCategory transactionCategory = transactionCategoryClosingBalance.getTransactionCategory();
+							if (transactionCategory.getTransactionCategoryCode().equalsIgnoreCase
+									(TransactionCategoryCodeEnum.OUTPUT_VAT.getCode())) {
+								output.put("OutputVat", closingBalance);
+								totalOutputVat = totalOutputVat.add(closingBalance);
+							}
+								break;
 
 						case OTHER_CURRENT_ASSET:
-							output.put("InputVat", closingBalance);
-							totalInputVat = totalInputVat.add(closingBalance);
+							transactionCategory = transactionCategoryClosingBalance.getTransactionCategory();
+							if (transactionCategory.getTransactionCategoryCode().equalsIgnoreCase
+									(TransactionCategoryCodeEnum.INPUT_VAT.getCode())) {
+								output.put("InputVat", closingBalance);
+								totalInputVat = totalInputVat.add(closingBalance);
+							}
 							break;
 						default:
 							break;

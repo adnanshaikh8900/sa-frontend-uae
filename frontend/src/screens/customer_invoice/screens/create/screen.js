@@ -470,9 +470,7 @@ class CreateCustomerInvoice extends React.Component {
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
-		const result = product_list.find(
-			(item) => item.id === parseInt(e.target.value),
-		);
+		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -503,9 +501,6 @@ class CreateCustomerInvoice extends React.Component {
 
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
-		let productList = product_list.length
-			? [{ id: '', name: 'Select Product' }, ...product_list]
-			: product_list;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -513,27 +508,51 @@ class CreateCustomerInvoice extends React.Component {
 			}
 			return obj;
 		});
-		if (productList.length > 0) {
+		if (product_list.length > 0) {
 			return (
 				<Field
 					name={`lineItemsString.${idx}.productId`}
 					render={({ field, form }) => (
-						<Input
-							type="select"
+						<Select
+							options={
+								product_list
+									? selectOptionsFactory.renderOptions(
+											'name',
+											'id',
+											product_list,
+											'Product',
+									  )
+									: []
+							}
+							id="productId"
 							onChange={(e) => {
-								this.selectItem(
-									e.target.value,
-									row,
-									'productId',
-									form,
-									field,
-									props,
-								);
-								this.prductValue(e, row, 'productId', form, field, props);
-								// this.formRef.current.props.handleChange(field.name)(e.value)
+								if (e && e.label !== 'Select Product') {
+									this.selectItem(
+										e.value,
+										row,
+										'productId',
+										form,
+										field,
+										props,
+									);
+									this.prductValue(
+										e.value,
+										row,
+										'productId',
+										form,
+										field,
+										props,
+									);
+									// this.formRef.current.props.handleChange(field.name)(e.value)
+								} else {
+									form.setFieldValue(
+										`lineItemsString.${idx}.productId`,
+										e.value,
+										true,
+									);
+								}
 							}}
-							value={row.productId}
-							className={`form-control ${
+							className={`${
 								props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
@@ -544,18 +563,7 @@ class CreateCustomerInvoice extends React.Component {
 									? 'is-invalid'
 									: ''
 							}`}
-						>
-							{productList
-								? productList.map((obj) => {
-										// obj.name = obj.name === 'default' ? '0' : obj.name
-										return (
-											<option value={obj.id} key={obj.id}>
-												{obj.name}
-											</option>
-										);
-								  })
-								: ''}
-						</Input>
+						/>
 					)}
 				/>
 			);

@@ -313,7 +313,6 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	renderUnitPrice = (cell, row, props) => {
-		console.log('ss');
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -373,7 +372,7 @@ class DetailCustomerInvoice extends React.Component {
 				data: data.concat({
 					id: this.state.idCount + 1,
 					description: '',
-					quantity: '',
+					quantity: 1,
 					unitPrice: '',
 					vatCategoryId: '',
 					subTotal: 0,
@@ -490,9 +489,7 @@ class DetailCustomerInvoice extends React.Component {
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
-		const result = product_list.find(
-			(item) => item.id === parseInt(e.target.value),
-		);
+		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -538,22 +535,31 @@ class DetailCustomerInvoice extends React.Component {
 			<Field
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
-					<Input
-						type="select"
+					<Select
+						options={
+							product_list
+								? selectOptionsFactory.renderOptions(
+										'name',
+										'id',
+										product_list,
+										'Product',
+								  )
+								: []
+						}
+						value={
+							product_list &&
+							selectOptionsFactory
+								.renderOptions('name', 'id', product_list, 'Product')
+								.find((option) => option.value === +row.productId)
+						}
+						id="productId"
 						onChange={(e) => {
-							this.selectItem(
-								e.target.value,
-								row,
-								'productId',
-								form,
-								field,
-								props,
-							);
-							this.prductValue(e, row, 'productId', form, field, props);
-							// this.formRef.current.props.handleChange(field.name)(e.value)
+							if (e && e.label !== 'Select Product') {
+								this.selectItem(e.value, row, 'productId', form, field, props);
+								this.prductValue(e.value, row, 'productId', form, field, props);
+							}
 						}}
-						value={row.productId}
-						className={`form-control ${
+						className={`${
 							props.errors.lineItemsString &&
 							props.errors.lineItemsString[parseInt(idx, 10)] &&
 							props.errors.lineItemsString[parseInt(idx, 10)].productId &&
@@ -564,18 +570,7 @@ class DetailCustomerInvoice extends React.Component {
 								? 'is-invalid'
 								: ''
 						}`}
-					>
-						{productList
-							? productList.map((obj) => {
-									// obj.name = obj.name === 'default' ? '0' : obj.name
-									return (
-										<option value={obj.id} key={obj.id}>
-											{obj.name}
-										</option>
-									);
-							  })
-							: ''}
-					</Input>
+					/>
 				)}
 			/>
 		);
@@ -621,7 +616,6 @@ class DetailCustomerInvoice extends React.Component {
 	};
 
 	updateAmount = (data, props) => {
-		console.log(data);
 		const { vat_list } = this.props;
 		let total_net = 0;
 		let total = 0;

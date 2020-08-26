@@ -221,7 +221,8 @@ class CreateSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.quantity`}
 				render={({ field, form }) => (
 					<Input
-						type="text" maxLength='10'
+						type="text"
+						maxLength="10"
 						value={row['quantity'] !== 0 ? row['quantity'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
@@ -268,7 +269,8 @@ class CreateSupplierInvoice extends React.Component {
 				name={`lineItemsString.${idx}.unitPrice`}
 				render={({ field, form }) => (
 					<Input
-						type="text" maxLength='10'
+						type="text"
+						maxLength="10"
 						value={row['unitPrice'] !== 0 ? row['unitPrice'] : 0}
 						onChange={(e) => {
 							if (e.target.value === '' || this.regEx.test(e.target.value)) {
@@ -480,9 +482,7 @@ class CreateSupplierInvoice extends React.Component {
 	prductValue = (e, row, name, form, field, props) => {
 		const { product_list } = this.props;
 		let data = this.state.data;
-		const result = product_list.find(
-			(item) => item.id === parseInt(e.target.value),
-		);
+		const result = product_list.find((item) => item.id === parseInt(e));
 		let idx;
 		data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -525,9 +525,6 @@ class CreateSupplierInvoice extends React.Component {
 
 	renderProduct = (cell, row, props) => {
 		const { product_list } = this.props;
-		let productList = product_list.length
-			? [{ id: '', name: 'Select Product' }, ...product_list]
-			: product_list;
 		let idx;
 		this.state.data.map((obj, index) => {
 			if (obj.id === row.id) {
@@ -535,27 +532,52 @@ class CreateSupplierInvoice extends React.Component {
 			}
 			return obj;
 		});
-		if (productList.length > 0) {
+		if (product_list.length > 0) {
 			return (
 				<Field
 					name={`lineItemsString.${idx}.productId`}
 					render={({ field, form }) => (
-						<Input
-							type="select"
+						<Select
+							options={
+								product_list
+									? selectOptionsFactory.renderOptions(
+											'name',
+											'id',
+											product_list,
+											'Product',
+									  )
+									: []
+							}
+							id="productId"
 							onChange={(e) => {
-								this.selectItem(
-									e.target.value,
-									row,
-									'productId',
-									form,
-									field,
-									props,
-								);
-								this.prductValue(e, row, 'productId', form, field, props);
-								// this.formRef.current.props.handleChange(field.name)(e.value)
+								if (e && e.label !== 'Select Product') {
+									this.selectItem(
+										e.value,
+										row,
+										'productId',
+										form,
+										field,
+										props,
+									);
+									this.prductValue(
+										e.value,
+										row,
+										'productId',
+										form,
+										field,
+										props,
+									);
+									// this.formRef.current.props.handleChange(field.name)(e.value)
+								} else {
+									console.log(e.value);
+									form.setFieldValue(
+										`lineItemsString.${idx}.productId`,
+										e.value,
+										true,
+									);
+								}
 							}}
-							value={row.productId}
-							className={`form-control ${
+							className={`${
 								props.errors.lineItemsString &&
 								props.errors.lineItemsString[parseInt(idx, 10)] &&
 								props.errors.lineItemsString[parseInt(idx, 10)].productId &&
@@ -566,18 +588,7 @@ class CreateSupplierInvoice extends React.Component {
 									? 'is-invalid'
 									: ''
 							}`}
-						>
-							{productList
-								? productList.map((obj) => {
-										// obj.name = obj.name === 'default' ? '0' : obj.name
-										return (
-											<option value={obj.id} key={obj.id}>
-												{obj.name}
-											</option>
-										);
-								  })
-								: ''}
-						</Input>
+						/>
 					)}
 				/>
 			);
@@ -989,7 +1000,11 @@ class CreateSupplierInvoice extends React.Component {
 									<Row>
 										<Col lg={12}>
 											<div className="h4 mb-0 d-flex align-items-center">
-											<img alt="invoiceimage" src={invoiceimage} style={{'width':'40px'}} />
+												<img
+													alt="invoiceimage"
+													src={invoiceimage}
+													style={{ width: '40px' }}
+												/>
 												<span className="ml-2">Create Invoice</span>
 											</div>
 										</Col>
@@ -1150,7 +1165,7 @@ class CreateSupplierInvoice extends React.Component {
 																	<Select
 																		id="contactId"
 																		name="contactId"
-																		placeholder= "Select Supplier Name"
+																		placeholder="Select Supplier Name"
 																		options={
 																			supplier_list
 																				? selectOptionsFactory.renderOptions(
@@ -1207,7 +1222,6 @@ class CreateSupplierInvoice extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="term">
 																		<span className="text-danger">*</span>Terms{' '}
-																	
 																		<i
 																			id="UncontrolledTooltipExample"
 																			className="fa fa-question-circle ml-1"
@@ -1216,11 +1230,25 @@ class CreateSupplierInvoice extends React.Component {
 																			placement="right"
 																			target="UncontrolledTooltipExample"
 																		>
-																			<p> Terms- The duration given to a buyer for payment.</p> 
-																			<p>Net 7 – payment due in 7 days from invoice date </p>	
-																			<p>	Net 10 – payment due in 10 days from invoice date </p>	
-																			<p>	Net 30 – payment due in 30 days from invoice date </p>	
-
+																			<p>
+																				{' '}
+																				Terms- The duration given to a buyer for
+																				payment.
+																			</p>
+																			<p>
+																				Net 7 – payment due in 7 days from
+																				invoice date{' '}
+																			</p>
+																			<p>
+																				{' '}
+																				Net 10 – payment due in 10 days from
+																				invoice date{' '}
+																			</p>
+																			<p>
+																				{' '}
+																				Net 30 – payment due in 30 days from
+																				invoice date{' '}
+																			</p>
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
@@ -1488,7 +1516,7 @@ class CreateSupplierInvoice extends React.Component {
 																			this.renderUnitPrice(cell, rows, props)
 																		}
 																	>
-																		Unit Price 
+																		Unit Price
 																		<i
 																			id="UnitPriceToolTip"
 																			className="fa fa-question-circle ml-1"
@@ -1497,7 +1525,8 @@ class CreateSupplierInvoice extends React.Component {
 																			placement="right"
 																			target="UnitPriceToolTip"
 																		>
-																		Unit Price – Price of a single product or service 
+																			Unit Price – Price of a single product or
+																			service
 																		</UncontrolledTooltip>
 																	</TableHeaderColumn>
 																	<TableHeaderColumn
@@ -1514,7 +1543,7 @@ class CreateSupplierInvoice extends React.Component {
 																		className="text-right"
 																		columnClassName="text-right"
 																	>
-																		Sub Total 
+																		Sub Total
 																	</TableHeaderColumn>
 																</BootstrapTable>
 															</Col>
@@ -1526,7 +1555,8 @@ class CreateSupplierInvoice extends React.Component {
 																	<FormGroup className="py-2">
 																		<Label htmlFor="notes">Notes</Label>
 																		<Input
-																			type="textarea" maxLength='255'
+																			type="textarea"
+																			maxLength="255"
 																			name="notes"
 																			id="notes"
 																			rows="6"
@@ -1545,7 +1575,8 @@ class CreateSupplierInvoice extends React.Component {
 																					Reciept Number
 																				</Label>
 																				<Input
-																					type="text" maxLength='50'
+																					type="text"
+																					maxLength="50"
 																					id="receiptNumber"
 																					name="receiptNumber"
 																					placeholder="Reciept Number"
@@ -1617,7 +1648,8 @@ class CreateSupplierInvoice extends React.Component {
 																			Attachment Description
 																		</Label>
 																		<Input
-																			type="textarea" maxLength='255'
+																			type="textarea"
+																			maxLength="255"
 																			name="receiptAttachmentDescription"
 																			id="receiptAttachmentDescription"
 																			rows="5"
@@ -1688,7 +1720,8 @@ class CreateSupplierInvoice extends React.Component {
 																								id="discountPercentage"
 																								name="discountPercentage"
 																								placeholder="Discount Percentage"
-																								type="text" maxLength='5'
+																								type="text"
+																								maxLength="5"
 																								value={
 																									props.values
 																										.discountPercentage
@@ -1731,7 +1764,8 @@ class CreateSupplierInvoice extends React.Component {
 																						<Input
 																							id="discount"
 																							name="discount"
-																							type="text" maxLength='7'
+																							type="text"
+																							maxLength="7"
 																							disabled={
 																								props.values.discountType &&
 																								props.values.discountType

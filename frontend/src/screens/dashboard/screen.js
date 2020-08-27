@@ -21,6 +21,8 @@ const mapStateToProps = (state) => {
 		bank_account_type: state.dashboard.bank_account_type,
 		bank_account_graph: state.dashboard.bank_account_graph,
 
+		universal_currency_list: state.common.universal_currency_list,
+
 		// Cash Flow
 		cash_flow_graph: state.dashboard.cash_flow_graph,
 

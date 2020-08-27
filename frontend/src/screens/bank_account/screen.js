@@ -287,7 +287,9 @@ class BankAccount extends React.Component {
 	};
 
 	renderBalance(cell, row) {
-		return row.openingBalance ? row.openingBalance.toFixed(2) : row.openingBalance;
+		return row.openingBalance
+			? row.openingBalance.toFixed(2)
+			: row.openingBalance;
 	}
 
 	renderActions = (cell, row) => {

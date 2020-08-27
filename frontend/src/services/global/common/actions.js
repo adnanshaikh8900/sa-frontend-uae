@@ -71,7 +71,7 @@ export const getCurrencyList = () => {
 			.then((res) => {
 				if (res.status === 200) {
 					dispatch({
-						type: COMMON.CURRENCY_LIST,
+						type: COMMON.UNIVERSAL_CURRENCY_LIST,
 						payload: {
 							data: res.data,
 						},

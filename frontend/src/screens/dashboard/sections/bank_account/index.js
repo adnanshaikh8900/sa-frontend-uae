@@ -163,7 +163,7 @@ class BankAccount extends Component {
 													{this.props.bank_account_type.map(
 														(account, index) => (
 															<option key={index} value={account.bankAccountId}>
-																{account.name}
+																{account.name+"-"+account.accounName}
 															</option>
 														),
 													)}

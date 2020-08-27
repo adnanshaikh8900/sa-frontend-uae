@@ -143,6 +143,7 @@ class CreateExpense extends React.Component {
 			employee,
 			expenseDescription,
 			receiptNumber,
+			attachmentFile,
 			receiptAttachmentDescription,
 			vatCategoryId,
 			payMode,
@@ -153,6 +154,7 @@ class CreateExpense extends React.Component {
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
+		formData.append('attachmentFile',attachmentFile);
 		formData.append(
 			'receiptAttachmentDescription',
 			receiptAttachmentDescription,
@@ -616,7 +618,7 @@ class CreateExpense extends React.Component {
 																			options={
 																				bank_list && bank_list.data
 																					? selectOptionsFactory.renderOptions(
-																							'name',
+																							'accounName',
 																							'bankAccountId',
 																							bank_list.data,
 																							'Bank',
@@ -729,13 +731,12 @@ class CreateExpense extends React.Component {
 															<Col lg={4}>
 																<Row>
 																	<Col lg={12}>
-																		<FormGroup className="mb-3">
+																	<FormGroup className="mb-3">
 																			<Field
-																				name="attachmentFile"
+																				name="attachment"
 																				render={({ field, form }) => (
 																					<div>
-																						<Label>Reciept Attachment</Label>{' '}
-																						<br />
+																						<Label>Attachment</Label> <br />
 																						<Button
 																							color="primary"
 																							onClick={() => {
@@ -759,7 +760,19 @@ class CreateExpense extends React.Component {
 																								this.handleFileChange(e, props);
 																							}}
 																						/>
-																						{this.state.initValue.fileName}
+																						{this.state.fileName && (
+																							<div>
+																								<i
+																									className="fa fa-close"
+																									onClick={() =>
+																										this.setState({
+																											fileName: '',
+																										})
+																									}
+																								></i>{' '}
+																								{this.state.fileName}
+																							</div>
+																						)}
 																					</div>
 																				)}
 																			/>

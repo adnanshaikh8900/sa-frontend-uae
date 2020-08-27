@@ -787,7 +787,9 @@ public class TransactionRestController {
 		trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
 		trnx.setTransactionDate(dateFormatUtil.getDateStrAsLocalDateTime(transactionPresistModel.getDate(),
 				transactionPresistModel.getDATE_FORMAT()));
-		trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
+		if(transactionPresistModel.getVatId() != null) {
+				trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
+		}
 
 		if(transactionPresistModel.getTransactionCategoryId()!=null) {
 			//Pota Grandchild

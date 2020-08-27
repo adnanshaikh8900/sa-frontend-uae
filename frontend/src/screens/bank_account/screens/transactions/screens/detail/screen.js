@@ -695,6 +695,19 @@ class DetailBankTransaction extends React.Component {
                                                     );
                                                   }}
                                                 />
+                                                {this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
                                                 {this.state.fileName ? (
                                                   this.state.fileName
                                                 ) : (

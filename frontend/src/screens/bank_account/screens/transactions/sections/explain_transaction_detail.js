@@ -65,7 +65,8 @@ class ExplainTrasactionDetail extends React.Component {
 
 		this.file_size = 1024000;
 		this.supported_format = [
-			'',
+			'image/png',
+			'image/jpeg',
 			'text/plain',
 			'application/pdf',
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -368,7 +369,16 @@ class ExplainTrasactionDetail extends React.Component {
 				});
 		}
 	};
-
+	handleFileChange = (e, props) => {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachmentFile', file, true);
+		}
+	};
 	closeTransaction = (id) => {
 		this.setState({
 			dialog: (
@@ -460,17 +470,17 @@ class ExplainTrasactionDetail extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values, resetForm);
 													}}
-													validate={(values) => {
-														let errors = {};
-														if (
-															values.coaCategoryId.label ===
-																'Supplier Invoice' ||
-															values.coaCategoryId.label === 'Sales'
-														) {
-															errors.invoiceIdList = 'Invoice is  required';
-														}
-														return errors;
-													}}
+													// validate={(values) => {
+													// 	let errors = {};
+													// 	if (
+													// 		values.coaCategoryId.label ===
+													// 			'Supplier Invoice' ||
+													// 		values.coaCategoryId.label === 'Sales'
+													// 	) {
+													// 		errors.invoiceIdList = 'Invoice is  required';
+													// 	}
+													// 	return errors;
+													// }}
 													validationSchema={Yup.object().shape({
 														date: Yup.string().required(
 															'Transaction Date is Required',
@@ -1283,10 +1293,22 @@ class ExplainTrasactionDetail extends React.Component {
 																									);
 																								}}
 																							/>
-																							{this.state.fileName}
 																						</div>
 																					)}
 																				/>
+																				{this.state.fileName && (
+																								<div>
+																									<i
+																										className="fa fa-close"
+																										onClick={() =>
+																											this.setState({
+																												fileName: '',
+																											})
+																										}
+																									></i>{' '}
+																									{this.state.fileName}
+																								</div>
+																							)}
 																				{props.errors.attachment &&
 																					props.touched.attachment && (
 																						<div className="invalid-file">

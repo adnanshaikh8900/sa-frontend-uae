@@ -145,7 +145,7 @@ class Invoice extends Component {
 											className="btn-instagram btn-brand mr-1 mb-1 btn btn-secondary btn-sm"
 											onClick={() => {
 												this.props.history.push(
-													'/admin/revenue/customer-invoice/create',
+													'/admin/income/customer-invoice/create',
 												);
 											}}
 										>

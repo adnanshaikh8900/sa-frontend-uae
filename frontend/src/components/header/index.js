@@ -70,7 +70,7 @@ class Header extends Component {
 					to={'/admin/dashboard'}
 					full={{
 						src: logo,
-						width: '100%',
+						width: '115%',
 						height: 'auto',
 						alt: 'CoreUI Logo',
 					}}

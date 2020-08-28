@@ -53,7 +53,6 @@ const mapDispatchToProps = (dispatch) => {
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
 
-
 class CustomerInvoice extends React.Component {
 	constructor(props) {
 		super(props);
@@ -260,7 +259,12 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderInvoiceAmount = (cell, row) => {
-		return row.invoiceAmount ? row.invoiceAmount.toFixed(2) : '';
+		return row.invoiceAmount
+			? parseInt(row.invoiceAmount).toLocaleString('en-IN', {
+					style: 'currency',
+					currency: 'INR',
+			  })
+			: '';
 	};
 	invoiceDueDate = (cell, row) => {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
@@ -270,7 +274,15 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderVatAmount = (cell, row) => {
-		return row.vatAmount === 0 ? row.vatAmount : row.vatAmount;
+		return row.vatAmount === 0
+			? row.vatAmount.toLocaleString('en-IN', {
+					style: 'currency',
+					currency: 'INR',
+			  })
+			: row.vatAmount.toLocaleString('en-IN', {
+					style: 'currency',
+					currency: 'INR',
+			  });
 	};
 
 	renderActions = (cell, row) => {
@@ -399,7 +411,8 @@ class CustomerInvoice extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message = 'Warning: This Customer nvoice will be deleted permanently and cannot be recovered.  ';
+		const message =
+			'Warning: This Customer nvoice will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -592,7 +605,11 @@ class CustomerInvoice extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-									<img alt="invoiceimage" src={invoiceimage} style={{'width':'40px'}} />
+										<img
+											alt="invoiceimage"
+											src={invoiceimage}
+											style={{ width: '40px' }}
+										/>
 										<span className="ml-2">Customer Invoices</span>
 									</div>
 								</Col>
@@ -615,9 +632,7 @@ class CustomerInvoice extends React.Component {
 										<Row>
 											<Col lg={3}>
 												<h5>Overdue</h5>
-												<h3>
-													{this.state.overDueAmountDetails.overDueAmount}
-												</h3>
+												<h3>{this.state.overDueAmountDetails.overDueAmount}</h3>
 											</Col>
 											<Col lg={3}>
 												<h5>Due Within This Week</h5>
@@ -651,7 +666,7 @@ class CustomerInvoice extends React.Component {
 													ref={this.csvLink}
 													target="_blank"
 												/>
-											)} 
+											)}
 											<Button
 												color="primary"
 												className="btn-square "

@@ -569,10 +569,34 @@ class CreateSupplierInvoice extends React.Component {
 									);
 									// this.formRef.current.props.handleChange(field.name)(e.value)
 								} else {
-									console.log(e.value);
 									form.setFieldValue(
 										`lineItemsString.${idx}.productId`,
 										e.value,
+										true,
+									);
+									form.setFieldValue(
+										`lineItemsString.${idx}.vatCategoryId`,
+										'',
+										true,
+									);
+									form.setFieldValue(
+										`lineItemsString.${idx}.unitPrice`,
+										200,
+										true,
+									);
+									form.setFieldValue(
+										`lineItemsString.${idx}.description`,
+										'',
+										true,
+									);
+									form.setFieldValue(
+										`lineItemsString.${idx}.transactionCategoryId`,
+										'',
+										true,
+									);
+									form.setFieldValue(
+										`lineItemsString.${idx}.transactionCategoryLabel`,
+										'',
 										true,
 									);
 								}

@@ -20,7 +20,7 @@ const cashBarOption = {
 				ticks: {
 					// Include a dollar sign in the ticks
 					callback(value, index, values) {
-						return  value;
+						return value;
 					},
 					beginAtZero: true,
 				},
@@ -77,7 +77,7 @@ class CashFlow extends Component {
 				},
 			],
 		};
-
+		const { universal_currency_list } = this.props;
 		return (
 			<div className="animated fadeIn">
 				<Card className="cash-card">
@@ -100,14 +100,44 @@ class CashFlow extends Component {
 							<div className="data-item">
 								<img alt="income" src={incomeIcon} />
 								<div>
-									<h3>{(this.props.cash_flow_graph.inflow || {})['sum']}</h3>
+									<h3>
+										{universal_currency_list[0] &&
+											this.props.cash_flow_graph.inflow &&
+											(this.props.cash_flow_graph.inflow || {})[
+												'sum'
+											].toLocaleString(
+												`en-${universal_currency_list[0].currencyIsoCode.slice(
+													0,
+													universal_currency_list[0].currencyIsoCode.length - 1,
+												)}`,
+												{
+													style: 'currency',
+													currency: universal_currency_list[0].currencyIsoCode,
+												},
+											)}
+									</h3>
 									<p>INFLOW</p>
 								</div>
 							</div>
 							<div className="data-item">
 								<img alt="outgoing" src={outcomeIcon} />
 								<div>
-									<h3>{(this.props.cash_flow_graph.outflow || {})['sum']}</h3>
+									<h3>
+										{universal_currency_list[0] &&
+											this.props.cash_flow_graph.outflow &&
+											(this.props.cash_flow_graph.outflow || {})[
+												'sum'
+											].toLocaleString(
+												`en-${universal_currency_list[0].currencyIsoCode.slice(
+													0,
+													universal_currency_list[0].currencyIsoCode.length - 1,
+												)}`,
+												{
+													style: 'currency',
+													currency: universal_currency_list[0].currencyIsoCode,
+												},
+											)}
+									</h3>
 									<p>OUTFLOW</p>
 								</div>
 							</div>
@@ -116,8 +146,21 @@ class CashFlow extends Component {
 								<div>
 									<h3>
 										{' '}
-										{(this.props.cash_flow_graph.inflow || {})['sum'] -
-											(this.props.cash_flow_graph.outflow || {})['sum']}
+										{universal_currency_list[0] &&
+											this.props.cash_flow_graph.outflow &&
+											(
+												(this.props.cash_flow_graph.inflow || {})['sum'] -
+												(this.props.cash_flow_graph.outflow || {})['sum']
+											).toLocaleString(
+												`en-${universal_currency_list[0].currencyIsoCode.slice(
+													0,
+													universal_currency_list[0].currencyIsoCode.length - 1,
+												)}`,
+												{
+													style: 'currency',
+													currency: universal_currency_list[0].currencyIsoCode,
+												},
+											)}
 									</h3>
 									<p>NET</p>
 								</div>

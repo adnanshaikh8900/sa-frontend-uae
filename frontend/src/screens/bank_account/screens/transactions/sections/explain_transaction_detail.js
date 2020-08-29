@@ -46,6 +46,17 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class ExplainTrasactionDetail extends React.Component {
 	constructor(props) {
@@ -545,6 +556,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			Transaction Type
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={
 																				chartOfAccountCategoryList
 																					? chartOfAccountCategoryList
@@ -726,6 +738,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Expense Category
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						expense_categories_list
 																							? selectOptionsFactory.renderOptions(
@@ -839,6 +852,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							Currency
 																						</Label>
 																						<Select
+																						styles={customStyles}
 																							id="currencyCode"
 																							name="currencyCode"
 																							options={
@@ -907,6 +921,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Vendor
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						vendor_list ? vendor_list : []
 																					}
@@ -947,6 +962,7 @@ class ExplainTrasactionDetail extends React.Component {
 																							Invoice
 																						</Label>
 																						<Select
+																						styles={customStyles}
 																							isMulti
 																							options={
 																								vendor_invoice_list
@@ -1021,6 +1037,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Customer
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						transactionCategoryList.dataList[0]
 																							? transactionCategoryList
@@ -1064,6 +1081,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Invoice
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					isMulti
 																					options={
 																						customer_invoice_list
@@ -1139,6 +1157,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					Category
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						transactionCategoryList
 																							? transactionCategoryList.categoriesList
@@ -1195,6 +1214,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			<FormGroup className="mb-3">
 																				<Label htmlFor="employeeId">User</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						transactionCategoryList.dataList
 																							? transactionCategoryList
@@ -1405,6 +1425,7 @@ class ExplainTrasactionDetail extends React.Component {
 																						User
 																					</Label>
 																					<Select
+																					styles={customStyles}
 																						options={
 																							transactionCategoryList.dataList
 																								? transactionCategoryList

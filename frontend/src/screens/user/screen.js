@@ -47,6 +47,16 @@ const mapDispatchToProps = (dispatch) => {
 
   })
 }
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class User extends React.Component {
 
@@ -377,6 +387,7 @@ class User extends React.Component {
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Select
+                            styles={customStyles}
                               className="select-default-width"
                               placeholder="Select Role"
                               id="roleId"
@@ -394,6 +405,7 @@ class User extends React.Component {
                           </Col>
                           <Col lg={2} className="mb-1">
                             <Select
+                            styles={customStyles}
                               className="select-default-width"
                               placeholder="Select Status"
                               id="active"

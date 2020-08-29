@@ -42,7 +42,16 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 class CreateContact extends React.Component {
 	constructor(props) {
 		super(props);
@@ -374,6 +383,7 @@ class CreateContact extends React.Component {
 																		Contact Type
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		options={
 																			contact_type_list
 																				? selectOptionsFactory.renderOptions(
@@ -691,6 +701,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="countryId">Country</Label>
 																	<Select
+																	styles={customStyles}
 																		options={
 																			country_list
 																				? selectOptionsFactory.renderOptions(
@@ -737,6 +748,7 @@ class CreateContact extends React.Component {
 																<FormGroup>
 																	<Label htmlFor="stateId">State Region</Label>
 																	<Select
+																	styles={customStyles}
 																		options={
 																			state_list
 																				? selectOptionsFactory.renderOptions(
@@ -961,6 +973,7 @@ class CreateContact extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		options={
 																			currency_list
 																				? selectCurrencyFactory.renderOptions(

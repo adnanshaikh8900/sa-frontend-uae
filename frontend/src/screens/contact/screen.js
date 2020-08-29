@@ -37,6 +37,17 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class Contact extends React.Component {
 	constructor(props) {
@@ -378,6 +389,7 @@ class Contact extends React.Component {
 
 													<Col lg={3} className="mb-1">
 														<Select
+														styles={customStyles}
 															options={
 																contact_type_list
 																	? selectOptionsFactory.renderOptions(

@@ -49,6 +49,17 @@ const mapDispatchToProps = (dispatch) => {
     paymentActions: bindActionCreators(PaymentActions, dispatch)
   };
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class DetailPayment extends React.Component {
   constructor(props) {
@@ -313,6 +324,7 @@ class DetailPayment extends React.Component {
                                         Supplier Name
                                     </Label>
                                       <Select
+                                      styles={customStyles}
                                         id="supplier"
                                         name="supplier"
                                         options={
@@ -355,6 +367,7 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="invoiceId"><span className="text-danger">*</span>Invoice #</Label>
                                       <Select
+                                      styles={customStyles}
                                         id="invoiceId"
                                         name="invoiceId"
                                         options={
@@ -421,6 +434,7 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="currency"><span className="text-danger">*</span>Currency</Label>
                                       <Select
+                                      styles={customStyles}
                                         id="currency"
                                         name="currency"
                                         options={
@@ -456,6 +470,7 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="project">Project</Label>
                                       <Select
+                                      styles={customStyles}
                                         id="project"
                                         name="project"
                                         options={
@@ -516,6 +531,7 @@ class DetailPayment extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="bank">Bank</Label>
                                       <Select
+                                      styles={customStyles}
                                         id="bank"
                                         name="bank"
                                         options={

@@ -42,6 +42,16 @@ const mapDispatchToProps = (dispatch) => {
 		),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class DetailBankAccount extends React.Component {
 	constructor(props) {
@@ -312,6 +322,7 @@ class DetailBankAccount extends React.Component {
 																	<span className="text-danger">*</span>Currency
 																</Label>
 																<Select
+																styles={customStyles}
 																	id="currency"
 																	name="currency"
 																	options={
@@ -413,6 +424,7 @@ class DetailBankAccount extends React.Component {
 																	Account Type
 																</Label>
 																<Select
+																styles={customStyles}
 																	id="account_type"
 																	name="account_type"
 																	options={
@@ -612,6 +624,7 @@ class DetailBankAccount extends React.Component {
 															<FormGroup className="mb-3">
 																<Label htmlFor="country">Country</Label>
 																<Select
+																styles={customStyles}
 																	id="country"
 																	name="country"
 																	options={
@@ -665,6 +678,7 @@ class DetailBankAccount extends React.Component {
 																	is for
 																</Label>
 																<Select
+																styles={customStyles}
 																	id="account_is_for"
 																	name="account_is_for"
 																	options={

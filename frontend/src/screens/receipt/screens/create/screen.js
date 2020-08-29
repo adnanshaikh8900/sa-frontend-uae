@@ -52,6 +52,17 @@ const mapDispatchToProps = (dispatch) => {
 		receiptActions: bindActionCreators(ReceiptActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class CreateReceipt extends React.Component {
 	constructor(props) {
@@ -398,6 +409,7 @@ class CreateReceipt extends React.Component {
 																		Customer Name
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		options={
 																			contact_list
 																				? selectOptionsFactory.renderOptions(
@@ -434,7 +446,7 @@ class CreateReceipt extends React.Component {
 																		)}
 																</FormGroup>
 															</Col>
-															<Col lg={4}>
+															{/* <Col lg={4}>
 																<FormGroup className="mb-3">
 																	<Label htmlFor="receiptNo">Payment</Label>
 																	<Input
@@ -454,7 +466,7 @@ class CreateReceipt extends React.Component {
 																		}}
 																	/>
 																</FormGroup>
-															</Col>
+															</Col> */}
 														</Row>
 														<hr />
 														{props.values.contactId && (
@@ -552,6 +564,7 @@ class CreateReceipt extends React.Component {
 																						Payment Mode
 																					</Label>
 																					<Select
+																					styles={customStyles}
 																						options={
 																							pay_mode
 																								? selectOptionsFactory.renderOptions(
@@ -601,6 +614,7 @@ class CreateReceipt extends React.Component {
 																						Deposit To
 																					</Label>
 																					<Select
+																					styles={customStyles}
 																						options={deposit_list}
 																						value={props.values.depositeTo}
 																						onChange={(option) => {

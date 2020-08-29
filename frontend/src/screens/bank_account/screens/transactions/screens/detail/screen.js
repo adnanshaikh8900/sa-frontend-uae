@@ -50,6 +50,17 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch),
   };
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class DetailBankTransaction extends React.Component {
   constructor(props) {
@@ -352,6 +363,7 @@ class DetailBankTransaction extends React.Component {
                                       Transaction Type
                                     </Label>
                                     <Select
+                                    styles={customStyles}
                                       options={
                                         transaction_type_list
                                           ? selectOptionsFactory.renderOptions(
@@ -493,6 +505,7 @@ class DetailBankTransaction extends React.Component {
                                       Category
                                     </Label>
                                     <Select
+                                    styles={customStyles}
                                       className="select-default-width"
                                       options={
                                         transaction_category_list &&
@@ -567,6 +580,7 @@ class DetailBankTransaction extends React.Component {
                                   <FormGroup className="mb-3">
                                     <Label htmlFor="projectId">Project</Label>
                                     <Select
+                                    styles={customStyles}
                                       className="select-default-width"
                                       options={
                                         project_list

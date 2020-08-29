@@ -154,7 +154,6 @@ class CreateExpense extends React.Component {
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
-		formData.append('attachmentFile',attachmentFile);
 		formData.append(
 			'receiptAttachmentDescription',
 			receiptAttachmentDescription,

@@ -58,6 +58,17 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class DetailCustomerInvoice extends React.Component {
 	constructor(props) {
@@ -441,6 +452,7 @@ class DetailCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
+					styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -536,6 +548,7 @@ class DetailCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.productId`}
 				render={({ field, form }) => (
 					<Select
+					styles={customStyles}
 						options={
 							product_list
 								? selectOptionsFactory.renderOptions(
@@ -1037,6 +1050,7 @@ class DetailCustomerInvoice extends React.Component {
 																			Customer Name
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			id="contactId"
 																			name="contactId"
 																			options={
@@ -1110,6 +1124,7 @@ class DetailCustomerInvoice extends React.Component {
 																			<i className="fa fa-question-circle"></i>
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={
 																				this.termList
 																					? selectOptionsFactory.renderOptions(
@@ -1249,6 +1264,7 @@ class DetailCustomerInvoice extends React.Component {
 																			Currency
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={
 																				currency_list
 																					? selectCurrencyFactory.renderOptions(
@@ -1603,6 +1619,7 @@ class DetailCustomerInvoice extends React.Component {
 																								Discount Type
 																							</Label>
 																							<Select
+																							styles={customStyles}
 																								className="select-default-width"
 																								options={discountOptions}
 																								id="discountType"

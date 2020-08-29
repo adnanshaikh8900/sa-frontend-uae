@@ -41,6 +41,16 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 class CreateChartAccount extends React.Component {
 	constructor(props) {
 		super(props);
@@ -246,6 +256,7 @@ class CreateChartAccount extends React.Component {
                                 <div className="invalid-feedback">{props.errors.chartOfAccount}</div>
                               )} */}
 															<Select
+															styles={customStyles}
 																id="chartOfAccount"
 																name="chartOfAccount"
 																placeholder='Select type'

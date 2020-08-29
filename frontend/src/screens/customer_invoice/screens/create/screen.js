@@ -54,6 +54,17 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 const invoiceimage = require('assets/images/invoice/invoice.png');
 
 class CreateCustomerInvoice extends React.Component {
@@ -423,6 +434,7 @@ class CreateCustomerInvoice extends React.Component {
 				name={`lineItemsString.${idx}.vatCategoryId`}
 				render={({ field, form }) => (
 					<Select
+					styles={customStyles}
 						options={
 							vat_list
 								? selectOptionsFactory.renderOptions(
@@ -514,6 +526,7 @@ class CreateCustomerInvoice extends React.Component {
 					name={`lineItemsString.${idx}.productId`}
 					render={({ field, form }) => (
 						<Select
+						styles={customStyles}
 							options={
 								product_list
 									? selectOptionsFactory.renderOptions(
@@ -1041,6 +1054,7 @@ class CreateCustomerInvoice extends React.Component {
 																		Customer Name
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		id="contactId"
 																		name="contactId"
 																		placeholder="Select Customer name"
@@ -1135,6 +1149,7 @@ class CreateCustomerInvoice extends React.Component {
 																		</UncontrolledTooltip>
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		options={
 																			this.termList
 																				? selectOptionsFactory.renderOptions(
@@ -1255,6 +1270,7 @@ class CreateCustomerInvoice extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		options={
 																			currency_list
 																				? selectCurrencyFactory.renderOptions(
@@ -1552,6 +1568,7 @@ class CreateCustomerInvoice extends React.Component {
 																							Discount Type
 																						</Label>
 																						<Select
+																						styles={customStyles}
 																							className="select-default-width"
 																							options={discountOptions}
 																							id="discountType"

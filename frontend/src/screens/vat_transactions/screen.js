@@ -41,6 +41,16 @@ const vatOptions = [
 	{ value: 'output', label: 'Output' },
 	{ value: 'all', label: 'All' },
 ];
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 const tempdata = [
 	{
@@ -271,6 +281,7 @@ class VatTransactions extends React.Component {
 									</Col>
 									<Col lg={2} className="mb-1">
 										<Select
+										styles={customStyles}
 											className=""
 											options={vatOptions}
 											value={this.state.selectedType}
@@ -280,6 +291,7 @@ class VatTransactions extends React.Component {
 									</Col>
 									<Col lg={2} className="mb-1">
 										<Select
+										styles={customStyles}
 											className=""
 											options={vatOptions}
 											value={this.state.selectedType}
@@ -289,6 +301,7 @@ class VatTransactions extends React.Component {
 									</Col>
 									<Col lg={2} className="mb-1">
 										<Select
+										styles={customStyles}
 											className=""
 											options={vatOptions}
 											value={this.state.selectedType}

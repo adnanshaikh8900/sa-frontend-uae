@@ -49,6 +49,16 @@ const mapDispatchToProps = (dispatch) => {
     commonActions: bindActionCreators(CommonActions, dispatch)
   })
 }
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 
 class DetailContact extends React.Component {
@@ -325,6 +335,7 @@ class DetailContact extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="contactType"><span className="text-danger">*</span>Contact Type</Label>
                                       <Select
+                                      styles={customStyles}
                                         options={contact_type_list ? selectOptionsFactory.renderOptions('label', 'value', contact_type_list, 'Contact Type') : []}
                                         value={contact_type_list && contact_type_list.find((option) => option.value === +props.values.contactType)}
                                         onChange={(option) => {
@@ -540,6 +551,7 @@ class DetailContact extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="countryId"><span className="text-danger">*</span>Country</Label>
                                       <Select
+                                      styles={customStyles}
                                         options={country_list ? selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country') : []}
                                         value={country_list && selectOptionsFactory.renderOptions('countryName', 'countryCode', country_list, 'Country').find((option) => option.value === +props.values.countryId)  }
                                         onChange={(option) => {
@@ -571,6 +583,7 @@ class DetailContact extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="stateId">State Region</Label>
                                       <Select
+                                      styles={customStyles}
                                         options={state_list ? selectOptionsFactory.renderOptions('label', 'value', state_list, 'State') : []}
                                         value={state_list && selectOptionsFactory.renderOptions('label', 'value', state_list, 'State').find((option) => option.value === props.values.stateId)}
                                         onChange={(option) => {
@@ -725,6 +738,7 @@ class DetailContact extends React.Component {
                                     <FormGroup>
                                       <Label htmlFor="currencyCode"><span className="text-danger">*</span>Currency Code</Label>
                                       <Select
+                                      styles={customStyles}
                                         options={currency_list ? selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency') : []}
                                         value={currency_list && selectCurrencyFactory.renderOptions('currencyName', 'currencyCode', currency_list, 'Currency').find((option) => option.value === +props.values.currencyCode)}
                                         onChange={(option) => {

@@ -43,6 +43,17 @@ const mapDispatchToProps = (dispatch) => {
 		paymentActions: bindActionCreators(PaymentActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class Payment extends React.Component {
 	constructor(props) {
@@ -359,6 +370,7 @@ class Payment extends React.Component {
 											<Row>
 												<Col lg={3} className="mb-1">
 													<Select
+													styles={customStyles}
 														className="select-default-width"
 														placeholder="Select Supplier"
 														id="supplier"

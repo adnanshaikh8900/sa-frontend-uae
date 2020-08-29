@@ -31,6 +31,17 @@ const mapStateToProps = (state) => {
 		country_list: state.bank_account.country_list,
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 const mapDispatchToProps = (dispatch) => {
 	return {
 		commonActions: bindActionCreators(CommonActions, dispatch),
@@ -301,6 +312,7 @@ class CreateBankAccount extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		id="currency"
 																		name="currency"
 																		options={
@@ -398,6 +410,7 @@ class CreateBankAccount extends React.Component {
 																		Account Type
 																	</Label>
 																	<Select
+																		styles={customStyles}
 																		id="account_type"
 																		name="account_type"
 																		options={
@@ -610,6 +623,7 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="country">Country</Label>
 																	<Select
+																	styles={customStyles}
 																		id="country"
 																		name="country"
 																		getOptionValue={(option) =>
@@ -651,6 +665,7 @@ class CreateBankAccount extends React.Component {
 																		Account is for
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		id="account_is_for"
 																		name="account_is_for"
 																		options={

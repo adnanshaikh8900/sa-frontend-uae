@@ -43,6 +43,17 @@ const mapDispatchToProps = (dispatch) => {
 
   })
 }
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class DetailChartAccount extends React.Component {
   constructor(props) {
@@ -284,6 +295,7 @@ class DetailChartAccount extends React.Component {
                                     }
                                   /> */}
                                   <Select
+                                  styles={customStyles}
                                     id='chartOfAccount'
                                     name='chartOfAccount'
                                     value={props.values.chartOfAccount}

@@ -260,7 +260,7 @@ class DetailedGeneralLedgerReport extends React.Component {
 						id,
 					});
 				} else {
-					this.props.history.push('/admin/revenue/customer-invoice/view', {
+					this.props.history.push('/admin/income/customer-invoice/view', {
 						id,
 					});
 				}

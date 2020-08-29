@@ -48,6 +48,16 @@ const mapDispatchToProps = (dispatch) => {
     receiptActions: bindActionCreators(ReceiptActions, dispatch)
   })
 }
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class DetailReceipt extends React.Component {
 
@@ -298,6 +308,7 @@ class DetailReceipt extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="invoice">Invoice</Label>
                                       <Select
+                                      styles={customStyles}
                                         options={invoice_list ? selectOptionsFactory.renderOptions('label', 'value', invoice_list, 'Invoice Number') : []}
                                         className="select-default-width"
                                         placeholder="Invoice Number"
@@ -320,6 +331,7 @@ class DetailReceipt extends React.Component {
                                     <FormGroup className="mb-3">
                                       <Label htmlFor="mode">Mode(TBD)</Label>
                                       <Select
+                                      styles={customStyles}
                                         className="select-default-width"
                                         options={[]}
                                         id="mode"

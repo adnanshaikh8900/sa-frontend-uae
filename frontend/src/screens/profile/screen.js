@@ -55,6 +55,17 @@ const mapStateToProps = (state) => {
 
   })
 }
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 const mapDispatchToProps = (dispatch) => {
   return ({
     profileActions: bindActionCreators(ProfileActions, dispatch),
@@ -625,6 +636,7 @@ class Profile extends React.Component {
                                             <FormGroup>
                                               <Label htmlFor="roleId">Role</Label>
                                               <Select
+                                              styles={customStyles}
                                                 options={role_list ? selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role') : []}
                                                 value={role_list && selectOptionsFactory.renderOptions('roleName', 'roleCode', role_list, 'Role').find((option) => option.value === +props.values.roleId)}
                                                 onChange={(option) => {

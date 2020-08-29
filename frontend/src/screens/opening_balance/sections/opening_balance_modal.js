@@ -101,6 +101,7 @@ class OpeningBalanceModal extends React.Component {
                     <FormGroup>
                       <Label htmlFor="categoryCode"><span className="text-danger">*</span>Account</Label>
                       <Select
+                      styles={customStyles}
                         options={bankAccountList ? selectOptionsFactory.renderOptions('name', 'bankAccountId', bankAccountList, 'Account') : []}
                         placeholder="Select Account"
                         onChange={(option) => {

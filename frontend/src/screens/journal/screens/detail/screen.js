@@ -48,6 +48,17 @@ const mapDispatchToProps = (dispatch) => {
 		journalDetailActions: bindActionCreators(JournalDetailActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class DetailJournal extends React.Component {
 	constructor(props) {
@@ -781,6 +792,7 @@ class DetailJournal extends React.Component {
 																			Currency
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			className="select-default-width"
 																			options={
 																				currency_list

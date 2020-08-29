@@ -41,6 +41,16 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class DetailUser extends React.Component {
 	constructor(props) {
@@ -503,6 +513,7 @@ class DetailUser extends React.Component {
 																					Role
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					options={
 																						role_list
 																							? selectOptionsFactory.renderOptions(

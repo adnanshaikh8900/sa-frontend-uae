@@ -54,6 +54,16 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class RecordSupplierPayment extends React.Component {
 	constructor(props) {
@@ -423,6 +433,7 @@ class RecordSupplierPayment extends React.Component {
 																			Customer Name
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			id="contactId"
 																			name="contactId"
 																			isDisabled
@@ -566,6 +577,7 @@ class RecordSupplierPayment extends React.Component {
 																			Payment Mode
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={
 																				pay_mode
 																					? selectOptionsFactory.renderOptions(
@@ -609,6 +621,7 @@ class RecordSupplierPayment extends React.Component {
 																			Deposit To
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={deposit_list}
 																			value={props.values.depositeTo}
 																			onChange={(option) => {

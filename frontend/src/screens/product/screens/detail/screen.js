@@ -45,6 +45,16 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class DetailProduct extends React.Component {
 	constructor(props) {
@@ -551,6 +561,7 @@ class DetailProduct extends React.Component {
 																			Product Category
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			className="select-default-width"
 																			options={
 																				product_category_list &&
@@ -606,6 +617,7 @@ class DetailProduct extends React.Component {
 																			Percentage
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			options={
 																				vat_list
 																					? selectOptionsFactory.renderOptions(
@@ -788,6 +800,7 @@ class DetailProduct extends React.Component {
 																			Category
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			isDisabled={
 																				props.values.productPriceType &&
 																				props.values.productPriceType.includes(
@@ -981,6 +994,7 @@ class DetailProduct extends React.Component {
 																			Category
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			isDisabled={
 																				props.values.productPriceType &&
 																				props.values.productPriceType.includes(

@@ -35,6 +35,17 @@ const mapDispatchToProps = (dispatch) => {
     openingBalanceActions: bindActionCreators(OpeningBalanceActions, dispatch)
   })
 }
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class OpeningBalance extends React.Component {
 
@@ -119,6 +130,7 @@ class OpeningBalance extends React.Component {
     let value = typeof row.transactionCategory === 'string' ? row.transactionCategory : row.transactionCategory.value
     return (
       <Select
+      styles={customStyles}
       id="chart_of_account"
       name="chart_of_account_list"
       options={transaction_category_list ? selectOptionsFactory.renderOptions('transactionCategoryName', 'transactionCategoryId', transaction_category_list, 'Chart of Account') : []}

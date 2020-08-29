@@ -52,6 +52,9 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
+const overWeekly = require('assets/images/invoice/icons_due within a week.png');
+const overduemonthly = require('assets/images/invoice/icons_due within month.png');
+const overdue = require('assets/images/invoice/icons_overdue.png');
 
 class CustomerInvoice extends React.Component {
 	constructor(props) {
@@ -628,24 +631,53 @@ class CustomerInvoice extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-									<div className="mb-4 status-panel p-3">
-										<Row>
-											<Col lg={3}>
-												<h5>Overdue</h5>
-												<h3>{this.state.overDueAmountDetails.overDueAmount}</h3>
-											</Col>
-											<Col lg={3}>
-												<h5>Due Within This Week</h5>
-												<h3>
-													{this.state.overDueAmountDetails.overDueAmountWeekly}
-												</h3>
-											</Col>
-											<Col lg={3}>
-												<h5>Due Within 30 Days</h5>
-												<h3>
-													{this.state.overDueAmountDetails.overDueAmountMonthly}
-												</h3>
-											</Col>
+								<div className="mb-4 status-panel p-3">
+										<Row className="align-items-center justify-content-around">
+											<div className="h4 mb-0 d-flex align-items-center ">
+												<img
+													alt="overdue"
+													src={overdue}
+													style={{ width: '60px' }}
+												/>
+												<div>
+													<h5>Overdue</h5>
+													<h3 className="invoice-detail ml-2">
+														{this.state.overDueAmountDetails.overDueAmount}
+													</h3>
+												</div>
+											</div>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<img
+													alt="overWeekly"
+													src={overWeekly}
+													style={{ width: '60px' }}
+												/>
+												<div>
+													<h5>Due Within This Week</h5>
+													<h3 className="invoice-detail ml-3">
+														{
+															this.state.overDueAmountDetails
+																.overDueAmountWeekly
+														}
+													</h3>
+												</div>
+											</div>
+											<div className="h4 mb-0 d-flex align-items-center">
+												<img
+													alt="overduemonthly"
+													src={overduemonthly}
+													style={{ width: '60px' }}
+												/>
+												<div>
+													<h5>Due Within 30 Days</h5>
+													<h3 className="invoice-detail ml-3">
+														{
+															this.state.overDueAmountDetails
+																.overDueAmountMonthly
+														}
+													</h3>
+												</div>
+											</div>
 										</Row>
 									</div>
 									<div className="d-flex justify-content-end">

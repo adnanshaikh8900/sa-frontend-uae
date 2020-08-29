@@ -42,6 +42,17 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class Receipt extends React.Component {
 	constructor(props) {
@@ -396,6 +407,7 @@ class Receipt extends React.Component {
 												</Col>
 												<Col lg={2} className="mb-1">
 													<Select
+													styles={customStyles}
 														options={
 															invoice_list
 																? selectOptionsFactory.renderOptions(
@@ -420,6 +432,7 @@ class Receipt extends React.Component {
 												</Col>
 												<Col lg={3} className="mb-1">
 													<Select
+													styles={customStyles}
 														options={
 															contact_list
 																? selectOptionsFactory.renderOptions(

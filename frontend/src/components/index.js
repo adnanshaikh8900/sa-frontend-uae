@@ -9,6 +9,7 @@ import ConfirmDeleteModal from './confirm_delete_modal';
 import ImageUploader from './react-image-upload';
 import SidebarComponent from './sidebar';
 import Tooltip from './tooltip';
+import Currency from './currency';
 import * as CustomStyles from './react-select';
 
 export {
@@ -24,4 +25,5 @@ export {
 	SidebarComponent,
 	CustomStyles,
 	Tooltip,
+	Currency,
 };

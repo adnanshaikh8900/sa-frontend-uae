@@ -56,8 +56,9 @@ class InvoiceTemplate extends Component {
 												  companyData.company.companyLogo
 												: logo
 										}
-										className="img-avatar"
+										className=""
 										alt=""
+										style={{ width: ' 150px' }}
 									/>
 									<h6 className="mb-0">
 										{companyData && companyData.company

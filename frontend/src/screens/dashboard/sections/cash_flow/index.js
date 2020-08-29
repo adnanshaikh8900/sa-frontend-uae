@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { Bar } from 'react-chartjs-2';
 import { Card, CardBody } from 'reactstrap';
-
+import { Currency } from 'components';
 import './style.scss';
 
 const cashBarOption = {
@@ -101,20 +101,9 @@ class CashFlow extends Component {
 								<img alt="income" src={incomeIcon} />
 								<div>
 									<h3>
-										{universal_currency_list[0] &&
-											this.props.cash_flow_graph.inflow &&
-											(this.props.cash_flow_graph.inflow || {})[
-												'sum'
-											].toLocaleString(
-												`en-${universal_currency_list[0].currencyIsoCode.slice(
-													0,
-													universal_currency_list[0].currencyIsoCode.length - 1,
-												)}`,
-												{
-													style: 'currency',
-													currency: universal_currency_list[0].currencyIsoCode,
-												},
-											)}
+										<Currency
+											value={(this.props.cash_flow_graph.inflow || {})['sum']}
+										/>
 									</h3>
 									<p>INFLOW</p>
 								</div>

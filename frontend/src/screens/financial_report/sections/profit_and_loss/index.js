@@ -19,7 +19,7 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { CSVLink } from 'react-csv';
-import { Loader } from 'components';
+import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
 
@@ -29,6 +29,7 @@ import './style.scss';
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -157,7 +158,7 @@ class ProfitAndLossReport extends React.Component {
 
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { profile } = this.props;
+		const { profile, universal_currency_list } = this.props;
 		return (
 			<div className="transactions-report-screen">
 				<div className="animated fadeIn">
@@ -288,9 +289,17 @@ class ProfitAndLossReport extends React.Component {
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0"></td>
 																	<td className="pt-0 pb-0 text-right">
-																		{this.state.data['operatingIncome'][
-																			`${item}`
-																		].toFixed(2)}
+																		<Currency
+																			value={this.state.data['operatingIncome'][
+																				`${item}`
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	</td>
 																</tr>
 															))}
@@ -301,11 +310,21 @@ class ProfitAndLossReport extends React.Component {
 																<td></td>
 																<td className="text-right">
 																	{this.state.data['totalOperatingIncome'] !=
-																	null
-																		? this.state.data[
+																	null ? (
+																		<Currency
+																			value={this.state.data[
 																				'totalOperatingIncome'
-																		  ].toFixed(2)
-																		: '0.0'}
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.0'
+																	)}
 																</td>
 															</tr>
 															<tr>
@@ -322,9 +341,17 @@ class ProfitAndLossReport extends React.Component {
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0"></td>
 																	<td className="pt-0 pb-0 text-right">
-																		{this.state.data['costOfGoodsSold'][
-																			`${item}`
-																		].toFixed(2)}
+																		<Currency
+																			value={this.state.data['costOfGoodsSold'][
+																				`${item}`
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	</td>
 																</tr>
 															))}
@@ -335,20 +362,42 @@ class ProfitAndLossReport extends React.Component {
 																<td></td>
 																<td className="text-right">
 																	{this.state.data['totalCostOfGoodsSold'] !=
-																	null
-																		? this.state.data[
+																	null ? (
+																		<Currency
+																			value={this.state.data[
 																				'totalCostOfGoodsSold'
-																		  ].toFixed(2)
-																		: '0.0'}
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.0'
+																	)}
 																</td>
 															</tr>
 															<tr>
 																<td></td>
 																<td className="mainLable">Gross Profit</td>
 																<td className="text-right">
-																	{this.state.data['grossProfit'] != null
-																		? this.state.data['grossProfit'].toFixed(2)
-																		: '0.0'}
+																	{this.state.data['grossProfit'] != null ? (
+																		<Currency
+																			value={this.state.data[
+																				'grossProfit'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.0'
+																	)}
 																</td>
 															</tr>
 															<tr>
@@ -363,9 +412,17 @@ class ProfitAndLossReport extends React.Component {
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0"></td>
 																	<td className="pt-0 pb-0 text-right">
-																		{this.state.data['operatingExpense'][
-																			`${item}`
-																		].toFixed(2)}
+																		<Currency
+																			value={this.state.data[
+																				'operatingExpense'
+																			][`${item}`].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	</td>
 																</tr>
 															))}
@@ -376,22 +433,43 @@ class ProfitAndLossReport extends React.Component {
 																<td></td>
 																<td className="text-right">
 																	{this.state.data['totalOperatingExpense'] !=
-																	null
-																		? this.state.data[
+																	null ? (
+																		<Currency
+																			value={this.state.data[
 																				'totalOperatingExpense'
-																		  ].toFixed(2)
-																		: '0.0'}
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.0'
+																	)}
 																</td>
 															</tr>
 															<tr>
 																<td></td>
 																<td className="mainLable">Operating Profit </td>
 																<td className="text-right">
-																	{this.state.data['operatingProfit'] != null
-																		? this.state.data[
+																	{this.state.data['operatingProfit'] !=
+																	null ? (
+																		<Currency
+																			value={this.state.data[
 																				'operatingProfit'
-																		  ].toFixed(2)
-																		: '0.0'}
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.0'
+																	)}
 																</td>
 															</tr>
 															<tr>
@@ -408,9 +486,17 @@ class ProfitAndLossReport extends React.Component {
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0"></td>
 																	<td className="pt-0 pb-0 text-right">
-																		{this.state.data['nonOperatingIncome'][
-																			`${item}`
-																		].toFixed(2)}
+																		<Currency
+																			value={this.state.data[
+																				'nonOperatingIncome'
+																			][`${item}`].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	</td>
 																</tr>
 															))}
@@ -421,11 +507,21 @@ class ProfitAndLossReport extends React.Component {
 																<td></td>
 																<td className="text-right">
 																	{this.state.data['totalNonOperatingIncome'] !=
-																	null
-																		? this.state.data[
+																	null ? (
+																		<Currency
+																			value={this.state.data[
 																				'totalNonOperatingIncome'
-																		  ].toFixed(2)
-																		: '0.0'}
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.0'
+																	)}
 																</td>
 															</tr>
 															<tr>
@@ -442,9 +538,17 @@ class ProfitAndLossReport extends React.Component {
 																	<td className="pt-0 pb-0">{item}</td>
 																	<td className="pt-0 pb-0"></td>
 																	<td className="pt-0 pb-0 text-right">
-																		{this.state.data['nonOperatingExpense'][
-																			`${item}`
-																		].toFixed(2)}
+																		<Currency
+																			value={this.state.data[
+																				'nonOperatingExpense'
+																			][`${item}`].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
 																	</td>
 																</tr>
 															))}
@@ -456,22 +560,42 @@ class ProfitAndLossReport extends React.Component {
 																<td className="text-right">
 																	{this.state.data[
 																		'totalNonOperatingExpense'
-																	] != null
-																		? this.state.data[
+																	] != null ? (
+																		<Currency
+																			value={this.state.data[
 																				'totalNonOperatingExpense'
-																		  ].toFixed(2)
-																		: '0.0'}
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.0'
+																	)}
 																</td>
 															</tr>
 															<tr>
 																<td></td>
 																<td className="mainLable">Net Profit/Loss </td>
 																<td className="text-right">
-																	{this.state.data['netProfitLoss'] != null
-																		? this.state.data['netProfitLoss'].toFixed(
-																				2,
-																		  )
-																		: '0.0'}
+																	{this.state.data['netProfitLoss'] != null ? (
+																		<Currency
+																			value={this.state.data[
+																				'netProfitLoss'
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		'0.0'
+																	)}
 																</td>
 															</tr>
 														</>

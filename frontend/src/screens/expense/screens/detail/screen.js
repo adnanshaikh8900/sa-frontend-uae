@@ -53,6 +53,16 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 class DetailExpense extends React.Component {
 	constructor(props) {
@@ -403,6 +413,7 @@ class DetailExpense extends React.Component {
 																			Expense Category
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			id="expenseCategory"
 																			name="expenseCategory"
 																			options={
@@ -535,6 +546,7 @@ class DetailExpense extends React.Component {
 																			Currency
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			id="currencyCode"
 																			name="currencyCode"
 																			options={
@@ -623,6 +635,7 @@ class DetailExpense extends React.Component {
 																	<FormGroup className="mb-3">
 																		<Label htmlFor="vatCategoryId">Tax</Label>
 																		<Select
+																		styles={customStyles}
 																			className="select-default-width"
 																			id="vatCategoryId"
 																			name="vatCategoryId"
@@ -666,6 +679,7 @@ class DetailExpense extends React.Component {
 																			Pay Through
 																		</Label>
 																		<Select
+																		styles={customStyles}
 																			id="pay_through"
 																			name="pay_through"
 																			options={
@@ -721,6 +735,7 @@ class DetailExpense extends React.Component {
 																				Bank
 																			</Label>
 																			<Select
+																			styles={customStyles}
 																				id="bankAccountId"
 																				name="bankAccountId"
 																				options={

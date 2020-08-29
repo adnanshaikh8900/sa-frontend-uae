@@ -39,6 +39,16 @@ const mapDispatchToProps = (dispatch) => {
 		accountBalanceData: bindActionCreators(accountBalanceData, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 // const colourOptions = [
 //   { value: 'ocean', label: 'Ocean', color: '#00B8D9', isFixed: true },
@@ -196,6 +206,7 @@ class AccountBalances extends React.Component {
 
 									<Col lg={2} className="mb-1">
 										<Select
+										styles={customStyles}
 											className=""
 											options={
 												account_type_list

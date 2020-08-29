@@ -46,6 +46,17 @@ const mapDispatchToProps = (dispatch) => {
 		journalCreateActions: bindActionCreators(JournalCreateActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class CreateJournal extends React.Component {
 	constructor(props) {
@@ -191,6 +202,7 @@ class CreateJournal extends React.Component {
 				name={`journalLineItems.${idx}.transactionCategoryId`}
 				render={({ field, form }) => (
 					<Input
+					styles={customStyles}
 						type="select"
 						onChange={(e) => {
 							this.selectItem(e, row, 'transactionCategoryId', form, field);
@@ -751,6 +763,7 @@ class CreateJournal extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="currencyCode">Currency</Label>
 																	<Select
+																	styles={customStyles}
 																		className="select-default-width"
 																		options={
 																			currency_list

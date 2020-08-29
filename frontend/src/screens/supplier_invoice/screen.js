@@ -53,8 +53,21 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
+const overWeekly = require('assets/images/invoice/icons_due within a week.png');
+const overduemonthly = require('assets/images/invoice/icons_due within month.png');
+const overdue = require('assets/images/invoice/icons_overdue.png');
 
 class SupplierInvoice extends React.Component {
 	constructor(props) {
@@ -635,28 +648,28 @@ class SupplierInvoice extends React.Component {
 								<Col lg={12}>
 									<div className="mb-4 status-panel p-3">
 										<Row className="align-items-center justify-content-around">
-											<div className="h4 mb-0 d-flex align-items-center">
+											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
-													alt="invoiceimage"
-													src={invoiceimage}
-													style={{ width: '80px' }}
+													alt="overdue"
+													src={overdue}
+													style={{ width: '60px' }}
 												/>
 												<div>
 													<h5>Overdue</h5>
-													<h3 className="invoice-detail">
+													<h3 className="invoice-detail ml-2">
 														{this.state.overDueAmountDetails.overDueAmount}
 													</h3>
 												</div>
 											</div>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<img
-													alt="invoiceimage"
-													src={invoiceimage}
-													style={{ width: '80px' }}
+													alt="overWeekly"
+													src={overWeekly}
+													style={{ width: '60px' }}
 												/>
 												<div>
 													<h5>Due Within This Week</h5>
-													<h3 className="invoice-detail">
+													<h3 className="invoice-detail ml-3">
 														{
 															this.state.overDueAmountDetails
 																.overDueAmountWeekly
@@ -666,13 +679,13 @@ class SupplierInvoice extends React.Component {
 											</div>
 											<div className="h4 mb-0 d-flex align-items-center">
 												<img
-													alt="invoiceimage"
-													src={invoiceimage}
-													style={{ width: '80px' }}
+													alt="overduemonthly"
+													src={overduemonthly}
+													style={{ width: '60px' }}
 												/>
 												<div>
 													<h5>Due Within 30 Days</h5>
-													<h3 className="invoice-detail">
+													<h3 className="invoice-detail ml-3">
 														{
 															this.state.overDueAmountDetails
 																.overDueAmountMonthly
@@ -717,6 +730,7 @@ class SupplierInvoice extends React.Component {
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
+												styles={customStyles}
 													className="select-default-width"
 													placeholder="Select Supplier"
 													id="supplier"
@@ -788,6 +802,7 @@ class SupplierInvoice extends React.Component {
 											</Col>
 											<Col lg={2} className="mb-1">
 												<Select
+												styles={customStyles}
 													className=""
 													// options={status_list ? status_list.map((item) => {
 													//   return { label: item, value: item }

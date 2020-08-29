@@ -50,6 +50,17 @@ const mapDispatchToProps = (dispatch) => {
 		expenseActions: bindActionCreators(ExpenseActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class Expense extends React.Component {
 	constructor(props) {
@@ -570,6 +581,7 @@ class Expense extends React.Component {
 												{/* <Input type="text" placeholder="Supplier Name" /> */}
 												<FormGroup className="mb-3">
 													<Select
+													styles={customStyles}
 														className="select-default-width"
 														id="expenseCategoryId"
 														name="expenseCategoryId"

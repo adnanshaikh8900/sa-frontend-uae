@@ -52,6 +52,17 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
+const customStyles = {
+	control: (base, state) => ({
+		...base,
+		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		boxShadow: state.isFocused ? null : null,
+		'&:hover': {
+			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
+		},
+	}),
+};
+
 
 class CreateBankTransaction extends React.Component {
 	constructor(props) {
@@ -546,6 +557,7 @@ class CreateBankTransaction extends React.Component {
 																		Transaction Type
 																	</Label>
 																	<Select
+																	styles={customStyles}
 																		options={categoriesList}
 																		value={props.values.coaCategoryId}
 																		onChange={(option) => {
@@ -631,7 +643,7 @@ class CreateBankTransaction extends React.Component {
 																		Amount
 																	</Label>
 																	<Input
-																		type="text"
+																		type="text" maxLength='10'
 																		id="transactionAmount"
 																		name="transactionAmount"
 																		placeholder="Amount"
@@ -676,6 +688,7 @@ class CreateBankTransaction extends React.Component {
 																				Expense Category
 																			</Label>
 																			<Select
+																			styles={customStyles}
 																				options={
 																					expense_categories_list
 																						? selectOptionsFactory.renderOptions(
@@ -716,6 +729,7 @@ class CreateBankTransaction extends React.Component {
 																				<FormGroup className="mb-3">
 																					<Label htmlFor="vatId">Vat</Label>
 																					<Select
+																					styles={customStyles}
 																						options={
 																							vat_list
 																								? selectOptionsFactory.renderOptions(
@@ -766,6 +780,7 @@ class CreateBankTransaction extends React.Component {
 																						Currency
 																					</Label>
 																					<Select
+																					styles={customStyles}
 																						id="currencyCode"
 																						name="currencyCode"
 																						options={
@@ -834,6 +849,7 @@ class CreateBankTransaction extends React.Component {
 																				Vendor
 																			</Label>
 																			<Select
+																			styles={customStyles}
 																				options={vendor_list ? vendor_list : []}
 																				// value={
 																				// 	props.values.vendorId
@@ -879,6 +895,7 @@ class CreateBankTransaction extends React.Component {
 																						Invoice
 																					</Label>
 																					<Select
+																					styles={customStyles}
 																						isMulti
 																						options={
 																							vendor_invoice_list
@@ -949,6 +966,7 @@ class CreateBankTransaction extends React.Component {
 																				Category
 																			</Label>
 																			<Select
+																			styles={customStyles}
 																				className="select-default-width"
 																				options={
 																					transactionCategoryList
@@ -984,6 +1002,7 @@ class CreateBankTransaction extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="employeeId">User</Label>
 																			<Select
+																			styles={customStyles}
 																				className="select-default-width"
 																				options={
 																					transactionCategoryList.dataList[0]
@@ -1007,6 +1026,7 @@ class CreateBankTransaction extends React.Component {
 																		<FormGroup className="mb-3">
 																			<Label htmlFor="employeeId">User</Label>
 																			<Select
+																			styles={customStyles}
 																				className="select-default-width"
 																				options={
 																					transactionCategoryList.dataList[0]
@@ -1035,6 +1055,7 @@ class CreateBankTransaction extends React.Component {
 																					Customer
 																				</Label>
 																				<Select
+																				styles={customStyles}
 																					className="select-default-width"
 																					options={
 																						transactionCategoryList.dataList[1]
@@ -1064,6 +1085,7 @@ class CreateBankTransaction extends React.Component {
 																				Invoice
 																			</Label>
 																			<Select
+																			styles={customStyles}
 																				isMulti
 																				className="select-default-width"
 																				options={

@@ -16,7 +16,7 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { selectOptionsFactory } from 'utils';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -34,6 +34,7 @@ const mapStateToProps = (state) => {
 		receipt_list: state.receipt.receipt_list,
 		invoice_list: state.receipt.invoice_list,
 		contact_list: state.receipt.contact_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -52,7 +53,6 @@ const customStyles = {
 		},
 	}),
 };
-
 
 class Receipt extends React.Component {
 	constructor(props) {
@@ -145,8 +145,15 @@ class Receipt extends React.Component {
 			: '';
 	};
 
-	renderAmount = (cell, row) => {
-		return row.amount ? row.amount.toFixed(2) : '';
+	renderAmount = (cell, row, extraData) => {
+		return row.amount ? (
+			<Currency
+				value={row.amount.toFixed(2)}
+				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
 
 	renderUnusedAmount = (cell, row) => {
@@ -202,7 +209,8 @@ class Receipt extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message = 'Warning: This Income Receipt will be deleted permanently and cannot be recovered.  ';
+		const message =
+			'Warning: This Income Receipt will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -314,7 +322,12 @@ class Receipt extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { receipt_list, invoice_list, contact_list } = this.props;
+		const {
+			receipt_list,
+			invoice_list,
+			contact_list,
+			universal_currency_list,
+		} = this.props;
 
 		return (
 			<div className="receipt-screen">
@@ -407,7 +420,7 @@ class Receipt extends React.Component {
 												</Col>
 												<Col lg={2} className="mb-1">
 													<Select
-													styles={customStyles}
+														styles={customStyles}
 														options={
 															invoice_list
 																? selectOptionsFactory.renderOptions(
@@ -432,7 +445,7 @@ class Receipt extends React.Component {
 												</Col>
 												<Col lg={3} className="mb-1">
 													<Select
-													styles={customStyles}
+														styles={customStyles}
 														options={
 															contact_list
 																? selectOptionsFactory.renderOptions(
@@ -544,6 +557,7 @@ class Receipt extends React.Component {
 													dataField="amount"
 													dataSort
 													dataFormat={this.renderAmount}
+													formatExtraData={universal_currency_list}
 												>
 													Amount
 												</TableHeaderColumn>

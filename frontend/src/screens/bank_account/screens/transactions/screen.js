@@ -22,7 +22,7 @@ import Select from 'react-select';
 import BootstrapTable from 'react-bootstrap-table-next';
 import DatePicker from 'react-datepicker';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -44,6 +44,7 @@ const mapStateToProps = (state) => {
 	return {
 		bank_transaction_list: state.bank_account.bank_transaction_list,
 		transaction_type_list: state.bank_account.transaction_type_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -237,16 +238,25 @@ class BankTransactions extends React.Component {
 		return <span className={`badge ${classname} mb-0`}>{value}</span>;
 	};
 
-	renderDepositAmount = (cell, row) => {
-		return row.depositeAmount >= 0
-			? row.depositeAmount.toLocaleString('en-IN', {
-					style: 'currency',
-					currency: 'INR',
-			  })
-			: '';
+	renderDepositAmount = (cell, row, extraData) => {
+		return row.depositeAmount >= 0 ? (
+			<Currency
+				value={row.depositeAmount}
+				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
-	renderWithdrawalAmount = (cell, row) => {
-		return row.withdrawalAmount >= 0 ? row.withdrawalAmount.toFixed(2) : '';
+	renderWithdrawalAmount = (cell, row, extraData) => {
+		return row.withdrawalAmount >= 0 ? (
+			<Currency
+				value={row.withdrawalAmount}
+				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
 	renderRunningAmount = (cell, row) => {
 		return row.runningAmount >= 0 ? row.runningAmount.toFixed(2) : '';
@@ -537,7 +547,11 @@ class BankTransactions extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { bank_transaction_list, transaction_type_list } = this.props;
+		const {
+			bank_transaction_list,
+			transaction_type_list,
+			universal_currency_list,
+		} = this.props;
 
 		const columns = [
 			{
@@ -551,11 +565,14 @@ class BankTransactions extends React.Component {
 			{
 				dataField: 'depositeAmount',
 				text: 'Deposit Amount',
+				formatExtraData: universal_currency_list,
 				formatter: this.renderDepositAmount,
 			},
 			{
 				dataField: 'withdrawalAmount',
 				text: 'Withdrawal Amount',
+				formatter: this.renderWithdrawalAmount,
+				formatExtraData: universal_currency_list,
 			},
 			{
 				dataField: 'explinationStatusEnum',

@@ -20,7 +20,7 @@ import Select from 'react-select';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { CSVLink } from 'react-csv';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 import { selectCurrencyFactory, selectOptionsFactory } from 'utils';
 
 import { CommonActions } from 'services/global';
@@ -287,9 +287,11 @@ class BankAccount extends React.Component {
 	};
 
 	renderBalance(cell, row) {
-		return row.openingBalance
-			? row.openingBalance.toFixed(2)
-			: row.openingBalance;
+		return row.openingBalance ? (
+			<Currency value={row.openingBalance} currencySymbol={row.currancyName} />
+		) : (
+			row.openingBalance
+		);
 	}
 
 	renderActions = (cell, row) => {

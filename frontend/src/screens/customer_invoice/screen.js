@@ -21,7 +21,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { CSVLink } from 'react-csv';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -261,13 +261,15 @@ class CustomerInvoice extends React.Component {
 		});
 	};
 
-	renderInvoiceAmount = (cell, row) => {
-		return row.invoiceAmount
-			? parseInt(row.invoiceAmount).toLocaleString('en-IN', {
-					style: 'currency',
-					currency: 'INR',
-			  })
-			: '';
+	renderInvoiceAmount = (cell, row, extraData) => {
+		return row.invoiceAmount ? (
+			<Currency
+				value={row.invoiceAmount}
+				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
 	invoiceDueDate = (cell, row) => {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
@@ -276,16 +278,18 @@ class CustomerInvoice extends React.Component {
 		return row.invoiceDate ? row.invoiceDate : '';
 	};
 
-	renderVatAmount = (cell, row) => {
-		return row.vatAmount === 0
-			? row.vatAmount.toLocaleString('en-IN', {
-					style: 'currency',
-					currency: 'INR',
-			  })
-			: row.vatAmount.toLocaleString('en-IN', {
-					style: 'currency',
-					currency: 'INR',
-			  });
+	renderVatAmount = (cell, row, extraData) => {
+		return row.vatAmount === 0 ? (
+			<Currency
+				value={row.vatAmount}
+				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.vatAmount}
+				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
 	};
 
 	renderActions = (cell, row) => {
@@ -581,7 +585,12 @@ class CustomerInvoice extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { status_list, customer_list, customer_invoice_list } = this.props;
+		const {
+			status_list,
+			customer_list,
+			customer_invoice_list,
+			currency_list,
+		} = this.props;
 		const customer_invoice_data =
 			this.props.customer_invoice_list && this.props.customer_invoice_list.data
 				? this.props.customer_invoice_list.data.map((customer) => ({
@@ -631,7 +640,7 @@ class CustomerInvoice extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-								<div className="mb-4 status-panel p-3">
+									<div className="mb-4 status-panel p-3">
 										<Row className="align-items-center justify-content-around">
 											<div className="h4 mb-0 d-flex align-items-center ">
 												<img
@@ -905,6 +914,7 @@ class CustomerInvoice extends React.Component {
 												dataField="totalAmount"
 												dataSort
 												dataFormat={this.renderInvoiceAmount}
+												formatExtraData={currency_list}
 											>
 												Invoice Amount
 											</TableHeaderColumn>
@@ -912,6 +922,7 @@ class CustomerInvoice extends React.Component {
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
+												formatExtraData={currency_list}
 											>
 												VAT Amount
 											</TableHeaderColumn>

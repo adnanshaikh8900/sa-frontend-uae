@@ -25,13 +25,14 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { CSVLink } from 'react-csv';
-import { Loader } from 'components';
+import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
 
 const mapStateToProps = (state) => {
 	return {
 		profile: state.auth.profile,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -182,7 +183,7 @@ class CashFlowStatement extends React.Component {
 
 	render() {
 		const { loading, initValue, dropdownOpen, csvData, view } = this.state;
-		const { profile } = this.props;
+		const { profile, universal_currency_list } = this.props;
 		console.log(this.state.data['expense']);
 		console.log(
 			this.state.data['transactionCategoryMapper']['Accommodation and Meals'],
@@ -321,20 +322,40 @@ class CashFlowStatement extends React.Component {
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['assets'][
+																			][`${item}`] === 'Debit' ? (
+																				<Currency
+																					value={this.state.data['assets'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																		<td className="pt-0 pb-0">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['assets'][
+																			][`${item}`] === 'Credit' ? (
+																				<Currency
+																					value={this.state.data['assets'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																	</tr>
 																),
@@ -351,20 +372,40 @@ class CashFlowStatement extends React.Component {
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['fixedAsset'][
+																			][`${item}`] === 'Debit' ? (
+																				<Currency
+																					value={this.state.data['fixedAsset'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																		<td className="pt-0 pb-0">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['fixedAsset'][
+																			][`${item}`] === 'Credit' ? (
+																				<Currency
+																					value={this.state.data['fixedAsset'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																	</tr>
 																),
@@ -381,20 +422,40 @@ class CashFlowStatement extends React.Component {
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['bank'][
+																			][`${item}`] === 'Debit' ? (
+																				<Currency
+																					value={this.state.data['bank'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
-																		<td className="pt-0 pb-0">
+																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['bank'][
+																			][`${item}`] === 'Credit' ? (
+																				<Currency
+																					value={this.state.data['bank'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																	</tr>
 																),
@@ -411,20 +472,40 @@ class CashFlowStatement extends React.Component {
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['liabilities'][
+																			][`${item}`] === 'Debit' ? (
+																				<Currency
+																					value={this.state.data['liabilities'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																		<td className="text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['liabilities'][
+																			][`${item}`] === 'Credit' ? (
+																				<Currency
+																					value={this.state.data['liabilities'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																	</tr>
 																),
@@ -441,20 +522,40 @@ class CashFlowStatement extends React.Component {
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['equities'][
+																			][`${item}`] === 'Debit' ? (
+																				<Currency
+																					value={this.state.data['equities'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																		<td>
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['equities'][
+																			][`${item}`] === 'Credit' ? (
+																				<Currency
+																					value={this.state.data['equities'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																	</tr>
 																),
@@ -471,20 +572,40 @@ class CashFlowStatement extends React.Component {
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['income'][
+																			][`${item}`] === 'Debit' ? (
+																				<Currency
+																					value={this.state.data['income'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['income'][
+																			][`${item}`] === 'Credit' ? (
+																				<Currency
+																					value={this.state.data['income'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																	</tr>
 																),
@@ -501,20 +622,40 @@ class CashFlowStatement extends React.Component {
 																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Debit'
-																				? this.state.data['expense'][
+																			][`${item}`] === 'Debit' ? (
+																				<Currency
+																					value={this.state.data['expense'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
-																		<td>
+																		<td className="text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
-																			][`${item}`] === 'Credit'
-																				? this.state.data['expense'][
+																			][`${item}`] === 'Credit' ? (
+																				<Currency
+																					value={this.state.data['expense'][
 																						`${item}`
-																				  ].toFixed(2)
-																				: ''}
+																					].toFixed(2)}
+																					currencySymbol={
+																						universal_currency_list
+																							? universal_currency_list[0]
+																									.currencyIsoCode
+																							: 'USD'
+																					}
+																				/>
+																			) : (
+																				''
+																			)}
 																		</td>
 																	</tr>
 																),
@@ -526,20 +667,40 @@ class CashFlowStatement extends React.Component {
 																<td className="text-right">
 																	{this.state.data['transactionCategoryMapper'][
 																		'Accounts Receivable'
-																	] === 'Debit'
-																		? this.state.data['accountReceivable'][
-																				'Accounts Receivable'
-																		  ].toFixed(2)
-																		: ''}
+																	] === 'Debit' ? (
+																		<Currency
+																			value={this.state.data[
+																				'accountReceivable'
+																			]['Accounts Receivable'].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		''
+																	)}
 																</td>
 																<td className="text-right">
 																	{this.state.data['transactionCategoryMapper'][
 																		'Accounts Receivable'
-																	] === 'Credit'
-																		? this.state.data['accountReceivable'][
-																				'Accounts Receivable'
-																		  ].toFixed(2)
-																		: ''}
+																	] === 'Credit' ? (
+																		<Currency
+																			value={this.state.data[
+																				'accountReceivable'
+																			]['Accounts Receivable'].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		''
+																	)}
 																</td>
 															</tr>
 															<tr>
@@ -548,29 +709,65 @@ class CashFlowStatement extends React.Component {
 																	{' '}
 																	{this.state.data['transactionCategoryMapper'][
 																		'Accounts Payable'
-																	] === 'Debit'
-																		? this.state.data['accountpayable'][
+																	] === 'Debit' ? (
+																		<Currency
+																			value={this.state.data['accountpayable'][
 																				'Accounts Payable'
-																		  ].toFixed(2)
-																		: ''}
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		''
+																	)}
 																</td>
 																<td className="text-right">
 																	{this.state.data['transactionCategoryMapper'][
 																		'Accounts Payable'
-																	] === 'Credit'
-																		? this.state.data['accountpayable'][
+																	] === 'Credit' ? (
+																		<Currency
+																			value={this.state.data['accountpayable'][
 																				'Accounts Payable'
-																		  ].toFixed(2)
-																		: ''}
+																			].toFixed(2)}
+																			currencySymbol={
+																				universal_currency_list
+																					? universal_currency_list[0]
+																							.currencyIsoCode
+																					: 'USD'
+																			}
+																		/>
+																	) : (
+																		''
+																	)}
 																</td>
 															</tr>
 															<tr>
 																<td className="mainLable text-right">Total</td>
 																<td className="text-right">
-																	{this.state.data['totalDebitAmount']}
+																	<Currency
+																		value={this.state.data['totalDebitAmount']}
+																		currencySymbol={
+																			universal_currency_list
+																				? universal_currency_list[0]
+																						.currencyIsoCode
+																				: 'USD'
+																		}
+																	/>
 																</td>
 																<td className="text-right">
-																	{this.state.data['totalCreditAmount']}
+																	<Currency
+																		value={this.state.data['totalCreditAmount']}
+																		currencySymbol={
+																			universal_currency_list
+																				? universal_currency_list[0]
+																						.currencyIsoCode
+																				: 'USD'
+																		}
+																	/>
 																</td>
 															</tr>
 														</>

@@ -141,11 +141,6 @@
 		.companyDetails {
 			text-align: left;
 			margin: 20px 0;
-			img {
-				width: 160px !important;
-				height: 80px;
-				border-radius: 50%;
-			}
 		}
 		.header-row {
 			color: white;
@@ -164,7 +159,7 @@
 	body {
 		height: initial !important;
 		overflow: initial !important;
-		-webkit-print-color-adjust: exact;
+		-webkit-print-color-adjust: exact !important;
 		visibility: hidden;
 	}
 
@@ -177,7 +172,11 @@
 	#singlePage {
 		.header-row {
 			// color: white!important;
-			background-color: black !important;
+			background-color: #6a4bc4;
 		}
+		.ribbon {
+			display: none !important;
+		}
+		box-shadow: none !important;
 	}
 }

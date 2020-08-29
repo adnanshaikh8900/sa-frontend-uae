@@ -150,7 +150,7 @@ class CreateExpense extends React.Component {
 			bankAccountId,
 		} = data;
 		let formData = new FormData();
-		formData.append('payee', payee.value?payee.value:'');
+		formData.append('payee', payee.value ? payee.value : '');
 		formData.append('expenseDate', expenseDate !== null ? expenseDate : '');
 		formData.append('expenseDescription', expenseDescription);
 		formData.append('receiptNumber', receiptNumber);
@@ -496,7 +496,8 @@ class CreateExpense extends React.Component {
 																		<span className="text-danger">*</span>Amount
 																	</Label>
 																	<Input
-																		type="text" maxLength='10'
+																		type="text"
+																		maxLength="10"
 																		name="expenseAmount"
 																		id="expenseAmount"
 																		rows="5"
@@ -655,7 +656,8 @@ class CreateExpense extends React.Component {
 																		Description
 																	</Label>
 																	<Input
-																		type="textarea"maxLength='255'
+																		type="textarea"
+																		maxLength="255"
 																		name="expenseDescription"
 																		id="expenseDescription"
 																		rows="5"
@@ -680,7 +682,8 @@ class CreateExpense extends React.Component {
 																				Reciept Number
 																			</Label>
 																			<Input
-																				type="text" maxLength='50'
+																				type="text"
+																				maxLength="50"
 																				id="receiptNumber"
 																				name="receiptNumber"
 																				placeholder="Enter Reciept Number"
@@ -708,7 +711,8 @@ class CreateExpense extends React.Component {
 																				Attachment Description
 																			</Label>
 																			<Input
-																				type="textarea" maxLength='255'
+																				type="textarea"
+																				maxLength="255"
 																				name="receiptAttachmentDescription"
 																				id="receiptAttachmentDescription"
 																				rows="5"
@@ -730,7 +734,7 @@ class CreateExpense extends React.Component {
 															<Col lg={4}>
 																<Row>
 																	<Col lg={12}>
-																	<FormGroup className="mb-3">
+																		<FormGroup className="mb-3">
 																			<Field
 																				name="attachment"
 																				render={({ field, form }) => (

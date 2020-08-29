@@ -22,7 +22,7 @@ import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import { selectOptionsFactory } from 'utils';
 
@@ -42,6 +42,7 @@ const mapStateToProps = (state) => {
 	return {
 		expense_list: state.expense.expense_list,
 		expense_categories_list: state.expense.expense_categories_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -60,7 +61,6 @@ const customStyles = {
 		},
 	}),
 };
-
 
 class Expense extends React.Component {
 	constructor(props) {
@@ -293,8 +293,15 @@ class Expense extends React.Component {
 		);
 	};
 
-	renderAmount = (cell, row) => {
-		return row.expenseAmount ? row.expenseAmount.toFixed(2) : '';
+	renderAmount = (cell, row, extraData) => {
+		return row.expenseAmount ? (
+			<Currency
+				value={row.expenseAmount.toFixed(2)}
+				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
 
 	handleSearch = () => {
@@ -482,7 +489,11 @@ class Expense extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { expense_list, expense_categories_list } = this.props;
+		const {
+			expense_list,
+			expense_categories_list,
+			universal_currency_list,
+		} = this.props;
 		// const containerStyle = {
 		//   zIndex: 1999
 		// }
@@ -581,7 +592,7 @@ class Expense extends React.Component {
 												{/* <Input type="text" placeholder="Supplier Name" /> */}
 												<FormGroup className="mb-3">
 													<Select
-													styles={customStyles}
+														styles={customStyles}
 														className="select-default-width"
 														id="expenseCategoryId"
 														name="expenseCategoryId"
@@ -712,6 +723,7 @@ class Expense extends React.Component {
 												dataField="expenseAmount"
 												dataSort
 												dataFormat={this.renderAmount}
+												formatExtraData={universal_currency_list}
 												width="15%"
 											>
 												Expense Amount

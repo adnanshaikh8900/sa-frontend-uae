@@ -50,23 +50,8 @@ const mapDispatchToProps = (dispatch) => {
 		commonActions: bindActionCreators(CommonActions, dispatch),
 	};
 };
-const customStyles = {
-	control: (base, state) => ({
-		...base,
-		borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
-		boxShadow: state.isFocused ? null : null,
-		'&:hover': {
-			borderColor: state.isFocused ? '#6a4bc4' : '#c7c7c7',
-		},
-	}),
-};
-
 
 const invoiceimage = require('assets/images/invoice/invoice.png');
-const overWeekly = require('assets/images/invoice/icons_due within a week.png');
-const overduemonthly = require('assets/images/invoice/icons_due within month.png');
-const overdue = require('assets/images/invoice/icons_overdue.png');
-
 
 class CustomerInvoice extends React.Component {
 	constructor(props) {
@@ -274,7 +259,12 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderInvoiceAmount = (cell, row) => {
-		return row.invoiceAmount ? row.invoiceAmount.toFixed(2) : '';
+		return row.invoiceAmount
+			? parseInt(row.invoiceAmount).toLocaleString('en-IN', {
+					style: 'currency',
+					currency: 'INR',
+			  })
+			: '';
 	};
 	invoiceDueDate = (cell, row) => {
 		return row.invoiceDueDate ? row.invoiceDueDate : '';
@@ -284,7 +274,15 @@ class CustomerInvoice extends React.Component {
 	};
 
 	renderVatAmount = (cell, row) => {
-		return row.vatAmount === 0 ? row.vatAmount : row.vatAmount;
+		return row.vatAmount === 0
+			? row.vatAmount.toLocaleString('en-IN', {
+					style: 'currency',
+					currency: 'INR',
+			  })
+			: row.vatAmount.toLocaleString('en-IN', {
+					style: 'currency',
+					currency: 'INR',
+			  });
 	};
 
 	renderActions = (cell, row) => {
@@ -413,7 +411,8 @@ class CustomerInvoice extends React.Component {
 
 	bulkDelete = () => {
 		const { selectedRows } = this.state;
-		const message = 'Warning: This Customer nvoice will be deleted permanently and cannot be recovered.  ';
+		const message =
+			'Warning: This Customer nvoice will be deleted permanently and cannot be recovered.  ';
 		if (selectedRows.length > 0) {
 			this.setState({
 				dialog: (
@@ -606,7 +605,11 @@ class CustomerInvoice extends React.Component {
 							<Row>
 								<Col lg={12}>
 									<div className="h4 mb-0 d-flex align-items-center">
-									<img alt="invoiceimage" src={invoiceimage} style={{'width':'40px'}} />
+										<img
+											alt="invoiceimage"
+											src={invoiceimage}
+											style={{ width: '40px' }}
+										/>
 										<span className="ml-2">Customer Invoices</span>
 									</div>
 								</Col>
@@ -625,53 +628,24 @@ class CustomerInvoice extends React.Component {
 							)}
 							<Row>
 								<Col lg={12}>
-								<div className="mb-4 status-panel p-3">
-										<Row className="align-items-center justify-content-around">
-											<div className="h4 mb-0 d-flex align-items-center ">
-												<img
-													alt="overdue"
-													src={overdue}
-													style={{ width: '60px' }}
-												/>
-												<div>
-													<h5>Overdue</h5>
-													<h3 className="invoice-detail ml-2">
-														{this.state.overDueAmountDetails.overDueAmount}
-													</h3>
-												</div>
-											</div>
-											<div className="h4 mb-0 d-flex align-items-center">
-												<img
-													alt="overWeekly"
-													src={overWeekly}
-													style={{ width: '60px' }}
-												/>
-												<div>
-													<h5>Due Within This Week</h5>
-													<h3 className="invoice-detail ml-3">
-														{
-															this.state.overDueAmountDetails
-																.overDueAmountWeekly
-														}
-													</h3>
-												</div>
-											</div>
-											<div className="h4 mb-0 d-flex align-items-center">
-												<img
-													alt="overduemonthly"
-													src={overduemonthly}
-													style={{ width: '60px' }}
-												/>
-												<div>
-													<h5>Due Within 30 Days</h5>
-													<h3 className="invoice-detail ml-3">
-														{
-															this.state.overDueAmountDetails
-																.overDueAmountMonthly
-														}
-													</h3>
-												</div>
-											</div>
+									<div className="mb-4 status-panel p-3">
+										<Row>
+											<Col lg={3}>
+												<h5>Overdue</h5>
+												<h3>{this.state.overDueAmountDetails.overDueAmount}</h3>
+											</Col>
+											<Col lg={3}>
+												<h5>Due Within This Week</h5>
+												<h3>
+													{this.state.overDueAmountDetails.overDueAmountWeekly}
+												</h3>
+											</Col>
+											<Col lg={3}>
+												<h5>Due Within 30 Days</h5>
+												<h3>
+													{this.state.overDueAmountDetails.overDueAmountMonthly}
+												</h3>
+											</Col>
 										</Row>
 									</div>
 									<div className="d-flex justify-content-end">
@@ -692,7 +666,7 @@ class CustomerInvoice extends React.Component {
 													ref={this.csvLink}
 													target="_blank"
 												/>
-											)} 
+											)}
 											<Button
 												color="primary"
 												className="btn-square "
@@ -709,7 +683,6 @@ class CustomerInvoice extends React.Component {
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
-												styles={customStyles}
 													className="select-default-width"
 													placeholder="Select Customer"
 													id="customer"
@@ -781,7 +754,6 @@ class CustomerInvoice extends React.Component {
 											</Col>
 											<Col lg={2} className="mb-1">
 												<Select
-												styles={customStyles}
 													className=""
 													options={
 														status_list

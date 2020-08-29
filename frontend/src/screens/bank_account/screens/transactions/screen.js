@@ -238,7 +238,12 @@ class BankTransactions extends React.Component {
 	};
 
 	renderDepositAmount = (cell, row) => {
-		return row.depositeAmount >= 0 ? row.depositeAmount.toFixed(2) : '';
+		return row.depositeAmount >= 0
+			? row.depositeAmount.toLocaleString('en-IN', {
+					style: 'currency',
+					currency: 'INR',
+			  })
+			: '';
 	};
 	renderWithdrawalAmount = (cell, row) => {
 		return row.withdrawalAmount >= 0 ? row.withdrawalAmount.toFixed(2) : '';
@@ -546,6 +551,7 @@ class BankTransactions extends React.Component {
 			{
 				dataField: 'depositeAmount',
 				text: 'Deposit Amount',
+				formatter: this.renderDepositAmount,
 			},
 			{
 				dataField: 'withdrawalAmount',

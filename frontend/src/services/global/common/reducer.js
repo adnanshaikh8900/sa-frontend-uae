@@ -5,7 +5,7 @@ const initState = {
 	version: '',
 	tostifyAlertFunc: null,
 	tostifyAlert: {},
-	currency_list: [],
+	universal_currency_list: [],
 };
 
 const CommonReducer = (state = initState, action) => {
@@ -46,10 +46,10 @@ const CommonReducer = (state = initState, action) => {
 				version: payload.data,
 			};
 
-		case COMMON.CURRENCY_LIST:
+		case COMMON.UNIVERSAL_CURRENCY_LIST:
 			return {
 				...state,
-				currency_list: Object.assign([], payload.data),
+				universal_currency_list: Object.assign([], payload.data),
 			};
 
 		default:

@@ -70,7 +70,7 @@ class ExplainTrasactionDetail extends React.Component {
 			chartOfAccountCategoryList: [],
 			transactionCategoryList: [],
 			id: '',
-			dialog: null,
+			dialog: true,
 			totalAmount: '',
 		};
 
@@ -136,7 +136,6 @@ class ExplainTrasactionDetail extends React.Component {
 						},
 					},
 					() => {
-						console.log(this.state.initValue.currencyCode);
 						if (this.state.initValue.customerId) {
 							this.getSuggestionInvoicesFotCust(
 								this.state.initValue.customerId,
@@ -174,7 +173,7 @@ class ExplainTrasactionDetail extends React.Component {
 							);
 							this.getTransactionCategoryList(id);
 						}
-						if (this.state.initValue.coaCategoryId === 10) {
+						if (this.state.initValue.expenseCategory) {
 							this.props.transactionsActions.getExpensesCategoriesList();
 							this.props.transactionsActions.getCurrencyList();
 							this.props.transactionsActions.getUserForDropdown();
@@ -219,6 +218,7 @@ class ExplainTrasactionDetail extends React.Component {
 		const data = {
 			amount: amount,
 			id: option,
+			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions.getCustomerInvoiceList(data);
 	};
@@ -226,6 +226,7 @@ class ExplainTrasactionDetail extends React.Component {
 		const data = {
 			amount: amount,
 			id: option,
+			bankId: this.props.bankId,
 		};
 		this.props.transactionsActions.getVendorInvoiceList(data);
 	};
@@ -394,12 +395,15 @@ class ExplainTrasactionDetail extends React.Component {
 		this.setState({
 			dialog: (
 				<ConfirmDeleteModal
+					isOpen={true}
 					okHandler={() => this.removeTransaction(id)}
 					cancelHandler={this.removeDialog}
+					message="test"
 				/>
 			),
 		});
 	};
+
 	invoiceIdList = (option) => {
 		this.setState(
 			{
@@ -415,6 +419,7 @@ class ExplainTrasactionDetail extends React.Component {
 		this.formRef.current.setFieldValue('invoiceIdList', option, true);
 	};
 	removeTransaction = (id) => {
+		this.removeDialog();
 		this.props.transactionsActions
 			.deleteTransactionById(id)
 			.then((res) => {
@@ -422,6 +427,7 @@ class ExplainTrasactionDetail extends React.Component {
 					'success',
 					'Transaction Deleted Successfully',
 				);
+				this.props.closeExplainTransactionModal(this.state.id);
 			})
 			.catch((err) => {
 				this.props.commonActions.tostifyAlert(
@@ -430,10 +436,22 @@ class ExplainTrasactionDetail extends React.Component {
 				);
 			});
 	};
+
 	removeDialog = () => {
 		this.setState({
 			dialog: null,
 		});
+	};
+
+	handleFileChange = (e, props) => {
+		e.preventDefault();
+		let reader = new FileReader();
+		let file = e.target.files[0];
+		if (file) {
+			reader.onloadend = () => {};
+			reader.readAsDataURL(file);
+			props.setFieldValue('attachment', file, true);
+		}
 	};
 
 	render() {
@@ -442,6 +460,7 @@ class ExplainTrasactionDetail extends React.Component {
 			loading,
 			chartOfAccountCategoryList,
 			transactionCategoryList,
+			dialog,
 		} = this.state;
 		const {
 			customer_invoice_list,
@@ -456,6 +475,7 @@ class ExplainTrasactionDetail extends React.Component {
 				<div className="animated fadeIn">
 					<Row>
 						<Col lg={12} className="mx-auto">
+							{dialog}
 							{loading ? (
 								<Loader />
 							) : (
@@ -481,17 +501,18 @@ class ExplainTrasactionDetail extends React.Component {
 													onSubmit={(values, { resetForm }) => {
 														this.handleSubmit(values, resetForm);
 													}}
-													// validate={(values) => {
-													// 	let errors = {};
-													// 	if (
-													// 		values.coaCategoryId.label ===
-													// 			'Supplier Invoice' ||
-													// 		values.coaCategoryId.label === 'Sales'
-													// 	) {
-													// 		errors.invoiceIdList = 'Invoice is  required';
-													// 	}
-													// 	return errors;
-													// }}
+													validate={(values) => {
+														let errors = {};
+														if (
+															(values.coaCategoryId.label ===
+																'Supplier Invoice' ||
+																values.coaCategoryId.label === 'Sales') &&
+															!values.invoiceIdList
+														) {
+															errors.invoiceIdList = 'Invoice is  required';
+														}
+														return errors;
+													}}
 													validationSchema={Yup.object().shape({
 														date: Yup.string().required(
 															'Transaction Date is Required',
@@ -1285,8 +1306,7 @@ class ExplainTrasactionDetail extends React.Component {
 																					name="attachment"
 																					render={({ field, form }) => (
 																						<div>
-																							<Label>Reciept Attachment</Label>{' '}
-																							<br />
+																							<Label>Attachment</Label> <br />
 																							<Button
 																								color="primary"
 																								onClick={() => {
@@ -1317,18 +1337,18 @@ class ExplainTrasactionDetail extends React.Component {
 																					)}
 																				/>
 																				{this.state.fileName && (
-																								<div>
-																									<i
-																										className="fa fa-close"
-																										onClick={() =>
-																											this.setState({
-																												fileName: '',
-																											})
-																										}
-																									></i>{' '}
-																									{this.state.fileName}
-																								</div>
-																							)}
+																					<div>
+																						<i
+																							className="fa fa-close"
+																							onClick={() =>
+																								this.setState({
+																									fileName: '',
+																								})
+																							}
+																						></i>{' '}
+																						{this.state.fileName}
+																					</div>
+																				)}
 																				{props.errors.attachment &&
 																					props.touched.attachment && (
 																						<div className="invalid-file">
@@ -1483,7 +1503,7 @@ class ExplainTrasactionDetail extends React.Component {
 																			color="secondary"
 																			className="btn-square"
 																			onClick={() =>
-																				this.removeTransaction(
+																				this.closeTransaction(
 																					props.values.transactionId,
 																				)
 																			}

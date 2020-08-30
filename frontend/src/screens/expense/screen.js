@@ -297,7 +297,7 @@ class Expense extends React.Component {
 		return row.expenseAmount ? (
 			<Currency
 				value={row.expenseAmount.toFixed(2)}
-				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
 			''

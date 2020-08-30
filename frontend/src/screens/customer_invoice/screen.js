@@ -38,7 +38,7 @@ const mapStateToProps = (state) => {
 		customer_invoice_list: state.customer_invoice.customer_invoice_list,
 		customer_list: state.customer_invoice.customer_list,
 		status_list: state.customer_invoice.status_list,
-		currency_list: state.customer_invoice.currency_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -109,7 +109,6 @@ class CustomerInvoice extends React.Component {
 	componentDidMount = () => {
 		let { filterData } = this.state;
 		this.props.customerInvoiceActions.getStatusList();
-		this.props.customerInvoiceActions.getCurrencyList();
 		this.props.customerInvoiceActions.getCustomerList(filterData.contactType);
 		this.props.customerInvoiceActions
 			.getOverdueAmountDetails(filterData.contactType)
@@ -265,7 +264,7 @@ class CustomerInvoice extends React.Component {
 		return row.invoiceAmount ? (
 			<Currency
 				value={row.invoiceAmount}
-				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
 			''
@@ -282,12 +281,12 @@ class CustomerInvoice extends React.Component {
 		return row.vatAmount === 0 ? (
 			<Currency
 				value={row.vatAmount}
-				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
 			<Currency
 				value={row.vatAmount}
-				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		);
 	};
@@ -589,7 +588,7 @@ class CustomerInvoice extends React.Component {
 			status_list,
 			customer_list,
 			customer_invoice_list,
-			currency_list,
+			universal_currency_list,
 		} = this.props;
 		const customer_invoice_data =
 			this.props.customer_invoice_list && this.props.customer_invoice_list.data
@@ -914,7 +913,7 @@ class CustomerInvoice extends React.Component {
 												dataField="totalAmount"
 												dataSort
 												dataFormat={this.renderInvoiceAmount}
-												formatExtraData={currency_list}
+												formatExtraData={universal_currency_list}
 											>
 												Invoice Amount
 											</TableHeaderColumn>
@@ -922,7 +921,7 @@ class CustomerInvoice extends React.Component {
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
-												formatExtraData={currency_list}
+												formatExtraData={universal_currency_list}
 											>
 												VAT Amount
 											</TableHeaderColumn>

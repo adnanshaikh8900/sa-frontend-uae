@@ -206,7 +206,7 @@ class VatTransactions extends React.Component {
 		return row.amount ? (
 			<Currency
 				value={row.amount}
-				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
 			row.amount
@@ -217,7 +217,7 @@ class VatTransactions extends React.Component {
 		return row.vatAmount ? (
 			<Currency
 				value={row.vatAmount}
-				currencySymbol={extraData ? extraData[0].currencyIsoCode : 'USD'}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
 			/>
 		) : (
 			row.vatAmount
@@ -281,7 +281,7 @@ class VatTransactions extends React.Component {
 									</Col>
 									<Col lg={2} className="mb-1">
 										<Select
-										styles={customStyles}
+											styles={customStyles}
 											className=""
 											options={vatOptions}
 											value={this.state.selectedType}
@@ -291,7 +291,7 @@ class VatTransactions extends React.Component {
 									</Col>
 									<Col lg={2} className="mb-1">
 										<Select
-										styles={customStyles}
+											styles={customStyles}
 											className=""
 											options={vatOptions}
 											value={this.state.selectedType}
@@ -301,7 +301,7 @@ class VatTransactions extends React.Component {
 									</Col>
 									<Col lg={2} className="mb-1">
 										<Select
-										styles={customStyles}
+											styles={customStyles}
 											className=""
 											options={vatOptions}
 											value={this.state.selectedType}

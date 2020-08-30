@@ -22,7 +22,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DatePicker from 'react-datepicker';
 import { CSVLink } from 'react-csv';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader, ConfirmDeleteModal, Currency } from 'components';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => {
 		supplier_invoice_list: state.supplier_invoice.supplier_invoice_list,
 		supplier_list: state.supplier_invoice.supplier_list,
 		status_list: state.supplier_invoice.status_list,
-		currency_list: state.customer_invoice.currency_list,
+		universal_currency_list: state.common.universal_currency_list,
 	};
 };
 const mapDispatchToProps = (dispatch) => {
@@ -211,12 +211,29 @@ class SupplierInvoice extends React.Component {
 		this.initializeData();
 	};
 
-	renderInvoiceAmount = (cell, row) => {
-		return row.invoiceAmount ? row.invoiceAmount.toFixed(2) : '';
+	renderInvoiceAmount = (cell, row, extraData) => {
+		return row.invoiceAmount ? (
+			<Currency
+				value={row.invoiceAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			''
+		);
 	};
 
-	renderVatAmount = (cell, row) => {
-		return row.vatAmount === 0 ? row.vatAmount : row.vatAmount;
+	renderVatAmount = (cell, row, extraData) => {
+		return row.vatAmount === 0 ? (
+			<Currency
+				value={row.vatAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		) : (
+			<Currency
+				value={row.vatAmount}
+				currencySymbol={extraData[0] ? extraData[0].currencyIsoCode : 'USD'}
+			/>
+		);
 	};
 
 	invoiceDueDate = (cell, row) => {
@@ -592,7 +609,12 @@ class SupplierInvoice extends React.Component {
 			csvData,
 			view,
 		} = this.state;
-		const { status_list, supplier_list, supplier_invoice_list } = this.props;
+		const {
+			status_list,
+			supplier_list,
+			supplier_invoice_list,
+			universal_currency_list,
+		} = this.props;
 		// const containerStyle = {
 		//   zIndex: 1999
 		// }
@@ -730,7 +752,7 @@ class SupplierInvoice extends React.Component {
 										<Row>
 											<Col lg={2} className="mb-1">
 												<Select
-												styles={customStyles}
+													styles={customStyles}
 													className="select-default-width"
 													placeholder="Select Supplier"
 													id="supplier"
@@ -802,7 +824,7 @@ class SupplierInvoice extends React.Component {
 											</Col>
 											<Col lg={2} className="mb-1">
 												<Select
-												styles={customStyles}
+													styles={customStyles}
 													className=""
 													// options={status_list ? status_list.map((item) => {
 													//   return { label: item, value: item }
@@ -921,6 +943,7 @@ class SupplierInvoice extends React.Component {
 												dataField="totalAmount"
 												dataSort
 												dataFormat={this.renderInvoiceAmount}
+												formatExtraData={universal_currency_list}
 											>
 												Invoice Amount
 											</TableHeaderColumn>
@@ -928,6 +951,7 @@ class SupplierInvoice extends React.Component {
 												dataField="totalVatAmount"
 												dataSort
 												dataFormat={this.renderVatAmount}
+												formatExtraData={universal_currency_list}
 											>
 												VAT Amount
 											</TableHeaderColumn>

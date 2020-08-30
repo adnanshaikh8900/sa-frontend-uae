@@ -328,7 +328,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -338,7 +338,7 @@ class CashFlowStatement extends React.Component {
 																				''
 																			)}
 																		</td>
-																		<td className="pt-0 pb-0">
+																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit' ? (
@@ -347,7 +347,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -378,7 +378,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -388,7 +388,7 @@ class CashFlowStatement extends React.Component {
 																				''
 																			)}
 																		</td>
-																		<td className="pt-0 pb-0">
+																		<td className="pt-0 pb-0 text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit' ? (
@@ -397,7 +397,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -428,7 +428,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -447,7 +447,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -478,7 +478,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -497,7 +497,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -528,7 +528,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -538,7 +538,7 @@ class CashFlowStatement extends React.Component {
 																				''
 																			)}
 																		</td>
-																		<td>
+																		<td className="text-right">
 																			{this.state.data[
 																				'transactionCategoryMapper'
 																			][`${item}`] === 'Credit' ? (
@@ -547,7 +547,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -578,7 +578,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -597,7 +597,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -628,7 +628,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -647,7 +647,7 @@ class CashFlowStatement extends React.Component {
 																						`${item}`
 																					].toFixed(2)}
 																					currencySymbol={
-																						universal_currency_list
+																						universal_currency_list[0]
 																							? universal_currency_list[0]
 																									.currencyIsoCode
 																							: 'USD'
@@ -673,7 +673,7 @@ class CashFlowStatement extends React.Component {
 																				'accountReceivable'
 																			]['Accounts Receivable'].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -692,7 +692,7 @@ class CashFlowStatement extends React.Component {
 																				'accountReceivable'
 																			]['Accounts Receivable'].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -715,7 +715,7 @@ class CashFlowStatement extends React.Component {
 																				'Accounts Payable'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -734,7 +734,7 @@ class CashFlowStatement extends React.Component {
 																				'Accounts Payable'
 																			].toFixed(2)}
 																			currencySymbol={
-																				universal_currency_list
+																				universal_currency_list[0]
 																					? universal_currency_list[0]
 																							.currencyIsoCode
 																					: 'USD'
@@ -751,7 +751,7 @@ class CashFlowStatement extends React.Component {
 																	<Currency
 																		value={this.state.data['totalDebitAmount']}
 																		currencySymbol={
-																			universal_currency_list
+																			universal_currency_list[0]
 																				? universal_currency_list[0]
 																						.currencyIsoCode
 																				: 'USD'
@@ -762,7 +762,7 @@ class CashFlowStatement extends React.Component {
 																	<Currency
 																		value={this.state.data['totalCreditAmount']}
 																		currencySymbol={
-																			universal_currency_list
+																			universal_currency_list[0]
 																				? universal_currency_list[0]
 																						.currencyIsoCode
 																				: 'USD'

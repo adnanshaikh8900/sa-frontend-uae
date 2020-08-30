@@ -312,7 +312,7 @@ class CreateBankAccount extends React.Component {
 																		Currency
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		id="currency"
 																		name="currency"
 																		options={
@@ -342,7 +342,9 @@ class CreateBankAccount extends React.Component {
 																		}
 																		onChange={(option) => {
 																			if (option && option.value) {
-																				props.handleChange('currency')(option);
+																				props.handleChange('currency')(
+																					option.value,
+																				);
 																			} else {
 																				props.handleChange('currency')('');
 																			}
@@ -623,7 +625,7 @@ class CreateBankAccount extends React.Component {
 																<FormGroup className="mb-3">
 																	<Label htmlFor="country">Country</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		id="country"
 																		name="country"
 																		getOptionValue={(option) =>
@@ -665,7 +667,7 @@ class CreateBankAccount extends React.Component {
 																		Account is for
 																	</Label>
 																	<Select
-																	styles={customStyles}
+																		styles={customStyles}
 																		id="account_is_for"
 																		name="account_is_for"
 																		options={
